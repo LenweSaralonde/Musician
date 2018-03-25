@@ -1,0 +1,165 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+	<Frame name="MusicianFrame" parent="UIParent" toplevel="true" enableMouse="true" movable="true" hidden="true">
+
+		<Scripts>
+			<OnLoad>self:RegisterForDrag("LeftButton")</OnLoad>
+			<OnDragStart>self:StartMoving()</OnDragStart>
+			<OnDragStop>self:StopMovingOrSizing()</OnDragStop>
+			<OnEscapePressed>MusicianFrame.Escape()</OnEscapePressed>
+		</Scripts>
+
+		<Size x="320" y="160" />
+
+		<Anchors>
+			<Anchor point="CENTER" x="-52" y="47" />
+		</Anchors>
+
+		<Layers>
+			<Layer level="BACKGROUND">
+				<FontString name="MusicianFrameTitle" inherits="GameFontNormal">
+					<Anchors>
+						<Anchor point="TOP">
+							<Offset>
+								<AbsDimension x="0" y="-15"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+
+		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+			<BackgroundInsets>
+				<AbsInset left="11" right="12" top="12" bottom="11" />
+			</BackgroundInsets>
+			<TileSize>
+				<AbsValue val="32" />
+			</TileSize>
+			<EdgeSize>
+				<AbsValue val="32" />
+			</EdgeSize>
+		</Backdrop>
+
+		<Frames>
+
+			<Button name="MusicianFrameClearButton" inherits="UIPanelButtonTemplate" text="Effacer"  level="OVERLAY">
+				<Size x="60" y="20" />
+				<Anchors>
+					<Anchor point="TOPRIGHT" x="-10" y="-10" relativePoint="TOPRIGHT" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						MusicianFrameSource:SetText(Musician.Msg.PASTE_MUSIC_CODE)
+						MusicianFrameSource:SetFocus()
+						MusicianFrameSource:HighlightText(0);
+					</OnClick>
+				</Scripts>
+			</Button>
+
+			<Button name="MusicianFrameCloseButton" inherits="UIPanelCloseButton">
+				<Anchors>
+					<Anchor point="CENTER" relativePoint="TOPRIGHT">
+						<Offset x="-7" y="-7" />
+					</Anchor>
+				</Anchors>
+			</Button>
+
+			<Button name="MusicianFrameTestButton" inherits="UIPanelButtonTemplate">
+				<Size x="100" y="20" />
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" x="10" y="10" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						MusicianFrame.Test()
+						MusicianFrameSource:ClearFocus()
+					</OnClick>
+				</Scripts>
+			</Button>
+
+			<Button name="MusicianFrameLoadButton" inherits="UIPanelButtonTemplate">
+				<Size x="100" y="20" />
+				<Anchors>
+					<Anchor point="BOTTOM" x="0" y="10" relativePoint="BOTTOM" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						MusicianFrame.Load()
+						MusicianFrameSource:ClearFocus()
+					</OnClick>
+				</Scripts>
+			</Button>
+
+			<Button name="MusicianFramePlayButton" inherits="UIPanelButtonTemplate">
+				<Size x="100" y="20" />
+				<Anchors>
+					<Anchor point="BOTTOMRIGHT" x="-10" y="10" relativePoint="BOTTOMRIGHT" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						MusicianFrame.Play()
+						MusicianFrameSource:ClearFocus()
+					</OnClick>
+				</Scripts>
+			</Button>
+
+			<ScrollFrame name="MusicianFrameScrollFrame" inherits="UIPanelScrollFrameTemplate">
+				<Size x="268" y="90" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="15" y="-35" relativePoint="TOPLEFT" />
+				</Anchors>
+
+				<ScrollChild>
+					<EditBox name="MusicianFrameSource" multiLine="true" autoFocus="false" countInvisibleLetters="false">
+						<Size x="268" y="90"/>
+
+						<Scripts>
+							<OnEditFocusGained>
+								MusicianFrameSource:HighlightText(0)
+							</OnEditFocusGained>
+							<OnLoad>
+								ScrollingEdit_OnCursorChanged(self, 0, 0, 0, 0)
+							</OnLoad>
+							<OnTextChanged>
+								ScrollingEdit_OnTextChanged(self, self:GetParent())
+								Musician:SendMessage(Musician.Events.RefreshFrame)
+							</OnTextChanged>
+							<OnCursorChanged function="ScrollingEdit_OnCursorChanged"/>
+							<OnUpdate>
+								ScrollingEdit_OnUpdate(self, elapsed, self:GetParent())
+							</OnUpdate>
+							<OnEscapePressed>MusicianFrame.Escape()</OnEscapePressed>
+						</Scripts>
+
+						<FontString inherits="GameFontHighlightSmall"/>
+					</EditBox>
+				</ScrollChild>
+			</ScrollFrame>
+
+			<Frame name="MusicianFrameTextBackground">
+				<Size x="300" y="100" />
+				<Anchors>
+					<Anchor point="TOP" y="-30" relativePoint="TOP" />
+				</Anchors>
+				<Backdrop bgFile="Interface\Tooltips\UI-Tooltip-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+					<EdgeSize>
+						<AbsValue val="16"/>
+					</EdgeSize>
+					<TileSize>
+						<AbsValue val="16"/>
+					</TileSize>
+					<BackgroundInsets>
+						<AbsInset left="5" right="5" top="5" bottom="5"/>
+					</BackgroundInsets>
+				</Backdrop>
+				<Scripts>
+					<OnLoad>
+						self:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b);
+						self:SetBackdropColor(TOOLTIP_DEFAULT_BACKGROUND_COLOR.r, TOOLTIP_DEFAULT_BACKGROUND_COLOR.g, TOOLTIP_DEFAULT_BACKGROUND_COLOR.b);
+					</OnLoad>
+				</Scripts>
+			</Frame>
+
+		</Frames>
+	</Frame>
+</Ui>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>MidiConvert</title>
+	<script type="text/javascript" src="./js/MidiConvert.js"></script>
+	<script type="text/javascript" src="./js/base64.js"></script>
+	<script type="text/javascript" src="./js/musician.js"></script>
+</head>
+<body>
+	<style type="text/css">
+
+		body {
+			font-family: "Roboto Mono", monospace;
+			text-align: center;
+			margin: 0px;
+		}
+
+		#FileDrop{
+			position: absolute;
+			width: 500px;
+			height: 200px;
+			margin-left: -250px;
+			border: 2px dashed black;
+			left: 50%;
+			margin-top: 70px;
+			color: black;
+		}
+
+		#FileDrop.Hover{
+			background-color: black;
+			color: white;
+		}
+
+		#FileDrop input {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			opacity: 0;
+			left: 0px;
+			top: 0px;
+		}
+
+		#FileDrop #Text {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			line-height: 200px;
+			left: 0px;
+			top: 0px;
+			text-align: center;
+		}
+
+		textarea {
+			font-family: "Roboto Mono" monospace;
+			height: 300px;
+			width: 100%;
+			display: inline-block;
+			position: relative;
+			float: left;
+		}
+
+		#Results {
+			position: absolute;
+			width: 500px;
+			margin-left: -250px;
+			top: 300px;
+			left: 50%;
+			position: absolute;
+		}
+
+		#Description {
+			position: absolute;
+			width: 100%;
+			height: 40px;
+			font-size: 20px;
+			bottom: 0px;
+		}
+
+	</style>
+	<div id="FileDrop">
+		<div id="Text">
+			Drop a midi file here
+		</div>
+		<input type="file" accept="audio/midi">
+	</div>
+	<div id="Results">
+		<textarea id="ResultsText" onClick="this.setSelectionRange(0, this.value.length)"></textarea>
+	</div>
+
+	<div id="Description">Parse a MIDI file into Musician format.</div>
+
+	<script type="text/javascript">
+
+		if (!(window.File && window.FileReader && window.FileList && window.Blob)) {
+			document.querySelector("#FileDrop #Text").textContent = "Reading files not supported by this browser";
+		} else {
+
+			var fileDrop = document.querySelector("#FileDrop")
+
+			fileDrop.addEventListener("dragenter", function(){
+				fileDrop.classList.add("Hover");
+			})
+
+			fileDrop.addEventListener("dragleave", function(){
+				fileDrop.classList.remove("Hover");
+			});
+
+			fileDrop.addEventListener("drop", function(){
+				fileDrop.classList.remove("Hover");
+			});
+
+			document.querySelector("#FileDrop input").addEventListener("change", function(e){
+				//get the files
+				var files = e.target.files;
+				if (files.length > 0){
+					var file = files[0];
+					document.querySelector("#FileDrop #Text").textContent = file.name;
+					parseFile(file);
+				}
+			});
+		}
+
+		function parseFile(file){
+			//read the file
+			var reader = new FileReader();
+			reader.onload = function(e){
+				var song = MidiConvert.parse(e.target.result);
+				document.querySelector("#ResultsText").value = base64(Musician.PackSong(song));
+			};
+			reader.readAsBinaryString(file);
+		}
+
+	</script>
+
+</body>
+</html>
