@@ -4,6 +4,7 @@ Musician.Msg.LOAD = "Load"
 Musician.Msg.LOADING = "Loading"
 Musician.Msg.TEST_SONG = "Preview"
 Musician.Msg.STOP_TEST = "Stop preview"
+Musician.Msg.CLEAR = "Clear"
 
 Musician.Msg.INVALID_MUSIC_CODE = "Invalid music code."
 

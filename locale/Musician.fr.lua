@@ -5,6 +5,7 @@ if ( GetLocale() == "frFR" ) then
 	Musician.Msg.LOADING = "Chargement"
 	Musician.Msg.TEST_SONG = "Aperçu"
 	Musician.Msg.STOP_TEST = "Arrêter aperçu"
+	Musician.Msg.CLEAR = "Effacer"
 
 	Musician.Msg.INVALID_MUSIC_CODE = "Le code musical est invalide."
 

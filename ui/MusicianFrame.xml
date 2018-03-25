@@ -42,7 +42,7 @@
 
 		<Frames>
 
-			<Button name="MusicianFrameClearButton" inherits="UIPanelButtonTemplate" text="Effacer"  level="OVERLAY">
+			<Button name="MusicianFrameClearButton" inherits="UIPanelButtonTemplate" level="OVERLAY">
 				<Size x="60" y="20" />
 				<Anchors>
 					<Anchor point="TOPRIGHT" x="-10" y="-10" relativePoint="TOPRIGHT" />
