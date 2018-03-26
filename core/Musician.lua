@@ -43,6 +43,7 @@ function Musician.PlayTestSong(songData)
 		Musician.testSong = nil
 		Musician.testSongIsPlaying = false
 		Musician.Utils.MuteGameMusic()
+		Musician:SendMessage(Musician.Events.RefreshFrame)
 	end)
 
 	Musician:SendMessage(Musician.Events.RefreshFrame)
