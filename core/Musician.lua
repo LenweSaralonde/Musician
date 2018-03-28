@@ -15,14 +15,44 @@ function Musician:OnInitialize()
 
 	MusicianFrame.Init()
 
-	SlashCmdList["MUSICIAN"] = function(s)
-		MusicianFrame:Show()
-		MusicianFrameSource:SetFocus()
+	-- /musician command
+	SlashCmdList["MUSICIAN"] = function(cmd)
+
+		cmd = strlower(strtrim(cmd))
+
+		-- Stop all music currently playing
+		if cmd == "stop" or cmd == "panic" then
+
+			Musician.StopTestSong()
+
+			local song, player
+			for player, song in pairs(Musician.songs) do
+				if song.playing then
+					Musician.Utils.StopSong(song.playing)
+					Musician.songs[player].playing = nil
+				end
+			end
+
+			-- Show main window
+		elseif cmd == "show" or cmd == "" then
+			MusicianFrame:Show()
+			MusicianFrameSource:SetFocus()
+		end
 	end
 
 	SLASH_MUSICIAN1 = "/musician"
 	SLASH_MUSICIAN2 = "/music"
 	SLASH_MUSICIAN3 = "/mus"
+
+	-- /stopmusic command
+	SlashCmdList["STOPMUSIC"] = function()
+		SlashCmdList["MUSICIAN"]("stop")
+	end
+
+	SLASH_STOPMUSIC1 = "/stopmusic"
+	SLASH_STOPMUSIC2 = "/stopmus"
+	SLASH_STOPMUSIC3 = "/musicstop"
+	SLASH_STOPMUSIC4 = "/musstop"
 end
 
 --- Play a song, locally
