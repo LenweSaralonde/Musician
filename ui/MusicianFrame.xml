@@ -11,7 +11,7 @@
 		<Size x="320" y="160" />
 
 		<Anchors>
-			<Anchor point="CENTER" x="-52" y="47" />
+			<Anchor point="CENTER" x="0" y="0" />
 		</Anchors>
 
 		<Layers>
