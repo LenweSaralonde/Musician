@@ -414,15 +414,21 @@ end
 --- Start or stop the actual game music if a song can actually be heard
 --
 function Musician.Utils.MuteGameMusic()
-	local mute = Musician.testSongIsPlaying
+	local mute
 
-	if not(mute) then
-		local song, player
-		for player, song in pairs(Musician.songs) do
-			if song.playing and Musician.Utils.PlayerIsInRange(player) then
-				mute = true
+	if GetCVar("Sound_EnableMusic") ~= "0" then
+		mute = Musician.testSongIsPlaying
+
+		if not(mute) then
+			local song, player
+			for player, song in pairs(Musician.songs) do
+				if song.playing and Musician.Utils.PlayerIsInRange(player) then
+					mute = true
+				end
 			end
 		end
+	else
+		mute = false
 	end
 
 	if Musician.Utils.gameMusicIsMuted == mute then return end
