@@ -59,7 +59,7 @@ MusicianFrame.Refresh = function()
 	local editBoxIsEmpty = MusicianFrameSource:GetText() == Musician.Msg.PASTE_MUSIC_CODE or string.len(MusicianFrameSource:GetText()) == 0
 
 	-- Test song button
-	if editBoxIsEmpty then
+	if editBoxIsEmpty and not(Musician.testSongIsPlaying) then
 		MusicianFrameTestButton:Disable()
 	else
 		MusicianFrameTestButton:Enable()
