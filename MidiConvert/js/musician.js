@@ -71,14 +71,8 @@ Musician.PackTrack = function(track, fps) {
 
 Musician.PackSong = function(song) {
 
-	// Get actual duration
-	var track;
-	var duration = 0;
-	song.tracks.forEach(function(track) {
-		track.notes.forEach(function(note) {
-			duration = Math.max(duration, Math.ceil(note.time + note.duration));
-		});
-	});
+	var duration = Math.ceil(song.duration);
+	
 	var fps = 65536 / duration;
 
 	if (fps < 60) {
@@ -98,6 +92,7 @@ Musician.PackSong = function(song) {
 	packedSong += Musician.PackNumber(song.tracks.length, 1);
 
 	// Song tracks
+	var track;	
 	song.tracks.forEach(function(track) {
 		packedSong += Musician.PackTrack(track, fps);
 	});
