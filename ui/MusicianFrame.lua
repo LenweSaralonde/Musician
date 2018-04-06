@@ -2,7 +2,7 @@
 
 MusicianFrame.Init = function()
 	MusicianFrame.Refresh()
-	Musician:RegisterMessage(Musician.Events.RefreshFrame, MusicianFrame.Refresh)
+	Musician.Comm:RegisterMessage(Musician.Events.RefreshFrame, MusicianFrame.Refresh)
 	MusicianFrameSource:SetText(Musician.Msg.PASTE_MUSIC_CODE)
 	MusicianFrameTitle:SetText(Musician.Msg.PLAY_A_SONG)
 	MusicianFrameClearButton:SetText(Musician.Msg.CLEAR)

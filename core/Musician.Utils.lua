@@ -1,11 +1,11 @@
-Musician.Utils = {}
+Musician.Utils = LibStub("AceAddon-3.0"):NewAddon("Musician.Utils")
 
 Musician.Utils.gameMusicIsMuted = false
 
 --- Display a message in the console
 -- @param msg (string)
 function Musician.Utils.Print(msg)
-	print(msg)
+	DEFAULT_CHAT_FRAME:AddMessage(msg, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
 end
 
 --- Display an error message in the console
@@ -14,6 +14,19 @@ function Musician.Utils.Error(msg)
 	message(msg)
 	PlaySoundFile("Sound\\interface\\Error.ogg")
 end
+
+--- Highlight text
+-- @param text (string)
+-- @param color (string)
+-- @return (string)
+function Musician.Utils.Highlight(text, color)
+
+	if color == nil then
+		color = 'FFFFFF'
+	end
+
+	return "|cFF" .. color .. text .. "|r"
+end	
 
 --- Return the note name corresponding its MIDI key
 -- @param key (int) MIDI key index
@@ -235,6 +248,8 @@ end
 -- @return (boolean)
 function Musician.Utils.PlayerIsInRange(player)
 
+	player = Musician.Utils.NormalizePlayerName(player)
+
 	-- Musician not registered
 	if Musician.songs[player] == nil or Musician.songs[player].position == nil then
 		return false
@@ -442,4 +457,53 @@ function Musician.Utils.MuteGameMusic()
 		-- Stop custom silent music, resume game music
 		StopMusic()
 	end
+end
+
+--- Return the normalized player name, including realm slug
+-- @param name (string)
+-- @return (string)
+function Musician.Utils.NormalizePlayerName(name)
+
+	-- Append missing realm name
+	if string.find(name, '-') == nil then
+		return name .. '-' .. string.gsub(GetRealmName(), "%s+", "")
+	end
+
+	return name
+end
+
+--- Compare two version numbers
+-- @param versionA (string)
+-- @param versionB (string)
+-- @return (number)
+function Musician.Utils.VersionCompare(versionA, versionB)
+
+	if versionA == versionB then
+		return 0
+	end
+
+	local partsA = { strsplit('.', versionA) }
+	local partsB = { strsplit('.', versionB) }
+	local countA = table.getn(partsA)
+	local countB = table.getn(partsB)
+
+	local i
+	for i = 1, min(countA, countB) do
+		local a = tonumber(partsA[i])
+		local b = tonumber(partsB[i])
+	
+		if a > b then
+			return 1
+		elseif a < b then
+			return -1
+		end
+	end
+	
+	if countA > countB then
+		return 1
+	elseif countA < countB then
+		return -1
+	end
+	
+	return 0
 end

@@ -1,7 +1,7 @@
-Musician = LibStub("AceAddon-3.0"):NewAddon("Musician", "AceComm-3.0", "AceEvent-3.0")
+Musician = LibStub("AceAddon-3.0"):NewAddon("Musician")
 
 function Musician:OnInitialize()
-	Musician.Utils.Print("Musician |cFFFFFFFF" .. GetAddOnMetadata("Musician", "Version") .. "|r")
+	Musician.Utils.Print(string.gsub(Musician.Msg.STARTUP, "{version}", Musician.Utils.Highlight(GetAddOnMetadata("Musician", "Version"))))
 
 	Musician.songs = {}
 	Musician.testSong = nil
@@ -10,6 +10,7 @@ function Musician:OnInitialize()
 	Musician.testSongIsPlaying = false
 
 	Musician.Comm.Init()
+	Musician.Registry.Init()
 
 	C_Timer.NewTicker(0.5, Musician.Utils.MuteGameMusic)
 
@@ -73,10 +74,10 @@ function Musician.PlayTestSong(songData)
 		Musician.testSong = nil
 		Musician.testSongIsPlaying = false
 		Musician.Utils.MuteGameMusic()
-		Musician:SendMessage(Musician.Events.RefreshFrame)
+		Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
 	end)
 
-	Musician:SendMessage(Musician.Events.RefreshFrame)
+	Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
 end
 
 --- Stop song test
@@ -89,7 +90,7 @@ function Musician.StopTestSong()
 		Musician.Utils.MuteGameMusic()
 	end
 
-	Musician:SendMessage(Musician.Events.RefreshFrame)
+	Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
 end
 
 --- Play a song loaded by a player
@@ -108,10 +109,10 @@ function Musician.PlayLoadedSong(playerName)
 			Musician.songs[playerName].playing = nil
 
 			-- Stop broadcasting my position if the song is initiated by myself
-			if playerName == UnitName("player") then
+			if playerName == Musician.Utils.NormalizePlayerName(UnitName("player")) then
 				Musician.Comm.StopPositionUpdate()
 				Musician.songIsPlaying = false
-				Musician:SendMessage(Musician.Events.RefreshFrame)
+				Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
 			end
 
 			Musician.Utils.MuteGameMusic()

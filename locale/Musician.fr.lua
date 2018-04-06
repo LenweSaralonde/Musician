@@ -7,6 +7,16 @@ if ( GetLocale() == "frFR" ) then
 	Musician.Msg.STOP_TEST = "Arrêter aperçu"
 	Musician.Msg.CLEAR = "Effacer"
 
+	Musician.Msg.STARTUP = "Bienvenue dans Musician v{version}."
+	
+	Musician.Msg.NEW_VERSION = "Une nouvelle version de Musician est disponible ! Téléchargez-la sur {url}"
+
+	Musician.Msg.PLAYER_TOOLTIP = "Musician"
+	Musician.Msg.PLAYER_TOOLTIP_VERSION = "Musician v{version}"
+
+	Musician.Msg.PLAYER_COUNT_ONLINE = "Il y a {count} autres amateurs de musique dans le coin !"
+	Musician.Msg.PLAYER_COUNT_ONLINE_ONE = "Il y a un autre amateur de musique dans le coin !"
+
 	Musician.Msg.INVALID_MUSIC_CODE = "Le code musical est invalide."
 
 	Musician.Msg.PLAY_A_SONG = "Jouer un morceau"
