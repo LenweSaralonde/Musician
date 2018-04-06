@@ -124,8 +124,13 @@
 			//read the file
 			var reader = new FileReader();
 			reader.onload = function(e){
-				var song = MidiConvert.parse(e.target.result);
-				document.querySelector("#ResultsText").value = base64(Musician.PackSong(song));
+				try {
+					var song = MidiConvert.parse(e.target.result);
+					document.querySelector("#ResultsText").value = base64(Musician.PackSong(song));
+				} catch(e) {
+					document.querySelector("#ResultsText").value = "";
+					alert(e);
+				}
 			};
 			reader.readAsBinaryString(file);
 		}

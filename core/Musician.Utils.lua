@@ -98,16 +98,18 @@ end
 --- Pack a time or duration in seconds into a string
 -- @param seconds (float)
 -- @param bytes (int) Number of bytes
+-- @param fps (float) Precision in frames par second
 -- @return (string)
-function Musician.Utils.PackTime(seconds, bytes)
-	return Musician.Utils.PackNumber(seconds * 1000, bytes)
+function Musician.Utils.PackTime(seconds, bytes, fps)
+	return Musician.Utils.PackNumber(floor(seconds * fps + .5), bytes)
 end
 
 --- Unpack a string into a time or duration in seconds
 -- @param str (string)
+-- @param fps (float) Precision in frames par second 
 -- @return (float)
-function Musician.Utils.UnpackTime(str)
-	return Musician.Utils.UnpackNumber(str) / 1000
+function Musician.Utils.UnpackTime(str, fps)
+	return Musician.Utils.UnpackNumber(str) / fps
 end
 
 --- Pack player position into a string
@@ -127,28 +129,31 @@ end
 
 --- Pack a note into a string
 -- @param note (table)
+-- @param fps (float)
 -- @return (string)
-function Musician.Utils.PackNote(note)
-	-- KTTTDD : key, time, duration
-	return Musician.Utils.PackNumber(note[1], 1) .. Musician.Utils.PackTime(note[2], 3) .. Musician.Utils.PackTime(note[3], 2)
+function Musician.Utils.PackNote(note, fps)
+	-- KTTD : key, time, duration
+	return Musician.Utils.PackNumber(note[1], 1) .. Musician.Utils.PackTime(note[2], 2, fps) .. Musician.Utils.PackTime(note[3], 1, Musician.DURATION_FPS)
 end
 
 --- Unpack note from string
 -- @param str (string)
+-- @param fps (float)
 -- @return (table)
-function Musician.Utils.UnpackNote(str)
-	-- KTTTDD : key, time, duration
+function Musician.Utils.UnpackNote(str, fps)
+	-- KTTD : key, time, duration
 	return {
 		Musician.Utils.UnpackNumber(string.sub(str, 1, 1)),
-		Musician.Utils.UnpackTime(string.sub(str, 2, 4)),
-		Musician.Utils.UnpackTime(string.sub(str, 5, 6))
+		Musician.Utils.UnpackTime(string.sub(str, 2, 3), fps),
+		Musician.Utils.UnpackTime(string.sub(str, 4, 4), Musician.DURATION_FPS)
 	}
 end
 
 --- Pack a track into a string
 -- @param track (table)
+-- @param fps (float)
 -- @return (string)
-function Musician.Utils.PackTrack(track)
+function Musician.Utils.PackTrack(track, fps)
 	local packedTrack
 
 	-- TINN : Track Id, instrument ID, Number of notes
@@ -157,7 +162,7 @@ function Musician.Utils.PackTrack(track)
 	-- Notes
 	local note
 	for _, note in pairs(track.notes) do
-		packedTrack = packedTrack .. Musician.Utils.PackNote(note)
+		packedTrack = packedTrack .. Musician.Utils.PackNote(note, fps)
 	end
 
 	return packedTrack
@@ -165,8 +170,9 @@ end
 
 --- Unpack a track from string
 -- @param str (string)
+-- @param fps (float)
 -- @return (table)
-function Musician.Utils.UnpackTrack(str)
+function Musician.Utils.UnpackTrack(str, fps)
 	local track = {}
 
 	-- TINN : Track Id, instrument ID, Number of notes
@@ -177,8 +183,8 @@ function Musician.Utils.UnpackTrack(str)
 	track.notes = {}
 	local noteId
 	for noteId = 0, noteCount - 1 do
-		local cursor = 5 + noteId * 6 -- Notes are 6-byte long
-		table.insert(track.notes, Musician.Utils.UnpackNote(string.sub(str, cursor, cursor + 5)))
+		local cursor = 5 + noteId * 4 -- Notes are 4-byte long
+		table.insert(track.notes, Musician.Utils.UnpackNote(string.sub(str, cursor, cursor + 3), fps))
 	end
 
 	return track
@@ -190,9 +196,13 @@ end
 function Musician.Utils.PackSong(song)
 	local packedSong = Musician.FILE_HEADER
 	local songName = string.sub(song.name, 1, 255)
+	local fps = 65536 / song.duration -- 2^16
 
 	-- Song name length, song name
 	packedSong = packedSong .. Musician.Utils.PackNumber(string.len(songName), 1) .. songName
+
+	-- Song duration
+	packedSong = packedSong .. Musician.Utils.PackNumber(song.duration, 2)
 
 	-- Number of tracks
 	packedSong = packedSong .. Musician.Utils.PackNumber(table.getn(song.tracks), 1)
@@ -200,7 +210,7 @@ function Musician.Utils.PackSong(song)
 	-- Song tracks
 	local track
 	for _, track in pairs(song.tracks) do
-		packedSong = packedSong .. Musician.Utils.PackTrack(track)
+		packedSong = packedSong .. Musician.Utils.PackTrack(track, fps)
 	end
 
 	return packedSong
@@ -225,6 +235,12 @@ function Musician.Utils.UnpackSong(str)
 	song.name = string.sub(str, cursor, cursor + songNameLength - 1)
 	cursor = cursor + songNameLength
 
+	-- song duration (2)
+	local duration = Musician.Utils.UnpackNumber(string.sub(str, cursor, cursor + 1))
+	local fps = 65536 / duration -- 2^16
+	song.duration = duration
+	cursor = cursor + 2
+
 	-- number of tracks (1)
 	local trackCount = Musician.Utils.UnpackNumber(string.sub(str, cursor, cursor))
 	cursor = cursor + 1
@@ -234,8 +250,8 @@ function Musician.Utils.UnpackSong(str)
 	song.tracks = {}
 	for trackId = 0, trackCount - 1 do
 		local trackLength = Musician.Utils.UnpackNumber(string.sub(str, cursor + 2, cursor + 3))
-		local trackEnd = cursor + 3 + trackLength * 6
-		table.insert(song.tracks, Musician.Utils.UnpackTrack(string.sub(str, cursor, trackEnd)))
+		local trackEnd = cursor + 3 + trackLength * 4
+		table.insert(song.tracks, Musician.Utils.UnpackTrack(string.sub(str, cursor, trackEnd), fps))
 		cursor = trackEnd + 1
 	end
 
