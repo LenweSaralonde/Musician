@@ -6,7 +6,7 @@ Musician.C0_INDEX = 24;
 
 Musician.FILE_HEADER = 'MUS2';
 Musician.MAX_NOTE_DURATION = 6
-Musician.DURATION_FPS = 256 / Musician.MAX_NOTE_DURATION // 2^8
+Musician.DURATION_FPS = 255 / Musician.MAX_NOTE_DURATION // 2^8
 
 Musician.NoteKey = function(noteName) {
 	var matches = noteName.match(/^([^0-9-]+)(-?[0-9]+)$/);
@@ -43,7 +43,7 @@ Musician.PackTime = function(seconds, bytes, fps) {
 
 Musician.PackNote = function(note, isPercussion, fps) {
 	// KTTD : key, time, duration
-	return Musician.PackNumber(Musician.NoteKey(note.name) + (isPercussion ? (39 - 51) : 0), 1) + Musician.PackTime(note.time, 2, fps) + Musician.PackTime(note.duration, 1, Musician.DURATION_FPS);
+	return Musician.PackNumber(Musician.NoteKey(note.name) + (isPercussion ? (39 - 51) : 0), 1) + Musician.PackTime(note.time, 2, fps) + Musician.PackTime(Math.min(note.duration, Musician.MAX_NOTE_DURATION), 1, Musician.DURATION_FPS);
 }
 
 Musician.PackTrack = function(track, fps) {
@@ -72,8 +72,8 @@ Musician.PackTrack = function(track, fps) {
 Musician.PackSong = function(song) {
 
 	var duration = Math.ceil(song.duration);
-	
-	var fps = 65536 / duration;
+
+	var fps = 65535 / duration;
 
 	if (fps < 60) {
 		throw "Songs should not be longer than 18 minutes.";
@@ -92,7 +92,7 @@ Musician.PackSong = function(song) {
 	packedSong += Musician.PackNumber(song.tracks.length, 1);
 
 	// Song tracks
-	var track;	
+	var track;
 	song.tracks.forEach(function(track) {
 		packedSong += Musician.PackTrack(track, fps);
 	});

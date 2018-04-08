@@ -133,7 +133,7 @@ end
 -- @return (string)
 function Musician.Utils.PackNote(note, fps)
 	-- KTTD : key, time, duration
-	return Musician.Utils.PackNumber(note[1], 1) .. Musician.Utils.PackTime(note[2], 2, fps) .. Musician.Utils.PackTime(note[3], 1, Musician.DURATION_FPS)
+	return Musician.Utils.PackNumber(note[1], 1) .. Musician.Utils.PackTime(note[2], 2, fps) .. Musician.Utils.PackTime(min(note[3], Musician.MAX_NOTE_DURATION), 1, Musician.DURATION_FPS)
 end
 
 --- Unpack note from string
@@ -196,7 +196,7 @@ end
 function Musician.Utils.PackSong(song)
 	local packedSong = Musician.FILE_HEADER
 	local songName = string.sub(song.name, 1, 255)
-	local fps = 65536 / song.duration -- 2^16
+	local fps = 65535 / song.duration -- 2^16
 
 	-- Song name length, song name
 	packedSong = packedSong .. Musician.Utils.PackNumber(string.len(songName), 1) .. songName
@@ -237,7 +237,7 @@ function Musician.Utils.UnpackSong(str)
 
 	-- song duration (2)
 	local duration = Musician.Utils.UnpackNumber(string.sub(str, cursor, cursor + 1))
-	local fps = 65536 / duration -- 2^16
+	local fps = 65535 / duration -- 2^16
 	song.duration = duration
 	cursor = cursor + 2
 
