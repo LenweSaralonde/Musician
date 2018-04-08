@@ -52,9 +52,9 @@ Musician.PackTrack = function(track, fps) {
 	var instrumentNumber;
 
 	if (track.isPercussion) {
-		instrumentNumber = 0;
+		instrumentNumber = 128;
 	} else {
-		instrumentNumber = track.instrumentNumber + 1;
+		instrumentNumber = track.instrumentNumber;
 	}
 
 	// TINN : Track Id, instrument ID, Number of notes

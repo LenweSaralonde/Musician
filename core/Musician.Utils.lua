@@ -293,7 +293,7 @@ function Musician.Utils.GetSoundFile(instrument, key)
 	noteName = string.gsub(noteName, 'A#', 'Bb')
 
 	local instrumentName
-	if instrument ~= 0 then -- Not a percussion
+	if instrument ~= 128 then -- Not a percussion
 		instrumentName = Musician.MIDI_INSTRUMENT_MAPPING[instrument]
 		if instrumentName == nil then
 			return nil
@@ -351,8 +351,6 @@ function Musician.Utils.PlayNote(instrument, key, start, duration, player)
 			if play then
 				local soundDuration = duration
 				local soundDecay = instrumentData.decay
-				-- local soundDuration = max(0, duration - instrumentData.decay / 1000)
-				-- local soundDecay = min(duration * 1000, instrumentData.decay)
 
 				C_Timer.After(soundDuration, function()
 					StopSound(handle, soundDecay)
@@ -412,7 +410,6 @@ function Musician.Utils.PreloadSong(songData)
 	local index = 0
 	local duration = .25
 	for _, note in pairs(notes) do
-		-- Musician.Utils.PlayNote(note[1], note[2], index * duration, duration)
 		local soundFile, _ = Musician.Utils.GetSoundFile(note[1], note[2])
 		if soundFile ~= nil then
 			local play, handle = PlaySoundFile(soundFile, 'SFX')

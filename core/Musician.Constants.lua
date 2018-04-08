@@ -254,164 +254,164 @@ Musician.INSTRUMENTS = {
 
 Musician.MIDI_INSTRUMENT_MAPPING = {
 	-- 	Piano
-	[1] = "dulcimer", -- Acoustic Grand Piano
-	[2] = "dulcimer", -- Bright Acoustic Piano
-	[3] = "dulcimer", -- Electric Grand Piano
-	[4] = "dulcimer", -- Honky-tonk Piano
-	[5] = "dulcimer", -- Electric Piano 1
-	[6] = "dulcimer", -- Electric Piano 2
-	[7] = "harp", -- Harpsichord
-	[8] = "harp", -- Clavi
+	[0] = "dulcimer", -- Acoustic Grand Piano
+	[1] = "dulcimer", -- Bright Acoustic Piano
+	[2] = "dulcimer", -- Electric Grand Piano
+	[3] = "dulcimer", -- Honky-tonk Piano
+	[4] = "dulcimer", -- Electric Piano 1
+	[5] = "dulcimer", -- Electric Piano 2
+	[6] = "harp", -- Harpsichord
+	[7] = "harp", -- Clavi
 
 	-- Chromatic Percussion
-	[9] = "dulcimer", -- Celesta
-	[10] = "dulcimer", -- Glockenspiel
-	[11] = "dulcimer", -- Music Box
-	[12] = "dulcimer", -- Vibraphone
-	[13] = "dulcimer", -- Marimba
-	[14] = "dulcimer", -- Xylophone
-	[15] = "dulcimer", -- Tubular Bells
-	[16] = "dulcimer", -- Dulcimer
+	[8] = "dulcimer", -- Celesta
+	[9] = "dulcimer", -- Glockenspiel
+	[10] = "dulcimer", -- Music Box
+	[11] = "dulcimer", -- Vibraphone
+	[12] = "dulcimer", -- Marimba
+	[13] = "dulcimer", -- Xylophone
+	[14] = "dulcimer", -- Tubular Bells
+	[15] = "dulcimer", -- Dulcimer
 
 	-- Organ
-	[17] = "lute", -- Drawbar Organ
-	[18] = "lute", -- Percussive Organ
-	[19] = "lute", -- Rock Organ
-	[20] = "lute", -- Church Organ
-	[21] = "lute", -- Reed Organ
-	[22] = "lute", -- Accordion
-	[23] = "lute", -- Harmonica
-	[24] = "lute", -- Tango Accordion
+	[16] = "lute", -- Drawbar Organ
+	[17] = "lute", -- Percussive Organ
+	[18] = "lute", -- Rock Organ
+	[19] = "lute", -- Church Organ
+	[20] = "lute", -- Reed Organ
+	[21] = "lute", -- Accordion
+	[22] = "lute", -- Harmonica
+	[23] = "lute", -- Tango Accordion
 
 	-- Guitar
-	[25] = "lute", -- Acoustic Guitar (nylon)
-	[26] = "lute", -- Acoustic Guitar (steel)
-	[27] = "lute", -- Electric Guitar (jazz)
-	[28] = "lute", -- Electric Guitar (clean)
-	[29] = "lute", -- Electric Guitar (muted)
-	[30] = "lute", -- Overdriven Guitar
-	[31] = "lute", -- Distortion Guitar
-	[32] = "lute", -- Guitar harmonics
+	[24] = "lute", -- Acoustic Guitar (nylon)
+	[25] = "lute", -- Acoustic Guitar (steel)
+	[26] = "lute", -- Electric Guitar (jazz)
+	[27] = "lute", -- Electric Guitar (clean)
+	[28] = "lute", -- Electric Guitar (muted)
+	[29] = "lute", -- Overdriven Guitar
+	[30] = "lute", -- Distortion Guitar
+	[31] = "lute", -- Guitar harmonics
 
 	-- Bass
-	[33] = "lute", -- Acoustic Bass
-	[34] = "lute", -- Electric Bass (finger)
-	[35] = "lute", -- Electric Bass (pick)
-	[36] = "lute", -- Fretless Bass
-	[37] = "lute", -- Slap Bass 1
-	[38] = "lute", -- Slap Bass 2
-	[39] = "lute", -- Synth Bass 1
-	[40] = "lute", -- Synth Bass 2
+	[32] = "lute", -- Acoustic Bass
+	[33] = "lute", -- Electric Bass (finger)
+	[34] = "lute", -- Electric Bass (pick)
+	[35] = "lute", -- Fretless Bass
+	[36] = "lute", -- Slap Bass 1
+	[37] = "lute", -- Slap Bass 2
+	[38] = "lute", -- Synth Bass 1
+	[39] = "lute", -- Synth Bass 2
 
 	-- Strings
-	[41] = "fiddle", -- Violin
-	[42] = "fiddle", -- Viola
-	[43] = "cello", -- Cello
-	[44] = "cello", -- Contrabass
-	[45] = "fiddle", -- Tremolo Strings
-	[46] = "lute", -- Pizzicato Strings
-	[47] = "harp", -- Orchestral Harp
-	[48] = "bodhran-bassdrum-low", -- Timpani
+	[40] = "fiddle", -- Violin
+	[41] = "fiddle", -- Viola
+	[42] = "cello", -- Cello
+	[43] = "cello", -- Contrabass
+	[44] = "fiddle", -- Tremolo Strings
+	[45] = "lute", -- Pizzicato Strings
+	[46] = "harp", -- Orchestral Harp
+	[47] = "bodhran-bassdrum-low", -- Timpani
 
 	-- Ensemble
-	[49] = "fiddle", -- String Ensemble 1
-	[50] = "fiddle", -- String Ensemble 2
-	[51] = "fiddle", -- SynthStrings 1
-	[52] = "fiddle", -- SynthStrings 2
-	[53] = "female-voice", -- Choir Aahs
-	[54] = "female-voice", -- Voice Oohs
-	[55] = "female-voice", -- Synth Voice
-	[56] = "lute", -- Orchestra Hit
+	[48] = "fiddle", -- String Ensemble 1
+	[49] = "fiddle", -- String Ensemble 2
+	[50] = "fiddle", -- SynthStrings 1
+	[51] = "fiddle", -- SynthStrings 2
+	[52] = "female-voice", -- Choir Aahs
+	[53] = "female-voice", -- Voice Oohs
+	[54] = "female-voice", -- Synth Voice
+	[55] = "lute", -- Orchestra Hit
 
 	-- Brass
-	[57] = "trumpet", -- Trumpet
-	[58] = "trombone", -- Trombone
-	[59] = "trombone", -- Tuba
-	[60] = "trumpet", -- Muted Trumpet
-	[61] = "trumpet", -- French Horn
-	[62] = "trumpet", -- Brass Section
-	[63] = "trumpet", -- SynthBrass 1
-	[64] = "trumpet", -- SynthBrass 2
+	[56] = "trumpet", -- Trumpet
+	[57] = "trombone", -- Trombone
+	[58] = "trombone", -- Tuba
+	[59] = "trumpet", -- Muted Trumpet
+	[60] = "trumpet", -- French Horn
+	[61] = "trumpet", -- Brass Section
+	[62] = "trumpet", -- SynthBrass 1
+	[63] = "trumpet", -- SynthBrass 2
 
 	-- Reed
-	[65] = "clarinet", -- Soprano Sax
-	[66] = "clarinet", -- Alto Sax
-	[67] = "bassoon", -- Tenor Sax
-	[68] = "bassoon", -- Baritone Sax
-	[69] = "clarinet", -- Oboe
-	[70] = "clarinet", -- English Horn
-	[71] = "bassoon", -- Bassoon
-	[72] = "clarinet", -- Clarinet
+	[64] = "clarinet", -- Soprano Sax
+	[65] = "clarinet", -- Alto Sax
+	[66] = "bassoon", -- Tenor Sax
+	[67] = "bassoon", -- Baritone Sax
+	[68] = "clarinet", -- Oboe
+	[69] = "clarinet", -- English Horn
+	[70] = "bassoon", -- Bassoon
+	[71] = "clarinet", -- Clarinet
 
 	-- Pipe
-	[73] = "recorder", -- Piccolo
-	[74] = "recorder", -- Flute
-	[75] = "recorder", -- Recorder
-	[76] = "recorder", -- Pan Flute
-	[77] = "recorder", -- Blown Bottle
-	[78] = "recorder", -- Shakuhachi
-	[79] = "recorder", -- Whistle
-	[80] = "recorder", -- Ocarina
+	[72] = "recorder", -- Piccolo
+	[73] = "recorder", -- Flute
+	[74] = "recorder", -- Recorder
+	[75] = "recorder", -- Pan Flute
+	[76] = "recorder", -- Blown Bottle
+	[77] = "recorder", -- Shakuhachi
+	[78] = "recorder", -- Whistle
+	[79] = "recorder", -- Ocarina
 
 	-- Synth Lead
-	[81] = "clarinet", -- Lead 1 (square)
-	[82] = "fiddle", -- Lead 2 (sawtooth)
-	[83] = "recorder", -- Lead 3 (calliope)
-	[84] = "recorder", -- Lead 4 (chiff)
-	[85] = "recorder", -- Lead 5 (charang)
-	[86] = "female-voice", -- Lead 6 (voice)
-	[87] = "fiddle", -- Lead 7 (fifths)
-	[88] = "lute", -- Lead 8 (bass + lead)
+	[80] = "clarinet", -- Lead 1 (square)
+	[81] = "fiddle", -- Lead 2 (sawtooth)
+	[82] = "recorder", -- Lead 3 (calliope)
+	[83] = "recorder", -- Lead 4 (chiff)
+	[84] = "recorder", -- Lead 5 (charang)
+	[85] = "female-voice", -- Lead 6 (voice)
+	[86] = "fiddle", -- Lead 7 (fifths)
+	[87] = "lute", -- Lead 8 (bass + lead)
 
 	-- Synth Pad
-	[89] = "lute", -- Pad 1 (new age)
-	[90] = "fiddle", -- Pad 2 (warm)
-	[91] = "fiddle", -- Pad 3 (polysynth)
-	[92] = "fiddle", -- Pad 4 (choir)
-	[93] = "fiddle", -- Pad 5 (bowed)
-	[94] = "fiddle", -- Pad 6 (metallic)
-	[95] = "fiddle", -- Pad 7 (halo)
-	[96] = "fiddle", -- Pad 8 (sweep)
+	[88] = "lute", -- Pad 1 (new age)
+	[89] = "fiddle", -- Pad 2 (warm)
+	[90] = "fiddle", -- Pad 3 (polysynth)
+	[91] = "fiddle", -- Pad 4 (choir)
+	[92] = "fiddle", -- Pad 5 (bowed)
+	[93] = "fiddle", -- Pad 6 (metallic)
+	[94] = "fiddle", -- Pad 7 (halo)
+	[95] = "fiddle", -- Pad 8 (sweep)
 
 	-- Synth Effects
-	[97] = "dulcimer", -- FX 1 (rain)
-	[98] = "dulcimer", -- FX 2 (soundtrack)
-	[99] = "dulcimer", -- FX 3 (crystal)
-	[100] = "dulcimer", -- FX 4 (atmosphere)
-	[101] = "dulcimer", -- FX 5 (brightness)
-	[102] = "dulcimer", -- FX 6 (goblins)
-	[103] = "dulcimer", -- FX 7 (echoes)
-	[104] = "dulcimer", -- FX 8 (sci-fi)
+	[96] = "dulcimer", -- FX 1 (rain)
+	[97] = "dulcimer", -- FX 2 (soundtrack)
+	[98] = "dulcimer", -- FX 3 (crystal)
+	[99] = "dulcimer", -- FX 4 (atmosphere)
+	[100] = "dulcimer", -- FX 5 (brightness)
+	[101] = "dulcimer", -- FX 6 (goblins)
+	[102] = "dulcimer", -- FX 7 (echoes)
+	[103] = "dulcimer", -- FX 8 (sci-fi)
 
 	-- Ethnic
-	[105] = "dulcimer", -- Sitar
-	[106] = "lute", -- Banjo
-	[107] = "lute", -- Shamisen
-	[108] = "dulcimer", -- Koto
-	[109] = "dulcimer", -- Kalimba
-	[110] = "bagpipe", -- Bag pipe
-	[111] = "fiddle", -- Fiddle
-	[112] = "bagpipe", -- Shanai
+	[104] = "dulcimer", -- Sitar
+	[105] = "lute", -- Banjo
+	[106] = "lute", -- Shamisen
+	[107] = "dulcimer", -- Koto
+	[108] = "dulcimer", -- Kalimba
+	[109] = "bagpipe", -- Bag pipe
+	[110] = "fiddle", -- Fiddle
+	[111] = "bagpipe", -- Shanai
 
 	-- Percussive
-	[113] = "lute", -- Tinkle Bell
-	[114] = "none", -- Agogo
-	[115] = "dulcimer", -- Steel Drums
-	[116] = "none", -- Woodblock
-	[117] = "bodhran-bassdrum-low", -- Taiko Drum
-	[118] = "bodhran-snare-long-hi", -- Melodic Tom
-	[119] = "bodhran-snare-long-low", -- Synth Drum
-	[120] = "none", -- Reverse Cymbal
+	[112] = "lute", -- Tinkle Bell
+	[113] = "none", -- Agogo
+	[114] = "dulcimer", -- Steel Drums
+	[115] = "none", -- Woodblock
+	[116] = "bodhran-bassdrum-low", -- Taiko Drum
+	[117] = "bodhran-snare-long-hi", -- Melodic Tom
+	[118] = "bodhran-snare-long-low", -- Synth Drum
+	[119] = "none", -- Reverse Cymbal
 
 	-- Sound Effects
-	[121] = "none", -- Guitar Fret Noise
-	[122] = "none", -- Breath Noise
-	[123] = "none", -- Seashore
-	[124] = "none", -- Bird Tweet
-	[125] = "none", -- Telephone Ring
-	[126] = "none", -- Helicopter
-	[127] = "none", -- Applause
-	[128] = "none", -- Gunshot
+	[120] = "none", -- Guitar Fret Noise
+	[121] = "none", -- Breath Noise
+	[122] = "none", -- Seashore
+	[123] = "none", -- Bird Tweet
+	[124] = "none", -- Telephone Ring
+	[125] = "none", -- Helicopter
+	[126] = "none", -- Applause
+	[127] = "none", -- Gunshot
 }
 
 Musician.MIDI_PERCUSSION_MAPPING = {
