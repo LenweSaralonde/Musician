@@ -1,100 +1,187 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>MidiConvert</title>
+	<title>Musician MIDI Convert</title>
 	<script type="text/javascript" src="./js/MidiConvert.js?v=2"></script>
 	<script type="text/javascript" src="./js/base64.js"></script>
 	<script type="text/javascript" src="./js/musician.js?v=2"></script>
-</head>
-<body>
-	<style type="text/css">
 
+	<style type="text/css">
 		body {
 			font-family: "Roboto Mono", monospace;
 			text-align: center;
 			margin: 0px;
+			background-color: #1a1a1a;
+			color: #bbbbbb;
+		}
+
+		a, a:link, a:visited {
+			color: #FFFFFF;
+		}
+
+		a:hover, a:active {
+			color: #FFFF00;
+		}
+
+		#Converter {
+			width: 500px;
+			margin: auto;
+			position: relative;
 		}
 
 		#FileDrop{
-			position: absolute;
-			width: 500px;
-			height: 200px;
-			margin-left: -250px;
-			border: 2px dashed black;
-			left: 50%;
-			margin-top: 70px;
-			color: black;
+			position: relative;
+			display: inline-block;
+			width: 100%;
+			height: 100px;
+			line-height: 100px;
+			border: 2px dashed #bbbbbb;
+			margin-top: 15px;
+			background-color: #000000;
 		}
 
 		#FileDrop.Hover{
-			background-color: black;
-			color: white;
+			background-color: #444444;
 		}
 
 		#FileDrop input {
 			position: absolute;
+			left: 0px;
+			top: 0px;
 			width: 100%;
 			height: 100%;
 			opacity: 0;
-			left: 0px;
-			top: 0px;
+			cursor: pointer;
 		}
 
 		#FileDrop #Text {
-			position: absolute;
 			width: 100%;
 			height: 100%;
-			line-height: 200px;
+			line-height: 100px;
+			font-size: 1.5em;
 			left: 0px;
 			top: 0px;
 			text-align: center;
+			color: #FFFFFF;
+			overflow: hidden;
+		}
+
+		#Result {
+			opacity: 0;
+		}
+
+		#Result.visible {
+			opacity: 1;
+			transition: opacity .5s ease;
 		}
 
 		textarea {
+			margin-top: 10px;
 			font-family: "Roboto Mono" monospace;
-			height: 300px;
 			width: 100%;
-			display: inline-block;
-			position: relative;
-			float: left;
-		}
-
-		#Results {
-			position: absolute;
-			width: 500px;
-			margin-left: -250px;
-			top: 300px;
-			left: 50%;
-			position: absolute;
+			height: 150px;
+			width: 100%;
+			color: #bbbbbb;
+			border: 2px solid #bbbbbb;
+			background-color: #000000;
 		}
 
 		#Description {
-			position: absolute;
+			position: fixed;
 			width: 100%;
 			height: 40px;
 			font-size: 20px;
 			bottom: 0px;
 		}
 
+		#CopyResult {
+			position: absolute;
+			left: 10px;
+			width: 480px;
+			margin-top: -35px;
+			background-color: transparent;
+			height: 1em;
+			padding: .2em;
+			color: #000000;
+			border-radius: 6px;
+			opacity: 0;
+			transition: opacity .5s ease;
+		}
+
+		#CopyResult.success {
+			background-color: #00BB00;
+			opacity: 1;
+		}
+
+		#CopyResult.error {
+			background-color: #BB0000;
+			opacity: 1;
+		}
+
+		#MusicianWindow {
+			margin-left: -50px;
+			opacity: 0;
+		}
+
+		#MusicianWindow.visible {
+			opacity: 1;
+			transition: opacity .5s ease;
+		}
+
+		#CopyButton {
+			position: absolute;
+			left: 125px;
+			padding: 10px;
+			margin-top: -105px;
+			background-color: #880000;
+			color: #FFFF00;
+			width: 250px;
+			border: 2px solid #440000;
+			border-radius: 6px;
+			cursor: pointer;
+			text-transfor: uppercase;
+			font-size: 1.2em;
+			opacity: 0;
+			-webkit-box-shadow: 0px 0px 111px 0px rgba(0,0,0,0.75);
+			-moz-box-shadow: 0px 0px 111px 0px rgba(0,0,0,0.75);
+			box-shadow: 0px 0px 111px 0px rgba(0,0,0,0.75);
+		}
+
+		#CopyButton.visible {
+			opacity: 1;
+			transition: opacity .5s ease;
+		}
+
+		#CopyButton:hover {
+			background-color: #BB0000;
+		}
+
 	</style>
-	<div id="FileDrop">
-		<div id="Text">
-			Drop a midi file here
+</head>
+<body>
+	<h1>Import a MIDI file in Musician</h1>
+	<div id="Converter">
+		<div id="FileDrop">
+			<input type="file" accept="audio/midi">
+			<div id="Text">
+				Drop a MIDI file here
+			</div>
 		</div>
-		<input type="file" accept="audio/midi">
-	</div>
-	<div id="Results">
-		<textarea id="ResultsText" onClick="this.setSelectionRange(0, this.value.length)"></textarea>
+		<div id="Result">
+			<textarea id="ResultsText" onClick="this.setSelectionRange(0, this.value.length)" readonly></textarea>
+			<button id="CopyButton" type="button" onclick="copyCode()">Copy</button>
+			<div id="CopyResult"></div>
+			<img id="MusicianWindow" src="img/musician-window-bg.png">
+		</div>
 	</div>
 
-	<div id="Description">Parse a MIDI file into Musician format.</div>
+	<div id="Description"><a href="https://lenwe.info/musician">Download Musician addon for World of Warcraft</a></div>
 
 	<script type="text/javascript">
 
 		if (!(window.File && window.FileReader && window.FileList && window.Blob)) {
 			document.querySelector("#FileDrop #Text").textContent = "Reading files not supported by this browser";
 		} else {
-
 			var fileDrop = document.querySelector("#FileDrop")
 
 			fileDrop.addEventListener("dragenter", function(){
@@ -110,7 +197,13 @@
 			});
 
 			document.querySelector("#FileDrop input").addEventListener("change", function(e){
-				//get the files
+				document.querySelector("#ResultsText").innerHTML = "";
+				document.querySelector("#ResultsText").value = "";
+				document.querySelector("#Result").className = "";
+				document.querySelector("#CopyButton").className = "";
+				document.querySelector("#CopyResult").className = "";
+				document.querySelector("#MusicianWindow").className = "";
+
 				var files = e.target.files;
 				if (files.length > 0){
 					var file = files[0];
@@ -121,12 +214,13 @@
 		}
 
 		function parseFile(file){
-			//read the file
 			var reader = new FileReader();
 			reader.onload = function(e){
 				try {
 					var song = MidiConvert.parse(e.target.result);
 					document.querySelector("#ResultsText").value = base64(Musician.PackSong(song));
+					document.querySelector("#Result").className = "visible";
+					document.querySelector("#CopyButton").className = "visible";
 				} catch(e) {
 					document.querySelector("#ResultsText").value = "";
 					alert(e);
@@ -135,6 +229,32 @@
 			reader.readAsBinaryString(file);
 		}
 
+		function copyCode() {
+			document.querySelector("#MusicianWindow").className = "visible";
+
+			var textarea = document.querySelector("#ResultsText");
+			var answer = document.querySelector("#CopyResult");
+
+			textarea.focus();
+			textarea.setSelectionRange(0, textarea.value.length);
+
+			try {
+				var ok = document.execCommand('copy');
+				if (ok) {
+					answer.innerHTML = 'Copied!';
+					answer.className = "success";
+
+					setTimeout(function() {answer.className = "";}, 2000);
+				} else {
+					answer.innerHTML = 'Unable to copy!';
+					answer.className = "error";
+				}
+			} catch (err) {
+				answer.innerHTML = 'Unsupported Browser!';
+				answer.className = "error";
+			}
+
+		}
 	</script>
 
 </body>
