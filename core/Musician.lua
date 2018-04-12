@@ -1,5 +1,12 @@
 Musician = LibStub("AceAddon-3.0"):NewAddon("Musician")
 
+-- Default settings
+if Musician_Settings == nil then
+	Musician_Settings = {
+		minimapPosition = 154
+	}
+end
+
 function Musician:OnInitialize()
 	Musician.Utils.Print(string.gsub(Musician.Msg.STARTUP, "{version}", Musician.Utils.Highlight(GetAddOnMetadata("Musician", "Version"))))
 
@@ -9,12 +16,15 @@ function Musician:OnInitialize()
 	Musician.songIsPlaying = false
 	Musician.testSongIsPlaying = false
 
+	Musician.globalMute = false
+
 	Musician.Comm.Init()
 	Musician.Registry.Init()
 
 	C_Timer.NewTicker(0.5, Musician.Utils.MuteGameMusic)
 
 	MusicianFrame.Init()
+	MusicianButton.Init()
 
 	-- /musician command
 	SlashCmdList["MUSICIAN"] = function(cmd)

@@ -3,9 +3,15 @@
 MusicianFrame.Init = function()
 	MusicianFrame.Refresh()
 	Musician.Comm:RegisterMessage(Musician.Events.RefreshFrame, MusicianFrame.Refresh)
-	MusicianFrameSource:SetText(Musician.Msg.PASTE_MUSIC_CODE)
+	MusicianFrame.Clear()
 	MusicianFrameTitle:SetText(Musician.Msg.PLAY_A_SONG)
 	MusicianFrameClearButton:SetText(Musician.Msg.CLEAR)
+end
+
+MusicianFrame.Clear = function()
+	MusicianFrameSource:SetText(string.gsub(Musician.Msg.PASTE_MUSIC_CODE, "{url}", Musician.CONVERTER_URL))
+	MusicianFrameSource:SetFocus()
+	MusicianFrameSource:HighlightText(0)
 end
 
 MusicianFrame.Test = function()

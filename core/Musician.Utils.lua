@@ -26,7 +26,22 @@ function Musician.Utils.Highlight(text, color)
 	end
 
 	return "|cFF" .. color .. text .. "|r"
-end	
+end
+
+--- Format text, adding highlights etc.
+-- @param text (string)
+-- @return (string)
+function Musician.Utils.FormatText(text)
+
+	-- Highlight **text**
+	local search = "%*%*[^%*]+%*%*"
+	while string.find(text, search) do
+			local from, to = string.find(text, search)
+			text = string.sub(text, 1, from - 1) .. Musician.Utils.Highlight(string.sub(text, from + 2, to - 2)) .. string.sub(text, to + 1)
+	end
+
+	return text
+end
 
 --- Return the note name corresponding its MIDI key
 -- @param key (int) MIDI key index
@@ -106,7 +121,7 @@ end
 
 --- Unpack a string into a time or duration in seconds
 -- @param str (string)
--- @param fps (float) Precision in frames par second 
+-- @param fps (float) Precision in frames par second
 -- @return (float)
 function Musician.Utils.UnpackTime(str, fps)
 	return Musician.Utils.UnpackNumber(str) / fps
@@ -342,7 +357,7 @@ function Musician.Utils.PlayNote(instrument, key, start, duration, player)
 	return C_Timer.NewTimer(start, function()
 
 			-- Do not play note if a test song is playing or if player is out of range
-			if player ~= nil and (Musician.testSongIsPlaying or not(Musician.Utils.PlayerIsInRange(player))) then
+			if player ~= nil and (Musician.testSongIsPlaying or not(Musician.Utils.PlayerIsInRange(player))) or Musician.globalMute then
 				return
 			end
 
@@ -445,12 +460,12 @@ function Musician.Utils.MuteGameMusic()
 	local mute
 
 	if GetCVar("Sound_EnableMusic") ~= "0" then
-		mute = Musician.testSongIsPlaying
+		mute = Musician.testSongIsPlaying and not(Musician.globalMute)
 
 		if not(mute) then
 			local song, player
 			for player, song in pairs(Musician.songs) do
-				if song.playing and Musician.Utils.PlayerIsInRange(player) then
+				if song.playing and Musician.Utils.PlayerIsInRange(player) and not(Musician.globalMute) then
 					mute = true
 				end
 			end
@@ -504,19 +519,19 @@ function Musician.Utils.VersionCompare(versionA, versionB)
 	for i = 1, min(countA, countB) do
 		local a = tonumber(partsA[i])
 		local b = tonumber(partsB[i])
-	
+
 		if a > b then
 			return 1
 		elseif a < b then
 			return -1
 		end
 	end
-	
+
 	if countA > countB then
 		return 1
 	elseif countA < countB then
 		return -1
 	end
-	
+
 	return 0
 end

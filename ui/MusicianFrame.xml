@@ -49,9 +49,7 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						MusicianFrameSource:SetText(Musician.Msg.PASTE_MUSIC_CODE)
-						MusicianFrameSource:SetFocus()
-						MusicianFrameSource:HighlightText(0);
+						MusicianFrame.Clear()
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -108,6 +106,15 @@
 				<Anchors>
 					<Anchor point="TOPLEFT" x="15" y="-35" relativePoint="TOPLEFT" />
 				</Anchors>
+
+				<Scripts>
+					<OnMouseUp>
+						if not(MusicianFrameSource:HasFocus()) then
+							MusicianFrameSource:SetFocus()
+							MusicianFrameSource:HighlightText(0)
+						end
+					</OnMouseUp>
+				</Scripts>
 
 				<ScrollChild>
 					<EditBox name="MusicianFrameSource" multiLine="true" autoFocus="false" countInvisibleLetters="false">

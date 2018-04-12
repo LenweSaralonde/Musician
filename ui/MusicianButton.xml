@@ -1,0 +1,89 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+	<Button name="MusicianButton" parent="Minimap">
+		<Size>
+			<AbsDimension x="32" y="32"/>
+		</Size>
+		<Anchors>
+			<Anchor point="CENTER" />
+		</Anchors>
+		<Layers level="OVERLAY">
+			<Layer level="ARTWORK">
+				<Texture name="MusicianButton_IconUnmuted" file="Interface\AddOns\Musician\ui\textures\button-unmuted">
+					<Size>
+						<AbsDimension x="16" y="16"/>
+					</Size>
+					<Anchors>
+						<Anchor point="CENTER" />
+					</Anchors>
+				</Texture>
+				<Texture name="MusicianButton_IconMuted" file="Interface\AddOns\Musician\ui\textures\button-muted" hidden="true">
+					<Size>
+						<AbsDimension x="16" y="16"/>
+					</Size>
+					<Anchors>
+						<Anchor point="CENTER" />
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="OVERLAY">
+				<Texture name="MusicianButton_Border" file="Interface\Minimap\MiniMap-TrackingBorder">
+					<Size>
+						<AbsDimension x="48" y="48"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="2" y="-2"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Frame name="MusicianButton_DraggingFrame" hidden="true">
+				<Size>
+					<AbsDimension x="32" y="32"/>
+				</Size>
+				<Anchors>
+					<Anchor point="CENTER" />
+				</Anchors>
+				<Scripts>
+					<OnUpdate>
+						MusicianButton.DraggingFrame_OnUpdate()
+					</OnUpdate>
+				</Scripts>
+			</Frame>
+		</Frames>
+		<HighlightTexture alphaMode="ADD" file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight"/>
+		<Scripts>
+			<OnMouseDown>
+				MusicianButton.OnMouseDown()
+			</OnMouseDown>
+			<OnMouseUp>
+				MusicianButton.OnMouseUp()
+			</OnMouseUp>
+			<OnLoad>
+				self:SetFrameLevel(Minimap:GetFrameLevel()+1000)
+				self:RegisterForClicks("LeftButtonUp","RightButtonUp")
+				self:RegisterForDrag("LeftButton","RightButton")
+			</OnLoad>
+			<OnDragStart>
+				self:LockHighlight()
+				MusicianButton_DraggingFrame:Show()
+				MusicianButton.OnMouseDown()
+			</OnDragStart>
+			<OnDragStop>
+				self:UnlockHighlight()
+				MusicianButton_DraggingFrame:Hide()
+				MusicianButton.OnMouseUp()
+			</OnDragStop>
+			<OnEnter>
+				MusicianButton.ShowTooltip()
+			</OnEnter>
+			<OnLeave>
+				MusicianButton.HideTooltip()
+			</OnLeave>
+		</Scripts>
+	</Button>
+</Ui>

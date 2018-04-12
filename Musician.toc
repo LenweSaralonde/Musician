@@ -3,6 +3,7 @@
 ## Author: LenweSaralonde
 ## Version: 1.1
 ## Notes: Perform music with your character
+## SavedVariables: Musician_Settings
 
 embeds.xml
 
@@ -14,5 +15,8 @@ core\Musician.Registry.lua
 
 ui\MusicianFrame.xml
 ui\MusicianFrame.lua
+
+ui\MusicianButton.xml
+ui\MusicianButton.lua
 
 locale\locale.xml

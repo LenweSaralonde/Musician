@@ -2,6 +2,7 @@ Musician.CHANNEL  = "MusicianComm"
 Musician.PASSWORD = "TrustMeIMAMusician"
 
 Musician.URL = "https://lenwe.info/musician"
+Musician.CONVERTER_URL = "https://lenwe.info/musician-midi-convert"
 
 Musician.FILE_HEADER = "MUS2"
 Musician.MAX_NOTE_DURATION = 6
