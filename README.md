@@ -8,27 +8,29 @@ How to listen to music
 ----------------------
 All you need to do is install the addon. Nothing more is required.
 
-If you're hearing something that you don't like, you can stop the music at any moment by typing `/stopmusic`.
+To mute a player, right click on his/her name or portrait to open the menu then select **Mute**. Do the same to unmute. If you prefer, you can just stop the song being played.
+
+Right click on the minimap button to enable or disable all the music from the addon.
 
 How to play music
 -----------------
-Musician uses music files in MIDI format. MIDI files have a **.mid** or **.midi** extension and do not contain sound but a sequence of notes that can be played by music software and instruments.
+Musician plays music files in MIDI format. MIDI files have a **.mid** or **.midi** extension and do not contain sound but a sequence of notes that can be played by music software and instruments.
 
-You can find lots of MIDI files very easily on Google by searching for *MIDI* + *music genre/title* etc. I also made a [selection of cool music files](https://www.dropbox.com/sh/6ypecquora72sne/AADAS0HnHS142bhpMNurRfX8a?dl=0) you can try with the addon. 
+You can find lots of MIDI files very easily on Google by searching for *MIDI* + *music genre/title* etc. I also made a [selection of cool music files](https://www.dropbox.com/sh/6ypecquora72sne/AADAS0HnHS142bhpMNurRfX8a?dl=0) you can try with the addon.
 
 To play a song:
 
 1. Open the [**MIDI converter**](https://www.lenwe.info/musician-midi-convert/) located at [lenwe.info/musician-midi-convert](https://www.lenwe.info/musician-midi-convert/) in your web browser. (You can also find the converter in the **Interface/AddOns/Musician/MidiConvert** folder.)
 2. Drag and drop a **MIDI file**
 3. Copy the generated music code by clicking the **Copy** button
-4. Open the Musician in-game interface by typing `/music`
+4. Left click on the minimap button (or type `/music`) to open the main window
 5. Click **Clear** then paste the music code in the edit window (*Ctrl+V* or *CMD+V* on Mac)
 6. Click **Load** then wait for the song to load (may take ~1 minute)
 7. Click **Play**
 
 Tips
 ----
-* You can preview the song at any moment before playing it for other players without loading time by clicking the **Preview** button. If another song is playing nearby, it will be muted for you only. 
+* You can preview the song at any moment prior to playing it for other players without loading time by clicking the **Preview** button. If another song is playing nearby, it will be muted for you only.
 * If another player has Musician, it will be shown in his/her tooltip. Just hover the other players with your mouse cursor to see who can hear you !
 * You can add lyrics by combining Musician with the [StoryTeller addon](https://www.lenwe.info/story-teller) !
 * Load the next song while the current one is playing to reduce waiting time between songs.
@@ -37,7 +39,7 @@ Tips
 
 Compose your own music
 ----------------------
-You can compose music for Musician using any MIDI sequencer, even in your browser with this [free online sequencer](https://onlinesequencer.net/). 
+You can compose music for Musician using any MIDI sequencer, even in your browser with this [free online sequencer](https://onlinesequencer.net/).
 
 The 12 instruments available are:
 
@@ -54,7 +56,7 @@ The 12 instruments available are:
 * Trombone (57)
 * Trumpet (56)
 
-The other instruments are mapped with the closest-sounding of the 12 instruments above (violin → fiddle, piano → dulcimer, guitar → lute etc.). The drum kits are replaced by a bodhrán (frame drum), a tambourine and a shaker. Check the mappings in [Musician.Constants.lua](https://github.com/LenweSaralonde/Musician/blob/master/core/Musician.Constants.lua#L255) for details. 
+The other instruments are mapped with the closest-sounding of the 12 instruments above (violin → fiddle, piano → dulcimer, guitar → lute etc.). The drum kits are replaced by a bodhrán (frame drum), a tambourine and a shaker. Check the mappings in [Musician.Constants.lua](https://github.com/LenweSaralonde/Musician/blob/master/core/Musician.Constants.lua#L255) for details.
 
 Unfortunately, due to limitations of the WoW UI, velocity and controls (volume, padding, pitch bend, modulation...) are not supported. The polypohony is approximately 10 notes.
 

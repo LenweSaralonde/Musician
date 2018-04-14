@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v1.1.1
+------
+* Added minimap button
+* Added global and player mute
+* Improved UI to make it more comprehensive and intuitive
+* Fixed minor bugs
+
 v1.1
 ----
 * New v2 protocol: loading time dropped by ~66%
