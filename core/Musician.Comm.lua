@@ -153,7 +153,7 @@ Musician.Comm:RegisterComm(Musician.Comm.event.play, function(prefix, message, d
 	if sender == Musician.Utils.NormalizePlayerName(UnitName("player")) then
 		Musician.Comm.isPlaySent = false
 		Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
-		SendChatMessage(Musician.Msg.EMOTE_PLAYING_MUSIC, "EMOTE")
+		SendChatMessage(Musician.Utils.GetPromoEmote(), "EMOTE")
 	end
 end)
 
@@ -193,13 +193,14 @@ end
 -- @param packedPosition (string)
 function Musician.Comm.UpdatePlayerPosition(player, packedPosition)
 	player = Musician.Utils.NormalizePlayerName(player)
-	local posY, posX, posZ, instanceID = Musician.Utils.UnpackPosition(packedPosition)
+	local posY, posX, posZ, instanceID, guid = Musician.Utils.UnpackPosition(packedPosition)
 
 	if Musician.songs[player] == nil then
 		Musician.songs[player] = {}
 	end
 
 	Musician.songs[player].position = {posY, posX, posZ, instanceID}
+	Musician.songs[player].guid = guid
 end
 
 --- Update a received player position

@@ -36,11 +36,69 @@ function Musician.Utils.FormatText(text)
 	-- Highlight **text**
 	local search = "%*%*[^%*]+%*%*"
 	while string.find(text, search) do
-			local from, to = string.find(text, search)
-			text = string.sub(text, 1, from - 1) .. Musician.Utils.Highlight(string.sub(text, from + 2, to - 2)) .. string.sub(text, to + 1)
+		local from, to = string.find(text, search)
+		text = string.sub(text, 1, from - 1) .. Musician.Utils.Highlight(string.sub(text, from + 2, to - 2)) .. string.sub(text, to + 1)
 	end
 
 	return text
+end
+
+--- Get hyperlink
+-- @param command (string)
+-- @param text (string)
+-- @param ... (string)
+-- @return (string)
+function Musician.Utils.GetLink(command, text, ...)
+	return "|H" .. strjoin(':', command, ... ) .. "|h" .. text .. "|h"
+end
+
+--- Get player hyperlink
+-- @param player (string)
+-- @return (string)
+function Musician.Utils.GetPlayerLink(player)
+	local player, realm = strsplit('-', Musician.Utils.NormalizePlayerName(player), 2)
+	local _, myRealm = strsplit('-', Musician.Utils.NormalizePlayerName(UnitName("player")), 2)
+
+	if myRealm ~= realm then
+		player = player .. "-" .. realm
+	end
+
+	return Musician.Utils.GetLink('player', player, player)
+end
+
+--- Return the code to insert an icon in a chat message
+-- @param path (string)
+-- @return (string)
+function Musician.Utils.GetChatIcon(path)
+	local _, fontHeight = FCF_GetChatWindowInfo(DEFAULT_CHAT_FRAME:GetID())
+
+	if fontHeight == 0 then
+		-- fontHeight will be 0 if it's still at the default (14)
+		fontHeight = 14;
+	end
+
+	return "|T" .. path .. ":" .. fontHeight .. "|t"
+end
+
+--- Display a faked emote
+-- @param player (string)
+-- @param playerGUID (string)
+-- @param message (string)
+-- @return (string)
+function Musician.Utils.DisplayEmote(player, playerGUID, message)
+	local player, realm = strsplit('-', Musician.Utils.NormalizePlayerName(player), 2)
+	local _, myRealm = strsplit('-', Musician.Utils.NormalizePlayerName(UnitName("player")), 2)
+	local fullPlayerName = player .. "-" .. realm
+
+	if myRealm ~= realm then
+		player = fullPlayerName
+	end
+
+	if playerGUID then
+		ChatFrame_OnEvent(DEFAULT_CHAT_FRAME, "CHAT_MSG_EMOTE", message, fullPlayerName, '', '', player, '', nil, nil, nil, nil, -1, playerGUID)
+	else
+		ChatFrame_OnEvent(DEFAULT_CHAT_FRAME, "CHAT_MSG_EMOTE", message, fullPlayerName, '', '', player, '')
+	end
 end
 
 --- Return the note name corresponding its MIDI key
@@ -131,15 +189,15 @@ end
 -- @return (string)
 function Musician.Utils.PackPosition()
 	local posY, posX, posZ, instanceID = UnitPosition("player")
-	return posY .. " " .. posX .. " " .. posZ .. " " .. instanceID
+	return posY .. " " .. posX .. " " .. posZ .. " " .. instanceID .. " " .. UnitGUID("player")
 end
 
 --- Unpack player position from string
 -- @param str (string)
--- @return posY (number), posX (number), posZ (number), instanceID (number)
+-- @return posY (number), posX (number), posZ (number), instanceID (number), guid (string)
 function Musician.Utils.UnpackPosition(str)
-	local posY, posX, posZ, instanceID = strsplit(' ', str)
-	return posY + 0, posX + 0, posZ + 0, instanceID + 0
+	local posY, posX, posZ, instanceID, guid = strsplit(' ', str)
+	return posY + 0, posX + 0, posZ + 0, instanceID + 0, guid
 end
 
 --- Pack a note into a string
@@ -356,8 +414,14 @@ function Musician.Utils.PlayNote(instrument, key, start, duration, player)
 
 	return C_Timer.NewTimer(start, function()
 
+			-- Send notification emote
+			if player ~= nil and Musician.Utils.PlayerIsInRange(player) and not(Musician.songs[player].playing.notified) then
+				Musician.songs[player].playing.notified = true
+				Musician.Utils.DisplayEmote(player, Musician.songs[player].guid, Musician.Msg.EMOTE_PLAYING_MUSIC)
+			end
+
 			-- Do not play note if a test song is playing or if player is out of range
-			if player ~= nil and (Musician.testSongIsPlaying or not(Musician.Utils.PlayerIsInRange(player))) or Musician.globalMute then
+			if player ~= nil and (Musician.testSongIsPlaying or not(Musician.Utils.PlayerIsInRange(player))) or Musician.globalMute or Musician.PlayerIsMuted(player) then
 				return
 			end
 
@@ -465,7 +529,7 @@ function Musician.Utils.MuteGameMusic()
 		if not(mute) then
 			local song, player
 			for player, song in pairs(Musician.songs) do
-				if song.playing and Musician.Utils.PlayerIsInRange(player) and not(Musician.globalMute) then
+				if song.playing and Musician.Utils.PlayerIsInRange(player) and not(Musician.globalMute) and not(Musician.PlayerIsMuted(player)) then
 					mute = true
 				end
 			end
@@ -498,6 +562,20 @@ function Musician.Utils.NormalizePlayerName(name)
 	end
 
 	return name
+end
+
+--- Return true if the provided player name is myself
+-- @param name (string)
+-- @return (boolean)
+function Musician.Utils.PlayerIsMyself(player)
+	return Musician.Utils.NormalizePlayerName(player) == Musician.Utils.NormalizePlayerName(UnitName("player"))
+end
+
+--- Return the emote for "Player is playing music" with promo URL
+-- @return (string)
+function Musician.Utils.GetPromoEmote()
+	local promo = string.gsub(Musician.Msg.EMOTE_PROMO, "{url}", Musician.URL)
+	return Musician.Msg.EMOTE_PLAYING_MUSIC .. " " .. promo
 end
 
 --- Compare two version numbers

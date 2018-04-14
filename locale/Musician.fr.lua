@@ -6,6 +6,8 @@ if ( GetLocale() == "frFR" ) then
 	Musician.Msg.TEST_SONG = "Aperçu"
 	Musician.Msg.STOP_TEST = "Arrêter aperçu"
 	Musician.Msg.CLEAR = "Effacer"
+	Musician.Msg.MUTE = "Rendre silencieux"
+	Musician.Msg.UNMUTE = "Rétablir la musique"
 
 	Musician.Msg.STARTUP = "Bienvenue dans Musician v{version}."
 
@@ -23,6 +25,9 @@ if ( GetLocale() == "frFR" ) then
 	Musician.Msg.PASTE_MUSIC_CODE = "Importez votre morceau au format MIDI à l'adresse :\n{url}\n\npuis collez le code de la musique ici..."
 
 	Musician.Msg.EMOTE_PLAYING_MUSIC = "joue de la musique."
+	Musician.Msg.EMOTE_PROMO = "(Téléchargez l'add-on \"Musician\" sur {url} pour l'écouter !)"
+	Musician.Msg.EMOTE_SONG_NOT_LOADED = "(Le morceau n'a pas pu être chargé.)"
+	Musician.Msg.EMOTE_PLAYER_OTHER_REALM = "(Ce joueur est sur un autre royaume.)"
 
 	Musician.Msg.TOOLTIP_LEFT_CLICK = "**Clic gauche** : {action}"
 	Musician.Msg.TOOLTIP_RIGHT_CLICK = "**Clic droit** : {action}"
@@ -30,6 +35,14 @@ if ( GetLocale() == "frFR" ) then
 	Musician.Msg.TOOLTIP_ISMUTED = "(silencieux)"
 	Musician.Msg.TOOLTIP_ACTION_SHOW = "Ouvrir"
 	Musician.Msg.TOOLTIP_ACTION_HIDE = "Fermer"
-	Musician.Msg.TOOLTIP_ACTION_MUTE = "Mettre en silencieux"
+	Musician.Msg.TOOLTIP_ACTION_MUTE = "Activer le mode silencieux"
 	Musician.Msg.TOOLTIP_ACTION_UNMUTE = "Désactiver le mode silencieux"
+
+	Musician.Msg.PLAYER_MENU_TITLE = "Musique"
+	Musician.Msg.PLAYER_MENU_STOP_CURRENT_SONG = "Arrêter le morceau en cours"
+	Musician.Msg.PLAYER_MENU_MUTE = "Rendre silencieux"
+	Musician.Msg.PLAYER_MENU_UNMUTE = "Rétablir la musique"
+
+	Musician.Msg.PLAYER_IS_MUTED = "{icon}{player} est maintenant en mode silencieux."
+	Musician.Msg.PLAYER_IS_UNMUTED = "{icon}{player} n'est plus en mode silencieux."
 end

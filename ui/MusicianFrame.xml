@@ -5,7 +5,12 @@
 			<OnLoad>self:RegisterForDrag("LeftButton")</OnLoad>
 			<OnDragStart>self:StartMoving()</OnDragStart>
 			<OnDragStop>self:StopMovingOrSizing()</OnDragStop>
-			<OnEscapePressed>MusicianFrame.Escape()</OnEscapePressed>
+			<OnShow>
+				PlaySound(SOUNDKIT.IG_QUEST_LIST_OPEN)
+			</OnShow>
+			<OnHide>
+				PlaySound(SOUNDKIT.IG_QUEST_LIST_CLOSE)
+			</OnHide>
 		</Scripts>
 
 		<Size x="320" y="160" />
@@ -131,11 +136,11 @@
 								ScrollingEdit_OnTextChanged(self, self:GetParent())
 								Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
 							</OnTextChanged>
-							<OnCursorChanged function="ScrollingEdit_OnCursorChanged"/>
+							<OnCursorChanged function="ScrollingEdit_OnCursorChanged" />
 							<OnUpdate>
 								ScrollingEdit_OnUpdate(self, elapsed, self:GetParent())
 							</OnUpdate>
-							<OnEscapePressed>MusicianFrame.Escape()</OnEscapePressed>
+							<OnEscapePressed>MusicianFrameSource:ClearFocus()</OnEscapePressed>
 						</Scripts>
 
 						<FontString inherits="GameFontHighlightSmall"/>

@@ -9,7 +9,7 @@ MusicianFrame.Init = function()
 end
 
 MusicianFrame.Clear = function()
-	MusicianFrameSource:SetText(string.gsub(Musician.Msg.PASTE_MUSIC_CODE, "{url}", Musician.CONVERTER_URL))
+	MusicianFrameSource:SetText(MusicianFrame.GetDefaultText())
 	MusicianFrameSource:SetFocus()
 	MusicianFrameSource:HighlightText(0)
 end
@@ -52,17 +52,13 @@ MusicianFrame.Play = function()
 	end
 end
 
-MusicianFrame.Escape = function()
-	if MusicianFrameSource:HasFocus() then
-		MusicianFrameSource:ClearFocus()
-	else
-		MusicianFrame:Hide()
-	end
+MusicianFrame.GetDefaultText = function()
+	return string.gsub(Musician.Msg.PASTE_MUSIC_CODE, "{url}", Musician.CONVERTER_URL)
 end
 
 MusicianFrame.Refresh = function()
 
-	local editBoxIsEmpty = MusicianFrameSource:GetText() == Musician.Msg.PASTE_MUSIC_CODE or string.len(MusicianFrameSource:GetText()) == 0
+	local editBoxIsEmpty = MusicianFrameSource:GetText() == MusicianFrame.GetDefaultText() or string.len(MusicianFrameSource:GetText()) == 0
 
 	-- Test song button
 	if editBoxIsEmpty and not(Musician.testSongIsPlaying) then
@@ -124,5 +120,3 @@ MusicianFrame.Refresh = function()
 		MusicianFramePlayButton:SetText(Musician.Msg.PLAY)
 	end
 end
-
-						

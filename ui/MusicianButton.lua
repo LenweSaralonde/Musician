@@ -54,9 +54,16 @@ function MusicianButton.OnClick(self, button)
 			MusicianFrame:Hide()
 		else
 			MusicianFrame:Show()
+			MusicianFrameSource:SetFocus()
+			MusicianFrameSource:HighlightText(0)
 		end
 	elseif button == "RightButton" then
 		Musician.globalMute = not(Musician.globalMute)
+		if Musician.globalMute then
+			PlaySound(SOUNDKIT.IG_MINIMAP_ZOOM_OUT)
+		else
+			PlaySound(SOUNDKIT.IG_MINIMAP_ZOOM_IN)
+		end
 	end
 	MusicianButton.Reposition()
 	MusicianButton.ShowTooltip()

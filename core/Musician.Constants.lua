@@ -22,6 +22,10 @@ Musician.Msg = {}
 Musician.Events = {}
 Musician.Events.RefreshFrame = "MusicianRefreshFrame"
 
+Musician.Icons = {}
+Musician.Icons.PlayerMuted = "Interface\\AddOns\\Musician\\ui\\textures\\muted.blp"
+Musician.Icons.PlayerUnmuted = "Interface\\AddOns\\Musician\\ui\\textures\\unmuted.blp"
+
 Musician.INSTRUMENTS = {
 	["none"] = nil,
 	["bagpipe"] = {
