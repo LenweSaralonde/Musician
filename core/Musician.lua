@@ -328,7 +328,7 @@ function Musician.SetupHooks()
 		local fullPlayerName = Musician.Utils.NormalizePlayerName(player)
 
 		-- "Player is playing music."
-		if msg == Musician.Utils.GetPromoEmote() or msg == Musician.Msg.EMOTE_PLAYING_MUSIC then
+		if (msg == Musician.Utils.GetPromoEmote() or msg == Musician.Msg.EMOTE_PLAYING_MUSIC) and event == "CHAT_MSG_EMOTE" then
 
 			-- Music is loaded and actually playing
 			if Musician.songs[fullPlayerName] ~= nil and Musician.songs[fullPlayerName].playing ~= nil then
@@ -338,7 +338,7 @@ function Musician.SetupHooks()
 				msg = Musician.Msg.EMOTE_PLAYING_MUSIC
 
 				-- Add action link if playing music (and not current player)
-				if not(Musician.Utils.PlayerIsMyself(fullPlayerName)) and event == "CHAT_MSG_EMOTE" then
+				if not(Musician.Utils.PlayerIsMyself(fullPlayerName)) then
 					-- Stop music
 					if not(Musician.PlayerIsMuted(fullPlayerName)) then
 						local stopAction = Musician.Utils.Highlight(Musician.Utils.GetLink("musician", Musician.Msg.STOP, "stop", fullPlayerName), 'FF0000')
@@ -347,23 +347,6 @@ function Musician.SetupHooks()
 					else
 						local unmuteAction = Musician.Utils.Highlight(Musician.Utils.GetLink("musician", Musician.Msg.UNMUTE, "unmute", fullPlayerName), '00FF00')
 						msg = msg .. " " .. Musician.Utils.Highlight('[') .. unmuteAction .. Musician.Utils.Highlight(']')
-					end
-				end
-
-				-- Add muted/unmuted flag
-				if pflag and _G["CHAT_FLAG_" .. pflag] then
-					if Musician.PlayerIsMuted(fullPlayerName) then
-						_G["CHAT_FLAG_" .. pflag .. "_MUSICIAN_MUTED"] = _G["CHAT_FLAG_" .. pflag] .. CHAT_FLAG_MUSICIAN_MUTED
-						pflag = pflag .. "_MUSICIAN_MUTED"
-					else
-						_G["CHAT_FLAG_" .. pflag .. "_MUSICIAN_UNMUTED"] = _G["CHAT_FLAG_" .. pflag] .. CHAT_FLAG_MUSICIAN_UNMUTED
-						pflag = pflag .. "_MUSICIAN_UNMUTED"
-					end
-				else
-					if Musician.PlayerIsMuted(fullPlayerName) then
-						pflag = "MUSICIAN_MUTED"
-					else
-						pflag = "MUSICIAN_UNMUTED"
 					end
 				end
 
@@ -379,6 +362,25 @@ function Musician.SetupHooks()
 			end
 		end
 
+		-- Add muted/unmuted flag if currently playing music
+		if Musician.songs[fullPlayerName] ~= nil and Musician.songs[fullPlayerName].playing ~= nil then
+			if pflag and _G["CHAT_FLAG_" .. pflag] then
+				if Musician.PlayerIsMuted(fullPlayerName) then
+					_G["CHAT_FLAG_" .. pflag .. "_MUSICIAN_MUTED"] = _G["CHAT_FLAG_" .. pflag] .. CHAT_FLAG_MUSICIAN_MUTED
+					pflag = pflag .. "_MUSICIAN_MUTED"
+				else
+					_G["CHAT_FLAG_" .. pflag .. "_MUSICIAN_UNMUTED"] = _G["CHAT_FLAG_" .. pflag] .. CHAT_FLAG_MUSICIAN_UNMUTED
+					pflag = pflag .. "_MUSICIAN_UNMUTED"
+				end
+			else
+				if Musician.PlayerIsMuted(fullPlayerName) then
+					pflag = "MUSICIAN_MUTED"
+				else
+					pflag = "MUSICIAN_UNMUTED"
+				end
+			end
+		end
+
 		return false, msg, player, arg3, arg4, arg5, pflag, ...
 	end
 
@@ -389,4 +391,5 @@ function Musician.SetupHooks()
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", messageEventFilter)
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_EMOTE", messageEventFilter)
 end
+
 
