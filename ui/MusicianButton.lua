@@ -1,9 +1,5 @@
 
 function MusicianButton.Init()
-	if Musician_Settings.minimapPosition == nil then
-		Musician_Settings.minimapPosition = 26
-	end
-
 	MusicianButton.Reposition()
 	MusicianButton:SetScript("OnClick", MusicianButton.OnClick)
 end
