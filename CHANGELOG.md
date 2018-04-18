@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.1.2
+------
+* Added new instrument "Male voice" on patch 52 ("Choir Aahs")
+* Fixed recorder tuning
+
 v1.1.1
 ------
 * Added minimap button
