@@ -58,6 +58,11 @@ Musician.INSTRUMENTS = {
 		["decay"] = 200,
 		["isPercussion"] = false
 	},
+	["male-voice"] = {
+		["path"] = "Interface\\AddOns\\Musician\\instruments\\male-voice",
+		["decay"] = 200,
+		["isPercussion"] = false
+	},
 	["fiddle"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\fiddle",
 		["decay"] = 100,
@@ -323,7 +328,7 @@ Musician.MIDI_INSTRUMENT_MAPPING = {
 	[49] = "fiddle", -- String Ensemble 2
 	[50] = "fiddle", -- SynthStrings 1
 	[51] = "fiddle", -- SynthStrings 2
-	[52] = "female-voice", -- Choir Aahs
+	[52] = "male-voice", -- Choir Aahs
 	[53] = "female-voice", -- Voice Oohs
 	[54] = "female-voice", -- Synth Voice
 	[55] = "lute", -- Orchestra Hit

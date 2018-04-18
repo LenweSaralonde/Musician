@@ -41,13 +41,14 @@ Compose your own music
 ----------------------
 You can compose music for Musician using any MIDI sequencer, even in your browser with this [free online sequencer](https://onlinesequencer.net/).
 
-The 12 instruments available are:
+The 13 instruments available are:
 
 * Bagpipe (109)
 * Bassoon (70)
 * Cello (42)
 * Clarinet (71)
 * Dulcimer (15)
+* Male voice (52 Choir Aahs)
 * Female voice (53 Voice Oohs)
 * Fiddle (110)
 * Harp (46)
@@ -56,7 +57,7 @@ The 12 instruments available are:
 * Trombone (57)
 * Trumpet (56)
 
-The other instruments are mapped with the closest-sounding of the 12 instruments above (violin → fiddle, piano → dulcimer, guitar → lute etc.). The drum kits are replaced by a bodhrán (frame drum), a tambourine and a shaker. Check the mappings in [Musician.Constants.lua](https://github.com/LenweSaralonde/Musician/blob/master/core/Musician.Constants.lua#L260) for details.
+The other instruments are mapped with the closest-sounding of the 13 instruments above (violin → fiddle, piano → dulcimer, guitar → lute etc.). The drum kits are replaced by a bodhrán (frame drum), a tambourine and a shaker. Check the mappings in [Musician.Constants.lua](https://github.com/LenweSaralonde/Musician/blob/master/core/Musician.Constants.lua#L260) for details.
 
 Unfortunately, due to limitations of the WoW UI, velocity and controls (volume, padding, pitch bend, modulation...) are not supported. The polypohony is approximately 10 notes.
 
