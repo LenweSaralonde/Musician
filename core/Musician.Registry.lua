@@ -143,6 +143,13 @@ function Musician.Registry.Init()
 		Musician.Registry.players[player] = nil
 	end)
 
+	-- Send "Hello" every 5 minutes
+	C_Timer.NewTicker(300, function()
+		if not(Musician.Comm.isSending) then
+			Musician.Registry.SendHello()
+		end
+	end)
+
 end
 
 --- Fetch the connected players
