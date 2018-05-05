@@ -42,7 +42,7 @@ function Musician:OnInitialize()
 			local song, player
 			for player, song in pairs(Musician.songs) do
 				if song.playing then
-					Musician.Utils.StopSong(song.playing)
+					song.playing:Stop()
 					Musician.songs[player].playing = nil
 				end
 			end
@@ -80,7 +80,7 @@ function Musician.PlayTestSong(songData)
 	Musician.Utils.MuteGameMusic()
 
 	Musician.testSong = songData
-	local duration = Musician.Utils.PlaySong(Musician.testSong, Musician.PLAY_PREROLL)
+	local duration = Musician.testSong:Play()
 
 	-- Remove song currently playing when finished
 	Musician.testSong.endTimer = C_Timer.NewTimer(duration, function()
@@ -97,7 +97,7 @@ end
 --
 function Musician.StopTestSong()
 	if Musician.testSong then
-		Musician.Utils.StopSong(Musician.testSong)
+		Musician.testSong:Stop()
 		Musician.testSong = nil
 		Musician.testSongIsPlaying = false
 		Musician.Utils.MuteGameMusic()
@@ -115,7 +115,7 @@ function Musician.PlayLoadedSong(playerName)
 		Musician.songs[playerName].received = nil
 		Musician.Utils.MuteGameMusic()
 
-		local duration = Musician.Utils.PlaySong(Musician.songs[playerName].playing, Musician.PLAY_PREROLL)
+		local duration = Musician.songs[playerName].playing:Play()
 
 		-- Remove song currently playing when finished
 		Musician.songs[playerName].playing.endTimer = C_Timer.NewTimer(duration, function()
@@ -137,7 +137,7 @@ end
 -- @param playerName (string)
 function Musician.StopLoadedSong(playerName)
 	if Musician.songs[playerName] ~= nil and Musician.songs[playerName].playing ~= nil then
-		Musician.Utils.StopSong(Musician.songs[playerName].playing)
+		Musician.songs[playerName].playing:Stop()
 		Musician.songs[playerName].playing = nil
 		Musician.Utils.MuteGameMusic()
 	end

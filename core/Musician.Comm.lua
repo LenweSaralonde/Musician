@@ -92,7 +92,7 @@ function Musician.Comm.BroadcastSong(song)
 	Musician.Comm.isSending = true
 	Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
 
-	local packedSongData = Musician.Utils.PackSong(song)
+	local packedSongData = song:Pack()
 	local compressedPackedSongData = LibCompressEncodeTable:Encode(LibCompress:CompressHuffman(packedSongData))
 
 	Musician.Comm:SendCommMessage(Musician.Comm.event.song, compressedPackedSongData, 'CHANNEL', Musician.Comm.getChannel(), "BULK")
@@ -110,7 +110,7 @@ Musician.Comm:RegisterComm(Musician.Comm.event.song, function(prefix, message, d
 
 	local success = pcall(function()
 		local uncompressedPackedSongData = LibCompress:Decompress(LibCompressEncodeTable:Decode(message))
-		finalSongData = Musician.Utils.UnpackSong(uncompressedPackedSongData)
+		finalSongData = Musician.Song.create(uncompressedPackedSongData)
 	end)
 
 	-- An error occurred while decoding the received song

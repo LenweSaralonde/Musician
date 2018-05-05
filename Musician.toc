@@ -8,6 +8,7 @@
 embeds.xml
 
 core\Musician.lua
+core\Musician.Song.lua
 core\Musician.Constants.lua
 core\Musician.Utils.lua
 core\Musician.Comm.lua

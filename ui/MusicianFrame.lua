@@ -19,7 +19,7 @@ MusicianFrame.Test = function()
 		Musician.StopTestSong()
 	else
 		local success = pcall(function()
-			local testSong = Musician.Utils.UnpackSong(MusicianBase64.decode(MusicianFrameSource:GetText()))
+			local testSong = Musician.Song.create(MusicianBase64.decode(MusicianFrameSource:GetText()))
 			C_Timer.After(0.1, function()
 				Musician.PlayTestSong(testSong)
 			end)
@@ -34,7 +34,7 @@ end
 MusicianFrame.Load = function()
 	if not(Musician.Comm.isSending) then
 		local success = pcall(function()
-			local songData = Musician.Utils.UnpackSong(MusicianBase64.decode(MusicianFrameSource:GetText()))
+			local songData = Musician.Song.create(MusicianBase64.decode(MusicianFrameSource:GetText()))
 			Musician.Comm.BroadcastSong(songData)
 		end)
 
