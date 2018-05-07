@@ -28,6 +28,9 @@ function Musician.Song.create(packedSongData)
 	-- @field notified (boolean) True when the notification for the song playing has been displayed
 	self.notified = false
 
+	-- @field playing (boolean) True when the song is playing
+	self.playing = false
+
 	if packedSongData then
 		self:Unpack(packedSongData)
 	end
@@ -67,6 +70,8 @@ function Musician.Song:Play()
 
 	local preroll = Musician.PLAY_PREROLL
 
+	self.playing = true
+
 	self:Preload()
 
 	local now = GetTime()
@@ -91,6 +96,15 @@ function Musician.Song:Play()
 		end
 	end)
 
+	-- Send event when finished
+	self.endTimer = C_Timer.NewTimer(endTime, function()
+		self.playing = false
+		self.endTimer = nil
+		Musician.Comm:SendMessage(Musician.Events.SongStop, self)
+	end)
+
+	Musician.Comm:SendMessage(Musician.Events.SongPlay, self)
+
 	return endTime
 end
 
@@ -99,6 +113,7 @@ function Musician.Song:Stop()
 
 	if self.endTimer ~= nil then
 		self.endTimer:Cancel()
+		self.endTimer = nil
 	end
 
 	local track, note
@@ -110,6 +125,9 @@ function Musician.Song:Stop()
 			end
 		end
 	end
+
+	self.playing = false
+	Musician.Comm:SendMessage(Musician.Events.SongStop, self)
 end
 
 --- Play a note
@@ -137,8 +155,9 @@ function Musician.Song:PlayNote(track, key, start, duration)
 			Musician.Utils.DisplayEmote(self.player, self.guid, Musician.Msg.EMOTE_PLAYING_MUSIC)
 		end
 
-		-- Do not play note if a test song is playing or if player is out of range
-		if self.player ~= nil and (Musician.testSongIsPlaying or not(Musician.Utils.PlayerIsInRange(self.player))) or Musician.globalMute or Musician.PlayerIsMuted(self.player) then
+		-- Do not play note if the source song is playing or if the player is out of range
+		local sourceSongIsPlaying = Musician.sourceSong ~= nil and Musician.sourceSong.playing
+		if self.player ~= nil and (sourceSongIsPlaying or not(Musician.Utils.PlayerIsInRange(self.player))) or Musician.globalMute or Musician.PlayerIsMuted(self.player) then
 			return
 		end
 

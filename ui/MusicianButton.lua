@@ -50,8 +50,7 @@ function MusicianButton.OnClick(self, button)
 			MusicianFrame:Hide()
 		else
 			MusicianFrame:Show()
-			MusicianFrameSource:SetFocus()
-			MusicianFrameSource:HighlightText(0)
+			MusicianFrame.Focus()
 		end
 	elseif button == "RightButton" then
 		Musician.globalMute = not(Musician.globalMute)

@@ -6,41 +6,72 @@ MusicianFrame.Init = function()
 	MusicianFrame.Clear()
 	MusicianFrameTitle:SetText(Musician.Msg.PLAY_A_SONG)
 	MusicianFrameClearButton:SetText(Musician.Msg.CLEAR)
+	MusicianFrameSource:SetScript("OnTextChanged", MusicianFrame.SourceChanged)
+end
+
+MusicianFrame.Focus = function()
+	local editable = MusicianFrameSource:GetText() == "" or MusicianFrameSource:GetText() == MusicianFrame.GetDefaultText()
+	if editable then
+		MusicianFrameSource:HighlightText(0)
+		MusicianFrameSource:SetFocus()
+	else
+		MusicianFrameSource:HighlightText(0, 0)
+		MusicianFrameSource:ClearFocus()
+	end
 end
 
 MusicianFrame.Clear = function()
 	MusicianFrameSource:SetText(MusicianFrame.GetDefaultText())
-	MusicianFrameSource:SetFocus()
-	MusicianFrameSource:HighlightText(0)
+	MusicianFrame.Focus()
 end
 
-MusicianFrame.Test = function()
-	if Musician.testSongIsPlaying then
-		Musician.StopTestSong()
-	else
-		local success = pcall(function()
-			local testSong = Musician.Song.create(MusicianBase64.decode(MusicianFrameSource:GetText()))
-			C_Timer.After(0.1, function()
-				Musician.PlayTestSong(testSong)
-			end)
-		end)
+MusicianFrame.SourceChanged = function(self, isUserInput)
+	ScrollingEdit_OnTextChanged(self, self:GetParent())
 
-		if not(success) then
-			Musician.Utils.Error(Musician.Msg.INVALID_MUSIC_CODE)
-		end
+	if isUserInput then
+		MusicianFrame.LoadSource()
+		MusicianFrame.Focus()
 	end
 end
 
-MusicianFrame.Load = function()
-	if not(Musician.Comm.isSending) then
-		local success = pcall(function()
-			local songData = Musician.Song.create(MusicianBase64.decode(MusicianFrameSource:GetText()))
-			Musician.Comm.BroadcastSong(songData)
-		end)
+MusicianFrame.LoadSource = function()
+	if MusicianFrameSource:GetText() == "" or MusicianFrameSource:GetText() == MusicianFrame.GetDefaultText() then
+		return
+	end
 
-		if not(success) then
-			Musician.Utils.Error(Musician.Msg.INVALID_MUSIC_CODE)
+	local sourceSong
+	local success = pcall(function()
+		sourceSong = Musician.Song.create(MusicianBase64.decode(MusicianFrameSource:GetText()))
+	end)
+
+	if not(success) then
+		Musician.Utils.Error(Musician.Msg.INVALID_MUSIC_CODE)
+	else
+		-- Stop previous source song being played
+		if Musician.sourceSong and  Musician.sourceSong.playing then
+			Musician.sourceSong:Stop()
 		end
+
+		Musician.sourceSong = sourceSong
+	end
+
+	Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
+end
+
+MusicianFrame.Test = function()
+	if Musician.sourceSong then
+		if Musician.sourceSong.playing then
+			Musician.sourceSong:Stop()
+		else
+			Musician.sourceSong:Play()
+		end
+	end
+	Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
+end
+
+MusicianFrame.Load = function()
+	if not(Musician.Comm.isSending) and Musician.sourceSong then
+		Musician.Comm.BroadcastSong(Musician.sourceSong)
 	end
 end
 
@@ -58,23 +89,21 @@ end
 
 MusicianFrame.Refresh = function()
 
-	local editBoxIsEmpty = MusicianFrameSource:GetText() == MusicianFrame.GetDefaultText() or string.len(MusicianFrameSource:GetText()) == 0
-
 	-- Test song button
-	if editBoxIsEmpty and not(Musician.testSongIsPlaying) then
+	if Musician.sourceSong == nil then
 		MusicianFrameTestButton:Disable()
 	else
 		MusicianFrameTestButton:Enable()
 	end
 
-	if Musician.testSongIsPlaying then
+	if Musician.sourceSong ~= nil and Musician.sourceSong.playing then
 		MusicianFrameTestButton:SetText(Musician.Msg.STOP_TEST)
 	else
 		MusicianFrameTestButton:SetText(Musician.Msg.TEST_SONG)
 	end
 
 	-- Load button
-	if editBoxIsEmpty or Musician.Comm.isSending then
+	if Musician.sourceSong == nil or Musician.Comm.isSending then
 		MusicianFrameLoadButton:Disable()
 	else
 		MusicianFrameLoadButton:Enable()

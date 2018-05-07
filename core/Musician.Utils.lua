@@ -271,7 +271,8 @@ function Musician.Utils.MuteGameMusic()
 	local mute
 
 	if GetCVar("Sound_EnableMusic") ~= "0" then
-		mute = Musician.testSongIsPlaying and not(Musician.globalMute)
+		local sourceSongIsPlaying = Musician.sourceSong ~= nil and Musician.sourceSong.playing
+		mute = sourceSongIsPlaying and not(Musician.globalMute)
 
 		if not(mute) then
 			local song, player
