@@ -23,12 +23,13 @@ function Musician.Comm.Init()
 
 	-- Register prefixes
 	Musician.Comm:RegisterEvent("PLAYER_ENTERING_WORLD", function()
+		Musician.Utils.MuteGameMusic(true)
 
-			if initialized then return end
+		if initialized then return end
 
-			initialized = true
+		initialized = true
 
-			Musician.Comm.JoinChannel()
+		Musician.Comm.JoinChannel()
 	end)
 end
 

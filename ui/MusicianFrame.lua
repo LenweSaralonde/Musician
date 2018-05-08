@@ -48,7 +48,7 @@ MusicianFrame.LoadSource = function()
 		Musician.Utils.Error(Musician.Msg.INVALID_MUSIC_CODE)
 	else
 		-- Stop previous source song being played
-		if Musician.sourceSong and  Musician.sourceSong.playing then
+		if Musician.sourceSong and  Musician.sourceSong:IsPlaying() then
 			Musician.sourceSong:Stop()
 		end
 
@@ -60,7 +60,7 @@ end
 
 MusicianFrame.Test = function()
 	if Musician.sourceSong then
-		if Musician.sourceSong.playing then
+		if Musician.sourceSong:IsPlaying() then
 			Musician.sourceSong:Stop()
 		else
 			Musician.sourceSong:Play()
@@ -96,7 +96,7 @@ MusicianFrame.Refresh = function()
 		MusicianFrameTestButton:Enable()
 	end
 
-	if Musician.sourceSong ~= nil and Musician.sourceSong.playing then
+	if Musician.sourceSong ~= nil and Musician.sourceSong:IsPlaying() then
 		MusicianFrameTestButton:SetText(Musician.Msg.STOP_TEST)
 	else
 		MusicianFrameTestButton:SetText(Musician.Msg.TEST_SONG)

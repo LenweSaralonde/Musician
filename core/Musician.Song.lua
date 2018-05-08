@@ -28,8 +28,17 @@ function Musician.Song.create(packedSongData)
 	-- @field notified (boolean) True when the notification for the song playing has been displayed
 	self.notified = false
 
+	-- @field preloading (boolean) True when the song samples are preloading
+	self.preloading = false
+
+	-- @field preloaded (boolean) True when the song samples have been preloaded
+	self.preloaded = false
+
 	-- @field playing (boolean) True when the song is playing
 	self.playing = false
+
+	-- @field cursor (number) Cursor position, in seconds
+	self.cursor = 0
 
 	if packedSongData then
 		self:Unpack(packedSongData)
@@ -38,8 +47,20 @@ function Musician.Song.create(packedSongData)
 	return self
 end
 
---- Preload song sounds into memory cache
+--- Returns true if the song is playing or about to be played (preloading).
+-- @return (boolean)
+function Musician.Song:IsPlaying()
+	return self.preloading or self.playing
+end
+
+--- Preload song samples into memory cache
 function Musician.Song:Preload()
+	if self.preloaded then
+		return
+	end
+
+	self.preloading = true
+
 	local track, note
 
 	local notes = {}
@@ -62,116 +83,231 @@ function Musician.Song:Preload()
 			end
 		end
 	end
+
+	self.preloaded = true
 end
 
 --- Play song
--- @return (float) The total duration of the song
 function Musician.Song:Play()
+	self:Reset()
+	self:Resume()
+end
 
-	local preroll = Musician.PLAY_PREROLL
-
-	self.playing = true
-
-	self:Preload()
-
-	local now = GetTime()
-	local track, note
-	local endTime = 0
-
-	if preroll == nil then
-		preroll = 0
-	end
-
+--- Reset song to initial position
+function Musician.Song:Reset()
+	self:SongNotesOff()
+	self.cursor = 0
+	local track
 	for _, track in pairs(self.tracks) do
-		for _, note in pairs(track.notes) do
-			endTime = max(endTime, preroll + note[2] + now - GetTime() + note[3] + 1)
-		end
+		track.playIndex = 1
 	end
+	Musician.Comm:SendMessage(Musician.Events.SongCursor, self)
+end
 
-	C_Timer.After(0.1, function()
-		for _, track in pairs(self.tracks) do
-			for _, note in pairs(track.notes) do
-				note[4] = self:PlayNote(track, note[1], preroll + note[2] + now - GetTime(), note[3])
+--- Seek to position
+-- @param cursor (number)
+function Musician.Song:Seek(cursor)
+
+	--- Perform seek within track
+	-- @param cursor (number) Position to reach
+	-- @param track (table)
+	local trackSeek = function(cursor, track)
+		local noteCount = table.getn(track.notes)
+
+		if noteCount == 0 then
+			return
+		end
+
+		-- Cursor is before the first note
+		if cursor <= track.notes[1][2] then
+			track.playIndex = 1
+			return
+		-- Cursor is after the last note
+		elseif cursor > track.notes[noteCount][2] then
+			track.playIndex = noteCount + 1
+			return
+		end
+
+		local from = 1
+		local to = noteCount
+		local index = max(1, min(noteCount, track.playIndex))
+
+		if cursor <= track.notes[index][2] then
+			to = index
+		else
+			from = index
+		end
+
+		local found = false
+		while not(found) do
+			index = from + floor((to - from) / 2 + .5)
+
+			-- Exact position found! Find first note at exact position
+			while index >= 1 and track.notes[index][2] == cursor do
+				found = true
+				index = index - 1
+			end
+
+			if found then
+				track.playIndex = index + 1
+				return
+			end
+
+			-- In-between position found
+			if cursor > track.notes[index - 1][2] and cursor <= track.notes[index][2] then
+				track.playIndex = index
+				return
+			end
+
+			-- Seek before
+			if cursor < track.notes[index][2] then
+				to = index
+				-- Seek after
+			else
+				from = index
 			end
 		end
-	end)
+	end
 
-	-- Send event when finished
-	self.endTimer = C_Timer.NewTimer(endTime, function()
-		self.playing = false
-		self.endTimer = nil
-		Musician.Comm:SendMessage(Musician.Events.SongStop, self)
-	end)
+	cursor = max(0, min(cursor, self.duration))
+
+	if cursor == self.cursor then
+		return
+	end
+
+	self:SongNotesOff()
+
+	local track
+	for _, track in pairs(self.tracks) do
+		trackSeek(cursor, track)
+	end
+
+	self.cursor = cursor
+	Musician.Comm:SendMessage(Musician.Events.SongCursor, self)
+end
+
+--- Resume a song playing
+function Musician.Song:Resume()
+	local playSong = function()
+		self.preloading = false
+		self.playing = true
+	end
+
+	-- Preload and delay playout if necessary
+	if not(self.preloaded) then
+		C_Timer.After(Musician.PLAY_PREROLL, playSong)
+		self:Preload()
+	else
+		playSong()
+	end
 
 	Musician.Comm:SendMessage(Musician.Events.SongPlay, self)
-
-	return endTime
 end
 
 --- Stop song
 function Musician.Song:Stop()
-
-	if self.endTimer ~= nil then
-		self.endTimer:Cancel()
-		self.endTimer = nil
-	end
-
-	local track, note
-	for _, track in pairs(self.tracks) do
-		for _, note in pairs(track.notes) do
-			if note[4] ~= nil then
-				note[4]:Cancel()
-				note[4] = nil
-			end
-		end
-	end
-
+	self:SongNotesOff()
+	self.preloading = false
 	self.playing = false
 	Musician.Comm:SendMessage(Musician.Events.SongStop, self)
 end
 
---- Play a note
--- @param track (table) Reference to the track
--- @param key (int) MIDI key
--- @param start (float) Start time in seconds
--- @param duration (float) Duration in seconds
--- @return (table) Timer or nil if the not could not start
-function Musician.Song:PlayNote(track, key, start, duration)
-
-	if start < 0 then
-		return nil
+--- Main on update function, play notes accordingly to every frame.
+-- @param elapsed (number)
+function Musician.Song:OnUpdate(elapsed)
+	if not(self.playing) then
+		return
 	end
 
-	return C_Timer.NewTimer(start, function()
-		local soundFile, instrumentData = Musician.Utils.GetSoundFile(track.instrument, key)
+	local from = self.cursor
+	local to = self.cursor + elapsed
 
-		if soundFile == nil then
-			return
+	local track
+	for _, track in pairs(self.tracks) do
+		-- Notes On
+		while track.notes[track.playIndex] and (track.notes[track.playIndex][2] >= from) and (track.notes[track.playIndex][2] < to) do
+			if elapsed < 1 then -- Do not play notes if frame is longer than 1 s (after loading screen) to avoid slowdowns
+				self:NoteOn(track, track.playIndex, soundFile)
+			end
+			track.playIndex = track.playIndex + 1
 		end
 
-		-- Send notification emote
-		if self.player ~= nil and Musician.Utils.PlayerIsInRange(self.player) and not(self.notified) then
-			self.notified = true
-			Musician.Utils.DisplayEmote(self.player, self.guid, Musician.Msg.EMOTE_PLAYING_MUSIC)
+		-- Notes Off
+		local noteIndex, noteOn
+		for noteIndex, noteOn in pairs(track.notesOn) do
+			if noteOn[1] < to then -- Off time is in the past
+				self:NoteOff(track, noteIndex)
+			end
 		end
+	end
 
-		-- Do not play note if the source song is playing or if the player is out of range
-		local sourceSongIsPlaying = Musician.sourceSong ~= nil and Musician.sourceSong.playing
-		if self.player ~= nil and (sourceSongIsPlaying or not(Musician.Utils.PlayerIsInRange(self.player))) or Musician.globalMute or Musician.PlayerIsMuted(self.player) then
-			return
-		end
+	self.cursor = to
+	Musician.Comm:SendMessage(Musician.Events.SongCursor, self)
 
-		local play, handle = PlaySoundFile(soundFile, 'SFX')
+	-- Song has ended
+	if to >= self.duration then
+		self:Stop()
+	end
+end
 
-		if play then
-			local soundDuration = duration
-			local soundDecay = instrumentData.decay
+--- Play a note
+-- @param track (table) Reference to the track
+-- @param noteIndex (int) Note index
+function Musician.Song:NoteOn(track, noteIndex)
+	local key, time, duration = unpack(track.notes[noteIndex])
+	local soundFile, instrumentData = Musician.Utils.GetSoundFile(track.instrument, key)
+	if soundFile == nil then
+		return
+	end
 
-			C_Timer.After(soundDuration, function()
-				StopSound(handle, soundDecay)
-			end)
-		end
-	end)
+	-- Send notification emote
+	if self.player ~= nil and Musician.Utils.PlayerIsInRange(self.player) and not(self.notified) then
+		self.notified = true
+		Musician.Utils.DisplayEmote(self.player, self.guid, Musician.Msg.EMOTE_PLAYING_MUSIC)
+	end
+
+	-- Do not play note if the source song is playing or if the player is out of range
+	local sourceSongIsPlaying = Musician.sourceSong ~= nil and Musician.sourceSong:IsPlaying()
+	if self.player ~= nil and (sourceSongIsPlaying or not(Musician.Utils.PlayerIsInRange(self.player))) or track.muted or Musician.globalMute or Musician.PlayerIsMuted(self.player) then
+		return
+	end
+
+	-- Play note sound file
+	local play, handle = PlaySoundFile(soundFile, 'SFX')
+
+	-- Add note to notesOn with sound handle and note off time
+	if play then
+		track.notesOn[noteIndex] = {time + duration, handle}
+	end
+end
+
+--- Stop a note of a track
+-- @param track (table) Reference to the track
+-- @param noteIndex (int) Note index
+function Musician.Song:NoteOff(track, noteIndex)
+	local _, instrumentData = Musician.Utils.GetSoundFile(track.instrument, track.notes[noteIndex][1])
+	if track.notesOn[noteIndex] ~= nil then
+		local handle = track.notesOn[noteIndex][2]
+		StopSound(handle, instrumentData.decay)
+		track.notesOn[noteIndex] = nil
+	end
+end
+
+--- Stop all notes of a track
+-- @param track (table) Reference to the track
+function Musician.Song:TrackNotesOff(track)
+	local noteIndex, noteOn
+	for noteIndex, noteOn in pairs(track.notesOn) do
+		self:NoteOff(track, noteIndex)
+	end
+end
+
+--- Stop all notes of the song
+function Musician.Song:SongNotesOff()
+	local track
+	for _, track in pairs(self.tracks) do
+		self:TrackNotesOff(track)
+	end
 end
 
 --- Pack a note into a string
@@ -233,6 +369,15 @@ function Musician.Song:UnpackTrack(str, fps)
 		local cursor = 5 + noteId * 4 -- Notes are 4-byte long
 		table.insert(track.notes, self:UnpackNote(string.sub(str, cursor, cursor + 3), fps))
 	end
+
+	-- Current playing note index
+	track.playIndex = 1
+
+	-- Track is muted
+	track.muted = false
+
+	-- Notes currently playing
+	track.notesOn = {}
 
 	return track
 end

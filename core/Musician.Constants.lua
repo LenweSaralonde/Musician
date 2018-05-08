@@ -23,6 +23,7 @@ Musician.Events = {}
 Musician.Events.RefreshFrame = "MusicianRefreshFrame"
 Musician.Events.SongPlay = "MusicianSongPlay"
 Musician.Events.SongStop = "MusicianSongStop"
+Musician.Events.SongCursor = "MusicianSongCursor"
 
 Musician.Icons = {}
 Musician.Icons.PlayerMuted = "Interface\\AddOns\\Musician\\ui\\textures\\muted.blp"

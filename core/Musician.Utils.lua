@@ -266,8 +266,8 @@ function Musician.Utils.GetSoundFile(instrument, key)
 end
 
 --- Start or stop the actual game music if a song can actually be heard
---
-function Musician.Utils.MuteGameMusic()
+-- @param force (boolean)
+function Musician.Utils.MuteGameMusic(force)
 	local mute
 
 	if GetCVar("Sound_EnableMusic") ~= "0" then
@@ -286,7 +286,7 @@ function Musician.Utils.MuteGameMusic()
 		mute = false
 	end
 
-	if Musician.Utils.gameMusicIsMuted == mute then return end
+	if not(force) and Musician.Utils.gameMusicIsMuted == mute then return end
 
 	Musician.Utils.gameMusicIsMuted = mute
 

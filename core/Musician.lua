@@ -29,6 +29,15 @@ function Musician:OnInitialize()
 	MusicianButton.Init()
 
 	Musician.Comm:RegisterMessage(Musician.Events.SongStop, Musician.OnSongStopped)
+	Musician.Comm:RegisterMessage(Musician.Events.SongPlay, Musician.OnSongPlayed)
+
+	-- @var frame (Frame)
+	Musician.playerFrame = CreateFrame("Frame")
+	Musician.playerFrame:SetFrameStrata("HIGH")
+	Musician.playerFrame:EnableMouse(false)
+	Musician.playerFrame:SetMovable(false)
+
+	Musician.playerFrame:SetScript("OnUpdate", Musician.PlayerOnUpdate)
 
 	-- /musician command
 	SlashCmdList["MUSICIAN"] = function(cmd)
@@ -92,8 +101,16 @@ function Musician.StopLoadedSong(playerName)
 	end
 end
 
+--- Handle playing song
+-- @param event (table)
+-- @param song (Musician.Song)
+function Musician.OnSongPlayed(event, song)
+	Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
+end
+
 --- Handle stopped song
--- @param playerName (string)
+-- @param event (table)
+-- @param song (Musician.Song)
 function Musician.OnSongStopped(event, song)
 	local playerName = song.player
 
@@ -110,6 +127,22 @@ function Musician.OnSongStopped(event, song)
 	end
 
 	Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
+end
+
+--- Music player on frame
+-- @param frame (Frame)
+-- @param elapsed (number)
+function Musician.PlayerOnUpdate(frame, elapsed)
+	if Musician.sourceSong then
+		Musician.sourceSong:OnUpdate(elapsed)
+	end
+
+	local song, player
+	for player, playerSong in pairs(Musician.songs) do
+		if playerSong.playing then
+			playerSong.playing:OnUpdate(elapsed)
+		end
+	end
 end
 
 --- Mute or unmute a player
