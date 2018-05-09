@@ -221,6 +221,7 @@ function Musician.Song:OnUpdate(elapsed)
 
 	local from = self.cursor
 	local to = self.cursor + elapsed
+	self.cursor = to
 
 	local track
 	for _, track in pairs(self.tracks) do
@@ -241,7 +242,6 @@ function Musician.Song:OnUpdate(elapsed)
 		end
 	end
 
-	self.cursor = to
 	Musician.Comm:SendMessage(Musician.Events.SongCursor, self)
 
 	-- Song has ended
@@ -277,7 +277,7 @@ function Musician.Song:NoteOn(track, noteIndex)
 
 	-- Add note to notesOn with sound handle and note off time
 	if play then
-		track.notesOn[noteIndex] = {time + duration, handle}
+		track.notesOn[noteIndex] = {self.cursor + duration, handle}
 	end
 end
 
