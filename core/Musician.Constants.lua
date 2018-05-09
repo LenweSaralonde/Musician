@@ -100,167 +100,167 @@ Musician.INSTRUMENTS = {
 	-- Percussion
 	["clap"] = {
 		["pathFunc"] = function() return "Sound\\Character\\EmoteClap" .. (floor(math.random() * 7) + 1) end, -- EmoteClap1 - 7
-		["decay"] = 50,
+		["decay"] = 100,
 		["isPercussion"] = true
 	},
 	["tambourine-crash-long1"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\tambourine\\crash-long1",
-		["decay"] = 50,
+		["decay"] = 100,
 		["isPercussion"] = true
 	},
 	["tambourine-crash-long2"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\tambourine\\crash-long2",
-		["decay"] = 50,
+		["decay"] = 100,
 		["isPercussion"] = true
 	},
 	["tambourine-crash-short1"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\tambourine\\crash-short1",
-		["decay"] = 50,
+		["decay"] = 100,
 		["isPercussion"] = true
 	},
 	["tambourine-crash-short2"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\tambourine\\crash-short2",
-		["decay"] = 50,
+		["decay"] = 100,
 		["isPercussion"] = true
 	},
 	["tambourine-crash-short-hi"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\tambourine\\crash-short-hi",
-		["decay"] = 50,
+		["decay"] = 100,
 		["isPercussion"] = true
 	},
 	["tambourine-hit1"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\tambourine\\hit1",
-		["decay"] = 50,
+		["decay"] = 100,
 		["isPercussion"] = true
 	},
 	["tambourine-hit2"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\tambourine\\hit2",
-		["decay"] = 50,
+		["decay"] = 100,
 		["isPercussion"] = true
 	},
 	["tambourine-shake-long"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\tambourine\\shake-long",
-		["decay"] = 50,
+		["decay"] = 100,
 		["isPercussion"] = true
 	},
 	["tambourine-shake-short"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\tambourine\\shake-short",
-		["decay"] = 50,
+		["decay"] = 100,
 		["isPercussion"] = true
 	},
 	["rattle-egg"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\rattle-egg\\rattle-egg",
-		["decay"] = 50,
+		["decay"] = 100,
 		["isPercussion"] = true
 	},
 	["bodhran-bassdrum-hi"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\bodhran\\bassdrum-hi",
-		["decay"] = 200,
+		["decay"] = 250,
 		["isPercussion"] = true
 	},
 	["bodhran-bassdrum-low"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\bodhran\\bassdrum-low",
-		["decay"] = 200,
+		["decay"] = 250,
 		["isPercussion"] = true
 	},
 	["bodhran-guiro-hi"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\bodhran\\guiro-hi",
-		["decay"] = 50,
+		["decay"] = 100,
 		["isPercussion"] = true
 	},
 	["bodhran-guiro-low"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\bodhran\\guiro-low",
-		["decay"] = 50,
+		["decay"] = 100,
 		["isPercussion"] = true
 	},
 	["bodhran-roll-bassdrum"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\bodhran\\roll-bassdrum",
-		["decay"] = 50,
+		["decay"] = 100,
 		["isPercussion"] = true
 	},
 	["bodhran-roll-hi"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\bodhran\\roll-hi",
-		["decay"] = 50,
+		["decay"] = 100,
 		["isPercussion"] = true
 	},
 	["bodhran-roll-low"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\bodhran\\roll-low",
-		["decay"] = 50,
+		["decay"] = 100,
 		["isPercussion"] = true
 	},
 	["bodhran-roll"] = {
 		["pathFunc"] = function() return "Interface\\AddOns\\Musician\\instruments\\bodhran\\roll" .. (floor(math.random() * 3) + 1) end, -- roll1 - 3
-		["decay"] = 50,
+		["decay"] = 100,
 		["isPercussion"] = true
 	},
 	["bodhran-snare-long-hi"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\bodhran\\snare-long-hi",
-		["decay"] = 50,
+		["decay"] = 100,
 		["isPercussion"] = true
 	},
 	["bodhran-snare-long-low"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\bodhran\\snare-long-low",
-		["decay"] = 50,
+		["decay"] = 100,
 		["isPercussion"] = true
 	},
 	["bodhran-snare-long-med"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\bodhran\\snare-long-med",
-		["decay"] = 50,
+		["decay"] = 100,
 		["isPercussion"] = true
 	},
 	["bodhran-snare-short-hi"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\bodhran\\snare-short-hi",
-		["decay"] = 50,
+		["decay"] = 100,
 		["isPercussion"] = true
 	},
 	["bodhran-snare-short-low"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\bodhran\\snare-short-low",
-		["decay"] = 50,
+		["decay"] = 100,
 		["isPercussion"] = true
 	},
 	["bodhran-stick-hi"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\bodhran\\stick-hi",
-		["decay"] = 50,
+		["decay"] = 100,
 		["isPercussion"] = true
 	},
 	["bodhran-stick-low"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\bodhran\\stick-low",
-		["decay"] = 50,
+		["decay"] = 100,
 		["isPercussion"] = true
 	},
 	["bodhran-stick-med"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\bodhran\\stick-med",
-		["decay"] = 50,
+		["decay"] = 100,
 		["isPercussion"] = true
 	},
 	["bodhran-tom-long-hi"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\bodhran\\tom-long-hi",
-		["decay"] = 50,
+		["decay"] = 100,
 		["isPercussion"] = true
 	},
 	["bodhran-tom-long-low"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\bodhran\\tom-long-low",
-		["decay"] = 50,
+		["decay"] = 100,
 		["isPercussion"] = true
 	},
 	["bodhran-tom-long-med"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\bodhran\\tom-long-med",
-		["decay"] = 50,
+		["decay"] = 100,
 		["isPercussion"] = true
 	},
 	["bodhran-tom-short-hi"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\bodhran\\tom-short-hi",
-		["decay"] = 50,
+		["decay"] = 100,
 		["isPercussion"] = true
 	},
 	["bodhran-tom-short-low"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\bodhran\\tom-short-low",
-		["decay"] = 50,
+		["decay"] = 100,
 		["isPercussion"] = true
 	},
 	["bodhran-tom-short-med"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\bodhran\\tom-short-med",
-		["decay"] = 50,
+		["decay"] = 100,
 		["isPercussion"] = true
 	},
 }
