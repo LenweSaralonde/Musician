@@ -37,6 +37,12 @@ function Musician.Song.create(packedSongData)
 	-- @field playing (boolean) True when the song is playing
 	self.playing = false
 
+	-- @field cropFrom (number) Play song from this position
+	self.cropFrom = 0
+
+	-- @field cropTo (number) Play song until this position
+	self.cropTo = 0
+
 	-- @field cursor (number) Cursor position, in seconds
 	self.cursor = 0
 
@@ -96,12 +102,7 @@ end
 --- Reset song to initial position
 function Musician.Song:Reset()
 	self:SongNotesOff()
-	self.cursor = 0
-	local track
-	for _, track in pairs(self.tracks) do
-		track.playIndex = 1
-	end
-	Musician.Comm:SendMessage(Musician.Events.SongCursor, self)
+	self:Seek(self.cropFrom)
 end
 
 --- Seek to position
@@ -245,7 +246,7 @@ function Musician.Song:OnUpdate(elapsed)
 	Musician.Comm:SendMessage(Musician.Events.SongCursor, self)
 
 	-- Song has ended
-	if to >= self.duration then
+	if to >= self.cropTo then
 		self:Stop()
 	end
 end
@@ -316,7 +317,7 @@ end
 -- @return (string)
 function Musician.Song:PackNote(note, fps)
 	-- KTTD : key, time, duration
-	return Musician.Utils.PackNumber(note[1], 1) .. Musician.Utils.PackTime(note[2], 2, fps) .. Musician.Utils.PackTime(min(note[3], Musician.MAX_NOTE_DURATION), 1, Musician.DURATION_FPS)
+	return Musician.Utils.PackNumber(note[1], 1) .. Musician.Utils.PackTime(note[2] - self.cropFrom, 2, fps) .. Musician.Utils.PackTime(min(note[3], Musician.MAX_NOTE_DURATION), 1, Musician.DURATION_FPS)
 end
 
 --- Unpack note from string
@@ -337,15 +338,21 @@ end
 -- @param fps (float)
 -- @return (string)
 function Musician.Song:PackTrack(track, fps)
-	local packedTrack
-
-	-- TINN : Track Id, instrument ID, Number of notes
-	packedTrack = Musician.Utils.PackNumber(track.id, 1) .. Musician.Utils.PackNumber(track.instrument, 1) .. Musician.Utils.PackNumber(table.getn(track.notes), 2)
+	local packedTrack = ""
 
 	-- Notes
 	local note
+	local noteCount = 0
 	for _, note in pairs(track.notes) do
-		packedTrack = packedTrack .. self:PackNote(note, fps)
+		if note[2] >= self.cropFrom and note[2] <= self.cropTo then
+			packedTrack = packedTrack .. self:PackNote(note, fps)
+			noteCount = noteCount + 1
+		end
+	end
+
+	if noteCount > 0 then
+		-- TINN : Track Id, instrument ID, Number of notes
+		packedTrack = Musician.Utils.PackNumber(track.id, 1) .. Musician.Utils.PackNumber(track.instrument, 1) .. Musician.Utils.PackNumber(noteCount, 2)	 .. packedTrack
 	end
 
 	return packedTrack
@@ -387,22 +394,34 @@ end
 function Musician.Song:Pack()
 	local packedSong = Musician.FILE_HEADER
 	local songName = string.sub(self.name, 1, 255)
-	local fps = 65535 / self.duration -- 2^16
+	local duration = self.cropTo - self.cropFrom
+	local fps = 65535 / duration -- 2^16
+
+	-- Pack tracks
+	local packedTracks = ""
+	local packedTrackCount = 0
+	local track
+	for _, track in pairs(self.tracks) do
+		if not(track.muted) then
+			local packedTrack = self:PackTrack(track, fps)
+			if packedTrack ~= "" then
+				packedTracks = packedTracks .. packedTrack
+				packedTrackCount = packedTrackCount + 1
+			end
+		end
+	end
 
 	-- Song name length, song name
 	packedSong = packedSong .. Musician.Utils.PackNumber(string.len(songName), 1) .. songName
 
 	-- Song duration
-	packedSong = packedSong .. Musician.Utils.PackNumber(self.duration, 2)
+	packedSong = packedSong .. Musician.Utils.PackNumber(duration, 2)
 
 	-- Number of tracks
-	packedSong = packedSong .. Musician.Utils.PackNumber(table.getn(self.tracks), 1)
+	packedSong = packedSong .. Musician.Utils.PackNumber(packedTrackCount, 1)
 
-	-- Song tracks
-	local track
-	for _, track in pairs(self.tracks) do
-		packedSong = packedSong .. self:PackTrack(track, fps)
-	end
+	-- Tracks
+	packedSong = packedSong .. packedTracks
 
 	return packedSong
 end
@@ -428,6 +447,7 @@ function Musician.Song:Unpack(str)
 	local duration = Musician.Utils.UnpackNumber(string.sub(str, cursor, cursor + 1))
 	local fps = 65535 / duration -- 2^16
 	self.duration = duration
+	self.cropTo = duration
 	cursor = cursor + 2
 
 	-- number of tracks (1)
@@ -436,11 +456,16 @@ function Musician.Song:Unpack(str)
 
 	-- tracks
 	local trackId
+	self.cropFrom = self.duration
 	self.tracks = {}
 	for trackId = 0, trackCount - 1 do
 		local trackLength = Musician.Utils.UnpackNumber(string.sub(str, cursor + 2, cursor + 3))
 		local trackEnd = cursor + 3 + trackLength * 4
-		table.insert(self.tracks, self:UnpackTrack(string.sub(str, cursor, trackEnd), fps))
+		if trackLength > 0 then
+			local track = self:UnpackTrack(string.sub(str, cursor, trackEnd), fps)
+			table.insert(self.tracks, track)
+			self.cropFrom = min(self.cropFrom, track.notes[1][2])
+		end
 		cursor = trackEnd + 1
 	end
 end
