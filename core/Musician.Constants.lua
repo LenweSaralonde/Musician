@@ -18,6 +18,7 @@ Musician.LISTENING_RADIUS = 40
 Musician.PLAY_PREROLL = 1
 
 Musician.Msg = {}
+Musician.Locale = {}
 
 Musician.Events = {}
 Musician.Events.RefreshFrame = "MusicianRefreshFrame"

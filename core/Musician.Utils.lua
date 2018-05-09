@@ -326,6 +326,20 @@ function Musician.Utils.GetPromoEmote()
 	return Musician.Msg.EMOTE_PLAYING_MUSIC .. " " .. promo
 end
 
+--- Return true if the message contains the promo emote, in any language
+-- @param message (string)
+-- @return (boolean)
+function Musician.Utils.HasPromoEmote(message)
+	local lang
+	for lang, locale in pairs(Musician.Locale) do
+		if string.find(message, locale.EMOTE_PLAYING_MUSIC) == 1 then
+			return true
+		end
+	end
+
+	return false
+end
+
 --- Compare two version numbers
 -- @param versionA (string)
 -- @param versionB (string)
