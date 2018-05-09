@@ -60,15 +60,21 @@ function Musician.Song:IsPlaying()
 end
 
 --- Preload song samples into memory cache
-function Musician.Song:Preload()
+-- @param callback (function) Function to be called when preloading is complete
+function Musician.Song:Preload(callback)
+
+	-- Already preloaded
 	if self.preloaded then
+		if callback then
+			callback()
+		end
 		return
 	end
 
 	self.preloading = true
 
+	-- Get all samples (notes per instrument) needed
 	local track, note
-
 	local notes = {}
 
 	for _, track in pairs(self.tracks) do
@@ -78,6 +84,18 @@ function Musician.Song:Preload()
 		end
 	end
 
+	local noteCount = 0
+	for _, note in pairs(notes) do
+		noteCount = noteCount + 1
+	end
+
+	-- Synchronize callback
+	if callback then
+		-- Max loading time for a sample has been measured to 3 ms (5400 RPM HDD on USB2)
+		C_Timer.After(noteCount * 0.003, callback)
+	end
+
+	-- Preload samples
 	local index = 0
 	local duration = .25
 	for _, note in pairs(notes) do
@@ -189,18 +207,11 @@ end
 
 --- Resume a song playing
 function Musician.Song:Resume()
-	local playSong = function()
+	-- Preload and delay playout if necessary
+	self:Preload(function()
 		self.preloading = false
 		self.playing = true
-	end
-
-	-- Preload and delay playout if necessary
-	if not(self.preloaded) then
-		C_Timer.After(Musician.PLAY_PREROLL, playSong)
-		self:Preload()
-	else
-		playSong()
-	end
+	end)
 
 	Musician.Comm:SendMessage(Musician.Events.SongPlay, self)
 end

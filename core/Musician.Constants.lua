@@ -15,8 +15,6 @@ Musician.C0_INDEX = 24
 Musician.POSITION_UPDATE_PERIOD = 4
 Musician.LISTENING_RADIUS = 40
 
-Musician.PLAY_PREROLL = 1
-
 Musician.Msg = {}
 Musician.Locale = {}
 
