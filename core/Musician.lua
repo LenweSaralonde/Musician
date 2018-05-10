@@ -335,6 +335,11 @@ function Musician.SetupHooks()
 			-- Music is loaded and actually playing
 			if Musician.songs[fullPlayerName] ~= nil and Musician.songs[fullPlayerName].playing ~= nil then
 
+				-- Ignore emote if the player has already been notified
+				if Musician.songs[fullPlayerName].playing.notified then
+					return true
+				end
+
 				-- Remove the "promo" part of the emote and mark as already notified
 				Musician.songs[fullPlayerName].playing.notified = true
 				msg = Musician.Msg.EMOTE_PLAYING_MUSIC

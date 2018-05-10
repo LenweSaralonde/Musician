@@ -19,12 +19,6 @@ function Musician.Song.create(packedSongData)
 	-- @field player (string) Player name, with realm slug
 	self.player = nil
 
-	-- @field guid (string) Player GUID
-	self.guid = nil
-
-	-- @field position (table) Player position
-	self.position = nil
-
 	-- @field notified (boolean) True when the notification for the song playing has been displayed
 	self.notified = false
 
@@ -274,8 +268,8 @@ function Musician.Song:NoteOn(track, noteIndex)
 
 	-- Send notification emote
 	if self.player ~= nil and Musician.Utils.PlayerIsInRange(self.player) and not(self.notified) then
+		Musician.Utils.DisplayEmote(self.player, Musician.songs[self.player].guid, Musician.Msg.EMOTE_PLAYING_MUSIC)
 		self.notified = true
-		Musician.Utils.DisplayEmote(self.player, self.guid, Musician.Msg.EMOTE_PLAYING_MUSIC)
 	end
 
 	-- Do not play note if the source song is playing or if the player is out of range
