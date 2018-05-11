@@ -375,3 +375,59 @@ function Musician.Utils.VersionCompare(versionA, versionB)
 
 	return 0
 end
+
+--- Add padding zeros
+-- @param number (number)
+-- @param zeros (number)
+-- @return (string)
+function Musician.Utils.PaddingZeros(number, zeros)
+	local str = number .. ""
+
+	while strlen(str) < zeros do
+		str = "0" .. str
+	end
+
+	return str
+end
+
+--- Format time to mm:ss.ss format
+-- @param time (number)
+-- @return (string)
+function Musician.Utils.FormatTime(time)
+	time = floor(time * 100 + .5)
+	local cs = time % 100
+	time = floor(time / 100)
+	local s = time % 60
+	time = floor(time / 60)
+	local m = time
+	return Musician.Utils.PaddingZeros(m, 2) .. ":" .. Musician.Utils.PaddingZeros(s, 2) .. "." .. Musician.Utils.PaddingZeros(cs, 2)
+end
+
+--- Parse time from mm:ss.ss format
+-- @param timestamp (string)
+-- @return (number)
+function Musician.Utils.ParseTime(timestamp)
+	local parts = {string.split(':', timestamp)}
+	local m, s
+
+	if #parts >= 2 then
+		m = string.match(parts[#parts - 1], "(%d*)")
+	end
+	s, _, cs = string.match(parts[#parts], "(%d*)(%.?)(%d*)")
+
+	local time = 0
+
+	if m and m ~= "" then
+		time = tonumber(m) * 60
+	end
+
+	if s and s ~= "" then
+		time = time + tonumber(s)
+	end
+
+	if cs and cs ~= "" then
+		time = time + tonumber('0.' .. cs)
+	end
+
+	return max(0, time)
+end

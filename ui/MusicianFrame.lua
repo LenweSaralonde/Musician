@@ -1,11 +1,12 @@
-
+Musician.Frame = LibStub("AceAddon-3.0"):NewAddon("Musician.Frame", "AceEvent-3.0")
 
 MusicianFrame.Init = function()
 	MusicianFrame.Refresh()
-	Musician.Comm:RegisterMessage(Musician.Events.RefreshFrame, MusicianFrame.Refresh)
+	Musician.Frame:RegisterMessage(Musician.Events.RefreshFrame, MusicianFrame.Refresh)
 	MusicianFrame.Clear()
 	MusicianFrameTitle:SetText(Musician.Msg.PLAY_A_SONG)
 	MusicianFrameClearButton:SetText(Musician.Msg.CLEAR)
+	MusicianFrameTrackEditorButton:SetText(Musician.Msg.EDIT)
 	MusicianFrameSource:SetScript("OnTextChanged", MusicianFrame.SourceChanged)
 end
 
@@ -23,6 +24,10 @@ end
 MusicianFrame.Clear = function()
 	MusicianFrameSource:SetText(MusicianFrame.GetDefaultText())
 	MusicianFrame.Focus()
+end
+
+MusicianFrame.TrackEditor = function()
+	MusicianTrackEditor:Show()
 end
 
 MusicianFrame.SourceChanged = function(self, isUserInput)
@@ -53,6 +58,7 @@ MusicianFrame.LoadSource = function()
 		end
 
 		Musician.sourceSong = sourceSong
+		Musician.TrackEditor.OnLoad()
 	end
 
 	Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
@@ -88,6 +94,14 @@ MusicianFrame.GetDefaultText = function()
 end
 
 MusicianFrame.Refresh = function()
+
+	-- Track editor button
+	if Musician.sourceSong == nil then
+		MusicianFrameTrackEditorButton:Disable()
+		MusicianTrackEditor:Hide()
+	else
+		MusicianFrameTrackEditorButton:Enable()
+	end
 
 	-- Test song button
 	if Musician.sourceSong == nil then

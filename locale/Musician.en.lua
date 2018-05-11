@@ -2,11 +2,13 @@ Musician.Locale.en = {}
 
 Musician.Locale.en.PLAY = "Play"
 Musician.Locale.en.STOP = "Stop"
+Musician.Locale.en.PAUSE = "Pause"
 Musician.Locale.en.LOAD = "Load"
 Musician.Locale.en.LOADING = "Loading"
 Musician.Locale.en.TEST_SONG = "Preview"
 Musician.Locale.en.STOP_TEST = "Stop preview"
 Musician.Locale.en.CLEAR = "Clear"
+Musician.Locale.en.EDIT = "Edit"
 Musician.Locale.en.MUTE = "Mute"
 Musician.Locale.en.UNMUTE = "Unmute"
 
@@ -24,6 +26,11 @@ Musician.Locale.en.INVALID_MUSIC_CODE = "Invalid music code."
 
 Musician.Locale.en.PLAY_A_SONG = "Play a song"
 Musician.Locale.en.PASTE_MUSIC_CODE = "Import your song in MIDI format at:\n{url}\n\nthen paste the music code here..."
+
+Musician.Locale.en.SONG_EDITOR = "Song editor"
+Musician.Locale.en.MARKER_FROM = "From"
+Musician.Locale.en.MARKER_TO = "To"
+Musician.Locale.en.POSITION = "Position"
 
 Musician.Locale.en.EMOTE_PLAYING_MUSIC = "is playing a song."
 Musician.Locale.en.EMOTE_PROMO = "(Get \"Musician\" add-on at {url} to listen!)"

@@ -1,0 +1,191 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+
+	<EditBox name="$parentTimeEditBoxTemplate" letters="8" historyLines="0" autofocus="false" virtual="true">
+		<Size x="50" y="20"/>
+		<FontString inherits="GameFontHighlightSmall" justifyH="LEFT" justifyV="MIDDLE"/>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture name="$parentLeft" file="Interface\Common\Common-Input-Border">
+					<Size x="8" y="20"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" x="-5" y="0" relativeTo="$parent" />
+					</Anchors>
+					<TexCoords left="0" right="0.0625" top="0" bottom="0.625"/>
+				</Texture>
+				<Texture name="$parentRight" file="Interface\Common\Common-Input-Border">
+					<Size x="8" y="20"/>
+					<Anchors>
+						<Anchor point="RIGHT" x="5" y="0" relativeTo="$parent" />
+					</Anchors>
+					<TexCoords left="0.9375" right="1.0" top="0" bottom="0.625"/>
+				</Texture>
+				<Texture name="$parentMiddle" file="Interface\Common\Common-Input-Border">
+					<Size x="0" y="20"/>
+					<Anchors>
+						<Anchor point="LEFT" relativeTo="$parentLeft" relativePoint="RIGHT"/>
+						<Anchor point="RIGHT" relativeTo="$parentRight" relativePoint="LEFT"/>
+					</Anchors>
+					<TexCoords left="0.0625" right="0.9375" top="0" bottom="0.625"/>
+				</Texture>
+
+				<FontString name="$parentTitle" inherits="GameFontNormal">
+					<Anchors>
+						<Anchor point="TOP" y="13" relativePoint="TOP" relativeTo="$parent" />
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnEscapePressed>self:ClearFocus()</OnEscapePressed>
+			<OnKeyUp>
+				if key == "ENTER" then
+					self:ClearFocus()
+				end
+			</OnKeyUp>
+		</Scripts>
+	</EditBox>
+
+	<Frame name="MusicianTrackEditor" parent="UIParent" toplevel="true" enableMouse="true" movable="true" hidden="true">
+
+		<Scripts>
+			<OnLoad>self:RegisterForDrag("LeftButton")</OnLoad>
+			<OnDragStart>self:StartMoving()</OnDragStart>
+			<OnDragStop>self:StopMovingOrSizing()</OnDragStop>
+			<OnShow>
+				PlaySound(SOUNDKIT.IG_QUEST_LIST_OPEN)
+			</OnShow>
+			<OnHide>
+				PlaySound(SOUNDKIT.IG_QUEST_LIST_CLOSE)
+			</OnHide>
+		</Scripts>
+
+		<Size x="320" y="148" />
+
+		<Anchors>
+			<Anchor point="CENTER" x="0" y="0" />
+		</Anchors>
+
+		<Layers>
+			<Layer level="BACKGROUND">
+				<FontString name="$parentTitle" inherits="GameFontNormal">
+					<Anchors>
+						<Anchor point="TOP">
+							<Offset>
+								<AbsDimension x="0" y="-15"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+
+		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+			<BackgroundInsets>
+				<AbsInset left="11" right="12" top="12" bottom="11" />
+			</BackgroundInsets>
+			<TileSize>
+				<AbsValue val="32" />
+			</TileSize>
+			<EdgeSize>
+				<AbsValue val="32" />
+			</EdgeSize>
+		</Backdrop>
+
+		<Frames>
+
+			<Button name="$parentCloseButton" inherits="UIPanelCloseButton">
+				<Anchors>
+					<Anchor point="CENTER" relativePoint="TOPRIGHT">
+						<Offset x="-7" y="-7" />
+					</Anchor>
+				</Anchors>
+			</Button>
+
+			<Slider name="$parentSourceSongSlider" inherits="OptionsSliderTemplate" defaultValue="1" minValue="1" maxValue="1" valueStep=".01" stepsPerPage="1000">
+				<Size x="290" y="22"/>
+				<Anchors>
+					<Anchor point="TOP" x="0" y="-80"/>
+				</Anchors>
+				<Scripts>
+					<OnMouseDown>
+						self.dragging = true
+					</OnMouseDown>
+					<OnMouseUp>
+						self.dragging = false
+						if Musician.sourceSong then
+							Musician.sourceSong:Seek(self:GetValue() - .001)
+						end
+					</OnMouseUp>
+					<OnUpdate>
+						if self.dragging then
+							Musician.TrackEditor.UpdateCursor(nil, Musician.sourceSong)
+						end
+					</OnUpdate>
+				</Scripts>
+			</Slider>
+
+			<Button name="$parentPrevButton" inherits="UIPanelButtonTemplate">
+				<Size x="50" y="20" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="0" y="-8" relativePoint="BOTTOMLEFT" relativeTo="$parentSourceSongSlider" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						Musician.sourceSong:Seek(max(Musician.sourceSong.cropFrom, Musician.sourceSong.cursor - 10))
+					</OnClick>
+				</Scripts>
+			</Button>
+
+			<Button name="$parentPlayButton" inherits="UIPanelButtonTemplate">
+				<Size x="200" y="20" />
+				<Anchors>
+					<Anchor point="TOP" x="0" y="-8" relativePoint="BOTTOM" relativeTo="$parentSourceSongSlider" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						if Musician.sourceSong.playing then
+							Musician.sourceSong:Stop()
+						else
+							if Musician.sourceSong.cursor >= Musician.sourceSong.cropTo then
+								Musician.sourceSong:Seek(Musician.sourceSong.cropFrom)
+							end
+							Musician.sourceSong:Resume()
+						end
+					</OnClick>
+				</Scripts>
+			</Button>
+
+			<Button name="$parentNextButton" inherits="UIPanelButtonTemplate">
+				<Size x="50" y="20" />
+				<Anchors>
+					<Anchor point="TOPRIGHT" x="0" y="-8" relativePoint="BOTTOMRIGHT" relativeTo="$parentSourceSongSlider" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						Musician.sourceSong:Seek(min(Musician.sourceSong.cropTo, Musician.sourceSong.cursor + 10))
+					</OnClick>
+				</Scripts>
+			</Button>
+
+			<EditBox name="$parentCropFrom" inherits="$parentTimeEditBoxTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" x="5" y="8" relativeTo="$parentSourceSongSlider" relativePoint="TOPLEFT" />
+				</Anchors>
+			</EditBox>
+
+			<EditBox name="$parentCursorAt" inherits="$parentTimeEditBoxTemplate">
+				<Anchors>
+					<Anchor point="BOTTOM" y="8" relativeTo="$parentSourceSongSlider" relativePoint="TOP" />
+				</Anchors>
+			</EditBox>
+
+			<EditBox name="$parentCropTo" inherits="$parentTimeEditBoxTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMRIGHT" x="-5" y="8" relativeTo="$parentSourceSongSlider" relativePoint="TOPRIGHT" />
+				</Anchors>
+			</EditBox>
+
+
+		</Frames>
+	</Frame>
+</Ui>

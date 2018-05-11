@@ -17,6 +17,9 @@ core\Musician.Registry.lua
 ui\MusicianFrame.xml
 ui\MusicianFrame.lua
 
+ui\MusicianTrackEditor.xml
+ui\MusicianTrackEditor.lua
+
 ui\MusicianButton.xml
 ui\MusicianButton.lua
 

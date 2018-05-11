@@ -1,4 +1,4 @@
-Musician = LibStub("AceAddon-3.0"):NewAddon("Musician")
+Musician = LibStub("AceAddon-3.0"):NewAddon("Musician", "AceEvent-3.0")
 
 function Musician:OnInitialize()
 	Musician.Utils.Print(string.gsub(Musician.Msg.STARTUP, "{version}", Musician.Utils.Highlight(GetAddOnMetadata("Musician", "Version"))))
@@ -27,9 +27,10 @@ function Musician:OnInitialize()
 
 	MusicianFrame.Init()
 	MusicianButton.Init()
+	Musician.TrackEditor.Init()
 
-	Musician.Comm:RegisterMessage(Musician.Events.SongStop, Musician.OnSongStopped)
-	Musician.Comm:RegisterMessage(Musician.Events.SongPlay, Musician.OnSongPlayed)
+	Musician:RegisterMessage(Musician.Events.SongStop, Musician.OnSongStopped)
+	Musician:RegisterMessage(Musician.Events.SongPlay, Musician.OnSongPlayed)
 
 	-- @var frame (Frame)
 	Musician.playerFrame = CreateFrame("Frame")

@@ -2,11 +2,13 @@ Musician.Locale.fr = {}
 
 Musician.Locale.fr.PLAY = "Jouer"
 Musician.Locale.fr.STOP = "Stop"
+Musician.Locale.fr.PAUSE = "Pause"
 Musician.Locale.fr.LOAD = "Charger"
 Musician.Locale.fr.LOADING = "Chargement"
 Musician.Locale.fr.TEST_SONG = "Aperçu"
 Musician.Locale.fr.STOP_TEST = "Arrêter aperçu"
 Musician.Locale.fr.CLEAR = "Effacer"
+Musician.Locale.fr.EDIT = "Éditer"
 Musician.Locale.fr.MUTE = "Rendre silencieux"
 Musician.Locale.fr.UNMUTE = "Rétablir la musique"
 
@@ -24,6 +26,11 @@ Musician.Locale.fr.INVALID_MUSIC_CODE = "Le code musical est invalide."
 
 Musician.Locale.fr.PLAY_A_SONG = "Jouer un morceau"
 Musician.Locale.fr.PASTE_MUSIC_CODE = "Importez votre morceau au format MIDI à l'adresse :\n{url}\n\npuis collez le code de la musique ici..."
+
+Musician.Locale.fr.SONG_EDITOR = "Éditeur de morceau"
+Musician.Locale.fr.MARKER_FROM = "Début"
+Musician.Locale.fr.MARKER_TO = "Fin"
+Musician.Locale.fr.POSITION = "Position"
 
 Musician.Locale.fr.EMOTE_PLAYING_MUSIC = "joue de la musique."
 Musician.Locale.fr.EMOTE_PROMO = "(Téléchargez l'add-on \"Musician\" sur {url} pour l'écouter !)"

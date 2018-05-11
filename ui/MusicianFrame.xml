@@ -21,7 +21,7 @@
 
 		<Layers>
 			<Layer level="BACKGROUND">
-				<FontString name="MusicianFrameTitle" inherits="GameFontNormal">
+				<FontString name="$parentTitle" inherits="GameFontNormal">
 					<Anchors>
 						<Anchor point="TOP">
 							<Offset>
@@ -47,7 +47,7 @@
 
 		<Frames>
 
-			<Button name="MusicianFrameClearButton" inherits="UIPanelButtonTemplate" level="OVERLAY">
+			<Button name="$parentClearButton" inherits="UIPanelButtonTemplate" level="OVERLAY">
 				<Size x="60" y="20" />
 				<Anchors>
 					<Anchor point="TOPRIGHT" x="-10" y="-10" relativePoint="TOPRIGHT" />
@@ -59,7 +59,19 @@
 				</Scripts>
 			</Button>
 
-			<Button name="MusicianFrameCloseButton" inherits="UIPanelCloseButton">
+			<Button name="$parentTrackEditorButton" inherits="UIPanelButtonTemplate" level="OVERLAY">
+				<Size x="60" y="20" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="10" y="-10" relativePoint="TOPLEFT" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						MusicianFrame.TrackEditor()
+					</OnClick>
+				</Scripts>
+			</Button>
+
+			<Button name="$parentCloseButton" inherits="UIPanelCloseButton">
 				<Anchors>
 					<Anchor point="CENTER" relativePoint="TOPRIGHT">
 						<Offset x="-7" y="-7" />
@@ -67,7 +79,7 @@
 				</Anchors>
 			</Button>
 
-			<Button name="MusicianFrameTestButton" inherits="UIPanelButtonTemplate">
+			<Button name="$parentTestButton" inherits="UIPanelButtonTemplate">
 				<Size x="100" y="20" />
 				<Anchors>
 					<Anchor point="BOTTOMLEFT" x="10" y="10" relativePoint="BOTTOMLEFT" />
@@ -79,7 +91,7 @@
 				</Scripts>
 			</Button>
 
-			<Button name="MusicianFrameLoadButton" inherits="UIPanelButtonTemplate">
+			<Button name="$parentLoadButton" inherits="UIPanelButtonTemplate">
 				<Size x="100" y="20" />
 				<Anchors>
 					<Anchor point="BOTTOM" x="0" y="10" relativePoint="BOTTOM" />
@@ -91,7 +103,7 @@
 				</Scripts>
 			</Button>
 
-			<Button name="MusicianFramePlayButton" inherits="UIPanelButtonTemplate">
+			<Button name="$parentPlayButton" inherits="UIPanelButtonTemplate">
 				<Size x="100" y="20" />
 				<Anchors>
 					<Anchor point="BOTTOMRIGHT" x="-10" y="10" relativePoint="BOTTOMRIGHT" />
@@ -103,7 +115,7 @@
 				</Scripts>
 			</Button>
 
-			<ScrollFrame name="MusicianFrameScrollFrame" inherits="UIPanelScrollFrameTemplate">
+			<ScrollFrame name="$parentScrollFrame" inherits="UIPanelScrollFrameTemplate">
 				<Size x="268" y="90" />
 				<Anchors>
 					<Anchor point="TOPLEFT" x="15" y="-35" relativePoint="TOPLEFT" />
@@ -138,7 +150,7 @@
 				</ScrollChild>
 			</ScrollFrame>
 
-			<Frame name="MusicianFrameTextBackground">
+			<Frame name="$parentTextBackground">
 				<Size x="300" y="100" />
 				<Anchors>
 					<Anchor point="TOP" y="-30" relativePoint="TOP" />

@@ -473,4 +473,6 @@ function Musician.Song:Unpack(str)
 		end
 		cursor = trackEnd + 1
 	end
+
+	self.cursor = self.cropFrom
 end
