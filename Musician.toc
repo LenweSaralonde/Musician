@@ -9,10 +9,13 @@ embeds.xml
 
 core\Musician.lua
 core\Musician.Song.lua
-core\Musician.Constants.lua
 core\Musician.Utils.lua
 core\Musician.Comm.lua
 core\Musician.Registry.lua
+
+constants\Musician.Constants.lua
+constants\Musician.Instruments.lua
+constants\Musician.MidiMapping.lua
 
 ui\MusicianFrame.xml
 ui\MusicianFrame.lua
