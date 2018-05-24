@@ -134,8 +134,6 @@ function Musician.Song:Preload(callback)
 	end
 
 	-- Preload samples
-	local index = 0
-	local duration = .25
 	for _, note in pairs(notes) do
 		local soundFile, _ = Musician.Utils.GetSoundFile(note[1], note[2])
 		if soundFile ~= nil then

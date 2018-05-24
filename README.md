@@ -28,9 +28,19 @@ To play a song:
 6. Click **Load** then wait for the song to load (may take ~1 minute)
 7. Click **Play**
 
+Song editor
+-----------
+When a song is imported (pasted) from the converter, it can be opened in the song editor by pressing the **Edit** button. You can preview the song using the player controls and perform some basic modifications prior to playing it for other players without requiring an external sequencer:
+* Set start and end points, to use a part of the song (and reduce loading time)
+* Mute and solo tracks
+* Change track instruments
+* Transpose tracks
+
+The song editor also shows some information about the tracks (MIDI instrument, start and end points, number of notes...) and the activity while the song is playing.
+
 Tips
 ----
-* You can preview the song at any moment prior to playing it for other players without loading time by clicking the **Preview** button. If another song is playing nearby, it will be muted for you only.
+* You can preview the song at any moment prior to playing it for other players without loading time by clicking the **Preview** button or using the song editor. If another song is playing nearby, it will be muted for you only.
 * If another player has Musician, it will be shown in his/her tooltip. Just hover the other players with your mouse cursor to see who can hear you !
 * You can add lyrics by combining Musician with the [StoryTeller addon](https://www.lenwe.info/story-teller) !
 * Load the next song while the current one is playing to reduce waiting time between songs.
@@ -57,7 +67,7 @@ The 13 instruments available are:
 * Trombone (57)
 * Trumpet (56)
 
-The other instruments are mapped with the closest-sounding of the 13 instruments above (violin → fiddle, piano → dulcimer, guitar → lute etc.). The drum kits are replaced by a bodhrán (frame drum), a tambourine and a shaker. Check the mappings in [Musician.Constants.lua](https://github.com/LenweSaralonde/Musician/blob/master/core/Musician.Constants.lua#L265) for details.
+The other instruments are mapped with the closest-sounding of the 13 instruments above (violin → fiddle, piano → dulcimer, guitar → lute etc.). The drum kits are replaced by a bodhrán (frame drum), a tambourine and a shaker. Check the mappings in [Musician.MidiMapping.lua](https://github.com/LenweSaralonde/Musician/blob/master/constants/Musician.MidiMapping.lua) for details.
 
 Unfortunately, due to limitations of the WoW UI, velocity and controls (volume, padding, pitch bend, modulation...) are not supported. The polypohony is approximately 10 notes.
 
