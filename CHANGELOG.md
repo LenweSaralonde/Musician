@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v1.2.0
+------
+* Brand new music player: better performance and less RAM usage
+* Normalized instrument samples
+* Added song editor (song crop, instrument replacement, transposition, track mute and solo)
+* Fixed minor bugs
+
 v1.1.2
 ------
 * Added new instrument "Male voice" on patch 52 ("Choir Aahs")
