@@ -239,7 +239,7 @@ Musician.TrackEditor.InitInstrumentDropdown = function(dropdown, trackIndex)
 		local originalMidiId = value
 		local instrumentId = Musician.MIDI_INSTRUMENT_MAPPING[originalMidiId]
 		local midiId = Musician.INSTRUMENTS[instrumentId].midi
-		local instrumentName = Musician.Locale.fr.INSTRUMENT_NAMES[instrumentId]
+		local instrumentName = Musician.Msg.INSTRUMENT_NAMES[instrumentId]
 		dropdown.value = midiId
 		Musician.sourceSong.tracks[dropdown.trackIndex].instrument = midiId
 		UIDropDownMenu_SetText(dropdown, instrumentName)
@@ -256,7 +256,7 @@ Musician.TrackEditor.InitInstrumentDropdown = function(dropdown, trackIndex)
 		local instrumentId
 		for _, instrumentId in pairs(Musician.INSTRUMENTS_AVAILABLE) do
 			local midiId = Musician.INSTRUMENTS[instrumentId].midi
-			info.text = Musician.Locale.fr.INSTRUMENT_NAMES[instrumentId]
+			info.text = Musician.Msg.INSTRUMENT_NAMES[instrumentId]
 			info.arg1 = midiId
 			info.checked = dropdown.value == midiId
 			UIDropDownMenu_AddButton(info)
