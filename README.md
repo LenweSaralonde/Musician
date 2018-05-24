@@ -31,6 +31,7 @@ To play a song:
 Song editor
 -----------
 When a song is imported (pasted) from the converter, it can be opened in the song editor by pressing the **Edit** button. You can preview the song using the player controls and perform some basic modifications prior to playing it for other players without requiring an external sequencer:
+
 * Set start and end points, to use a part of the song (and reduce loading time)
 * Mute and solo tracks
 * Change track instruments
