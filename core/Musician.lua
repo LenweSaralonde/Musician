@@ -192,14 +192,17 @@ function Musician.SetupHooks()
 			if args[2] == "stop" then
 				PlaySound(80)
 				Musician.StopLoadedSong(args[3])
-				-- Mute player
+			-- Mute player
 			elseif args[2] == "mute" then
 				PlaySound(80)
 				Musician.MutePlayer(args[3], true)
-				-- Unmute player
+			-- Unmute player
 			elseif args[2] == "unmute" then
 				PlaySound(80)
 				Musician.MutePlayer(args[3], false)
+			-- Seek source song
+			elseif args[2] == "seek" and Musician.sourceSong ~= nil then
+				Musician.sourceSong:Seek(args[3])
 			end
 		else
 			return MusicianFrame.HookedChatFrame_OnHyperlinkShow(chatFrame, link, text, button)

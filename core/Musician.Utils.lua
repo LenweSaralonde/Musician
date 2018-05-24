@@ -236,7 +236,7 @@ function Musician.Utils.GetSoundFile(instrument, key)
 	local instrumentName
 	if instrument ~= 128 then -- Not a percussion
 		instrumentName = Musician.MIDI_INSTRUMENT_MAPPING[instrument]
-		if instrumentName == nil then
+		if instrumentName == nil or instrumentName == "none" then
 			return nil
 		end
 	else -- Percussion
@@ -244,7 +244,7 @@ function Musician.Utils.GetSoundFile(instrument, key)
 	end
 
 	local instrumentData = Musician.INSTRUMENTS[instrumentName]
-	if instrumentData == nil then
+	if instrumentData == nil or instrumentName == "none" then
 		return nil
 	end
 
@@ -392,14 +392,20 @@ end
 
 --- Format time to mm:ss.ss format
 -- @param time (number)
+-- @param simple (boolean)
 -- @return (string)
-function Musician.Utils.FormatTime(time)
+function Musician.Utils.FormatTime(time, simple)
 	time = floor(time * 100 + .5)
 	local cs = time % 100
 	time = floor(time / 100)
 	local s = time % 60
 	time = floor(time / 60)
 	local m = time
+
+	if simple then
+		return Musician.Utils.PaddingZeros(m, 2) .. ":" .. Musician.Utils.PaddingZeros(s, 2)
+	end
+
 	return Musician.Utils.PaddingZeros(m, 2) .. ":" .. Musician.Utils.PaddingZeros(s, 2) .. "." .. Musician.Utils.PaddingZeros(cs, 2)
 end
 

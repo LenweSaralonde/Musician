@@ -1,36 +1,16 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 
-	<EditBox name="$parentTimeEditBoxTemplate" letters="8" historyLines="0" autofocus="false" virtual="true">
-		<Size x="50" y="20"/>
-		<FontString inherits="GameFontHighlightSmall" justifyH="LEFT" justifyV="MIDDLE"/>
+	<!-- Edit box with timecode template -->
+
+	<EditBox name="MusicianTimeEditBoxTemplate" inherits="InputBoxTemplate" letters="8" historyLines="0" autofocus="false" virtual="true">
+		<Size x="55" y="20"/>
+		<FontString inherits="GameFontHighlightSmall" justifyH="LEFT" justifyV="MIDDLE" />
 		<Layers>
 			<Layer level="BACKGROUND">
-				<Texture name="$parentLeft" file="Interface\Common\Common-Input-Border">
-					<Size x="8" y="20"/>
+				<FontString name="$parentTitle" inherits="GameFontNormal" justifyH="CENTER" justifyV="MIDDLE">
+					<Size x="50" y="0"/>
 					<Anchors>
-						<Anchor point="TOPLEFT" x="-5" y="0" relativeTo="$parent" />
-					</Anchors>
-					<TexCoords left="0" right="0.0625" top="0" bottom="0.625"/>
-				</Texture>
-				<Texture name="$parentRight" file="Interface\Common\Common-Input-Border">
-					<Size x="8" y="20"/>
-					<Anchors>
-						<Anchor point="RIGHT" x="5" y="0" relativeTo="$parent" />
-					</Anchors>
-					<TexCoords left="0.9375" right="1.0" top="0" bottom="0.625"/>
-				</Texture>
-				<Texture name="$parentMiddle" file="Interface\Common\Common-Input-Border">
-					<Size x="0" y="20"/>
-					<Anchors>
-						<Anchor point="LEFT" relativeTo="$parentLeft" relativePoint="RIGHT"/>
-						<Anchor point="RIGHT" relativeTo="$parentRight" relativePoint="LEFT"/>
-					</Anchors>
-					<TexCoords left="0.0625" right="0.9375" top="0" bottom="0.625"/>
-				</Texture>
-
-				<FontString name="$parentTitle" inherits="GameFontNormal">
-					<Anchors>
-						<Anchor point="TOP" y="13" relativePoint="TOP" relativeTo="$parent" />
+						<Anchor point="TOPLEFT" x="-5" y="35" relativePoint="TOPLEFT" relativeTo="$parent" />
 					</Anchors>
 				</FontString>
 			</Layer>
@@ -44,6 +24,239 @@
 			</OnKeyUp>
 		</Scripts>
 	</EditBox>
+
+	<!-- Icon fonts -->
+
+	<Font name="MusicianFontIconsNormal" inherits="GameFontNormal" font="Interface\AddOns\Musician\ui\fonts\fontello.ttf" height="12" virtual="true" />
+	<Font name="MusicianFontIconsHighlight" inherits="GameFontHighlight" font="Interface\AddOns\Musician\ui\fonts\fontello.ttf" height="12" virtual="true" />
+	<Font name="MusicianFontIconsDisable" inherits="GameFontDisable" font="Interface\AddOns\Musician\ui\fonts\fontello.ttf" height="12" virtual="true" />
+
+	<!-- Standard button with icon font template -->
+
+	<Button name="MusicianPlayerButton" inherits="UIPanelButtonTemplate" virtual="true">
+		<NormalFont style="MusicianFontIconsNormal" />
+		<HighlightFont style="MusicianFontIconsHighlight" />
+		<DisabledFont style="MusicianFontIconsDisable" />
+	</Button>
+
+	<!-- Fieldset template -->
+
+	<Frame name="MusicianFieldset" virtual="true">
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture file="Interface\DialogFrame\UI-DialogBox-Background" horizTile="true" vertTile="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="3" y="-4"/>
+						<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" x="-5" y="2"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="BORDER" textureSubLevel="1">
+				<Texture name="$parentInsetBotLeftCorner" inherits="UI-Frame-InnerBotLeftCorner" parentKey="InsetBorderBottomLeft">
+					<Anchors>
+						<Anchor point="BOTTOMLEFT" x="2" y="0"/>
+					</Anchors>
+				</Texture>
+				<Texture name="$parentInsetBotRightCorner" inherits="UI-Frame-InnerBotRight" parentKey="InsetBorderBottomRight">
+					<Anchors>
+						<Anchor point="BOTTOMRIGHT" x="-3" y="0"/>
+					</Anchors>
+				</Texture>
+				<Texture name="$parentInsetTopLeftCorner" inherits="UI-Frame-InnerTopLeft" parentKey="InsetBorderTopLeft">
+					<Anchors>
+						<Anchor point="TOPLEFT" x="2" y="-3"/>
+					</Anchors>
+				</Texture>
+				<Texture name="$parentInsetTopRightCorner" inherits="UI-Frame-InnerTopRight" parentKey="InsetBorderTopmRight">
+					<Anchors>
+						<Anchor point="TOPRIGHT" x="-3" y="-3"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="BORDER">
+				<Texture name="$parentInsetBottomBorder" inherits="_UI-Frame-InnerBotTile" parentKey="InsetBorderBottom">
+					<Anchors>
+						<Anchor point="BOTTOMLEFT" relativeKey="$parent.InsetBorderBottomLeft" relativePoint="BOTTOMRIGHT"/>
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.InsetBorderBottomRight" relativePoint="BOTTOMLEFT"/>
+					</Anchors>
+				</Texture>
+
+				<Texture name="$parentInsetLeftBorder" inherits="!UI-Frame-InnerLeftTile" parentKey="InsetBorderLeft">
+					<Anchors>
+						<Anchor point="TOPLEFT" x="2" y="-3"/>
+						<Anchor point="BOTTOMLEFT" relativeKey="$parent.InsetBorderBottomLeft" relativePoint="TOPLEFT"/>
+					</Anchors>
+				</Texture>
+				<Texture name="$parentInsetRightBorder" inherits="!UI-Frame-InnerRightTile" parentKey="InsetBorderRight">
+					<Anchors>
+						<Anchor point="TOPRIGHT" x="-3" y="-3"/>
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.InsetBorderBottomRight" relativePoint="TOPRIGHT"/>
+					</Anchors>
+				</Texture>
+				<Texture name="$parentInsetTopBorder" inherits="_UI-Frame-InnerTopTile" parentKey="InsetBorderBottom">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.InsetBorderLeft" relativePoint="TOPLEFT"/>
+						<Anchor point="TOPRIGHT" relativeKey="$parent.InsetBorderRight" relativePoint="TOPRIGHT"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+	</Frame>
+
+	<!-- Track row template -->
+
+	<Frame name="MusicianTrackTemplate" parent="MusicianTrackEditorTrackContainer" virtual="true">
+		<Size x="568" y="32" />
+
+		<Layers>
+			<Layer level="FOREGROUND">
+				<FontString name="$parentTrackId" inherits="GameFontHighlightLarge" justifyh="" justifyv="" text="00">
+					<Size x="32" y="32" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="0" y="2" relativePoint="TOPLEFT" relativeTo="$parent" />
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTrackName" inherits="GameFontNormalSmall" text="[TrackName]">
+					<Anchors>
+						<Anchor point="TOPLEFT" x="68" y="-4" relativePoint="TOPLEFT" relativeTo="$parent" />
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTrackInfo" inherits="GameFontNormalSmall" text="[TrackInfo]">
+					<Anchors>
+						<Anchor point="TOPLEFT" x="68" y="-16" relativePoint="TOPLEFT" relativeTo="$parent" />
+					</Anchors>
+					<OnHyperlinkClick>
+						ChatFrame_OnHyperlinkShow(DEFAULT_CHAT_FRAME, link, text, button)
+					</OnHyperlinkClick>
+				</FontString>
+				<Texture name="$parentMeter" alphaMode="ADD">
+					<Size x="32" y="5"/>
+					<Anchors>
+						<Anchor point="CENTER" x="48" y="-22" relativePoint="TOPLEFT" relativeTo="$parent" />
+					</Anchors>
+					<Color a="1" r="0" g="1" b="0" />
+				</Texture>
+			</Layer>
+
+			<Layer level="BACKGROUND">
+				<Texture name="$parentLeft" file="Interface\AuctionFrame\UI-AuctionItemNameFrame">
+					<Size>
+						<AbsDimension x="10" y="32"/>
+					</Size>
+					<Anchors>
+						<Anchor point="LEFT">
+							<Offset>
+								<AbsDimension x="0" y="2"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<TexCoords left="0" right="0.078125" top="0" bottom="1.0"/>
+				</Texture>
+				<Texture name="$parentRight" file="Interface\AuctionFrame\UI-AuctionItemNameFrame">
+					<Size>
+						<AbsDimension x="10" y="32"/>
+					</Size>
+					<Anchors>
+						<Anchor point="RIGHT">
+							<Offset>
+								<AbsDimension x="0" y="2"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<TexCoords left="0.75" right="0.828125" top="0" bottom="1.0"/>
+				</Texture>
+				<Texture file="Interface\AuctionFrame\UI-AuctionItemNameFrame">
+					<Size>
+						<AbsDimension x="10" y="32"/>
+					</Size>
+					<Anchors>
+						<Anchor point="LEFT" relativeTo="$parentLeft" relativePoint="RIGHT">
+							<Offset>
+								<AbsDimension x="0" y="0"/>
+							</Offset>
+						</Anchor>
+						<Anchor point="RIGHT" relativeTo="$parentRight" relativePoint="LEFT">
+							<Offset>
+								<AbsDimension x="0" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<TexCoords left="0.078125" right="0.75" top="0" bottom="1.0"/>
+				</Texture>
+			</Layer>
+		</Layers>
+
+		<Frames>
+			<CheckButton name="$parentMute" inherits="OptionsSmallCheckButtonTemplate" >
+				<Anchors>
+					<Anchor point="TOPLEFT" x="32" y="-2" relativeTo="$parent" relativePoint="TOPLEFT" />
+				</Anchors>
+				<Size>
+					<AbsDimension x="16" y="16"/>
+				</Size>
+				<HitRectInsets>
+					<AbsInset left="0" right="0" top="0" bottom="0"/>
+				</HitRectInsets>
+			</CheckButton>
+			<CheckButton name="$parentSolo" inherits="OptionsSmallCheckButtonTemplate" >
+				<Anchors>
+					<Anchor point="TOPLEFT" x="48" y="-2" relativeTo="$parent" relativePoint="TOPLEFT" />
+				</Anchors>
+				<Size>
+					<AbsDimension x="16" y="16"/>
+				</Size>
+				<HitRectInsets>
+					<AbsInset left="0" right="0" top="0" bottom="0"/>
+				</HitRectInsets>
+			</CheckButton>
+
+			<Frame name="$parentInstrumentDropdown" inherits="UIDropDownMenuTemplate">
+				<Anchors>
+					<Anchor point="RIGHT" relativePoint="RIGHT" relativeTo="$parent" x="14" />
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						UIDropDownMenu_SetWidth(self, 115)
+					</OnLoad>
+					<OnEnter>
+						if(self.tooltipText ~= nil) then
+							GameTooltip_AddNewbieTip(self, self.tooltipText, 1.0, 1.0, 1.0, self.newbieText);
+						end
+					</OnEnter>
+					<OnLeave>
+						if(self.tooltipText ~= nil) then
+							GameTooltip:Hide();
+						end
+					</OnLeave>
+				</Scripts>
+			</Frame>
+
+			<Frame name="$parentTransposeDropdown" inherits="UIDropDownMenuTemplate">
+				<Anchors>
+					<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentInstrumentDropdown" x="32" />
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						UIDropDownMenu_SetWidth(self, 40)
+					</OnLoad>
+					<OnEnter>
+						if(self.tooltipText ~= nil) then
+							GameTooltip_AddNewbieTip(self, self.tooltipText, 1.0, 1.0, 1.0, self.newbieText);
+						end
+					</OnEnter>
+					<OnLeave>
+						if(self.tooltipText ~= nil) then
+							GameTooltip:Hide();
+						end
+					</OnLeave>
+				</Scripts>
+			</Frame>
+
+		</Frames>
+	</Frame>
+
+
+	<!-- Main frame -->
 
 	<Frame name="MusicianTrackEditor" parent="UIParent" toplevel="true" enableMouse="true" movable="true" hidden="true">
 
@@ -59,25 +272,11 @@
 			</OnHide>
 		</Scripts>
 
-		<Size x="320" y="148" />
+		<Size x="620" y="500" />
 
 		<Anchors>
 			<Anchor point="CENTER" x="0" y="0" />
 		</Anchors>
-
-		<Layers>
-			<Layer level="BACKGROUND">
-				<FontString name="$parentTitle" inherits="GameFontNormal">
-					<Anchors>
-						<Anchor point="TOP">
-							<Offset>
-								<AbsDimension x="0" y="-15"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</FontString>
-			</Layer>
-		</Layers>
 
 		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
 			<BackgroundInsets>
@@ -93,6 +292,8 @@
 
 		<Frames>
 
+			<!-- Close button -->
+
 			<Button name="$parentCloseButton" inherits="UIPanelCloseButton">
 				<Anchors>
 					<Anchor point="CENTER" relativePoint="TOPRIGHT">
@@ -101,11 +302,16 @@
 				</Anchors>
 			</Button>
 
+			<!-- Player slider -->
+
 			<Slider name="$parentSourceSongSlider" inherits="OptionsSliderTemplate" defaultValue="1" minValue="1" maxValue="1" valueStep=".01" stepsPerPage="1000">
-				<Size x="290" y="22"/>
+				<Size x="590" y="22"/>
 				<Anchors>
-					<Anchor point="TOP" x="0" y="-80"/>
+					<Anchor point="TOP" x="0" y="-60"/>
 				</Anchors>
+				<HitRectInsets>
+					<AbsInset left="0" right="0" top="0" bottom="0"/>
+				</HitRectInsets>
 				<Scripts>
 					<OnMouseDown>
 						self.dragging = true
@@ -124,22 +330,40 @@
 				</Scripts>
 			</Slider>
 
-			<Button name="$parentPrevButton" inherits="UIPanelButtonTemplate">
-				<Size x="50" y="20" />
+			<!-- Timecode inputs -->
+
+			<EditBox name="$parentCropFrom" inherits="MusicianTimeEditBoxTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" x="0" y="-8" relativePoint="BOTTOMLEFT" relativeTo="$parentSourceSongSlider" />
+					<Anchor point="TOPLEFT" x="5" y="0" relativeTo="$parentSourceSongSlider" relativePoint="BOTTOMLEFT" />
 				</Anchors>
 				<Scripts>
-					<OnClick>
-						Musician.sourceSong:Seek(max(Musician.sourceSong.cropFrom, Musician.sourceSong.cursor - 10))
-					</OnClick>
+					<OnLoad>MusicianTrackEditorCropFromTitle:SetJustifyH('LEFT')</OnLoad>
 				</Scripts>
-			</Button>
+			</EditBox>
 
-			<Button name="$parentPlayButton" inherits="UIPanelButtonTemplate">
-				<Size x="200" y="20" />
+			<EditBox name="$parentCursorAt" inherits="MusicianTimeEditBoxTemplate">
 				<Anchors>
-					<Anchor point="TOP" x="0" y="-8" relativePoint="BOTTOM" relativeTo="$parentSourceSongSlider" />
+					<Anchor point="TOP" y="0" relativeTo="$parentSourceSongSlider" relativePoint="BOTTOM" />
+				</Anchors>
+			</EditBox>
+
+			<EditBox name="$parentCropTo" inherits="MusicianTimeEditBoxTemplate">
+				<Anchors>
+					<Anchor point="TOPRIGHT" x="0" y="0" relativeTo="$parentSourceSongSlider" relativePoint="BOTTOMRIGHT" />
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						MusicianTrackEditorCropToTitle:SetJustifyH('RIGHT')
+					</OnLoad>
+				</Scripts>
+			</EditBox>
+
+			<!-- Player buttons -->
+
+			<Button name="$parentPlayButton" inherits="MusicianPlayerButton">
+				<Size x="60" y="20" />
+				<Anchors>
+					<Anchor point="BOTTOM" x="0" y="0" relativePoint="TOP" relativeTo="$parentSourceSongSlider" />
 				</Anchors>
 				<Scripts>
 					<OnClick>
@@ -155,10 +379,22 @@
 				</Scripts>
 			</Button>
 
-			<Button name="$parentNextButton" inherits="UIPanelButtonTemplate">
-				<Size x="50" y="20" />
+			<Button name="$parentPrevButton" inherits="MusicianPlayerButton" text="«">
+				<Size x="40" y="20" />
 				<Anchors>
-					<Anchor point="TOPRIGHT" x="0" y="-8" relativePoint="BOTTOMRIGHT" relativeTo="$parentSourceSongSlider" />
+					<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentPlayButton" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						Musician.sourceSong:Seek(max(Musician.sourceSong.cropFrom, Musician.sourceSong.cursor - 10))
+					</OnClick>
+				</Scripts>
+			</Button>
+
+			<Button name="$parentNextButton" inherits="MusicianPlayerButton" text="»">
+				<Size x="40" y="20" />
+				<Anchors>
+					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentPlayButton" />
 				</Anchors>
 				<Scripts>
 					<OnClick>
@@ -167,25 +403,162 @@
 				</Scripts>
 			</Button>
 
-			<EditBox name="$parentCropFrom" inherits="$parentTimeEditBoxTemplate">
+			<Button name="$parentGoToStartButton" inherits="MusicianPlayerButton" text="&lt;" >
+				<Size x="40" y="20" />
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" x="5" y="8" relativeTo="$parentSourceSongSlider" relativePoint="TOPLEFT" />
+					<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentPrevButton" />
 				</Anchors>
-			</EditBox>
+				<Scripts>
+					<OnClick>
+						Musician.sourceSong:Seek(Musician.sourceSong.cropFrom)
+					</OnClick>
+				</Scripts>
+			</Button>
 
-			<EditBox name="$parentCursorAt" inherits="$parentTimeEditBoxTemplate">
+			<Button name="$parentGoToEndButton" inherits="MusicianPlayerButton" text="&gt;" hidden="true">
+				<Size x="40" y="20" />
 				<Anchors>
-					<Anchor point="BOTTOM" y="8" relativeTo="$parentSourceSongSlider" relativePoint="TOP" />
+					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentNextButton" />
 				</Anchors>
-			</EditBox>
+				<Scripts>
+					<OnClick>
+						Musician.sourceSong:Seek(Musician.sourceSong.cropTo)
+					</OnClick>
+				</Scripts>
+			</Button>
 
-			<EditBox name="$parentCropTo" inherits="$parentTimeEditBoxTemplate">
+			<Button name="$parentSetCropFromButton" inherits="MusicianPlayerButton" text="{" >
+				<Size x="40" y="20" />
 				<Anchors>
-					<Anchor point="BOTTOMRIGHT" x="-5" y="8" relativeTo="$parentSourceSongSlider" relativePoint="TOPRIGHT" />
+					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentGoToEndButton" />
 				</Anchors>
-			</EditBox>
+				<Scripts>
+					<OnClick>
+						Musician.TrackEditor.SetCropFrom(Musician.sourceSong.cursor)
+					</OnClick>
+				</Scripts>
+			</Button>
 
+			<Button name="$parentSetCropToButton" inherits="MusicianPlayerButton" text="}" >
+				<Size x="40" y="20" />
+				<Anchors>
+					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentSetCropFromButton" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						Musician.TrackEditor.SetCropTo(Musician.sourceSong.cursor)
+					</OnClick>
+				</Scripts>
+			</Button>
 
+			<!-- Track list -->
+
+			<ScrollFrame name="$parentScrollFrame" inherits="UIPanelScrollFrameTemplate">
+				<Size x="568" y="349"/>
+				<Anchors>
+					<Anchor point="BOTTOM" x="-12" y="13" relativeTo="$parent" />
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<Texture name="$parentTop" file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
+							<Size x="31" y="102"/>
+							<Anchors>
+								<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" x="-2" y="5"/>
+							</Anchors>
+							<TexCoords left="0" right="0.484375" top="0" bottom="0.4"/>
+						</Texture>
+						<Texture name="$parentBottom" file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
+							<Size x="31" y="106"/>
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" x="-2" y="-2"/>
+							</Anchors>
+							<TexCoords left="0.515625" right="1.0" top="0" bottom="0.4140625"/>
+						</Texture>
+						<Texture name="$parentMiddle" file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
+							<Size x="31" y="1"/>
+							<Anchors>
+								<Anchor point="TOP" relativeTo="$parentTop" relativePoint="BOTTOM"/>
+								<Anchor point="BOTTOM" relativeTo="$parentBottom" relativePoint="TOP"/>
+							</Anchors>
+							<TexCoords left="0" right="0.484375" top=".75" bottom="1.0"/>
+						</Texture>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnLoad function="ScrollFrame_OnLoad"/>
+				</Scripts>
+				<ScrollChild>
+					<Frame name="MusicianTrackEditorTrackContainer">
+						<Size x="585" y="0"/>
+						<Anchors>
+							<Anchor point="TOPLEFT"/>
+						</Anchors>
+					</Frame>
+				</ScrollChild>
+			</ScrollFrame>
+
+			<Frame name="$parentBackground" inherits="MusicianFieldset">
+				<Size x="600" y="360" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="-5" y="8" relativeTo="$parentScrollFrame" />
+				</Anchors>
+			</Frame>
 		</Frames>
+
+		<Layers>
+			<Layer level="BACKGROUND">
+
+				<!-- Main title -->
+
+				<FontString name="$parentTitle" inherits="GameFontNormal">
+					<Anchors>
+						<Anchor point="TOP">
+							<Offset>
+								<AbsDimension x="0" y="-15"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+
+				<!-- Track list headers -->
+
+				<FontString name="$parentHeaderTrackId" inherits="GameFontNormal" text="#">
+					<Size x="32" />
+					<Anchors>
+						<Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT" x="0" y="8" relativeTo="$parentScrollFrame" />
+					</Anchors>
+				</FontString>
+
+				<FontString name="$parentHeaderMute" inherits="MusicianFontIconsNormal" text="/">
+					<Size x="16" />
+					<Anchors>
+						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentHeaderTrackId" />
+					</Anchors>
+				</FontString>
+
+				<FontString name="$parentHeaderSolo" inherits="MusicianFontIconsNormal" text="s">
+					<Size x="16" />
+					<Anchors>
+						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentHeaderMute" />
+					</Anchors>
+				</FontString>
+
+				<FontString name="$parentHeaderInstrument" inherits="GameFontNormal" text="Instrument">
+					<Size x="135" />
+					<Anchors>
+						<Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" x="0" y="8" relativeTo="$parentScrollFrame" />
+					</Anchors>
+				</FontString>
+
+				<FontString name="$parentHeaderTranspose" inherits="GameFontNormal" text="Octave">
+					<Size x="54" />
+					<Anchors>
+						<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentHeaderInstrument" />
+					</Anchors>
+				</FontString>
+
+			</Layer>
+		</Layers>
+
 	</Frame>
 </Ui>

@@ -69,6 +69,29 @@ Musician.PackTrack = function(track, fps) {
 	return packedTrack;
 }
 
+Musician.PackTrackNames = function(song) {
+	var packedTrackNames = "TRN";
+
+	var track;
+	song.tracks.forEach(function(track) {
+		var trackName = (track.name || "").substring(0, 255);
+		packedTrackNames += Musician.PackNumber(trackName.length, 1) + trackName;
+	});
+
+	return packedTrackNames;
+}
+
+Musician.PackTrackChannels = function(song) {
+	var packedTrackChannels = "TRC";
+
+	var track;
+	song.tracks.forEach(function(track) {
+		packedTrackChannels += Musician.PackNumber(track.channelNumber + 1, 1);
+	});
+
+	return packedTrackChannels;
+}
+
 Musician.PackSong = function(song) {
 
 	var duration = Math.ceil(song.duration);
@@ -96,6 +119,10 @@ Musician.PackSong = function(song) {
 	song.tracks.forEach(function(track) {
 		packedSong += Musician.PackTrack(track, fps);
 	});
+
+	// Metadata
+	packedSong += Musician.PackTrackChannels(song);
+	packedSong += Musician.PackTrackNames(song);
 
 	return packedSong;
 }

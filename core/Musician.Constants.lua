@@ -23,77 +23,100 @@ Musician.Events.RefreshFrame = "MusicianRefreshFrame"
 Musician.Events.SongPlay = "MusicianSongPlay"
 Musician.Events.SongStop = "MusicianSongStop"
 Musician.Events.SongCursor = "MusicianSongCursor"
+Musician.Events.NoteOn = "MusicianNoteOn"
+Musician.Events.NoteOff = "MusicianNoteOff"
 
 Musician.Icons = {}
 Musician.Icons.PlayerMuted = "Interface\\AddOns\\Musician\\ui\\textures\\muted.blp"
 Musician.Icons.PlayerUnmuted = "Interface\\AddOns\\Musician\\ui\\textures\\unmuted.blp"
 
 Musician.INSTRUMENTS = {
-	["none"] = nil,
+	["none"] = {
+		["midi"] = -1
+	},
 	["bagpipe"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\bagpipe",
 		["decay"] = 100,
-		["isPercussion"] = false
+		["isPercussion"] = false,
+		["midi"] = 109
 	},
 	["bassoon"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\bassoon",
 		["decay"] = 150,
-		["isPercussion"] = false
+		["isPercussion"] = false,
+		["midi"] = 70
 	},
 	["cello"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\cello",
 		["decay"] = 100,
-		["isPercussion"] = false
+		["isPercussion"] = false,
+		["midi"] = 42
 	},
 	["clarinet"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\clarinet",
 		["decay"] = 150,
-		["isPercussion"] = false
+		["isPercussion"] = false,
+		["midi"] = 71
 	},
 	["dulcimer"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\dulcimer",
 		["decay"] = 500,
-		["isPercussion"] = false
+		["isPercussion"] = false,
+		["isPlucked"] = true,
+		["midi"] = 15
 	},
 	["female-voice"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\female-voice",
 		["decay"] = 200,
-		["isPercussion"] = false
+		["isPercussion"] = false,
+		["midi"] = 53
 	},
 	["male-voice"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\male-voice",
 		["decay"] = 200,
-		["isPercussion"] = false
+		["isPercussion"] = false,
+		["midi"] = 52
 	},
 	["fiddle"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\fiddle",
 		["decay"] = 100,
-		["isPercussion"] = false
+		["isPercussion"] = false,
+		["midi"] = 110
 	},
 	["harp"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\harp",
 		["decay"] = 500,
-		["isPercussion"] = false
+		["isPercussion"] = false,
+		["isPlucked"] = true,
+		["midi"] = 46
 	},
 	["lute"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\lute",
 		["decay"] = 100,
-		["isPercussion"] = false
+		["isPercussion"] = false,
+		["isPlucked"] = true,
+		["midi"] = 24
 	},
 	["recorder"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\recorder",
 		["decay"] = 150,
-		["isPercussion"] = false
+		["isPercussion"] = false,
+		["midi"] = 74
 	},
 	["trombone"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\trombone",
 		["decay"] = 150,
-		["isPercussion"] = false
+		["isPercussion"] = false,
+		["midi"] = 57
 	},
 	["trumpet"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\trumpet",
 		["decay"] = 150,
-		["isPercussion"] = false
+		["isPercussion"] = false,
+		["midi"] = 56
+	},
+	["percussions"] = {
+		["midi"] = 128
 	},
 
 	-- Percussion
@@ -160,7 +183,8 @@ Musician.INSTRUMENTS = {
 	["bodhran-bassdrum-low"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\bodhran\\bassdrum-low",
 		["decay"] = 250,
-		["isPercussion"] = true
+		["isPercussion"] = true,
+		["midi"] = 47
 	},
 	["bodhran-guiro-hi"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\bodhran\\guiro-hi",
@@ -195,12 +219,14 @@ Musician.INSTRUMENTS = {
 	["bodhran-snare-long-hi"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\bodhran\\snare-long-hi",
 		["decay"] = 100,
-		["isPercussion"] = true
+		["isPercussion"] = true,
+		["midi"] = 117
 	},
 	["bodhran-snare-long-low"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\bodhran\\snare-long-low",
 		["decay"] = 100,
-		["isPercussion"] = true
+		["isPercussion"] = true,
+		["midi"] = 118
 	},
 	["bodhran-snare-long-med"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\bodhran\\snare-long-med",
@@ -397,7 +423,6 @@ Musician.MIDI_INSTRUMENT_MAPPING = {
 
 	-- Ethnic
 	[104] = "dulcimer", -- Sitar
-	[105] = "lute", -- Banjo
 	[106] = "lute", -- Shamisen
 	[107] = "dulcimer", -- Koto
 	[108] = "dulcimer", -- Kalimba
@@ -424,6 +449,12 @@ Musician.MIDI_INSTRUMENT_MAPPING = {
 	[125] = "none", -- Helicopter
 	[126] = "none", -- Applause
 	[127] = "none", -- Gunshot
+
+	-- Percussions
+	[128] = "percussions",
+
+	-- None
+	[-1] = "none",
 }
 
 Musician.MIDI_PERCUSSION_MAPPING = {
@@ -491,4 +522,25 @@ Musician.MIDI_PERCUSSION_MAPPING = {
 	[91] = "none", -- Snare Drum Rod
 	[92] = "none", -- Ocean Drum
 	[93] = "none", -- Snare Drum Brush
+}
+
+Musician.INSTRUMENTS_AVAILABLE = {
+	"lute",
+	"recorder",
+	"harp",
+	"dulcimer",
+	"bagpipe",
+	"fiddle",
+	"cello",
+	"male-voice",
+	"female-voice",
+	"trumpet",
+	"trombone",
+	"clarinet",
+	"bassoon",
+	"bodhran-bassdrum-low",
+	"bodhran-snare-long-hi",
+	"bodhran-snare-long-low",
+	"percussions",
+	"none",
 }

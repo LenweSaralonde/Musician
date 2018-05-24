@@ -46,7 +46,7 @@ MusicianFrame.LoadSource = function()
 
 	local sourceSong
 	local success = pcall(function()
-		sourceSong = Musician.Song.create(MusicianBase64.decode(MusicianFrameSource:GetText()))
+		sourceSong = Musician.Song.create(MusicianBase64.decode(MusicianFrameSource:GetText()), true)
 	end)
 
 	if not(success) then
