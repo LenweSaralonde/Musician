@@ -51,7 +51,7 @@ end
 
 Musician.TrackEditor.OnLoad = function()
 	Musician.TrackEditor.UpdateSlider()
-	Musician.TrackEditor.UpdateButtons()
+	Musician.TrackEditor.UpdateButtons(nil, Musician.sourceSong)
 	Musician.TrackEditor.UpdateBounds()
 	Musician.TrackEditor.UpdateCursor(nil, Musician.sourceSong)
 
@@ -71,13 +71,15 @@ Musician.TrackEditor.OnLoad = function()
 	end
 end
 
-Musician.TrackEditor.UpdateButtons = function()
-	if Musician.sourceSong:IsPlaying() then
-		MusicianTrackEditorPlayButton.tooltipText = Musician.Msg.PAUSE
-		MusicianTrackEditorPlayButton:SetText(Musician.TrackEditor.PAUSE_ICON)
-	else
-		MusicianTrackEditorPlayButton.tooltipText = Musician.Msg.PLAY
-		MusicianTrackEditorPlayButton:SetText(Musician.TrackEditor.PLAY_ICON)
+Musician.TrackEditor.UpdateButtons = function(event, song)
+	if song == Musician.sourceSong then
+		if Musician.sourceSong:IsPlaying() then
+			MusicianTrackEditorPlayButton.tooltipText = Musician.Msg.PAUSE
+			MusicianTrackEditorPlayButton:SetText(Musician.TrackEditor.PAUSE_ICON)
+		else
+			MusicianTrackEditorPlayButton.tooltipText = Musician.Msg.PLAY
+			MusicianTrackEditorPlayButton:SetText(Musician.TrackEditor.PLAY_ICON)
+		end
 	end
 end
 
@@ -275,6 +277,14 @@ Musician.TrackEditor.SetCropFrom = function(position)
 	Musician.TrackEditor.UpdateBounds()
 end
 
+Musician.TrackEditor.SetCropTo = function(position)
+	if position > Musician.sourceSong.cropFrom then
+		Musician.sourceSong.cropTo = position
+	end
+	Musician.TrackEditor.UpdateSlider()
+	Musician.TrackEditor.UpdateBounds()
+end
+
 Musician.TrackEditor.OnUpdate = function(self, elapsed)
 	local attack = .2
 	local maxLength = 6
@@ -312,14 +322,6 @@ Musician.TrackEditor.OnUpdate = function(self, elapsed)
 			end
 		end
 	end
-end
-
-Musician.TrackEditor.SetCropTo = function(position)
-	if position > Musician.sourceSong.cropFrom then
-		Musician.sourceSong.cropTo = position
-	end
-	Musician.TrackEditor.UpdateSlider()
-	Musician.TrackEditor.UpdateBounds()
 end
 
 Musician.TrackEditor.NoteOn = function(self, song, track, noteIndex, endTime, decay)
