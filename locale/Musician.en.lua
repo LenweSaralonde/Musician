@@ -226,6 +226,7 @@ Musician.Locale.en.MIDI_INSTRUMENT_NAMES = {
 
 	-- Ethnic
 	[104] = "Sitar",
+	[105] = "Banjo",
 	[106] = "Shamisen",
 	[107] = "Koto",
 	[108] = "Kalimba",

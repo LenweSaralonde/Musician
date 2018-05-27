@@ -130,9 +130,10 @@ Musician.MIDI_INSTRUMENT_MAPPING = {
 	[103] = "dulcimer", -- FX 8 (sci-fi)
 
 	-- Ethnic
-	[104] = "dulcimer", -- Sitar
+	[104] = "harp", -- Sitar
+	[105] = "lute", -- Banjo
 	[106] = "lute", -- Shamisen
-	[107] = "dulcimer", -- Koto
+	[107] = "harp", -- Koto
 	[108] = "dulcimer", -- Kalimba
 	[109] = "bagpipe", -- Bag pipe
 	[110] = "fiddle", -- Fiddle
