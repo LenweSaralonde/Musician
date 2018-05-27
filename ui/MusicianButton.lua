@@ -20,13 +20,14 @@ function MusicianButton.Reposition()
 end
 
 function MusicianButton.DraggingFrame_OnUpdate()
-	local xpos,ypos = GetCursorPosition()
-	local xmin,ymin = Minimap:GetLeft() + Minimap:GetWidth() / 2, Minimap:GetBottom() + Minimap:GetHeight() / 2
+	local xpos, ypos = GetCursorPosition()
+	local xmin, ymin = Minimap:GetCenter()
+	local scale = UIParent:GetScale()
 
-	xpos = xpos-xmin/UIParent:GetScale()
-	ypos = ypos-ymin/UIParent:GetScale()
+	xpos = xpos / scale
+	ypos = ypos / scale
 
-	Musician_Settings.minimapPosition = math.deg(math.atan2(ypos,xpos))
+	Musician_Settings.minimapPosition = math.deg(math.atan2(ypos - ymin, xpos - xmin)) % 360
 	MusicianButton.Reposition()
 end
 
@@ -99,4 +100,3 @@ end
 function MusicianButton.HideTooltip()
 	GameTooltip:Hide();
 end
-
