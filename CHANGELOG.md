@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.2.0.1
+--------
+* Fixed minimap button when UI is scaled (Yimiprod)
+* Added missing MIDI mapping for banjo
+
 v1.2.0
 ------
 * Brand new music player: better performance and less RAM usage
