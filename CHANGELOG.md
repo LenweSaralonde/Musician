@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.2.0.2
+--------
+* Fixed missing of glitchy samples
+
 v1.2.0.1
 --------
 * Fixed minimap button when UI is scaled (Yimiprod)
