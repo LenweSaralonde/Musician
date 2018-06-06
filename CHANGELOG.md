@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.2.0.3
+--------
+* Fixed blocked commands issue in unit popup menus
+
 v1.2.0.2
 --------
 * Fixed missing or glitchy samples

@@ -1,7 +1,7 @@
 ## Interface: 70300
 ## Title: Musician
 ## Author: LenweSaralonde
-## Version: 1.2.0.2
+## Version: 1.2.0.3
 ## Notes: Perform music with your character
 ## SavedVariables: Musician_Settings
 
