@@ -240,9 +240,7 @@ function Musician.SetupHooks()
 	-- Show or hide player dropdown menu options
 	--
 
-	MusicianFrame.HookedUnitPopup_HideButtons = UnitPopup_HideButtons
-	UnitPopup_HideButtons = function()
-		MusicianFrame.HookedUnitPopup_HideButtons()
+	hooksecurefunc("UnitPopup_HideButtons", function()	
 		local dropdownMenu = UIDROPDOWNMENU_INIT_MENU;
 		local isPlayer = dropdownMenu.unit and UnitIsPlayer(dropdownMenu.unit) or dropdownMenu.chatTarget
 		local isMyself = false
@@ -292,13 +290,12 @@ function Musician.SetupHooks()
 				end
 			end
 		end
-	end
+	end)
 
 	-- Handle actions in player dropdown menus
 	--
 
-	MusicianFrame.HookedUnitPopup_OnClick = UnitPopup_OnClick
-	UnitPopup_OnClick = function(self)
+	hooksecurefunc("UnitPopup_OnClick", function(self)
 		local dropdownMenu = UIDROPDOWNMENU_INIT_MENU;
 		local button = self.value
 		local isPlayer = dropdownMenu.unit and UnitIsPlayer(dropdownMenu.unit) or dropdownMenu.chatTarget
@@ -314,18 +311,16 @@ function Musician.SetupHooks()
 					player = Musician.Utils.NormalizePlayerName(dropdownMenu.name)
 				end
 			end
-		end
 
-		if button == "MUSICIAN_MUTE" then
-			Musician.MutePlayer(player, true)
-		elseif button == "MUSICIAN_UNMUTE" then
-			Musician.MutePlayer(player, false)
-		elseif button == "MUSICIAN_STOP" then
-			Musician.StopLoadedSong(player)
+			if button == "MUSICIAN_MUTE" then
+				Musician.MutePlayer(player, true)
+			elseif button == "MUSICIAN_UNMUTE" then
+				Musician.MutePlayer(player, false)
+			elseif button == "MUSICIAN_STOP" then
+				Musician.StopLoadedSong(player)
+			end
 		end
-
-		MusicianFrame.HookedUnitPopup_OnClick(self)
-	end
+	end)
 
 	-- Add muted/unmuted status to player messages when playing
 	-- Add stop button to "Player plays music" emote
