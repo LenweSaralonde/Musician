@@ -23,7 +23,7 @@ function Musician.Comm.Init()
 
 	-- Register prefixes
 	Musician.Comm:RegisterEvent("PLAYER_ENTERING_WORLD", function()
-		Musician.Utils.MuteGameMusic(true)
+		C_Timer.After(1, function() Musician.Utils.MuteGameMusic(true) end)
 
 		if initialized then return end
 

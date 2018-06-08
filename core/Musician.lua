@@ -23,7 +23,7 @@ function Musician:OnInitialize()
 	Musician.Registry.Init()
 	Musician.SetupHooks()
 
-	C_Timer.NewTicker(0.5, Musician.Utils.MuteGameMusic)
+	C_Timer.NewTicker(0.5, function() Musician.Utils.MuteGameMusic() end)
 
 	MusicianFrame.Init()
 	MusicianButton.Init()
