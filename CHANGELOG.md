@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.2.0.4
+--------
+* Fixed issue with music from other addons that could not play.
+
 v1.2.0.3
 --------
 * Fixed blocked commands issue in unit popup menus
