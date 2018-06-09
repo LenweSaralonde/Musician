@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.2.0.5
+--------
+* Fixed missing protected actions in player popup menu such as targeting.
+
 v1.2.0.4
 --------
 * Fixed issue with music from other addons that could not play.
