@@ -184,8 +184,7 @@ function Musician.SetupHooks()
 	-- Hyperlinks
 	--
 
-	MusicianFrame.HookedChatFrame_OnHyperlinkShow = ChatFrame_OnHyperlinkShow
-	ChatFrame_OnHyperlinkShow = function(chatFrame, link, text, button)
+	hooksecurefunc("ChatFrame_OnHyperlinkShow", function(self, link, text, button)
 		local args = { strsplit(':', link) }
 		if args[1] == "musician" then
 			-- Stop current song for player
@@ -204,89 +203,92 @@ function Musician.SetupHooks()
 			elseif args[2] == "seek" and Musician.sourceSong ~= nil then
 				Musician.sourceSong:Seek(args[3])
 			end
-		else
-			return MusicianFrame.HookedChatFrame_OnHyperlinkShow(chatFrame, link, text, button)
 		end
+	end)
+
+	local HookedSetHyperlink = ItemRefTooltip.SetHyperlink
+	function ItemRefTooltip:SetHyperlink(link, ...)
+		if (link and link:sub(0, 8) == "musician") then
+			return
+		end
+		return HookedSetHyperlink(self, link, ...)
 	end
 
 	-- Player dropdown menus
 	--
 
-	UnitPopupButtons["MUSICIAN_SUBSECTION_TITLE_MUTED"] = { text = Musician.Msg.PLAYER_MENU_TITLE .. " " .. Musician.Utils.GetChatIcon(Musician.Icons.PlayerMuted), dist = 0, isTitle = true, isUninteractable = true, isSubsection = true, isSubsectionTitle = true, isSubsectionSeparator = true }
-	UnitPopupButtons["MUSICIAN_SUBSECTION_TITLE_UNMUTED"] = { text = Musician.Msg.PLAYER_MENU_TITLE .. " " .. Musician.Utils.GetChatIcon(Musician.Icons.PlayerUnmuted), dist = 0, isTitle = true, isUninteractable = true, isSubsection = true, isSubsectionTitle = true, isSubsectionSeparator = true }
-	UnitPopupButtons["MUSICIAN_STOP"] = { text = Musician.Msg.PLAYER_MENU_STOP_CURRENT_SONG, dist = 0, space = 1, isCloseCommand = true }
-	UnitPopupButtons["MUSICIAN_MUTE"] = { text = Musician.Msg.PLAYER_MENU_MUTE, dist = 0, space = 1, isCloseCommand = true }
-	UnitPopupButtons["MUSICIAN_UNMUTE"] = { text = Musician.Msg.PLAYER_MENU_UNMUTE, dist = 0, space = 1, isCloseCommand = true }
-
-	local items = {"MUSICIAN_SUBSECTION_TITLE_MUTED", "MUSICIAN_SUBSECTION_TITLE_UNMUTED", "MUSICIAN_MUTE", "MUSICIAN_UNMUTE", "MUSICIAN_STOP"}
-	local menus = {"PARTY", "PLAYER", "RAID_PLAYER", "FRIEND", "FRIEND_OFFLINE", "TARGET"}
-	local insertBefore = "OTHER_SUBSECTION_TITLE"
-
-	local item, menu
-	for _, menu in pairs(menus) do
-		local newItems = {}
-		local oldItem
-		for _, oldItem in pairs(UnitPopupMenus[menu]) do
-			if oldItem == insertBefore then
-				for _, item in pairs(items) do
-					table.insert(newItems, item)
-				end
-			end
-			table.insert(newItems, oldItem)
-		end
-		UnitPopupMenus[menu] = newItems
-	end
-
-	-- Show or hide player dropdown menu options
+	-- Add player dropdown menu options
 	--
+		
+	hooksecurefunc("UnitPopup_ShowMenu", function(dropdownMenu, which, unit, name, userData)
+		if UIDROPDOWNMENU_MENU_LEVEL == 1 and (which == "PARTY" or which == "PLAYER" or which == "RAID_PLAYER" or which == "FRIEND" or which == "FRIEND_OFFLINE" or which == "TARGET") then
+			local isPlayer = dropdownMenu.unit and UnitIsPlayer(dropdownMenu.unit) or dropdownMenu.chatTarget
+			local isMyself = false
+			local isMuted = false
+			local isPlaying = false
+			local isRegistered = false
+			local player
 
-	hooksecurefunc("UnitPopup_HideButtons", function()	
-		local dropdownMenu = UIDROPDOWNMENU_INIT_MENU;
-		local isPlayer = dropdownMenu.unit and UnitIsPlayer(dropdownMenu.unit) or dropdownMenu.chatTarget
-		local isMyself = false
-		local isMuted = false
-		local isPlaying = false
-		local isRegistered = false
-		local player
-
-		if isPlayer then
-			if dropdownMenu.chatTarget then
-				player = Musician.Utils.NormalizePlayerName(dropdownMenu.chatTarget)
-			else
-				if dropdownMenu.server then
-					player = dropdownMenu.name .. '-' .. dropdownMenu.server
+			if isPlayer then
+				if dropdownMenu.chatTarget then
+					player = Musician.Utils.NormalizePlayerName(dropdownMenu.chatTarget)
 				else
-					player = Musician.Utils.NormalizePlayerName(dropdownMenu.name)
+					if dropdownMenu.server then
+						player = dropdownMenu.name .. '-' .. dropdownMenu.server
+					else
+						player = Musician.Utils.NormalizePlayerName(dropdownMenu.name)
+					end
 				end
+
+				isMyself = Musician.Utils.PlayerIsMyself(player)
+				isMuted = Musician.PlayerIsMuted(player)
+				isPlaying = Musician.songs[player] ~= nil and Musician.songs[player].playing ~= nil
+				isRegistered = Musician.Registry.players[player] ~= nil
 			end
 
-			isMyself = Musician.Utils.PlayerIsMyself(player)
-			isMuted = Musician.PlayerIsMuted(player)
-			isPlaying = Musician.songs[player] ~= nil and Musician.songs[player].playing ~= nil
-			isRegistered = Musician.Registry.players[player] ~= nil
-		end
+			local items = {
+				{
+					value = "MUSICIAN_SUBSECTION_TITLE_MUTED",
+					text = Musician.Msg.PLAYER_MENU_TITLE .. " " .. Musician.Utils.GetChatIcon(Musician.Icons.PlayerMuted),
+					isTitle = true,
+					visible = isPlayer and isRegistered and not(isMyself) and isMuted
+				},
+				{
+					value = "MUSICIAN_SUBSECTION_TITLE_UNMUTED",
+					text = Musician.Msg.PLAYER_MENU_TITLE .. " " .. Musician.Utils.GetChatIcon(Musician.Icons.PlayerUnmuted),
+					isTitle = true,
+					visible = isPlayer and isRegistered and not(isMyself) and not(isMuted)
+				},
+				{
+					value = "MUSICIAN_STOP",
+					text = Musician.Msg.PLAYER_MENU_STOP_CURRENT_SONG,
+					visible = isPlayer and isRegistered and not(isMyself) and isPlaying and not(isMuted)
+				},
+				{
+					value = "MUSICIAN_MUTE",
+					text = Musician.Msg.PLAYER_MENU_MUTE,
+					visible = isPlayer and isRegistered and not(isMyself) and not(isMuted)
+				},
+				{
+					value = "MUSICIAN_UNMUTE",
+					text = Musician.Msg.PLAYER_MENU_UNMUTE,
+					visible = isPlayer and isRegistered and not(isMyself) and isMuted
+				},
+			}
 
-		local index, value
-		for index, value in ipairs(UnitPopupMenus[UIDROPDOWNMENU_MENU_VALUE] or UnitPopupMenus[dropdownMenu.which]) do
-			if value == "MUSICIAN_SUBSECTION_TITLE_MUTED" then
-				if not(isPlayer) or not(isRegistered) or isMyself or not(isMuted) then
-					UnitPopupShown[UIDROPDOWNMENU_MENU_LEVEL][index] = 0
-				end
-			elseif value == "MUSICIAN_SUBSECTION_TITLE_UNMUTED" then
-				if not(isPlayer) or not(isRegistered) or isMyself or isMuted then
-					UnitPopupShown[UIDROPDOWNMENU_MENU_LEVEL][index] = 0
-				end
-			elseif value == "MUSICIAN_MUTE" then
-				if not(isPlayer) or not(isRegistered) or isMyself or isMuted then
-					UnitPopupShown[UIDROPDOWNMENU_MENU_LEVEL][index] = 0
-				end
-			elseif value == "MUSICIAN_UNMUTE" then
-				if not(isPlayer) or not(isRegistered) or isMyself or not(isMuted) then
-					UnitPopupShown[UIDROPDOWNMENU_MENU_LEVEL][index] = 0
-				end
-			elseif value == "MUSICIAN_STOP" then
-				if not(isPlayer) or not(isRegistered) or isMyself or not(isPlaying) or isMuted then
-					UnitPopupShown[UIDROPDOWNMENU_MENU_LEVEL][index] = 0
+			UIDropDownMenu_AddSeparator(UIDropDownMenu_CreateInfo(), 1)
+
+			local item
+			for _, item in pairs(items) do
+				if item.visible then
+					local info = UIDropDownMenu_CreateInfo()
+					info.text = item.text
+					info.isTitle = item.isTitle
+					info.func = UnitPopup_OnClick
+					info.notCheckable = true
+					info.value = item.value
+					info.arg1 = dropdownMenu
+					UIDropDownMenu_AddButton(info)
 				end
 			end
 		end
@@ -296,9 +298,9 @@ function Musician.SetupHooks()
 	--
 
 	hooksecurefunc("UnitPopup_OnClick", function(self)
-		local dropdownMenu = UIDROPDOWNMENU_INIT_MENU;
+		local dropdownMenu = self.arg1
 		local button = self.value
-		local isPlayer = dropdownMenu.unit and UnitIsPlayer(dropdownMenu.unit) or dropdownMenu.chatTarget
+		local isPlayer = dropdownMenu and (dropdownMenu.unit and UnitIsPlayer(dropdownMenu.unit) or dropdownMenu.chatTarget)
 		local player
 
 		if isPlayer then
