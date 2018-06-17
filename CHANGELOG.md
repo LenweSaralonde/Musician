@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.2.0.6
+--------
+* Removed unnecessary separator in unit popup menu.
+
 v1.2.0.5
 --------
 * Fixed missing protected actions in player popup menu such as targeting.
