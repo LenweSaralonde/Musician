@@ -230,9 +230,6 @@ end
 -- @return (string, table)
 function Musician.Utils.GetSoundFile(instrument, key)
 
-	local noteName = Musician.Utils.NoteName(key)
-	noteName = string.gsub(noteName, 'A#', 'Bb')
-
 	local instrumentName
 	if instrument ~= 128 then -- Not a percussion
 		instrumentName = Musician.MIDI_INSTRUMENT_MAPPING[instrument]
@@ -255,6 +252,13 @@ function Musician.Utils.GetSoundFile(instrument, key)
 	else
 		soundFile = instrumentData.path
 	end
+
+	if instrumentData["transpose"] then
+		key = key + instrumentData["transpose"]
+	end
+
+	local noteName = Musician.Utils.NoteName(key)
+	noteName = string.gsub(noteName, 'A#', 'Bb')
 
 	if not(instrumentData.isPercussion) then
 		soundFile = soundFile .. '\\' .. noteName

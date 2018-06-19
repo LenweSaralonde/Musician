@@ -32,22 +32,22 @@ Musician.MIDI_INSTRUMENT_MAPPING = {
 	-- Guitar
 	[24] = "lute", -- Acoustic Guitar (nylon)
 	[25] = "lute", -- Acoustic Guitar (steel)
-	[26] = "lute", -- Electric Guitar (jazz)
-	[27] = "lute", -- Electric Guitar (clean)
-	[28] = "lute", -- Electric Guitar (muted)
-	[29] = "lute", -- Overdriven Guitar
-	[30] = "lute", -- Distortion Guitar
-	[31] = "lute", -- Guitar harmonics
+	[26] = "clean-guitar", -- Electric Guitar (jazz)
+	[27] = "clean-guitar", -- Electric Guitar (clean)
+	[28] = "clean-guitar", -- Electric Guitar (muted)
+	[29] = "distorsion-guitar", -- Overdriven Guitar
+	[30] = "distorsion-guitar", -- Distortion Guitar
+	[31] = "distorsion-guitar", -- Guitar harmonics
 
 	-- Bass
 	[32] = "lute", -- Acoustic Bass
-	[33] = "lute", -- Electric Bass (finger)
-	[34] = "lute", -- Electric Bass (pick)
-	[35] = "lute", -- Fretless Bass
-	[36] = "lute", -- Slap Bass 1
-	[37] = "lute", -- Slap Bass 2
-	[38] = "lute", -- Synth Bass 1
-	[39] = "lute", -- Synth Bass 2
+	[33] = "bass-guitar", -- Electric Bass (finger)
+	[34] = "bass-guitar", -- Electric Bass (pick)
+	[35] = "bass-guitar", -- Fretless Bass
+	[36] = "bass-guitar", -- Slap Bass 1
+	[37] = "bass-guitar", -- Slap Bass 2
+	[38] = "bass-guitar", -- Synth Bass 1
+	[39] = "bass-guitar", -- Synth Bass 2
 
 	-- Strings
 	[40] = "fiddle", -- Violin
@@ -161,6 +161,7 @@ Musician.MIDI_INSTRUMENT_MAPPING = {
 
 	-- Percussions
 	[128] = "percussions",
+	[129] = "drumkit",
 
 	-- None
 	[-1] = "none",

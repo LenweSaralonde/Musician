@@ -83,8 +83,37 @@ Musician.INSTRUMENTS = {
 		["isPercussion"] = false,
 		["midi"] = 56
 	},
+	["distorsion-guitar"] = {
+		["path"] = "Interface\\AddOns\\Musician\\instruments\\distorsion-guitar",
+		["decay"] = 75,
+		["isPercussion"] = false,
+		["isPlucked"] = true,
+		["midi"] = 29,
+	},
+	["clean-guitar"] = {
+		["path"] = "Interface\\AddOns\\Musician\\instruments\\clean-guitar",
+		["decay"] = 75,
+		["isPercussion"] = false,
+		["isPlucked"] = true,
+		["midi"] = 27,
+	},
+	["bass-guitar"] = {
+		["path"] = "Interface\\AddOns\\Musician\\instruments\\bass-guitar",
+		["decay"] = 75,
+		["isPercussion"] = false,
+		["isPlucked"] = true,
+		["midi"] = 33,
+	},
 	["percussions"] = {
 		["midi"] = 128
+	},
+	["drumkit"] = {
+		["path"] = "Interface\\AddOns\\Musician\\instruments\\drumkit",
+		["decay"] = 100,
+		["isPercussion"] = false,
+		["isPlucked"] = true,
+		["midi"] = 129,
+		["transpose"] = 51 - 39,
 	},
 
 	-- Percussion
@@ -277,5 +306,11 @@ Musician.INSTRUMENTS_AVAILABLE = {
 	"bodhran-snare-long-hi",
 	"bodhran-snare-long-low",
 	"percussions",
+
+	"distorsion-guitar",
+	"clean-guitar",
+	"bass-guitar",
+	"drumkit",
+
 	"none",
 }

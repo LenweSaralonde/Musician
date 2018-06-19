@@ -276,7 +276,7 @@ function Musician.Song:OnUpdate(elapsed)
 		-- Notes On
 		while track.notes[track.playIndex] and (track.notes[track.playIndex][2] >= from) and (track.notes[track.playIndex][2] < to) do
 			if elapsed < 1 then -- Do not play notes if frame is longer than 1 s (after loading screen) to avoid slowdowns
-				self:NoteOn(track, track.playIndex, soundFile)
+				self:NoteOn(track, track.playIndex)
 			end
 			track.playIndex = track.playIndex + 1
 		end
@@ -404,7 +404,7 @@ function Musician.Song:PackTrack(track, fps)
 
 	if noteCount > 0 then
 		-- TINN : Track Id, instrument ID, Number of notes
-		packedTrack = Musician.Utils.PackNumber(track.id, 1) .. Musician.Utils.PackNumber(track.instrument, 1) .. Musician.Utils.PackNumber(noteCount, 2)	 .. packedTrack
+		packedTrack = Musician.Utils.PackNumber(track.id, 1) .. Musician.Utils.PackNumber(min(track.instrument, 128), 1) .. Musician.Utils.PackNumber(noteCount, 2)	 .. packedTrack
 	end
 
 	return packedTrack
@@ -470,12 +470,16 @@ function Musician.Song:Pack()
 	local packedTracks = ""
 	local packedTrackCount = 0
 	local track
+	local packedDrumkits = ""
 	for _, track in pairs(self.tracks) do
 		if not(self:TrackIsMuted(track)) and Musician.MIDI_INSTRUMENT_MAPPING[track.instrument] ~= "none" then
 			local packedTrack = self:PackTrack(track, fps)
 			if packedTrack ~= "" then
 				packedTracks = packedTracks .. packedTrack
 				packedTrackCount = packedTrackCount + 1
+				if track.instrument >= 128 then
+					packedDrumkits = packedDrumkits .. Musician.Utils.PackNumber(track.instrument - 128, 1)
+				end
 			end
 		end
 	end
@@ -491,6 +495,11 @@ function Musician.Song:Pack()
 
 	-- Tracks
 	packedSong = packedSong .. packedTracks
+
+	-- Metadata
+	if packedDrumkits ~= "" then
+		packedSong = packedSong .. "DRK" .. packedDrumkits
+	end
 
 	return packedSong
 end
@@ -524,7 +533,18 @@ function Musician.Song:UnpackMetadata(str)
 				cursor = cursor + 1
 			end
 
-		-- Unsupported
+		-- DRK: Drum Kits
+		elseif string.sub(str, cursor, cursor + 2) == 'DRK' then
+			cursor = cursor + 3
+			local track
+			for	_, track in pairs(self.tracks) do
+				if track.instrument >= 128 then
+					track.instrument = 128 + Musician.Utils.UnpackNumber(string.sub(str, cursor, cursor))
+					cursor = cursor + 1
+				end
+			end
+
+			-- Unsupported
 		else
 			return
 

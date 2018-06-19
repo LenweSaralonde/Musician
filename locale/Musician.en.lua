@@ -87,7 +87,11 @@ Musician.Locale.en.INSTRUMENT_NAMES = {
 	["fiddle"] = "Fiddle",
 	["bodhran-snare-long-hi"] = "Bodhrán (snare high)",
 	["bodhran-snare-long-low"] = "Bodhrán (snare low)",
-	["percussions"] = "Percussions",
+	["percussions"] = "Percussions (traditional)",
+	["distorsion-guitar"] = "Distorsion guitar",
+	["clean-guitar"] = "Clean guitar",
+	["bass-guitar"] = "Bass guitar",
+	["drumkit"] = "Drum kit",
 }
 
 Musician.Locale.en.MIDI_INSTRUMENT_NAMES = {

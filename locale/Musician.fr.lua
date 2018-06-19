@@ -87,7 +87,11 @@ Musician.Locale.fr.INSTRUMENT_NAMES = {
 	["fiddle"] = "Violon irlandais",
 	["bodhran-snare-long-hi"] = "Bodhrán (caisse claire aigüe)",
 	["bodhran-snare-long-low"] = "Bodhrán (caisse claire grave)",
-	["percussions"] = "Percussions",
+	["percussions"] = "Percussions traditionnelles",
+	["distorsion-guitar"] = "Guitare metal",
+	["clean-guitar"] = "Guitare électrique",
+	["bass-guitar"] = "Guitare basse",
+	["drumkit"] = "Batterie",
 }
 
 Musician.Locale.fr.MIDI_INSTRUMENT_NAMES = Musician.Locale.en.MIDI_INSTRUMENT_NAMES
