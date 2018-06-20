@@ -87,7 +87,7 @@ Musician.INSTRUMENTS = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\distorsion-guitar",
 		["decay"] = 75,
 		["isPercussion"] = false,
-		["isPlucked"] = true,
+		["isPlucked"] = false,
 		["midi"] = 29,
 	},
 	["clean-guitar"] = {
