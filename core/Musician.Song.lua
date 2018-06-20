@@ -47,6 +47,9 @@ function Musician.Song.create(packedSongData, crop)
 	-- @field speed (number) Playing speed
 	self.speed = 1
 
+	-- @field polyphony (number) Current polyphony
+	self.polyphony = 0
+
 	if packedSongData then
 		self:Unpack(packedSongData, crop)
 	end
@@ -301,7 +304,8 @@ end
 --- Play a note
 -- @param track (table) Reference to the track
 -- @param noteIndex (int) Note index
-function Musician.Song:NoteOn(track, noteIndex)
+-- @param noRetry (boolean) Do not attempt to recover dropped notes
+function Musician.Song:NoteOn(track, noteIndex, noRetry)
 	local key, time, duration = unpack(track.notes[noteIndex])
 	local soundFile, instrumentData = Musician.Utils.GetSoundFile(track.instrument, key + track.transpose)
 	if soundFile == nil then
@@ -323,11 +327,21 @@ function Musician.Song:NoteOn(track, noteIndex)
 	-- Play note sound file
 	local play, handle = PlaySoundFile(soundFile, 'SFX')
 
+	-- Note dropped: interrupt the oldest one and retry
+	if not(play) and not(noRetry) then
+		self:StopOldestNote()
+		C_Timer.After(0, function()
+			self:NoteOn(track, noteIndex, true)
+		end)
+		return
+	end
+
 	-- Add note to notesOn with sound handle and note off time
 	if play then
 		local endTime = self.cursor + duration / self.speed
 		track.notesOn[noteIndex] = {endTime, handle, instrumentData.decay}
 		track.polyphony = track.polyphony + 1
+		self.polyphony = self.polyphony + 1
 		Musician:SendMessage(Musician.Events.NoteOn, self, track, noteIndex, endTime, instrumentData.decay)
 	end
 end
@@ -341,6 +355,7 @@ function Musician.Song:NoteOff(track, noteIndex)
 		StopSound(handle, track.notesOn[noteIndex][3])
 		track.notesOn[noteIndex] = nil
 		track.polyphony = track.polyphony - 1
+		self.polyphony = self.polyphony - 1
 		Musician:SendMessage(Musician.Events.NoteOff, self, track, noteIndex)
 	end
 end
@@ -359,6 +374,26 @@ function Musician.Song:SongNotesOff()
 	local track
 	for _, track in pairs(self.tracks) do
 		self:TrackNotesOff(track)
+	end
+end
+
+--- Stop the oldest note still playing
+function Musician.Song:StopOldestNote()
+	local foundTrack, foundNoteIndex
+	local track
+	for _, track in pairs(self.tracks) do
+		local noteIndex, noteOn
+		for noteIndex, noteOn in pairs(track.notesOn) do
+			if foundNoteIndex == nil or track.notes[noteIndex][2] < foundTrack.notes[foundNoteIndex][2] then
+				foundTrack = track
+				foundNoteIndex = noteIndex
+			end
+		end
+	end
+
+	if foundNoteIndex ~= nil then
+		foundTrack.notesOn[foundNoteIndex][3] = 0 -- Remove decay
+		self:NoteOff(foundTrack, foundNoteIndex)
 	end
 end
 
