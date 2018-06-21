@@ -244,6 +244,16 @@ Musician.TrackEditor.InitInstrumentDropdown = function(dropdown, trackIndex)
 		local instrumentName = Musician.Msg.INSTRUMENT_NAMES[instrumentId]
 		dropdown.value = midiId
 		Musician.sourceSong.tracks[dropdown.trackIndex].instrument = midiId
+
+		if Musician.INSTRUMENTS[instrumentId].color ~= nil then
+			local r, g, b = unpack(Musician.INSTRUMENTS[instrumentId].color)
+			local trackFrameName = 'MusicianTrackEditorTrack' .. trackIndex
+			_G[trackFrameName .. 'TrackName']:SetTextColor(r, g, b)
+			_G[trackFrameName .. 'TrackInfo']:SetTextColor(r, g, b)
+			_G[trackFrameName .. 'TrackId']:SetTextColor(r, g, b)
+			instrumentName = Musician.Utils.GetColorCode(unpack(Musician.INSTRUMENTS[instrumentId].color)) .. instrumentName .. "|r"
+		end
+
 		UIDropDownMenu_SetText(dropdown, instrumentName)
 	end
 
@@ -261,6 +271,9 @@ Musician.TrackEditor.InitInstrumentDropdown = function(dropdown, trackIndex)
 			info.text = Musician.Msg.INSTRUMENT_NAMES[instrumentId]
 			info.arg1 = midiId
 			info.checked = dropdown.value == midiId
+			if Musician.INSTRUMENTS[instrumentId].color ~= nil then
+				info.colorCode = Musician.Utils.GetColorCode(unpack(Musician.INSTRUMENTS[instrumentId].color))
+			end
 			UIDropDownMenu_AddButton(info)
 		end
 	end

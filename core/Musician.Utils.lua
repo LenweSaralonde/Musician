@@ -28,6 +28,18 @@ function Musician.Utils.Highlight(text, color)
 	return "|cFF" .. color .. text .. "|r"
 end
 
+--- Get color code from RGB values
+-- @param r (number)
+-- @param g (number) 
+-- @param b (number) 
+-- @return (string)
+function Musician.Utils.GetColorCode(r, g, b)
+	local rh = string.format('%02X', floor(r * 255))
+	local gh = string.format('%02X', floor(g * 255))
+	local bh = string.format('%02X', floor(b * 255))
+	return "|cFF" .. rh .. gh .. bh
+end
+
 --- Format text, adding highlights etc.
 -- @param text (string)
 -- @return (string)
