@@ -1,6 +1,6 @@
 Musician
 ========
-Listen and play medieval/celtic folk music that can be heard by the nearby players. For the first time in World of Warcraft, your character can litterally become a bard!
+Listen to and play music that can be heard by nearby players. For the first time in World of Warcraft, your character can litterally become a bard!
 
 ([Tuto en français ici](https://www.lenwe.info/guide-musician/))
 
@@ -8,9 +8,9 @@ How to listen to music
 ----------------------
 All you need to do is install the addon. Nothing more is required.
 
-To mute a player, right click on his/her name or portrait to open the menu then select **Mute**. Do the same to unmute. If you prefer, you can just stop the song being played.
-
-Right click on the minimap button to enable or disable all the music from the addon.
+* To mute a player, right click on his/her name or portrait to open the menu then select **Mute**. Do the same to unmute.
+* You can also just stop the song being played by clicking the **[Stop]** hyperlink in the player's emote.
+* Right click on the minimap button to enable or disable all the music from the addon.
 
 How to play music
 -----------------
@@ -46,13 +46,13 @@ Tips
 * You can add lyrics by combining Musician with the [StoryTeller addon](https://www.lenwe.info/story-teller) !
 * Load the next song while the current one is playing to reduce waiting time between songs.
 * The radius for hearing the music is approximately 40 meters.
-* Play songs that are relevant with your "band" composition. It's nonsense to play orchestral music with only two bards or heavy metal with traditional instruments ! 😃
+* Play songs that are relevant with your "band" composition. It's nonsense to play orchestral music with only two bards or heavy metal using only traditional instruments ! 😃 However you can still roleplay as if your character owns a kind of gnomish *Music-o-Matic* machine that is capable of reproducing a whole band.
 
 Compose your own music
 ----------------------
 You can compose music for Musician using any MIDI sequencer, even in your browser with this [free online sequencer](https://onlinesequencer.net/).
 
-The 13 instruments available are:
+The 16 instruments available are:
 
 * Bagpipe (109)
 * Bassoon (70)
@@ -68,9 +68,19 @@ The 13 instruments available are:
 * Trombone (57)
 * Trumpet (56)
 
-The other instruments are mapped with the closest-sounding of the 13 instruments above (violin → fiddle, piano → dulcimer, guitar → lute etc.). The drum kits are replaced by a bodhrán (frame drum), a tambourine and a shaker. Check the mappings in [Musician.MidiMapping.lua](https://github.com/LenweSaralonde/Musician/blob/master/constants/Musician.MidiMapping.lua) for details.
+And since version *1.3* :
 
-Unfortunately, due to limitations of the WoW UI, velocity and controls (volume, padding, pitch bend, modulation...) are not supported. The polypohony is approximately 10 notes.
+* Distorsion guitar (29)
+* Clean Guitar (27)
+* Bass guitar (33 Fingered bass)
+
+The other instruments are mapped to the closest-sounding instrument among the 16 available (violin → fiddle, piano → dulcimer, guitar → lute etc.).
+
+The drum kits are replaced by traditional percussions such as a bodhrán (frame drum), a tambourine and a shaker. Since version *1.3*, a standard drum kit is also available for heavy metal songs.
+
+Check the mappings in [Musician.MidiMapping.lua](https://github.com/LenweSaralonde/Musician/blob/master/constants/Musician.MidiMapping.lua) for details.
+
+Unfortunately, due to limitations of the WoW UI, velocity and controls (volume, padding, pitch bend, modulation...) are not supported. The polypohony is roughly 12 notes.
 
 Limitations and known issues
 ----------------------------

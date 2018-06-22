@@ -1,6 +1,14 @@
 Changelog
 =========
 
+v1.3.0.0
+--------
+Get heavy! \m/
+
+* Added power trio (electric guitars, bass and drum kit) to play heavy metal. The *Elite Tauren Chieftains* and the *Blight Boar* are now in for a real challenge!
+* Improved player to better deal with note drops due to the lack of polyphony
+* Added instrument coloring in track editor
+
 v1.2.0.6
 --------
 * Removed unnecessary separator in unit popup menu.
