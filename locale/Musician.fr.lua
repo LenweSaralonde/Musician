@@ -89,7 +89,7 @@ Musician.Locale.fr.INSTRUMENT_NAMES = {
 	["bodhran-snare-long-low"] = "Bodhrán (caisse claire grave)",
 	["percussions"] = "Percussions traditionnelles",
 	["distorsion-guitar"] = "Guitare metal",
-	["clean-guitar"] = "Guitare électrique",
+	["clean-guitar"] = "Guitare son clair",
 	["bass-guitar"] = "Guitare basse",
 	["drumkit"] = "Batterie",
 }
