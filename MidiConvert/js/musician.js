@@ -92,6 +92,25 @@ Musician.PackTrackChannels = function(song) {
 	return packedTrackChannels;
 }
 
+Musician.PackDrumkits = function(song) {
+	var packedTrackDrumkits = "DRK";
+	var track;
+
+	// Find some metal instruments
+	var isMetal = false
+	song.tracks.forEach(function(track) {
+		isMetal = isMetal || track.instrumentNumber === 29 || track.instrumentNumber === 30 || track.instrumentNumber === 31;
+	});
+
+	song.tracks.forEach(function(track) {
+		if (track.isPercussion) {
+			packedTrackDrumkits += Musician.PackNumber(isMetal?1:0, 1);
+		}
+	});
+
+	return packedTrackDrumkits;
+}
+
 Musician.PackSong = function(song) {
 
 	var duration = Math.ceil(song.duration);
@@ -123,6 +142,7 @@ Musician.PackSong = function(song) {
 	// Metadata
 	packedSong += Musician.PackTrackChannels(song);
 	packedSong += Musician.PackTrackNames(song);
+	packedSong += Musician.PackDrumkits(song);
 
 	return packedSong;
 }
