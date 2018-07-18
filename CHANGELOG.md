@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.3.0.1
+--------
+* Updated for WoW 8.0
+
 v1.3.0.0
 --------
 Get heavy! \m/
