@@ -64,7 +64,7 @@ function Musician.Comm.getChannel()
 	local channelId, _ = GetChannelName(Musician.CHANNEL)
 
 	if channelId ~= 0 then
-		return channelId .. ''
+		return channelId
 	else
 		return nil
 	end
