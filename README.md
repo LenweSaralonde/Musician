@@ -2,7 +2,7 @@ Musician
 ========
 Listen to and play music that can be heard by nearby players. For the first time in World of Warcraft, your character can litterally become a bard!
 
-([Tuto en français ici](https://www.lenwe.info/guide-musician/))
+[Discord (EN/FR)](https://discord.gg/ypfpGxK) / [Guide en français](https://www.lenwe.info/guide-musician/)
 
 How to listen to music
 ----------------------
