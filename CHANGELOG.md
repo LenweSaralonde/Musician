@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.3.0.2
+--------
+* Fixed bug with dropdown menu after WoW 8.0 update
+
 v1.3.0.1
 --------
 * Updated for WoW 8.0
