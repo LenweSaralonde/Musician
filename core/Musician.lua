@@ -277,7 +277,7 @@ function Musician.SetupHooks()
 			}
 
 			if isPlayer and isRegistered and not(isMyself) then
-				UIDropDownMenu_AddSeparator(UIDropDownMenu_CreateInfo(), 1)
+				UIDropDownMenu_AddSeparator(1)
 			end
 
 			local item
