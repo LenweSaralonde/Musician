@@ -126,13 +126,13 @@ Musician.TrackEditor.GetTrackWidget = function(trackIndex)
 
 		-- Mute
 		_G[trackFrameName .. 'Mute'].tooltipText = Musician.Msg.MUTE_TRACK
-		_G[trackFrameName .. 'Mute'].setFunc = function(setting)
+		_G[trackFrameName .. 'Mute'].SetValue = function(self, setting)
 			Musician.sourceSong:SetTrackMuted(Musician.sourceSong.tracks[trackIndex], setting == "1")
 		end
 
 		-- Solo
 		_G[trackFrameName .. 'Solo'].tooltipText = Musician.Msg.SOLO_TRACK
-		_G[trackFrameName .. 'Solo'].setFunc = function(setting)
+		_G[trackFrameName .. 'Solo'].SetValue = function(self, setting)
 			Musician.sourceSong:SetTrackSolo(Musician.sourceSong.tracks[trackIndex], setting == "1")
 		end
 
