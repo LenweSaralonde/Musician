@@ -151,7 +151,7 @@ Musician.INSTRUMENTS = {
 	},
 	["drumkit"] = {
 		["path"] = "Interface\\AddOns\\Musician\\instruments\\drumkit",
-		["decay"] = 100,
+		["decay"] = 150,
 		["isPercussion"] = false,
 		["isPlucked"] = true,
 		["midi"] = 129,

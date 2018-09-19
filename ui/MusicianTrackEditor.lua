@@ -175,8 +175,8 @@ Musician.TrackEditor.GetTrackWidget = function(trackIndex)
 
 	local noteCount = table.getn(track.notes)
 	if table.getn(track.notes) > 0 then
-		local firstNote = track.notes[1][2]
-		local lastNote = track.notes[noteCount][2] + track.notes[noteCount][3]
+		local firstNote = track.notes[1][Musician.Song.Indexes.NOTE_TIME]
+		local lastNote = track.notes[noteCount][Musician.Song.Indexes.NOTE_TIME] + (track.notes[noteCount][Musician.Song.Indexes.NOTE_DURATION] or 0)
 		trackInfo = trackInfo .. " [" .. Musician.Utils.GetLink('seek', Musician.Utils.FormatTime(firstNote, true), firstNote)
 		trackInfo = trackInfo .. " – " .. Musician.Utils.GetLink('seek', Musician.Utils.FormatTime(lastNote, true), lastNote) .. "]"
 	end
@@ -341,10 +341,10 @@ Musician.TrackEditor.NoteOn = function(self, song, track, noteIndex, endTime, de
 	if song == Musician.sourceSong then
 		local meter = _G['MusicianTrackEditorTrack' .. track.index .. 'Meter']
 		local note = track.notes[noteIndex]
-		local _, instrumentData = Musician.Utils.GetSoundFile(track.instrument, note[1] + track.transpose)
+		local _, instrumentData = Musician.Utils.GetSoundFile(track.instrument, note[Musician.Song.Indexes.NOTE_KEY] + track.transpose)
 		meter:SetWidth(meter.maxWidth)
-		meter.cursor = note[2]
-		meter.time = note[2]
+		meter.cursor = note[Musician.Song.Indexes.NOTE_TIME]
+		meter.time = note[Musician.Song.Indexes.NOTE_TIME]
 
 		if meter.endTime == nil then
 			meter.endTime = meter.time
@@ -363,12 +363,11 @@ Musician.TrackEditor.NoteOn = function(self, song, track, noteIndex, endTime, de
 	end
 end
 
-Musician.TrackEditor.NoteOff = function(self, song, track, noteIndex)
+Musician.TrackEditor.NoteOff = function(self, song, track, key)
 	if song == Musician.sourceSong then
 		-- Stop if all notes of the track are off
 		if track.polyphony == 0 then
-			local note = track.notes[noteIndex]
-			local _, instrumentData = Musician.Utils.GetSoundFile(track.instrument, note[1] + track.transpose)
+			local _, instrumentData = Musician.Utils.GetSoundFile(track.instrument, key + track.transpose)
 			local meter = _G['MusicianTrackEditorTrack' .. track.index .. 'Meter']
 			meter.cursor = meter.endTime
 			meter.decay = instrumentData.decay / 1000
