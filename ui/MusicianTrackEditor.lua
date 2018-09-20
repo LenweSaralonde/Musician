@@ -3,6 +3,8 @@ Musician.TrackEditor = LibStub("AceAddon-3.0"):NewAddon("Musician.TrackEditor", 
 Musician.TrackEditor.PAUSE_ICON = 'p'
 Musician.TrackEditor.PLAY_ICON = 'P'
 
+Musician.TrackEditor.MAX_NOTE_DURATION = 6
+
 Musician.TrackEditor.Init = function()
 
 	-- Init texts
@@ -348,6 +350,10 @@ Musician.TrackEditor.NoteOn = function(self, song, track, noteIndex, endTime, de
 
 		if meter.endTime == nil then
 			meter.endTime = meter.time
+		end
+
+		if endTime == nil then
+			endTime = note[Musician.Song.Indexes.NOTE_TIME] + Musician.TrackEditor.MAX_NOTE_DURATION
 		end
 
 		if instrumentData.isPlucked or instrumentData.isPercussion then
