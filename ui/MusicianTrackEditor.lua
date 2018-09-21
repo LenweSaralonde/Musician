@@ -5,6 +5,9 @@ Musician.TrackEditor.PLAY_ICON = 'P'
 
 Musician.TrackEditor.MAX_NOTE_DURATION = 6
 
+local NOTE = Musician.Song.Indexes.NOTE
+local NOTEON = Musician.Song.Indexes.NOTEON
+
 Musician.TrackEditor.Init = function()
 
 	-- Init texts
@@ -58,7 +61,7 @@ Musician.TrackEditor.OnLoad = function()
 	Musician.TrackEditor.UpdateCursor(nil, Musician.sourceSong)
 
 	-- Get tracks
-	local trackCount = table.getn(Musician.sourceSong.tracks)
+	local trackCount = #Musician.sourceSong.tracks
 	local trackIndex
 	for trackIndex = 1, trackCount, 1 do
 		Musician.TrackEditor.GetTrackWidget(trackIndex)
@@ -175,10 +178,10 @@ Musician.TrackEditor.GetTrackWidget = function(trackIndex)
 
 	trackInfo = trackInfo .. Musician.Msg.MIDI_INSTRUMENT_NAMES[track.midiInstrument]
 
-	local noteCount = table.getn(track.notes)
-	if table.getn(track.notes) > 0 then
-		local firstNote = track.notes[1][Musician.Song.Indexes.NOTE_TIME]
-		local lastNote = track.notes[noteCount][Musician.Song.Indexes.NOTE_TIME] + (track.notes[noteCount][Musician.Song.Indexes.NOTE_DURATION] or 0)
+	local noteCount = #track.notes
+	if #track.notes > 0 then
+		local firstNote = track.notes[1][NOTE.TIME]
+		local lastNote = track.notes[noteCount][NOTE.TIME] + (track.notes[noteCount][NOTE.DURATION] or 0)
 		trackInfo = trackInfo .. " [" .. Musician.Utils.GetLink('seek', Musician.Utils.FormatTime(firstNote, true), firstNote)
 		trackInfo = trackInfo .. " – " .. Musician.Utils.GetLink('seek', Musician.Utils.FormatTime(lastNote, true), lastNote) .. "]"
 	end
@@ -343,17 +346,17 @@ Musician.TrackEditor.NoteOn = function(self, song, track, noteIndex, endTime, de
 	if song == Musician.sourceSong then
 		local meter = _G['MusicianTrackEditorTrack' .. track.index .. 'Meter']
 		local note = track.notes[noteIndex]
-		local _, instrumentData = Musician.Utils.GetSoundFile(track.instrument, note[Musician.Song.Indexes.NOTE_KEY] + track.transpose)
+		local _, instrumentData = Musician.Utils.GetSoundFile(track.instrument, note[NOTE.KEY] + track.transpose)
 		meter:SetWidth(meter.maxWidth)
-		meter.cursor = note[Musician.Song.Indexes.NOTE_TIME]
-		meter.time = note[Musician.Song.Indexes.NOTE_TIME]
+		meter.cursor = note[NOTE.TIME]
+		meter.time = note[NOTE.TIME]
 
 		if meter.endTime == nil then
 			meter.endTime = meter.time
 		end
 
 		if endTime == nil then
-			endTime = note[Musician.Song.Indexes.NOTE_TIME] + Musician.TrackEditor.MAX_NOTE_DURATION
+			endTime = note[NOTE.TIME] + Musician.TrackEditor.MAX_NOTE_DURATION
 		end
 
 		if instrumentData.isPlucked or instrumentData.isPercussion then

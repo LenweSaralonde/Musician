@@ -3,15 +3,20 @@ Musician.Song.__index = Musician.Song
 
 Musician.Song.Indexes = {}
 
-Musician.Song.Indexes.NOTE_ON = 1
-Musician.Song.Indexes.NOTE_KEY = 2
-Musician.Song.Indexes.NOTE_TIME = 3
-Musician.Song.Indexes.NOTE_DURATION = 4
+Musician.Song.Indexes.NOTE = {}
+Musician.Song.Indexes.NOTE.ON = 1
+Musician.Song.Indexes.NOTE.KEY = 2
+Musician.Song.Indexes.NOTE.TIME = 3
+Musician.Song.Indexes.NOTE.DURATION = 4
 
-Musician.Song.Indexes.NOTEON_TIME = 1
-Musician.Song.Indexes.NOTEON_ENDTIME = 2
-Musician.Song.Indexes.NOTEON_HANDLE = 3
-Musician.Song.Indexes.NOTEON_DECAY = 4
+Musician.Song.Indexes.NOTEON = {}
+Musician.Song.Indexes.NOTEON.TIME = 1
+Musician.Song.Indexes.NOTEON.ENDTIME = 2
+Musician.Song.Indexes.NOTEON.HANDLE = 3
+Musician.Song.Indexes.NOTEON.DECAY = 4
+
+local NOTE = Musician.Song.Indexes.NOTE
+local NOTEON = Musician.Song.Indexes.NOTEON
 
 --- Constructor
 -- @param packedSongData (string)
@@ -132,9 +137,9 @@ function Musician.Song:Preload(callback)
 
 	for _, track in pairs(self.tracks) do
 		for _, note in pairs(track.notes) do
-			if note[Musician.Song.Indexes.NOTE_ON] then
-				local noteString = track.instrument .. note[Musician.Song.Indexes.NOTE_KEY]
-				notes[noteString] = {track.instrument, note[Musician.Song.Indexes.NOTE_KEY]}
+			if note[NOTE.ON] then
+				local noteString = track.instrument .. note[NOTE.KEY]
+				notes[noteString] = {track.instrument, note[NOTE.KEY]}
 			end
 		end
 	end
@@ -184,18 +189,18 @@ function Musician.Song:Seek(cursor)
 	-- @param cursor (number) Position to reach
 	-- @param track (table)
 	local trackSeek = function(cursor, track)
-		local noteCount = table.getn(track.notes)
+		local noteCount = #track.notes
 
 		if noteCount == 0 then
 			return
 		end
 
 		-- Cursor is before the first note
-		if cursor <= track.notes[1][Musician.Song.Indexes.NOTE_TIME] then
+		if cursor <= track.notes[1][NOTE.TIME] then
 			track.playIndex = 1
 			return
 		-- Cursor is after the last note
-		elseif cursor > track.notes[noteCount][Musician.Song.Indexes.NOTE_TIME] then
+		elseif cursor > track.notes[noteCount][NOTE.TIME] then
 			track.playIndex = noteCount + 1
 			return
 		end
@@ -204,7 +209,7 @@ function Musician.Song:Seek(cursor)
 		local to = noteCount
 		local index = max(1, min(noteCount, track.playIndex))
 
-		if cursor <= track.notes[index][Musician.Song.Indexes.NOTE_TIME] then
+		if cursor <= track.notes[index][NOTE.TIME] then
 			to = index
 		else
 			from = index
@@ -215,7 +220,7 @@ function Musician.Song:Seek(cursor)
 			index = from + floor((to - from) / 2 + .5)
 
 			-- Exact position found! Find first note at exact position
-			while index >= 1 and track.notes[index][Musician.Song.Indexes.NOTE_TIME] == cursor do
+			while index >= 1 and track.notes[index][NOTE.TIME] == cursor do
 				found = true
 				index = index - 1
 			end
@@ -226,13 +231,13 @@ function Musician.Song:Seek(cursor)
 			end
 
 			-- In-between position found
-			if cursor > track.notes[index - 1][Musician.Song.Indexes.NOTE_TIME] and cursor <= track.notes[index][Musician.Song.Indexes.NOTE_TIME] then
+			if cursor > track.notes[index - 1][NOTE.TIME] and cursor <= track.notes[index][NOTE.TIME] then
 				track.playIndex = index
 				return
 			end
 
 			-- Seek before
-			if cursor < track.notes[index][Musician.Song.Indexes.NOTE_TIME ] then
+			if cursor < track.notes[index][NOTE.TIME ] then
 				to = index
 				-- Seek after
 			else
@@ -291,15 +296,15 @@ function Musician.Song:OnUpdate(elapsed)
 	local track
 	for _, track in pairs(self.tracks) do
 		-- Notes On and Notes Off
-		while track.notes[track.playIndex] and (track.notes[track.playIndex][Musician.Song.Indexes.NOTE_TIME] >= from) and (track.notes[track.playIndex][Musician.Song.Indexes.NOTE_TIME] < to) do
-			if track.notes[track.playIndex][Musician.Song.Indexes.NOTE_ON] then
+		while track.notes[track.playIndex] and (track.notes[track.playIndex][NOTE.TIME] >= from) and (track.notes[track.playIndex][NOTE.TIME] < to) do
+			if track.notes[track.playIndex][NOTE.ON] then
 				-- Note On
 				if elapsed < 1 then -- Do not play notes if frame is longer than 1 s (after loading screen) to avoid slowdowns
 					self:NoteOn(track, track.playIndex)
 				end
 			else
 				-- Note Off
-				self:NoteOff(track, track.notes[track.playIndex][Musician.Song.Indexes.NOTE_KEY])
+				self:NoteOff(track, track.notes[track.playIndex][NOTE.KEY])
 			end
 			track.playIndex = track.playIndex + 1
 		end
@@ -307,7 +312,7 @@ function Musician.Song:OnUpdate(elapsed)
 		-- Stop expired notes currently playing
 		local noteIndex, noteOn
 		for noteIndex, noteOn in pairs(track.notesOn) do
-			if noteOn[Musician.Song.Indexes.NOTEON_ENDTIME] ~= nil and noteOn[Musician.Song.Indexes.NOTEON_ENDTIME] < to then -- Off time is in the past
+			if noteOn[NOTEON.ENDTIME] ~= nil and noteOn[NOTEON.ENDTIME] < to then -- Off time is in the past
 				self:NoteOff(track, noteIndex)
 			end
 		end
@@ -327,9 +332,9 @@ end
 -- @param noteIndex (int) Note index
 -- @param noRetry (boolean) Do not attempt to recover dropped notes
 function Musician.Song:NoteOn(track, noteIndex, noRetry)
-	local key = track.notes[noteIndex][Musician.Song.Indexes.NOTE_KEY]
-	local time = track.notes[noteIndex][Musician.Song.Indexes.NOTE_TIME]
-	local duration = track.notes[noteIndex][Musician.Song.Indexes.NOTE_DURATION]
+	local key = track.notes[noteIndex][NOTE.KEY]
+	local time = track.notes[noteIndex][NOTE.TIME]
+	local duration = track.notes[noteIndex][NOTE.DURATION]
 	local soundFile, instrumentData = Musician.Utils.GetSoundFile(track.instrument, key + track.transpose)
 	if soundFile == nil then
 		return
@@ -370,10 +375,10 @@ function Musician.Song:NoteOn(track, noteIndex, noRetry)
 		end
 
 		track.notesOn[key] = {
-			[Musician.Song.Indexes.NOTEON_TIME] = time,
-			[Musician.Song.Indexes.NOTEON_ENDTIME] = endTime,
-			[Musician.Song.Indexes.NOTEON_HANDLE] = handle,
-			[Musician.Song.Indexes.NOTEON_DECAY] = instrumentData.decay
+			[NOTEON.TIME] = time,
+			[NOTEON.ENDTIME] = endTime,
+			[NOTEON.HANDLE] = handle,
+			[NOTEON.DECAY] = instrumentData.decay
 		}
 
 		track.polyphony = track.polyphony + 1
@@ -387,8 +392,8 @@ end
 -- @param key (int) Note key
 function Musician.Song:NoteOff(track, key)
 	if track.notesOn[key] ~= nil then
-		local handle = track.notesOn[key][Musician.Song.Indexes.NOTEON_HANDLE]
-		StopSound(handle, track.notesOn[key][Musician.Song.Indexes.NOTEON_DECAY])
+		local handle = track.notesOn[key][NOTEON.HANDLE]
+		StopSound(handle, track.notesOn[key][NOTEON.DECAY])
 		track.notesOn[key] = nil
 		track.polyphony = track.polyphony - 1
 		self.polyphony = self.polyphony - 1
@@ -420,7 +425,7 @@ function Musician.Song:StopOldestNote()
 	for _, track in pairs(self.tracks) do
 		local noteKey, noteOn
 		for noteKey, noteOn in pairs(track.notesOn) do
-			if foundNoteKey == nil or track.notesOn[noteKey][Musician.Song.Indexes.NOTE_TIME] < foundTrack.notesOn[foundNoteKey][Musician.Song.Indexes.NOTE_TIME] then
+			if foundNoteKey == nil or track.notesOn[noteKey][NOTE.TIME] < foundTrack.notesOn[foundNoteKey][NOTE.TIME] then
 				foundTrack = track
 				foundNoteKey = noteKey
 			end
@@ -428,7 +433,7 @@ function Musician.Song:StopOldestNote()
 	end
 
 	if foundNoteKey ~= nil then
-		foundTrack.notesOn[foundNoteKey][Musician.Song.Indexes.NOTEON_DECAY] = 0 -- Remove decay
+		foundTrack.notesOn[foundNoteKey][NOTEON.DECAY] = 0 -- Remove decay
 		self:NoteOff(foundTrack, foundNoteKey)
 	end
 end
@@ -440,9 +445,9 @@ end
 -- @return (string)
 function Musician.Song:PackNote(note, fps, transpose)
 	-- KTTD : key, time, duration
-	local packedKey = Musician.Utils.PackNumber(max(0, min(255, note[Musician.Song.Indexes.NOTE_KEY] + transpose)), 1)
-	local packedTime = Musician.Utils.PackTime(note[Musician.Song.Indexes.NOTE_TIME] - self.cropFrom, 2, fps)
-	local packedDuration = Musician.Utils.PackTime(min(note[Musician.Song.Indexes.NOTE_DURATION], Musician.MAX_NOTE_DURATION), 1, Musician.DURATION_FPS)
+	local packedKey = Musician.Utils.PackNumber(max(0, min(255, note[NOTE.KEY] + transpose)), 1)
+	local packedTime = Musician.Utils.PackTime(note[NOTE.TIME] - self.cropFrom, 2, fps)
+	local packedDuration = Musician.Utils.PackTime(min(note[NOTE.DURATION], Musician.MAX_NOTE_DURATION), 1, Musician.DURATION_FPS)
 	return packedKey .. packedTime .. packedDuration
 end
 
@@ -457,10 +462,10 @@ function Musician.Song:UnpackNote(str, fps)
 	local duration = Musician.Utils.UnpackTime(string.sub(str, 4, 4), Musician.DURATION_FPS)
 
 	return {
-		[Musician.Song.Indexes.NOTE_ON] = true,
-		[Musician.Song.Indexes.NOTE_KEY] = key,
-		[Musician.Song.Indexes.NOTE_TIME] = time,
-		[Musician.Song.Indexes.NOTE_DURATION] = duration
+		[NOTE.ON] = true,
+		[NOTE.KEY] = key,
+		[NOTE.TIME] = time,
+		[NOTE.DURATION] = duration
 	}
 end
 
@@ -475,7 +480,7 @@ function Musician.Song:PackTrack(track, fps)
 	local note
 	local noteCount = 0
 	for _, note in pairs(track.notes) do
-		if note[Musician.Song.Indexes.NOTE_ON] and note[Musician.Song.Indexes.NOTE_TIME] >= self.cropFrom and note[Musician.Song.Indexes.NOTE_TIME] <= self.cropTo then
+		if note[NOTE.ON] and note[NOTE.TIME] >= self.cropFrom and note[NOTE.TIME] <= self.cropTo then
 			packedTrack = packedTrack .. self:PackNote(note, fps, track.transpose)
 			noteCount = noteCount + 1
 		end
@@ -676,10 +681,10 @@ function Musician.Song:Unpack(str, crop)
 		local track = self:UnpackTrack(string.sub(str, cursor, trackEnd), fps)
 		track.index = trackId + 1
 		table.insert(self.tracks, track)
-		if track.notes[Musician.Song.Indexes.NOTE_KEY] ~= nil and crop then
-			local noteCount = table.getn(track.notes)
-			self.cropFrom = min(self.cropFrom, track.notes[1][Musician.Song.Indexes.NOTE_TIME])
-			self.cropTo = max(self.cropTo, track.notes[noteCount][Musician.Song.Indexes.NOTE_TIME] + (track.notes[noteCount][Musician.Song.Indexes.NOTE_DURATION] or 0))
+		if track.notes[NOTE.KEY] ~= nil and crop then
+			local noteCount = #track.notes
+			self.cropFrom = min(self.cropFrom, track.notes[1][NOTE.TIME])
+			self.cropTo = max(self.cropTo, track.notes[noteCount][NOTE.TIME] + (track.notes[noteCount][NOTE.DURATION] or 0))
 		end
 		cursor = trackEnd + 1
 	end

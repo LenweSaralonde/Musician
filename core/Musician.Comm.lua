@@ -38,14 +38,14 @@ end
 function Musician.Comm.JoinChannel()
 	if Musician.Comm.channelJoiner ~= nil then return end
 
-	local joinedChannelCount = table.getn( { GetChannelList() } )
+	local joinedChannelCount = #{GetChannelList()}
 
 	Musician.Comm.channelJoiner = C_Timer.NewTicker(4, function()
 		local channelId, _ = GetChannelName(Musician.CHANNEL)
 
 		if channelId == 0 then
 			Musician.Registry.playersFetched = false
-			local newJoinedChannelCount = table.getn( { GetChannelList() } )
+			local newJoinedChannelCount = #{GetChannelList()}
 
 			if newJoinedChannelCount > 0 and newJoinedChannelCount == joinedChannelCount then
 				local type, name = JoinTemporaryChannel(Musician.CHANNEL, Musician.PASSWORD)

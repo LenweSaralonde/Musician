@@ -368,8 +368,8 @@ function Musician.Utils.VersionCompare(versionA, versionB)
 
 	local partsA = { strsplit('.', versionA) }
 	local partsB = { strsplit('.', versionB) }
-	local countA = table.getn(partsA)
-	local countB = table.getn(partsB)
+	local countA = #partsA
+	local countB = #partsB
 
 	local i
 	for i = 1, min(countA, countB) do
