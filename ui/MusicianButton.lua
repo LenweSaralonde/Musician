@@ -1,7 +1,14 @@
+Musician.Button = LibStub("AceAddon-3.0"):NewAddon("Musician.Button", "AceEvent-3.0")
 
 function MusicianButton.Init()
 	MusicianButton.Reposition()
+	MusicianButton.tooltipIsVisible = false
 	MusicianButton:SetScript("OnClick", MusicianButton.OnClick)
+	Musician.Button:RegisterMessage(Musician.Events.PreloadingProgress, function()
+		if MusicianButton.tooltipIsVisible then
+			MusicianButton.UpdateTooltipText(true)
+		end
+	end)
 end
 
 function MusicianButton.Reposition()
@@ -66,7 +73,13 @@ function MusicianButton.OnClick(self, button)
 end
 
 function MusicianButton.ShowTooltip()
-	GameTooltip:SetOwner(MusicianButton, "ANCHOR_BOTTOMLEFT");
+	GameTooltip:SetOwner(MusicianButton, "ANCHOR_BOTTOMLEFT")
+	MusicianButton.UpdateTooltipText(false)
+	GameTooltip:Show()
+	MusicianButton.tooltipIsVisible = true
+end
+
+function MusicianButton.UpdateTooltipText(alwaysShowLoadingProgression)
 
 	local mainLine = string.gsub(Musician.Msg.PLAYER_TOOLTIP_VERSION, "{version}", GetAddOnMetadata("Musician", "Version"))
 
@@ -89,14 +102,22 @@ function MusicianButton.ShowTooltip()
 	end
 	rightClickLine = string.gsub(rightClickLine, "{action}", rightAction)
 
+	GameTooltip:ClearLines()
 	GameTooltip:AddLine(mainLine, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
 	GameTooltip:AddLine(Musician.Utils.FormatText(leftClickLine), NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
 	GameTooltip:AddLine(Musician.Utils.FormatText(rightClickLine), NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
 	GameTooltip:AddLine(Musician.Utils.FormatText(Musician.Msg.TOOLTIP_DRAG_AND_DROP), NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
 
-	GameTooltip:Show();
+	local preloadingProgression = Musician.Preloader.GetProgress()
+	local loadingLine = ''
+	if alwaysShowLoadingProgression or preloadingProgression < 1 then
+		local strPreloadingProgression = floor(preloadingProgression * 100) .. "%%"
+		loadingLine = string.gsub(Musician.Msg.PLAYER_TOOLTIP_PRELOADING, "{progress}", strPreloadingProgression)
+	end
+	GameTooltip:AddLine(Musician.Utils.FormatText(loadingLine), LIGHTBLUE_FONT_COLOR.r, LIGHTBLUE_FONT_COLOR.g, LIGHTBLUE_FONT_COLOR.b)
 end
 
 function MusicianButton.HideTooltip()
-	GameTooltip:Hide();
+	MusicianButton.tooltipIsVisible = false
+	GameTooltip:Hide()
 end

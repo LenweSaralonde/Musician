@@ -30,8 +30,8 @@ end
 
 --- Get color code from RGB values
 -- @param r (number)
--- @param g (number) 
--- @param b (number) 
+-- @param g (number)
+-- @param b (number)
 -- @return (string)
 function Musician.Utils.GetColorCode(r, g, b)
 	local rh = string.format('%02X', floor(r * 255))
@@ -236,24 +236,31 @@ function Musician.Utils.PlayerIsInRange(player)
 	return Musician.LISTENING_RADIUS ^ 2 > (posY2 - posY) ^ 2 + (posX2 - posX) ^ 2 + (posZ2 - posZ) ^ 2
 end
 
+--- Return instrument name from its MIDI ID
+-- @param instrument (number)
+-- @param key (number)
+-- @return (string)
+function Musician.Utils.GetInstrumentName(instrument, key)
+	if instrument ~= 128 then -- Not a percussion
+		return Musician.MIDI_INSTRUMENT_MAPPING[instrument]
+	else -- Percussion
+		return Musician.MIDI_PERCUSSION_MAPPING[key]
+	end
+end
+
 --- Returns the sound file for this instrument and key
 -- @param instrument (int) MIDI instrument index
 -- @param key (int) MIDI key
 -- @return (string, table)
 function Musician.Utils.GetSoundFile(instrument, key)
 
-	local instrumentName
-	if instrument ~= 128 then -- Not a percussion
-		instrumentName = Musician.MIDI_INSTRUMENT_MAPPING[instrument]
-		if instrumentName == nil or instrumentName == "none" then
-			return nil
-		end
-	else -- Percussion
-		instrumentName = Musician.MIDI_PERCUSSION_MAPPING[key]
+	local instrumentName = Musician.Utils.GetInstrumentName(instrument, key)
+	if instrumentName == nil or instrumentName == "none" then
+		return nil
 	end
 
-	local instrumentData = Musician.INSTRUMENTS[instrumentName]
-	if instrumentData == nil or instrumentName == "none" then
+	local instrumentData = Musician.Utils.GetInstrumentData(instrumentName, key)
+	if instrumentData == nil then
 		return nil
 	end
 
@@ -281,23 +288,33 @@ function Musician.Utils.GetSoundFile(instrument, key)
 	return soundFile .. ".ogg", instrumentData
 end
 
+--- Returns true if a song is actually playing and audible
+-- @return (boolean)
+function Musician.Utils.SongIsPlaying()
+	local isPlaying
+
+	local sourceSongIsPlaying = Musician.sourceSong ~= nil and Musician.sourceSong.playing
+	isPlaying = sourceSongIsPlaying and not(Musician.globalMute)
+
+	if not(isPlaying) then
+		local song, player
+		for player, song in pairs(Musician.songs) do
+			if song.playing and Musician.Utils.PlayerIsInRange(player) and not(Musician.globalMute) and not(Musician.PlayerIsMuted(player)) then
+				return true
+			end
+		end
+	end
+
+	return isPlaying
+end
+
 --- Start or stop the actual game music if a song can actually be heard
 -- @param force (boolean)
 function Musician.Utils.MuteGameMusic(force)
 	local mute
 
 	if GetCVar("Sound_EnableMusic") ~= "0" then
-		local sourceSongIsPlaying = Musician.sourceSong ~= nil and Musician.sourceSong.playing
-		mute = sourceSongIsPlaying and not(Musician.globalMute)
-
-		if not(mute) then
-			local song, player
-			for player, song in pairs(Musician.songs) do
-				if song.playing and Musician.Utils.PlayerIsInRange(player) and not(Musician.globalMute) and not(Musician.PlayerIsMuted(player)) then
-					mute = true
-				end
-			end
-		end
+		mute = Musician.Utils.SongIsPlaying()
 	else
 		mute = false
 	end
@@ -452,4 +469,60 @@ function Musician.Utils.ParseTime(timestamp)
 	end
 
 	return max(0, time)
+end
+
+--- Return instrument data
+-- @param instrumentName (string)
+-- @param key (number)
+-- @return (table)
+function Musician.Utils.GetInstrumentData(instrumentName, key)
+	local instrumentData = Musician.INSTRUMENTS[instrumentName]
+	if instrumentData == nil then
+		return nil
+	end
+
+	instrumentData.name = instrumentName
+
+	-- Handle specific percussion mapping
+	if instrumentData.midi == 128 and not(instrumentData.isPercussion) then
+		return Musician.Utils.GetInstrumentData(Musician.MIDI_PERCUSSION_MAPPING[key], key)
+	end
+
+	-- Assign percussion MIDI id
+	if instrumentData.midi == nil and instrumentData.isPercussion then
+		instrumentData.midi = 128
+	end
+
+	return instrumentData
+end
+
+--- Returns sample ID for note and instrument
+-- @param instrumentData (table) as returned by Musician.Utils.GetSoundFile()
+-- @param key (number)
+-- @return (string)
+function Musician.Utils.GetSampleId(instrumentData, key)
+	if instrumentData == nil or instrumentData.name == nil or instrumentData.name == "none" then
+		return nil
+	end
+
+	if instrumentData.isPercussion then
+		return instrumentData.name
+	else
+		return instrumentData.name .. '-' .. key
+	end
+end
+
+--- Play Note
+-- @param instrument (number)
+-- @param key (number)
+-- @return (boolean), (number), (table) willPlay, soundHandle, instrumentData
+function Musician.Utils.PlayNote(instrument, key)
+	local soundFile, instrumentData = Musician.Utils.GetSoundFile(instrument, key)
+	local sampleId = Musician.Utils.GetSampleId(instrumentData, key)
+	local play, handle = false
+	if soundFile then
+		play, handle = PlaySoundFile(soundFile, 'SFX')
+	end
+	Musician.Preloader.AddPreloaded(sampleId)
+	return play, handle, instrumentData
 end

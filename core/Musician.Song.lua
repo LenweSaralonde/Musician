@@ -40,12 +40,6 @@ function Musician.Song.create(packedSongData, crop)
 	-- @field notified (boolean) True when the notification for the song playing has been displayed
 	self.notified = false
 
-	-- @field preloading (boolean) True when the song samples are preloading
-	self.preloading = false
-
-	-- @field preloaded (boolean) True when the song samples have been preloaded
-	self.preloaded = false
-
 	-- @field playing (boolean) True when the song is playing
 	self.playing = false
 
@@ -77,7 +71,7 @@ end
 --- Returns true if the song is playing or about to be played (preloading).
 -- @return (boolean)
 function Musician.Song:IsPlaying()
-	return self.preloading or self.playing
+	return self.playing
 end
 
 --- Mute or unmute track
@@ -117,58 +111,6 @@ function Musician.Song:SetTrackSolo(track, isSolo)
 	end
 end
 
---- Preload song samples into memory cache
--- @param callback (function) Function to be called when preloading is complete
-function Musician.Song:Preload(callback)
-
-	-- Already preloaded
-	if self.preloaded then
-		if callback then
-			callback()
-		end
-		return
-	end
-
-	self.preloading = true
-
-	-- Get all samples (notes per instrument) needed
-	local track, note
-	local notes = {}
-
-	for _, track in pairs(self.tracks) do
-		for _, note in pairs(track.notes) do
-			if note[NOTE.ON] then
-				local noteString = track.instrument .. note[NOTE.KEY]
-				notes[noteString] = {track.instrument, note[NOTE.KEY]}
-			end
-		end
-	end
-
-	local noteCount = 0
-	for _, note in pairs(notes) do
-		noteCount = noteCount + 1
-	end
-
-	-- Synchronize callback
-	if callback then
-		-- Max loading time for a sample has been measured to 3 ms (5400 RPM HDD on USB2)
-		C_Timer.After(noteCount * 0.003 + 1, callback)
-	end
-
-	-- Preload samples
-	for _, note in pairs(notes) do
-		local soundFile, _ = Musician.Utils.GetSoundFile(note[1], note[2])
-		if soundFile ~= nil then
-			local play, handle = PlaySoundFile(soundFile, 'SFX')
-			if play then
-				StopSound(handle, 0)
-			end
-		end
-	end
-
-	self.preloaded = true
-end
-
 --- Play song
 function Musician.Song:Play()
 	self:Reset()
@@ -199,7 +141,7 @@ function Musician.Song:Seek(cursor)
 		if cursor <= track.notes[1][NOTE.TIME] then
 			track.playIndex = 1
 			return
-		-- Cursor is after the last note
+			-- Cursor is after the last note
 		elseif cursor > track.notes[noteCount][NOTE.TIME] then
 			track.playIndex = noteCount + 1
 			return
@@ -265,19 +207,13 @@ end
 
 --- Resume a song playing
 function Musician.Song:Resume()
-	-- Preload and delay playout if necessary
-	self:Preload(function()
-		self.preloading = false
-		self.playing = true
-	end)
-
+	self.playing = true
 	Musician.Comm:SendMessage(Musician.Events.SongPlay, self)
 end
 
 --- Stop song
 function Musician.Song:Stop()
 	self:SongNotesOff()
-	self.preloading = false
 	self.playing = false
 	Musician.Comm:SendMessage(Musician.Events.SongStop, self)
 end
@@ -332,10 +268,10 @@ end
 -- @param noteIndex (int) Note index
 -- @param noRetry (boolean) Do not attempt to recover dropped notes
 function Musician.Song:NoteOn(track, noteIndex, noRetry)
-	local key = track.notes[noteIndex][NOTE.KEY]
+	local key = track.notes[noteIndex][NOTE.KEY] + track.transpose
 	local time = track.notes[noteIndex][NOTE.TIME]
 	local duration = track.notes[noteIndex][NOTE.DURATION]
-	local soundFile, instrumentData = Musician.Utils.GetSoundFile(track.instrument, key + track.transpose)
+	local soundFile, instrumentData = Musician.Utils.GetSoundFile(track.instrument, key)
 	if soundFile == nil then
 		return
 	end
@@ -356,7 +292,7 @@ function Musician.Song:NoteOn(track, noteIndex, noRetry)
 	self:NoteOff(track, key)
 
 	-- Play note sound file
-	local play, handle = PlaySoundFile(soundFile, 'SFX')
+	local play, handle = Musician.Utils.PlayNote(track.instrument, key)
 
 	-- Note dropped: interrupt the oldest one and retry
 	if not(play) and not(noRetry) then

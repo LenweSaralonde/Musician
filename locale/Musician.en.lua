@@ -18,6 +18,7 @@ Musician.Locale.en.NEW_VERSION = "A new version of Musician has been released! G
 
 Musician.Locale.en.PLAYER_TOOLTIP = "Musician"
 Musician.Locale.en.PLAYER_TOOLTIP_VERSION = "Musician v{version}"
+Musician.Locale.en.PLAYER_TOOLTIP_PRELOADING = "Preloading sounds… ({progress})"
 
 Musician.Locale.en.PLAYER_COUNT_ONLINE = "There are {count} other music fans around!"
 Musician.Locale.en.PLAYER_COUNT_ONLINE_ONE = "There is another music fan around!"

@@ -12,6 +12,9 @@ Musician.NOTE_NAMES = {[0] = 'C', [1] = 'C#', [2] = 'D', [3] = 'D#', [4] = 'E', 
 Musician.NOTE_IDS   = {['C'] = 0, ['C#'] = 1, ['D'] = 2, ['D#'] = 3, ['E'] = 4, ['F'] = 5, ['F#'] = 6, ['G'] = 7, ['G#'] = 8, ['A'] = 9, ['A#'] = 10, ['B'] = 11}
 Musician.C0_INDEX = 24
 
+Musician.MIN_KEY = 24 -- C0
+Musician.MAX_KEY = 120 -- C8
+
 Musician.POSITION_UPDATE_PERIOD = 4
 Musician.LISTENING_RADIUS = 40
 
@@ -25,6 +28,7 @@ Musician.Events.SongStop = "MusicianSongStop"
 Musician.Events.SongCursor = "MusicianSongCursor"
 Musician.Events.NoteOn = "MusicianNoteOn"
 Musician.Events.NoteOff = "MusicianNoteOff"
+Musician.Events.PreloadingProgress = "MusicianPreloadingProgress"
 
 Musician.Icons = {}
 Musician.Icons.PlayerMuted = "Interface\\AddOns\\Musician\\ui\\textures\\muted.blp"

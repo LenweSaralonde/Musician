@@ -18,6 +18,7 @@ Musician.Locale.fr.NEW_VERSION = "Une nouvelle version de Musician est disponibl
 
 Musician.Locale.fr.PLAYER_TOOLTIP = "Musician"
 Musician.Locale.fr.PLAYER_TOOLTIP_VERSION = "Musician v{version}"
+Musician.Locale.fr.PLAYER_TOOLTIP_PRELOADING = "Préchargement des sons… ({progress})"
 
 Musician.Locale.fr.PLAYER_COUNT_ONLINE = "Il y a {count} autres amateurs de musique dans le coin !"
 Musician.Locale.fr.PLAYER_COUNT_ONLINE_ONE = "Il y a un autre amateur de musique dans le coin !"

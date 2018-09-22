@@ -12,6 +12,7 @@ core\Musician.Song.lua
 core\Musician.Utils.lua
 core\Musician.Comm.lua
 core\Musician.Registry.lua
+core\Musician.Preloader.lua
 
 constants\Musician.Constants.lua
 constants\Musician.Instruments.lua

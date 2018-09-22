@@ -22,6 +22,7 @@ function Musician:OnInitialize()
 	Musician.Comm.Init()
 	Musician.Registry.Init()
 	Musician.SetupHooks()
+	Musician.Preloader.Init()
 
 	C_Timer.NewTicker(0.5, function() Musician.Utils.MuteGameMusic() end)
 
@@ -134,6 +135,8 @@ end
 -- @param frame (Frame)
 -- @param elapsed (number)
 function Musician.PlayerOnUpdate(frame, elapsed)
+	Musician.Preloader.OnUpdate(elapsed)
+
 	if Musician.sourceSong then
 		Musician.sourceSong:OnUpdate(elapsed)
 	end
