@@ -1,76 +1,77 @@
 Musician.Locale.en = {}
+local msg = Musician.Locale.en
 
-Musician.Locale.en.PLAY = "Play"
-Musician.Locale.en.STOP = "Stop"
-Musician.Locale.en.PAUSE = "Pause"
-Musician.Locale.en.LOAD = "Load"
-Musician.Locale.en.LOADING = "Loading"
-Musician.Locale.en.TEST_SONG = "Preview"
-Musician.Locale.en.STOP_TEST = "Stop preview"
-Musician.Locale.en.CLEAR = "Clear"
-Musician.Locale.en.EDIT = "Edit"
-Musician.Locale.en.MUTE = "Mute"
-Musician.Locale.en.UNMUTE = "Unmute"
+msg.PLAY = "Play"
+msg.STOP = "Stop"
+msg.PAUSE = "Pause"
+msg.LOAD = "Load"
+msg.LOADING = "Loading"
+msg.TEST_SONG = "Preview"
+msg.STOP_TEST = "Stop preview"
+msg.CLEAR = "Clear"
+msg.EDIT = "Edit"
+msg.MUTE = "Mute"
+msg.UNMUTE = "Unmute"
 
-Musician.Locale.en.STARTUP = "Welcome to Musician v{version}."
+msg.STARTUP = "Welcome to Musician v{version}."
 
-Musician.Locale.en.NEW_VERSION = "A new version of Musician has been released! Get it on {url}"
+msg.NEW_VERSION = "A new version of Musician has been released! Get it on {url}"
 
-Musician.Locale.en.PLAYER_TOOLTIP = "Musician"
-Musician.Locale.en.PLAYER_TOOLTIP_VERSION = "Musician v{version}"
-Musician.Locale.en.PLAYER_TOOLTIP_PRELOADING = "Preloading sounds… ({progress})"
+msg.PLAYER_TOOLTIP = "Musician"
+msg.PLAYER_TOOLTIP_VERSION = "Musician v{version}"
+msg.PLAYER_TOOLTIP_PRELOADING = "Preloading sounds… ({progress})"
 
-Musician.Locale.en.PLAYER_COUNT_ONLINE = "There are {count} other music fans around!"
-Musician.Locale.en.PLAYER_COUNT_ONLINE_ONE = "There is another music fan around!"
+msg.PLAYER_COUNT_ONLINE = "There are {count} other music fans around!"
+msg.PLAYER_COUNT_ONLINE_ONE = "There is another music fan around!"
 
-Musician.Locale.en.INVALID_MUSIC_CODE = "Invalid music code."
+msg.INVALID_MUSIC_CODE = "Invalid music code."
 
-Musician.Locale.en.PLAY_A_SONG = "Play a song"
-Musician.Locale.en.PASTE_MUSIC_CODE = "Import your song in MIDI format at:\n{url}\n\nthen paste the music code here..."
+msg.PLAY_A_SONG = "Play a song"
+msg.PASTE_MUSIC_CODE = "Import your song in MIDI format at:\n{url}\n\nthen paste the music code here..."
 
-Musician.Locale.en.SONG_EDITOR = "Song editor"
-Musician.Locale.en.MARKER_FROM = "From"
-Musician.Locale.en.MARKER_TO = "To"
-Musician.Locale.en.POSITION = "Position"
-Musician.Locale.en.TRACK_NUMBER = "Track #{track}"
-Musician.Locale.en.CHANNEL_NUMBER_SHORT = "Ch.{channel}"
-Musician.Locale.en.JUMP_PREV = "Back 10s"
-Musician.Locale.en.JUMP_NEXT = "Forward 10s"
-Musician.Locale.en.GO_TO_START = "Go to start"
-Musician.Locale.en.GO_TO_END = "Go to end"
-Musician.Locale.en.SET_CROP_FROM = "Set start point"
-Musician.Locale.en.SET_CROP_TO = "Set end point"
-Musician.Locale.en.MUTE_TRACK = "Mute"
-Musician.Locale.en.SOLO_TRACK = "Solo"
-Musician.Locale.en.TRANSPOSE_TRACK = "Transpose (octave)"
-Musician.Locale.en.CHANGE_TRACK_INSTRUMENT = "Change instrument"
-Musician.Locale.en.HEADER_NUMBER = "#"
-Musician.Locale.en.HEADER_OCTAVE = "Octave"
-Musician.Locale.en.HEADER_INSTRUMENT = "Instrument"
+msg.SONG_EDITOR = "Song editor"
+msg.MARKER_FROM = "From"
+msg.MARKER_TO = "To"
+msg.POSITION = "Position"
+msg.TRACK_NUMBER = "Track #{track}"
+msg.CHANNEL_NUMBER_SHORT = "Ch.{channel}"
+msg.JUMP_PREV = "Back 10s"
+msg.JUMP_NEXT = "Forward 10s"
+msg.GO_TO_START = "Go to start"
+msg.GO_TO_END = "Go to end"
+msg.SET_CROP_FROM = "Set start point"
+msg.SET_CROP_TO = "Set end point"
+msg.MUTE_TRACK = "Mute"
+msg.SOLO_TRACK = "Solo"
+msg.TRANSPOSE_TRACK = "Transpose (octave)"
+msg.CHANGE_TRACK_INSTRUMENT = "Change instrument"
+msg.HEADER_NUMBER = "#"
+msg.HEADER_OCTAVE = "Octave"
+msg.HEADER_INSTRUMENT = "Instrument"
 
-Musician.Locale.en.EMOTE_PLAYING_MUSIC = "is playing a song."
-Musician.Locale.en.EMOTE_PROMO = "(Get \"Musician\" add-on at {url} to listen!)"
-Musician.Locale.en.EMOTE_SONG_NOT_LOADED = "(The song could not have been loaded.)"
-Musician.Locale.en.EMOTE_PLAYER_OTHER_REALM = "(This player is on another realm.)"
+msg.EMOTE_PLAYING_MUSIC = "is playing a song."
+msg.EMOTE_PROMO = "(Get \"Musician\" add-on at {url} to listen!)"
+msg.EMOTE_SONG_NOT_LOADED = "(The song could not have been loaded.)"
+msg.EMOTE_PLAYER_OTHER_REALM = "(This player is on another realm.)"
 
-Musician.Locale.en.TOOLTIP_LEFT_CLICK = "**Left click** : {action}"
-Musician.Locale.en.TOOLTIP_RIGHT_CLICK = "**Right click** : {action}"
-Musician.Locale.en.TOOLTIP_DRAG_AND_DROP = "**Drag and drop** to move"
-Musician.Locale.en.TOOLTIP_ISMUTED = "(muted)"
-Musician.Locale.en.TOOLTIP_ACTION_SHOW = "Show"
-Musician.Locale.en.TOOLTIP_ACTION_HIDE = "Hide"
-Musician.Locale.en.TOOLTIP_ACTION_MUTE = "Mute all music"
-Musician.Locale.en.TOOLTIP_ACTION_UNMUTE = "Unmute music"
+msg.TOOLTIP_LEFT_CLICK = "**Left click** : {action}"
+msg.TOOLTIP_RIGHT_CLICK = "**Right click** : {action}"
+msg.TOOLTIP_DRAG_AND_DROP = "**Drag and drop** to move"
+msg.TOOLTIP_ISMUTED = "(muted)"
+msg.TOOLTIP_ACTION_SHOW = "Show"
+msg.TOOLTIP_ACTION_HIDE = "Hide"
+msg.TOOLTIP_ACTION_MUTE = "Mute all music"
+msg.TOOLTIP_ACTION_UNMUTE = "Unmute music"
 
-Musician.Locale.en.PLAYER_MENU_TITLE = "Music"
-Musician.Locale.en.PLAYER_MENU_STOP_CURRENT_SONG = "Stop current song"
-Musician.Locale.en.PLAYER_MENU_MUTE = "Mute"
-Musician.Locale.en.PLAYER_MENU_UNMUTE = "Unmute"
+msg.PLAYER_MENU_TITLE = "Music"
+msg.PLAYER_MENU_STOP_CURRENT_SONG = "Stop current song"
+msg.PLAYER_MENU_MUTE = "Mute"
+msg.PLAYER_MENU_UNMUTE = "Unmute"
 
-Musician.Locale.en.PLAYER_IS_MUTED = "{icon}{player} is now muted."
-Musician.Locale.en.PLAYER_IS_UNMUTED = "{icon}{player} is now unmuted."
+msg.PLAYER_IS_MUTED = "{icon}{player} is now muted."
+msg.PLAYER_IS_UNMUTED = "{icon}{player} is now unmuted."
 
-Musician.Locale.en.INSTRUMENT_NAMES = {
+msg.INSTRUMENT_NAMES = {
 	["none"] = "(None)",
 	["bagpipe"] = "Bagpipe",
 	["dulcimer"] = "Dulcimer (hammered)",
@@ -95,7 +96,7 @@ Musician.Locale.en.INSTRUMENT_NAMES = {
 	["drumkit"] = "Drum kit",
 }
 
-Musician.Locale.en.MIDI_INSTRUMENT_NAMES = {
+msg.MIDI_INSTRUMENT_NAMES = {
 	-- 	Piano
 	[-1] = "(None)",
 
@@ -263,4 +264,4 @@ Musician.Locale.en.MIDI_INSTRUMENT_NAMES = {
 	[128] = "Percussions",
 }
 
-Musician.Msg = Musician.Locale.en
+Musician.Msg = msg
