@@ -49,9 +49,6 @@ function Musician.Preloader.Init()
 			end
 		end
 	end
-
-	print('TOTAL SAMPLES', totalSamples)
-
 end
 
 --- Preload next sample
