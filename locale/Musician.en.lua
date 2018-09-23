@@ -15,7 +15,8 @@ msg.UNMUTE = "Unmute"
 
 msg.STARTUP = "Welcome to Musician v{version}."
 
-msg.NEW_VERSION = "A new version of Musician has been released! Get it on {url}"
+msg.NEW_VERSION = "A new version of Musician has been released! Download the update from {url} ."
+msg.NEW_MAJOR_VERSION = "Your version of Musician is obsolete and does not work anymore.\nPlease download the update from\n{url}"
 
 msg.PLAYER_TOOLTIP = "Musician"
 msg.PLAYER_TOOLTIP_VERSION = "Musician v{version}"

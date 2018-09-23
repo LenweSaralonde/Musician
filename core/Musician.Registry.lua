@@ -236,16 +236,37 @@ end)
 
 
 --- Display a message if a new version of the addon is available
--- @param version (string)
-function Musician.Registry.NotifyNewVersion(version)
-	if Musician.Registry.newVersionNotified then return end
+-- @param otherVersion (string)
+function Musician.Registry.NotifyNewVersion(otherVersion)
 
-	if Musician.Utils.VersionCompare(version, GetAddOnMetadata("Musician", "Version")) == 1 then
+	local myVersion = GetAddOnMetadata("Musician", "Version")
+	local myVersionParts = { string.split('.', myVersion) }
+	local otherVersionParts = { string.split('.', otherVersion) }
+	local myMajorVersion = myVersionParts[1] .. '.' .. myVersionParts[2]
+	local otherMajorVersion = otherVersionParts[1] .. '.' .. otherVersionParts[2]
+
+	-- Compare minor version
+	if not(Musician.Registry.newVersionNotified) and Musician.Utils.VersionCompare(otherVersion, myVersion) == 1 then
+		Musician.Registry.newVersionNotified = true
+
 		local msg = Musician.Msg.NEW_VERSION
 		msg = string.gsub(msg, '{url}', Musician.Utils.Highlight(Musician.URL, '00FFFF'))
-		msg = string.gsub(msg, '{version}', Musician.Utils.Highlight(version))
-		Musician.Utils.Print(msg)
-		PlaySound(67788, 'Master')
+		msg = string.gsub(msg, '{version}', Musician.Utils.Highlight(otherVersion))
+
+		-- Display message with fanfare sound
+		local _, handle = PlaySound(67788, 'Master')
+		C_Timer.After(.5, function() Musician.Utils.Print(msg) end)
+	end
+
+	-- Compare major version
+	if not(Musician.Registry.newMajorVersionNotified) and Musician.Utils.VersionCompare(otherMajorVersion, myMajorVersion) == 1 then
+		Musician.Registry.newMajorVersionNotified = true
 		Musician.Registry.newVersionNotified = true
+
+		local msg = Musician.Msg.NEW_MAJOR_VERSION
+		msg = string.gsub(msg, '{url}', Musician.Utils.Highlight(Musician.URL, '00FFFF'))
+		msg = string.gsub(msg, '{version}', Musician.Utils.Highlight(otherVersion))
+
+		C_Timer.After(3, function() Musician.Utils.Popup(msg) end)
 	end
 end

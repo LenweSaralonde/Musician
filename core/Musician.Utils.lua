@@ -8,11 +8,18 @@ function Musician.Utils.Print(msg)
 	DEFAULT_CHAT_FRAME:AddMessage(msg, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
 end
 
---- Display an error message in the console
+--- Display an error message in a popup
 -- @param msg (string)
 function Musician.Utils.Error(msg)
 	message(msg)
 	PlaySoundFile("Sound\\interface\\Error.ogg")
+end
+
+--- Display an message in a popup
+-- @param msg (string)
+function Musician.Utils.Popup(msg)
+	msg = string.gsub(msg, '|r', '|r' .. NORMAL_FONT_COLOR_CODE)
+	message(NORMAL_FONT_COLOR_CODE .. msg .. '|r')
 end
 
 --- Highlight text

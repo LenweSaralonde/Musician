@@ -15,7 +15,8 @@ msg.UNMUTE = "Rétablir la musique"
 
 msg.STARTUP = "Bienvenue dans Musician v{version}."
 
-msg.NEW_VERSION = "Une nouvelle version de Musician est disponible ! Téléchargez-la sur {url}"
+msg.NEW_VERSION = "Une nouvelle version de Musician est disponible ! Téléchargez la mise à jour sur {url} ."
+msg.NEW_MAJOR_VERSION = "Votre version de Musician est obsolète et n'est plus fonctionnelle.\nTéléchargez la mise à jour sur\n{url}"
 
 msg.PLAYER_TOOLTIP = "Musician"
 msg.PLAYER_TOOLTIP_VERSION = "Musician v{version}"
