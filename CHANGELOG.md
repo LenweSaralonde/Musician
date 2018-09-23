@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.3.1.0
+--------
+* Samples are now preloaded in background to avoid freezings every time a song starts playing.
+
 v1.3.0.3
 --------
 * Fixed bug with solo and mute checkboxes in track editor after WoW 8.0 update
