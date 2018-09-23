@@ -255,7 +255,7 @@ function Musician.Registry.NotifyNewVersion(otherVersion)
 
 		-- Display message with fanfare sound
 		local _, handle = PlaySound(67788, 'Master')
-		C_Timer.After(.5, function() Musician.Utils.Print(msg) end)
+		Musician.Utils.Print(msg)
 	end
 
 	-- Compare major version
