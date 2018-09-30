@@ -216,7 +216,66 @@ end
 -- @return posY (number), posX (number), posZ (number), instanceID (number), guid (string)
 function Musician.Utils.UnpackPosition(str)
 	local posY, posX, posZ, instanceID, guid = strsplit(' ', str)
-	return posY + 0, posX + 0, posZ + 0, instanceID + 0, guid
+	return tonumber(posY), tonumber(posX), tonumber(posZ), tonumber(instanceID), guid
+end
+
+--- Pack player GUID into a 6-byte string
+-- @return (string)
+function Musician.Utils.PackPlayerGuid()
+	local _, serverId, playerHexId = string.split('-', UnitGUID("player"))
+	return Musician.Utils.PackNumber(tonumber(serverId), 2) .. Musician.Utils.FromHex(playerHexId)
+end
+
+--- Unpack player GUID from string
+-- @param str (string)
+-- @return (string)
+function Musician.Utils.UnpackPlayerGuid(str)
+	local serverId = Musician.Utils.UnpackNumber(string.sub(str, 1, 2))
+	local playerHexId = Musician.Utils.ToHex(string.sub(str, 3, 6))
+	return "Player-" .. serverId .. "-" .. playerHexId
+end
+
+--- Pack player position into a 18-byte chunk string
+-- @return (string)
+function Musician.Utils.PackPlayerPosition()
+	local posY, posX, posZ, instanceID = UnitPosition("player") -- posZ is always 0
+
+	local x = Musician.Utils.PackNumber(floor(posX + .5) + 0x7fffffff, 4)
+	local y = Musician.Utils.PackNumber(floor(posY + .5) + 0x7fffffff, 4)
+	local i = Musician.Utils.PackNumber(instanceID, 4)
+	local g = Musician.Utils.PackPlayerGuid()
+
+	return x .. y .. i .. g 
+end
+
+--- Unpack player position from chunk string
+-- @param str (string)
+-- @return posY (number), posX (number), posZ (number), instanceID (number), guid (string)
+function Musician.Utils.UnpackPlayerPosition(str)
+	local posX = Musician.Utils.UnpackNumber(string.sub(str, 1, 4)) - 0x7fffffff
+	local posY = Musician.Utils.UnpackNumber(string.sub(str, 5, 8)) - 0x7fffffff
+	local instanceID = Musician.Utils.UnpackNumber(string.sub(str, 9, 12))
+	local guid = Musician.Utils.UnpackPlayerGuid(string.sub(str, 13, 18))
+
+	return posY, posX, 0, instanceID, guid
+end
+
+--- Convert hex string to string
+-- @param str (string)
+-- @return (string)
+function Musician.Utils.FromHex(str)
+	return (str:gsub('..', function (cc)
+		return string.char(tonumber(cc, 16))
+	end))
+end
+
+--- Convert string to hex string
+-- @param str (string)
+-- @return (string)
+function Musician.Utils.ToHex(str)
+	return (str:gsub('.', function (c)
+		return string.format('%02X', string.byte(c))
+	end))
 end
 
 --- Returns true if the player is in listening range
@@ -532,4 +591,24 @@ function Musician.Utils.PlayNote(instrument, key)
 	end
 	Musician.Preloader.AddPreloaded(sampleId)
 	return play, handle, instrumentData
+end
+
+--- Deep copy a table
+-- http://lua-users.org/wiki/CopyTable
+-- @param orig (table)
+-- @return (table)
+function Musician.Utils.DeepCopy(orig)
+	local orig_type = type(orig)
+	local copy
+	if orig_type == 'table' then
+		copy = {}
+		local orig_key, orig_value
+		for orig_key, orig_value in next, orig, nil do
+			copy[Musician.Utils.DeepCopy(orig_key)] = Musician.Utils.DeepCopy(orig_value)
+		end
+		--setmetatable(copy, Musician.Utils.DeepCopy(getmetatable(orig)))
+	else -- number, string, boolean, etc
+		copy = orig
+	end
+	return copy
 end

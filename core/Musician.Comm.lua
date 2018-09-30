@@ -7,6 +7,7 @@ Musician.Comm.event = {}
 Musician.Comm.event.song   = "MusicianSong"
 Musician.Comm.event.play   = "MusicianPlay"
 Musician.Comm.event.stop   = "MusicianStop"
+Musician.Comm.event.stream = "MusicianStream"
 Musician.Comm.event.update = "MusicianUpdate"
 
 Musician.Comm.isSending = false
@@ -158,6 +159,58 @@ Musician.Comm:RegisterComm(Musician.Comm.event.play, function(prefix, message, d
 	end
 end)
 
+--- Stream a packed song chunk
+-- @param packedChunk (string)
+-- @return (boolean)
+function Musician.Comm.StreamSongChunk(packedChunk)
+	if not(Musician.Comm.isReady()) then return false end
+	local compressedchunk = LibCompressEncodeTable:Encode(LibCompress:CompressHuffman(packedChunk))
+	Musician.Comm:SendCommMessage(Musician.Comm.event.stream, compressedchunk, 'CHANNEL', Musician.Comm.getChannel(), "ALERT")
+	return true
+end
+
+--- Play a received song chunk
+--
+Musician.Comm:RegisterComm(Musician.Comm.event.stream, function(prefix, message, distribution, sender)
+	sender = Musician.Utils.NormalizePlayerName(sender)
+
+	local packedChunk = LibCompress:Decompress(LibCompressEncodeTable:Decode(message))
+	local chunk, songId, chunkDuration, position = Musician.Song.UnpackChunk(packedChunk)
+	local posY, posX, posZ, instanceID, guid = unpack(position)
+
+	-- Update player position
+	if Musician.songs[sender] == nil then
+		Musician.songs[sender] = {}
+	end
+
+	Musician.songs[sender].position = {posY, posX, posZ, instanceID}
+	Musician.songs[sender].guid = guid
+
+	-- Create playing song, if missing
+	if Musician.songs[sender].playing == nil then
+		Musician.songs[sender].playing = Musician.Song.create()
+		Musician.songs[sender].playing.songId = songId
+		Musician.songs[sender].playing.player = sender
+	elseif not(Musician.songs[sender].playing.isStreamed) or (Musician.songs[sender].playing.songId ~= songId) then
+		Musician.songs[sender].playing:Stop()
+		Musician.songs[sender].playing = Musician.Song.create()
+		Musician.songs[sender].playing.songId = songId
+		Musician.songs[sender].playing.player = sender
+	end
+
+	-- Append chunk data
+	Musician.songs[sender].playing.isStreamed = true
+	Musician.songs[sender].playing:AppendChunk(chunk)
+
+	-- Play song if not already started
+	if not(Musician.songs[sender].playing.willPlay) then
+		Musician.songs[sender].playing.willPlay = true
+		C_Timer.After(chunkDuration / 2, function()
+			Musician.songs[sender].playing:Play()
+		end)
+	end
+end)
+
 --- Stop uploaded song
 -- @return (boolean)
 function Musician.Comm.StopSong()
@@ -165,7 +218,7 @@ function Musician.Comm.StopSong()
 	Musician.Comm.isStopSent = true
 	Musician.songIsPlaying = false
 	Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
-	Musician.Comm:SendCommMessage(Musician.Comm.event.stop,  Musician.Utils.PackPosition(), 'CHANNEL', Musician.Comm.getChannel(), "ALERT")
+	Musician.Comm:SendCommMessage(Musician.Comm.event.stop, Musician.Utils.PackPosition(), 'CHANNEL', Musician.Comm.getChannel(), "ALERT")
 	Musician.Comm.StopPositionUpdate()
 	return true
 end
@@ -185,7 +238,7 @@ end)
 -- @return (boolean)
 function Musician.Comm.SendPositionUpdate()
 	if not(Musician.Comm.isReady()) then return false end
-	Musician.Comm:SendCommMessage(Musician.Comm.event.update,  Musician.Utils.PackPosition(), 'CHANNEL', Musician.Comm.getChannel(), "ALERT")
+	Musician.Comm:SendCommMessage(Musician.Comm.event.update, Musician.Utils.PackPosition(), 'CHANNEL', Musician.Comm.getChannel(), "ALERT")
 	return true
 end
 

@@ -18,6 +18,7 @@ function Musician:OnInitialize()
 	Musician.sourceSong = nil
 	Musician.songIsPlaying = false
 	Musician.globalMute = false
+	Musician.nextSongId = 1
 
 	Musician.Comm.Init()
 	Musician.Registry.Init()
