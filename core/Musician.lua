@@ -218,6 +218,18 @@ function Musician.SetupHooks()
 		return HookedSetHyperlink(self, link, ...)
 	end
 
+	-- Workaround for the CanReportPlayer bug with crafted emotes
+	--
+
+	local HookedCanReportPlayer = C_ChatInfo.CanReportPlayer
+	C_ChatInfo.CanReportPlayer = function(playerLocation)
+		local canReport = false
+		pcall(function()
+			canReport = HookedCanReportPlayer(playerLocation)
+		end)
+		return canReport
+	end
+
 	-- Player dropdown menus
 	--
 
