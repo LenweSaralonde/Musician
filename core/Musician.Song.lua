@@ -79,6 +79,9 @@ function Musician.Song.create(packedSongData, crop)
 	-- @field polyphony (number) Current polyphony
 	self.polyphony = 0
 
+	-- @field drops (number) Dropped notes
+	self.drops = 0
+
 	if packedSongData then
 		self:Unpack(packedSongData, crop)
 	end
@@ -254,6 +257,7 @@ function Musician.Song:OnUpdate(elapsed)
 		return
 	end
 
+	local drops = 0
 	local from = self.cursor
 	local to = self.cursor + elapsed
 	self.cursor = to
@@ -261,15 +265,19 @@ function Musician.Song:OnUpdate(elapsed)
 	local track
 	for _, track in pairs(self.tracks) do
 		-- Notes On and Notes Off
-		while track.notes[track.playIndex] and (track.notes[track.playIndex][NOTE.TIME] >= from) and (track.notes[track.playIndex][NOTE.TIME] < to) do
-			if track.notes[track.playIndex][NOTE.ON] then
-				-- Note On
-				if elapsed < 1 then -- Do not play notes if frame is longer than 1 s (after loading screen) to avoid slowdowns
-					self:NoteOn(track, track.playIndex)
+		while track.notes[track.playIndex] and (track.notes[track.playIndex][NOTE.TIME] < to) do
+			if track.notes[track.playIndex][NOTE.TIME] >= from then
+				if track.notes[track.playIndex][NOTE.ON] then
+					-- Note On
+					if elapsed < 1 then -- Do not play notes if frame is longer than 1 s (after loading screen) to avoid slowdowns
+						self:NoteOn(track, track.playIndex)
+					end
+				else
+					-- Note Off
+					self:NoteOff(track, track.notes[track.playIndex][NOTE.KEY])
 				end
-			else
-				-- Note Off
-				self:NoteOff(track, track.notes[track.playIndex][NOTE.KEY])
+			else -- Note dropped due to lag
+				drops = drops + 1
 			end
 			track.playIndex = track.playIndex + 1
 		end
@@ -285,6 +293,12 @@ function Musician.Song:OnUpdate(elapsed)
 	end
 
 	Musician.Comm:SendMessage(Musician.Events.SongCursor, self)
+
+	-- Dropped notes
+	if drops > 0 then
+		self.drops = self.drops + drops
+		Musician.Comm:SendMessage(Musician.Events.NoteDropped, self, self.drops, drops)
+	end
 
 	-- Song has ended
 	if to >= self.cropTo then
@@ -766,21 +780,24 @@ StreamChunk = function(self)
 		-- Notes On and Notes Off
 		local notes = {}
 		local noteOffset = from
-		while track.notes[track.streamIndex] and (track.notes[track.streamIndex][NOTE.TIME] >= from) and (track.notes[track.streamIndex][NOTE.TIME] < to) and (track.notes[track.streamIndex][NOTE.TIME] <= self.cropTo) do
-			local note = Musician.Utils.DeepCopy(track.notes[track.streamIndex])
+		while track.notes[track.streamIndex] and (track.notes[track.streamIndex][NOTE.TIME] < to) and (track.notes[track.streamIndex][NOTE.TIME] <= self.cropTo) do
 
-			if not(self:TrackIsMuted(track)) and Musician.MIDI_INSTRUMENT_MAPPING[track.instrument] ~= "none" then
-				note[NOTE.KEY] = note[NOTE.KEY] + track.transpose
+			if track.notes[track.streamIndex][NOTE.TIME] >= from then
+				local note = Musician.Utils.DeepCopy(track.notes[track.streamIndex])
 
-				local noteTimeRelative = note[NOTE.TIME] - noteOffset
-				noteOffset = note[NOTE.TIME]
-				note[NOTE.TIME] = noteTimeRelative
+				if not(self:TrackIsMuted(track)) and Musician.MIDI_INSTRUMENT_MAPPING[track.instrument] ~= "none" then
+					note[NOTE.KEY] = note[NOTE.KEY] + track.transpose
 
-				if note[NOTE.DURATION] ~= nil then
-					note[NOTE.DURATION] = note[NOTE.DURATION]
+					local noteTimeRelative = note[NOTE.TIME] - noteOffset
+					noteOffset = note[NOTE.TIME]
+					note[NOTE.TIME] = noteTimeRelative
+
+					if note[NOTE.DURATION] ~= nil then
+						note[NOTE.DURATION] = note[NOTE.DURATION]
+					end
+
+					table.insert(notes, note)
 				end
-
-				table.insert(notes, note)
 			end
 
 			track.streamIndex = track.streamIndex + 1

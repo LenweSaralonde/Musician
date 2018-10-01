@@ -30,6 +30,7 @@ Musician.Events.SongStop = "MusicianSongStop"
 Musician.Events.SongCursor = "MusicianSongCursor"
 Musician.Events.NoteOn = "MusicianNoteOn"
 Musician.Events.NoteOff = "MusicianNoteOff"
+Musician.Events.NoteDropped = "MusicianNoteDropped"
 Musician.Events.PreloadingProgress = "MusicianPreloadingProgress"
 
 Musician.Icons = {}
