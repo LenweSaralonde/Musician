@@ -367,7 +367,7 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						if Musician.sourceSong.playing then
+						if Musician.sourceSong:IsPlaying() then
 							Musician.sourceSong:Stop()
 						else
 							if Musician.sourceSong.cursor >= Musician.sourceSong.cropTo then

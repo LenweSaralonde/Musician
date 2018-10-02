@@ -91,18 +91,6 @@
 				</Scripts>
 			</Button>
 
-			<Button name="$parentLoadButton" inherits="UIPanelButtonTemplate">
-				<Size x="100" y="20" />
-				<Anchors>
-					<Anchor point="BOTTOM" x="0" y="10" relativePoint="BOTTOM" />
-				</Anchors>
-				<Scripts>
-					<OnClick>
-						MusicianFrame.Load()
-					</OnClick>
-				</Scripts>
-			</Button>
-
 			<Button name="$parentPlayButton" inherits="UIPanelButtonTemplate">
 				<Size x="100" y="20" />
 				<Anchors>

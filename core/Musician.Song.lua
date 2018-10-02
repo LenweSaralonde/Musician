@@ -103,7 +103,7 @@ end
 --- Returns true if the song is playing or about to be played (preloading).
 -- @return (boolean)
 function Musician.Song:IsPlaying()
-	return self.playing
+	return self.playing or self.willPlayTimer ~= nil
 end
 
 --- Mute or unmute track
@@ -144,9 +144,19 @@ function Musician.Song:SetTrackSolo(track, isSolo)
 end
 
 --- Play song
-function Musician.Song:Play()
+-- @param delay (number) Delay in seconds to wait before playing the song
+function Musician.Song:Play(delay)
 	self:Reset()
-	self:Resume()
+
+	if delay then
+		self.willPlayTimer = C_Timer.NewTimer(delay, function()
+			self:Resume(true)
+			self.willPlayTimer = nil
+		end)
+		Musician.Comm:SendMessage(Musician.Events.SongPlay, self)
+	else
+		self:Resume()
+	end
 end
 
 --- Reset song to initial position
@@ -238,14 +248,21 @@ function Musician.Song:Seek(cursor)
 end
 
 --- Resume a song playing
-function Musician.Song:Resume()
+-- @param eventSent (boolean)
+function Musician.Song:Resume(eventSent)
 	self.playing = true
-	Musician.Comm:SendMessage(Musician.Events.SongPlay, self)
+	if not(eventSent) then
+		Musician.Comm:SendMessage(Musician.Events.SongPlay, self)
+	end
 end
 
 --- Stop song
 function Musician.Song:Stop()
 	self:SongNotesOff()
+	if self.willPlayTimer then
+		self.willPlayTimer:Cancel()
+		self.willPlayTimer = nil
+	end
 	self.playing = false
 	Musician.Comm:SendMessage(Musician.Events.SongStop, self)
 end
@@ -320,14 +337,14 @@ function Musician.Song:NoteOn(track, noteIndex, noRetry)
 	end
 
 	-- Send notification emote
-	if self.player ~= nil and Musician.Utils.PlayerIsInRange(self.player) and not(self.notified) then
-		Musician.Utils.DisplayEmote(self.player, Musician.songs[self.player].guid, Musician.Msg.EMOTE_PLAYING_MUSIC)
+	if self.player ~= nil and Musician.Registry.PlayerIsInRange(self.player, Musician.LISTENING_RADIUS) and not(self.notified) then
+		Musician.Utils.DisplayEmote(self.player, Musician.Registry.GetPlayerGUID(self.player), Musician.Msg.EMOTE_PLAYING_MUSIC)
 		self.notified = true
 	end
 
 	-- Do not play note if the source song is playing or if the player is out of range
 	local sourceSongIsPlaying = Musician.sourceSong ~= nil and Musician.sourceSong:IsPlaying()
-	if self.player ~= nil and (sourceSongIsPlaying or not(Musician.Utils.PlayerIsInRange(self.player))) or self:TrackIsMuted(track) or Musician.globalMute or Musician.PlayerIsMuted(self.player) then
+	if self.player ~= nil and (sourceSongIsPlaying or not(Musician.Registry.PlayerIsInRange(self.player, Musician.LISTENING_RADIUS))) or self:TrackIsMuted(track) or Musician.globalMute or Musician.PlayerIsMuted(self.player) then
 		return
 	end
 

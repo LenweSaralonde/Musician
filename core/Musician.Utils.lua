@@ -204,21 +204,6 @@ function Musician.Utils.UnpackTime(str, fps)
 	return Musician.Utils.UnpackNumber(str) / fps
 end
 
---- Pack player position into a string
--- @return (string)
-function Musician.Utils.PackPosition()
-	local posY, posX, posZ, instanceID = UnitPosition("player")
-	return posY .. " " .. posX .. " " .. posZ .. " " .. instanceID .. " " .. UnitGUID("player")
-end
-
---- Unpack player position from string
--- @param str (string)
--- @return posY (number), posX (number), posZ (number), instanceID (number), guid (string)
-function Musician.Utils.UnpackPosition(str)
-	local posY, posX, posZ, instanceID, guid = strsplit(' ', str)
-	return tonumber(posY), tonumber(posX), tonumber(posZ), tonumber(instanceID), guid
-end
-
 --- Pack player GUID into a 6-byte string
 -- @return (string)
 function Musician.Utils.PackPlayerGuid()
@@ -278,30 +263,6 @@ function Musician.Utils.ToHex(str)
 	end))
 end
 
---- Returns true if the player is in listening range
--- @param player (string)
--- @return (boolean)
-function Musician.Utils.PlayerIsInRange(player)
-
-	player = Musician.Utils.NormalizePlayerName(player)
-
-	-- Musician not registered
-	if Musician.songs[player] == nil or Musician.songs[player].position == nil then
-		return false
-	end
-
-	local posY, posX, posZ, instanceID = UnitPosition("player")
-	local posY2, posX2, posZ2, instanceID2 = unpack(Musician.songs[player].position)
-
-	-- Not the same instance
-	if instanceID2 ~= instanceID then
-		return false
-	end
-
-	-- Range check
-	return Musician.LISTENING_RADIUS ^ 2 > (posY2 - posY) ^ 2 + (posX2 - posX) ^ 2 + (posZ2 - posZ) ^ 2
-end
-
 --- Return instrument name from its MIDI ID
 -- @param instrument (number)
 -- @param key (number)
@@ -359,13 +320,13 @@ end
 function Musician.Utils.SongIsPlaying()
 	local isPlaying
 
-	local sourceSongIsPlaying = Musician.sourceSong ~= nil and Musician.sourceSong.playing
+	local sourceSongIsPlaying = Musician.sourceSong ~= nil and Musician.sourceSong:IsPlaying()
 	isPlaying = sourceSongIsPlaying and not(Musician.globalMute)
 
 	if not(isPlaying) then
 		local song, player
 		for player, song in pairs(Musician.songs) do
-			if song.playing and Musician.Utils.PlayerIsInRange(player) and not(Musician.globalMute) and not(Musician.PlayerIsMuted(player)) then
+			if song:IsPlaying() and Musician.Registry.PlayerIsInRange(player, Musician.LISTENING_RADIUS) and not(Musician.globalMute) and not(Musician.PlayerIsMuted(player)) then
 				return true
 			end
 		end

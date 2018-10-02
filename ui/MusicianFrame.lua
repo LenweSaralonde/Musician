@@ -75,12 +75,6 @@ MusicianFrame.Test = function()
 	Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
 end
 
-MusicianFrame.Load = function()
-	if not(Musician.Comm.isSending) and Musician.sourceSong then
-		Musician.Comm.BroadcastSong(Musician.sourceSong)
-	end
-end
-
 MusicianFrame.Play = function()
 	if Musician.songIsPlaying then
 		Musician.Comm.StopSong()
@@ -116,42 +110,8 @@ MusicianFrame.Refresh = function()
 		MusicianFrameTestButton:SetText(Musician.Msg.TEST_SONG)
 	end
 
-	-- Load button
-	if Musician.sourceSong == nil or Musician.Comm.isSending then
-		MusicianFrameLoadButton:Disable()
-	else
-		MusicianFrameLoadButton:Enable()
-	end
-
-	if Musician.Comm.isSending then
-
-		if MusicianFrame.LoadingSpinner == nil then
-			MusicianFrameLoadButton:SetText(Musician.Msg.LOADING)
-
-			local dots = 1
-			MusicianFrame.LoadingSpinner = C_Timer.NewTicker(.25, function()
-				if Musician.Comm.isSending then
-					MusicianFrameLoadButton:SetText(Musician.Msg.LOADING .. string.rep('.', dots) .. string.rep(' ', 3 - dots))
-					dots = (dots + 1) % 4
-				else
-					MusicianFrame.LoadingSpinner:Cancel()
-					MusicianFrame.LoadingSpinner = nil
-					MusicianFrame.Refresh()
-				end
-			end)
-
-		end
-	else
-		if MusicianFrame.LoadingSpinner ~= nil then
-			MusicianFrame.LoadingSpinner:Cancel()
-			MusicianFrame.LoadingSpinner = nil
-		end
-
-		MusicianFrameLoadButton:SetText(Musician.Msg.LOAD)
-	end
-
 	-- Play button
-	if Musician.Comm.isPlaySent or Musician.Comm.isStopSent or not(Musician.Comm.SongIsLoaded()) and not(Musician.songIsPlaying) then
+	if Musician.Comm.isPlaySent or Musician.Comm.isStopSent or not(Musician.sourceSong) and not(Musician.songIsPlaying) then
 		MusicianFramePlayButton:Disable()
 	else
 		MusicianFramePlayButton:Enable()

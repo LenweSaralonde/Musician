@@ -50,16 +50,13 @@ function Musician:OnInitialize()
 		-- Stop all music currently playing
 		if cmd == "stop" or cmd == "panic" then
 
-			if Musician.sourceSong and Musician.sourceSong.playing then
+			if Musician.sourceSong then
 				Musician.sourceSong:Stop()
 			end
 
 			local song, player
 			for player, song in pairs(Musician.songs) do
-				if song.playing then
-					song.playing:Stop()
-					Musician.songs[player].playing = nil
-				end
+				song:Stop()
 			end
 
 			-- Show main window
@@ -84,23 +81,11 @@ function Musician:OnInitialize()
 	SLASH_STOPMUSIC4 = "/musstop"
 end
 
---- Play a song loaded by a player
+--- Stop a song playing by a player
 -- @param playerName (string)
-function Musician.PlayLoadedSong(playerName)
-	if Musician.songs[playerName] ~= nil and Musician.songs[playerName].received ~= nil then
-		Musician.StopLoadedSong(playerName)
-		Musician.songs[playerName].playing = Musician.songs[playerName].received
-		Musician.songs[playerName].received = nil
-		Musician.Utils.MuteGameMusic()
-		Musician.songs[playerName].playing:Play()
-	end
-end
-
---- Stop a song loaded by a player
--- @param playerName (string)
-function Musician.StopLoadedSong(playerName)
-	if Musician.songs[playerName].playing then
-		Musician.songs[playerName].playing:Stop()
+function Musician.StopPlayerSong(playerName)
+	if Musician.songs[playerName] then
+		Musician.songs[playerName]:Stop()
 	end
 end
 
@@ -108,6 +93,13 @@ end
 -- @param event (table)
 -- @param song (Musician.Song)
 function Musician.OnSongPlayed(event, song)
+	local playerName = song.player
+
+	if Musician.Utils.PlayerIsMyself(playerName) then
+		Musician.songIsPlaying = true
+		Musician.Comm.isPlaySent = false
+	end
+
 	Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
 end
 
@@ -117,15 +109,11 @@ end
 function Musician.OnSongStopped(event, song)
 	local playerName = song.player
 
-	if playerName ~= nil and Musician.songs[playerName] ~= nil and Musician.songs[playerName].playing ~= nil then
-
-		-- Stop broadcasting my position if the song is initiated by myself
-		if playerName == Musician.Utils.NormalizePlayerName(UnitName("player")) then
-			Musician.Comm.StopPositionUpdate()
+	if playerName ~= nil and Musician.songs[playerName] ~= nil then
+		if Musician.Utils.PlayerIsMyself(playerName) then
 			Musician.songIsPlaying = false
+			Musician.Comm.isStopSent = false
 		end
-
-		Musician.songs[playerName].playing = nil
 		Musician.Utils.MuteGameMusic()
 	end
 
@@ -144,9 +132,7 @@ function Musician.PlayerOnUpdate(frame, elapsed)
 
 	local song, player
 	for player, playerSong in pairs(Musician.songs) do
-		if playerSong.playing then
-			playerSong.playing:OnUpdate(elapsed)
-		end
+		playerSong:OnUpdate(elapsed)
 	end
 end
 
@@ -194,7 +180,7 @@ function Musician.SetupHooks()
 			-- Stop current song for player
 			if args[2] == "stop" then
 				PlaySound(80)
-				Musician.StopLoadedSong(args[3])
+				Musician.StopPlayerSong(args[3])
 			-- Mute player
 			elseif args[2] == "mute" then
 				PlaySound(80)
@@ -258,7 +244,7 @@ function Musician.SetupHooks()
 
 				isMyself = Musician.Utils.PlayerIsMyself(player)
 				isMuted = Musician.PlayerIsMuted(player)
-				isPlaying = Musician.songs[player] ~= nil and Musician.songs[player].playing ~= nil
+				isPlaying = Musician.songs[player] ~= nil and Musician.songs[player]:IsPlaying()
 				isRegistered = Musician.Registry.players[player] ~= nil
 			end
 
@@ -337,7 +323,7 @@ function Musician.SetupHooks()
 			elseif button == "MUSICIAN_UNMUTE" then
 				Musician.MutePlayer(player, false)
 			elseif button == "MUSICIAN_STOP" then
-				Musician.StopLoadedSong(player)
+				Musician.StopPlayerSong(player)
 			end
 		end
 	end)
@@ -352,15 +338,15 @@ function Musician.SetupHooks()
 		if Musician.Utils.HasPromoEmote(msg) and event == "CHAT_MSG_EMOTE" then
 
 			-- Music is loaded and actually playing
-			if Musician.songs[fullPlayerName] ~= nil and Musician.songs[fullPlayerName].playing ~= nil then
+			if Musician.songs[fullPlayerName] ~= nil and Musician.songs[fullPlayerName]:IsPlaying() then
 
 				-- Ignore emote if the player has already been notified
-				if Musician.songs[fullPlayerName].playing.notified then
+				if Musician.songs[fullPlayerName].notified then
 					return true
 				end
 
 				-- Remove the "promo" part of the emote and mark as already notified
-				Musician.songs[fullPlayerName].playing.notified = true
+				Musician.songs[fullPlayerName].notified = true
 				msg = Musician.Msg.EMOTE_PLAYING_MUSIC
 
 				-- Add action link if playing music (and not current player)
@@ -383,13 +369,13 @@ function Musician.SetupHooks()
 					msg = Musician.Msg.EMOTE_PLAYING_MUSIC .. " " .. Musician.Utils.Highlight(Musician.Msg.EMOTE_PLAYER_OTHER_REALM, 'FF0000')
 				-- Song has not been loaded
 				else
-					msg = Musician.Msg.EMOTE_PLAYING_MUSIC .. " " .. Musician.Utils.Highlight(Musician.Msg.EMOTE_SONG_NOT_LOADED, 'FF0000')
+					return true
 				end
 			end
 		end
 
 		-- Add muted/unmuted flag if currently playing music
-		if Musician.songs[fullPlayerName] ~= nil and Musician.songs[fullPlayerName].playing ~= nil then
+		if Musician.songs[fullPlayerName] ~= nil then
 			if pflag and _G["CHAT_FLAG_" .. pflag] then
 				if Musician.PlayerIsMuted(fullPlayerName) then
 					_G["CHAT_FLAG_" .. pflag .. "_MUSICIAN_MUTED"] = _G["CHAT_FLAG_" .. pflag] .. CHAT_FLAG_MUSICIAN_MUTED

@@ -19,6 +19,7 @@ Musician.MAX_KEY = 120 -- C8
 
 Musician.POSITION_UPDATE_PERIOD = 4
 Musician.LISTENING_RADIUS = 40
+Musician.LOADING_RADIUS = 100
 
 Musician.Msg = {}
 Musician.Locale = {}

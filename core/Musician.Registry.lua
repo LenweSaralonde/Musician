@@ -145,7 +145,7 @@ function Musician.Registry.Init()
 
 	-- Send "Hello" every 5 minutes
 	C_Timer.NewTicker(300, function()
-		if not(Musician.Comm.isSending) then
+		if not(Musician.streamingSong) or not(Musician.streamingSong.streaming) then
 			Musician.Registry.SendHello()
 		end
 	end)
@@ -163,6 +163,65 @@ function Musician.Registry.FetchPlayers()
 		Musician.Registry.fetchingPlayers = true
 		ListChannelByName(Musician.Comm.getChannel())
 	end
+end
+
+--- Update player's position and GUID
+-- @param player (string)
+-- @param posY (number)
+-- @param posX (string)
+-- @param posZ (string)
+-- @param instanceID (string)
+-- @param guid (string)
+function Musician.Registry.UpdatePlayerPositionAndGUID(player, posY, posX, posZ, instanceID, guid)
+	if Musician.Registry.players[player] == nil then
+		Musician.Registry.players[player] = {}
+	end
+
+	Musician.Registry.players[player].posY = posY
+	Musician.Registry.players[player].posX = posX
+	Musician.Registry.players[player].posZ = posZ
+	Musician.Registry.players[player].instanceID = instanceID
+	Musician.Registry.players[player].guid = guid
+end
+
+--- Returns true if the player is in range
+-- @param player (string)
+-- @param radius (number) Distance in yards
+-- @return (boolean)
+function Musician.Registry.PlayerIsInRange(player, radius)
+	player = Musician.Utils.NormalizePlayerName(player)
+
+	-- Player is always in range with itself
+	if Musician.Utils.PlayerIsMyself(player) then
+		return true
+	end
+
+	-- Player not in registry
+	if Musician.Registry.players[player] == nil or Musician.Registry.players[player].guid == nil then
+		return false
+	end
+
+	local posY, posX, posZ, instanceID = UnitPosition("player")
+	local pp = Musician.Registry.players[player]
+
+	-- Not the same instance
+	if pp.instanceID ~= instanceID then
+		return false
+	end
+
+	-- Range check
+	return radius ^ 2 > (pp.posY - posY) ^ 2 + (pp.posX - posX) ^ 2 + (pp.posZ - posZ) ^ 2
+end
+
+--- Return player GUID
+-- @param player (string)
+-- @return (string)
+function Musician.Registry.GetPlayerGUID(player)
+	if Musician.Registry.players[player] ~= nil then
+		return Musician.Registry.players[player].guid
+	end
+
+	return nil
 end
 
 --- Append Musician client version to player tooltip, if applicable.
@@ -233,7 +292,6 @@ Musician.Registry:RegisterComm(Musician.Registry.event.query, function(prefix, m
 
 	Musician.Registry:SendCommMessage(Musician.Registry.event.hello, GetAddOnMetadata("Musician", "Version"), 'WHISPER', player, "ALERT")
 end)
-
 
 --- Display a message if a new version of the addon is available
 -- @param otherVersion (string)
