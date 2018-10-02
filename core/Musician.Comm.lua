@@ -146,6 +146,9 @@ end)
 -- @return (boolean)
 function Musician.Comm.StopSong()
 	if not(Musician.Comm.isReady()) then return false end
+	if Musician.streamingSong and Musician.streamingSong.streaming then
+		Musician.streamingSong:StopStreaming()
+	end	
 	Musician.Comm.isStopSent = true
 	Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
 	Musician.Comm:SendCommMessage(Musician.Comm.event.stop, Musician.Comm.event.stop, 'CHANNEL', Musician.Comm.getChannel(), "ALERT")
