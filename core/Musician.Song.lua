@@ -434,19 +434,6 @@ function Musician.Song:StopOldestNote()
 	end
 end
 
---- Pack a note into a string
--- @param note (table)
--- @param fps (float)
--- @param transpose (number)
--- @return (string)
-function Musician.Song:PackNote(note, fps, transpose)
-	-- KTTD : key, time, duration
-	local packedKey = Musician.Utils.PackNumber(max(0, min(255, note[NOTE.KEY] + transpose)), 1)
-	local packedTime = Musician.Utils.PackTime(note[NOTE.TIME] - self.cropFrom, 2, fps)
-	local packedDuration = Musician.Utils.PackTime(min(note[NOTE.DURATION], Musician.MAX_NOTE_DURATION), 1, Musician.DURATION_FPS)
-	return packedKey .. packedTime .. packedDuration
-end
-
 --- Unpack note from string
 -- @param str (string)
 -- @param fps (float)
@@ -463,31 +450,6 @@ function Musician.Song:UnpackNote(str, fps)
 		[NOTE.TIME] = time,
 		[NOTE.DURATION] = duration
 	}
-end
-
---- Pack a track into a string
--- @param track (table)
--- @param fps (float)
--- @return (string)
-function Musician.Song:PackTrack(track, fps)
-	local packedTrack = ""
-
-	-- Notes
-	local note
-	local noteCount = 0
-	for _, note in pairs(track.notes) do
-		if note[NOTE.ON] and note[NOTE.TIME] >= self.cropFrom and note[NOTE.TIME] <= self.cropTo then
-			packedTrack = packedTrack .. self:PackNote(note, fps, track.transpose)
-			noteCount = noteCount + 1
-		end
-	end
-
-	if noteCount > 0 then
-		-- TINN : Track Id, instrument ID, Number of notes
-		packedTrack = Musician.Utils.PackNumber(track.id, 1) .. Musician.Utils.PackNumber(min(track.instrument, 128), 1) .. Musician.Utils.PackNumber(noteCount, 2)	 .. packedTrack
-	end
-
-	return packedTrack
 end
 
 --- Unpack a track from string
@@ -536,52 +498,6 @@ function Musician.Song:UnpackTrack(str, fps)
 	track.name = nil
 
 	return track
-end
-
---- Pack a song into a string
--- @return (string)
-function Musician.Song:Pack()
-	local packedSong = Musician.FILE_HEADER
-	local songName = string.sub(self.name, 1, 255)
-	local duration = ceil(self.cropTo - self.cropFrom)
-	local fps = 65535 / duration -- 2^16
-
-	-- Pack tracks
-	local packedTracks = ""
-	local packedTrackCount = 0
-	local track
-	local packedDrumkits = ""
-	for _, track in pairs(self.tracks) do
-		if not(self:TrackIsMuted(track)) and Musician.MIDI_INSTRUMENT_MAPPING[track.instrument] ~= "none" then
-			local packedTrack = self:PackTrack(track, fps)
-			if packedTrack ~= "" then
-				packedTracks = packedTracks .. packedTrack
-				packedTrackCount = packedTrackCount + 1
-				if track.instrument >= 128 then
-					packedDrumkits = packedDrumkits .. Musician.Utils.PackNumber(track.instrument - 128, 1)
-				end
-			end
-		end
-	end
-
-	-- Song name length, song name
-	packedSong = packedSong .. Musician.Utils.PackNumber(string.len(songName), 1) .. songName
-
-	-- Song duration
-	packedSong = packedSong .. Musician.Utils.PackNumber(duration, 2)
-
-	-- Number of tracks
-	packedSong = packedSong .. Musician.Utils.PackNumber(packedTrackCount, 1)
-
-	-- Tracks
-	packedSong = packedSong .. packedTracks
-
-	-- Metadata
-	if packedDrumkits ~= "" then
-		packedSong = packedSong .. "DRK" .. packedDrumkits
-	end
-
-	return packedSong
 end
 
 --- Unpack song metadata from string
