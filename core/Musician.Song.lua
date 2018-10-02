@@ -680,7 +680,7 @@ function Musician.Song:AppendChunk(chunk)
 		track.instrument = trackData[CHUNK.INSTRUMENT]
 		track.midiInstrument = trackData[CHUNK.INSTRUMENT]
 
-		local noteOffset = self.chunkCount * Musician.CHUNK_DURATION
+		local noteOffset = max(self.chunkCount * Musician.CHUNK_DURATION, self.cursor + Musician.CHUNK_DURATION / 2)
 		local note
 		for _, note in pairs(trackData[CHUNK.NOTES]) do
 			note[NOTE.TIME] = note[NOTE.TIME] + noteOffset
@@ -691,7 +691,7 @@ function Musician.Song:AppendChunk(chunk)
 	end
 
 	self.chunkCount = self.chunkCount + 1
-	self.cropTo = max(self.cropTo, CROP_OFFSET + self.chunkCount * Musician.CHUNK_DURATION)
+	self.cropTo = max(self.cropTo, CROP_OFFSET + max(self.chunkCount * Musician.CHUNK_DURATION, self.cursor + Musician.CHUNK_DURATION / 2))
 end
 
 --- Stream a chunk of the song
