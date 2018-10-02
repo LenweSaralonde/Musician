@@ -376,7 +376,7 @@ end
 -- @param name (string)
 -- @return (boolean)
 function Musician.Utils.PlayerIsMyself(player)
-	return Musician.Utils.NormalizePlayerName(player) == Musician.Utils.NormalizePlayerName(UnitName("player"))
+	return player ~= nil and Musician.Utils.NormalizePlayerName(player) == Musician.Utils.NormalizePlayerName(UnitName("player"))
 end
 
 --- Return the emote for "Player is playing music" with promo URL
