@@ -133,6 +133,7 @@ Musician.Comm:RegisterComm(Musician.Comm.event.stream, function(prefix, message,
 
 	-- Append chunk data
 	Musician.songs[sender].isStreamed = true
+	Musician.songs[sender].chunkDuration = chunkDuration
 	Musician.songs[sender]:AppendChunk(chunk)
 
 	-- Play song if not already started

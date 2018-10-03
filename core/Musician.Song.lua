@@ -26,6 +26,8 @@ local NOTE = Musician.Song.Indexes.NOTE
 local NOTEON = Musician.Song.Indexes.NOTEON
 local CHUNK = Musician.Song.Indexes.CHUNK
 
+local STOP_TIMEOUT = 10
+
 local CHUNK_MODE_DURATION = 0x10 -- Duration are set in chunk notes
 local CHUNK_MODE_LIVE = 0x20 -- No duration in chunk notes
 local CHUNK_VERSION = 0x01 -- Max: 0x0F (15)
@@ -63,6 +65,9 @@ function Musician.Song.create(packedSongData, crop)
 
 	-- @field streaming (boolean) True when the song is streaming
 	self.streaming = false
+
+	-- @field chunkDuration (number) Duration of a streaming chunk, in seconds
+	self.chunkDuration = Musician.CHUNK_DURATION
 
 	-- @field cropFrom (number) Play song from this position
 	self.cropFrom = 0
@@ -625,7 +630,7 @@ function Musician.Song:Stream()
 	self:StopStreaming() -- Stop and reset streaming
 	self.streaming = true
 	StreamChunk(self)
-	self.streamingTimer = C_Timer.NewTicker(Musician.CHUNK_DURATION, function() StreamChunk(self) end);
+	self.streamingTimer = C_Timer.NewTicker(self.chunkDuration, function() StreamChunk(self) end);
 end
 
 --- Stop streaming song
@@ -650,10 +655,8 @@ end
 -- @param chunk (table)
 function Musician.Song:AppendChunk(chunk)
 
-	local CROP_OFFSET = 10 -- TODO: Workaround for empty chunks
-
-	if self.chunkCount == nil then
-		self.chunkCount = 0
+	if self.chunkTime == nil then
+		self.chunkTime = 0
 	end
 
 	local trackData
@@ -680,18 +683,24 @@ function Musician.Song:AppendChunk(chunk)
 		track.instrument = trackData[CHUNK.INSTRUMENT]
 		track.midiInstrument = trackData[CHUNK.INSTRUMENT]
 
-		local noteOffset = max(self.chunkCount * Musician.CHUNK_DURATION, self.cursor + Musician.CHUNK_DURATION / 2)
+		-- The chunk has been received too late, after the current cursor position
+		if self.cursor >= self.chunkTime then
+			-- Advance chunkTime accordingly to avoid note drops
+			self.chunkTime = self.cursor + self.chunkDuration / 2
+		end
+
+		local noteOffset = self.chunkTime
 		local note
 		for _, note in pairs(trackData[CHUNK.NOTES]) do
 			note[NOTE.TIME] = note[NOTE.TIME] + noteOffset
 			noteOffset = note[NOTE.TIME]
-			self.cropTo = max(self.cropTo, CROP_OFFSET + note[NOTE.TIME] + note[NOTE.DURATION])
+			self.cropTo = max(self.cropTo, STOP_TIMEOUT + note[NOTE.TIME] + note[NOTE.DURATION])
 			table.insert(track.notes, note)
 		end
 	end
 
-	self.chunkCount = self.chunkCount + 1
-	self.cropTo = max(self.cropTo, CROP_OFFSET + max(self.chunkCount * Musician.CHUNK_DURATION, self.cursor + Musician.CHUNK_DURATION / 2))
+	self.chunkTime = self.chunkTime + self.chunkDuration
+	self.cropTo = max(self.cropTo, STOP_TIMEOUT + self.chunkTime)
 end
 
 --- Stream a chunk of the song
@@ -700,7 +709,7 @@ end
 StreamChunk = function(self)
 
 	local from = self.streamPosition
-	local to = from	+ Musician.CHUNK_DURATION
+	local to = from	+ self.chunkDuration
 
 	local chunk = {}
 
@@ -751,7 +760,7 @@ StreamChunk = function(self)
 	self.streamPosition = to
 
 	local player = Musician.Utils.NormalizePlayerName(UnitName("player"))
-	local packedChunk = Musician.Song.PackChunk(chunk, self:GetId())
+	local packedChunk = Musician.Song.PackChunk(chunk, self.chunkDuration, self:GetId())
 
 	Musician.Comm.StreamSongChunk(packedChunk)
 
@@ -762,18 +771,19 @@ end
 
 --- Pack a song chunk
 -- @param chunk (table)
+-- @param chunkDuration (number)
 -- @param songId (number)
 -- @return (string)
-Musician.Song.PackChunk = function(chunk, songId)
+Musician.Song.PackChunk = function(chunk, chunkDuration, songId)
 
 	local mode = CHUNK_MODE_DURATION
-	local chunkDuration = Musician.CHUNK_DURATION
+	local chunkDuration = chunkDuration
 
 	-- Chunk version and mode (1)
 	local packedVersionAndMode = Musician.Utils.PackNumber(bit.bor(mode, CHUNK_VERSION), 1)
 
 	-- Chunk duration (1)
-	local packedChunkDuration = Musician.Utils.PackNumber(chunkDuration, 1)
+	local packedChunkDuration = Musician.Utils.PackNumber(chunkDuration * 10, 1)
 
 	-- Song ID (1)
 	local packedSongId = Musician.Utils.PackNumber(songId % 255, 1)
@@ -830,7 +840,7 @@ Musician.Song.UnpackChunk = function(str)
 	local mode = bit.band(Musician.Utils.UnpackNumber(string.sub(str, 1, 1)), 0xf0)
 
 	-- Chunk duration (1)
-	local chunkDuration = Musician.Utils.UnpackNumber(string.sub(str, 2, 2))
+	local chunkDuration = Musician.Utils.UnpackNumber(string.sub(str, 2, 2)) / 10
 
 	-- Song ID (1)
 	local songId = Musician.Utils.UnpackNumber(string.sub(str, 3, 3))
