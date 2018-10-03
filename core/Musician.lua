@@ -130,6 +130,10 @@ function Musician.PlayerOnUpdate(frame, elapsed)
 		Musician.sourceSong:OnUpdate(elapsed)
 	end
 
+	if Musician.streamingSong then
+		Musician.streamingSong:OnUpdate(elapsed)
+	end
+
 	local song, player
 	for player, playerSong in pairs(Musician.songs) do
 		playerSong:OnUpdate(elapsed)

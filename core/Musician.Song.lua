@@ -32,9 +32,6 @@ local CHUNK_MODE_DURATION = 0x10 -- Duration are set in chunk notes
 local CHUNK_MODE_LIVE = 0x20 -- No duration in chunk notes
 local CHUNK_VERSION = 0x01 -- Max: 0x0F (15)
 
--- Private functions
-local StreamChunk
-
 --- Constructor
 -- @param packedSongData (string)
 -- @param crop (boolean)
@@ -272,9 +269,16 @@ function Musician.Song:Stop()
 	Musician.Comm:SendMessage(Musician.Events.SongStop, self)
 end
 
---- Main on update function, play notes accordingly to every frame.
+--- Main on frame update function
 -- @param elapsed (number)
 function Musician.Song:OnUpdate(elapsed)
+	self:StreamOnFrame(elapsed)
+	self:PlayOnFrame(elapsed)
+end
+
+--- Play notes accordingly to every frame.
+-- @param elapsed (number)
+function Musician.Song:PlayOnFrame(elapsed)
 	if not(self.playing) then
 		return
 	end
@@ -629,18 +633,13 @@ end
 function Musician.Song:Stream()
 	self:StopStreaming() -- Stop and reset streaming
 	self.streaming = true
-	StreamChunk(self)
-	self.streamingTimer = C_Timer.NewTicker(self.chunkDuration, function() StreamChunk(self) end);
+	self.timeSinceLastStreamChunk = self.chunkDuration
 end
 
 --- Stop streaming song
 function Musician.Song:StopStreaming()
 	self.streaming = false
-
-	if self.streamingTimer ~= nil then
-		self.streamingTimer:Cancel()
-		self.streamingTimer = nil
-	end
+	self.timeSinceLastStreamChunk = 0
 
 	local track
 	for _, track in pairs(self.tracks) do
@@ -703,10 +702,21 @@ function Musician.Song:AppendChunk(chunk)
 	self.cropTo = max(self.cropTo, STOP_TIMEOUT + self.chunkTime)
 end
 
---- Stream a chunk of the song
--- Private
--- @param self (Musician.Song)
-StreamChunk = function(self)
+--- Stream a chunk of the song on frame
+-- @param elapsed (number)
+function Musician.Song:StreamOnFrame(elapsed)
+
+	if not(self.streaming) then
+		return
+	end
+
+	self.timeSinceLastStreamChunk = self.timeSinceLastStreamChunk + elapsed
+
+	if self.timeSinceLastStreamChunk >= self.chunkDuration then
+		self.timeSinceLastStreamChunk = 0
+	else
+		return
+	end
 
 	local from = self.streamPosition
 	local to = from	+ self.chunkDuration
