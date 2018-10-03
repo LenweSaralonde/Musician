@@ -832,12 +832,18 @@ end
 -- @return (table), (number), (number), (table) chunk, song ID, chunk duration, player position and GUID
 Musician.Song.UnpackChunk = function(str)
 
+	local packedChunkLength = string.len(str)
 	local chunk = {}
 	local cursor
 
 	-- Version (1)
 	local version = bit.band(Musician.Utils.UnpackNumber(string.sub(str, 1, 1)), 0x0f)
 	local mode = bit.band(Musician.Utils.UnpackNumber(string.sub(str, 1, 1)), 0xf0)
+
+	-- Invalid version
+	if version > CHUNK_VERSION then
+		return nil
+	end
 
 	-- Chunk duration (1)
 	local chunkDuration = Musician.Utils.UnpackNumber(string.sub(str, 2, 2)) / 10
@@ -868,6 +874,11 @@ Musician.Song.UnpackChunk = function(str)
 	local n, note
 	for t, trackData in pairs(chunk) do
 		for n = 1, trackData[CHUNK.NOTE_COUNT] do
+
+			if cursor > packedChunkLength then
+				return nil
+			end
+
 			local time = Musician.Utils.UnpackTime(string.sub(str, cursor, cursor), Musician.CHUNK_FPS)
 			local noteOn = bit.band(Musician.Utils.UnpackNumber(string.sub(str, cursor + 1, cursor + 1)), 0x80)
 			local key = bit.band(Musician.Utils.UnpackNumber(string.sub(str, cursor + 1, cursor + 1)), 0x7F) + Musician.C0_INDEX

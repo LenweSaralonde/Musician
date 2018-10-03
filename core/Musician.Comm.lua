@@ -107,6 +107,11 @@ Musician.Comm:RegisterComm(Musician.Comm.event.stream, function(prefix, message,
 	local packedChunk = LibCompress:Decompress(LibCompressEncodeTable:Decode(message))
 	local chunk, songId, chunkDuration, position = Musician.Song.UnpackChunk(packedChunk)
 
+	-- Invalid chunk
+	if chunk == nil then
+		return
+	end
+
 	-- Update player position
 	Musician.Registry.UpdatePlayerPositionAndGUID(sender, unpack(position))
 
