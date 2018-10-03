@@ -4,6 +4,7 @@ local sourceBuffer
 local i
 
 MusicianFrame.Init = function()
+	MusicianFrame:SetClampedToScreen(true)
 	MusicianFrame.Refresh()
 	Musician.Frame:RegisterMessage(Musician.Events.RefreshFrame, MusicianFrame.Refresh)
 	MusicianFrame.Clear()

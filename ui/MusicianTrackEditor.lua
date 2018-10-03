@@ -10,6 +10,8 @@ local NOTEON = Musician.Song.Indexes.NOTEON
 
 Musician.TrackEditor.Init = function()
 
+	MusicianTrackEditor:SetClampedToScreen(true)
+
 	-- Init texts
 	Musician.TrackEditor:RegisterMessage(Musician.Events.SongCursor, Musician.TrackEditor.UpdateCursor)
 	Musician.TrackEditor:RegisterMessage(Musician.Events.SongPlay, Musician.TrackEditor.UpdateButtons)
