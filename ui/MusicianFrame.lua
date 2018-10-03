@@ -1,5 +1,8 @@
 Musician.Frame = LibStub("AceAddon-3.0"):NewAddon("Musician.Frame", "AceEvent-3.0")
 
+local sourceBuffer
+local i
+
 MusicianFrame.Init = function()
 	MusicianFrame.Refresh()
 	Musician.Frame:RegisterMessage(Musician.Events.RefreshFrame, MusicianFrame.Refresh)
@@ -7,23 +10,27 @@ MusicianFrame.Init = function()
 	MusicianFrameTitle:SetText(Musician.Msg.PLAY_A_SONG)
 	MusicianFrameClearButton:SetText(Musician.Msg.CLEAR)
 	MusicianFrameTrackEditorButton:SetText(Musician.Msg.EDIT)
+	MusicianFrameSource:SetMaxBytes(512)
 	MusicianFrameSource:SetScript("OnTextChanged", MusicianFrame.SourceChanged)
+	MusicianFrameSource:SetScript("OnChar", function(self, c)
+		sourceBuffer[i] = c
+		i = i + 1
+	end)
 end
 
 MusicianFrame.Focus = function()
-	local editable = MusicianFrameSource:GetText() == "" or MusicianFrameSource:GetText() == MusicianFrame.GetDefaultText()
-	if editable then
+	if not(MusicianFrameSource:HasFocus()) then
 		MusicianFrameSource:HighlightText(0)
 		MusicianFrameSource:SetFocus()
-	else
-		MusicianFrameSource:HighlightText(0, 0)
-		MusicianFrameSource:ClearFocus()
 	end
 end
 
 MusicianFrame.Clear = function()
+	sourceBuffer = {}
+	i = 1
 	MusicianFrameSource:SetText(MusicianFrame.GetDefaultText())
-	MusicianFrame.Focus()
+	MusicianFrameSource:HighlightText(0)
+	MusicianFrameSource:SetFocus()
 end
 
 MusicianFrame.TrackEditor = function()
@@ -31,22 +38,26 @@ MusicianFrame.TrackEditor = function()
 end
 
 MusicianFrame.SourceChanged = function(self, isUserInput)
-	ScrollingEdit_OnTextChanged(self, self:GetParent())
+	MusicianFrameSource:HighlightText(0, 0)
+	MusicianFrameSource:ClearFocus()
 
 	if isUserInput then
 		MusicianFrame.LoadSource()
 		MusicianFrame.Focus()
+		sourceBuffer = {}
+		i = 1
 	end
 end
 
 MusicianFrame.LoadSource = function()
-	if MusicianFrameSource:GetText() == "" or MusicianFrameSource:GetText() == MusicianFrame.GetDefaultText() then
+	local source = table.concat(sourceBuffer)
+	if source == "" or source == MusicianFrame.GetDefaultText() then
 		return
 	end
 
 	local sourceSong
 	local success = pcall(function()
-		sourceSong = Musician.Song.create(MusicianBase64.decode(MusicianFrameSource:GetText()), true)
+		sourceSong = Musician.Song.create(Musician.Utils.Base64Decode(source), true)
 	end)
 
 	if not(success) then

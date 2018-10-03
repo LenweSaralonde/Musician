@@ -103,33 +103,30 @@
 				</Scripts>
 			</Button>
 
-			<ScrollFrame name="$parentScrollFrame" inherits="UIPanelScrollFrameTemplate">
-				<Size x="268" y="90" />
+			<ScrollFrame name="$parentScrollFrame">
+				<Size x="290" y="90" />
 				<Anchors>
 					<Anchor point="TOPLEFT" x="15" y="-35" relativePoint="TOPLEFT" />
 				</Anchors>
 
 				<Scripts>
 					<OnMouseUp>
-						MusicianFrame.Focus()
+						MusicianFrameSource:SetFocus()
 					</OnMouseUp>
 				</Scripts>
 
 				<ScrollChild>
 					<EditBox name="MusicianFrameSource" multiLine="true" autoFocus="false" countInvisibleLetters="false">
-						<Size x="268" y="90"/>
+						<Size x="290" y="90"/>
 
 						<Scripts>
+							<OnMouseUp>
+								MusicianFrameSource:SetFocus()
+							</OnMouseUp>
 							<OnEditFocusGained>
-								MusicianFrame.Focus()
+								MusicianFrameSource:HighlightText(0)
 							</OnEditFocusGained>
-							<OnLoad>
-								ScrollingEdit_OnCursorChanged(self, 0, 0, 0, 0)
-							</OnLoad>
-							<OnCursorChanged function="ScrollingEdit_OnCursorChanged" />
-							<OnUpdate>
-								ScrollingEdit_OnUpdate(self, elapsed, self:GetParent())
-							</OnUpdate>
+
 							<OnEscapePressed>MusicianFrameSource:ClearFocus()</OnEscapePressed>
 						</Scripts>
 
