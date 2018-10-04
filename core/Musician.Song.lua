@@ -26,8 +26,6 @@ local NOTE = Musician.Song.Indexes.NOTE
 local NOTEON = Musician.Song.Indexes.NOTEON
 local CHUNK = Musician.Song.Indexes.CHUNK
 
-local STOP_TIMEOUT = 10
-
 local CHUNK_MODE_DURATION = 0x10 -- Duration are set in chunk notes
 local CHUNK_MODE_LIVE = 0x20 -- No duration in chunk notes
 local CHUNK_VERSION = 0x01 -- Max: 0x0F (15)
@@ -652,11 +650,21 @@ end
 
 --- Append chunk data to current song
 -- @param chunk (table)
-function Musician.Song:AppendChunk(chunk)
+-- @param songId (number)
+-- @param chunkDuration (number)
+-- @param playtimeLeft (number)
+-- @param player (string)
+function Musician.Song:AppendChunk(chunk, songId, chunkDuration, playtimeLeft, player)
 
 	if self.chunkTime == nil then
 		self.chunkTime = 0
 	end
+
+	self.isStreamed = true
+	self.songId = songId
+	self.player = player
+	self.chunkDuration = chunkDuration
+	self.cropTo = max(self.cropTo, self.chunkTime + playtimeLeft)
 
 	local trackData
 	for _, trackData in pairs(chunk) do
@@ -693,13 +701,13 @@ function Musician.Song:AppendChunk(chunk)
 		for _, note in pairs(trackData[CHUNK.NOTES]) do
 			note[NOTE.TIME] = note[NOTE.TIME] + noteOffset
 			noteOffset = note[NOTE.TIME]
-			self.cropTo = max(self.cropTo, STOP_TIMEOUT + note[NOTE.TIME] + note[NOTE.DURATION])
+			self.cropTo = max(self.cropTo, note[NOTE.TIME] + note[NOTE.DURATION])
 			table.insert(track.notes, note)
 		end
 	end
 
 	self.chunkTime = self.chunkTime + self.chunkDuration
-	self.cropTo = max(self.cropTo, STOP_TIMEOUT + self.chunkTime)
+	self.cropTo = max(self.cropTo, self.chunkTime)
 end
 
 --- Stream a chunk of the song on frame
@@ -713,7 +721,7 @@ function Musician.Song:StreamOnFrame(elapsed)
 	self.timeSinceLastStreamChunk = self.timeSinceLastStreamChunk + elapsed
 
 	if self.timeSinceLastStreamChunk >= self.chunkDuration then
-		self.timeSinceLastStreamChunk = 0
+		self.timeSinceLastStreamChunk = self.timeSinceLastStreamChunk - self.chunkDuration
 	else
 		return
 	end
@@ -770,7 +778,7 @@ function Musician.Song:StreamOnFrame(elapsed)
 	self.streamPosition = to
 
 	local player = Musician.Utils.NormalizePlayerName(UnitName("player"))
-	local packedChunk = Musician.Song.PackChunk(chunk, self.chunkDuration, self:GetId())
+	local packedChunk = self:PackChunk(chunk)
 
 	Musician.Comm.StreamSongChunk(packedChunk)
 
@@ -781,22 +789,23 @@ end
 
 --- Pack a song chunk
 -- @param chunk (table)
--- @param chunkDuration (number)
--- @param songId (number)
 -- @return (string)
-Musician.Song.PackChunk = function(chunk, chunkDuration, songId)
+function Musician.Song:PackChunk(chunk)
 
 	local mode = CHUNK_MODE_DURATION
-	local chunkDuration = chunkDuration
 
 	-- Chunk version and mode (1)
 	local packedVersionAndMode = Musician.Utils.PackNumber(bit.bor(mode, CHUNK_VERSION), 1)
 
 	-- Chunk duration (1)
-	local packedChunkDuration = Musician.Utils.PackNumber(chunkDuration * 10, 1)
+	local packedChunkDuration = Musician.Utils.PackNumber(self.chunkDuration * 10, 1)
 
 	-- Song ID (1)
-	local packedSongId = Musician.Utils.PackNumber(songId % 255, 1)
+	local packedSongId = Musician.Utils.PackNumber(self:GetId() % 255, 1)
+
+	-- Playtime left (2)
+	local playtimeLeft = ceil(self.cropTo - self.streamPosition + self.chunkDuration)
+	local packedPlaytimeLeft = Musician.Utils.PackNumber(playtimeLeft, 2)
 
 	-- Player position (18)
 	local packedPlayerPosition = Musician.Utils.PackPlayerPosition()
@@ -834,12 +843,12 @@ Musician.Song.PackChunk = function(chunk, chunkDuration, songId)
 		end
 	end
 
-	return packedVersionAndMode .. packedChunkDuration .. packedSongId .. packedPlayerPosition .. packedTrackCount .. packedTrackInfo .. packedNoteData
+	return packedVersionAndMode .. packedChunkDuration .. packedSongId .. packedPlaytimeLeft .. packedPlayerPosition .. packedTrackCount .. packedTrackInfo .. packedNoteData
 end
 
 --- Unpack a song chunk
 -- @param chunk (table)
--- @return (table), (number), (number), (table) chunk, song ID, chunk duration, player position and GUID
+-- @return (table), (number), (number), (number), (table) chunk, song ID, chunk duration, playtimeLeft, player position and GUID
 Musician.Song.UnpackChunk = function(str)
 
 	local packedChunkLength = string.len(str)
@@ -861,14 +870,17 @@ Musician.Song.UnpackChunk = function(str)
 	-- Song ID (1)
 	local songId = Musician.Utils.UnpackNumber(string.sub(str, 3, 3))
 
+	-- Playtime left (2)
+	local playtimeLeft = Musician.Utils.UnpackNumber(string.sub(str, 4, 5))
+
 	-- Player position (18)
-	local position = { Musician.Utils.UnpackPlayerPosition(string.sub(str, 4, 21)) }
+	local position = { Musician.Utils.UnpackPlayerPosition(string.sub(str, 6, 23)) }
 
 	-- Number of tracks (1)
-	local trackCount = Musician.Utils.UnpackNumber(string.sub(str, 22, 22))
+	local trackCount = Musician.Utils.UnpackNumber(string.sub(str, 24, 24))
 
 	-- Track information: trackId (1), instrumentId (1), note count (2)
-	cursor = 23
+	cursor = 25
 	local t, trackData
 	for t = 1, trackCount do
 		table.insert(chunk, {
@@ -910,7 +922,6 @@ Musician.Song.UnpackChunk = function(str)
 		end
 	end
 
-	return chunk, songId, chunkDuration, position
+	return chunk, songId, chunkDuration, playtimeLeft, position
 end
-
 

@@ -105,7 +105,7 @@ Musician.Comm:RegisterComm(Musician.Comm.event.stream, function(prefix, message,
 	sender = Musician.Utils.NormalizePlayerName(sender)
 
 	local packedChunk = LibCompress:Decompress(LibCompressEncodeTable:Decode(message))
-	local chunk, songId, chunkDuration, position = Musician.Song.UnpackChunk(packedChunk)
+	local chunk, songId, chunkDuration, playtimeLeft, position = Musician.Song.UnpackChunk(packedChunk)
 
 	-- Invalid chunk
 	if chunk == nil then
@@ -127,19 +127,13 @@ Musician.Comm:RegisterComm(Musician.Comm.event.stream, function(prefix, message,
 	-- Create playing song, if missing
 	if Musician.songs[sender] == nil then
 		Musician.songs[sender] = Musician.Song.create()
-		Musician.songs[sender].songId = songId
-		Musician.songs[sender].player = sender
 	elseif not(Musician.songs[sender].isStreamed) or (Musician.songs[sender].songId ~= songId) then
 		Musician.songs[sender]:Stop()
 		Musician.songs[sender] = Musician.Song.create()
-		Musician.songs[sender].songId = songId
-		Musician.songs[sender].player = sender
 	end
 
 	-- Append chunk data
-	Musician.songs[sender].isStreamed = true
-	Musician.songs[sender].chunkDuration = chunkDuration
-	Musician.songs[sender]:AppendChunk(chunk)
+	Musician.songs[sender]:AppendChunk(chunk, songId, chunkDuration, playtimeLeft, sender)
 
 	-- Play song if not already started
 	if not(Musician.songs[sender]:IsPlaying()) and not(Musician.songs[sender].willPlay) then
