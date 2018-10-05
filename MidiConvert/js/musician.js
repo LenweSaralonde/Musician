@@ -4,9 +4,12 @@ var Musician = {}
 Musician.NOTE_IDS = {'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11};
 Musician.C0_INDEX = 24;
 
-Musician.FILE_HEADER = 'MUS2';
-Musician.MAX_NOTE_DURATION = 6
-Musician.DURATION_FPS = 255 / Musician.MAX_NOTE_DURATION // 2^8
+Musician.FILE_HEADER = 'MUS3';
+Musician.MAX_NOTE_DURATION = 6;
+Musician.NOTE_DURATION_FPS = 255 / Musician.MAX_NOTE_DURATION; // 8-bit
+Musician.NOTE_TIME_FPS = 240;
+Musician.MAX_NOTE_TIME = 65535 / Musician.NOTE_TIME_FPS; // 16-bit
+Musician.PERCUSSION_KEY_OFFSET = -12;
 
 Musician.NoteKey = function(noteName) {
 	var matches = noteName.match(/^([^0-9-]+)(-?[0-9]+)$/);
@@ -41,108 +44,113 @@ Musician.PackTime = function(seconds, bytes, fps) {
 	return Musician.PackNumber(Math.round(seconds * fps), bytes);
 }
 
-Musician.PackNote = function(note, isPercussion, fps) {
-	// KTTD : key, time, duration
-	return Musician.PackNumber(Musician.NoteKey(note.name) + (isPercussion ? (39 - 51) : 0), 1) + Musician.PackTime(note.time, 2, fps) + Musician.PackTime(Math.min(note.duration, Musician.MAX_NOTE_DURATION), 1, Musician.DURATION_FPS);
+Musician.PackString = function(str) {
+	var utf8Str = Musician.EncodeUTF8(str);
+	return Musician.PackNumber(utf8Str.length, 2) + utf8Str;
 }
 
-Musician.PackTrack = function(track, fps) {
-	var packedTrack;
-
-	var instrumentNumber;
-
-	if (track.isPercussion) {
-		instrumentNumber = 128;
-	} else {
-		instrumentNumber = track.instrumentNumber;
-	}
-
-	// TINN : Track Id, instrument ID, Number of notes
-	packedTrack = Musician.PackNumber(track.id, 1) + Musician.PackNumber(instrumentNumber, 1) + Musician.PackNumber(track.notes.length, 2);
-
-	// Notes
-	var note
-	track.notes.forEach(function(note) {
-		packedTrack += Musician.PackNote(note, track.isPercussion, fps);
-	});
-
-	return packedTrack;
-}
-
-Musician.PackTrackNames = function(song) {
-	var packedTrackNames = "TRN";
-
-	var track;
-	song.tracks.forEach(function(track) {
-		var trackName = (track.name || "").substring(0, 255);
-		packedTrackNames += Musician.PackNumber(trackName.length, 1) + trackName;
-	});
-
-	return packedTrackNames;
-}
-
-Musician.PackTrackChannels = function(song) {
-	var packedTrackChannels = "TRC";
-
-	var track;
-	song.tracks.forEach(function(track) {
-		packedTrackChannels += Musician.PackNumber(track.channelNumber + 1, 1);
-	});
-
-	return packedTrackChannels;
-}
-
-Musician.PackDrumkits = function(song) {
-	var packedTrackDrumkits = "DRK";
-	var track;
-
-	// Find some metal instruments
-	var isMetal = false
-	song.tracks.forEach(function(track) {
-		isMetal = isMetal || track.instrumentNumber === 29 || track.instrumentNumber === 30 || track.instrumentNumber === 31;
-	});
-
-	song.tracks.forEach(function(track) {
-		if (track.isPercussion) {
-			packedTrackDrumkits += Musician.PackNumber(isMetal?1:0, 1);
-		}
-	});
-
-	return packedTrackDrumkits;
+Musician.EncodeUTF8 = function(str) {
+	return unescape(encodeURIComponent(str));
 }
 
 Musician.PackSong = function(song) {
 
+	var packedSong = '';
+
+	// Header (4)
+	packedSong += Musician.FILE_HEADER;
+
+	// Duration (3)
 	var duration = Math.ceil(song.duration);
+	packedSong += Musician.PackNumber(duration, 3);
 
-	var fps = 65535 / duration;
-
-	if (fps < 60) {
-		throw "Songs should not be longer than 18 minutes.";
+	// Number of tracks (1)
+	if (song.tracks.length > 255) {
+		throw "A song cannot have more than 255 tracks.";
 	}
-
-	var packedSong = Musician.FILE_HEADER;
-	var songName = (song.header.name || '').substring(0, 255);
-
-	// Song name length, song name
-	packedSong += Musician.PackNumber(songName.length, 1) + songName;
-
-	// Song duration, in seconds
-	packedSong += Musician.PackNumber(duration, 2);
-
-	// Number of tracks
 	packedSong += Musician.PackNumber(song.tracks.length, 1);
 
-	// Song tracks
-	var track;
+	// Find some heavy metal instruments
+	var isMetal = false
 	song.tracks.forEach(function(track) {
-		packedSong += Musician.PackTrack(track, fps);
+		// Overdriven Guitar, Distortion Guitar, Guitar harmonics
+		isMetal = isMetal || track.instrumentNumber >= 29 && track.instrumentNumber <= 31;
 	});
 
-	// Metadata
-	packedSong += Musician.PackTrackChannels(song);
-	packedSong += Musician.PackTrackNames(song);
-	packedSong += Musician.PackDrumkits(song);
+	// Grab track and notes
+	var tracks = [];
+	song.tracks.forEach(function(rawTrack) {
+		var track = {};
+
+		// Track instrument
+		if (rawTrack.isPercussion) {
+			// Use modern drumkit (129) instead of the tradition one (128) if the song contains heavy metal instruments
+			track.instrument = isMetal ? 129 : 128;
+		} else {
+			track.instrument = rawTrack.instrumentNumber;
+		}
+		track.isPercussion = rawTrack.isPercussion;
+
+		// Track channel
+		track.channel = rawTrack.channelNumber + 1;
+
+		// Track name
+		track.name = rawTrack.name || "";
+
+		// Track notes
+		var offset = 0;
+		var notes = [];
+		rawTrack.notes.forEach(function(rawNote) {
+			//var noteTime = rawNote.time - lastNoteTime;
+			var noteTime = rawNote.time - offset;
+			var noteKey = Musician.NoteKey(rawNote.name) + (rawTrack.isPercussion ? Musician.PERCUSSION_KEY_OFFSET : 0);
+			var noteDuration = Math.min(rawNote.duration, Musician.MAX_NOTE_DURATION);
+
+			// Insert spacer notes
+			while (noteTime > Musician.MAX_NOTE_TIME) {
+				// 0 char
+				notes.push(Musician.PackNumber(0, 1));
+				noteTime -= Musician.MAX_NOTE_TIME;
+				offset += Musician.MAX_NOTE_TIME;
+			}
+
+			// Insert packed note: key (1), time (2), duration (1)
+			notes.push(
+				Musician.PackNumber(noteKey, 1) +
+				Musician.PackTime(noteTime, 2, Musician.NOTE_TIME_FPS) +
+				Musician.PackTime(noteDuration, 1, Musician.NOTE_DURATION_FPS)
+			);
+
+			lastNoteTime = rawNote.time;
+		});
+		track.notes = notes;
+
+		tracks.push(track);
+	});
+
+	// Track data: instrument (1), channel (1), number of notes (2),
+	tracks.forEach(function(track) {
+		if (track.notes.length > 65535) {
+			throw "A track cannot have more than 65535 notes.";
+		}
+
+		packedSong += Musician.PackNumber(track.instrument, 1);
+		packedSong += Musician.PackNumber(track.channel, 1);
+		packedSong += Musician.PackNumber(track.notes.length, 2);
+	});
+
+	// Note data
+	tracks.forEach(function(track) {
+		packedSong += track.notes.join(''); // Notes are already packed
+	});
+
+	// Song title (2) + (title length in bytes)
+	packedSong += Musician.PackString(song.header.name || '');
+
+	// Track names (2) + (title length in bytes)
+	tracks.forEach(function(track) {
+		packedSong +=  Musician.PackString(track.name);
+	});
 
 	return packedSong;
 }
