@@ -441,177 +441,151 @@ function Musician.Song:StopOldestNote()
 	end
 end
 
---- Unpack note from string
--- @param str (string)
--- @param fps (float)
--- @return (table)
-function Musician.Song:UnpackNote(str, fps)
-	-- KTTD : key, time, duration
-	local key = Musician.Utils.UnpackNumber(string.sub(str, 1, 1))
-	local time = Musician.Utils.UnpackTime(string.sub(str, 2, 3), fps)
-	local duration = Musician.Utils.UnpackTime(string.sub(str, 4, 4), Musician.DURATION_FPS)
-
-	return {
-		[NOTE.ON] = true,
-		[NOTE.KEY] = key,
-		[NOTE.TIME] = time,
-		[NOTE.DURATION] = duration
-	}
-end
-
---- Unpack a track from string
--- @param str (string)
--- @param fps (float)
--- @return (table)
-function Musician.Song:UnpackTrack(str, fps)
-	local track = {}
-
-	-- TINN : Track Id, instrument ID, Number of notes
-	track.id = Musician.Utils.UnpackNumber(string.sub(str, 1, 1))
-	track.midiInstrument = Musician.Utils.UnpackNumber(string.sub(str, 2, 2))
-	track.instrument = track.midiInstrument
-
-	local noteCount  = Musician.Utils.UnpackNumber(string.sub(str, 3, 4))
-
-	track.notes = {}
-	local noteId
-	for noteId = 0, noteCount - 1 do
-		local cursor = 5 + noteId * 4 -- Notes are 4-byte long
-		table.insert(track.notes, self:UnpackNote(string.sub(str, cursor, cursor + 3), fps))
-	end
-
-	-- Current playing note index
-	track.playIndex = 1
-
-	-- Track is muted
-	track.muted = (noteCount == 0)
-
-	-- Track is solo
-	track.solo = false
-
-	-- Track transposition
-	track.transpose = 0
-
-	-- Notes currently playing
-	track.notesOn = {}
-
-	-- Polyphony
-	track.polyphony = 0
-
-	-- Channel number
-	track.channel = nil
-
-	-- Track name
-	track.name = nil
-
-	return track
-end
-
---- Unpack song metadata from string
--- @param str (string)
-function Musician.Song:UnpackMetadata(str)
-	local cursor = 1
-
-	while cursor <= string.len(str) do
-
-		-- TRN: Track names
-		if string.sub(str, cursor, cursor + 2) == 'TRN' then
-			cursor = cursor + 3
-			local track
-
-			for	_, track in pairs(self.tracks) do
-				local length = Musician.Utils.UnpackNumber(string.sub(str, cursor, cursor))
-				if length > 0 then
-					track.name = string.sub(str, cursor + 1, cursor + length)
-				end
-				cursor = cursor + length + 1
-			end
-
-		-- TRC: Track channels
-		elseif string.sub(str, cursor, cursor + 2) == 'TRC' then
-			cursor = cursor + 3
-			local track
-			for	_, track in pairs(self.tracks) do
-				track.channel = Musician.Utils.UnpackNumber(string.sub(str, cursor, cursor))
-				cursor = cursor + 1
-			end
-
-		-- DRK: Drum Kits
-		elseif string.sub(str, cursor, cursor + 2) == 'DRK' then
-			cursor = cursor + 3
-			local track
-			for	_, track in pairs(self.tracks) do
-				if track.instrument >= 128 then
-					track.instrument = 128 + Musician.Utils.UnpackNumber(string.sub(str, cursor, cursor))
-					cursor = cursor + 1
-				end
-			end
-
-			-- Unsupported
-		else
-			return
-
-		end
-	end
-end
-
 --- Unpack a song from string
 -- @param str (string)
 -- @param crop (boolean)
 function Musician.Song:Unpack(str, crop)
-	local cursor = 1
 
-	-- Check format
-	if string.sub(str, 1, string.len(Musician.FILE_HEADER)) ~= Musician.FILE_HEADER then
+	local cursor = 1
+	local advanceCursor = function(bytes)
+		cursor = cursor + bytes
+		if cursor > #str + 1 then
+			error(Musician.Msg.INVALID_MUSIC_CODE)
+		end
+	end
+
+	local MAX_NOTE_TIME = 65535 / Musician.NOTE_TIME_FPS -- 16-bit
+	local noteCount = 0
+
+	-- Header (4)
+	if string.sub(str, cursor, cursor + 3) ~= Musician.FILE_HEADER then
 		error(Musician.Msg.INVALID_MUSIC_CODE)
 	end
-	cursor = cursor + string.len(Musician.FILE_HEADER)
+	advanceCursor(4)
 
-	-- Song name length (1), song name
-	local songNameLength = Musician.Utils.UnpackNumber(string.sub(str, cursor, cursor))
-	cursor = cursor + 1
-	self.name = string.sub(str, cursor, cursor + songNameLength - 1)
-	cursor = cursor + songNameLength
+	-- Duration (3)
+	self.duration = Musician.Utils.UnpackNumber(string.sub(str, cursor, cursor + 2))
+	self.cropFrom = 0
+	self.cropTo = self.duration
+	advanceCursor(3)
 
-	-- song duration (2)
-	local duration = Musician.Utils.UnpackNumber(string.sub(str, cursor, cursor + 1))
-	local fps = 65535 / duration -- 2^16
-	self.duration = duration
-	if crop then
-		self.cropTo = 0
-		self.cropFrom = self.duration
-	else
-		self.cropTo = self.duration
-		self.cropFrom = 0
-	end
-
-	cursor = cursor + 2
-
-	-- number of tracks (1)
+	-- Number of tracks (1)
 	local trackCount = Musician.Utils.UnpackNumber(string.sub(str, cursor, cursor))
-	cursor = cursor + 1
+	advanceCursor(1)
 
-	-- tracks
-	local trackId
+	-- Track information: instrument (1), channel (1), number of notes (2)
+	local track, trackIndex
 	self.tracks = {}
-	for trackId = 0, trackCount - 1 do
-		local trackLength = Musician.Utils.UnpackNumber(string.sub(str, cursor + 2, cursor + 3))
-		local trackEnd = cursor + 3 + trackLength * 4
-		local track = self:UnpackTrack(string.sub(str, cursor, trackEnd), fps)
-		track.index = trackId + 1
+	for trackIndex = 1, trackCount do
+		local track = {}
+
+		-- Instrument (1)
+		track.instrument = Musician.Utils.UnpackNumber(string.sub(str, cursor, cursor))
+		track.midiInstrument = min(128, track.instrument) -- Handle the metal drumkit that has Musician ID 129 but MIDI ID 128
+		advanceCursor(1)
+
+		-- Channel (1)
+		track.channel = Musician.Utils.UnpackNumber(string.sub(str, cursor, cursor))
+		advanceCursor(1)
+
+		-- Note count (2)
+		track.noteCount = Musician.Utils.UnpackNumber(string.sub(str, cursor, cursor + 1))
+		noteCount = noteCount + track.noteCount
+		advanceCursor(2)
+
+		-- Track index
+		track.index = trackIndex
+		
+		-- Track notes
+		track.notes = {}
+
+		-- Current playing note index
+		track.playIndex = 1
+
+		-- Track is muted
+		track.muted = (track.noteCount == 0)
+
+		-- Track is solo
+		track.solo = false
+
+		-- Track transposition
+		track.transpose = 0
+
+		-- Notes currently playing
+		track.notesOn = {}
+
+		-- Polyphony
+		track.polyphony = 0
+
+		-- Track name
+		track.name = nil
+		
 		table.insert(self.tracks, track)
-		if track.notes[NOTE.KEY] ~= nil and crop then
-			local noteCount = #track.notes
-			self.cropFrom = min(self.cropFrom, track.notes[1][NOTE.TIME])
-			self.cropTo = max(self.cropTo, track.notes[noteCount][NOTE.TIME] + (track.notes[noteCount][NOTE.DURATION] or 0))
-		end
-		cursor = trackEnd + 1
 	end
 
-	-- metadata
-	self:UnpackMetadata(string.sub(str, cursor))
+	-- Note information: key (1), time (2), duration (1)
+	for trackIndex, track in pairs(self.tracks) do
 
-	self.cursor = self.cropFrom
+		local offset = 0
+		local noteId
+		for noteId = 1, track.noteCount do
+
+			-- Key (1)
+			local key = Musician.Utils.UnpackNumber(string.sub(str, cursor, cursor))
+			advanceCursor(1)
+
+			-- This is a spacer (key 0)
+			if key == 0 then
+				offset = offset + MAX_NOTE_TIME
+				-- Note on with duration
+			else
+				-- Time (2)
+				--local time = lastNoteTime + Musician.Utils.UnpackTime(string.sub(str, cursor, cursor + 1), Musician.NOTE_TIME_FPS)
+				local time = offset + Musician.Utils.UnpackTime(string.sub(str, cursor, cursor + 1), Musician.NOTE_TIME_FPS)
+				advanceCursor(2)
+
+				-- Duration (1)
+				local duration = Musician.Utils.UnpackTime(string.sub(str, cursor, cursor), Musician.NOTE_DURATION_FPS)
+				advanceCursor(1)
+				
+				-- Insert note
+				table.insert(track.notes, {
+					[NOTE.ON] = true,
+					[NOTE.KEY] = key,
+					[NOTE.TIME] = time,
+					[NOTE.DURATION] = duration
+				})
+			end
+
+			track.noteCount = nil -- We don't need this information anymore
+		end
+	end	
+
+	-- Song title (2) + (title length in bytes)
+	local songTitleLength = Musician.Utils.UnpackNumber(string.sub(str, cursor, cursor + 1))
+	advanceCursor(2)
+	self.name = string.sub(str, cursor, cursor + songTitleLength - 1)
+	advanceCursor(songTitleLength)
+
+	-- Track names (2) + (title length in bytes)
+	for trackIndex, track in pairs(self.tracks) do
+		local trackNameLength = Musician.Utils.UnpackNumber(string.sub(str, cursor, cursor + 1))
+		advanceCursor(2)
+		track.name = string.sub(str, cursor, cursor + trackNameLength - 1)
+		advanceCursor(trackNameLength)
+	end
+
+	-- Crop song
+	if crop then
+		self.cropFrom = self.duration
+		self.cropTo = 0
+		for trackIndex, track in pairs(self.tracks) do
+			if table.getn(track.notes) > 0 then
+				self.cropFrom = min(self.cropFrom, track.notes[1][NOTE.TIME])
+				self.cropTo = max(self.cropTo, track.notes[#track.notes][NOTE.TIME] + track.notes[#track.notes][NOTE.DURATION])
+			end
+		end
+	end
 end
 
 --- Clone song
@@ -687,8 +661,9 @@ function Musician.Song:AppendChunk(chunk, songId, chunkDuration, playtimeLeft, p
 
 		local track = self.tracks[trackData[CHUNK.TRACK_ID]]
 
+		-- Track instrument
 		track.instrument = trackData[CHUNK.INSTRUMENT]
-		track.midiInstrument = trackData[CHUNK.INSTRUMENT]
+		track.midiInstrument = min(128, track.instrument) -- Handle the metal drumkit that has Musician ID 129 but MIDI ID 128
 
 		-- The chunk has been received too late, after the current cursor position
 		if self.cursor >= self.chunkTime then
@@ -822,24 +797,34 @@ function Musician.Song:PackChunk(chunk)
 		packedTrackInfo = packedTrackInfo .. Musician.Utils.PackNumber(#trackData[CHUNK.NOTES], 2)
 	end
 
-	-- Note information: time (1), on/off + key(1), [duration (1)]
+	-- Note information: key on/off or spacer (1), time (1), [duration (1)]
 	local packedNoteData = ''
 	local note
 	for _, trackData in pairs(chunk) do
 		for _, note in pairs(trackData[CHUNK.NOTES]) do
-			-- Consider a whole chunk to last 255
-			local packedTime = Musician.Utils.PackTime(note[NOTE.TIME], 1, Musician.CHUNK_FPS)
 
-			-- First bit: note on, the rest: key (C0 is 0)
-			local packedNoteOnAndKey = Musician.Utils.PackNumber(bit.bor(note[NOTE.ON] and 0x80, bit.band(note[NOTE.KEY] - Musician.C0_INDEX, 0x7F)), 1)
+			-- Get note time relatively to previous note
+			local noteTime = note[NOTE.TIME]
 
-			-- Duration (MAX_NOTE_DURATION is 255)
-			local packedDuration = ""
-			if note[NOTE.ON] and mode == CHUNK_MODE_DURATION then
-				packedDuration = Musician.Utils.PackTime(min(note[NOTE.DURATION], Musician.MAX_NOTE_DURATION), 1, Musician.DURATION_FPS)
+			-- Insert spacers if note time exceeds the maximum
+			while noteTime > Musician.MAX_CHUNK_NOTE_TIME do
+				packedNoteData = packedNoteData .. Musician.Utils.PackNumber(255, 1)
+				noteTime = noteTime - Musician.MAX_CHUNK_NOTE_TIME
 			end
 
-			packedNoteData = packedNoteData .. packedTime .. packedNoteOnAndKey .. packedDuration
+			-- Note time (1 byte)
+			local packedTime = Musician.Utils.PackTime(noteTime, 1, Musician.NOTE_TIME_FPS)
+
+			-- First bit: note on, the rest: key (C0 is 0) (1 byte)
+			local packedKeyOnOff = Musician.Utils.PackNumber(bit.bor(note[NOTE.ON] and 0x80, bit.band(note[NOTE.KEY] - Musician.C0_INDEX, 0x7F)), 1)
+
+			-- Duration (1 byte, MAX_NOTE_DURATION is 255)
+			local packedDuration = ""
+			if note[NOTE.ON] and mode == CHUNK_MODE_DURATION then
+				packedDuration = Musician.Utils.PackTime(min(note[NOTE.DURATION], Musician.MAX_NOTE_DURATION), 1, Musician.NOTE_DURATION_FPS)
+			end
+
+			packedNoteData = packedNoteData .. packedKeyOnOff .. packedTime .. packedDuration
 		end
 	end
 
@@ -851,75 +836,118 @@ end
 -- @return (table), (number), (number), (number), (table) chunk, song ID, chunk duration, playtimeLeft, player position and GUID
 Musician.Song.UnpackChunk = function(str)
 
-	local packedChunkLength = string.len(str)
-	local chunk = {}
-	local cursor
-
-	-- Version (1)
-	local version = bit.band(Musician.Utils.UnpackNumber(string.sub(str, 1, 1)), 0x0f)
-	local mode = bit.band(Musician.Utils.UnpackNumber(string.sub(str, 1, 1)), 0xf0)
-
-	-- Invalid version
-	if version > CHUNK_VERSION then
-		return nil
+	local cursor = 1
+	local advanceCursor = function(bytes, isLastBit)
+		cursor = cursor + bytes
+		if cursor > #str + 1 then
+			error(Musician.Msg.INVALID_MUSIC_CODE)
+		end
 	end
 
-	-- Chunk duration (1)
-	local chunkDuration = Musician.Utils.UnpackNumber(string.sub(str, 2, 2)) / 10
+	local chunk, songId, chunkDuration, playtimeLeft, position
 
-	-- Song ID (1)
-	local songId = Musician.Utils.UnpackNumber(string.sub(str, 3, 3))
+	local success = pcall(function()
+		local packedChunkLength = string.len(str)
 
-	-- Playtime left (2)
-	local playtimeLeft = Musician.Utils.UnpackNumber(string.sub(str, 4, 5))
+		-- Version and mode (1)
+		local versionAndModeByte = Musician.Utils.UnpackNumber(string.sub(str, cursor, cursor))
+		local version = bit.band(versionAndModeByte, 0x0f)
+		local mode = bit.band(versionAndModeByte, 0xf0)
+		advanceCursor(1)
 
-	-- Player position (18)
-	local position = { Musician.Utils.UnpackPlayerPosition(string.sub(str, 6, 23)) }
+		-- Invalid version
+		if version > CHUNK_VERSION then
+			error(Musician.Msg.INVALID_MUSIC_CODE)
+		end
 
-	-- Number of tracks (1)
-	local trackCount = Musician.Utils.UnpackNumber(string.sub(str, 24, 24))
+		-- Chunk duration (1)
+		chunkDuration = Musician.Utils.UnpackNumber(string.sub(str, cursor, cursor)) / 10
+		advanceCursor(1)
 
-	-- Track information: trackId (1), instrumentId (1), note count (2)
-	cursor = 25
-	local t, trackData
-	for t = 1, trackCount do
-		table.insert(chunk, {
-			[CHUNK.TRACK_ID] = Musician.Utils.UnpackNumber(string.sub(str, cursor, cursor)),
-			[CHUNK.INSTRUMENT] = Musician.Utils.UnpackNumber(string.sub(str, cursor + 1, cursor + 1)),
-			[CHUNK.NOTE_COUNT] = Musician.Utils.UnpackNumber(string.sub(str, cursor + 2, cursor + 3)),
-			[CHUNK.NOTES] = {}
-		})
-		cursor = cursor + 4
-	end
+		-- Song ID (1)
+		songId = Musician.Utils.UnpackNumber(string.sub(str, cursor, cursor))
+		advanceCursor(1)
 
-	-- Note information: time (1), on/off + key(1), [duration (1)]
-	local n, note
-	for t, trackData in pairs(chunk) do
-		for n = 1, trackData[CHUNK.NOTE_COUNT] do
+		-- Playtime left (2)
+		playtimeLeft = Musician.Utils.UnpackNumber(string.sub(str, cursor, cursor + 1))
+		advanceCursor(2)
 
-			if cursor > packedChunkLength then
-				return nil
-			end
+		-- Player position (18)
+		position = { Musician.Utils.UnpackPlayerPosition(string.sub(str, cursor, cursor + 17)) }
+		advanceCursor(18)
 
-			local time = Musician.Utils.UnpackTime(string.sub(str, cursor, cursor), Musician.CHUNK_FPS)
-			local noteOn = bit.band(Musician.Utils.UnpackNumber(string.sub(str, cursor + 1, cursor + 1)), 0x80)
-			local key = bit.band(Musician.Utils.UnpackNumber(string.sub(str, cursor + 1, cursor + 1)), 0x7F) + Musician.C0_INDEX
-			local duration = nil
+		-- Number of tracks (1)
+		local trackCount = Musician.Utils.UnpackNumber(string.sub(str, cursor, cursor))
+		advanceCursor(1)
 
-			if noteOn and mode == CHUNK_MODE_DURATION then
-				duration = Musician.Utils.UnpackTime(string.sub(str, cursor + 2, cursor + 2), Musician.DURATION_FPS)
-				cursor = cursor + 3
-			else
-				cursor = cursor + 2
-			end
+		-- Track information: trackId (1), instrumentId (1), note count (2)
+		chunk = {}
+		local t, trackData
+		for t = 1, trackCount do
+			local trackId = Musician.Utils.UnpackNumber(string.sub(str, cursor, cursor))
+			advanceCursor(1)
 
-			table.insert(chunk[t][CHUNK.NOTES], {
-				[NOTE.ON] = noteOn,
-				[NOTE.KEY] = key,
-				[NOTE.TIME] = time,
-				[NOTE.DURATION] = duration
+			local instrument = Musician.Utils.UnpackNumber(string.sub(str, cursor, cursor))
+			advanceCursor(1)
+
+			local noteCount = Musician.Utils.UnpackNumber(string.sub(str, cursor, cursor + 1))
+			advanceCursor(2)
+
+			table.insert(chunk, {
+				[CHUNK.TRACK_ID] = trackId,
+				[CHUNK.INSTRUMENT] = instrument,
+				[CHUNK.NOTE_COUNT] = noteCount,
+				[CHUNK.NOTES] = {}
 			})
 		end
+
+		-- Note information: key on/off or spacer (1), time (1), [duration (1)]
+		local n, note
+		for t, trackData in pairs(chunk) do
+			for n = 1, trackData[CHUNK.NOTE_COUNT] do
+
+				-- Key, note on/off or spacer (1)
+				local offset = 0
+				local keyByte = Musician.Utils.UnpackNumber(string.sub(str, cursor, cursor))
+				advanceCursor(1)
+
+				-- Spacer bytes
+				while keyByte == 255 do
+					offset = offset + Musician.MAX_CHUNK_NOTE_TIME
+					keyByte = Musician.Utils.UnpackNumber(string.sub(str, cursor, cursor))
+					advanceCursor(1)
+				end
+
+				-- Note on
+				local noteOn = bit.band(keyByte, 0x80)
+
+				-- Key
+				local key = bit.band(keyByte, 0x7F) + Musician.C0_INDEX
+
+				-- Time relative to previous note
+				local time = Musician.Utils.UnpackTime(string.sub(str, cursor, cursor), Musician.NOTE_TIME_FPS) + offset
+				advanceCursor(1)
+
+				-- Note duration
+				local duration = nil
+				if noteOn and mode == CHUNK_MODE_DURATION then
+					duration = Musician.Utils.UnpackTime(string.sub(str, cursor, cursor), Musician.NOTE_DURATION_FPS)
+					advanceCursor(1)
+				end
+
+				table.insert(chunk[t][CHUNK.NOTES], {
+					[NOTE.ON] = noteOn,
+					[NOTE.KEY] = key,
+					[NOTE.TIME] = time,
+					[NOTE.DURATION] = duration
+				})
+
+			end
+		end
+	end)
+
+	if not(success) then
+		return nil
 	end
 
 	return chunk, songId, chunkDuration, playtimeLeft, position
