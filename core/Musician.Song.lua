@@ -642,12 +642,18 @@ function Musician.Song:ImportStep(elapsed)
 
 			local track = self.tracks[import.trackIndex]
 
+			-- Ignore empty tracks
+			while track.noteCount == 0 do
+				import.trackIndex = import.trackIndex + 1
+				track = self.tracks[import.trackIndex]
+			end
+
 			-- Key (1)
 			local key = Musician.Utils.UnpackNumber(string.sub(import.data, import.cursor, import.cursor))
 			advanceCursor(1)
 
-			-- This is a spacer (key 0)
-			if key == 0 then
+			-- This is a spacer (key 0xFF)
+			if key == 0xFF then
 				import.trackOffset = import.trackOffset + MAX_NOTE_TIME
 			else
 				-- Note on with duration

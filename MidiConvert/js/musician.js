@@ -109,14 +109,14 @@ Musician.PackSong = function(song) {
 			// Insert note spacers if needed
 			var noteSpacer = '';
 			while (noteTime > Musician.MAX_NOTE_TIME) {
-				noteSpacer += Musician.PackNumber(0, 1); // 0 char
+				noteSpacer += Musician.PackNumber(0xFF, 1); // 0xFF char
 				noteTime -= Musician.MAX_NOTE_TIME;
 				offset += Musician.MAX_NOTE_TIME;
 			}
 
 			// Insert packed note: key (1), time (2), duration (1)
 			notes.push(
-				noteSpacer + 
+				noteSpacer +
 				Musician.PackNumber(noteKey, 1) +
 				Musician.PackTime(noteTime, 2, Musician.NOTE_TIME_FPS) +
 				Musician.PackTime(noteDuration, 1, Musician.NOTE_DURATION_FPS)
