@@ -119,7 +119,7 @@ end
 -- @return (number)
 function Musician.Preloader.GetFrameWaitingTime()
 	-- Consider using 25% of frame time for loading the sample to limit FPS drop
-	return 0.25 * (averageLoadingTime / 1000)
+	return 3 * (averageLoadingTime / 1000)
 end
 
 --- Main on update function, called on each frame
