@@ -83,9 +83,14 @@ end
 
 --- Stop a song playing by a player
 -- @param playerName (string)
-function Musician.StopPlayerSong(playerName)
+-- @param remove (boolean)
+function Musician.StopPlayerSong(playerName, remove)
 	if Musician.songs[playerName] then
 		Musician.songs[playerName]:Stop()
+		if remove then
+			Musician.songs[playerName] = nil
+			collectgarbage()
+		end
 	end
 end
 

@@ -263,8 +263,10 @@ function Musician.Song:Stop()
 		self.willPlayTimer:Cancel()
 		self.willPlayTimer = nil
 	end
+	if self.playing then
+		Musician.Comm:SendMessage(Musician.Events.SongStop, self)
+	end
 	self.playing = false
-	Musician.Comm:SendMessage(Musician.Events.SongStop, self)
 end
 
 --- Main on frame update function

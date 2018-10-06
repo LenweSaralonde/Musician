@@ -71,6 +71,7 @@ MusicianFrame.LoadSource = function()
 
 		Musician.sourceSong = sourceSong
 		Musician.TrackEditor.OnLoad()
+		collectgarbage()
 	end
 
 	Musician.Comm:SendMessage(Musician.Events.RefreshFrame)

@@ -85,6 +85,7 @@ function Musician.Comm.PlaySong()
 	end
 
 	Musician.streamingSong = Musician.sourceSong:Clone()
+	collectgarbage()
 	Musician.streamingSong:Stream()
 	return true
 end
@@ -120,6 +121,7 @@ Musician.Comm:RegisterComm(Musician.Comm.event.stream, function(prefix, message,
 		if Musician.songs[sender] ~= nil then
 			Musician.songs[sender]:Stop()
 			Musician.songs[sender] = nil
+			collectgarbage()
 		end
 		return
 	end
@@ -130,6 +132,7 @@ Musician.Comm:RegisterComm(Musician.Comm.event.stream, function(prefix, message,
 	elseif not(Musician.songs[sender].isStreamed) or (Musician.songs[sender].songId ~= songId) then
 		Musician.songs[sender]:Stop()
 		Musician.songs[sender] = Musician.Song.create()
+		collectgarbage()
 	end
 
 	-- Append chunk data
@@ -148,6 +151,8 @@ function Musician.Comm.StopSong()
 	if not(Musician.Comm.isReady()) then return false end
 	if Musician.streamingSong and Musician.streamingSong.streaming then
 		Musician.streamingSong:StopStreaming()
+		Musician.streamingSong = nil
+		collectgarbage()
 	end	
 	Musician.Comm.isStopSent = true
 	Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
@@ -159,7 +164,7 @@ end
 --
 Musician.Comm:RegisterComm(Musician.Comm.event.stop, function(prefix, message, distribution, sender)
 	sender = Musician.Utils.NormalizePlayerName(sender)
-	Musician.StopPlayerSong(sender)
+	Musician.StopPlayerSong(sender, true)
 	if sender == Musician.Utils.NormalizePlayerName(UnitName("player")) then
 		Musician.Comm.isStopSent = false
 		Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
