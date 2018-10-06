@@ -249,7 +249,7 @@
 			reader.onload = function(e){
 				try {
 					var song = MidiConvert.parse(e.target.result);
-					document.querySelector("#ResultsText").value = base64(Musician.PackSong(song));
+					document.querySelector("#ResultsText").value = base64(Musician.PackSong(song, file.name));
 					document.querySelector("#Result").className = "visible";
 					document.querySelector("#CopyButton").className = "visible";
 				} catch(e) {

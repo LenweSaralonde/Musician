@@ -53,7 +53,13 @@ Musician.EncodeUTF8 = function(str) {
 	return unescape(encodeURIComponent(str));
 }
 
-Musician.PackSong = function(song) {
+Musician.FilenameToTitle = function(fileName) {
+	return fileName.replace(/[_]+/g, ' ').replace(/\.[a-zA-Z0-9]+$/, '').replace(/^(.)|\s+(.)/g, function ($1) {
+		return $1.toUpperCase()
+	});
+}
+
+Musician.PackSong = function(song, fileName) {
 
 	var packedSong = '';
 
@@ -146,7 +152,7 @@ Musician.PackSong = function(song) {
 	});
 
 	// Song title (2) + (title length in bytes)
-	packedSong += Musician.PackString(song.header.name || '');
+	packedSong += Musician.PackString(song.header.name || Musician.FilenameToTitle(fileName) || '');
 
 	// Track names (2) + (title length in bytes)
 	tracks.forEach(function(track) {
