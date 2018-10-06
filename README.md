@@ -25,14 +25,13 @@ To play a song:
 3. Copy the generated music code by clicking the **Copy** button
 4. Left click on the minimap button (or type `/music`) to open the main window
 5. Click **Clear** then paste the music code in the edit window (*Ctrl+V* or *CMD+V* on Mac)
-6. Click **Load** then wait for the song to load (may take ~1 minute)
-7. Click **Play**
+6. Click **Play**
 
 Song editor
 -----------
 When a song is imported (pasted) from the converter, it can be opened in the song editor by pressing the **Edit** button. You can preview the song using the player controls and perform some basic modifications prior to playing it for other players without requiring an external sequencer:
 
-* Set start and end points, to use a part of the song (and reduce loading time)
+* Set start and end points, to use a part of the song
 * Mute and solo tracks
 * Change track instruments
 * Transpose tracks
@@ -41,12 +40,12 @@ The song editor also shows some information about the tracks (MIDI instrument, s
 
 Tips
 ----
-* You can preview the song at any moment prior to playing it for other players without loading time by clicking the **Preview** button or using the song editor. If another song is playing nearby, it will be muted for you only.
+* You can preview the song at any moment prior to playing it for other players by clicking the **Preview** button or using the song editor. If another song is playing nearby, it will be muted for you only.
 * If another player has Musician, it will be shown in his/her tooltip. Just hover the other players with your mouse cursor to see who can hear you !
 * You can add lyrics by combining Musician with the [StoryTeller addon](https://www.lenwe.info/story-teller) !
-* Load the next song while the current one is playing to reduce waiting time between songs.
+* Import the next song while the current one is playing to reduce waiting time between songs.
 * The radius for hearing the music is approximately 40 meters.
-* Play songs that are relevant with your "band" composition. It's nonsense to play orchestral music with only two bards or heavy metal using only traditional instruments ! 😃 However you can still roleplay as if your character owns a kind of gnomish *Music-o-Matic* machine that is capable of reproducing a whole band.
+* Play songs that are relevant with your "band" composition. It's nonsense to play orchestral music with only two bards ! 😃 However you can still roleplay as if your character owns a kind of gnomish *Music-o-Matic* machine that is capable of reproducing a whole band.
 
 Compose your own music
 ----------------------
@@ -68,7 +67,7 @@ The 16 instruments available are:
 * Trombone (57)
 * Trumpet (56)
 
-And since version *1.3* :
+And also:
 
 * Distorsion guitar (29)
 * Clean Guitar (27)
@@ -76,7 +75,7 @@ And since version *1.3* :
 
 The other instruments are mapped to the closest-sounding instrument among the 16 available (violin → fiddle, piano → dulcimer, guitar → lute etc.).
 
-The drum kits are replaced by traditional percussions such as a bodhrán (frame drum), a tambourine and a shaker. Since version *1.3*, a standard drum kit is also available for heavy metal songs.
+The drum kits are replaced by traditional percussions such as a bodhrán (frame drum), a tambourine and a shaker. A standard drum kit is also available for heavy metal songs.
 
 Check the mappings in [Musician.MidiMapping.lua](https://github.com/LenweSaralonde/Musician/blob/master/constants/Musician.MidiMapping.lua) for details.
 
@@ -89,7 +88,5 @@ This addon is still experimental. Here is a summary of the problems you may enco
 * There is no support for velocity and modulation. This is actually not possible with the WoW UI.
 * Music playing relies on the refresh rate of the screen so stuttering may occur on slower computers. Adjust yout settings to maintain a framerate above 30 FPS for good results.
 * The polyphony is limited, some notes may drop if there are too many playing at the same time.
+* Songs having an overly high note rate may stutter.
 * Clipping may occur for some songs if you have all your volume settings maxed out. Just reduce in-game volume to avoid this.
-* Loading may take a while for large files (about 1 minute).
-* Play/Stop button may take some time to respond while loading a song.
-* Avoid moving while loading a song since the position of your character cannot be updated.
