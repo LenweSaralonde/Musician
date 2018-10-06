@@ -147,7 +147,7 @@ MusicianFrame.RefreshLoadingProgressBar = function(event, song, progression)
 		MusicianFrameTextBackgroundLoadingProgressBar:Show()
 
 		if progression ~= nil then
-			MusicianFrameTextBackgroundLoadingProgressBar:SetWidth(loadingProgressbarWidth * progression)
+			MusicianFrameTextBackgroundLoadingProgressBar:SetWidth(max(1, loadingProgressbarWidth * progression))
 		end
 	end
 end
@@ -166,7 +166,7 @@ MusicianFrame.RefreshPlayingProgressBar = function(event, song)
 	local progression = song:GetProgression()
 	if progression ~= nil then
 		progressBar:Show()
-		progressBar:SetWidth(buttonProgressbarWidth * progression)
+		progressBar:SetWidth(max(1, buttonProgressbarWidth * progression))
 	else
 		progressBar:Hide()
 	end
