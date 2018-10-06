@@ -838,7 +838,7 @@ function Musician.Song:AppendChunk(chunk, mode, songId, chunkDuration, playtimeL
 		track.midiInstrument = min(128, track.instrument) -- Handle the metal drumkit that has Musician ID 129 but MIDI ID 128
 
 		-- The chunk has been received too late, after the current cursor position
-		if self.cursor >= self.chunkTime then
+		if self.cursor > self.chunkTime then
 			-- Advance chunkTime accordingly to avoid note drops
 			self.chunkTime = self.cursor + self.chunkDuration / 2
 		end
