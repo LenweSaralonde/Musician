@@ -26,8 +26,8 @@ local NOTE = Musician.Song.Indexes.NOTE
 local NOTEON = Musician.Song.Indexes.NOTEON
 local CHUNK = Musician.Song.Indexes.CHUNK
 
-local CHUNK_MODE_DURATION = 0x10 -- Duration are set in chunk notes
-local CHUNK_MODE_LIVE = 0x20 -- No duration in chunk notes
+local SONG_MODE_DURATION = 0x10 -- Duration are set in chunk notes
+local SONG_MODE_LIVE = 0x20 -- No duration in chunk notes
 local CHUNK_VERSION = 0x01 -- Max: 0x0F (15)
 
 --- Constructor
@@ -63,6 +63,9 @@ function Musician.Song.create(packedSongData, crop)
 
 	-- @field chunkDuration (number) Duration of a streaming chunk, in seconds
 	self.chunkDuration = Musician.CHUNK_DURATION
+
+	-- @field mode (number) Song mode
+	self.mode = SONG_MODE_DURATION
 
 	-- @field cropFrom (number) Play song from this position
 	self.cropFrom = 0
@@ -264,9 +267,9 @@ function Musician.Song:Stop()
 		self.willPlayTimer = nil
 	end
 	if self.playing then
+		self.playing = false
 		Musician.Comm:SendMessage(Musician.Events.SongStop, self)
 	end
-	self.playing = false
 end
 
 --- Main on frame update function
@@ -626,17 +629,19 @@ end
 
 --- Append chunk data to current song
 -- @param chunk (table)
+-- @param mode (number)
 -- @param songId (number)
 -- @param chunkDuration (number)
 -- @param playtimeLeft (number)
 -- @param player (string)
-function Musician.Song:AppendChunk(chunk, songId, chunkDuration, playtimeLeft, player)
+function Musician.Song:AppendChunk(chunk, mode, songId, chunkDuration, playtimeLeft, player)
 
 	if self.chunkTime == nil then
 		self.chunkTime = 0
 	end
 
 	self.isStreamed = true
+	self.mode = mode
 	self.songId = songId
 	self.player = player
 	self.chunkDuration = chunkDuration
@@ -678,7 +683,7 @@ function Musician.Song:AppendChunk(chunk, songId, chunkDuration, playtimeLeft, p
 		for _, note in pairs(trackData[CHUNK.NOTES]) do
 			note[NOTE.TIME] = note[NOTE.TIME] + noteOffset
 			noteOffset = note[NOTE.TIME]
-			self.cropTo = max(self.cropTo, note[NOTE.TIME] + note[NOTE.DURATION])
+			self.cropTo = max(self.cropTo, note[NOTE.TIME] + (note[NOTE.DURATION] or 0))
 			table.insert(track.notes, note)
 		end
 	end
@@ -769,10 +774,8 @@ end
 -- @return (string)
 function Musician.Song:PackChunk(chunk)
 
-	local mode = CHUNK_MODE_DURATION
-
 	-- Chunk version and mode (1)
-	local packedVersionAndMode = Musician.Utils.PackNumber(bit.bor(mode, CHUNK_VERSION), 1)
+	local packedVersionAndMode = Musician.Utils.PackNumber(bit.bor(self.mode, CHUNK_VERSION), 1)
 
 	-- Chunk duration (1)
 	local packedChunkDuration = Musician.Utils.PackNumber(self.chunkDuration * 10, 1)
@@ -818,11 +821,11 @@ function Musician.Song:PackChunk(chunk)
 			local packedTime = Musician.Utils.PackTime(noteTime, 1, Musician.NOTE_TIME_FPS)
 
 			-- First bit: note on, the rest: key (C0 is 0) (1 byte)
-			local packedKeyOnOff = Musician.Utils.PackNumber(bit.bor(note[NOTE.ON] and 0x80, bit.band(note[NOTE.KEY] - Musician.C0_INDEX, 0x7F)), 1)
+			local packedKeyOnOff = Musician.Utils.PackNumber(bit.bor(note[NOTE.ON] and 0x80 or 0x00, bit.band(note[NOTE.KEY] - Musician.C0_INDEX, 0x7F)), 1)
 
 			-- Duration (1 byte, MAX_NOTE_DURATION is 255)
 			local packedDuration = ""
-			if note[NOTE.ON] and mode == CHUNK_MODE_DURATION then
+			if note[NOTE.ON] and self.mode == SONG_MODE_DURATION then
 				packedDuration = Musician.Utils.PackTime(min(note[NOTE.DURATION], Musician.MAX_NOTE_DURATION), 1, Musician.NOTE_DURATION_FPS)
 			end
 
@@ -835,7 +838,7 @@ end
 
 --- Unpack a song chunk
 -- @param chunk (table)
--- @return (table), (number), (number), (number), (table) chunk, song ID, chunk duration, playtimeLeft, player position and GUID
+-- @return (table), (number), (number), (number), (number), (table) chunk, mode, song ID, chunk duration, playtimeLeft, player position and GUID
 Musician.Song.UnpackChunk = function(str)
 
 	local cursor = 1
@@ -846,7 +849,7 @@ Musician.Song.UnpackChunk = function(str)
 		end
 	end
 
-	local chunk, songId, chunkDuration, playtimeLeft, position
+	local chunk, mode, songId, chunkDuration, playtimeLeft, position
 
 	local success = pcall(function()
 		local packedChunkLength = string.len(str)
@@ -854,7 +857,7 @@ Musician.Song.UnpackChunk = function(str)
 		-- Version and mode (1)
 		local versionAndModeByte = Musician.Utils.UnpackNumber(string.sub(str, cursor, cursor))
 		local version = bit.band(versionAndModeByte, 0x0f)
-		local mode = bit.band(versionAndModeByte, 0xf0)
+		mode = bit.band(versionAndModeByte, 0xf0)
 		advanceCursor(1)
 
 		-- Invalid version
@@ -921,7 +924,7 @@ Musician.Song.UnpackChunk = function(str)
 				end
 
 				-- Note on
-				local noteOn = bit.band(keyByte, 0x80)
+				local noteOn = bit.band(keyByte, 0x80) == 0x80
 
 				-- Key
 				local key = bit.band(keyByte, 0x7F) + Musician.C0_INDEX
@@ -932,7 +935,7 @@ Musician.Song.UnpackChunk = function(str)
 
 				-- Note duration
 				local duration = nil
-				if noteOn and mode == CHUNK_MODE_DURATION then
+				if noteOn and mode == SONG_MODE_DURATION then
 					duration = Musician.Utils.UnpackTime(string.sub(str, cursor, cursor), Musician.NOTE_DURATION_FPS)
 					advanceCursor(1)
 				end
@@ -952,6 +955,40 @@ Musician.Song.UnpackChunk = function(str)
 		return nil
 	end
 
-	return chunk, songId, chunkDuration, playtimeLeft, position
+	return chunk, mode, songId, chunkDuration, playtimeLeft, position
 end
 
+--- Convert song to live mode
+-- For testing only
+function Musician.Song:ConvertToLive()
+
+	-- Already in live mode
+	if self.mode == SONG_MODE_LIVE then
+		return
+	end
+
+	local track
+	for _, track in pairs(self.tracks) do
+		local note
+		for _, note in pairs(track.notes) do
+			if note[NOTE.DURATION] then
+				table.insert(track.notes, {
+					[NOTE.ON] = false,
+					[NOTE.KEY] = note[NOTE.KEY],
+					[NOTE.TIME] = note[NOTE.TIME] + note[NOTE.DURATION] - 1/30
+				})
+				note[NOTE.DURATION] = nil
+			end
+		end
+
+		table.sort(track.notes, function(a, b)
+			if a[NOTE.TIME] == b[NOTE.TIME] then
+				return (a[NOTE.ON] and 1 or 0) < (b[NOTE.ON] and 1 or 0)
+			end
+			return a[NOTE.TIME] < b[NOTE.TIME]
+		end)
+	end
+
+	self.mode = SONG_MODE_LIVE
+	self.chunkDuration = 1
+end

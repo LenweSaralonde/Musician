@@ -80,7 +80,7 @@ end
 
 Musician.TrackEditor.UpdateButtons = function(event, song)
 	if song == Musician.sourceSong then
-		if Musician.sourceSong:IsPlaying() then
+		if song:IsPlaying() then
 			MusicianTrackEditorPlayButton.tooltipText = Musician.Msg.PAUSE
 			MusicianTrackEditorPlayButton:SetText(Musician.TrackEditor.PAUSE_ICON)
 		else
@@ -293,6 +293,11 @@ Musician.TrackEditor.SetCropFrom = function(position)
 	if position < Musician.sourceSong.cropTo then
 		Musician.sourceSong.cropFrom = position
 	end
+
+	if Musician.sourceSong.cursor < position then
+		Musician.sourceSong:Seek(position)
+	end
+
 	Musician.TrackEditor.UpdateSlider()
 	Musician.TrackEditor.UpdateBounds()
 end
@@ -301,6 +306,11 @@ Musician.TrackEditor.SetCropTo = function(position)
 	if position > Musician.sourceSong.cropFrom then
 		Musician.sourceSong.cropTo = position
 	end
+
+	if Musician.sourceSong.cursor > position then
+		Musician.sourceSong:Seek(position)
+	end
+
 	Musician.TrackEditor.UpdateSlider()
 	Musician.TrackEditor.UpdateBounds()
 end
