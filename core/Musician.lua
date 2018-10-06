@@ -105,6 +105,7 @@ function Musician.OnSongPlayed(event, song)
 	if Musician.Utils.PlayerIsMyself(playerName) then
 		Musician.songIsPlaying = true
 		Musician.Comm.isPlaySent = false
+		SendChatMessage(Musician.Utils.GetPromoEmote(), "EMOTE")
 	end
 
 	Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
