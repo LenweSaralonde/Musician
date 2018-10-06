@@ -949,7 +949,7 @@ function Musician.Song:PackChunk(chunk)
 	local packedSongId = Musician.Utils.PackNumber(self:GetId() % 255, 1)
 
 	-- Playtime left (2)
-	local playtimeLeft = ceil(self.cropTo - self.streamPosition + self.chunkDuration)
+	local playtimeLeft = self.chunkDuration * ceil((self.cropTo - self.streamPosition + self.chunkDuration) / self.chunkDuration) -- Multiple of chunk duration
 	local packedPlaytimeLeft = Musician.Utils.PackNumber(playtimeLeft, 2)
 
 	-- Player position (18)
