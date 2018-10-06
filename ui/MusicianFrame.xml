@@ -89,6 +89,17 @@
 						MusicianFrame.Test()
 					</OnClick>
 				</Scripts>
+				<Layers>
+					<Layer level="FOREGROUND">
+						<Texture name="$parentProgressBar" alphaMode="ADD">
+							<Size x="90" y="1"/>
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" x="5" y="3" relativePoint="BOTTOMLEFT" />
+							</Anchors>
+							<Color a="1" r="1" g="0.82" b="0" />
+						</Texture>
+					</Layer>
+				</Layers>
 			</Button>
 
 			<Button name="$parentPlayButton" inherits="UIPanelButtonTemplate">
@@ -101,6 +112,17 @@
 						MusicianFrame.Play()
 					</OnClick>
 				</Scripts>
+				<Layers>
+					<Layer level="FOREGROUND">
+						<Texture name="$parentProgressBar" alphaMode="ADD">
+							<Size x="90" y="1"/>
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" x="5" y="3" relativePoint="BOTTOMLEFT" />
+							</Anchors>
+							<Color a="1" r="1" g="0.82" b="0" />
+						</Texture>
+					</Layer>
+				</Layers>
 			</Button>
 
 			<ScrollFrame name="$parentScrollFrame">
@@ -151,6 +173,17 @@
 						<AbsInset left="5" right="5" top="5" bottom="5"/>
 					</BackgroundInsets>
 				</Backdrop>
+				<Layers>
+					<Layer level="FOREGROUND">
+						<Texture name="$parentLoadingProgressBar" alphaMode="ADD">
+							<Size x="290" y="3"/>
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" x="5" y="3" relativePoint="BOTTOMLEFT" />
+							</Anchors>
+							<Color a="1" r="1" g="1" b="1" />
+						</Texture>
+					</Layer>
+				</Layers>
 				<Scripts>
 					<OnLoad>
 						self:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b);

@@ -3,20 +3,37 @@ Musician.Frame = LibStub("AceAddon-3.0"):NewAddon("Musician.Frame", "AceEvent-3.
 local sourceBuffer
 local i
 
+local loadingProgressbarWidth
+local buttonProgressbarWidth
+
 MusicianFrame.Init = function()
 	MusicianFrame:SetClampedToScreen(true)
 	MusicianFrame.Refresh()
+
 	Musician.Frame:RegisterMessage(Musician.Events.RefreshFrame, MusicianFrame.Refresh)
+	Musician.Frame:RegisterMessage(Musician.Events.SongImportProgress, MusicianFrame.RefreshLoadingProgressBar)
+	Musician.Frame:RegisterMessage(Musician.Events.SongImportComplete, MusicianFrame.RefreshLoadingProgressBar)
+	Musician.Frame:RegisterMessage(Musician.Events.SongPlay, MusicianFrame.RefreshPlayingProgressBar)
+	Musician.Frame:RegisterMessage(Musician.Events.SongStop, MusicianFrame.RefreshPlayingProgressBar)
+	Musician.Frame:RegisterMessage(Musician.Events.SongCursor, MusicianFrame.RefreshPlayingProgressBar)
+	
 	MusicianFrame.Clear()
 	MusicianFrameTitle:SetText(Musician.Msg.PLAY_A_SONG)
 	MusicianFrameClearButton:SetText(Musician.Msg.CLEAR)
 	MusicianFrameTrackEditorButton:SetText(Musician.Msg.EDIT)
+
 	MusicianFrameSource:SetMaxBytes(512)
 	MusicianFrameSource:SetScript("OnTextChanged", MusicianFrame.SourceChanged)
 	MusicianFrameSource:SetScript("OnChar", function(self, c)
 		sourceBuffer[i] = c
 		i = i + 1
 	end)
+
+	loadingProgressbarWidth = MusicianFrameTextBackgroundLoadingProgressBar:GetWidth()
+	buttonProgressbarWidth = MusicianFramePlayButtonProgressBar:GetWidth()
+	MusicianFrameTextBackgroundLoadingProgressBar:Hide()
+	MusicianFrameTestButtonProgressBar:Hide()
+	MusicianFramePlayButtonProgressBar:Hide()
 end
 
 MusicianFrame.Focus = function()
@@ -26,12 +43,15 @@ MusicianFrame.Focus = function()
 	end
 end
 
-MusicianFrame.Clear = function()
+MusicianFrame.Clear = function(noFocus)
 	sourceBuffer = {}
 	i = 1
 	MusicianFrameSource:SetText(MusicianFrame.GetDefaultText())
 	MusicianFrameSource:HighlightText(0)
-	MusicianFrameSource:SetFocus()
+
+	if not(noFocus) then
+		MusicianFrameSource:SetFocus()
+	end
 end
 
 MusicianFrame.TrackEditor = function()
@@ -116,5 +136,38 @@ MusicianFrame.Refresh = function()
 		MusicianFramePlayButton:SetText(Musician.Msg.STOP)
 	else
 		MusicianFramePlayButton:SetText(Musician.Msg.PLAY)
+	end
+end
+
+MusicianFrame.RefreshLoadingProgressBar = function(event, song, progression)
+	if not(song.importing) then
+		MusicianFrameTextBackgroundLoadingProgressBar:Hide()
+		MusicianFrame.Clear(true)
+	else
+		MusicianFrameTextBackgroundLoadingProgressBar:Show()
+
+		if progression ~= nil then
+			MusicianFrameTextBackgroundLoadingProgressBar:SetWidth(loadingProgressbarWidth * progression)
+		end
+	end
+end
+
+MusicianFrame.RefreshPlayingProgressBar = function(event, song)
+	local progressBar
+
+	if song == Musician.sourceSong then
+		progressBar = MusicianFrameTestButtonProgressBar
+	elseif song == Musician.songs[Musician.Utils.NormalizePlayerName(UnitName("player"))] then
+		progressBar = MusicianFramePlayButtonProgressBar
+	else
+		return
+	end
+
+	local progression = song:GetProgression()
+	if progression ~= nil then
+		progressBar:Show()
+		progressBar:SetWidth(buttonProgressbarWidth * progression)
+	else
+		progressBar:Hide()
 	end
 end

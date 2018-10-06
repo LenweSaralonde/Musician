@@ -107,6 +107,17 @@ function Musician.Song:IsPlaying()
 	return self.playing or self.willPlayTimer ~= nil
 end
 
+--- Returns playing progression
+-- @eturn (number)
+function Musician.Song:GetProgression()
+	if not(self.playing) then
+		return nil
+	end
+	local duration = self.cropTo - self.cropFrom
+	local position = self.cursor - self.cropFrom
+	return position / duration
+end
+
 --- Mute or unmute track
 -- @param track (object)
 -- @param isMuted (boolean)
