@@ -27,6 +27,7 @@ msg.INVALID_MUSIC_CODE = "Invalid music code."
 
 msg.PLAY_A_SONG = "Play a song"
 msg.PASTE_MUSIC_CODE = "Import your song in MIDI format at:\n{url}\n\nthen paste the music code here..."
+msg.SONG_IMPORTED = "Loaded song: {title}."
 
 msg.SONG_EDITOR = "Song editor"
 msg.MARKER_FROM = "From"

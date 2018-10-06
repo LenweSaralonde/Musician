@@ -16,6 +16,7 @@ MusicianFrame.Init = function()
 	Musician.Frame:RegisterMessage(Musician.Events.SongPlay, MusicianFrame.RefreshPlayingProgressBar)
 	Musician.Frame:RegisterMessage(Musician.Events.SongStop, MusicianFrame.RefreshPlayingProgressBar)
 	Musician.Frame:RegisterMessage(Musician.Events.SongCursor, MusicianFrame.RefreshPlayingProgressBar)
+	Musician.Frame:RegisterMessage(Musician.Events.SourceSongLoaded, function() MusicianFrame.Clear(true) end)
 	
 	MusicianFrame.Clear()
 	MusicianFrameTitle:SetText(Musician.Msg.PLAY_A_SONG)
@@ -46,6 +47,7 @@ end
 MusicianFrame.Clear = function(noFocus)
 	sourceBuffer = {}
 	i = 1
+
 	MusicianFrameSource:SetText(MusicianFrame.GetDefaultText())
 	MusicianFrameSource:HighlightText(0)
 
@@ -99,7 +101,13 @@ MusicianFrame.Play = function()
 end
 
 MusicianFrame.GetDefaultText = function()
-	return string.gsub(Musician.Msg.PASTE_MUSIC_CODE, "{url}", Musician.CONVERTER_URL)
+	local defaultText = string.gsub(Musician.Msg.PASTE_MUSIC_CODE, "{url}", Musician.CONVERTER_URL)
+	if Musician.sourceSong and Musician.sourceSong.name then
+		local importedText = string.gsub(Musician.Msg.SONG_IMPORTED, "{title}", Musician.sourceSong.name)
+		defaultText = importedText .. "\n\n" .. defaultText
+	end
+
+	return defaultText
 end
 
 MusicianFrame.Refresh = function()
