@@ -33,6 +33,8 @@ function Musician:OnInitialize()
 
 	Musician:RegisterMessage(Musician.Events.SongStop, Musician.OnSongStopped)
 	Musician:RegisterMessage(Musician.Events.SongPlay, Musician.OnSongPlayed)
+	Musician:RegisterMessage(Musician.Events.SongImportSucessful, Musician.OnSourceImportSuccessful)
+	Musician:RegisterMessage(Musician.Events.SongImportFailed, Musician.OnSourceImportFailed)
 
 	-- @var frame (Frame)
 	Musician.playerFrame = CreateFrame("Frame")
@@ -40,7 +42,7 @@ function Musician:OnInitialize()
 	Musician.playerFrame:EnableMouse(false)
 	Musician.playerFrame:SetMovable(false)
 
-	Musician.playerFrame:SetScript("OnUpdate", Musician.PlayerOnUpdate)
+	Musician.playerFrame:SetScript("OnUpdate", Musician.OnUpdate)
 
 	-- /musician command
 	SlashCmdList["MUSICIAN"] = function(cmd)
@@ -125,14 +127,56 @@ function Musician.OnSongStopped(event, song)
 	Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
 end
 
---- Music player on frame
+--- Import song from encoded string
+-- @param str (string)
+function Musician.ImportSource(str)
+	-- Remove previously importing song
+	if Musician.importingSong ~= nil then
+		Musician.importingSong.importing = false
+		Musician.importingSong = nil
+	end
+
+	Musician.importingSong = Musician.Song.create()
+	collectgarbage()
+	Musician.importingSong:Import(str, true)
+end
+
+--- Handle successful source import
+--
+function Musician.OnSourceImportSuccessful()
+	-- Stop previous source song being played
+	if Musician.sourceSong and  Musician.sourceSong:IsPlaying() then
+		Musician.sourceSong:Stop()
+	end
+
+	Musician.sourceSong = Musician.importingSong
+	Musician.importingSong = nil
+	collectgarbage()
+
+	Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
+	Musician.Comm:SendMessage(Musician.Events.SourceSongLoaded)
+end
+
+--- Handle failed source import
+--
+function Musician.OnSourceImportFailed()
+	Musician.importingSong = nil
+	collectgarbage()
+	Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
+end
+
+--- Perform all on-frame actions
 -- @param frame (Frame)
 -- @param elapsed (number)
-function Musician.PlayerOnUpdate(frame, elapsed)
+function Musician.OnUpdate(frame, elapsed)
 	Musician.Preloader.OnUpdate(elapsed)
 
 	if Musician.sourceSong then
 		Musician.sourceSong:OnUpdate(elapsed)
+	end
+
+	if Musician.importingSong then
+		Musician.importingSong:OnUpdate(elapsed)
 	end
 
 	if Musician.streamingSong then

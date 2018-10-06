@@ -43,38 +43,20 @@ MusicianFrame.SourceChanged = function(self, isUserInput)
 	MusicianFrameSource:ClearFocus()
 
 	if isUserInput then
-		MusicianFrame.LoadSource()
+		MusicianFrame.ImportSource()
 		MusicianFrame.Focus()
 		sourceBuffer = {}
 		i = 1
 	end
 end
 
-MusicianFrame.LoadSource = function()
+MusicianFrame.ImportSource = function()
 	local source = table.concat(sourceBuffer)
 	if source == "" or source == MusicianFrame.GetDefaultText() then
 		return
 	end
-
-	local sourceSong
-	local success = pcall(function()
-		sourceSong = Musician.Song.create(Musician.Utils.Base64Decode(source), true)
-	end)
-
-	if not(success) then
-		Musician.Utils.Error(Musician.Msg.INVALID_MUSIC_CODE)
-	else
-		-- Stop previous source song being played
-		if Musician.sourceSong and  Musician.sourceSong:IsPlaying() then
-			Musician.sourceSong:Stop()
-		end
-
-		Musician.sourceSong = sourceSong
-		Musician.TrackEditor.OnLoad()
-		collectgarbage()
-	end
-
-	Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
+	
+	Musician.ImportSource(source)
 end
 
 MusicianFrame.Test = function()

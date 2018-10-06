@@ -54,6 +54,7 @@ Musician.TrackEditor.Init = function()
 	MusicianTrackEditor:SetScript("OnUpdate", Musician.TrackEditor.OnUpdate)
 	Musician.TrackEditor:RegisterMessage(Musician.Events.NoteOn, Musician.TrackEditor.NoteOn)
 	Musician.TrackEditor:RegisterMessage(Musician.Events.NoteOff, Musician.TrackEditor.NoteOff)
+	Musician.TrackEditor:RegisterMessage(Musician.Events.SourceSongLoaded, Musician.TrackEditor.OnLoad)
 end
 
 Musician.TrackEditor.OnLoad = function()

@@ -106,16 +106,17 @@ Musician.PackSong = function(song) {
 			var noteKey = Musician.NoteKey(rawNote.name) + (rawTrack.isPercussion ? Musician.PERCUSSION_KEY_OFFSET : 0);
 			var noteDuration = Math.min(rawNote.duration, Musician.MAX_NOTE_DURATION);
 
-			// Insert spacer notes
+			// Insert note spacers if needed
+			var noteSpacer = '';
 			while (noteTime > Musician.MAX_NOTE_TIME) {
-				// 0 char
-				notes.push(Musician.PackNumber(0, 1));
+				noteSpacer += Musician.PackNumber(0, 1); // 0 char
 				noteTime -= Musician.MAX_NOTE_TIME;
 				offset += Musician.MAX_NOTE_TIME;
 			}
 
 			// Insert packed note: key (1), time (2), duration (1)
 			notes.push(
+				noteSpacer + 
 				Musician.PackNumber(noteKey, 1) +
 				Musician.PackTime(noteTime, 2, Musician.NOTE_TIME_FPS) +
 				Musician.PackTime(noteDuration, 1, Musician.NOTE_DURATION_FPS)
