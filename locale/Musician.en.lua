@@ -51,7 +51,7 @@ msg.HEADER_INSTRUMENT = "Instrument"
 
 msg.EMOTE_PLAYING_MUSIC = "is playing a song."
 msg.EMOTE_PROMO = "(Get \"Musician\" add-on at {url} to listen!)"
-msg.EMOTE_SONG_NOT_LOADED = "(The song could not have been loaded.)"
+msg.EMOTE_SONG_NOT_LOADED = "(The song cannot play because {player} is using an incompatible version.)"
 msg.EMOTE_PLAYER_OTHER_REALM = "(This player is on another realm.)"
 
 msg.TOOLTIP_LEFT_CLICK = "**Left click** : {action}"

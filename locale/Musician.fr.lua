@@ -51,7 +51,7 @@ msg.HEADER_INSTRUMENT = "Instrument"
 
 msg.EMOTE_PLAYING_MUSIC = "joue de la musique."
 msg.EMOTE_PROMO = "(Téléchargez l'add-on \"Musician\" sur {url} pour l'écouter !)"
-msg.EMOTE_SONG_NOT_LOADED = "(Le morceau n'a pas pu être chargé.)"
+msg.EMOTE_SONG_NOT_LOADED = "(Le morceau ne peut pas être joué car {player} utilise une version incompatible.)"
 msg.EMOTE_PLAYER_OTHER_REALM = "(Ce joueur est sur un autre royaume.)"
 
 msg.TOOLTIP_LEFT_CLICK = "**Clic gauche** : {action}"
