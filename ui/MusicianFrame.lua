@@ -6,6 +6,8 @@ local i
 local loadingProgressbarWidth
 local buttonProgressbarWidth
 
+local bandwidthLevel = 0
+
 MusicianFrame.Init = function()
 	MusicianFrame:SetClampedToScreen(true)
 	MusicianFrame.Refresh()
@@ -17,7 +19,10 @@ MusicianFrame.Init = function()
 	Musician.Frame:RegisterMessage(Musician.Events.SongStop, MusicianFrame.RefreshPlayingProgressBar)
 	Musician.Frame:RegisterMessage(Musician.Events.SongCursor, MusicianFrame.RefreshPlayingProgressBar)
 	Musician.Frame:RegisterMessage(Musician.Events.SourceSongLoaded, function() MusicianFrame.Clear(true) end)
-	
+	Musician.Frame:RegisterMessage(Musician.Events.Bandwidth, MusicianFrame.RefreshBandwidthIndicator)
+
+	MusicianFrame:SetScript("OnUpdate", MusicianFrame.OnUpdate)
+
 	MusicianFrame.Clear()
 	MusicianFrameTitle:SetText(Musician.Msg.PLAY_A_SONG)
 	MusicianFrameClearButton:SetText(Musician.Msg.CLEAR)
@@ -178,4 +183,23 @@ MusicianFrame.RefreshPlayingProgressBar = function(event, song)
 	else
 		progressBar:Hide()
 	end
+end
+
+MusicianFrame.RefreshBandwidthIndicator = function(event, bandwidth)
+	bandwidthLevel = bandwidth
+end
+
+MusicianFrame.OnUpdate = function()
+
+	local r = max(0, min(1, bandwidthLevel * 2))
+	local g = max(0, min(1, 2 - bandwidthLevel * 2))
+	local b = 0
+	local a = 1
+
+	if bandwidthLevel == 1 then
+		local t = GetTime()
+		r = sin((t - floor(t)) * 720) * .33 + .67
+	end
+
+	MusicianFramePlayButtonProgressBar:SetColorTexture(r, g, b, a)
 end

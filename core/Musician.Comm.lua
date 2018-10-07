@@ -96,6 +96,12 @@ end
 function Musician.Comm.StreamSongChunk(packedChunk)
 	if not(Musician.Comm.isReady()) then return false end
 	local compressedchunk = LibCompressEncodeTable:Encode(LibCompress:CompressHuffman(packedChunk))
+
+	local bwMin = Musician.BANDWIDTH_LIMIT_MIN
+	local bwMax = Musician.BANDWIDTH_LIMIT_MAX
+	local bandwidth = (max(bwMin, min(bwMax, #compressedchunk)) - bwMin) / (bwMax - bwMin)
+	Musician.Comm:SendMessage(Musician.Events.Bandwidth, bandwidth)
+
 	Musician.Comm:SendCommMessage(Musician.Comm.event.stream, compressedchunk, 'CHANNEL', Musician.Comm.getChannel(), "ALERT")
 	return true
 end

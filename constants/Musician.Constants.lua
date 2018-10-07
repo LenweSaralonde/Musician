@@ -25,6 +25,9 @@ Musician.LOADING_RADIUS = 100
 Musician.IMPORT_CONVERT_RATE = 210 / 3 -- Number of base64 bytes to be converted in 1 ms
 Musician.IMPORT_NOTE_RATE = 110 / 3 -- Number of notes to be imported in 1 ms
 
+Musician.BANDWIDTH_LIMIT_MIN = 240
+Musician.BANDWIDTH_LIMIT_MAX = 500
+
 Musician.Msg = {}
 Musician.Locale = {}
 
@@ -43,6 +46,7 @@ Musician.Events.SongImportComplete = "MusicianSongImportComplete"
 Musician.Events.SongImportSucessful = "MusicianSongImportSucessful"
 Musician.Events.SongImportFailed = "MusicianSongImportFailed"
 Musician.Events.SourceSongLoaded = "MusicianSourceSongLoaded"
+Musician.Events.Bandwidth = "MusicianBandwidth"
 
 Musician.Icons = {}
 Musician.Icons.PlayerMuted = "Interface\\AddOns\\Musician\\ui\\textures\\muted.blp"
