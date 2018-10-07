@@ -840,7 +840,9 @@ function Musician.Song:AppendChunk(chunk, mode, songId, chunkDuration, playtimeL
 		-- The chunk has been received too late, after the current cursor position
 		if self.cursor > self.chunkTime then
 			-- Advance chunkTime accordingly to avoid note drops
-			self.chunkTime = self.cursor + self.chunkDuration / 2
+			local advance = self.cursor + self.chunkDuration / 2 - self.chunkTime
+			self.chunkTime = self.chunkTime + advance
+			self.cropTo = self.cropTo + advance
 		end
 
 		local noteOffset = self.chunkTime
@@ -854,7 +856,6 @@ function Musician.Song:AppendChunk(chunk, mode, songId, chunkDuration, playtimeL
 	end
 
 	self.chunkTime = self.chunkTime + self.chunkDuration
-	self.cropTo = max(self.cropTo, self.chunkTime)
 end
 
 --- Stream a chunk of the song on frame
@@ -949,7 +950,7 @@ function Musician.Song:PackChunk(chunk)
 	local packedSongId = Musician.Utils.PackNumber(self:GetId() % 255, 1)
 
 	-- Playtime left (2)
-	local playtimeLeft = self.chunkDuration * ceil((self.cropTo - self.streamPosition + self.chunkDuration) / self.chunkDuration) -- Multiple of chunk duration
+	local playtimeLeft = ceil(self.cropTo - self.streamPosition + self.chunkDuration)
 	local packedPlaytimeLeft = Musician.Utils.PackNumber(playtimeLeft, 2)
 
 	-- Player position (18)
