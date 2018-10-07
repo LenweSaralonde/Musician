@@ -98,7 +98,7 @@ function Musician.Comm.StreamSongChunk(packedChunk)
 	local compressedchunk = LibCompressEncodeTable:Encode(LibCompress:CompressHuffman(packedChunk))
 
 	local bwMin = Musician.BANDWIDTH_LIMIT_MIN
-	local bwMax = Musician.BANDWIDTH_LIMIT_MAX
+	local bwMax = Musician.BANDWIDTH_LIMIT_MAX + 1
 	local bandwidth = (max(bwMin, min(bwMax, #compressedchunk)) - bwMin) / (bwMax - bwMin)
 	Musician.Comm:SendMessage(Musician.Events.Bandwidth, bandwidth)
 
