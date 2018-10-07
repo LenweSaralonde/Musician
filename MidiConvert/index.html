@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Musician MIDI Convert</title>
+	<title>Musician – MIDI Import</title>
+	<meta charset="UTF-8">
 	<script type="text/javascript" src="./js/MidiConvert.js?v=2"></script>
 	<script type="text/javascript" src="./js/base64.js"></script>
 	<script type="text/javascript" src="./js/musician.js?v=5"></script>
-
+	<script type="text/javascript" src="./js/locale.js"></script>
 	<style type="text/css">
 		body {
 			font-family: "Roboto Mono", monospace;
@@ -13,6 +14,7 @@
 			margin: 0px;
 			background-color: #1a1a1a;
 			color: #bbbbbb;
+			transition: opacity .5s ease;
 		}
 
 		a, a:link, a:visited {
@@ -187,14 +189,12 @@
 
 	</style>
 </head>
-<body>
-	<h1>Import a MIDI file in Musician</h1>
+<body style="opacity: 0" id="main">
+	<h1 id="header">Import a MIDI file in Musician</h1>
 	<div id="Converter">
 		<div id="FileDrop">
 			<input type="file" accept="audio/midi">
-			<div id="Text">
-				Drop a MIDI file here
-			</div>
+			<div id="Text"></div>
 		</div>
 		<div id="Result">
 			<textarea id="ResultsText" onClick="this.setSelectionRange(0, this.value.length)" readonly></textarea>
@@ -204,7 +204,7 @@
 		</div>
 	</div>
 
-	<div id="Description"><a href="https://lenwe.info/musician">Download Musician addon for World of Warcraft</a> / <a href="https://discord.gg/ypfpGxK" target="_blank">Discord</a></div>
+	<div id="Description"><a href="https://lenwe.info/musician" id="DowloadLink">Download Musician addon for World of Warcraft</a> / <a href="https://discord.gg/ypfpGxK" target="_blank">Discord</a></div>
 	<div id="Discord" class="community"><a href="https://discord.gg/ypfpGxK" title="Join our Discord community!" target="_blank"><img src="img/discord-icon.png" alt="Join our Discord community!"></a></div>
 	<div id="BattleNet" class="community"><a href="https://blizzard.com/invite/X2Gy7ztwX7" title="Join our Battle.net group!" target="_blank"><img src="img/battlenet-icon.png" alt="Join our Battle.net group!"></a></div>
 
@@ -272,19 +272,18 @@
 			try {
 				var ok = document.execCommand('copy');
 				if (ok) {
-					answer.innerHTML = 'Copied!';
+					answer.innerHTML = MUSICIAN_MSG.copySuccess;
 					answer.className = "success";
 
 					setTimeout(function() {answer.className = "";}, 2000);
 				} else {
-					answer.innerHTML = 'Unable to copy!';
+					answer.innerHTML = MUSICIAN_MSG.copyError;
 					answer.className = "error";
 				}
 			} catch (err) {
-				answer.innerHTML = 'Unsupported Browser!';
+				answer.innerHTML = MUSICIAN_MSG.unsupportedBrowser;
 				answer.className = "error";
 			}
-
 		}
 	</script>
 
