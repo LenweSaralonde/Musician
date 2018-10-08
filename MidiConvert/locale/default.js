@@ -8,3 +8,5 @@ MUSICIAN_MSG.unsupportedBrowser = "Unsupported Browser";
 MUSICIAN_MSG.dowload = "Download Musician addon for World of Warcraft";
 MUSICIAN_MSG.dowloadVersion = "Download Musician v{version} addon for World of Warcraft";
 MUSICIAN_MSG.windowBackgroundImage = "musician-window-bg-en.png";
+MUSICIAN_MSG.joinDiscord = "Join our Discord community!";
+MUSICIAN_MSG.joinBattleNet = "Join our Battle.net group!";
