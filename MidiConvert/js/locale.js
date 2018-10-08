@@ -21,6 +21,7 @@ window.onload = function() {
 	document.getElementById("CopyButton").innerHTML = MUSICIAN_MSG.copy;
 	setDownloadLink();
 	document.getElementById("main").style = 'opacity: 1';
+	document.getElementById("MusicianWindow").src = 'img/' + MUSICIAN_MSG.windowBackgroundImage;
 
 	var localeScriptTag = document.createElement('script');
 	localeScriptTag.src = 'https://www.lenwe.info/musician-midi-convert/get-last-version/';

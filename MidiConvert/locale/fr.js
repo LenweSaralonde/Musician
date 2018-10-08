@@ -7,3 +7,4 @@ MUSICIAN_MSG.copyError = "Impossible de copier";
 MUSICIAN_MSG.unsupportedBrowser = "Navigateur incompatible";
 MUSICIAN_MSG.dowload = "Télécharger l'add-on Musician pour World of Warcraft";
 MUSICIAN_MSG.dowloadVersion = "Télécharger l'add-on Musician v{version} pour World of Warcraft";
+MUSICIAN_MSG.windowBackgroundImage = "musician-window-bg-fr.png";
