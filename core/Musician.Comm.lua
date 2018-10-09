@@ -6,7 +6,6 @@ local LibCompressEncodeTable = LibCompress:GetAddonEncodeTable()
 Musician.Comm.event = {}
 Musician.Comm.event.stop   = "MusicianStop"
 Musician.Comm.event.stream = "MusicianStream"
-Musician.Comm.event.update = "MusicianUpdate"
 
 Musician.Comm.isPlaySent = false
 Musician.Comm.isStopSent = false
