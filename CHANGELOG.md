@@ -1,6 +1,17 @@
 Changelog
 =========
 
+v1.4.0.0
+--------
+*"Stream Machine"*
+
+* New *MUS3* streaming protocol
+* No more loading times, music now starts playing instantly for everyone!
+* *Load* button removed. We won't miss it.
+* No more freezings and slowdowns
+* Progress bars, progress bars everywhere...
+* Minor bugfixes
+
 v1.3.1.0
 --------
 * Samples are now preloaded in background to avoid freezings every time a song starts playing.
@@ -19,7 +30,7 @@ v1.3.0.1
 
 v1.3.0.0
 --------
-Get heavy! \m/
+*Get heavy! \m/*
 
 * Added power trio (electric guitars, bass and drum kit) to play heavy metal. The *Elite Tauren Chieftains* and the *Blight Boar* are now in for a real challenge!
 * Improved player to better deal with note drops due to the lack of polyphony
