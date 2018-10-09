@@ -430,7 +430,7 @@ function Musician.SetupHooks()
 		end
 
 		-- Add muted/unmuted flag if currently playing music
-		if Musician.songs[fullPlayerName] ~= nil then
+		if Musician.songs[fullPlayerName] ~= nil and Musician.songs[fullPlayerName]:IsPlaying() then
 			if pflag and _G["CHAT_FLAG_" .. pflag] then
 				if Musician.PlayerIsMuted(fullPlayerName) then
 					_G["CHAT_FLAG_" .. pflag .. "_MUSICIAN_MUTED"] = _G["CHAT_FLAG_" .. pflag] .. CHAT_FLAG_MUSICIAN_MUTED
