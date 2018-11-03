@@ -258,24 +258,22 @@ function Musician.SetupHooks()
 		return HookedSetHyperlink(self, link, ...)
 	end
 
-	-- Workaround for the CanReportPlayer bug with crafted emotes
+	-- Workaround for the CanReportPlayer bug with crafted emotes with messageID set to -1
 	--
 
-	local HookedCanReportPlayer = C_ChatInfo.CanReportPlayer
-	C_ChatInfo.CanReportPlayer = function(playerLocation)
-		local canReport = false
-		pcall(function()
-			canReport = HookedCanReportPlayer(playerLocation)
-		end)
-		return canReport
-	end
+	hooksecurefunc(PlayerLocationMixin, "SetChatLineID", function(self, lineID)
+		if lineID == -1 or lineID == '-1' then
+			-- Set player location to current player to avoid errors
+			self:SetUnit('player')
+		end
+	end)
 
 	-- Player dropdown menus
 	--
 
 	-- Add player dropdown menu options
 	--
-		
+
 	hooksecurefunc("UnitPopup_ShowMenu", function(dropdownMenu, which, unit, name, userData)
 		if UIDROPDOWNMENU_MENU_LEVEL == 1 and (which == "PARTY" or which == "PLAYER" or which == "RAID_PLAYER" or which == "FRIEND" or which == "FRIEND_OFFLINE" or which == "TARGET") then
 			local isPlayer = dropdownMenu.unit and UnitIsPlayer(dropdownMenu.unit) or dropdownMenu.chatTarget
