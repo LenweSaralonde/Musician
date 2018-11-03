@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.4.0.1
+--------
+* Fixed bug breaking the "Target" option from player chat menu.
+
 v1.4.0.0
 --------
 *"Stream Machine"*
