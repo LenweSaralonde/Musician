@@ -22,9 +22,9 @@ function Musician.Registry.Init()
 
 		-- Standard player tooltip hook
 		GameTooltip:HookScript("OnTooltipSetUnit", function()
-			local unitName, unitType = GameTooltip:GetUnit()
+			local _, unitType = GameTooltip:GetUnit()
 			if UnitIsPlayer(unitType) then
-				Musician.Registry.AddTooltipInfo(GameTooltip, unitName, 10)
+				Musician.Registry.AddTooltipInfo(GameTooltip, GetUnitName(unitType, true), 10)
 			end
 		end)
 
