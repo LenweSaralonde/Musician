@@ -91,7 +91,7 @@ function Musician.Comm.BroadcastCommMessage(message, type, groupType)
 	if groupChatType then
 		Musician.Comm:SendCommMessage(groupType, message, groupChatType, nil, "ALERT")
 	end
-	if not(IsInInstance()) then
+	if not(IsInInstance()) or groupChatType == nil then
 		Musician.Comm:SendCommMessage(type, message, "CHANNEL", Musician.Comm.getChannel(), "ALERT")
 	end
 end
