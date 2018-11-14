@@ -94,8 +94,8 @@ end
 -- @return (number)
 function Musician.Song:GetId()
 	if self.songId == nil then
-		self.songId = Musician.nextSongId
-		Musician.nextSongId = Musician.nextSongId + 1
+		self.songId = Musician_Settings.nextSongId
+		Musician_Settings.nextSongId = (Musician_Settings.nextSongId + 1) % 256
 	end
 
 	return self.songId
@@ -947,7 +947,7 @@ function Musician.Song:PackChunk(chunk)
 	local packedChunkDuration = Musician.Utils.PackNumber(self.chunkDuration * 10, 1)
 
 	-- Song ID (1)
-	local packedSongId = Musician.Utils.PackNumber(self:GetId() % 255, 1)
+	local packedSongId = Musician.Utils.PackNumber(self:GetId() % 256, 1)
 
 	-- Playtime left (2)
 	local playtimeLeft = ceil(self.cropTo - self.streamPosition + self.chunkDuration)

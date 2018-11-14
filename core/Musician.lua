@@ -6,6 +6,7 @@ function Musician:OnInitialize()
 	-- Init settings
 	local defaultSettings = {
 		minimapPosition = 154,
+		nextSongId = 0,
 		mutedPlayers = {}
 	}
 	if Musician_Settings ~= nil then
@@ -18,7 +19,6 @@ function Musician:OnInitialize()
 	Musician.sourceSong = nil
 	Musician.songIsPlaying = false
 	Musician.globalMute = false
-	Musician.nextSongId = 1
 
 	Musician.Comm.Init()
 	Musician.Registry.Init()
