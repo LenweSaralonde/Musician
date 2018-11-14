@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.4.1.0
+--------
+* Added support for groups, raids and instances.
+
 v1.4.0.1
 --------
 * Fixed bug breaking the "Target" option from player chat menu.
