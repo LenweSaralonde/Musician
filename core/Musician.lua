@@ -297,7 +297,7 @@ function Musician.SetupHooks()
 				isMyself = Musician.Utils.PlayerIsMyself(player)
 				isMuted = Musician.PlayerIsMuted(player)
 				isPlaying = Musician.songs[player] ~= nil and Musician.songs[player]:IsPlaying()
-				isRegistered = Musician.Registry.players[player] ~= nil
+				isRegistered = Musician.Registry.PlayerIsOnline(player)
 			end
 
 			local items = {
@@ -416,8 +416,8 @@ function Musician.SetupHooks()
 
 			-- Music is not loaded
 			else
-				-- Player is not in the registry (other server)
-				if Musician.Registry.players[fullPlayerName] == nil then
+				-- Player is not in the registry and not in my group: it's from another realm
+				if not(Musician.Registry.PlayerIsOnline(player)) and not(Musician.Utils.PlayerIsInGroup(player)) then
 					msg = Musician.Msg.EMOTE_PLAYING_MUSIC .. " " .. Musician.Utils.Highlight(Musician.Msg.EMOTE_PLAYER_OTHER_REALM, 'FF0000')
 				-- Song has not been loaded
 				else

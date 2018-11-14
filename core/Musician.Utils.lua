@@ -247,8 +247,8 @@ end
 function Musician.Utils.PackPlayerPosition()
 	local posY, posX, posZ, instanceID = UnitPosition("player") -- posZ is always 0
 
-	local x = Musician.Utils.PackNumber(floor(posX + .5) + 0x7fffffff, 4)
-	local y = Musician.Utils.PackNumber(floor(posY + .5) + 0x7fffffff, 4)
+	local x = Musician.Utils.PackNumber(floor((posX or 0) + .5) + 0x7fffffff, 4)
+	local y = Musician.Utils.PackNumber(floor((posY or 0) + .5) + 0x7fffffff, 4)
 	local i = Musician.Utils.PackNumber(instanceID, 4)
 	local g = Musician.Utils.PackPlayerGuid()
 
@@ -392,6 +392,49 @@ function Musician.Utils.NormalizePlayerName(name)
 	end
 
 	return name
+end
+
+--- Return the simple player name, including realm slug if needed
+-- @param name (string)
+-- @return (string)
+function Musician.Utils.SimplePlayerName(name)
+	local fullName = Musician.Utils.NormalizePlayerName(name)
+	local myRealmName = string.gsub(GetRealmName(), "%s+", "")
+	local simpleName, realmName = string.split('-', fullName)
+
+	if realmName == myRealmName then
+		return simpleName
+	end
+
+	return fullName
+end
+
+--- Returns true if the player is in my party or raid
+-- @param name (string)
+-- @return (boolean)
+function Musician.Utils.PlayerIsInGroup(name)
+
+	if Musician.Utils.PlayerIsMyself(name) and (IsInGroup() or IsInRaid()) then
+		return true
+	end
+
+	local slug = 'party'
+	local to = 4
+	name = Musician.Utils.NormalizePlayerName(name)
+
+	if IsInRaid() then
+		slug = 'raid'
+		to = 40
+	end
+
+	local i
+	for i = 1, to do
+		if GetUnitName(slug .. i, true) and Musician.Utils.NormalizePlayerName(GetUnitName(slug .. i, true)) == name then
+			return true
+		end
+	end
+
+	return false
 end
 
 --- Return true if the provided player name is myself

@@ -13,14 +13,14 @@ function Musician.Registry.Init()
 
 	local initialized = false
 
-	-- Setup tooltip hooks
+	-- Finish initialization when player enters world 
 	Musician.Registry:RegisterEvent("PLAYER_ENTERING_WORLD", function()
 
 		if initialized then return end
 
 		initialized = true
 
-		-- Standard player tooltip
+		-- Standard player tooltip hook
 		GameTooltip:HookScript("OnTooltipSetUnit", function()
 			local unitName, unitType = GameTooltip:GetUnit()
 			if UnitIsPlayer(unitType) then
@@ -28,24 +28,47 @@ function Musician.Registry.Init()
 			end
 		end)
 
-		-- Total RP player tooltip
+		-- Total RP player tooltip hook
 		if TRP3_CharacterTooltip ~= nil then
 			TRP3_CharacterTooltip:HookScript("OnShow", function(t)
 				Musician.Registry.AddTooltipInfo(TRP3_CharacterTooltip, t.target, TRP3_API.ui.tooltip.getSmallLineFontSize())
 			end)
 		end
+
+		-- Send query to group
+		if Musician.Comm.GetGroupChatType() then
+			Musician.Registry:SendCommMessage(Musician.Registry.event.query, GetAddOnMetadata("Musician", "Version"), Musician.Comm.GetGroupChatType(), nil, "ALERT")
+		end
+	end)
+
+	-- Send query to group when joining
+	Musician.Registry:RegisterEvent("GROUP_JOINED", function()
+		Musician.Registry:SendCommMessage(Musician.Registry.event.query, GetAddOnMetadata("Musician", "Version"), Musician.Comm.GetGroupChatType(), nil, "ALERT")
 	end)
 
 	-- Query hello to hovered player
 	Musician.Registry:RegisterEvent("UPDATE_MOUSEOVER_UNIT", function()
-		local unitName = UnitName("mouseover")
-		if UnitIsPlayer("mouseover") then
-			local player = Musician.Utils.NormalizePlayerName(unitName)
+		if not(UnitIsPlayer("mouseover")) then
+			return
+		end
 
-			if Musician.Registry.players[player] ~= nil then
-				local playerData = Musician.Registry.players[player]
-				if playerData.version == nil and not(playerData.query) then
-					playerData.query = true
+		local player = Musician.Utils.NormalizePlayerName(GetUnitName("mouseover", true))
+		if Musician.Utils.PlayerIsMyself(player) then
+			return
+		end
+
+		-- Player is in group but not (yet) in registry
+		local isNewlyGroupedPlayer = (Musician.Registry.players[player] == nil) and Musician.Utils.PlayerIsInGroup(player)
+
+		if isNewlyGroupedPlayer or Musician.Registry.players[player] ~= nil then
+			if Musician.Registry.players[player] == nil then
+				Musician.Registry.players[player] = {}
+			end
+
+			local playerData = Musician.Registry.players[player]
+			if playerData.version == nil and not(playerData.query) then
+				playerData.query = true
+				if not(isNewlyGroupedPlayer) then -- If the player is in the group and has Musician, the version will be retrieved when joining.
 					Musician.Registry:SendCommMessage(Musician.Registry.event.query, GetAddOnMetadata("Musician", "Version"), 'WHISPER', player, "ALERT")
 				end
 			end
@@ -175,6 +198,7 @@ end
 function Musician.Registry.UpdatePlayerPositionAndGUID(player, posY, posX, posZ, instanceID, guid)
 	if Musician.Registry.players[player] == nil then
 		Musician.Registry.players[player] = {}
+		Musician.Registry.players[player].online = true
 	end
 
 	Musician.Registry.players[player].posY = posY
@@ -197,7 +221,7 @@ function Musician.Registry.PlayerIsInRange(player, radius)
 	end
 
 	-- Player not in registry
-	if Musician.Registry.players[player] == nil or Musician.Registry.players[player].guid == nil then
+	if not(Musician.Registry.PlayerIsOnline(player)) or Musician.Registry.players[player].guid == nil then
 		return false
 	end
 
@@ -209,8 +233,13 @@ function Musician.Registry.PlayerIsInRange(player, radius)
 		return false
 	end
 
+	-- Current player is in an instance
+	if IsInInstance() then
+		return UnitInRange(Musician.Utils.SimplePlayerName(player)) -- Only works when the player is in our group
+	end
+
 	-- Range check
-	return radius ^ 2 > (pp.posY - posY) ^ 2 + (pp.posX - posX) ^ 2 + (pp.posZ - posZ) ^ 2
+	return radius ^ 2 > (pp.posY - (posY or 0)) ^ 2 + (pp.posX - (posX or 0)) ^ 2 + (pp.posZ - (posZ or 0)) ^ 2
 end
 
 --- Return player GUID
@@ -231,25 +260,22 @@ end
 function Musician.Registry.AddTooltipInfo(tooltip, player, fontSize)
 	player = Musician.Utils.NormalizePlayerName(player)
 
-	if Musician.Registry.players[player] == nil then return end
+	if not(Musician.Registry.PlayerIsOnline(player)) then return end
 
 	local localPlayerData = Musician.Registry.players[player]
 
-	if localPlayerData.online then
+	local infoText = Musician.Msg.PLAYER_TOOLTIP
 
-		local infoText = Musician.Msg.PLAYER_TOOLTIP
-
-		if localPlayerData.version then
-			infoText = string.gsub(Musician.Msg.PLAYER_TOOLTIP_VERSION, '{version}', localPlayerData.version)
-		end
-
-		tooltip:AddDoubleLine(" ", infoText, 1, 1, 1, 1, 1, 1)
-		local line = _G[strconcat(tooltip:GetName(), "TextRight", tooltip:NumLines())]
-		local font, _ , flag = line:GetFont()
-		line:SetFont(font, fontSize, flag)
-		tooltip:Show()
-		tooltip:GetTop()
+	if localPlayerData.version then
+		infoText = string.gsub(Musician.Msg.PLAYER_TOOLTIP_VERSION, '{version}', localPlayerData.version)
 	end
+
+	tooltip:AddDoubleLine(" ", infoText, 1, 1, 1, 1, 1, 1)
+	local line = _G[strconcat(tooltip:GetName(), "TextRight", tooltip:NumLines())]
+	local font, _ , flag = line:GetFont()
+	line:SetFont(font, fontSize, flag)
+	tooltip:Show()
+	tooltip:GetTop()
 end
 
 --- Send a hello to the channel
@@ -280,18 +306,35 @@ end)
 --
 Musician.Registry:RegisterComm(Musician.Registry.event.query, function(prefix, message, distribution, player)
 	player = Musician.Utils.NormalizePlayerName(player)
+	local version = message
+
+	if Musician.Utils.PlayerIsMyself(player) then
+		return
+	end
 
 	if Musician.Registry.players[player] == nil then
 		Musician.Registry.players[player] = {}
 	end
 
 	Musician.Registry.players[player].online = true
-	Musician.Registry.players[player].version = message
+	Musician.Registry.players[player].version = version
+	Musician.Registry.players[player].query = true
 
-	Musician.Registry.NotifyNewVersion(message)
+	Musician.Registry.NotifyNewVersion(version)
 
-	Musician.Registry:SendCommMessage(Musician.Registry.event.hello, GetAddOnMetadata("Musician", "Version"), 'WHISPER', player, "ALERT")
+	if distribution == 'WHISPER' then
+		Musician.Registry:SendCommMessage(Musician.Registry.event.hello, GetAddOnMetadata("Musician", "Version"), 'WHISPER', player, "ALERT")
+	elseif Musician.Comm.GetGroupChatType() then
+		Musician.Registry:SendCommMessage(Musician.Registry.event.hello, GetAddOnMetadata("Musician", "Version"), Musician.Comm.GetGroupChatType(), nil, "ALERT")
+	end
 end)
+
+--- Return true if this player is online and has Musician
+-- @param player (string)
+-- @return (boolean)
+function Musician.Registry.PlayerIsOnline(player)
+	return Musician.Registry.players[player] and Musician.Registry.players[player].online
+end
 
 --- Display a message if a new version of the addon is available
 -- @param otherVersion (string)

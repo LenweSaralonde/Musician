@@ -6,6 +6,7 @@ local LibCompressEncodeTable = LibCompress:GetAddonEncodeTable()
 Musician.Comm.event = {}
 Musician.Comm.event.stop   = "MusicianStop"
 Musician.Comm.event.stream = "MusicianStream"
+Musician.Comm.event.streamGroup = "MusicianGStream"
 
 Musician.Comm.isPlaySent = false
 Musician.Comm.isStopSent = false
@@ -53,6 +54,48 @@ function Musician.Comm.JoinChannel()
 	end)
 end
 
+--- Return communication chat type for group
+-- @return (string)
+function Musician.Comm.GetGroupChatType()
+	local inInstance, instanceType = IsInInstance()
+	local inGroup = IsInGroup()
+	local inRaid = IsInRaid()
+	local inLFG = IsInGroup(LE_PARTY_CATEGORY_INSTANCE)
+	local inLFR = IsInRaid(LE_PARTY_CATEGORY_INSTANCE)
+	local chatType
+	local channel
+
+	if inRaid and inInstance and instanceType == "pvp" then
+		return "BATTLEGROUND"
+	elseif inLFG or inLFR then
+		return "INSTANCE_CHAT"
+	elseif inRaid then
+		return "RAID"
+	elseif inGroup then
+		return "PARTY"
+	else
+		return nil
+	end
+end
+
+--- Broadcast communication message using appropriate channels
+-- @param message (string)
+-- @param type (string)
+-- @param [groupType (string)]
+function Musician.Comm.BroadcastCommMessage(message, type, groupType)
+	if groupType == nil then
+		groupType = type
+	end
+
+	local groupChatType = Musician.Comm.GetGroupChatType()
+	if groupChatType then
+		Musician.Comm:SendCommMessage(groupType, message, groupChatType, nil, "ALERT")
+	end
+	if not(IsInInstance()) then
+		Musician.Comm:SendCommMessage(type, message, "CHANNEL", Musician.Comm.getChannel(), "ALERT")
+	end
+end
+
 --- Return the communication channel ID
 -- @return (string)
 function Musician.Comm.getChannel()
@@ -69,6 +112,17 @@ end
 -- @return (boolean)
 function Musician.Comm.isReady()
 	return Musician.Comm.getChannel() ~= nil
+end
+
+--- Return true if the player supports group communication
+-- @param name (string)
+-- @return (boolean)
+function Musician.Comm.PlayerHasGroupSupport(name)
+	if not(Musician.Registry.players[name]) then
+		return false
+	end
+	local player = Musician.Registry.players[name]
+	return player.groupSupport or player.version and (Musician.Utils.VersionCompare(player.version, '1.4.1.0') >= 0)
 end
 
 --- Play song
@@ -100,15 +154,30 @@ function Musician.Comm.StreamSongChunk(packedChunk)
 	local bwMax = Musician.BANDWIDTH_LIMIT_MAX + 1
 	local bandwidth = (max(bwMin, min(bwMax, #compressedchunk)) - bwMin) / (bwMax - bwMin)
 	Musician.Comm:SendMessage(Musician.Events.Bandwidth, bandwidth)
-
-	Musician.Comm:SendCommMessage(Musician.Comm.event.stream, compressedchunk, 'CHANNEL', Musician.Comm.getChannel(), "ALERT")
+	Musician.Comm.BroadcastCommMessage(compressedchunk, Musician.Comm.event.stream, Musician.Comm.event.streamGroup)
 	return true
 end
 
 --- Play a received song chunk
 --
-Musician.Comm:RegisterComm(Musician.Comm.event.stream, function(prefix, message, distribution, sender)
+local function OnChunk(prefix, message, distribution, sender)
 	sender = Musician.Utils.NormalizePlayerName(sender)
+	local isGroup = distribution ~= 'CHANNEL'
+	local senderIsInGroup = Musician.Utils.PlayerIsInGroup(sender)
+
+	-- Consider the sender has group support since the message was received via group chat
+	if isGroup then
+		if Musician.Registry.players[sender] == nil then
+			Musician.Registry.players[sender] = {}
+		end
+
+		Musician.Registry.players[sender].groupSupport = true
+	end
+
+	-- Rejecting channel chunks if the sender is also sending group chunks
+	if not(isGroup) and senderIsInGroup and Musician.Comm.PlayerHasGroupSupport(sender) then
+		return
+	end
 
 	local packedChunk = LibCompress:Decompress(LibCompressEncodeTable:Decode(message))
 	local chunk, mode, songId, chunkDuration, playtimeLeft, position = Musician.Song.UnpackChunk(packedChunk)
@@ -122,7 +191,8 @@ Musician.Comm:RegisterComm(Musician.Comm.event.stream, function(prefix, message,
 	Musician.Registry.UpdatePlayerPositionAndGUID(sender, unpack(position))
 
 	-- Not in loading range
-	if not(Musician.Registry.PlayerIsInRange(sender, Musician.LOADING_RADIUS)) then
+	if not(isGroup) and not(Musician.Registry.PlayerIsInRange(sender, Musician.LOADING_RADIUS)) then
+		-- Stop currently playing music
 		if Musician.songs[sender] ~= nil then
 			Musician.songs[sender]:Stop()
 			Musician.songs[sender] = nil
@@ -148,7 +218,10 @@ Musician.Comm:RegisterComm(Musician.Comm.event.stream, function(prefix, message,
 		Musician.songs[sender].willPlay = true
 		Musician.songs[sender]:Play(chunkDuration / 2)
 	end
-end)
+end
+
+Musician.Comm:RegisterComm(Musician.Comm.event.stream, OnChunk)
+Musician.Comm:RegisterComm(Musician.Comm.event.streamGroup, OnChunk)
 
 --- Stop song
 -- @return (boolean)
@@ -158,10 +231,10 @@ function Musician.Comm.StopSong()
 		Musician.streamingSong:StopStreaming()
 		Musician.streamingSong = nil
 		collectgarbage()
-	end	
+	end
 	Musician.Comm.isStopSent = true
 	Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
-	Musician.Comm:SendCommMessage(Musician.Comm.event.stop, Musician.Comm.event.stop, 'CHANNEL', Musician.Comm.getChannel(), "ALERT")
+	Musician.Comm.BroadcastCommMessage(Musician.Comm.event.stop, Musician.Comm.event.stop)
 	return true
 end
 
