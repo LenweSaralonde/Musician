@@ -745,6 +745,7 @@ function Musician.Song:ImportStep(elapsed)
 				end
 			end
 		end
+		self.cursor = self.cropFrom
 
 		-- Update progression
 		import.progression = 1
