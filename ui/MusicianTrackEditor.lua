@@ -392,7 +392,7 @@ Musician.TrackEditor.NoteOff = function(self, song, track, key)
 			local _, instrumentData = Musician.Utils.GetSoundFile(track.instrument, key + track.transpose)
 			local meter = _G['MusicianTrackEditorTrack' .. track.index .. 'Meter']
 			meter.cursor = meter.endTime
-			meter.decay = instrumentData.decay / 1000
+			meter.decay = (instrumentData and instrumentData.decay or 0) / 1000
 		end
 	end
 end
