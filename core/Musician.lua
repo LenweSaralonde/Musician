@@ -258,16 +258,6 @@ function Musician.SetupHooks()
 		return HookedSetHyperlink(self, link, ...)
 	end
 
-	-- Workaround for the CanReportPlayer bug with crafted emotes with messageID set to -1
-	--
-
-	hooksecurefunc(PlayerLocationMixin, "SetChatLineID", function(self, lineID)
-		if lineID == -1 or lineID == '-1' then
-			-- Set player location to current player to avoid errors
-			self:SetUnit('player')
-		end
-	end)
-
 	-- Player dropdown menus
 	--
 
