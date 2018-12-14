@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.4.1.1
+--------
+* Updated for WoW 8.1
+* Minor bugfixes
+
 v1.4.1.0
 --------
 * Added support for groups, raids and instances.
