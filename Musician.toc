@@ -13,10 +13,12 @@ core\Musician.Utils.lua
 core\Musician.Comm.lua
 core\Musician.Registry.lua
 core\Musician.Preloader.lua
+core\Musician.KeyboardUtils.lua
 
 constants\Musician.Constants.lua
 constants\Musician.Instruments.lua
 constants\Musician.MidiMapping.lua
+constants\Musician.Keyboard.lua
 
 ui\MusicianFrame.xml
 ui\MusicianFrame.lua
@@ -26,5 +28,8 @@ ui\MusicianTrackEditor.lua
 
 ui\MusicianButton.xml
 ui\MusicianButton.lua
+
+ui\MusicianKeyboardConfig.xml
+ui\MusicianKeyboardConfig.lua
 
 locale\locale.xml

@@ -1,0 +1,117 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+
+	<!-- Keyboard key template -->
+
+	<Button name="MusicianKeyTemplate" inherits="UIMenuButtonStretchTemplate" virtual="true">
+		<Layers>
+			<Layer level="OVERLAY">
+				<Texture parentKey="selectedHighlight" file="Interface\Buttons\UI-Silver-Button-Select" alphaMode="ADD" hidden="true">
+					<Anchors>
+						<Anchor point="CENTER" x="0" y="-3"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnClick>
+				Musician.KeyboardConfig.Key_OnClick(self, button, down)
+			</OnClick>
+			<OnLoad>
+				self:RegisterForClicks("AnyUp")
+			</OnLoad>
+		</Scripts>
+		<NormalFont style="GameFontHighlightSmall"/>
+		<DisabledFont style="GameFontDisableSmall"/>
+		<HighlightFont style="GameFontHighlightSmall"/>
+	</Button>
+
+
+	<!-- Main frame -->
+
+	<Frame name="MusicianKeyboardConfig" parent="UIParent" toplevel="true" enableMouse="true" setAllPoints="true" enableKeyboard="true" movable="true" hidden="true" frameStrata="DIALOG">
+
+		<Scripts>
+			<OnLoad>self:RegisterForDrag("LeftButton")</OnLoad>
+			<OnDragStart>self:StartMoving()</OnDragStart>
+			<OnDragStop>self:StopMovingOrSizing()</OnDragStop>
+		</Scripts>
+
+		<Size x="800" y="400" />
+
+		<Anchors>
+			<Anchor point="CENTER" x="0" y="0" />
+		</Anchors>
+
+		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+			<BackgroundInsets>
+				<AbsInset left="11" right="12" top="12" bottom="11" />
+			</BackgroundInsets>
+			<TileSize>
+				<AbsValue val="32" />
+			</TileSize>
+			<EdgeSize>
+				<AbsValue val="32" />
+			</EdgeSize>
+		</Backdrop>
+
+		<Frames>
+			<Button name="$parentCloseButton" inherits="UIPanelCloseButton">
+				<Anchors>
+					<Anchor point="CENTER" relativePoint="TOPRIGHT">
+						<Offset x="-7" y="-7" />
+					</Anchor>
+				</Anchors>
+			</Button>
+
+			<Frame name="$parentKeyboard">
+				<Anchors>
+					<Anchor point="TOP" y="-50" relativePoint="TOP" relativeTo="$parent" />
+				</Anchors>
+			</Frame>
+
+			<Button name="$parentStartOverButton" inherits="UIPanelButtonTemplate">
+				<Size x="150" y="20" />
+				<Anchors>
+					<Anchor point="RIGHT" x="-10" y="40" relativePoint="BOTTOM" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						Musician.KeyboardConfig.Clear()
+					</OnClick>
+				</Scripts>
+			</Button>
+
+			<Button name="$parentSaveButton" inherits="UIPanelButtonTemplate">
+				<Size x="150" y="20" />
+				<Anchors>
+					<Anchor point="LEFT" x="10" y="40" relativePoint="BOTTOM" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						Musician.KeyboardConfig.Save()
+					</OnClick>
+				</Scripts>
+			</Button>
+		</Frames>
+
+		<Layers>
+			<Layer level="BACKGROUND">
+				<FontString name="$parentTitle" inherits="GameFontNormalLarge">
+					<Anchors>
+						<Anchor point="TOP">
+							<Offset>
+								<AbsDimension x="0" y="-25"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+
+				<FontString name="$parentHint" inherits="GameFontNormal">
+					<Anchors>
+						<Anchor point="TOP" y="-10" relativePoint="BOTTOM" relativeTo="$parentKeyboard" />
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+	</Frame>
+</Ui>

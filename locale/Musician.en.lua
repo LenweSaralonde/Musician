@@ -49,6 +49,32 @@ msg.HEADER_NUMBER = "#"
 msg.HEADER_OCTAVE = "Octave"
 msg.HEADER_INSTRUMENT = "Instrument"
 
+msg.CONFIGURE_KEYBOARD = "Configure keyboard"
+msg.CONFIGURE_KEYBOARD_HINT = "Click a key to set..."
+msg.CONFIGURE_KEYBOARD_HINT_COMPLETE = "Keyboard configuration is complete.\nYou can now save your changes and start playing music!"
+msg.CONFIGURE_KEYBOARD_START_OVER = "Start over"
+msg.CONFIGURE_KEYBOARD_SAVE = "Save configuration"
+msg.PRESS_KEY_BINDING = "Press the key #{col} in row #{row}."
+msg.KEY_CAN_BE_MERGED = "This key might be {key} on your keyboard."
+
+local KEY = Musician.KEYBOARD_KEY
+msg.FIXED_KEY_NAMES = {
+	[KEY.Backspace] = "Back",
+	[KEY.Tab] = "Tab",
+	[KEY.CapsLock] = "Caps lock",
+	[KEY.Enter] = "Enter",
+	[KEY.ShiftLeft] = "Shift",
+	[KEY.ShiftRight] = "Shift",
+	[KEY.ControlLeft] = "Ctrl",
+	[KEY.MetaLeft] = "Meta",
+	[KEY.AltLeft] = "Alt",
+	[KEY.Space] = "Space",
+	[KEY.AltRight] = "Alt",
+	[KEY.MetaRight] = "Meta",
+	[KEY.ContextMenu] = "Menu",
+	[KEY.ControlRight] = "Ctrl",
+}
+
 msg.EMOTE_PLAYING_MUSIC = "is playing a song."
 msg.EMOTE_PROMO = "(Get \"Musician\" add-on or upgrade it from {url} to listen!)"
 msg.EMOTE_SONG_NOT_LOADED = "(The song cannot play because {player} is using an incompatible version.)"
@@ -259,7 +285,7 @@ msg.MIDI_INSTRUMENT_NAMES = {
 	[125] = "Helicopter",
 	[126] = "Applause",
 	[127] = "Gunshot",
-	
+
 	-- Percussions
 	[128] = "Percussions",
 }

@@ -638,3 +638,15 @@ function Musician.Utils.DeepCopy(orig)
 	end
 	return copy
 end
+
+--- Flip a table
+-- @param orig (table)
+-- @return (table)
+function Musician.Utils.FlipTable(orig)
+	local flipped = {}
+	local key, value
+	for key, value in pairs(orig) do
+		flipped[value] = key
+	end
+	return flipped
+end

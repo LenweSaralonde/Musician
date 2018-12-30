@@ -49,6 +49,32 @@ msg.HEADER_NUMBER = "#"
 msg.HEADER_OCTAVE = "Octave"
 msg.HEADER_INSTRUMENT = "Instrument"
 
+msg.CONFIGURE_KEYBOARD = "Configurer le clavier"
+msg.CONFIGURE_KEYBOARD_HINT = "Cliquez sur une touche à définir..."
+msg.CONFIGURE_KEYBOARD_HINT_COMPLETE = "La configuration du clavier est terminée.\nVous pouvez maintenant enregistrer les modifications et commencer à jouer !"
+msg.CONFIGURE_KEYBOARD_START_OVER = "Recommencer"
+msg.CONFIGURE_KEYBOARD_SAVE = "Enregistrer"
+msg.PRESS_KEY_BINDING = "Appuyez sur la touche n°{col} de la rangée {row}."
+msg.KEY_CAN_BE_MERGED = "Il se peut que cette touche soit {key} sur votre clavier."
+
+local KEY = Musician.KEYBOARD_KEY
+msg.FIXED_KEY_NAMES = {
+	[KEY.Backspace] = "Suppr.",
+	[KEY.Tab] = "Tab",
+	[KEY.CapsLock] = "Verr. Maj",
+	[KEY.Enter] = "Entrée",
+	[KEY.ShiftLeft] = "Maj",
+	[KEY.ShiftRight] = "Maj",
+	[KEY.ControlLeft] = "Ctrl",
+	[KEY.MetaLeft] = "Meta",
+	[KEY.AltLeft] = "Alt",
+	[KEY.Space] = "Espace",
+	[KEY.AltRight] = "Alt",
+	[KEY.MetaRight] = "Meta",
+	[KEY.ContextMenu] = "Menu",
+	[KEY.ControlRight] = "Ctrl",
+}
+
 msg.EMOTE_PLAYING_MUSIC = "joue de la musique."
 msg.EMOTE_PROMO = "(Installez ou mettez à jour l'add-on \"Musician\" sur {url} pour l'écouter !)"
 msg.EMOTE_SONG_NOT_LOADED = "(Le morceau ne peut pas être joué car {player} utilise une version incompatible.)"
