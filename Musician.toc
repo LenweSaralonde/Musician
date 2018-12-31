@@ -14,11 +14,13 @@ core\Musician.Comm.lua
 core\Musician.Registry.lua
 core\Musician.Preloader.lua
 core\Musician.KeyboardUtils.lua
+core\Musician.Live.lua
 
 constants\Musician.Constants.lua
 constants\Musician.Instruments.lua
 constants\Musician.MidiMapping.lua
 constants\Musician.Keyboard.lua
+constants\Musician.Layouts.lua
 
 ui\MusicianFrame.xml
 ui\MusicianFrame.lua
@@ -28,6 +30,9 @@ ui\MusicianTrackEditor.lua
 
 ui\MusicianButton.xml
 ui\MusicianButton.lua
+
+ui\MusicianKeyboard.xml
+ui\MusicianKeyboard.lua
 
 ui\MusicianKeyboardConfig.xml
 ui\MusicianKeyboardConfig.lua

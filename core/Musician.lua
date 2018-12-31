@@ -31,6 +31,8 @@ function Musician:OnInitialize()
 	MusicianButton.Init()
 	Musician.TrackEditor.Init()
 	Musician.KeyboardConfig.Init()
+	Musician.Live.Init()
+	Musician.Keyboard.Init()
 
 	Musician:RegisterMessage(Musician.Events.SongStop, Musician.OnSongStopped)
 	Musician:RegisterMessage(Musician.Events.SongPlay, Musician.OnSongPlayed)

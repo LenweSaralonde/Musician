@@ -26,8 +26,9 @@ local NOTE = Musician.Song.Indexes.NOTE
 local NOTEON = Musician.Song.Indexes.NOTEON
 local CHUNK = Musician.Song.Indexes.CHUNK
 
-local SONG_MODE_DURATION = 0x10 -- Duration are set in chunk notes
-local SONG_MODE_LIVE = 0x20 -- No duration in chunk notes
+Musician.Song.MODE_DURATION = 0x10 -- Duration are set in chunk notes
+Musician.Song.MODE_LIVE = 0x20 -- No duration in chunk notes
+
 local CHUNK_VERSION = 0x01 -- Max: 0x0F (15)
 
 --- Constructor
@@ -67,7 +68,7 @@ function Musician.Song.create()
 	self.chunkDuration = Musician.CHUNK_DURATION
 
 	-- @field mode (number) Song mode
-	self.mode = SONG_MODE_DURATION
+	self.mode = Musician.Song.MODE_DURATION
 
 	-- @field cropFrom (number) Play song from this position
 	self.cropFrom = 0
@@ -362,6 +363,11 @@ function Musician.Song:NoteOn(track, noteIndex, noRetry)
 	if self.player ~= nil and Musician.Registry.PlayerIsInRange(self.player, Musician.LISTENING_RADIUS) and not(self.notified) then
 		Musician.Utils.DisplayEmote(self.player, Musician.Registry.GetPlayerGUID(self.player), Musician.Msg.EMOTE_PLAYING_MUSIC)
 		self.notified = true
+	end
+
+	-- Don't play back my own live notes
+	if Musician.Utils.PlayerIsMyself(self.player) and self.mode == Musician.Song.MODE_LIVE then
+		return
 	end
 
 	-- Do not play note if the source song is playing or if the player is out of range
@@ -992,7 +998,7 @@ function Musician.Song:PackChunk(chunk)
 
 			-- Duration (1 byte, MAX_NOTE_DURATION is 255)
 			local packedDuration = ""
-			if note[NOTE.ON] and self.mode == SONG_MODE_DURATION then
+			if note[NOTE.ON] and self.mode == Musician.Song.MODE_DURATION then
 				packedDuration = Musician.Utils.PackTime(min(note[NOTE.DURATION], Musician.MAX_NOTE_DURATION), 1, Musician.NOTE_DURATION_FPS)
 			end
 
@@ -1102,7 +1108,7 @@ Musician.Song.UnpackChunk = function(str)
 
 				-- Note duration
 				local duration = nil
-				if noteOn and mode == SONG_MODE_DURATION then
+				if noteOn and mode == Musician.Song.MODE_DURATION then
 					duration = Musician.Utils.UnpackTime(string.sub(str, cursor, cursor), Musician.NOTE_DURATION_FPS)
 					advanceCursor(1)
 				end
@@ -1130,7 +1136,7 @@ end
 function Musician.Song:ConvertToLive()
 
 	-- Already in live mode
-	if self.mode == SONG_MODE_LIVE then
+	if self.mode == Musician.Song.MODE_LIVE then
 		return
 	end
 
@@ -1156,6 +1162,6 @@ function Musician.Song:ConvertToLive()
 		end)
 	end
 
-	self.mode = SONG_MODE_LIVE
+	self.mode = Musician.Song.MODE_LIVE
 	self.chunkDuration = 1
 end

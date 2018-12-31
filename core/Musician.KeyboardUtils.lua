@@ -37,7 +37,7 @@ end
 --- Return the physical key mapped to the actual key value.
 -- @param keyValue (string) key value
 -- @return (string) physical key
-function Musician.KeyboardUtils.GetPhysicalKey(keyValue)
+function Musician.KeyboardUtils.GetKey(keyValue)
 	if Musician_Settings.keyboardMapping[keyValue] then
 		return Musician_Settings.keyboardMapping[keyValue]
 	end
