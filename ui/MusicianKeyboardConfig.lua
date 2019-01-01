@@ -51,8 +51,6 @@ local function createKeyboard()
 
 			button:SetWidth(keyWidth)
 			button:SetHeight(keyHeight)
-			button.selectedHighlight:SetWidth(keyWidth)
-			button.selectedHighlight:SetHeight(keyHeight)
 			button:SetPoint("TOPLEFT", MusicianKeyboardConfigKeyboard, "TOPLEFT", x, - (row - 1) * KEY_SIZE)
 
 			table.insert(keyButtons, button)

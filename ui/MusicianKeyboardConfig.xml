@@ -4,10 +4,19 @@
 
 	<Button name="MusicianKeyTemplate" inherits="UIMenuButtonStretchTemplate" virtual="true">
 		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture parentKey="background" name="$parentBackground">
+					<Size x="34" y="20"/>
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+					<Color a="1" r="0.1" g="0.1" b="0.1" />
+				</Texture>
+			</Layer>
 			<Layer level="OVERLAY">
 				<Texture parentKey="selectedHighlight" file="Interface\Buttons\UI-Silver-Button-Select" alphaMode="ADD" hidden="true">
 					<Anchors>
-						<Anchor point="CENTER" x="0" y="-3"/>
+						<Anchor point="CENTER" x="0" y="-12"/>
 					</Anchors>
 				</Texture>
 			</Layer>
@@ -17,8 +26,16 @@
 				Musician.KeyboardConfig.Key_OnClick(self, button, down)
 			</OnClick>
 			<OnLoad>
+				self.background:SetDrawLayer("BACKGROUND", -8)
 				self:RegisterForClicks("AnyUp")
 			</OnLoad>
+			<OnSizeChanged>
+				self.background:SetWidth(w - 7)
+				self.background:SetHeight(h - 7)
+				self.selectedHighlight:SetWidth(w)
+				self.selectedHighlight:SetHeight(h * 2)
+				self:GetHighlightTexture():SetTexCoord(0, 1, 0.2086, 0.5659)
+			</OnSizeChanged>
 		</Scripts>
 		<NormalFont style="GameFontHighlightSmall"/>
 		<DisabledFont style="GameFontDisableSmall"/>
