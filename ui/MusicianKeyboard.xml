@@ -1,4 +1,65 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+
+	<!-- Keyboard key template -->
+
+	<Button name="MusicianKeyboardKeyTemplate" inherits="UIMenuButtonStretchTemplate" virtual="true">
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture parentKey="background" name="$parentBackground">
+					<Size x="34" y="20"/>
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+					<Color a="1" r="1" g="1" b="1" />
+				</Texture>
+			</Layer>
+			<Layer level="FOREGROUND">
+				<FontString parentKey="subText" name="$parentSubText" inherits="GameFontHighlightSmall">
+					<Size x="32" y="32" />
+					<Anchors>
+						<Anchor point="CENTER" x="0" y="-10" relativePoint="CENTER" relativeTo="$parent" />
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad>
+				self.background:SetDrawLayer("BACKGROUND", -8)
+				self:RegisterForClicks("AnyUp")
+
+				self.pushedTextOffset = { self:GetPushedTextOffset() }
+				self:SetPushedTextOffset(0, 0)
+
+				local point, relativeTo, relativePoint, xOfs, yOfs = self:GetFontString():GetPoint()
+				self:GetFontString():SetPoint(point, relativeTo, relativePoint, xOfs, yOfs + 10)
+
+				self.animateOnMouseDown = self:GetScript("OnMouseDown")
+				self.animateOnMouseUp = self:GetScript("OnMouseUp")
+
+				self:SetScript("OnMouseDown", function(button, mouseButton)
+					Musician.Keyboard.OnKeyDown(self, self.keyValue)
+					self.animateOnMouseDown(button, mouseButton)
+				end)
+
+				self:SetScript("OnMouseUp", function(button, mouseButton)
+					Musician.Keyboard.OnKeyUp(self, self.keyValue)
+					self.animateOnMouseUp(button, mouseButton)
+				end)
+
+			</OnLoad>
+			<OnSizeChanged>
+				self.background:SetWidth(w - 7)
+				self.background:SetHeight(h - 7)
+				self:SetHighlightTexture(nil)
+			</OnSizeChanged>
+		</Scripts>
+		<NormalFont style="GameFontHighlightLarge"/>
+		<DisabledFont style="GameFontDisableLarge"/>
+		<HighlightFont style="GameFontHighlightLarge"/>
+	</Button>
+
+	<!-- Main frame -->
+
 	<Frame name="MusicianKeyboard" parent="UIParent" toplevel="true" enableMouse="true" setAllPoints="true" enableKeyboard="true" movable="true" hidden="true" frameStrata="DIALOG">
 
 		<Scripts>
@@ -7,13 +68,14 @@
 			<OnDragStop>self:StopMovingOrSizing()</OnDragStop>
 			<OnShow>
 				PlaySound(SOUNDKIT.IG_QUEST_LIST_OPEN)
+				Musician.Keyboard.BuildMapping()
 			</OnShow>
 			<OnHide>
 				PlaySound(SOUNDKIT.IG_QUEST_LIST_CLOSE)
 			</OnHide>
 		</Scripts>
 
-		<Size x="320" y="160" />
+		<Size x="800" y="300" />
 
 		<Anchors>
 			<Anchor point="CENTER" x="0" y="0" />
@@ -53,6 +115,12 @@
 					</Anchor>
 				</Anchors>
 			</Button>
+
+			<Frame name="$parentKeys">
+				<Anchors>
+					<Anchor point="CENTER" relativeTo="$parent" />
+				</Anchors>
+			</Frame>
 		</Frames>
 	</Frame>
 </Ui>

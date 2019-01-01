@@ -2,7 +2,7 @@ Musician.KeyboardConfig = LibStub("AceAddon-3.0"):NewAddon("Musician.KeyboardCon
 
 local KEY = Musician.KEYBOARD_KEY
 
-KEY_SIZE = 50
+local KEY_SIZE = 50
 
 local ALLOWED_DUPLICATES = {
 	[KEY.IntlYen] = "BACKSPACE",
@@ -45,7 +45,7 @@ local function createKeyboard()
 		local x = 0
 		for col, key in pairs(rowKeys) do
 			local size = Musician.KEYBOARD_KEY_SIZE[row][col]
-			local button = CreateFrame("Button", "$parent" .. key .. "Button", MusicianKeyboardConfigKeyboard, "MusicianKeyTemplate")
+			local button = CreateFrame("Button", "$parent" .. key .. "Button", MusicianKeyboardConfigKeyboard, "MusicianKeyboardConfigKeyTemplate")
 			local keyHeight = KEY_SIZE
 			local keyWidth = size * KEY_SIZE
 

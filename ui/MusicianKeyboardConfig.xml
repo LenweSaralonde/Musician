@@ -2,7 +2,7 @@
 
 	<!-- Keyboard key template -->
 
-	<Button name="MusicianKeyTemplate" inherits="UIMenuButtonStretchTemplate" virtual="true">
+	<Button name="MusicianKeyboardConfigKeyTemplate" inherits="UIMenuButtonStretchTemplate" virtual="true">
 		<Layers>
 			<Layer level="BACKGROUND">
 				<Texture parentKey="background" name="$parentBackground">
@@ -37,9 +37,9 @@
 				self:GetHighlightTexture():SetTexCoord(0, 1, 0.2086, 0.5659)
 			</OnSizeChanged>
 		</Scripts>
-		<NormalFont style="GameFontHighlightSmall"/>
-		<DisabledFont style="GameFontDisableSmall"/>
-		<HighlightFont style="GameFontHighlightSmall"/>
+		<NormalFont style="GameFontHighlight"/>
+		<DisabledFont style="GameFontDisable"/>
+		<HighlightFont style="GameFontHighlight"/>
 	</Button>
 
 

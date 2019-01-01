@@ -50,10 +50,146 @@ Musician.Keyboard.DrumKeys = {
 	["NUMPADMINUS"] = 57, -- [57] = "tambourine-crash-long2", -- Crash Cymbal 2
 }
 
+local KEY = Musician.KEYBOARD_KEY
+
+local KEY_SIZE = 50
+
 Musician.Keyboard.NotesOn = {}
 
 local lCtrlDown = false
 local rCtrlDown = false
+
+local keyButtons = {}
+local keyValueButtons = {}
+
+--- Return the binding button for the given physical key.
+-- @param key (string)
+-- @return (Button)
+local getKeyButton = function(key)
+	return _G["MusicianKeyboardKeys" .. key .. "Button"]
+end
+
+--- Create the keyboard keys.
+--
+local function generateKeys()
+
+	-- Size container
+	MusicianKeyboardKeys:SetHeight(5 * KEY_SIZE)
+	MusicianKeyboardKeys:SetWidth(15 * KEY_SIZE)
+
+	-- Create keys
+	local row, col, rowKeys, key
+	for row, rowKeys in pairs(Musician.KEYBOARD) do
+		for col, key in pairs(rowKeys) do
+			local button = CreateFrame("Button", "$parent" .. key .. "Button", MusicianKeyboardKeys, "MusicianKeyboardKeyTemplate")
+
+			table.insert(keyButtons, button)
+
+			button.key = key
+			button.row = row
+			button.col = col
+			button.index = #keyButtons
+		end
+	end
+end
+
+--- Set keyboard keys (notes, color etc)
+--
+local function setKeys()
+	local row, col, rowKeys, key
+	for row, rowKeys in pairs(Musician.KEYBOARD) do
+		local cursorX = 0
+		for col, key in pairs(rowKeys) do
+			local size = Musician.KEYBOARD_KEY_SIZE[row][col]
+			local keyHeight = 1
+			local keyWidth = size
+			local keyX = cursorX
+			local keyY = -(row - 1)
+			local keyVisible = true
+			local keyValueName = Musician.KeyboardUtils.GetKeyName(key)
+			local keyValue = Musician.KeyboardUtils.GetKeyValue(key)
+
+			local button = getKeyButton(key)
+			button.keyValue = keyValue
+
+			if keyValue then
+				keyValueButtons[keyValue] = button
+			end
+
+			if Musician.Keyboard.mapping[key] ~= nil or keyValueName then
+				-- Ket key and note names
+				local noteName = ""
+
+				if keyValue then
+					keyValueName = Musician.KeyboardUtils.GetKeyValueName(keyValue)
+				end
+
+				if Musician.Keyboard.mapping[key] ~= nil then
+					noteName = Musician.Utils.NoteName(Musician.Keyboard.mapping[key][2])
+
+					-- Black or white key
+					if string.match(noteName, "%#") then
+						button.background:SetColorTexture(.33, .22, .11, 1)
+					else
+						button.background:SetColorTexture(1, .88, .75, 1)
+					end
+					button:Enable()
+					button:SetAlpha(1)
+				else
+					-- keyValueName = ""
+					button.background:SetColorTexture(0, 0, 0, 0)
+					button:Disable()
+					button:SetAlpha(.5)
+				end
+
+				-- Set specific key sizes and positions
+				if key == KEY.IntlYen and keyValue == "BACKSPACE" then
+					keyWidth = keyWidth + Musician.KEYBOARD_KEY_SIZE[row][col + 1]
+				elseif key == KEY.Backspace and Musician.KeyboardUtils.GetKeyValue(KEY.IntlYen) == "BACKSPACE" then
+					keyVisible = false
+				elseif key == KEY.Backslash1 and keyValue == "ENTER" then
+					keyWidth = Musician.KEYBOARD_KEY_SIZE[row + 1][col]
+					keyX = keyX + Musician.KEYBOARD_KEY_SIZE[row][col] - keyWidth
+					keyHeight = 2
+				elseif key == KEY.Enter and Musician.KeyboardUtils.GetKeyValue(KEY.Backslash1) == "ENTER" then
+					keyVisible = false
+				elseif key == KEY.Backslash2 and keyValue == "ENTER" then
+					keyWidth = keyWidth + Musician.KEYBOARD_KEY_SIZE[row][col + 1]
+				elseif key == KEY.Enter and Musician.KeyboardUtils.GetKeyValue(KEY.Backslash2) == "ENTER" then
+					keyVisible = false
+				elseif key == KEY.ShiftLeft and Musician.KeyboardUtils.GetKeyValue(KEY.IntlBackslash) == "LSHIFT" then
+					keyVisible = false
+				elseif key == KEY.IntlBackslash and keyValue == "LSHIFT" then
+					keyWidth = keyWidth + Musician.KEYBOARD_KEY_SIZE[row][col - 1]
+					keyX = keyX - Musician.KEYBOARD_KEY_SIZE[row][col - 1]
+				elseif key == KEY.IntlRo and keyValue == "RSHIFT" then
+					keyWidth = keyWidth + Musician.KEYBOARD_KEY_SIZE[row][col + 1]
+				elseif key == KEY.ShiftRight and Musician.KeyboardUtils.GetKeyValue(KEY.IntlRo) == "RSHIFT" then
+					keyVisible = false
+				end
+
+				-- Set size and position
+				button:SetWidth(keyWidth * KEY_SIZE)
+				button:SetHeight(keyHeight * KEY_SIZE)
+				button:SetPoint("TOPLEFT", MusicianKeyboardKeys, "TOPLEFT", keyX * KEY_SIZE, keyY * KEY_SIZE)
+
+				-- Set text
+				button:SetText(keyValueName)
+				button.subText:SetText(noteName)
+			else
+				keyVisible = false
+			end
+
+			if keyVisible then
+				button:Show()
+			else
+				button:Hide()
+			end
+
+			cursorX = keyX + keyWidth
+		end
+	end
+end
 
 --- Initialize keyboard
 --
@@ -74,14 +210,27 @@ function Musician.Keyboard.Init()
 	MusicianKeyboard:SetScript("OnKeyDown", Musician.Keyboard.OnKeyDown)
 	MusicianKeyboard:SetScript("OnKeyUp", Musician.Keyboard.OnKeyUp)
 
-	-- Build mapping
-	Musician.Keyboard.BuildMapping()
+	-- Generate keyboard keys
+	generateKeys()
 end
 
 --- OnKeyDown
 -- @param self (Frame)
 -- @param keyValue (string)
 Musician.Keyboard.OnKeyDown = function(self, keyValue)
+	local button = keyValueButtons[keyValue]
+	if button then
+		if button.down then
+			return
+		end
+		button.down = true
+		button.animateOnMouseDown(button, "LeftButton")
+		local point, relativeTo, relativePoint, xOfs, yOfs = button:GetFontString():GetPoint()
+		button:GetFontString():SetPoint(point, relativeTo, relativePoint, xOfs + button.pushedTextOffset[1], yOfs + button.pushedTextOffset[2])
+		point, relativeTo, relativePoint, xOfs, yOfs = button.subText:GetPoint()
+		button.subText:SetPoint(point, relativeTo, relativePoint, xOfs + button.pushedTextOffset[1], yOfs + button.pushedTextOffset[2])
+	end
+
 	if keyValue == "LCTRL"  then
 		lCtrlDown = true
 	elseif keyValue == "RCTRL" then
@@ -99,6 +248,20 @@ end
 -- @param self (Frame)
 -- @param keyValue (string)
 Musician.Keyboard.OnKeyUp = function(self, keyValue)
+
+	local button = keyValueButtons[keyValue]
+	if button then
+		if not(button.down) then
+			return
+		end
+		button.animateOnMouseUp(button, "LeftButton")
+		local point, relativeTo, relativePoint, xOfs, yOfs = button:GetFontString():GetPoint()
+		button:GetFontString():SetPoint(point, relativeTo, relativePoint, xOfs - button.pushedTextOffset[1], yOfs - button.pushedTextOffset[2])
+		local point, relativeTo, relativePoint, xOfs, yOfs = button.subText:GetPoint()
+		button.subText:SetPoint(point, relativeTo, relativePoint, xOfs - button.pushedTextOffset[1], yOfs - button.pushedTextOffset[2])
+		button.down = false
+	end
+
 	if keyValue == "LCTRL"  then
 		lCtrlDown = false
 	elseif keyValue == "RCTRL" then
@@ -117,6 +280,7 @@ Musician.Keyboard.BuildMapping = function()
 
 	-- Invalid layout
 	if Musician.Layouts[Musician.Keyboard.config.layout] == nil then
+		setKeys()
 		return
 	end
 
@@ -143,6 +307,8 @@ Musician.Keyboard.BuildMapping = function()
 	local config = Musician.Keyboard.config
 	mapKeys(LAYER.UPPER, layout.scale, layout.upper.keyboardMapping, Musician.Utils.NoteKey(layout.upper.baseKey), layout.upper.baseKeyIndex + config.upperShift)
 	mapKeys(LAYER.LOWER, layout.scale, layout.lower.keyboardMapping, Musician.Utils.NoteKey(layout.lower.baseKey), layout.lower.baseKeyIndex + config.lowerShift)
+
+	setKeys()
 end
 
 --- Note key pressed
@@ -195,12 +361,8 @@ end
 --- Shift keyboard layout using ctrl + directional keys
 -- @param keyValue (string)
 MusicianKeyboard.ShiftKeyDown = function(keyValue)
-	local layer
-	if lCtrlDown then
-		layer = LAYER.LOWER
-	elseif rCtrlDown then
-		layer = LAYER.UPPER
-	else
+
+	if not(lCtrlDown) and not(rCtrlDown) then
 		return false
 	end
 
@@ -219,10 +381,12 @@ MusicianKeyboard.ShiftKeyDown = function(keyValue)
 	end
 
 	-- TODO: rewrite as separate function
-	if layer == LAYER.LOWER then
+	if lCtrlDown then
 		Musician.Keyboard.config.lowerShift = Musician.Keyboard.config.lowerShift + value
 		Musician.Utils.Print("Lower shift" .. " " .. Musician.Utils.Highlight(Musician.Keyboard.config.lowerShift))
-	else
+	end
+
+	if rCtrlDown then
 		Musician.Keyboard.config.upperShift = Musician.Keyboard.config.upperShift + value
 		Musician.Utils.Print("Upper shift" .. " " .. Musician.Utils.Highlight(Musician.Keyboard.config.upperShift))
 	end
@@ -235,35 +399,36 @@ end
 --- Change instrument using Ctrl + letter key
 -- @param keyValue (string)
 MusicianKeyboard.InstrumentChangeKeyDown = function(keyValue)
-	local layer
-	if lCtrlDown then
-		layer = LAYER.LOWER
-	elseif rCtrlDown then
-		layer = LAYER.UPPER
-	else
+
+	if not(lCtrlDown) and not(rCtrlDown) then
 		return false
 	end
 
+	local changeDrumsInstrument = false
 	if Musician.Keyboard.InstrumentKeys[keyValue] then
 		local instrumentName = Musician.Keyboard.InstrumentKeys[keyValue]
 		local replaceDrums = false
 		if string.match(instrumentName, 'NUMPAD-') then
 			instrumentName = string.gsub(instrumentName, 'NUMPAD%-', '')
-			layer = LAYER.DRUMS
+			changeDrumsInstrument = true
 		end
 
 		-- TODO: rewrite as separate function
 		local instrument = Musician.INSTRUMENTS[instrumentName]
 
-		if layer == LAYER.LOWER then
-			Musician.Keyboard.config.lowerInstrument = instrument.midi
-			Musician.Utils.Print(Musician.Msg.CHANGE_TRACK_INSTRUMENT .. " (lower) " .. Musician.Utils.Highlight(Musician.Msg.INSTRUMENT_NAMES[instrumentName]))
-		elseif layer == LAYER.UPPER then
-			Musician.Keyboard.config.upperInstrument = instrument.midi
-			Musician.Utils.Print(Musician.Msg.CHANGE_TRACK_INSTRUMENT .. " (upper) " .. Musician.Utils.Highlight(Musician.Msg.INSTRUMENT_NAMES[instrumentName]))
-		else
+		if changeDrumsInstrument then
 			Musician.Keyboard.config.drumsInstrument = instrument.midi
 			Musician.Utils.Print(Musician.Msg.CHANGE_TRACK_INSTRUMENT .. " (drums) " .. Musician.Utils.Highlight(Musician.Msg.INSTRUMENT_NAMES[instrumentName]))
+		else
+			if lCtrlDown then
+				Musician.Keyboard.config.lowerInstrument = instrument.midi
+				Musician.Utils.Print(Musician.Msg.CHANGE_TRACK_INSTRUMENT .. " (lower) " .. Musician.Utils.Highlight(Musician.Msg.INSTRUMENT_NAMES[instrumentName]))
+			end
+
+			if rCtrlDown then
+				Musician.Keyboard.config.upperInstrument = instrument.midi
+				Musician.Utils.Print(Musician.Msg.CHANGE_TRACK_INSTRUMENT .. " (upper) " .. Musician.Utils.Highlight(Musician.Msg.INSTRUMENT_NAMES[instrumentName]))
+			end
 		end
 
 		return true
