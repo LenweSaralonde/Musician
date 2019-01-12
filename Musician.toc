@@ -22,6 +22,10 @@ constants\Musician.MidiMapping.lua
 constants\Musician.Keyboard.lua
 constants\Musician.Layouts.lua
 
+locale\locale.xml
+
+ui\MusicianWidgets.xml
+
 ui\MusicianFrame.xml
 ui\MusicianFrame.lua
 
@@ -36,5 +40,3 @@ ui\MusicianKeyboard.lua
 
 ui\MusicianKeyboardConfig.xml
 ui\MusicianKeyboardConfig.lua
-
-locale\locale.xml

@@ -241,16 +241,10 @@ Musician.TrackEditor.InitTransposeDropdown = function(dropdown, trackIndex)
 end
 
 Musician.TrackEditor.InitInstrumentDropdown = function(dropdown, trackIndex)
-	dropdown.value = nil
 	dropdown.trackIndex = trackIndex
 	dropdown.tooltipText = Musician.Msg.CHANGE_TRACK_INSTRUMENT
 
-	dropdown.SetValue = function(value)
-		local originalMidiId = value
-		local instrumentId = Musician.MIDI_INSTRUMENT_MAPPING[originalMidiId]
-		local midiId = Musician.INSTRUMENTS[instrumentId].midi
-		local instrumentName = Musician.Msg.INSTRUMENT_NAMES[instrumentId]
-		dropdown.value = midiId
+	dropdown.OnChange = function(midiId, instrumentId)
 		Musician.sourceSong.tracks[dropdown.trackIndex].instrument = midiId
 
 		if Musician.INSTRUMENTS[instrumentId].color ~= nil then
@@ -259,35 +253,8 @@ Musician.TrackEditor.InitInstrumentDropdown = function(dropdown, trackIndex)
 			_G[trackFrameName .. 'TrackName']:SetTextColor(r, g, b)
 			_G[trackFrameName .. 'TrackInfo']:SetTextColor(r, g, b)
 			_G[trackFrameName .. 'TrackId']:SetTextColor(r, g, b)
-			instrumentName = Musician.Utils.GetColorCode(unpack(Musician.INSTRUMENTS[instrumentId].color)) .. instrumentName .. "|r"
-		end
-
-		UIDropDownMenu_SetText(dropdown, instrumentName)
-	end
-
-	dropdown.OnClick = function(self, arg1, arg2, checked)
-		dropdown.SetValue(arg1)
-	end
-
-	dropdown.GetItems = function(frame, level, menuList)
-		local info = UIDropDownMenu_CreateInfo()
-		info.func = dropdown.OnClick
-
-		local instrumentId
-		for _, instrumentId in pairs(Musician.INSTRUMENTS_AVAILABLE) do
-			local midiId = Musician.INSTRUMENTS[instrumentId].midi
-			info.text = Musician.Msg.INSTRUMENT_NAMES[instrumentId]
-			info.arg1 = midiId
-			info.checked = dropdown.value == midiId
-			if Musician.INSTRUMENTS[instrumentId].color ~= nil then
-				info.colorCode = Musician.Utils.GetColorCode(unpack(Musician.INSTRUMENTS[instrumentId].color))
-			end
-			UIDropDownMenu_AddButton(info)
 		end
 	end
-
-	UIDropDownMenu_Initialize(dropdown, dropdown.GetItems)
-	dropdown.SetValue(Musician.sourceSong.tracks[trackIndex].instrument)
 end
 
 Musician.TrackEditor.SetCropFrom = function(position)

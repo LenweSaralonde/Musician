@@ -210,28 +210,13 @@
 				</HitRectInsets>
 			</CheckButton>
 
-			<Frame name="$parentInstrumentDropdown" inherits="UIDropDownMenuTemplate">
+			<Frame name="$parentInstrumentDropdown" inherits="MusicianInstrumentDropdown">
 				<Anchors>
 					<Anchor point="RIGHT" relativePoint="RIGHT" relativeTo="$parent" x="14" />
 				</Anchors>
-				<Scripts>
-					<OnLoad>
-						UIDropDownMenu_SetWidth(self, 115)
-					</OnLoad>
-					<OnEnter>
-						if(self.tooltipText ~= nil) then
-							GameTooltip_AddNewbieTip(self, self.tooltipText, 1.0, 1.0, 1.0, self.newbieText);
-						end
-					</OnEnter>
-					<OnLeave>
-						if(self.tooltipText ~= nil) then
-							GameTooltip:Hide();
-						end
-					</OnLeave>
-				</Scripts>
 			</Frame>
 
-			<Frame name="$parentTransposeDropdown" inherits="UIDropDownMenuTemplate">
+			<Frame name="$parentTransposeDropdown" inherits="MusicianDropDownMenuTooltipTemplate">
 				<Anchors>
 					<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentInstrumentDropdown" x="32" />
 				</Anchors>
@@ -239,16 +224,6 @@
 					<OnLoad>
 						UIDropDownMenu_SetWidth(self, 40)
 					</OnLoad>
-					<OnEnter>
-						if(self.tooltipText ~= nil) then
-							GameTooltip_AddNewbieTip(self, self.tooltipText, 1.0, 1.0, 1.0, self.newbieText);
-						end
-					</OnEnter>
-					<OnLeave>
-						if(self.tooltipText ~= nil) then
-							GameTooltip:Hide();
-						end
-					</OnLeave>
 				</Scripts>
 			</Frame>
 

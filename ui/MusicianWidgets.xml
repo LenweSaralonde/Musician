@@ -1,0 +1,78 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+
+	<!-- Dropdown menu with tooltip -->
+
+	<Frame name="MusicianDropDownMenuTooltipTemplate" inherits="UIDropDownMenuTemplate" virtual="true">
+		<Anchors>
+			<Anchor point="RIGHT" relativePoint="RIGHT" relativeTo="$parent" x="14" />
+		</Anchors>
+		<Scripts>
+			<OnEnter>
+				if(self.tooltipText ~= nil) then
+					GameTooltip_AddNewbieTip(self, self.tooltipText, 1.0, 1.0, 1.0, self.newbieText);
+				end
+			</OnEnter>
+			<OnLeave>
+				if(self.tooltipText ~= nil) then
+					GameTooltip:Hide();
+				end
+			</OnLeave>
+		</Scripts>
+	</Frame>
+
+	<!-- Instrument dropdown -->
+
+	<Frame name="MusicianInstrumentDropdown" inherits="MusicianDropDownMenuTooltipTemplate" virtual="true">
+		<Scripts>
+			<OnLoad>
+				UIDropDownMenu_SetWidth(self, 115)
+				local dropdown = self
+
+				dropdown.value = nil
+
+				dropdown.SetValue = function(value)
+					local originalMidiId = value
+					local instrumentId = Musician.MIDI_INSTRUMENT_MAPPING[originalMidiId]
+					local midiId = Musician.INSTRUMENTS[instrumentId].midi
+					local instrumentName = Musician.Msg.INSTRUMENT_NAMES[instrumentId]
+					dropdown.value = midiId
+
+					if Musician.INSTRUMENTS[instrumentId].color ~= nil then
+						local r, g, b = unpack(Musician.INSTRUMENTS[instrumentId].color)
+						instrumentName = Musician.Utils.GetColorCode(unpack(Musician.INSTRUMENTS[instrumentId].color)) .. instrumentName .. "|r"
+					end
+
+					UIDropDownMenu_SetText(dropdown, instrumentName)
+
+					if dropdown.OnChange then
+						dropdown.OnChange(midiId, instrumentId)
+					end
+				end
+
+				dropdown.OnClick = function(self, arg1, arg2, checked)
+					dropdown.SetValue(arg1)
+				end
+
+				dropdown.GetItems = function(frame, level, menuList)
+					local info = UIDropDownMenu_CreateInfo()
+					info.func = dropdown.OnClick
+
+					local instrumentId
+					for _, instrumentId in pairs(Musician.INSTRUMENTS_AVAILABLE) do
+						local midiId = Musician.INSTRUMENTS[instrumentId].midi
+						info.text = Musician.Msg.INSTRUMENT_NAMES[instrumentId]
+						info.arg1 = midiId
+						info.checked = dropdown.value == midiId
+						if Musician.INSTRUMENTS[instrumentId].color ~= nil then
+							info.colorCode = Musician.Utils.GetColorCode(unpack(Musician.INSTRUMENTS[instrumentId].color))
+						end
+						UIDropDownMenu_AddButton(info)
+					end
+				end
+
+				UIDropDownMenu_Initialize(dropdown, dropdown.GetItems)
+			</OnLoad>
+		</Scripts>
+	</Frame>
+
+</Ui>
