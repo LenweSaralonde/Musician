@@ -189,7 +189,7 @@ end
 
 --- Decode base 64 string
 -- Lua 5.1+ base64 v3.0 (c) 2009 by Alex Kloss <alexthkloss@web.de>
--- licensed under the terms of the LGPL2 
+-- licensed under the terms of the LGPL2
 -- http://lua-users.org/wiki/BaseSixtyFour
 -- @param data (string)
 -- @return string
@@ -252,7 +252,7 @@ function Musician.Utils.PackPlayerPosition()
 	local i = Musician.Utils.PackNumber(instanceID, 4)
 	local g = Musician.Utils.PackPlayerGuid()
 
-	return x .. y .. i .. g 
+	return x .. y .. i .. g
 end
 
 --- Unpack player position from chunk string
@@ -326,7 +326,6 @@ function Musician.Utils.GetSoundFile(instrument, key)
 	end
 
 	local noteName = Musician.Utils.NoteName(key)
-	noteName = string.gsub(noteName, 'A#', 'Bb')
 
 	if not(instrumentData.isPercussion) then
 		soundFile = soundFile .. '\\' .. noteName

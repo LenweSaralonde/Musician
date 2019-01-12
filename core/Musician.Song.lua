@@ -767,7 +767,7 @@ end
 
 --- Clone song
 -- @return (Musician.Song)
-function Musician.Song:Clone(str, crop)
+function Musician.Song:Clone()
 
 	local clone = Musician.Song.create()
 	local key, value
