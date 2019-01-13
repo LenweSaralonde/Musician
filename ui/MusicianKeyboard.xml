@@ -102,7 +102,7 @@
 				</Anchors>
 			</Button>
 
-			<Button name="$parentShiftReset" inherits="MusicianKeyboardSquareButtonTemplate" text="r">
+			<Button name="$parentShiftReset" inherits="MusicianKeyboardSquareButtonTemplate" text="x">
 				<Anchors>
 					<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentShiftRight" />
 				</Anchors>
@@ -126,7 +126,35 @@
 					<Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$parentShiftReset" />
 				</Anchors>
 			</Button>
+
+			<CheckButton name="$parentPowerChords" inherits="OptionsSmallCheckButtonTemplate" >
+				<Anchors>
+					<Anchor point="TOPLEFT" x="16" y="0" relativeTo="$parentInstrument" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						self.tooltipText = Musician.Msg.POWER_CHORDS
+					</OnLoad>
+				</Scripts>
+				<Size>
+					<AbsDimension x="16" y="16"/>
+				</Size>
+				<HitRectInsets>
+					<AbsInset left="0" right="0" top="0" bottom="0"/>
+				</HitRectInsets>
+			</CheckButton>
 		</Frames>
+
+		<Layers>
+			<Layer level="FOREGROUND">
+				<FontString name="$parentPowerChordsLabel" inherits="MusicianFontIconsNormal" justifyh="LEFT" text="Bh">
+					<Size x="250" y="32" />
+					<Anchors>
+						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentPowerChords" />
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
 	</Frame>
 
 	<!-- Main frame -->

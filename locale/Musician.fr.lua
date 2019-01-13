@@ -85,6 +85,7 @@ msg.BASE_KEY = "Note de base"
 msg.CHANGE_BASE_KEY = "Changer la note de base"
 msg.CHANGE_LOWER_INSTRUMENT = "Changer l'instrument inférieur"
 msg.CHANGE_UPPER_INSTRUMENT = "Changer l'instrument supérieur"
+msg.POWER_CHORDS = "Power chords"
 
 msg.LAYERS = {
 	[Musician.KEYBOARD_LAYER.UPPER] = "Supérieur",

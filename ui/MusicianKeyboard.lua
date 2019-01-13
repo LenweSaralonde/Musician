@@ -254,6 +254,12 @@ local function initLayerControls(layer)
 	_G[varNamePrefix .. "ShiftReset"]:SetScript("OnClick", function()
 		Musician.Keyboard.ShiftKeys(layer)
 	end)
+
+	-- Power chords
+	_G[varNamePrefix .. "PowerChords"].SetValue = function(self, value)
+		Musician.Keyboard.SetPowerChords(layer, value == "1")
+	end
+	_G[varNamePrefix .. "PowerChords"].SetValue(Musician.Keyboard.config.powerChords[layer])
 end
 
 --- Initialize keyboard
@@ -456,11 +462,11 @@ MusicianKeyboard.NoteKey = function(down, keyValue)
 	local noteKey = note[2]
 	local instrument = Musician.Keyboard.config.instrument[layer]
 
-	Musician.Live.NoteOff(noteKey, layer, instrument)
 	if Musician.Keyboard.config.powerChords[layer] then
-		Musician.Live.NoteOff(noteKey - 5, layer, instrument)
 		Musician.Live.NoteOff(noteKey - 12, layer, instrument)
+		Musician.Live.NoteOff(noteKey - 5, layer, instrument)
 	end
+	Musician.Live.NoteOff(noteKey, layer, instrument)
 
 	if down then
 		if Musician.Keyboard.config.powerChords[layer] then
