@@ -1,55 +1,6 @@
 Musician.Keyboard = LibStub("AceAddon-3.0"):NewAddon("Musician.Keyboard", "AceEvent-3.0")
 
-Musician.Keyboard.Layer = {
-	["UPPER"] = 0,
-	["LOWER"] = 1,
-	["DRUMS"] = 2,
-}
-local LAYER = Musician.Keyboard.Layer
-
-Musician.Keyboard.InstrumentKeys = {
-	["L"] = "lute",
-	["R"] = "recorder",
-	["H"] = "harp",
-	["D"] = "dulcimer",
-	["B"] = "bagpipe",
-	["F"] = "fiddle",
-	["C"] = "cello",
-	["A"] = "female-voice",
-	["O"] = "male-voice",
-	["T"] = "trumpet",
-	["U"] = "trombone",
-	["W"] = "clarinet",
-	["Z"] = "bassoon",
-	["M"] = "distorsion-guitar",
-	["G"] = "clean-guitar",
-	["X"] = "bass-guitar",
-
-	["0"] = "percussions",
-	["1"] = "drumkit",
-
-	["NUMPAD0"] = "NUMPAD-percussions",
-	["NUMPAD1"] = "NUMPAD-drumkit",
-}
-
-Musician.Keyboard.DrumKeys = {
-	["NUMPAD0"] = 35, -- [35] = "bodhran-bassdrum-low", -- Acoustic Bass Drum
-	["NUMPADDECIMAL"] = 38, -- [38] = "bodhran-snare-long-low", -- Acoustic Snare
-	["NUMPAD1"] = 42, -- [42] = "tambourine-hit1", -- Closed Hi Hat
-	["NUMPAD2"] = 44, -- [44] = "tambourine-shake-short", -- Pedal Hi-Hat
-	["NUMPAD3"] = 46, -- [46] = "tambourine-shake-long", -- Open Hi-Hat
-	["NUMPAD4"] = 41, -- [41] = "bodhran-tom-long-low", -- Low Floor Tom
-	["NUMPAD5"] = 43, -- [43] = "bodhran-tom-long-med", -- High Floor Tom
-	["NUMPAD6"] = 45, -- [45] = "bodhran-tom-long-hi", -- Low Tom
-	["NUMPAD7"] = 47, -- [47] = "bodhran-tom-short-low", -- Low-Mid Tom
-	["NUMPAD8"] = 48, -- [48] = "bodhran-tom-short-med", -- Hi-Mid Tom
-	["NUMPAD9"] = 50, -- [50] = "bodhran-tom-short-hi", -- High Tom
-	["NUMPADDIVIDE"] = 51, -- [51] = "tambourine-hit1", -- Ride Cymbal 1
-	["NUMPADMULTIPLY"] = 59, -- [59] = "tambourine-hit2", -- Ride Cymbal 2
-	["NUMPADPLUS"] = 49, -- [49] = "tambourine-crash-long1", -- Crash Cymbal 1
-	["NUMPADMINUS"] = 57, -- [57] = "tambourine-crash-long2", -- Crash Cymbal 2
-}
-
+local LAYER = Musician.KEYBOARD_LAYER
 local KEY = Musician.KEYBOARD_KEY
 
 local KEY_SIZE = 50
@@ -96,6 +47,8 @@ end
 --- Set keyboard keys (notes, color etc)
 --
 local function setKeys()
+	local config = Musician.Keyboard.config
+
 	local row, col, rowKeys, key
 	for row, rowKeys in pairs(Musician.KEYBOARD) do
 		local cursorX = 0
@@ -116,7 +69,9 @@ local function setKeys()
 				keyValueButtons[keyValue] = button
 			end
 
-			if Musician.Keyboard.mapping[key] ~= nil or keyValueName then
+			local keyData = Musician.Keyboard.mapping[key]
+
+			if keyData ~= nil or keyValueName then
 				-- Ket key and note names
 				local noteName = ""
 
@@ -124,15 +79,18 @@ local function setKeys()
 					keyValueName = Musician.KeyboardUtils.GetKeyValueName(keyValue)
 				end
 
-				if Musician.Keyboard.mapping[key] ~= nil then
-					noteName = Musician.Utils.NoteName(Musician.Keyboard.mapping[key][2])
+				if keyData ~= nil then
+					noteName = Musician.Utils.NoteName(keyData[2])
+					local instrumentName = Musician.MIDI_INSTRUMENT_MAPPING[config.instrument[keyData[1]]]
+					local r, g, b = unpack(Musician.INSTRUMENTS[instrumentName].color)
 
 					-- Black or white key
-					if string.match(noteName, "%#") then
-						button.background:SetColorTexture(.33, .22, .11, 1)
-					else
-						button.background:SetColorTexture(1, .88, .75, 1)
+					if string.match(noteName, "[%#b]") then
+						r = r / 4
+						g = g / 4
+						b = b / 4
 					end
+					button.background:SetColorTexture(r, g, b, 1)
 					button:Enable()
 					button:SetAlpha(1)
 				else
@@ -174,8 +132,8 @@ local function setKeys()
 				button:SetPoint("TOPLEFT", MusicianKeyboardKeys, "TOPLEFT", keyX * KEY_SIZE, keyY * KEY_SIZE)
 
 				-- Set text
-				button:SetText(keyValueName)
-				button.subText:SetText(noteName)
+				button:SetText(noteName)
+				button.subText:SetText(keyValueName)
 			else
 				keyVisible = false
 			end
@@ -191,19 +149,133 @@ local function setKeys()
 	end
 end
 
+--- Initialize a dropdown
+-- @param dropdown (UIDropDownMenu)
+-- @param values (table)
+-- @param labels (table)
+-- @param initialValue (string)
+-- @param onChange (function)
+-- @param tooltipText (string)
+local function initDropdown(dropdown, values, labels, initialValue, onChange, tooltipText)
+	dropdown.value = nil
+	dropdown.tooltipText = tooltipText
+
+	dropdown.SetValue = function(value)
+		dropdown.value = value
+		UIDropDownMenu_SetText(dropdown, labels[value])
+		onChange(value)
+	end
+
+	dropdown.OnClick = function(self, arg1, arg2, checked)
+		dropdown.SetValue(arg1)
+	end
+
+	dropdown.GetItems = function(frame, level, menuList)
+		local info = UIDropDownMenu_CreateInfo()
+		info.func = dropdown.OnClick
+
+		local index, value
+		for index, value in pairs(values) do
+			info.text = labels[value]
+			info.arg1 = value
+			info.checked = dropdown.value == value
+			UIDropDownMenu_AddButton(info)
+		end
+	end
+
+	UIDropDownMenu_Initialize(dropdown, dropdown.GetItems)
+	dropdown.SetValue(initialValue)
+end
+
+--- Initialize layout dropdown
+--
+local function initLayoutDropdown()
+	local values = {}
+	local labels = {}
+	local index, layout
+	for index, layout in pairs(Musician.Layouts) do
+		table.insert(values, index)
+		table.insert(labels, Musician.Msg.KEYBOARD_LAYOUTS[layout.name] or layout.name)
+	end
+
+	initDropdown(MusicianKeyboardControlsMainLayoutDropdown, values, labels, Musician.Keyboard.config.layout, Musician.Keyboard.SetLayout, Musician.Msg.CHANGE_KEYBOARD_LAYOUT)
+end
+
+--- Initialize base key dropdown
+--
+local function initBaseKeyDropdown()
+
+	local values = {}
+	local key
+	for key = 0, 11 do
+		table.insert(values, key)
+	end
+
+	initDropdown(MusicianKeyboardControlsMainBaseKeyDropdown, values, Musician.NOTE_NAMES, Musician.Keyboard.config.baseKey, Musician.Keyboard.SetBaseKey, Musician.Msg.CHANGE_BASE_KEY)
+end
+
+--- Init controls for a layer
+-- @param layer (int)
+local function initLayerControls(layer)
+	local varNamePrefix = "MusicianKeyboardControls"
+	local config = Musician.Keyboard.config
+	local instrument = config.instrument[layer]
+	local dropdownTooltipText
+	local layout = Musician.Layouts[config.layout]
+
+	if layer == LAYER.LOWER then
+		varNamePrefix = varNamePrefix .. "Lower"
+		dropdownTooltipText = Musician.Msg.CHANGE_LOWER_INSTRUMENT
+	elseif layer == LAYER.UPPER then
+		varNamePrefix = varNamePrefix .. "Upper"
+		dropdownTooltipText = Musician.Msg.CHANGE_UPPER_INSTRUMENT
+	end
+
+	-- Instrument selector
+	_G[varNamePrefix .. "Instrument"].OnChange = function(instrument)
+		Musician.Keyboard.SetInstrument(layer, instrument)
+	end
+	_G[varNamePrefix .. "Instrument"].SetValue(instrument)
+	_G[varNamePrefix .. "Instrument"].tooltipText = dropdownTooltipText
+
+	-- Keys shift buttons
+	_G[varNamePrefix .. "ShiftLeft"]:SetScript("OnClick", function()
+		Musician.Keyboard.ShiftKeys(layer, -layout.shift)
+	end)
+	_G[varNamePrefix .. "ShiftRight"]:SetScript("OnClick", function()
+		Musician.Keyboard.ShiftKeys(layer, layout.shift)
+	end)
+	_G[varNamePrefix .. "ShiftDown"]:SetScript("OnClick", function()
+		Musician.Keyboard.ShiftKeys(layer, #layout.scale)
+	end)
+	_G[varNamePrefix .. "ShiftUp"]:SetScript("OnClick", function()
+		Musician.Keyboard.ShiftKeys(layer, -#layout.scale)
+	end)
+	_G[varNamePrefix .. "ShiftReset"]:SetScript("OnClick", function()
+		Musician.Keyboard.ShiftKeys(layer)
+	end)
+end
+
 --- Initialize keyboard
 --
 function Musician.Keyboard.Init()
 
 	-- Base parameters
 	Musician.Keyboard.config = {
-		["layout"] = "Piano",
-		["upperInstrument"] = 24, -- lute
-		["lowerInstrument"] = 24, -- lute
-		["drumsInstrument"] = 128,
-		["upperShift"] = 0,
-		["lowerShift"] = 0,
-		["transpose"] = 0,
+		["layout"] = 1,
+		["instrument"] = {
+			[LAYER.UPPER] = 24, -- lute
+			[LAYER.LOWER] = 24, -- lute
+		},
+		["shift"] = {
+			[LAYER.UPPER] = 0,
+			[LAYER.LOWER] = 0,
+		},
+		["baseKey"] = 0,
+		["powerChords"] = {
+			[LAYER.UPPER] = false,
+			[LAYER.LOWER] = false,
+		},
 	}
 
 	-- Set scripts
@@ -212,6 +284,13 @@ function Musician.Keyboard.Init()
 
 	-- Generate keyboard keys
 	generateKeys()
+
+	-- Generate dropdowns
+	initLayoutDropdown()
+	initBaseKeyDropdown()
+
+	initLayerControls(LAYER.LOWER)
+	initLayerControls(LAYER.UPPER)
 end
 
 --- OnKeyDown
@@ -237,11 +316,7 @@ Musician.Keyboard.OnKeyDown = function(self, keyValue)
 		rCtrlDown = true
 	elseif not(lCtrlDown) and not(rCtrlDown) then
 		MusicianKeyboard.NoteKey(true, keyValue)
-	else
-		MusicianKeyboard.ShiftKeyDown(keyValue)
-		MusicianKeyboard.InstrumentChangeKeyDown(keyValue)
 	end
-
 end
 
 --- OnKeyUp
@@ -268,14 +343,63 @@ Musician.Keyboard.OnKeyUp = function(self, keyValue)
 		rCtrlDown = false
 	elseif not(lCtrlDown) and not(rCtrlDown) then
 		MusicianKeyboard.NoteKey(false, keyValue)
-	else
-
 	end
+end
+
+--- Change keyboard layout
+-- @param layout (string)
+Musician.Keyboard.SetLayout = function(layout)
+	Musician.Keyboard.config.layout = layout
+	Musician.Live.AllNotesOff()
+	Musician.Keyboard.BuildMapping()
+end
+
+--- Change base key
+-- @param key (number)
+Musician.Keyboard.SetBaseKey = function(key)
+	Musician.Keyboard.config.baseKey = key
+	Musician.Live.AllNotesOff()
+	Musician.Keyboard.BuildMapping()
+end
+
+--- Change Instrument
+-- @param layer (number)
+-- @param instrument (number)
+Musician.Keyboard.SetInstrument = function(layer, instrument)
+	Musician.Keyboard.config.instrument[layer] = instrument
+	Musician.Live.AllNotesOff(layer)
+	setKeys()
+end
+
+--- Shift keys
+-- @param layer (number)
+-- @param amount (number) If nil, shift value is reset
+Musician.Keyboard.ShiftKeys = function(layer, amount)
+	local config = Musician.Keyboard.config
+
+	if amount ~= nil then
+		config.shift[layer] = config.shift[layer] + amount
+	else
+		config.shift[layer] = 0
+	end
+
+	Musician.Live.AllNotesOff(layer)
+	Musician.Keyboard.BuildMapping()
+end
+
+--- Set power chords \m/
+-- @param layer (number)
+-- @param enable (boolean)
+Musician.Keyboard.SetPowerChords = function(layer, enable)
+	Musician.Keyboard.config.powerChords[layer] = enable
+	Musician.Live.AllNotesOff(layer)
+	Musician.Keyboard.BuildMapping()
 end
 
 --- Build keyboard mapping from actual configuration
 --
 Musician.Keyboard.BuildMapping = function()
+
 	Musician.Keyboard.mapping = {}
 
 	-- Invalid layout
@@ -296,7 +420,7 @@ Musician.Keyboard.BuildMapping = function()
 			local scaleNote = scale[scaleIndex % #scale + 1]
 			if scaleNote ~= -1 then
 				local octave = floor(scaleIndex / #scale)
-				local note = scaleNote + baseKey + 12 * octave + Musician.Keyboard.config.transpose
+				local note = scaleNote + baseKey + 12 * octave + Musician.Keyboard.config.baseKey
 				Musician.Keyboard.mapping[key] = { layer, note }
 			end
 			scaleIndex = scaleIndex + 1
@@ -305,8 +429,8 @@ Musician.Keyboard.BuildMapping = function()
 
 	local layout = Musician.Layouts[Musician.Keyboard.config.layout]
 	local config = Musician.Keyboard.config
-	mapKeys(LAYER.UPPER, layout.scale, layout.upper.keyboardMapping, Musician.Utils.NoteKey(layout.upper.baseKey), layout.upper.baseKeyIndex + config.upperShift)
-	mapKeys(LAYER.LOWER, layout.scale, layout.lower.keyboardMapping, Musician.Utils.NoteKey(layout.lower.baseKey), layout.lower.baseKeyIndex + config.lowerShift)
+	mapKeys(LAYER.UPPER, layout.scale, layout.upper.keyboardMapping, Musician.Utils.NoteKey(layout.upper.baseKey), layout.upper.baseKeyIndex + config.shift[LAYER.UPPER])
+	mapKeys(LAYER.LOWER, layout.scale, layout.lower.keyboardMapping, Musician.Utils.NoteKey(layout.lower.baseKey), layout.lower.baseKeyIndex + config.shift[LAYER.LOWER])
 
 	setKeys()
 end
@@ -319,18 +443,7 @@ MusicianKeyboard.NoteKey = function(down, keyValue)
 	local key = Musician.KeyboardUtils.GetKey(keyValue)
 
 	if key == nil then
-		local drumNote = Musician.Keyboard.DrumKeys[keyValue]
-		if drumNote == nil then
-			return false
-		end
-
-		if down then
-			Musician.Live.NoteOn(drumNote, Musician.Keyboard.config.drumsInstrument)
-		else
-			Musician.Live.NoteOff(drumNote, Musician.Keyboard.config.drumsInstrument)
-		end
-
-		return true
+		return false
 	end
 
 	local note = Musician.Keyboard.mapping[key]
@@ -341,98 +454,21 @@ MusicianKeyboard.NoteKey = function(down, keyValue)
 
 	local layer = note[1]
 	local noteKey = note[2]
-	local instrument
+	local instrument = Musician.Keyboard.config.instrument[layer]
 
-	if layer == LAYER.UPPER then
-		instrument = Musician.Keyboard.config.upperInstrument
-	elseif layer == LAYER.LOWER then
-		instrument = Musician.Keyboard.config.lowerInstrument
+	Musician.Live.NoteOff(noteKey, layer, instrument)
+	if Musician.Keyboard.config.powerChords[layer] then
+		Musician.Live.NoteOff(noteKey - 5, layer, instrument)
+		Musician.Live.NoteOff(noteKey - 12, layer, instrument)
 	end
 
 	if down then
-		Musician.Live.NoteOn(noteKey, instrument)
-	else
-		Musician.Live.NoteOff(noteKey, instrument)
+		if Musician.Keyboard.config.powerChords[layer] then
+			Musician.Live.NoteOn(noteKey - 12, layer, instrument)
+			Musician.Live.NoteOn(noteKey - 5, layer, instrument)
+		end
+		Musician.Live.NoteOn(noteKey, layer, instrument)
 	end
 
 	return true
-end
-
---- Shift keyboard layout using ctrl + directional keys
--- @param keyValue (string)
-MusicianKeyboard.ShiftKeyDown = function(keyValue)
-
-	if not(lCtrlDown) and not(rCtrlDown) then
-		return false
-	end
-
-	local layout = Musician.Layouts[Musician.Keyboard.config.layout]
-
-	local value = 0
-
-	if keyValue == "UP" then value = -#layout.scale
-	elseif keyValue == "DOWN" then value = #layout.scale
-	elseif keyValue == "LEFT" then value = -layout.shift
-	elseif keyValue == "RIGHT" then value = layout.shift
-	end
-
-	if value == 0 then
-		return true
-	end
-
-	-- TODO: rewrite as separate function
-	if lCtrlDown then
-		Musician.Keyboard.config.lowerShift = Musician.Keyboard.config.lowerShift + value
-		Musician.Utils.Print("Lower shift" .. " " .. Musician.Utils.Highlight(Musician.Keyboard.config.lowerShift))
-	end
-
-	if rCtrlDown then
-		Musician.Keyboard.config.upperShift = Musician.Keyboard.config.upperShift + value
-		Musician.Utils.Print("Upper shift" .. " " .. Musician.Utils.Highlight(Musician.Keyboard.config.upperShift))
-	end
-
-	Musician.Keyboard.BuildMapping()
-
-	return true
-end
-
---- Change instrument using Ctrl + letter key
--- @param keyValue (string)
-MusicianKeyboard.InstrumentChangeKeyDown = function(keyValue)
-
-	if not(lCtrlDown) and not(rCtrlDown) then
-		return false
-	end
-
-	local changeDrumsInstrument = false
-	if Musician.Keyboard.InstrumentKeys[keyValue] then
-		local instrumentName = Musician.Keyboard.InstrumentKeys[keyValue]
-		local replaceDrums = false
-		if string.match(instrumentName, 'NUMPAD-') then
-			instrumentName = string.gsub(instrumentName, 'NUMPAD%-', '')
-			changeDrumsInstrument = true
-		end
-
-		-- TODO: rewrite as separate function
-		local instrument = Musician.INSTRUMENTS[instrumentName]
-
-		if changeDrumsInstrument then
-			Musician.Keyboard.config.drumsInstrument = instrument.midi
-			Musician.Utils.Print(Musician.Msg.CHANGE_TRACK_INSTRUMENT .. " (drums) " .. Musician.Utils.Highlight(Musician.Msg.INSTRUMENT_NAMES[instrumentName]))
-		else
-			if lCtrlDown then
-				Musician.Keyboard.config.lowerInstrument = instrument.midi
-				Musician.Utils.Print(Musician.Msg.CHANGE_TRACK_INSTRUMENT .. " (lower) " .. Musician.Utils.Highlight(Musician.Msg.INSTRUMENT_NAMES[instrumentName]))
-			end
-
-			if rCtrlDown then
-				Musician.Keyboard.config.upperInstrument = instrument.midi
-				Musician.Utils.Print(Musician.Msg.CHANGE_TRACK_INSTRUMENT .. " (upper) " .. Musician.Utils.Highlight(Musician.Msg.INSTRUMENT_NAMES[instrumentName]))
-			end
-		end
-
-		return true
-	end
-
-	return false
 end

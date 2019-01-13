@@ -45,7 +45,6 @@
 					Musician.Keyboard.OnKeyUp(self, self.keyValue)
 					self.animateOnMouseUp(button, mouseButton)
 				end)
-
 			</OnLoad>
 			<OnSizeChanged>
 				self.background:SetWidth(w - 7)
@@ -58,6 +57,78 @@
 		<HighlightFont style="GameFontHighlightLarge"/>
 	</Button>
 
+	<!-- Square button template -->
+
+	<Button name="MusicianKeyboardSquareButtonTemplate" inherits="MusicianIconButton" virtual="true">
+		<Size x="24" y="24" />
+		<Scripts>
+			<OnMouseDown>
+				PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
+			</OnMouseDown>
+		</Scripts>
+	</Button>
+
+	<!-- Layer settings template -->
+
+	<Frame name="MusicianLayerTemplate" virtual="true">
+		<Size x="250" y="92" />
+		<Layers>
+			<Layer level="FOREGROUND">
+				<FontString name="$parentLayerName" parentKey="layerName" inherits="GameFontHighlight" justifyh="LEFT">
+					<Size x="250" y="32" />
+					<Anchors>
+						<Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent" />
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+
+		<Frames>
+			<Frame name="$parentInstrument" inherits="MusicianInstrumentDropdownTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" x="-18" relativePoint="BOTTOMLEFT" relativeTo="$parentLayerName" />
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						MusicianInstrumentDropdownTemplate:GetScript("OnLoad")(self)
+						UIDropDownMenu_SetWidth(self, 150)
+					</OnLoad>
+				</Scripts>
+			</Frame>
+
+			<Button name="$parentShiftRight" inherits="MusicianKeyboardSquareButtonTemplate" text="R">
+				<Anchors>
+					<Anchor point="RIGHT" relativePoint="RIGHT" relativeTo="$parent" />
+				</Anchors>
+			</Button>
+
+			<Button name="$parentShiftReset" inherits="MusicianKeyboardSquareButtonTemplate" text="r">
+				<Anchors>
+					<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentShiftRight" />
+				</Anchors>
+			</Button>
+
+			<Button name="$parentShiftLeft" inherits="MusicianKeyboardSquareButtonTemplate" text="L">
+				<Anchors>
+					<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentShiftReset" />
+				</Anchors>
+				<ButtonText name="$parentText" parentKey="Text" />
+			</Button>
+
+			<Button name="$parentShiftUp" inherits="MusicianKeyboardSquareButtonTemplate" text="U">
+				<Anchors>
+					<Anchor point="BOTTOM" relativePoint="TOP" relativeTo="$parentShiftReset" />
+				</Anchors>
+			</Button>
+
+			<Button name="$parentShiftDown" inherits="MusicianKeyboardSquareButtonTemplate" text="D">
+				<Anchors>
+					<Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$parentShiftReset" />
+				</Anchors>
+			</Button>
+		</Frames>
+	</Frame>
+
 	<!-- Main frame -->
 
 	<Frame name="MusicianKeyboard" parent="UIParent" toplevel="true" enableMouse="true" setAllPoints="true" enableKeyboard="true" movable="true" hidden="true" frameStrata="DIALOG">
@@ -68,14 +139,13 @@
 			<OnDragStop>self:StopMovingOrSizing()</OnDragStop>
 			<OnShow>
 				PlaySound(SOUNDKIT.IG_QUEST_LIST_OPEN)
-				Musician.Keyboard.BuildMapping()
 			</OnShow>
 			<OnHide>
 				PlaySound(SOUNDKIT.IG_QUEST_LIST_CLOSE)
 			</OnHide>
 		</Scripts>
 
-		<Size x="800" y="300" />
+		<Size x="800" y="400" />
 
 		<Anchors>
 			<Anchor point="CENTER" x="0" y="0" />
@@ -118,9 +188,92 @@
 
 			<Frame name="$parentKeys">
 				<Anchors>
-					<Anchor point="CENTER" relativeTo="$parent" />
+					<Anchor point="TOP" relativeTo="$parent" relativePoint="TOP" y="-25" />
 				</Anchors>
 			</Frame>
+
+			<Frame name="$parentControls">
+				<Size x="750" y="92" />
+				<Anchors>
+					<Anchor point="BOTTOM" relativeTo="$parent" relativePoint="BOTTOM" y="25"  />
+				</Anchors>
+
+				<Frames>
+
+					<Frame name="$parentMain">
+						<Size x="200" y="92" />
+						<Anchors>
+							<Anchor point="TOP" relativeTo="$parent" relativePoint="TOP" />
+						</Anchors>
+
+						<Scripts>
+							<OnLoad>
+								self.title:SetText(Musician.Msg.KEYBOARD_LAYOUT)
+							</OnLoad>
+						</Scripts>
+
+						<Layers>
+							<Layer level="FOREGROUND">
+								<FontString name="$parentTitle" parentKey="title" inherits="GameFontHighlight" justifyh="LEFT">
+									<Size x="150" y="32" />
+									<Anchors>
+										<Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent" />
+									</Anchors>
+								</FontString>
+							</Layer>
+						</Layers>
+
+						<Frames>
+							<Frame name="$parentLayoutDropdown" inherits="MusicianDropDownMenuTooltipTemplate">
+								<Anchors>
+									<Anchor point="TOPLEFT" x="-18" relativePoint="BOTTOMLEFT" relativeTo="$parentTitle" />
+								</Anchors>
+								<Scripts>
+									<OnLoad>
+										UIDropDownMenu_SetWidth(self, 130)
+									</OnLoad>
+								</Scripts>
+							</Frame>
+
+							<Frame name="$parentBaseKeyDropdown" inherits="MusicianDropDownMenuTooltipTemplate">
+								<Anchors>
+									<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentLayoutDropdown" x="-32" />
+								</Anchors>
+								<Scripts>
+									<OnLoad>
+										UIDropDownMenu_SetWidth(self, 40)
+									</OnLoad>
+								</Scripts>
+							</Frame>
+						</Frames>
+					</Frame>
+
+					<Frame name="$parentLower" inherits="MusicianLayerTemplate" virtual="true">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent" />
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								self.layerName:SetText(Musician.Msg.LAYERS[Musician.KEYBOARD_LAYER.LOWER])
+							</OnLoad>
+						</Scripts>
+					</Frame>
+
+					<Frame name="$parentUpper" inherits="MusicianLayerTemplate" virtual="true">
+						<Anchors>
+							<Anchor point="TOPRIGHT" relativePoint="TOPRIGHT" relativeTo="$parent" />
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								self.layerName:SetText(Musician.Msg.LAYERS[Musician.KEYBOARD_LAYER.UPPER])
+							</OnLoad>
+						</Scripts>
+					</Frame>
+
+				</Frames>
+			</Frame>
+
 		</Frames>
 	</Frame>
 </Ui>
+

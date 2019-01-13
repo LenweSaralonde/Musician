@@ -17,11 +17,14 @@ function Musician.Live.Init()
 	local instrumentName, trackId, instrumentId
 
 	trackId = 1
-	for _, instrumentName in pairs(Musician.INSTRUMENTS_AVAILABLE) do
-		instrumentId = Musician.INSTRUMENTS[instrumentName].midi
-		if instrumentId >= 0 then
-			Musician.Live.InstrumentTrackMapping[instrumentId] = trackId
-			trackId = trackId + 1
+	for _, layerId in pairs(Musician.KEYBOARD_LAYER) do
+		Musician.Live.InstrumentTrackMapping[layerId] = {}
+		for _, instrumentName in pairs(Musician.INSTRUMENTS_AVAILABLE) do
+			instrumentId = Musician.INSTRUMENTS[instrumentName].midi
+			if instrumentId >= 0 then
+				Musician.Live.InstrumentTrackMapping[layerId][instrumentId] = trackId
+				trackId = trackId + 1
+			end
 		end
 	end
 end
@@ -40,26 +43,28 @@ function Musician.Live.CreateLiveSong()
 	song.mode = Musician.Song.MODE_LIVE
 	song.chunkDuration = CHUNK_DURATION
 
-	-- Create one track per instrument
-	local trackId, instrumentId
+	-- Create one track per instrument and per layer
+	local trackId, layerId, instrumentId
 	trackId = 1
-	for _, instrumentName in pairs(Musician.INSTRUMENTS_AVAILABLE) do
-		instrumentId = Musician.INSTRUMENTS[instrumentName].midi
-		if instrumentId >= 0 then
-			local track = {
-				['index'] = trackId,
-				['midiInstrument'] = min(128, instrumentId),
-				['instrument'] = instrumentId,
-				['notes'] = {},
-				['playIndex'] = 1,
-				['muted'] = false,
-				['solo'] = false,
-				['transpose'] = 0,
-				['notesOn'] = {},
-				['polyphony'] = 0
-			}
-			trackId = trackId + 1
-			table.insert(song.tracks, track)
+	for _, layerId in pairs(Musician.KEYBOARD_LAYER) do
+		for _, instrumentName in pairs(Musician.INSTRUMENTS_AVAILABLE) do
+			instrumentId = Musician.INSTRUMENTS[instrumentName].midi
+			if instrumentId >= 0 then
+				local track = {
+					['index'] = trackId,
+					['midiInstrument'] = min(128, instrumentId),
+					['instrument'] = instrumentId,
+					['notes'] = {},
+					['playIndex'] = 1,
+					['muted'] = false,
+					['solo'] = false,
+					['transpose'] = 0,
+					['notesOn'] = {},
+					['polyphony'] = 0
+				}
+				trackId = trackId + 1
+				table.insert(song.tracks, track)
+			end
 		end
 	end
 
@@ -85,8 +90,9 @@ end
 --- Send note
 -- @param noteOn (boolean) Note on/off
 -- @param key (int) MIDI key index
+-- @param layer (int)
 -- @param instrument (int)
-function Musician.Live.InsertNote(noteOn, key, instrument)
+function Musician.Live.InsertNote(noteOn, key, layer, instrument)
 
 	Musician.Live.CreateLiveSong()
 
@@ -96,8 +102,12 @@ function Musician.Live.InsertNote(noteOn, key, instrument)
 	end
 
 	-- Insert note in track
-	local trackId = Musician.Live.InstrumentTrackMapping[instrument]
+	local trackId = Musician.Live.InstrumentTrackMapping[layer][instrument]
 	local noteTime = GetTime() - Musician.Live.songStartTime
+
+	if trackId == nil then
+		return
+	end
 
 	table.insert(Musician.streamingSong.tracks[trackId].notes, {
 		[NOTE.ON] = noteOn,
@@ -112,8 +122,9 @@ end
 
 --- Send note on
 -- @param key (int) MIDI key index
+-- @param layer (int)
 -- @param instrument (int)
-function Musician.Live.NoteOn(key, instrument)
+function Musician.Live.NoteOn(key, layer, instrument)
 
 	local soundFile, instrumentData = Musician.Utils.GetSoundFile(instrument, key)
 	if soundFile == nil then
@@ -121,7 +132,7 @@ function Musician.Live.NoteOn(key, instrument)
 	end
 
 	-- Insert note on in streaming song
-	Musician.Live.InsertNote(true, key, instrument)
+	Musician.Live.InsertNote(true, key, layer, instrument)
 
 	-- Play note
 	if Musician.globalMute then
@@ -131,23 +142,36 @@ function Musician.Live.NoteOn(key, instrument)
 	local play, handle = PlaySoundFile(soundFile, 'SFX')
 
 	if play then
-		Musician.Live.NotesOn[key .. '-' .. instrument] = {handle, instrumentData.decay, instrumentData.midi}
+		Musician.Live.NotesOn[key .. '-' .. layer .. '-' .. instrument] = {handle, instrumentData.decay, layer, key, instrumentData.midi}
 	end
 end
 
 --- Send note off
 -- @param key (int) MIDI key index
+-- @param layer (int)
 -- @param instrument (int)
-function Musician.Live.NoteOff(key, instrument)
+function Musician.Live.NoteOff(key, layer, instrument)
 
 	-- Insert note off in streaming song
-	Musician.Live.InsertNote(false, key, instrument)
-	
-	local noteOnKey = key .. '-' .. instrument
+	Musician.Live.InsertNote(false, key, layer, instrument)
+
+	local noteOnKey = key .. '-' .. layer .. '-' .. instrument
 	if Musician.Live.NotesOn[noteOnKey] then
-		local handle, decay, instrumentId = unpack(Musician.Live.NotesOn[noteOnKey])
+		local handle, decay, _, _, _ = unpack(Musician.Live.NotesOn[noteOnKey])
 		StopSound(handle, decay)
 		Musician.Live.NotesOn[noteOnKey] = nil
 	end
+end
 
+--- Set all notes to off
+-- @param onlyForLayer (int)
+function Musician.Live.AllNotesOff(onlyForLayer)
+	local noteOnKey, note
+	for noteOnKey, note in pairs(Musician.Live.NotesOn) do
+		local _, _, layer, key, instrument = unpack(note)
+
+		if onlyForLayer == nil or onlyForLayer == layer then
+			Musician.Live.NoteOff(key, layer, instrument)
+		end
+	end
 end

@@ -110,3 +110,8 @@ Musician.KEYBOARD_FIXED_MAPPING = {
 	["MENU"] = KEY.ContextMenu,
 	["RCTRL"] = KEY.ControlRight,
 }
+
+Musician.KEYBOARD_LAYER = {
+	["UPPER"] = 0,
+	["LOWER"] = 1,
+}

@@ -1,11 +1,22 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 
+	<!-- Icon fonts -->
+
+	<Font name="MusicianFontIconsNormal" inherits="GameFontNormal" font="Interface\AddOns\Musician\ui\fonts\fontello.ttf" height="12" virtual="true" />
+	<Font name="MusicianFontIconsHighlight" inherits="GameFontHighlight" font="Interface\AddOns\Musician\ui\fonts\fontello.ttf" height="12" virtual="true" />
+	<Font name="MusicianFontIconsDisable" inherits="GameFontDisable" font="Interface\AddOns\Musician\ui\fonts\fontello.ttf" height="12" virtual="true" />
+
+	<!-- Standard button with icon font template -->
+
+	<Button name="MusicianIconButton" inherits="UIPanelButtonTemplate" virtual="true">
+		<NormalFont style="MusicianFontIconsNormal" />
+		<HighlightFont style="MusicianFontIconsHighlight" />
+		<DisabledFont style="MusicianFontIconsDisable" />
+	</Button>
+
 	<!-- Dropdown menu with tooltip -->
 
 	<Frame name="MusicianDropDownMenuTooltipTemplate" inherits="UIDropDownMenuTemplate" virtual="true">
-		<Anchors>
-			<Anchor point="RIGHT" relativePoint="RIGHT" relativeTo="$parent" x="14" />
-		</Anchors>
 		<Scripts>
 			<OnEnter>
 				if(self.tooltipText ~= nil) then
@@ -19,10 +30,11 @@
 			</OnLeave>
 		</Scripts>
 	</Frame>
+	<Frame name="MusicianDropDownMenuTooltipTemplate" inherits="MusicianDropDownMenuTooltipTemplate" />
 
 	<!-- Instrument dropdown -->
 
-	<Frame name="MusicianInstrumentDropdown" inherits="MusicianDropDownMenuTooltipTemplate" virtual="true">
+	<Frame name="MusicianInstrumentDropdownTemplate" inherits="MusicianDropDownMenuTooltipTemplate" virtual="true">
 		<Scripts>
 			<OnLoad>
 				UIDropDownMenu_SetWidth(self, 115)
@@ -74,5 +86,6 @@
 			</OnLoad>
 		</Scripts>
 	</Frame>
+	<Frame name="MusicianInstrumentDropdownTemplate" inherits="MusicianInstrumentDropdownTemplate" />
 
 </Ui>

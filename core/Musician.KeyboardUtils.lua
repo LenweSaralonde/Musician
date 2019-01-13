@@ -2,7 +2,7 @@ Musician.KeyboardUtils = LibStub("AceAddon-3.0"):NewAddon("Musician.KeyboardUtil
 
 local keyValues -- Reverse mapping table (physical key => key value)
 
-function Musician.KeyboardUtils:OnInitialize()
+function Musician.KeyboardUtils.Init()
 	if Musician_Settings.keyboardMapping == nil then
 		Musician_Settings.keyboardMapping = Musician.KeyboardUtils.GetEmptyMapping()
 	end

@@ -75,6 +75,22 @@ msg.FIXED_KEY_NAMES = {
 	[KEY.ControlRight] = "Ctrl",
 }
 
+msg.KEYBOARD_LAYOUTS = {
+	["piano"] = "Piano"
+}
+
+msg.KEYBOARD_LAYOUT = "Keyboard layout"
+msg.CHANGE_KEYBOARD_LAYOUT = "Change keyboard layout"
+msg.BASE_KEY = "Base key"
+msg.CHANGE_BASE_KEY = "Base key"
+msg.CHANGE_LOWER_INSTRUMENT = "Change lower instrument"
+msg.CHANGE_UPPER_INSTRUMENT = "Change upper instrument"
+
+msg.LAYERS = {
+	[Musician.KEYBOARD_LAYER.UPPER] = "Upper",
+	[Musician.KEYBOARD_LAYER.LOWER] = "Lower",
+}
+
 msg.EMOTE_PLAYING_MUSIC = "is playing a song."
 msg.EMOTE_PROMO = "(Get \"Musician\" add-on or upgrade it from {url} to listen!)"
 msg.EMOTE_SONG_NOT_LOADED = "(The song cannot play because {player} is using an incompatible version.)"

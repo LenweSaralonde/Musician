@@ -25,20 +25,6 @@
 		</Scripts>
 	</EditBox>
 
-	<!-- Icon fonts -->
-
-	<Font name="MusicianFontIconsNormal" inherits="GameFontNormal" font="Interface\AddOns\Musician\ui\fonts\fontello.ttf" height="12" virtual="true" />
-	<Font name="MusicianFontIconsHighlight" inherits="GameFontHighlight" font="Interface\AddOns\Musician\ui\fonts\fontello.ttf" height="12" virtual="true" />
-	<Font name="MusicianFontIconsDisable" inherits="GameFontDisable" font="Interface\AddOns\Musician\ui\fonts\fontello.ttf" height="12" virtual="true" />
-
-	<!-- Standard button with icon font template -->
-
-	<Button name="MusicianPlayerButton" inherits="UIPanelButtonTemplate" virtual="true">
-		<NormalFont style="MusicianFontIconsNormal" />
-		<HighlightFont style="MusicianFontIconsHighlight" />
-		<DisabledFont style="MusicianFontIconsDisable" />
-	</Button>
-
 	<!-- Fieldset template -->
 
 	<Frame name="MusicianFieldset" virtual="true">
@@ -210,7 +196,7 @@
 				</HitRectInsets>
 			</CheckButton>
 
-			<Frame name="$parentInstrumentDropdown" inherits="MusicianInstrumentDropdown">
+			<Frame name="$parentInstrumentDropdown" inherits="MusicianInstrumentDropdownTemplate">
 				<Anchors>
 					<Anchor point="RIGHT" relativePoint="RIGHT" relativeTo="$parent" x="14" />
 				</Anchors>
@@ -335,7 +321,7 @@
 
 			<!-- Player buttons -->
 
-			<Button name="$parentPlayButton" inherits="MusicianPlayerButton">
+			<Button name="$parentPlayButton" inherits="MusicianIconButton">
 				<Size x="60" y="20" />
 				<Anchors>
 					<Anchor point="BOTTOM" x="0" y="0" relativePoint="TOP" relativeTo="$parentSourceSongSlider" />
@@ -354,7 +340,7 @@
 				</Scripts>
 			</Button>
 
-			<Button name="$parentPrevButton" inherits="MusicianPlayerButton" text="«">
+			<Button name="$parentPrevButton" inherits="MusicianIconButton" text="«">
 				<Size x="40" y="20" />
 				<Anchors>
 					<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentPlayButton" />
@@ -366,7 +352,7 @@
 				</Scripts>
 			</Button>
 
-			<Button name="$parentNextButton" inherits="MusicianPlayerButton" text="»">
+			<Button name="$parentNextButton" inherits="MusicianIconButton" text="»">
 				<Size x="40" y="20" />
 				<Anchors>
 					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentPlayButton" />
@@ -378,7 +364,7 @@
 				</Scripts>
 			</Button>
 
-			<Button name="$parentGoToStartButton" inherits="MusicianPlayerButton" text="&lt;" >
+			<Button name="$parentGoToStartButton" inherits="MusicianIconButton" text="&lt;" >
 				<Size x="40" y="20" />
 				<Anchors>
 					<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentPrevButton" />
@@ -390,7 +376,7 @@
 				</Scripts>
 			</Button>
 
-			<Button name="$parentGoToEndButton" inherits="MusicianPlayerButton" text="&gt;" hidden="true">
+			<Button name="$parentGoToEndButton" inherits="MusicianIconButton" text="&gt;" hidden="true">
 				<Size x="40" y="20" />
 				<Anchors>
 					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentNextButton" />
@@ -402,7 +388,7 @@
 				</Scripts>
 			</Button>
 
-			<Button name="$parentSetCropFromButton" inherits="MusicianPlayerButton" text="{" >
+			<Button name="$parentSetCropFromButton" inherits="MusicianIconButton" text="{" >
 				<Size x="40" y="20" />
 				<Anchors>
 					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentGoToEndButton" />
@@ -414,7 +400,7 @@
 				</Scripts>
 			</Button>
 
-			<Button name="$parentSetCropToButton" inherits="MusicianPlayerButton" text="}" >
+			<Button name="$parentSetCropToButton" inherits="MusicianIconButton" text="}" >
 				<Size x="40" y="20" />
 				<Anchors>
 					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentSetCropFromButton" />
