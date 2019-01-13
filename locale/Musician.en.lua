@@ -79,6 +79,9 @@ msg.KEYBOARD_LAYOUTS = {
 	["piano"] = "Piano"
 }
 
+msg.LIVE_PLAY = "Live play"
+msg.SHOW_KEYBOARD = "Show keyboard"
+msg.HIDE_KEYBOARD = "Hide keyboard"
 msg.KEYBOARD_LAYOUT = "Keyboard layout"
 msg.CHANGE_KEYBOARD_LAYOUT = "Change keyboard layout"
 msg.BASE_KEY = "Base key"

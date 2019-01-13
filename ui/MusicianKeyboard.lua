@@ -297,12 +297,19 @@ function Musician.Keyboard.Init()
 
 	initLayerControls(LAYER.LOWER)
 	initLayerControls(LAYER.UPPER)
+
+	-- Show or hide keyboard according to last settings
+	MusicianKeyboard.showKeyboard(Musician_Settings.keyboardVisible)
 end
 
 --- OnKeyDown
 -- @param self (Frame)
 -- @param keyValue (string)
 Musician.Keyboard.OnKeyDown = function(self, keyValue)
+	if keyValue == "ESCAPE" then
+		MusicianKeyboard:Hide()
+	end
+
 	local button = keyValueButtons[keyValue]
 	if button then
 		if button.down then

@@ -45,7 +45,7 @@
 
 	<!-- Main frame -->
 
-	<Frame name="MusicianKeyboardConfig" parent="UIParent" toplevel="true" enableMouse="true" setAllPoints="true" enableKeyboard="true" movable="true" hidden="true" frameStrata="DIALOG">
+	<Frame name="MusicianKeyboardConfig" parent="UIParent" toplevel="true" enableMouse="true" setAllPoints="true" enableKeyboard="true" movable="true" hidden="true" clampedtoscreen="true" frameStrata="DIALOG">
 
 		<Scripts>
 			<OnLoad>self:RegisterForDrag("LeftButton")</OnLoad>

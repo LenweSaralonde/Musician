@@ -50,6 +50,7 @@
 				self.background:SetWidth(w - 7)
 				self.background:SetHeight(h - 7)
 				self:SetHighlightTexture(nil)
+				self.subText:SetWidth(self:GetWidth())
 			</OnSizeChanged>
 		</Scripts>
 		<NormalFont style="GameFontHighlightLarge"/>
@@ -147,10 +148,10 @@
 
 		<Layers>
 			<Layer level="FOREGROUND">
-				<FontString name="$parentPowerChordsLabel" inherits="MusicianFontIconsNormal" justifyh="LEFT" text="Bh">
+				<FontString name="$parentPowerChordsLabel" inherits="MusicianFontIconsNormal" justifyh="LEFT" text="B h">
 					<Size x="250" y="32" />
 					<Anchors>
-						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentPowerChords" />
+						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentPowerChords" x="4" />
 					</Anchors>
 				</FontString>
 			</Layer>
@@ -159,10 +160,33 @@
 
 	<!-- Main frame -->
 
-	<Frame name="MusicianKeyboard" parent="UIParent" toplevel="true" enableMouse="true" setAllPoints="true" enableKeyboard="true" movable="true" hidden="true" frameStrata="DIALOG">
+	<Frame name="MusicianKeyboard" parent="UIParent" toplevel="true" enableMouse="true" setAllPoints="true" enableKeyboard="true" movable="true" hidden="true" clampedtoscreen="true" frameStrata="DIALOG">
 
 		<Scripts>
-			<OnLoad>self:RegisterForDrag("LeftButton")</OnLoad>
+			<OnLoad>
+				MusicianKeyboard.showKeyboard = function(visible)
+					if visible == nil then
+						visible = not(MusicianKeyboardKeys:IsVisible())
+					end
+
+					if visible then
+						MusicianKeyboard:SetHeight(400)
+						MusicianKeyboardKeys:Show()
+						MusicianKeyboardToggleKeyboardButton:SetText("d k")
+						MusicianKeyboardToggleKeyboardButton.tooltipText = Musician.Msg.HIDE_KEYBOARD
+					else
+						MusicianKeyboardKeys:Hide()
+						MusicianKeyboard:SetHeight(400 - MusicianKeyboardKeys:GetHeight())
+						MusicianKeyboardToggleKeyboardButton:SetText("u k")
+						MusicianKeyboardToggleKeyboardButton.tooltipText = Musician.Msg.SHOW_KEYBOARD
+					end
+
+					Musician_Settings.keyboardVisible = visible
+				end
+
+				MusicianKeyboardTitle:SetText(Musician.Msg.LIVE_PLAY)
+				self:RegisterForDrag("LeftButton")
+			</OnLoad>
 			<OnDragStart>self:StartMoving()</OnDragStart>
 			<OnDragStop>self:StopMovingOrSizing()</OnDragStop>
 			<OnShow>
@@ -173,7 +197,7 @@
 			</OnHide>
 		</Scripts>
 
-		<Size x="800" y="400" />
+		<Size x="790" y="400" />
 
 		<Anchors>
 			<Anchor point="CENTER" x="0" y="0" />
@@ -181,11 +205,11 @@
 
 		<Layers>
 			<Layer level="BACKGROUND">
-				<FontString name="$parentTitle" inherits="GameFontNormal">
+				<FontString name="$parentTitle" inherits="GameFontNormalLarge">
 					<Anchors>
 						<Anchor point="TOP">
 							<Offset>
-								<AbsDimension x="0" y="-15"/>
+								<AbsDimension x="0" y="-22"/>
 							</Offset>
 						</Anchor>
 					</Anchors>
@@ -214,16 +238,53 @@
 				</Anchors>
 			</Button>
 
+			<Button name="$parentKeyboardConfigButton" inherits="MusicianIconButton" text="G K">
+				<Size x="48" y="24" />
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT" y="-20" x="20"  />
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						self.tooltipText = Musician.Msg.CONFIGURE_KEYBOARD
+					</OnLoad>
+					<OnMouseDown>
+						PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
+					</OnMouseDown>
+					<OnClick>
+						MusicianKeyboard:Hide()
+						MusicianKeyboardConfig:Show()
+					</OnClick>
+				</Scripts>
+			</Button>
+
+			<Button name="$parentToggleKeyboardButton" inherits="MusicianIconButton" text="d k">
+				<Size x="48" y="24" />
+				<Anchors>
+					<Anchor point="TOPRIGHT" relativeTo="$parent" relativePoint="TOPRIGHT" y="-20" x="-20"  />
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						self.tooltipText = Musician.Msg.HIDE_KEYBOARD
+					</OnLoad>
+					<OnMouseDown>
+						PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
+					</OnMouseDown>
+					<OnClick>
+						MusicianKeyboard.showKeyboard()
+					</OnClick>
+				</Scripts>
+			</Button>
+
 			<Frame name="$parentKeys">
 				<Anchors>
-					<Anchor point="TOP" relativeTo="$parent" relativePoint="TOP" y="-25" />
+					<Anchor point="TOP" relativeTo="$parent" relativePoint="TOP" y="-50" />
 				</Anchors>
 			</Frame>
 
 			<Frame name="$parentControls">
 				<Size x="750" y="92" />
 				<Anchors>
-					<Anchor point="BOTTOM" relativeTo="$parent" relativePoint="BOTTOM" y="25"  />
+					<Anchor point="BOTTOM" relativeTo="$parent" relativePoint="BOTTOM" y="10"  />
 				</Anchors>
 
 				<Frames>
