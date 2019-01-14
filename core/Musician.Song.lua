@@ -783,10 +783,13 @@ function Musician.Song:Stream()
 	self:StopStreaming() -- Stop and reset streaming
 	self.streaming = true
 	self.timeSinceLastStreamChunk = self.chunkDuration
+	Musician.Comm:SendMessage(Musician.Events.StreamStart, self)
 end
 
 --- Stop streaming song
 function Musician.Song:StopStreaming()
+	local wasStreaming = self.streaming
+
 	self.streaming = false
 	self.timeSinceLastStreamChunk = 0
 
@@ -797,6 +800,10 @@ function Musician.Song:StopStreaming()
 
 	self.streamPosition = self.cropFrom
 	self.songId = nil
+
+	if wasStreaming then
+		Musician.Comm:SendMessage(Musician.Events.StreamStop, self)
+	end
 end
 
 --- Append chunk data to current song

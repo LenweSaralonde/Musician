@@ -184,7 +184,6 @@
 					Musician_Settings.keyboardVisible = visible
 				end
 
-				MusicianKeyboardTitle:SetText(Musician.Msg.LIVE_PLAY)
 				self:RegisterForDrag("LeftButton")
 			</OnLoad>
 			<OnDragStart>self:StartMoving()</OnDragStart>
@@ -212,6 +211,13 @@
 								<AbsDimension x="0" y="-22"/>
 							</Offset>
 						</Anchor>
+					</Anchors>
+				</FontString>
+
+				<FontString name="$parentTitleIcon" parentKey="icon" inherits="MusicianFontHighlightLarge" justifyh="LEFT">
+					<Size x="32" y="32" />
+					<Anchors>
+						<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentTitle" />
 					</Anchors>
 				</FontString>
 			</Layer>
@@ -272,6 +278,38 @@
 					<OnClick>
 						MusicianKeyboard.showKeyboard()
 					</OnClick>
+				</Scripts>
+			</Button>
+
+			<Button name="$parentLiveModeButton" inherits="UIPanelButtonTemplate">
+				<Size x="105" y="24" />
+				<Anchors>
+					<Anchor point="RIGHT" relativeTo="$parentToggleKeyboardButton" relativePoint="LEFT" />
+				</Anchors>
+
+				<Layers>
+					<Layer level="FOREGROUND">
+						<FontString name="$parentIcon" parentKey="icon" inherits="MusicianFontIconsNormal" justifyh="LEFT">
+							<Size x="32" y="32" />
+							<Anchors>
+								<Anchor point="LEFT" relativePoint="LEFT" relativeTo="$parent" x="10" />
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+
+				<ButtonText name="$parentText" parentKey="Text">
+					<Anchors>
+						<Anchor point="CENTER" x="8" />
+					</Anchors>
+				</ButtonText>
+
+				<Scripts>
+					<OnMouseDown>
+						if self:IsEnabled() then
+							PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
+						end
+					</OnMouseDown>
 				</Scripts>
 			</Button>
 

@@ -5,6 +5,7 @@ local STREAM_PADDING = 10 -- Number of seconds to wait before ending streaming w
 Musician.Live.NotesOn = {}
 Musician.Live.songStartTime = nil
 Musician.Live.InstrumentTrackMapping = {}
+Musician.Live.enabled = true
 
 local NOTE = Musician.Song.Indexes.NOTE
 
@@ -12,6 +13,8 @@ local CHUNK_DURATION = 1
 
 local streamingStartTimer
 
+--- Init live mode
+--
 function Musician.Live.Init()
 	-- Build instrument ID => track ID mapping table
 	local instrumentName, trackId, instrumentId
@@ -27,6 +30,29 @@ function Musician.Live.Init()
 			end
 		end
 	end
+end
+
+--- Enable or disable live mode
+-- @param enable (boolean)
+function Musician.Live.Enable(enabled)
+	Musician.Live.enabled = enabled
+end
+
+--- Indicates whenever the live mode is enabled stream
+-- @return (boolean)
+function Musician.Live.IsEnabled()
+	return Musician.Live.enabled
+end
+
+--- Indicates whenever the live mode can stream
+-- @return (boolean)
+function Musician.Live.CanStream()
+	-- Actually streaming a song that is not a live song
+	if Musician.streamingSong and Musician.streamingSong.streaming and Musician.streamingSong.mode ~= Musician.Song.MODE_LIVE then
+		return false
+	end
+
+	return true
 end
 
 --- Create the live song for streaming, if needed
@@ -94,12 +120,12 @@ end
 -- @param instrument (int)
 function Musician.Live.InsertNote(noteOn, key, layer, instrument)
 
-	Musician.Live.CreateLiveSong()
-
-	-- No live streaming song
-	if not(Musician.streamingSong) or Musician.streamingSong.mode ~= Musician.Song.MODE_LIVE then
+	-- Do nothing if live mode is not enabled or can't stream
+	if not(Musician.Live.CanStream()) or not(Musician.Live.IsEnabled()) then
 		return
 	end
+
+	Musician.Live.CreateLiveSong()
 
 	-- Insert note in track
 	local trackId = Musician.Live.InstrumentTrackMapping[layer][instrument]

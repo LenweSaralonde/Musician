@@ -5,13 +5,18 @@ local KEY = Musician.KEYBOARD_KEY
 
 local KEY_SIZE = 50
 
-Musician.Keyboard.NotesOn = {}
-
 local lCtrlDown = false
 local rCtrlDown = false
 
 local keyButtons = {}
 local keyValueButtons = {}
+
+local ICON = {
+	["SOLO_MODE"] = "H", -- headphones
+	["LIVE_MODE"] = "+", -- speaker
+}
+
+Musician.Keyboard.NotesOn = {}
 
 --- Return the binding button for the given physical key.
 -- @param key (string)
@@ -262,6 +267,53 @@ local function initLayerControls(layer)
 	_G[varNamePrefix .. "PowerChords"].SetValue(Musician.Keyboard.config.powerChords[layer])
 end
 
+--- Update texts and icons for live and solo modes
+--
+local function updateLiveModeButton()
+	local button = MusicianKeyboardLiveModeButton
+
+	if Musician.Live.IsEnabled() then
+		button.icon:SetText(ICON.SOLO_MODE)
+		button:SetText(Musician.Msg.SOLO_MODE)
+		button.tooltipText = Musician.Msg.ENABLE_SOLO_MODE
+	else
+		button.icon:SetText(ICON.LIVE_MODE)
+		button:SetText(Musician.Msg.LIVE_MODE)
+		button.tooltipText = Musician.Msg.ENABLE_LIVE_MODE
+	end
+
+	if Musician.Live.IsEnabled() and Musician.Live.CanStream() then
+		MusicianKeyboardTitle:SetText(Musician.Msg.PLAY_LIVE)
+		MusicianKeyboardTitleIcon:SetText(ICON.LIVE_MODE)
+	else
+		MusicianKeyboardTitle:SetText(Musician.Msg.PLAY_SOLO)
+		MusicianKeyboardTitleIcon:SetText(ICON.SOLO_MODE)
+	end
+
+	if not(Musician.Live.IsEnabled()) and not(Musician.Live.CanStream()) then
+		button:Disable()
+		button.tooltipText = Musician.Msg.LIVE_MODE_DISABLED
+	else
+		button:Enable()
+	end
+end
+
+--- Init live mode button
+--
+local function initLiveModeButton()
+	local button = MusicianKeyboardLiveModeButton
+
+	button:SetScript("OnClick", function()
+		Musician.Live.Enable(not(Musician.Live.IsEnabled()))
+		updateLiveModeButton()
+	end)
+
+	updateLiveModeButton()
+
+	Musician.Keyboard:RegisterMessage(Musician.Events.StreamStart, updateLiveModeButton)
+	Musician.Keyboard:RegisterMessage(Musician.Events.StreamStop, updateLiveModeButton)
+end
+
 --- Initialize keyboard
 --
 function Musician.Keyboard.Init()
@@ -295,8 +347,10 @@ function Musician.Keyboard.Init()
 	initLayoutDropdown()
 	initBaseKeyDropdown()
 
+	-- Init controls
 	initLayerControls(LAYER.LOWER)
 	initLayerControls(LAYER.UPPER)
+	initLiveModeButton()
 
 	-- Show or hide keyboard according to last settings
 	MusicianKeyboard.showKeyboard(Musician_Settings.keyboardVisible)

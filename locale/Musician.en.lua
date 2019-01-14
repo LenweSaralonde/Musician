@@ -79,7 +79,13 @@ msg.KEYBOARD_LAYOUTS = {
 	["piano"] = "Piano"
 }
 
-msg.LIVE_PLAY = "Live play"
+msg.SOLO_MODE = "Solo Mode"
+msg.LIVE_MODE = "Live Mode"
+msg.LIVE_MODE_DISABLED = "Live Mode is disabled during playback."
+msg.ENABLE_SOLO_MODE = "Enable Solo Mode (you play for yourself)"
+msg.ENABLE_LIVE_MODE = "Enable Live Mode (you play for everyone)"
+msg.PLAY_LIVE = "Play live"
+msg.PLAY_SOLO = "Play solo"
 msg.SHOW_KEYBOARD = "Show keyboard"
 msg.HIDE_KEYBOARD = "Hide keyboard"
 msg.KEYBOARD_LAYOUT = "Keyboard layout"
