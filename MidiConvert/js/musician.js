@@ -1,8 +1,7 @@
 
-var Musician = {}
+var Musician = {};
 
-Musician.NOTE_IDS = {'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11};
-Musician.C0_INDEX = 24;
+Musician.C0_INDEX = 12;
 
 Musician.FILE_HEADER = 'MUS3';
 Musician.MAX_NOTE_DURATION = 6;
@@ -11,24 +10,11 @@ Musician.NOTE_TIME_FPS = 240;
 Musician.MAX_NOTE_TIME = 65535 / Musician.NOTE_TIME_FPS; // 16-bit
 Musician.PERCUSSION_KEY_OFFSET = -12;
 
-Musician.NoteKey = function(noteName) {
-	var matches = noteName.match(/^([^0-9-]+)(-?[0-9]+)$/);
-
-	var octave = parseInt(matches[2], 10);
-	var note = matches[1];
-
-	if (Musician.NOTE_IDS[note] === undefined) {
-		return 0;
-	}
-
-	return Musician.C0_INDEX + octave * 12 + Musician.NOTE_IDS[note];
-}
-
 Musician.PackNumber = function(num, bytes) {
-	var m = num;
+	var m = Math.max(0, num);
 	var b;
 	var packed = '';
-	var i = 0
+	var i = 0;
 
 	while ((m > 0) || (i < bytes)) {
 		b = m % 256;
@@ -37,29 +23,117 @@ Musician.PackNumber = function(num, bytes) {
 		i = i + 1;
 	}
 
-	return packed.substring(packed.length - bytes)
-}
+	return packed.substring(packed.length - bytes);
+};
 
 Musician.PackTime = function(seconds, bytes, fps) {
 	return Musician.PackNumber(Math.round(seconds * fps), bytes);
-}
+};
 
 Musician.PackString = function(str) {
 	var utf8Str = Musician.EncodeUTF8(str);
 	return Musician.PackNumber(utf8Str.length, 2) + utf8Str;
-}
+};
 
 Musician.EncodeUTF8 = function(str) {
 	return unescape(encodeURIComponent(str));
-}
+};
 
 Musician.FilenameToTitle = function(fileName) {
 	return fileName.replace(/[_]+/g, ' ').replace(/\.[a-zA-Z0-9]+$/, '').replace(/^(.)|\s+(.)/g, function ($1) {
-		return $1.toUpperCase()
+		return $1.toUpperCase();
 	});
-}
+};
+
+Musician.ProcessPitchBend = function(song) {
+
+	var eventTypeOrder = {
+		'pitchBend': 1,
+		'noteOn': 2,
+		'noteOff': 3,
+	};
+
+	var eventSorter = function(a, b) {
+		if (a.time < b.time) {
+			return -1;
+		} else if (a.time > b.time) {
+			return 1;
+		} else if (eventTypeOrder[a.type] < eventTypeOrder[b.type]) {
+			return -1;
+		} else if (eventTypeOrder[a.type] > eventTypeOrder[b.type]) {
+			return 1;
+		} else {
+			return 0;
+		}
+	};
+
+	song.tracks.forEach(function(track) {
+		var events = [];
+		var noteId = 1;
+
+		// Add notes as note on/note off events
+		track.notes.forEach(function(note) {
+			events.push({ time: note.time, type: 'noteOn', id: noteId, duration: note.duration, note: note });
+			events.push({ time: note.time + note.duration, type: 'noteOff', id: noteId, note: note });
+			noteId++;
+		});
+
+		// Add pitch bend events
+		track.controlChanges && track.controlChanges.pitchBend && track.controlChanges.pitchBend.forEach(function(cc) {
+			events.push({ time: cc.time, type: 'pitchBend', id: 0, cc: cc});
+		});
+
+		// Reorder events
+		events.sort(eventSorter);
+
+		// Process pitch bend
+		var noteEvents = [];
+		var notesOn = {};
+		var currentPitchBend = 0;
+		events.forEach(function(event) {
+			if (event.type === 'noteOn') {
+				// Insert note on
+				var midi = event.note.midi + currentPitchBend;
+				notesOn[event.id] = { time: event.time, midi: midi, velocity: event.note.velocity };
+			} else if (event.type === 'noteOff') {
+				// Insert note event
+				notesOn[event.id].duration = event.time - notesOn[event.id].time;
+				noteEvents.push(notesOn[event.id]);
+				delete notesOn[event.id];
+			} else if (event.type === 'pitchBend') {
+				var pitchBend = Math.round(event.cc.value);
+
+				// New pitch bend value step: split notes
+				if (pitchBend !== currentPitchBend) {
+					// Split notes
+					Object.keys(notesOn).forEach(function(id) {
+						// Insert note event
+						var note = notesOn[id];
+						note.duration = event.time - note.time;
+						noteEvents.push(Object.assign({}, note));
+
+						// Insert note on
+						midi = note.midi - currentPitchBend + pitchBend;
+						var newNote = Object.assign({}, note, { time: event.time, midi: midi });
+						notesOn[id] = newNote;
+					});
+
+					currentPitchBend = pitchBend;
+				}
+			}
+		});
+
+		noteEvents.sort(eventSorter);
+
+		track.notes = noteEvents;
+	});
+};
 
 Musician.PackSong = function(song, fileName) {
+
+	var duration = Math.ceil(song.duration);
+
+	Musician.ProcessPitchBend(song);
 
 	var packedSong = '';
 
@@ -67,17 +141,11 @@ Musician.PackSong = function(song, fileName) {
 	packedSong += Musician.FILE_HEADER;
 
 	// Duration (3)
-	var duration = Math.ceil(song.duration);
+	var duration = duration;
 	packedSong += Musician.PackNumber(duration, 3);
 
-	// Number of tracks (1)
-	if (song.tracks.length > 255) {
-		throw "A song cannot have more than 255 tracks.";
-	}
-	packedSong += Musician.PackNumber(song.tracks.length, 1);
-
 	// Find some heavy metal instruments
-	var isMetal = false
+	var isMetal = false;
 	song.tracks.forEach(function(track) {
 		// Overdriven Guitar, Distortion Guitar, Guitar harmonics
 		isMetal = isMetal || track.instrumentNumber >= 29 && track.instrumentNumber <= 31;
@@ -86,6 +154,10 @@ Musician.PackSong = function(song, fileName) {
 	// Grab track and notes
 	var tracks = [];
 	song.tracks.forEach(function(rawTrack) {
+		if (rawTrack.notes.length === 0) {
+			return;
+		}
+
 		var track = {};
 
 		// Track instrument
@@ -107,9 +179,8 @@ Musician.PackSong = function(song, fileName) {
 		var offset = 0;
 		var notes = [];
 		rawTrack.notes.forEach(function(rawNote) {
-			//var noteTime = rawNote.time - lastNoteTime;
 			var noteTime = rawNote.time - offset;
-			var noteKey = Musician.NoteKey(rawNote.name) + (rawTrack.isPercussion ? Musician.PERCUSSION_KEY_OFFSET : 0);
+			var noteKey = Musician.C0_INDEX + rawNote.midi + (rawTrack.isPercussion ? Musician.PERCUSSION_KEY_OFFSET : 0);
 			var noteDuration = Math.min(rawNote.duration, Musician.MAX_NOTE_DURATION);
 
 			// Insert note spacers if needed
@@ -134,6 +205,12 @@ Musician.PackSong = function(song, fileName) {
 
 		tracks.push(track);
 	});
+
+	// Number of tracks (1)
+	if (tracks.length > 255) {
+		throw "A song cannot have more than 255 tracks.";
+	}
+	packedSong += Musician.PackNumber(tracks.length, 1);
 
 	// Track data: instrument (1), channel (1), number of notes (2),
 	tracks.forEach(function(track) {
@@ -160,4 +237,4 @@ Musician.PackSong = function(song, fileName) {
 	});
 
 	return packedSong;
-}
+};
