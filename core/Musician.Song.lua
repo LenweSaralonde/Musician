@@ -780,6 +780,7 @@ end
 
 --- Stream song
 function Musician.Song:Stream()
+	self.playing = false
 	self:StopStreaming() -- Stop and reset streaming
 	self.streaming = true
 	self.timeSinceLastStreamChunk = self.chunkDuration
