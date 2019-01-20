@@ -7,6 +7,7 @@ msg.PAUSE = "Pause"
 msg.TEST_SONG = "Aperçu"
 msg.STOP_TEST = "Arrêter aperçu"
 msg.CLEAR = "Effacer"
+msg.SELECT_ALL = "Sélectionner tout"
 msg.EDIT = "Éditer"
 msg.MUTE = "Rendre silencieux"
 msg.UNMUTE = "Rétablir la musique"
@@ -26,7 +27,7 @@ msg.PLAYER_COUNT_ONLINE_ONE = "Il y a un autre amateur de musique dans le coin !
 msg.INVALID_MUSIC_CODE = "Le code musical est invalide."
 
 msg.PLAY_A_SONG = "Jouer un morceau"
-msg.PASTE_MUSIC_CODE = "Importez votre morceau au format MIDI à l'adresse :\n{url}\n\npuis collez le code de la musique ici..."
+msg.PASTE_MUSIC_CODE = "Importez votre morceau au format MIDI à l'adresse :\n{url}\n\npuis collez le code de la musique ici ({shortcut})..."
 msg.SONG_IMPORTED = "Morceau importé : {title}."
 
 msg.SONG_EDITOR = "Éditeur de morceau"

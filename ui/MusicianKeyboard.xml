@@ -22,30 +22,34 @@
 				</FontString>
 			</Layer>
 		</Layers>
+		<ButtonText parentKey="Text" name="$parentText">
+			<Anchors>
+				<Anchor point="CENTER" x="0" y="9"/>
+			</Anchors>
+		</ButtonText>
 		<Scripts>
-			<OnLoad>
+			<OnLoad inherit="prepend">
 				self.background:SetDrawLayer("BACKGROUND", -8)
-				self:RegisterForClicks("AnyUp")
-
-				self.pushedTextOffset = { self:GetPushedTextOffset() }
-				self:SetPushedTextOffset(0, 0)
-
-				local point, relativeTo, relativePoint, xOfs, yOfs = self:GetFontString():GetPoint()
-				self:GetFontString():SetPoint(point, relativeTo, relativePoint, xOfs, yOfs + 10)
-
-				self.animateOnMouseDown = self:GetScript("OnMouseDown")
-				self.animateOnMouseUp = self:GetScript("OnMouseUp")
-
-				self:SetScript("OnMouseDown", function(button, mouseButton)
-					Musician.Keyboard.OnKeyDown(self, self.keyValue)
-					self.animateOnMouseDown(button, mouseButton)
-				end)
-
-				self:SetScript("OnMouseUp", function(button, mouseButton)
-					Musician.Keyboard.OnKeyUp(self, self.keyValue)
-					self.animateOnMouseUp(button, mouseButton)
-				end)
+				self.down = false
 			</OnLoad>
+			<OnMouseDown inherit="prepend">
+				if not(self.down) then
+					self.down = true
+					local point, relativeTo, relativePoint, xOfs, yOfs = self.subText:GetPoint()
+					local x, y = self:GetPushedTextOffset()
+					self.subText:SetPoint(point, relativeTo, relativePoint, xOfs + x, yOfs + y)
+					Musician.Keyboard.KeyDown(self.keyValue)
+				end
+			</OnMouseDown>
+			<OnMouseUp inherit="prepend">
+				if self.down then
+					local point, relativeTo, relativePoint, xOfs, yOfs = self.subText:GetPoint()
+					local x, y = self:GetPushedTextOffset()
+					self.subText:SetPoint(point, relativeTo, relativePoint, xOfs - x, yOfs - y)
+					Musician.Keyboard.KeyUp(self.keyValue)
+					self.down = false
+				end
+			</OnMouseUp>
 			<OnSizeChanged>
 				self.background:SetWidth(w - 7)
 				self.background:SetHeight(h - 7)
@@ -60,13 +64,8 @@
 
 	<!-- Square button template -->
 
-	<Button name="MusicianKeyboardSquareButtonTemplate" inherits="MusicianIconButton" virtual="true">
+	<Button name="MusicianKeyboardSquareButtonTemplate" inherits="MusicianIconButtonTemplate" virtual="true">
 		<Size x="24" y="24" />
-		<Scripts>
-			<OnMouseDown>
-				PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
-			</OnMouseDown>
-		</Scripts>
 	</Button>
 
 	<!-- Layer settings template -->
@@ -90,8 +89,7 @@
 					<Anchor point="TOPLEFT" x="-18" relativePoint="BOTTOMLEFT" relativeTo="$parentLayerName" />
 				</Anchors>
 				<Scripts>
-					<OnLoad>
-						MusicianInstrumentDropdownTemplate:GetScript("OnLoad")(self)
+					<OnLoad inherit="prepend">
 						UIDropDownMenu_SetWidth(self, 150)
 					</OnLoad>
 				</Scripts>
@@ -160,10 +158,9 @@
 
 	<!-- Main frame -->
 
-	<Frame name="MusicianKeyboard" parent="UIParent" toplevel="true" enableMouse="true" setAllPoints="true" enableKeyboard="true" movable="true" hidden="true" clampedtoscreen="true" frameStrata="DIALOG">
-
+	<Frame name="MusicianKeyboard" inherits="MusicianDialogTemplate" enableKeyboard="true">
 		<Scripts>
-			<OnLoad>
+			<OnLoad inherit="prepend">
 				MusicianKeyboard.showKeyboard = function(visible)
 					if visible == nil then
 						visible = not(MusicianKeyboardKeys:IsVisible())
@@ -172,35 +169,21 @@
 					if visible then
 						MusicianKeyboard:SetHeight(400)
 						MusicianKeyboardKeys:Show()
-						MusicianKeyboardToggleKeyboardButton:SetText("d k")
+						MusicianKeyboardToggleKeyboardButton:SetText("u k")
 						MusicianKeyboardToggleKeyboardButton.tooltipText = Musician.Msg.HIDE_KEYBOARD
 					else
 						MusicianKeyboardKeys:Hide()
 						MusicianKeyboard:SetHeight(400 - MusicianKeyboardKeys:GetHeight())
-						MusicianKeyboardToggleKeyboardButton:SetText("u k")
+						MusicianKeyboardToggleKeyboardButton:SetText("d k")
 						MusicianKeyboardToggleKeyboardButton.tooltipText = Musician.Msg.SHOW_KEYBOARD
 					end
 
 					Musician_Settings.keyboardVisible = visible
 				end
-
-				self:RegisterForDrag("LeftButton")
 			</OnLoad>
-			<OnDragStart>self:StartMoving()</OnDragStart>
-			<OnDragStop>self:StopMovingOrSizing()</OnDragStop>
-			<OnShow>
-				PlaySound(SOUNDKIT.IG_QUEST_LIST_OPEN)
-			</OnShow>
-			<OnHide>
-				PlaySound(SOUNDKIT.IG_QUEST_LIST_CLOSE)
-			</OnHide>
 		</Scripts>
 
 		<Size x="790" y="400" />
-
-		<Anchors>
-			<Anchor point="CENTER" x="0" y="0" />
-		</Anchors>
 
 		<Layers>
 			<Layer level="BACKGROUND">
@@ -223,28 +206,9 @@
 			</Layer>
 		</Layers>
 
-		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
-			<BackgroundInsets>
-				<AbsInset left="11" right="12" top="12" bottom="11" />
-			</BackgroundInsets>
-			<TileSize>
-				<AbsValue val="32" />
-			</TileSize>
-			<EdgeSize>
-				<AbsValue val="32" />
-			</EdgeSize>
-		</Backdrop>
-
 		<Frames>
-			<Button name="$parentCloseButton" inherits="UIPanelCloseButton">
-				<Anchors>
-					<Anchor point="CENTER" relativePoint="TOPRIGHT">
-						<Offset x="-7" y="-7" />
-					</Anchor>
-				</Anchors>
-			</Button>
 
-			<Button name="$parentKeyboardConfigButton" inherits="MusicianIconButton" text="G K">
+			<Button name="$parentKeyboardConfigButton" inherits="MusicianIconButtonTemplate" text="G K">
 				<Size x="48" y="24" />
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT" y="-20" x="20"  />
@@ -253,9 +217,6 @@
 					<OnLoad>
 						self.tooltipText = Musician.Msg.CONFIGURE_KEYBOARD
 					</OnLoad>
-					<OnMouseDown>
-						PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
-					</OnMouseDown>
 					<OnClick>
 						MusicianKeyboard:Hide()
 						MusicianKeyboardConfig:Show()
@@ -263,7 +224,7 @@
 				</Scripts>
 			</Button>
 
-			<Button name="$parentToggleKeyboardButton" inherits="MusicianIconButton" text="d k">
+			<Button name="$parentToggleKeyboardButton" inherits="MusicianIconButtonTemplate" text="d k">
 				<Size x="48" y="24" />
 				<Anchors>
 					<Anchor point="TOPRIGHT" relativeTo="$parent" relativePoint="TOPRIGHT" y="-20" x="-20"  />
@@ -281,36 +242,14 @@
 				</Scripts>
 			</Button>
 
-			<Button name="$parentLiveModeButton" inherits="UIPanelButtonTemplate">
+			<Button name="$parentLiveModeButton" inherits="MusicianIconTextButtonTemplate">
 				<Size x="105" y="24" />
 				<Anchors>
 					<Anchor point="RIGHT" relativeTo="$parentToggleKeyboardButton" relativePoint="LEFT" />
 				</Anchors>
-
-				<Layers>
-					<Layer level="FOREGROUND">
-						<FontString name="$parentIcon" parentKey="icon" inherits="MusicianFontIconsNormal" justifyh="LEFT">
-							<Size x="32" y="32" />
-							<Anchors>
-								<Anchor point="LEFT" relativePoint="LEFT" relativeTo="$parent" x="10" />
-							</Anchors>
-						</FontString>
-					</Layer>
-				</Layers>
-
-				<ButtonText name="$parentText" parentKey="Text">
-					<Anchors>
-						<Anchor point="CENTER" x="8" />
-					</Anchors>
-				</ButtonText>
-
-				<Scripts>
-					<OnMouseDown>
-						if self:IsEnabled() then
-							PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
-						end
-					</OnMouseDown>
-				</Scripts>
+				<OnMouseDown inherits="prepend">
+					PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
+				</OnMouseDown>
 			</Button>
 
 			<Frame name="$parentKeys">

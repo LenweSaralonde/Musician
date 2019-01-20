@@ -1,134 +1,76 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
-	<Frame name="MusicianFrame" parent="UIParent" toplevel="true" enableMouse="true" movable="true" hidden="true">
-
-		<Scripts>
-			<OnLoad>self:RegisterForDrag("LeftButton")</OnLoad>
-			<OnDragStart>self:StartMoving()</OnDragStart>
-			<OnDragStop>self:StopMovingOrSizing()</OnDragStop>
-			<OnShow>
-				PlaySound(SOUNDKIT.IG_QUEST_LIST_OPEN)
-			</OnShow>
-			<OnHide>
-				PlaySound(SOUNDKIT.IG_QUEST_LIST_CLOSE)
-			</OnHide>
-		</Scripts>
+	<Frame name="MusicianFrame" inherits="MusicianDialogTemplate">
 
 		<Size x="320" y="160" />
-
-		<Anchors>
-			<Anchor point="CENTER" x="0" y="0" />
-		</Anchors>
 
 		<Layers>
 			<Layer level="BACKGROUND">
 				<FontString name="$parentTitle" inherits="GameFontNormal">
 					<Anchors>
-						<Anchor point="TOP">
-							<Offset>
-								<AbsDimension x="0" y="-15"/>
-							</Offset>
-						</Anchor>
+						<Anchor point="TOP" x="0" y="-15" />
 					</Anchors>
 				</FontString>
 			</Layer>
 		</Layers>
 
-		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
-			<BackgroundInsets>
-				<AbsInset left="11" right="12" top="12" bottom="11" />
-			</BackgroundInsets>
-			<TileSize>
-				<AbsValue val="32" />
-			</TileSize>
-			<EdgeSize>
-				<AbsValue val="32" />
-			</EdgeSize>
-		</Backdrop>
+		<Scripts>
+			<OnLoad inherit="prepend">
+				MusicianFrameTitle:SetText(Musician.Msg.PLAY_A_SONG)
+			</OnLoad>
+		</Scripts>
 
 		<Frames>
 
-			<Button name="$parentClearButton" inherits="UIPanelButtonTemplate" level="OVERLAY">
-				<Size x="60" y="20" />
-				<Anchors>
-					<Anchor point="TOPRIGHT" x="-10" y="-10" relativePoint="TOPRIGHT" />
-				</Anchors>
-				<Scripts>
-					<OnClick>
-						MusicianFrame.Clear()
-					</OnClick>
-				</Scripts>
-			</Button>
-
-			<Button name="$parentTrackEditorButton" inherits="UIPanelButtonTemplate" level="OVERLAY">
-				<Size x="60" y="20" />
+			<Button name="$parentTrackEditorButton" inherits="MusicianIconTextButtonTemplate" level="OVERLAY">
+				<Size x="70" y="22" />
 				<Anchors>
 					<Anchor point="TOPLEFT" x="10" y="-10" relativePoint="TOPLEFT" />
 				</Anchors>
 				<Scripts>
+					<OnLoad>
+						self:SetText(Musician.Msg.EDIT)
+						self.icon:SetText("T")
+					</OnLoad>
 					<OnClick>
 						MusicianFrame.TrackEditor()
 					</OnClick>
 				</Scripts>
 			</Button>
 
-			<Button name="$parentCloseButton" inherits="UIPanelCloseButton">
-				<Anchors>
-					<Anchor point="CENTER" relativePoint="TOPRIGHT">
-						<Offset x="-7" y="-7" />
-					</Anchor>
-				</Anchors>
-			</Button>
-
-			<Button name="$parentTestButton" inherits="UIPanelButtonTemplate">
-				<Size x="100" y="20" />
+			<Button name="$parentTestButton" inherits="MusicianIconTextProgressBarButtonTemplate">
+				<Size x="120" y="22" />
 				<Anchors>
 					<Anchor point="BOTTOMLEFT" x="10" y="10" relativePoint="BOTTOMLEFT" />
 				</Anchors>
 				<Scripts>
+					<OnLoad>
+						self.icon:SetText("H")
+					</OnLoad>
 					<OnClick>
 						MusicianFrame.Test()
 					</OnClick>
 				</Scripts>
-				<Layers>
-					<Layer level="FOREGROUND">
-						<Texture name="$parentProgressBar" alphaMode="ADD">
-							<Size x="90" y="1"/>
-							<Anchors>
-								<Anchor point="BOTTOMLEFT" x="5" y="3" relativePoint="BOTTOMLEFT" />
-							</Anchors>
-							<Color a="1" r="1" g="0.82" b="0" />
-						</Texture>
-					</Layer>
-				</Layers>
 			</Button>
 
-			<Button name="$parentPlayButton" inherits="UIPanelButtonTemplate">
-				<Size x="100" y="20" />
+			<Button name="$parentPlayButton" inherits="MusicianIconTextProgressBarButtonTemplate">
+				<Size x="120" y="22" />
 				<Anchors>
 					<Anchor point="BOTTOMRIGHT" x="-10" y="10" relativePoint="BOTTOMRIGHT" />
 				</Anchors>
 				<Scripts>
+					<OnLoad>
+						self.icon:SetText("+")
+					</OnLoad>
 					<OnClick>
 						MusicianFrame.Play()
 					</OnClick>
 				</Scripts>
-				<Layers>
-					<Layer level="FOREGROUND">
-						<Texture name="$parentProgressBar" alphaMode="ADD">
-							<Size x="90" y="1"/>
-							<Anchors>
-								<Anchor point="BOTTOMLEFT" x="5" y="3" relativePoint="BOTTOMLEFT" />
-							</Anchors>
-							<Color a="1" r="1" g="0.82" b="0" />
-						</Texture>
-					</Layer>
-				</Layers>
 			</Button>
 
 			<ScrollFrame name="$parentScrollFrame">
 				<Size x="290" y="90" />
 				<Anchors>
-					<Anchor point="TOPLEFT" x="15" y="-35" relativePoint="TOPLEFT" />
+					<Anchor point="TOPLEFT" x="15" y="-36" relativePoint="TOPLEFT" />
 				</Anchors>
 
 				<Scripts>
@@ -140,7 +82,6 @@
 				<ScrollChild>
 					<EditBox name="MusicianFrameSource" multiLine="true" autoFocus="false" countInvisibleLetters="false">
 						<Size x="290" y="90"/>
-
 						<Scripts>
 							<OnMouseUp>
 								MusicianFrameSource:SetFocus()
@@ -148,19 +89,17 @@
 							<OnEditFocusGained>
 								MusicianFrameSource:HighlightText(0)
 							</OnEditFocusGained>
-
 							<OnEscapePressed>MusicianFrameSource:ClearFocus()</OnEscapePressed>
 						</Scripts>
-
 						<FontString inherits="GameFontHighlightSmall"/>
 					</EditBox>
 				</ScrollChild>
 			</ScrollFrame>
 
 			<Frame name="$parentTextBackground">
-				<Size x="300" y="100" />
+				<Size x="300" y="99" />
 				<Anchors>
-					<Anchor point="TOP" y="-30" relativePoint="TOP" />
+					<Anchor point="TOP" y="-31" relativePoint="TOP" />
 				</Anchors>
 				<Backdrop bgFile="Interface\Tooltips\UI-Tooltip-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
 					<EdgeSize>
@@ -191,6 +130,22 @@
 					</OnLoad>
 				</Scripts>
 			</Frame>
+
+			<Button name="$parentClearButton" inherits="MusicianIconButtonTemplate" level="OVERLAY" text="E">
+				<Size x="24" y="24" />
+				<Anchors>
+					<Anchor point="BOTTOMRIGHT" x="-5" y="5" relativePoint="BOTTOMRIGHT" relativeTo="$parentTextBackground" />
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						self:SetFrameLevel(MusicianFrameSource:GetFrameLevel() + 1000)
+						self.tooltipText = Musician.Msg.SELECT_ALL
+					</OnLoad>
+					<OnClick>
+						MusicianFrame.Clear()
+					</OnClick>
+				</Scripts>
+			</Button>
 
 		</Frames>
 	</Frame>

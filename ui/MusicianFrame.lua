@@ -3,9 +3,6 @@ Musician.Frame = LibStub("AceAddon-3.0"):NewAddon("Musician.Frame", "AceEvent-3.
 local sourceBuffer
 local i
 
-local loadingProgressbarWidth
-local buttonProgressbarWidth
-
 local bandwidthLevel = 0
 
 MusicianFrame.Init = function()
@@ -24,9 +21,6 @@ MusicianFrame.Init = function()
 	MusicianFrame:SetScript("OnUpdate", MusicianFrame.OnUpdate)
 
 	MusicianFrame.Clear()
-	MusicianFrameTitle:SetText(Musician.Msg.PLAY_A_SONG)
-	MusicianFrameClearButton:SetText(Musician.Msg.CLEAR)
-	MusicianFrameTrackEditorButton:SetText(Musician.Msg.EDIT)
 
 	MusicianFrameSource:SetMaxBytes(512)
 	MusicianFrameSource:SetScript("OnTextChanged", MusicianFrame.SourceChanged)
@@ -35,8 +29,6 @@ MusicianFrame.Init = function()
 		i = i + 1
 	end)
 
-	loadingProgressbarWidth = MusicianFrameTextBackgroundLoadingProgressBar:GetWidth()
-	buttonProgressbarWidth = MusicianFramePlayButtonProgressBar:GetWidth()
 	MusicianFrameTextBackgroundLoadingProgressBar:Hide()
 	MusicianFrameTestButtonProgressBar:Hide()
 	MusicianFramePlayButtonProgressBar:Hide()
@@ -82,7 +74,7 @@ MusicianFrame.ImportSource = function()
 	if source == "" or source == MusicianFrame.GetDefaultText() then
 		return
 	end
-	
+
 	Musician.ImportSource(source)
 end
 
@@ -107,6 +99,16 @@ end
 
 MusicianFrame.GetDefaultText = function()
 	local defaultText = string.gsub(Musician.Msg.PASTE_MUSIC_CODE, "{url}", Musician.CONVERTER_URL)
+	local shortcut
+
+	if IsMacClient() then
+		shortcut = "Cmd+V"
+	else
+		shortcut = "Ctrl+V"
+	end
+
+	defaultText = string.gsub(defaultText, "{shortcut}", shortcut)
+
 	if Musician.sourceSong and Musician.sourceSong.name then
 		local importedText = string.gsub(Musician.Msg.SONG_IMPORTED, "{title}", Musician.sourceSong.name)
 		defaultText = importedText .. "\n\n" .. defaultText
@@ -160,28 +162,28 @@ MusicianFrame.RefreshLoadingProgressBar = function(event, song, progression)
 		MusicianFrameTextBackgroundLoadingProgressBar:Show()
 
 		if progression ~= nil then
-			MusicianFrameTextBackgroundLoadingProgressBar:SetWidth(max(1, loadingProgressbarWidth * progression))
+			MusicianFrameTextBackgroundLoadingProgressBar:SetWidth(max(1, (MusicianFrameTextBackground:GetWidth() - 10) * progression))
 		end
 	end
 end
 
 MusicianFrame.RefreshPlayingProgressBar = function(event, song)
-	local progressBar
+	local button
 
 	if song == Musician.sourceSong then
-		progressBar = MusicianFrameTestButtonProgressBar
+		button = MusicianFrameTestButton
 	elseif song == Musician.songs[Musician.Utils.NormalizePlayerName(UnitName("player"))] then
-		progressBar = MusicianFramePlayButtonProgressBar
+		button = MusicianFramePlayButton
 	else
 		return
 	end
 
 	local progression = song:GetProgression()
 	if progression ~= nil then
-		progressBar:Show()
-		progressBar:SetWidth(max(1, buttonProgressbarWidth * progression))
+		button.progressBar:Show()
+		button.progressBar:SetWidth(max(1, (button:GetWidth() - 10) * progression))
 	else
-		progressBar:Hide()
+		button.progressBar:Hide()
 	end
 end
 

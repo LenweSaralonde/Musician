@@ -25,9 +25,8 @@
 			<OnClick>
 				Musician.KeyboardConfig.Key_OnClick(self, button, down)
 			</OnClick>
-			<OnLoad>
+			<OnLoad inherit="prepend">
 				self.background:SetDrawLayer("BACKGROUND", -8)
-				self:RegisterForClicks("AnyUp")
 			</OnLoad>
 			<OnSizeChanged>
 				self.background:SetWidth(w - 7)
@@ -45,41 +44,11 @@
 
 	<!-- Main frame -->
 
-	<Frame name="MusicianKeyboardConfig" parent="UIParent" toplevel="true" enableMouse="true" setAllPoints="true" enableKeyboard="true" movable="true" hidden="true" clampedtoscreen="true" frameStrata="DIALOG">
-
-		<Scripts>
-			<OnLoad>self:RegisterForDrag("LeftButton")</OnLoad>
-			<OnDragStart>self:StartMoving()</OnDragStart>
-			<OnDragStop>self:StopMovingOrSizing()</OnDragStop>
-		</Scripts>
+	<Frame name="MusicianKeyboardConfig" inherits="MusicianDialogTemplate" enableKeyboard="true">
 
 		<Size x="800" y="400" />
 
-		<Anchors>
-			<Anchor point="CENTER" x="0" y="0" />
-		</Anchors>
-
-		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
-			<BackgroundInsets>
-				<AbsInset left="11" right="12" top="12" bottom="11" />
-			</BackgroundInsets>
-			<TileSize>
-				<AbsValue val="32" />
-			</TileSize>
-			<EdgeSize>
-				<AbsValue val="32" />
-			</EdgeSize>
-		</Backdrop>
-
 		<Frames>
-			<Button name="$parentCloseButton" inherits="UIPanelCloseButton">
-				<Anchors>
-					<Anchor point="CENTER" relativePoint="TOPRIGHT">
-						<Offset x="-7" y="-7" />
-					</Anchor>
-				</Anchors>
-			</Button>
-
 			<Frame name="$parentKeyboard">
 				<Anchors>
 					<Anchor point="TOP" y="-50" relativePoint="TOP" relativeTo="$parent" />

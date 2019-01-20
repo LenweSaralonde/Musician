@@ -8,12 +8,136 @@
 	<Font name="MusicianFontNormalLarge" inherits="GameFontNormalLarge" font="Interface\AddOns\Musician\ui\fonts\fontello.ttf" height="16" virtual="true" />
 	<Font name="MusicianFontHighlightLarge" inherits="GameFontHighlightLarge" font="Interface\AddOns\Musician\ui\fonts\fontello.ttf" height="16" virtual="true" />
 
+	<!-- Dialog Window -->
+
+	<Frame name="MusicianDialogTemplate" parent="UIParent" toplevel="true" enableMouse="true" setAllPoints="true" movable="true" hidden="true" clampedtoscreen="true" frameStrata="DIALOG" virtual="true">
+
+		<Scripts>
+			<OnLoad>self:RegisterForDrag("LeftButton")</OnLoad>
+			<OnDragStart>self:StartMoving()</OnDragStart>
+			<OnDragStop>self:StopMovingOrSizing()</OnDragStop>
+			<OnShow>
+				PlaySound(SOUNDKIT.IG_QUEST_LIST_OPEN)
+			</OnShow>
+			<OnHide>
+				PlaySound(SOUNDKIT.IG_QUEST_LIST_CLOSE)
+			</OnHide>
+		</Scripts>
+
+		<Anchors>
+			<Anchor point="CENTER" x="0" y="0" />
+		</Anchors>
+
+		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+			<BackgroundInsets>
+				<AbsInset left="11" right="12" top="12" bottom="11" />
+			</BackgroundInsets>
+			<TileSize>
+				<AbsValue val="32" />
+			</TileSize>
+			<EdgeSize>
+				<AbsValue val="32" />
+			</EdgeSize>
+		</Backdrop>
+
+		<Frames>
+			<Button name="$parentCloseButton" parentKey="close" inherits="UIPanelCloseButton">
+				<Anchors>
+					<Anchor point="CENTER" relativePoint="TOPRIGHT">
+						<Offset x="-7" y="-7" />
+					</Anchor>
+				</Anchors>
+			</Button>
+		</Frames>
+	</Frame>
+
 	<!-- Standard button with icon font template -->
 
-	<Button name="MusicianIconButton" inherits="UIPanelButtonTemplate" virtual="true">
+	<Button name="MusicianIconButtonTemplate" inherits="UIPanelButtonTemplate" virtual="true">
 		<NormalFont style="MusicianFontIconsNormal" />
 		<HighlightFont style="MusicianFontIconsHighlight" />
 		<DisabledFont style="MusicianFontIconsDisable" />
+	</Button>
+
+	<!-- Standard button with text and icon template -->
+
+	<Button name="MusicianIconTextButtonTemplate" inherits="UIPanelButtonTemplate" virtual="true">
+		<Layers>
+			<Layer level="FOREGROUND">
+				<FontString name="$parentIcon" parentKey="icon" inherits="MusicianFontIconsNormal" justifyh="LEFT">
+					<Size x="32" y="32" />
+					<Anchors>
+						<Anchor point="LEFT" relativePoint="LEFT" relativeTo="$parent" x="10" />
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+
+		<ButtonText name="$parentText" parentKey="Text">
+			<Anchors>
+				<Anchor point="CENTER" x="8" />
+			</Anchors>
+		</ButtonText>
+
+		<Scripts>
+			<OnEnter>
+				MusicianUIPanelButton:GetScript("OnEnter")(self, motion)
+				if self:IsEnabled() then
+					self.icon:SetFontObject(MusicianFontIconsHighlight)
+				end
+			</OnEnter>
+			<OnLeave>
+				MusicianUIPanelButton:GetScript("OnLeave")(self, motion)
+				if self:IsEnabled() then
+					self.icon:SetFontObject(MusicianFontIconsNormal)
+				end
+			</OnLeave>
+			<OnEnable>
+				MusicianUIPanelButton:GetScript("OnEnable")(self)
+				self.icon:SetFontObject(MusicianFontIconsNormal)
+			</OnEnable>
+			<OnDisable>
+				MusicianUIPanelButton:GetScript("OnDisable")(self)
+				self.icon:SetFontObject(MusicianFontIconsDisable)
+			</OnDisable>
+			<OnMouseDown inherits="prepend">
+				if self:IsEnabled() then
+					if (not self.icon.oldPoint) then
+						local point, relativeTo, relativePoint, x, y = self.icon:GetPoint(1)
+						self.icon.oldPoint = point
+						self.icon.oldX = x
+						self.icon.oldY = y
+					end
+					local ox, oy = self:GetPushedTextOffset()
+					self.icon:SetPoint(self.icon.oldPoint, self.icon.oldX + ox, self.icon.oldY + oy)
+				end
+			</OnMouseDown>
+			<OnMouseUp inherits="prepend">
+				if self:IsEnabled() then
+					self.icon:SetPoint(self.icon.oldPoint, self.icon.oldX, self.icon.oldY)
+				end
+			</OnMouseUp>
+		</Scripts>
+	</Button>
+	<Button name="MusicianUIPanelButton" inherits="UIPanelButtonTemplate" />
+
+	<!-- Button with icon and progress bar -->
+
+	<Button name="MusicianIconTextProgressBarButtonTemplate" inherits="MusicianIconTextButtonTemplate" virtual="true">
+		<Layers>
+			<Layer level="FOREGROUND">
+				<Texture name="$parentProgressBar" parentKey="progressBar" alphaMode="ADD">
+					<Size x="0" y="1"/>
+					<Anchors>
+						<Anchor point="BOTTOMLEFT" x="5" y="3" relativePoint="BOTTOMLEFT" />
+					</Anchors>
+					<Color a="1" r="1" g="0.82" b="0" />
+				</Texture>
+			</Layer>
+		</Layers>
+		<OnLoad>
+			self.progressBar:SetWidth(self:GetWidth())
+		</OnLoad>
 	</Button>
 
 	<!-- Dropdown menu with tooltip -->
@@ -32,7 +156,6 @@
 			</OnLeave>
 		</Scripts>
 	</Frame>
-	<Frame name="MusicianDropDownMenuTooltipTemplate" inherits="MusicianDropDownMenuTooltipTemplate" />
 
 	<!-- Instrument dropdown -->
 
@@ -88,6 +211,5 @@
 			</OnLoad>
 		</Scripts>
 	</Frame>
-	<Frame name="MusicianInstrumentDropdownTemplate" inherits="MusicianInstrumentDropdownTemplate" />
 
 </Ui>

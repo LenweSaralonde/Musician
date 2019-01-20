@@ -306,6 +306,7 @@ local function initLiveModeButton()
 	button:SetScript("OnClick", function()
 		Musician.Live.Enable(not(Musician.Live.IsEnabled()))
 		updateLiveModeButton()
+		PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
 	end)
 
 	updateLiveModeButton()
@@ -360,21 +361,34 @@ end
 -- @param self (Frame)
 -- @param keyValue (string)
 Musician.Keyboard.OnKeyDown = function(self, keyValue)
-	if keyValue == "ESCAPE" then
-		MusicianKeyboard:Hide()
-	end
-
 	local button = keyValueButtons[keyValue]
 	if button then
-		if button.down then
-			return
-		end
-		button.down = true
-		button.animateOnMouseDown(button, "LeftButton")
-		local point, relativeTo, relativePoint, xOfs, yOfs = button:GetFontString():GetPoint()
-		button:GetFontString():SetPoint(point, relativeTo, relativePoint, xOfs + button.pushedTextOffset[1], yOfs + button.pushedTextOffset[2])
-		point, relativeTo, relativePoint, xOfs, yOfs = button.subText:GetPoint()
-		button.subText:SetPoint(point, relativeTo, relativePoint, xOfs + button.pushedTextOffset[1], yOfs + button.pushedTextOffset[2])
+		button:SetButtonState("PUSHED")
+		button:GetScript("OnMouseDown")(button, "LeftButton")
+	else
+		Musician.Keyboard.KeyDown(keyValue)
+	end
+end
+
+--- OnKeyUp
+-- @param self (Frame)
+-- @param keyValue (string)
+Musician.Keyboard.OnKeyUp = function(self, keyValue)
+	local button = keyValueButtons[keyValue]
+	if button then
+		button:SetButtonState("NORMAL")
+		button:GetScript("OnMouseUp")(button, "LeftButton")
+	else
+		Musician.Keyboard.KeyUp(keyValue)
+	end
+end
+
+--- KeyDown
+-- @param keyValue (string)
+Musician.Keyboard.KeyDown = function(keyValue)
+	if keyValue == "ESCAPE" then
+		MusicianKeyboard:Hide()
+		return
 	end
 
 	if keyValue == "LCTRL"  then
@@ -386,24 +400,9 @@ Musician.Keyboard.OnKeyDown = function(self, keyValue)
 	end
 end
 
---- OnKeyUp
--- @param self (Frame)
+--- KeyUp
 -- @param keyValue (string)
-Musician.Keyboard.OnKeyUp = function(self, keyValue)
-
-	local button = keyValueButtons[keyValue]
-	if button then
-		if not(button.down) then
-			return
-		end
-		button.animateOnMouseUp(button, "LeftButton")
-		local point, relativeTo, relativePoint, xOfs, yOfs = button:GetFontString():GetPoint()
-		button:GetFontString():SetPoint(point, relativeTo, relativePoint, xOfs - button.pushedTextOffset[1], yOfs - button.pushedTextOffset[2])
-		local point, relativeTo, relativePoint, xOfs, yOfs = button.subText:GetPoint()
-		button.subText:SetPoint(point, relativeTo, relativePoint, xOfs - button.pushedTextOffset[1], yOfs - button.pushedTextOffset[2])
-		button.down = false
-	end
-
+Musician.Keyboard.KeyUp = function(keyValue)
 	if keyValue == "LCTRL"  then
 		lCtrlDown = false
 	elseif keyValue == "RCTRL" then

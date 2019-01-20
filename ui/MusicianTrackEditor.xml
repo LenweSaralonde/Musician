@@ -219,49 +219,11 @@
 
 	<!-- Main frame -->
 
-	<Frame name="MusicianTrackEditor" parent="UIParent" toplevel="true" enableMouse="true" movable="true" hidden="true">
-
-		<Scripts>
-			<OnLoad>self:RegisterForDrag("LeftButton")</OnLoad>
-			<OnDragStart>self:StartMoving()</OnDragStart>
-			<OnDragStop>self:StopMovingOrSizing()</OnDragStop>
-			<OnShow>
-				PlaySound(SOUNDKIT.IG_QUEST_LIST_OPEN)
-			</OnShow>
-			<OnHide>
-				PlaySound(SOUNDKIT.IG_QUEST_LIST_CLOSE)
-			</OnHide>
-		</Scripts>
+	<Frame name="MusicianTrackEditor" inherits="MusicianDialogTemplate">
 
 		<Size x="620" y="500" />
 
-		<Anchors>
-			<Anchor point="CENTER" x="0" y="0" />
-		</Anchors>
-
-		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
-			<BackgroundInsets>
-				<AbsInset left="11" right="12" top="12" bottom="11" />
-			</BackgroundInsets>
-			<TileSize>
-				<AbsValue val="32" />
-			</TileSize>
-			<EdgeSize>
-				<AbsValue val="32" />
-			</EdgeSize>
-		</Backdrop>
-
 		<Frames>
-
-			<!-- Close button -->
-
-			<Button name="$parentCloseButton" inherits="UIPanelCloseButton">
-				<Anchors>
-					<Anchor point="CENTER" relativePoint="TOPRIGHT">
-						<Offset x="-7" y="-7" />
-					</Anchor>
-				</Anchors>
-			</Button>
 
 			<!-- Player slider -->
 
@@ -321,7 +283,7 @@
 
 			<!-- Player buttons -->
 
-			<Button name="$parentPlayButton" inherits="MusicianIconButton">
+			<Button name="$parentPlayButton" inherits="MusicianIconButtonTemplate">
 				<Size x="60" y="20" />
 				<Anchors>
 					<Anchor point="BOTTOM" x="0" y="0" relativePoint="TOP" relativeTo="$parentSourceSongSlider" />
@@ -340,7 +302,7 @@
 				</Scripts>
 			</Button>
 
-			<Button name="$parentPrevButton" inherits="MusicianIconButton" text="«">
+			<Button name="$parentPrevButton" inherits="MusicianIconButtonTemplate" text="«">
 				<Size x="40" y="20" />
 				<Anchors>
 					<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentPlayButton" />
@@ -352,7 +314,7 @@
 				</Scripts>
 			</Button>
 
-			<Button name="$parentNextButton" inherits="MusicianIconButton" text="»">
+			<Button name="$parentNextButton" inherits="MusicianIconButtonTemplate" text="»">
 				<Size x="40" y="20" />
 				<Anchors>
 					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentPlayButton" />
@@ -364,7 +326,7 @@
 				</Scripts>
 			</Button>
 
-			<Button name="$parentGoToStartButton" inherits="MusicianIconButton" text="&lt;" >
+			<Button name="$parentGoToStartButton" inherits="MusicianIconButtonTemplate" text="&lt;" >
 				<Size x="40" y="20" />
 				<Anchors>
 					<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentPrevButton" />
@@ -376,7 +338,7 @@
 				</Scripts>
 			</Button>
 
-			<Button name="$parentGoToEndButton" inherits="MusicianIconButton" text="&gt;" hidden="true">
+			<Button name="$parentGoToEndButton" inherits="MusicianIconButtonTemplate" text="&gt;" hidden="true">
 				<Size x="40" y="20" />
 				<Anchors>
 					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentNextButton" />
@@ -388,7 +350,7 @@
 				</Scripts>
 			</Button>
 
-			<Button name="$parentSetCropFromButton" inherits="MusicianIconButton" text="{" >
+			<Button name="$parentSetCropFromButton" inherits="MusicianIconButtonTemplate" text="{" >
 				<Size x="40" y="20" />
 				<Anchors>
 					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentGoToEndButton" />
@@ -400,7 +362,7 @@
 				</Scripts>
 			</Button>
 
-			<Button name="$parentSetCropToButton" inherits="MusicianIconButton" text="}" >
+			<Button name="$parentSetCropToButton" inherits="MusicianIconButtonTemplate" text="}" >
 				<Size x="40" y="20" />
 				<Anchors>
 					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentSetCropFromButton" />
