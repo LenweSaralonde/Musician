@@ -136,6 +136,11 @@
 				<Anchors>
 					<Anchor point="BOTTOMRIGHT" x="-5" y="5" relativePoint="BOTTOMRIGHT" relativeTo="$parentTextBackground" />
 				</Anchors>
+				<ButtonText name="$parentText" parentKey="Text">
+					<Anchors>
+						<Anchor point="CENTER" x="1" y="-1"/>
+					</Anchors>
+				</ButtonText>
 				<Scripts>
 					<OnLoad>
 						self:SetFrameLevel(MusicianFrameSource:GetFrameLevel() + 1000)
