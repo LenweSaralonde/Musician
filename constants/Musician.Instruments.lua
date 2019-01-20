@@ -161,7 +161,15 @@ Musician.INSTRUMENTS = {
 
 	-- Percussion
 	["clap"] = {
-		["pathFunc"] = function() return "Sound\\Character\\EmoteClap" .. (floor(math.random() * 7) + 1) end, -- EmoteClap1 - 7
+		["pathList"] = {
+			"Sound\\Character\\EmoteClap1",
+			"Sound\\Character\\EmoteClap2",
+			"Sound\\Character\\EmoteClap3",
+			"Sound\\Character\\EmoteClap4",
+			"Sound\\Character\\EmoteClap5",
+			"Sound\\Character\\EmoteClap6",
+			"Sound\\Character\\EmoteClap7",
+		},
 		["decay"] = 100,
 		["isPercussion"] = true
 	},
@@ -253,7 +261,11 @@ Musician.INSTRUMENTS = {
 		["isPercussion"] = true
 	},
 	["bodhran-roll"] = {
-		["pathFunc"] = function() return "Interface\\AddOns\\Musician\\instruments\\bodhran\\roll" .. (floor(math.random() * 3) + 1) end, -- roll1 - 3
+		["pathList"] = {
+			"Interface\\AddOns\\Musician\\instruments\\bodhran\\roll1",
+			"Interface\\AddOns\\Musician\\instruments\\bodhran\\roll2",
+			"Interface\\AddOns\\Musician\\instruments\\bodhran\\roll3",
+		},
 		["decay"] = 100,
 		["isPercussion"] = true
 	},

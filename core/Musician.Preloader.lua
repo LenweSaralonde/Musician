@@ -71,14 +71,12 @@ function Musician.Preloader.PreloadNext()
 
 			-- Sample not preloaded
 			if sampleId and not(Musician.Preloader.IsPreloaded(sampleId)) then
-				-- Play note sample to preload it
-				local startTime = debugprofilestop()
-				local play, handle = Musician.Utils.PlayNote(instrumentData.midi, key)
-				if play then
-					StopSound(handle, 0)
+				-- Preload note samples
+				local hasSample, preloadTime = Musician.Utils.PreloadNote(instrumentData.midi, key)
+				if hasSample then
 					-- Calculate average loading time during first preloading cycle
 					if not(preloaded) then
-						totalLoadingTime = totalLoadingTime + debugprofilestop() - startTime
+						totalLoadingTime = totalLoadingTime + preloadTime
 						totalLoadedSamples = totalLoadedSamples + 1
 						averageLoadingTime = totalLoadingTime / totalLoadedSamples
 					end

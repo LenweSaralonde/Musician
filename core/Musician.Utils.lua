@@ -300,7 +300,7 @@ end
 --- Returns the sound file for this instrument and key
 -- @param instrument (int) MIDI instrument index
 -- @param key (int) MIDI key
--- @return (string, table)
+-- @return (string, table, table)
 function Musician.Utils.GetSoundFile(instrument, key)
 
 	local instrumentName = Musician.Utils.GetInstrumentName(instrument, key)
@@ -313,12 +313,11 @@ function Musician.Utils.GetSoundFile(instrument, key)
 		return nil
 	end
 
-	local soundFile
-
-	if instrumentData.pathFunc ~= nil then
-		soundFile = instrumentData.pathFunc()
+	local soundPaths, soundPath
+	if instrumentData.pathList ~= nil then
+		soundPaths = instrumentData.pathList
 	else
-		soundFile = instrumentData.path
+		soundPaths = { instrumentData.path }
 	end
 
 	if instrumentData["transpose"] then
@@ -327,13 +326,23 @@ function Musician.Utils.GetSoundFile(instrument, key)
 
 	local noteName = Musician.Utils.NoteName(key)
 
-	if not(instrumentData.isPercussion) then
-		soundFile = soundFile .. '\\' .. noteName
+	local soundFiles = {}
+	local i, soundPath
+	for i, soundPath in pairs(soundPaths) do
+		local soundFile = soundPath
+		if not(instrumentData.isPercussion) then
+			soundFile = soundFile .. '\\' .. noteName
+		end
+		soundFiles[i] = soundFile .. ".ogg"
 	end
 
 	instrumentData.name = instrumentName
 
-	return soundFile .. ".ogg", instrumentData
+	if #soundFiles == 1 then
+		return soundFiles[1], instrumentData, soundFiles
+	end
+
+	return soundFiles[floor(math.random() * #soundFiles) + 1], instrumentData, soundFiles
 end
 
 --- Returns true if a song is actually playing and audible
@@ -616,6 +625,27 @@ function Musician.Utils.PlayNote(instrument, key)
 	end
 	Musician.Preloader.AddPreloaded(sampleId)
 	return play, handle, instrumentData
+end
+
+--- Preload Note
+-- @param instrument (number)
+-- @param key (number)
+-- @return (boolean), (number) hasSample, preloadTime
+function Musician.Utils.PreloadNote(instrument, key)
+	local soundFile, instrumentData, soundFiles = Musician.Utils.GetSoundFile(instrument, key)
+	local sampleId = Musician.Utils.GetSampleId(instrumentData, key)
+	local hasSample = false
+	local startTime = debugprofilestop()
+	for i, soundFile in pairs(soundFiles) do
+		local play, handle
+		play, handle = PlaySoundFile(soundFile, 'SFX')
+		if play then
+			hasSample = true
+			StopSound(handle, 0)
+		end
+	end
+	Musician.Preloader.AddPreloaded(sampleId)
+	return hasSample, debugprofilestop() - startTime
 end
 
 --- Deep copy a table
