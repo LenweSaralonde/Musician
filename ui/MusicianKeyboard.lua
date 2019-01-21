@@ -357,6 +357,18 @@ function Musician.Keyboard.Init()
 	MusicianKeyboard.showKeyboard(Musician_Settings.keyboardVisible)
 end
 
+--- Show
+--
+Musician.Keyboard.Show = function()
+	if not(Musician_Settings.keyboardIsConfigured) then
+		Musician.Utils.Popup(Musician.Msg.SHOULD_CONFIGURE_KEYBOARD, function() MusicianKeyboardConfig:Show() end)
+		Musician.KeyboardConfig.showKeyboardOnComplete = true
+	else
+		Musician.KeyboardConfig.showKeyboardOnComplete = false
+		MusicianKeyboard:Show()
+	end
+end
+
 --- OnKeyDown
 -- @param self (Frame)
 -- @param keyValue (string)

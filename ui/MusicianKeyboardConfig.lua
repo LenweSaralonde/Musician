@@ -152,6 +152,11 @@ end
 Musician.KeyboardConfig.Save = function()
 	Musician.KeyboardUtils.SetMapping(currentMapping)
 	MusicianKeyboardConfig:Hide()
+	Musician.Keyboard.BuildMapping()
+	if Musician.KeyboardConfig.showKeyboardOnComplete then
+		Musician.KeyboardConfig.showKeyboardOnComplete = false
+		MusicianKeyboard:Show()
+	end
 end
 
 --- Cancel changes and close.

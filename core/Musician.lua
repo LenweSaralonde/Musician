@@ -65,10 +65,15 @@ function Musician:OnInitialize()
 				song:Stop()
 			end
 
-			-- Show main window
+		-- Show main window
 		elseif cmd == "show" or cmd == "" then
 			MusicianFrame:Show()
 			MusicianFrameSource:SetFocus()
+
+		-- Show live keyboard
+		elseif cmd == "live" or cmd == "keyboard" then
+			Musician.Keyboard.Show()
+
 		end
 	end
 

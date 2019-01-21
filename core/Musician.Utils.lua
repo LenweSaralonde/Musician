@@ -17,9 +17,14 @@ end
 
 --- Display an message in a popup
 -- @param msg (string)
-function Musician.Utils.Popup(msg)
-	msg = string.gsub(msg, '|r', '|r' .. NORMAL_FONT_COLOR_CODE)
-	message(NORMAL_FONT_COLOR_CODE .. msg .. '|r')
+-- @param callback (function)
+-- @param force (boolean)
+function Musician.Utils.Popup(msg, callback, force)
+	if (force or not MusicianBasicMessageDialog:IsShown()) then
+		MusicianBasicMessageDialogButton:SetScript("OnMouseUp", callback)
+		MusicianBasicMessageDialog.Text:SetText(msg)
+		MusicianBasicMessageDialog:Show()
+	end
 end
 
 --- Highlight text

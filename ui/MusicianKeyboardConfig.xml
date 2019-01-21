@@ -51,7 +51,7 @@
 		<Frames>
 			<Frame name="$parentKeyboard">
 				<Anchors>
-					<Anchor point="TOP" y="-50" relativePoint="TOP" relativeTo="$parent" />
+					<Anchor point="TOP" y="-85" relativePoint="TOP" relativeTo="$parent" />
 				</Anchors>
 			</Frame>
 
@@ -92,9 +92,10 @@
 					</Anchors>
 				</FontString>
 
-				<FontString name="$parentHint" inherits="GameFontNormal">
+				<FontString name="$parentHint" inherits="GameFontNormal" justifyH="CENTER" justifyV="CENTER">
+					<Size y="50" />
 					<Anchors>
-						<Anchor point="TOP" y="-10" relativePoint="BOTTOM" relativeTo="$parentKeyboard" />
+						<Anchor point="BOTTOM" relativePoint="TOP" relativeTo="$parentKeyboard" />
 					</Anchors>
 				</FontString>
 			</Layer>

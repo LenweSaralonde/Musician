@@ -51,6 +51,26 @@
 		</Frames>
 	</Frame>
 
+	<!-- Basic message dialog -->
+
+	<Frame name="MusicianBasicMessageDialog" inherits="DialogBoxFrame">
+		<Size>
+			<AbsDimension x="384" y="128"/>
+		</Size>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString parentKey="Text" inherits="GameFontNormalLarge" justifyH="CENTER" justifyV="CENTER" nonspacewrap="true">
+					<Size>
+						<AbsDimension x="360" y="75"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOP" x="0" y="-8"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+	</Frame>
+
 	<!-- Standard button with icon font template -->
 
 	<Button name="MusicianIconButtonTemplate" inherits="UIPanelButtonTemplate" virtual="true">

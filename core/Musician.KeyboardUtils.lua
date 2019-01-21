@@ -2,9 +2,12 @@ Musician.KeyboardUtils = LibStub("AceAddon-3.0"):NewAddon("Musician.KeyboardUtil
 
 local keyValues -- Reverse mapping table (physical key => key value)
 
+--- Init
+--
 function Musician.KeyboardUtils.Init()
 	if Musician_Settings.keyboardMapping == nil then
 		Musician_Settings.keyboardMapping = Musician.KeyboardUtils.GetEmptyMapping()
+		Musician_Settings.keyboardIsConfigured = false
 	end
 	keyValues = Musician.Utils.FlipTable(Musician_Settings.keyboardMapping)
 end
@@ -32,6 +35,7 @@ end
 function Musician.KeyboardUtils.SetMapping(mapping)
 	Musician_Settings.keyboardMapping = Musician.Utils.DeepCopy(mapping)
 	keyValues = Musician.Utils.FlipTable(Musician_Settings.keyboardMapping)
+	Musician_Settings.keyboardIsConfigured = true
 end
 
 --- Return the physical key mapped to the actual key value.
