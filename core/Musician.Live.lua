@@ -47,6 +47,11 @@ end
 --- Indicates whenever the live mode can stream
 -- @return (boolean)
 function Musician.Live.CanStream()
+	-- Communication not yet ready
+	if not(Musician.Comm.isReady()) then
+		return false
+	end
+
 	-- Actually streaming a song that is not a live song
 	if Musician.streamingSong and Musician.streamingSong.streaming and Musician.streamingSong.mode ~= Musician.Song.MODE_LIVE then
 		return false

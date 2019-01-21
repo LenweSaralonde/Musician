@@ -33,6 +33,7 @@ Musician.Locale = {}
 
 Musician.Events = {}
 Musician.Events.RefreshFrame = "MusicianRefreshFrame"
+Musician.Events.CommReady = "MusicianCommReady"
 Musician.Events.SongPlay = "MusicianSongPlay"
 Musician.Events.SongStop = "MusicianSongStop"
 Musician.Events.StreamStart = "MusicianStreamStart"

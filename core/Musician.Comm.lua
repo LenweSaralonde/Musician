@@ -44,7 +44,7 @@ function Musician.Comm.JoinChannel()
 			local newJoinedChannelCount = #{GetChannelList()}
 
 			if newJoinedChannelCount > 0 and newJoinedChannelCount == joinedChannelCount then
-				local type, name = JoinTemporaryChannel(Musician.CHANNEL, Musician.PASSWORD)
+				JoinTemporaryChannel(Musician.CHANNEL, Musician.PASSWORD)
 			end
 
 			joinedChannelCount = newJoinedChannelCount
