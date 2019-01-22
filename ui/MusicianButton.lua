@@ -54,12 +54,8 @@ end
 
 function MusicianButton.OnClick(self, button)
 	if button == "LeftButton" then
-		if MusicianFrame:IsVisible() then
-			MusicianFrame:Hide()
-		else
-			MusicianFrame:Show()
-			MusicianFrame.Focus()
-		end
+		PlaySound(SOUNDKIT.IG_MINIMAP_ZOOM_IN)
+		MusicianButton.OpenMenu()
 	elseif button == "RightButton" then
 		Musician.globalMute = not(Musician.globalMute)
 		if Musician.globalMute then
@@ -70,6 +66,37 @@ function MusicianButton.OnClick(self, button)
 	end
 	MusicianButton.Reposition()
 	MusicianButton.ShowTooltip()
+end
+
+function MusicianButton.OpenMenu()
+	local menu = {
+		{
+			notCheckable = true,
+			text = Musician.Msg.MENU_TITLE,
+			isTitle = true
+		},
+		{
+			notCheckable = true,
+			text = Musician.Msg.MENU_PLAY_SONG,
+			func = function()
+				MusicianKeyboardConfig:Hide()
+				MusicianKeyboard:Hide()
+				MusicianFrame:Show()
+				MusicianFrameSource:SetFocus()
+			end
+		},
+		{
+			notCheckable = true,
+			text = Musician.Msg.MENU_PLAY_LIVE,
+			func = function()
+				MusicianFrame:Hide()
+				MusicianFrameSource:ClearFocus()
+				Musician.Keyboard.Show()
+			end
+		},
+	}
+
+	EasyMenu(menu, MusicianButton_Menu, "cursor", 0 , 0, "MENU")
 end
 
 function MusicianButton.ShowTooltip()

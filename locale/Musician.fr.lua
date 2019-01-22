@@ -12,6 +12,10 @@ msg.EDIT = "Éditer"
 msg.MUTE = "Rendre silencieux"
 msg.UNMUTE = "Rétablir la musique"
 
+msg.MENU_TITLE = "Musician"
+msg.MENU_PLAY_SONG = "Jouer un morceau"
+msg.MENU_PLAY_LIVE = "Jouer en direct"
+
 msg.STARTUP = "Bienvenue dans Musician v{version}."
 
 msg.NEW_VERSION = "Une nouvelle version de Musician est disponible ! Téléchargez la mise à jour sur {url} ."
@@ -82,11 +86,11 @@ msg.KEYBOARD_LAYOUTS = {
 }
 
 msg.SOLO_MODE = "Mode Solo"
-msg.LIVE_MODE = "Mode Live"
-msg.LIVE_MODE_DISABLED = "Le Mode Live est désactivé pendant la lecture."
+msg.LIVE_MODE = "Mode Direct"
+msg.LIVE_MODE_DISABLED = "Le Mode Direct est désactivé pendant la lecture."
 msg.ENABLE_SOLO_MODE = "Activer le Mode Solo (vous jouez pour vous-même)"
-msg.ENABLE_LIVE_MODE = "Activer le Mode Live (vous jouez pour tout le monde)"
-msg.PLAY_LIVE = "Jouer en live"
+msg.ENABLE_LIVE_MODE = "Activer le Mode Direct (vous jouez pour tout le monde)"
+msg.PLAY_LIVE = "Jouer en direct"
 msg.PLAY_SOLO = "Jouer en solo"
 msg.SHOW_KEYBOARD = "Afficher le clavier"
 msg.HIDE_KEYBOARD = "Cacher le clavier"

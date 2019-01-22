@@ -12,6 +12,10 @@ msg.EDIT = "Edit"
 msg.MUTE = "Mute"
 msg.UNMUTE = "Unmute"
 
+msg.MENU_TITLE = "Musician"
+msg.MENU_PLAY_SONG = "Play a song"
+msg.MENU_PLAY_LIVE = "Play live"
+
 msg.STARTUP = "Welcome to Musician v{version}."
 
 msg.NEW_VERSION = "A new version of Musician has been released! Download the update from {url} ."
