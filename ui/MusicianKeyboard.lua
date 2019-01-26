@@ -245,16 +245,16 @@ local function initLayerControls(layer)
 
 	-- Keys shift buttons
 	_G[varNamePrefix .. "ShiftLeft"]:SetScript("OnClick", function()
-		Musician.Keyboard.ShiftKeys(layer, -layout.shift)
+		Musician.Keyboard.ShiftKeys(layer, -Musician.Layouts[config.layout].shift)
 	end)
 	_G[varNamePrefix .. "ShiftRight"]:SetScript("OnClick", function()
-		Musician.Keyboard.ShiftKeys(layer, layout.shift)
+		Musician.Keyboard.ShiftKeys(layer, Musician.Layouts[config.layout].shift)
 	end)
 	_G[varNamePrefix .. "ShiftDown"]:SetScript("OnClick", function()
-		Musician.Keyboard.ShiftKeys(layer, #layout.scale)
+		Musician.Keyboard.ShiftKeys(layer, #Musician.Layouts[config.layout].scale)
 	end)
 	_G[varNamePrefix .. "ShiftUp"]:SetScript("OnClick", function()
-		Musician.Keyboard.ShiftKeys(layer, -#layout.scale)
+		Musician.Keyboard.ShiftKeys(layer, -#Musician.Layouts[config.layout].scale)
 	end)
 	_G[varNamePrefix .. "ShiftReset"]:SetScript("OnClick", function()
 		Musician.Keyboard.ShiftKeys(layer)
@@ -428,7 +428,10 @@ end
 --- Change keyboard layout
 -- @param layout (string)
 Musician.Keyboard.SetLayout = function(layout)
-	Musician.Keyboard.config.layout = layout
+	local config = Musician.Keyboard.config
+	config.layout = layout
+	config.shift[LAYER.UPPER] = 0
+	config.shift[LAYER.LOWER] = 0
 	Musician.Live.AllNotesOff()
 	Musician.Keyboard.BuildMapping()
 end
