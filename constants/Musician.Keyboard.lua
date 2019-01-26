@@ -95,23 +95,23 @@ Musician.KEYBOARD_MERGEABLE_KEYS = {
 }
 
 Musician.KEYBOARD_FIXED_MAPPING = {
-	["BACKSPACE"] = KEY.Backspace,
-	["TAB"] = KEY.Tab,
-	["CAPSLOCK"] = KEY.CapsLock,
-	["ENTER"] = KEY.Enter,
-	["LSHIFT"] = KEY.ShiftLeft,
-	["RSHIFT"] = KEY.ShiftRight,
-	["LCTRL"] = KEY.ControlLeft,
-	["LMETA"] = KEY.MetaLeft,
-	["LALT"] = KEY.AltLeft,
-	["SPACE"] = KEY.Space,
-	["RALT"] = KEY.AltRight,
-	["RMETA"] = KEY.MetaRight,
-	["MENU"] = KEY.ContextMenu,
-	["RCTRL"] = KEY.ControlRight,
+	BACKSPACE = KEY.Backspace,
+	TAB = KEY.Tab,
+	CAPSLOCK = KEY.CapsLock,
+	ENTER = KEY.Enter,
+	LSHIFT = KEY.ShiftLeft,
+	RSHIFT = KEY.ShiftRight,
+	LCTRL = KEY.ControlLeft,
+	LMETA = KEY.MetaLeft,
+	LALT = KEY.AltLeft,
+	SPACE = KEY.Space,
+	RALT = KEY.AltRight,
+	RMETA = KEY.MetaRight,
+	MENU = KEY.ContextMenu,
+	RCTRL = KEY.ControlRight,
 }
 
 Musician.KEYBOARD_LAYER = {
-	["UPPER"] = 0,
-	["LOWER"] = 1,
+	UPPER = 0,
+	LOWER = 1,
 }
