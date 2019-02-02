@@ -84,7 +84,7 @@ local function setKeys()
 					keyValueName = Musician.KeyboardUtils.GetKeyValueName(keyValue)
 				end
 
-				if keyData ~= nil then
+				if keyData ~= nil and keyData[2] >= Musician.MIN_KEY and keyData[2] <= Musician.MAX_KEY then
 					noteName = Musician.Utils.NoteName(keyData[2])
 					local instrumentName = Musician.MIDI_INSTRUMENT_MAPPING[config.instrument[keyData[1]]]
 					local r, g, b = unpack(Musician.INSTRUMENTS[instrumentName].color)
@@ -162,34 +162,45 @@ end
 -- @param onChange (function)
 -- @param tooltipText (string)
 local function initDropdown(dropdown, values, labels, initialValue, onChange, tooltipText)
+	local initialIndex
+
 	dropdown.value = nil
+	dropdown.index = nil
 	dropdown.tooltipText = tooltipText
 
-	dropdown.SetValue = function(value)
-		dropdown.value = value
-		UIDropDownMenu_SetText(dropdown, labels[value])
-		onChange(value)
+	dropdown.SetIndex = function(index)
+		dropdown.value = values[index]
+		dropdown.index = index
+		UIDropDownMenu_SetText(dropdown, labels[index])
+		onChange(values[index])
 	end
 
 	dropdown.OnClick = function(self, arg1, arg2, checked)
-		dropdown.SetValue(arg1)
+		dropdown.SetIndex(arg1)
 	end
 
 	dropdown.GetItems = function(frame, level, menuList)
-		local info = UIDropDownMenu_CreateInfo()
-		info.func = dropdown.OnClick
-
 		local index, value
 		for index, value in pairs(values) do
-			info.text = labels[value]
-			info.arg1 = value
-			info.checked = dropdown.value == value
+			local info = UIDropDownMenu_CreateInfo()
+			info.func = dropdown.OnClick
+			info.text = labels[index]
+			if value ~= "" then
+				info.arg1 = index
+				info.checked = dropdown.value == value
+			else
+				info.isTitle = true
+				info.notCheckable = true
+			end
+			if value == initialValue then
+				initialIndex = index
+			end
 			UIDropDownMenu_AddButton(info)
 		end
 	end
 
 	UIDropDownMenu_Initialize(dropdown, dropdown.GetItems)
-	dropdown.SetValue(initialValue)
+	dropdown.SetIndex(initialIndex)
 end
 
 --- Initialize layout dropdown
@@ -199,7 +210,11 @@ local function initLayoutDropdown()
 	local labels = {}
 	local index, layout
 	for index, layout in pairs(Musician.Layouts) do
-		table.insert(values, index)
+		if layout.scale ~= nil then
+			table.insert(values, index)
+		else
+			table.insert(values, "")
+		end
 		table.insert(labels, Musician.Msg.KEYBOARD_LAYOUTS[layout.name] or layout.name)
 	end
 
@@ -211,12 +226,14 @@ end
 local function initBaseKeyDropdown()
 
 	local values = {}
+	local labels = {}
 	local key
 	for key = 0, 11 do
 		table.insert(values, key)
+		table.insert(labels, Musician.NOTE_NAMES[key])
 	end
 
-	initDropdown(MusicianKeyboardControlsMainBaseKeyDropdown, values, Musician.NOTE_NAMES, Musician.Keyboard.config.baseKey, Musician.Keyboard.SetBaseKey, Musician.Msg.CHANGE_BASE_KEY)
+	initDropdown(MusicianKeyboardControlsMainBaseKeyDropdown, values, labels, Musician.Keyboard.config.baseKey, Musician.Keyboard.SetBaseKey, Musician.Msg.CHANGE_BASE_KEY)
 end
 
 --- Init controls for a layer
@@ -322,17 +339,17 @@ function Musician.Keyboard.Init()
 
 	-- Base parameters
 	Musician.Keyboard.config = {
-		["layout"] = 1,
-		["instrument"] = {
+		layout = 2, -- Piano
+		instrument = {
 			[LAYER.UPPER] = 24, -- lute
 			[LAYER.LOWER] = 24, -- lute
 		},
-		["shift"] = {
+		shift = {
 			[LAYER.UPPER] = 0,
 			[LAYER.LOWER] = 0,
 		},
-		["baseKey"] = 0,
-		["powerChords"] = {
+		baseKey = 0,
+		powerChords = {
 			[LAYER.UPPER] = false,
 			[LAYER.LOWER] = false,
 		},

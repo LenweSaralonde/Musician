@@ -81,9 +81,7 @@ msg.FIXED_KEY_NAMES = {
 	[KEY.ControlRight] = "Ctrl",
 }
 
-msg.KEYBOARD_LAYOUTS = {
-	["piano"] = "Piano"
-}
+msg.KEYBOARD_LAYOUTS = {}
 
 msg.SOLO_MODE = "Solo Mode"
 msg.LIVE_MODE = "Live Mode"
@@ -94,7 +92,7 @@ msg.PLAY_LIVE = "Play live"
 msg.PLAY_SOLO = "Play solo"
 msg.SHOW_KEYBOARD = "Show keyboard"
 msg.HIDE_KEYBOARD = "Hide keyboard"
-msg.KEYBOARD_LAYOUT = "Keyboard layout"
+msg.KEYBOARD_LAYOUT = "Keyboard mode & scale"
 msg.CHANGE_KEYBOARD_LAYOUT = "Change keyboard layout"
 msg.BASE_KEY = "Base key"
 msg.CHANGE_BASE_KEY = "Base key"

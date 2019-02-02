@@ -82,7 +82,54 @@ msg.FIXED_KEY_NAMES = {
 }
 
 msg.KEYBOARD_LAYOUTS = {
-	["piano"] = "Piano"
+	["Piano"] = "Piano",
+	["Chromatic"] = "Chromatique",
+
+	["Modes"] = "Modes",
+	["Ionian"] = "Ionien",
+	["Dorian"] = "Dorien",
+	["Phrygian"] = "Phrygien",
+	["Lydian"] = "Lydien",
+	["Mixolydian"] = "Mixolydien",
+	["Aeolian"] = "Éolien",
+	["Locrian"] = "Locrien",
+	["minor Harmonic"] = "mineur Harmonique",
+	["minor Melodic"] = "mineur Mélodique",
+
+	["Blues scales"] = "Gammes de Blues",
+	["Major Blues"] = "Blues Majeure",
+	["minor Blues"] = "Blues mineure",
+
+	["Diminished scales"] = "Gammes diminuées",
+	["Diminished"] = "Diminuée",
+	["Complement Diminished"] = "Diminuée complémentaire",
+
+	["Pentatonic scales"] = "Gammes pentatoniques",
+	["Major Pentatonic"] = "Pentatonique Majeure",
+	["minor Pentatonic"] = "Pentatonique mineure",
+
+	["World scales"] = "Gammes du Monde",
+	["Raga 1"] = "Raga 1",
+	["Raga 2"] = "Raga 2",
+	["Raga 3"] = "Raga 3",
+	["Arabic"] = "Arabe",
+	["Spanish"] = "Espagnole",
+	["Gypsy"] = "Gitane",
+	["Egyptian"] = "Égyptienne",
+	["Hawaiian"] = "Hawaïenne",
+	["Bali Pelog"] = "Pelog Balinaise",
+	["Japanese"] = "Japonaise",
+	["Ryukyu"] = "Ryukyu",
+	["Chinese"] = "Chinoise",
+
+	["Miscellaneous scales"] = "Gammes diverses",
+	["Bass Line"] = "Ligne de basse",
+	["Wholetone"] = "Gamme par ton",
+	["minor 3rd"] = "mineure tierce",
+	["Major 3rd"] = "Majeure tierce",
+	["4th"] = "Quarte",
+	["5th"] = "Quinte",
+	["Octave"] = "Octave",
 }
 
 msg.SOLO_MODE = "Mode Solo"
@@ -94,7 +141,7 @@ msg.PLAY_LIVE = "Jouer en direct"
 msg.PLAY_SOLO = "Jouer en solo"
 msg.SHOW_KEYBOARD = "Afficher le clavier"
 msg.HIDE_KEYBOARD = "Cacher le clavier"
-msg.KEYBOARD_LAYOUT = "Disposition du clavier"
+msg.KEYBOARD_LAYOUT = "Mode/gamme du clavier"
 msg.CHANGE_KEYBOARD_LAYOUT = "Changer la disposition du clavier"
 msg.BASE_KEY = "Note de base"
 msg.CHANGE_BASE_KEY = "Changer la note de base"

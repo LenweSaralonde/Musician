@@ -281,7 +281,7 @@
 						<Layers>
 							<Layer level="FOREGROUND">
 								<FontString name="$parentTitle" parentKey="title" inherits="GameFontHighlight" justifyh="LEFT">
-									<Size x="150" y="32" />
+									<Size x="200" y="32" />
 									<Anchors>
 										<Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent" />
 									</Anchors>
