@@ -572,7 +572,7 @@ Musician.Keyboard.BuildMapping = function()
 			Musician.Utils.NoteKey(Musician.PercussionLayout.upper.baseKey),
 			Musician.PercussionLayout.upper.baseKeyIndex
 		)
-	else
+	elseif config.instrument[LAYER.UPPER] >= 0 then
 		mapKeys(
 			LAYER.UPPER,
 			layout.scale,
@@ -590,7 +590,7 @@ Musician.Keyboard.BuildMapping = function()
 			Musician.Utils.NoteKey(Musician.PercussionLayout.lower.baseKey),
 			Musician.PercussionLayout.lower.baseKeyIndex
 		)
-	else
+	elseif config.instrument[LAYER.LOWER] >= 0 then
 		mapKeys(
 			LAYER.LOWER,
 			layout.scale,
@@ -625,7 +625,7 @@ MusicianKeyboard.NoteKey = function(down, keyValue)
 	local instrument = Musician.Keyboard.config.instrument[layer]
 	local powerChords = Musician.Keyboard.config.powerChords[layer] and instrument < 128 -- No power chords for percussions
 
-	if noteKey < Musician.MIN_KEY or noteKey > Musician.MAX_KEY then
+	if noteKey < Musician.MIN_KEY or noteKey > Musician.MAX_KEY or instrument < 0 then
 		return false
 	end
 
