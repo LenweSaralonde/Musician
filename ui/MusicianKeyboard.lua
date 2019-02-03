@@ -98,10 +98,17 @@ local function setKeys()
 					button.background:SetColorTexture(r, g, b, 1)
 					button:Enable()
 					button:SetAlpha(1)
+
+					if config.instrument[keyData[1]] >= 128 then
+						button.tooltipText = Musician.Msg.MIDI_PERCUSSION_NAMES[keyData[2]]
+					else
+						button.tooltipText = nil
+					end
 				else
 					button.background:SetColorTexture(0, 0, 0, 0)
 					button:Disable()
 					button:SetAlpha(.5)
+					button.tooltipText = nil
 				end
 
 				-- Set specific key sizes and positions
