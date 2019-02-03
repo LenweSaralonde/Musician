@@ -342,6 +342,29 @@ local function initLiveModeButton()
 	Musician.Keyboard:RegisterMessage(Musician.Events.StreamStop, updateLiveModeButton)
 end
 
+--- Enable or disable layer controls
+-- @param layer (number)
+-- @param enable (boolean)
+local function enableLayerControls(layer, enable)
+	local controlNames = { "ShiftRight", "ShiftLeft", "ShiftUp", "ShiftDown", "ShiftReset", "PowerChords" }
+	local layerVarName = "MusicianKeyboardControls"
+
+	if layer == LAYER.UPPER then
+		layerVarName = layerVarName .. "Upper"
+	else
+		layerVarName = layerVarName .. "Lower"
+	end
+
+	local controlName
+	for _, controlName in pairs(controlNames) do
+		if enable then
+			_G[layerVarName .. controlName]:Enable()
+		else
+			_G[layerVarName .. controlName]:Disable()
+		end
+	end
+end
+
 --- Initialize keyboard
 --
 function Musician.Keyboard.Init()
@@ -476,7 +499,8 @@ end
 Musician.Keyboard.SetInstrument = function(layer, instrument)
 	Musician.Keyboard.config.instrument[layer] = instrument
 	Musician.Live.AllNotesOff(layer)
-	setKeys()
+	enableLayerControls(layer, instrument < 128) -- Enable controls if not percussion
+	Musician.Keyboard.BuildMapping()
 end
 
 --- Shift keys
@@ -539,8 +563,42 @@ Musician.Keyboard.BuildMapping = function()
 
 	local layout = Musician.Layouts[Musician.Keyboard.config.layout]
 	local config = Musician.Keyboard.config
-	mapKeys(LAYER.UPPER, layout.scale, layout.upper.keyboardMapping, Musician.Utils.NoteKey(layout.upper.baseKey), layout.upper.baseKeyIndex + config.shift[LAYER.UPPER])
-	mapKeys(LAYER.LOWER, layout.scale, layout.lower.keyboardMapping, Musician.Utils.NoteKey(layout.lower.baseKey), layout.lower.baseKeyIndex + config.shift[LAYER.LOWER])
+
+	if config.instrument[LAYER.UPPER] >= 128 then
+		mapKeys(
+			LAYER.UPPER,
+			Musician.PercussionLayout.scale,
+			Musician.PercussionLayout.upper.keyboardMapping,
+			Musician.Utils.NoteKey(Musician.PercussionLayout.upper.baseKey),
+			Musician.PercussionLayout.upper.baseKeyIndex
+		)
+	else
+		mapKeys(
+			LAYER.UPPER,
+			layout.scale,
+			layout.upper.keyboardMapping,
+			Musician.Utils.NoteKey(layout.upper.baseKey),
+			layout.upper.baseKeyIndex + config.shift[LAYER.UPPER]
+		)
+	end
+
+	if config.instrument[LAYER.LOWER] >= 128 then
+		mapKeys(
+			LAYER.LOWER,
+			Musician.PercussionLayout.scale,
+			Musician.PercussionLayout.lower.keyboardMapping,
+			Musician.Utils.NoteKey(Musician.PercussionLayout.lower.baseKey),
+			Musician.PercussionLayout.lower.baseKeyIndex
+		)
+	else
+		mapKeys(
+			LAYER.LOWER,
+			layout.scale,
+			layout.lower.keyboardMapping,
+			Musician.Utils.NoteKey(layout.lower.baseKey),
+			layout.lower.baseKeyIndex + config.shift[LAYER.LOWER]
+		)
+	end
 
 	setKeys()
 end
@@ -565,19 +623,20 @@ MusicianKeyboard.NoteKey = function(down, keyValue)
 	local layer = note[1]
 	local noteKey = note[2]
 	local instrument = Musician.Keyboard.config.instrument[layer]
+	local powerChords = Musician.Keyboard.config.powerChords[layer] and instrument < 128 -- No power chords for percussions
 
 	if noteKey < Musician.MIN_KEY or noteKey > Musician.MAX_KEY then
 		return false
 	end
 
-	if Musician.Keyboard.config.powerChords[layer] then
+	if powerChords then
 		Musician.Live.NoteOff(noteKey - 12, layer, instrument)
 		Musician.Live.NoteOff(noteKey - 5, layer, instrument)
 	end
 	Musician.Live.NoteOff(noteKey, layer, instrument)
 
 	if down then
-		if Musician.Keyboard.config.powerChords[layer] then
+		if powerChords then
 			Musician.Live.NoteOn(noteKey - 12, layer, instrument)
 			Musician.Live.NoteOn(noteKey - 5, layer, instrument)
 		end

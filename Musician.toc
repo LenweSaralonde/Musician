@@ -18,6 +18,7 @@ core\Musician.Live.lua
 
 constants\Musician.Constants.lua
 constants\Musician.Instruments.lua
+constants\Musician.Midi.lua
 constants\Musician.MidiMapping.lua
 constants\Musician.Keyboard.lua
 constants\Musician.Layouts.lua

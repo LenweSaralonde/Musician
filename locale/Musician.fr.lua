@@ -1,4 +1,5 @@
 Musician.Locale.fr = {}
+
 local msg = Musician.Locale.fr
 
 msg.PLAY = "Jouer"
@@ -203,6 +204,7 @@ msg.INSTRUMENT_NAMES = {
 }
 
 msg.MIDI_INSTRUMENT_NAMES = Musician.Locale.en.MIDI_INSTRUMENT_NAMES
+msg.MIDI_PERCUSSION_NAMES = Musician.Locale.en.MIDI_PERCUSSION_NAMES
 
 if ( GetLocale() == "frFR" ) then
 	Musician.Msg = msg

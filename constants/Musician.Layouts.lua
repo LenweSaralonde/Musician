@@ -1,6 +1,7 @@
 Musician.Layouts = {}
 
 local KEY = Musician.KEYBOARD_KEY
+local Percussion = Musician.MIDI_PERCUSSIONS
 
 local function getScale(name, notes, upperBaseKey, lowerBaseKey, upperBaseKeyIndex, lowerBaseKeyIndex)
 	return {
@@ -30,6 +31,15 @@ local function getSeparator(label)
 	return {
 		name = label
 	}
+end
+
+local function getPercussionScale(scale)
+	local shiftedScale = {}
+	local k, v
+	for k, v in pairs(scale) do
+		table.insert(shiftedScale, v - 27)
+	end
+	return shiftedScale
 end
 
 Musician.Layouts = {
@@ -105,3 +115,33 @@ Musician.Layouts = {
 	getScale("5th", { 0, 7 }),
 	getScale("Octave", { 0 }, 'C0', 'C0', 2, 1),
 }
+
+Musician.PercussionLayout = getScale(
+	"Percussion",
+	getPercussionScale({
+		Percussion.AcousticBassDrum,
+		Percussion.BassDrum1,
+		Percussion.AcousticSnare,
+		Percussion.ElectricSnare,
+		Percussion.SideStick,
+		Percussion.LowFloorTom,
+		Percussion.HighFloorTom,
+		Percussion.LowTom,
+		Percussion.LowMidTom,
+		Percussion.HiMidTom,
+		Percussion.HighTom,
+
+		Percussion.ClosedHiHat,
+		Percussion.PedalHiHat,
+		Percussion.OpenHiHat,
+		Percussion.CrashCymbal1,
+		Percussion.CrashCymbal2,
+		Percussion.RideCymbal1,
+		Percussion.RideCymbal2,
+		Percussion.RideBell,
+		Percussion.Tambourine,
+		Percussion.Maracas,
+		Percussion.HandClap,
+	}),
+	'D#0', 'D#0', 0, 0
+)
