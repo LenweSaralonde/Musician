@@ -191,7 +191,7 @@ Musician.KeyboardConfig.Button_OnKeyDown = function(self, keyValue, arg)
 		else
 			local mergedKey = Musician.KEYBOARD_MERGEABLE_KEYS[selectedKeyButton.key]
 			local fixedBindingKey = Musician.KEYBOARD_FIXED_MAPPING[keyValue]
-			local isAllowedBinding = (strlenutf8(keyValue) == 1 or fixedBindingKey ~= nil and fixedBindingKey == mergedKey)
+			local isAllowedBinding = (strlenutf8(keyValue) == 1 or fixedBindingKey ~= nil and fixedBindingKey == mergedKey) and not(Musician.DISABLED_KEY_VALUES[keyValue])
 
 			if isAllowedBinding then
 
@@ -299,9 +299,13 @@ Musician.KeyboardConfig.UpdateHint = function()
 		msg = string.gsub(msg, '{row}', Musician.Utils.Highlight(selectedKeyButton.row))
 
 		if ALLOWED_DUPLICATES[selectedKeyButton.key] ~= nil then
-			local msg2 = Musician.Msg.KEY_CAN_BE_MERGED
-			msg2 = string.gsub(msg2, '{key}', Musician.Utils.Highlight(Musician.KeyboardUtils.GetKeyValueName(ALLOWED_DUPLICATES[selectedKeyButton.key])))
-			msg = msg .. "\n" .. msg2
+			if Musician.DISABLED_KEY_VALUES[ALLOWED_DUPLICATES[selectedKeyButton.key]] then
+				msg = msg .. "\n" .. Musician.Msg.KEY_IS_OPTIONAL
+			else
+				local msg2 = Musician.Msg.KEY_CAN_BE_MERGED
+				msg2 = string.gsub(msg2, '{key}', Musician.Utils.Highlight(Musician.KeyboardUtils.GetKeyValueName(ALLOWED_DUPLICATES[selectedKeyButton.key])))
+				msg = msg .. "\n" .. msg2
+			end
 		end
 
 		MusicianKeyboardConfigHint:SetText(msg)

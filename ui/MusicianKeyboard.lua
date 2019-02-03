@@ -84,7 +84,7 @@ local function setKeys()
 					keyValueName = Musician.KeyboardUtils.GetKeyValueName(keyValue)
 				end
 
-				if keyData ~= nil and keyData[2] >= Musician.MIN_KEY and keyData[2] <= Musician.MAX_KEY then
+				if keyData ~= nil and keyData[2] >= Musician.MIN_KEY and keyData[2] <= Musician.MAX_KEY and not(Musician.DISABLED_KEYS[key]) and Musician.KeyboardUtils.GetKeyValue(key) then
 					noteName = Musician.Utils.NoteName(keyData[2])
 					local instrumentName = Musician.MIDI_INSTRUMENT_MAPPING[config.instrument[keyData[1]]]
 					local r, g, b = unpack(Musician.INSTRUMENTS[instrumentName].color)
@@ -99,7 +99,6 @@ local function setKeys()
 					button:Enable()
 					button:SetAlpha(1)
 				else
-					-- keyValueName = ""
 					button.background:SetColorTexture(0, 0, 0, 0)
 					button:Disable()
 					button:SetAlpha(.5)
@@ -122,13 +121,23 @@ local function setKeys()
 					keyVisible = false
 				elseif key == KEY.ShiftLeft and Musician.KeyboardUtils.GetKeyValue(KEY.IntlBackslash) == "LSHIFT" then
 					keyVisible = false
+				elseif key == KEY.ShiftLeft and not(Musician.KeyboardUtils.GetKeyValue(KEY.IntlBackslash)) then
+					keyWidth = keyWidth + Musician.KEYBOARD_KEY_SIZE[row][col + 1]
+				elseif key == KEY.IntlBackslash and not(keyValue) then
+					keyX = keyX - keyWidth
+					keyVisible = false
 				elseif key == KEY.IntlBackslash and keyValue == "LSHIFT" then
 					keyWidth = keyWidth + Musician.KEYBOARD_KEY_SIZE[row][col - 1]
 					keyX = keyX - Musician.KEYBOARD_KEY_SIZE[row][col - 1]
 				elseif key == KEY.IntlRo and keyValue == "RSHIFT" then
 					keyWidth = keyWidth + Musician.KEYBOARD_KEY_SIZE[row][col + 1]
+				elseif key == KEY.IntlRo and not(keyValue) then
+					keyVisible = false
 				elseif key == KEY.ShiftRight and Musician.KeyboardUtils.GetKeyValue(KEY.IntlRo) == "RSHIFT" then
 					keyVisible = false
+				elseif key == KEY.ShiftRight and not(Musician.KeyboardUtils.GetKeyValue(KEY.IntlRo)) then
+					keyWidth = keyWidth + Musician.KEYBOARD_KEY_SIZE[row][col - 1]
+					keyX = keyX - Musician.KEYBOARD_KEY_SIZE[row][col - 1]
 				end
 
 				-- Set size and position
@@ -520,7 +529,9 @@ Musician.Keyboard.BuildMapping = function()
 			if scaleNote ~= -1 then
 				local octave = floor(scaleIndex / #scale)
 				local note = scaleNote + baseKey + 12 * octave + Musician.Keyboard.config.baseKey
-				Musician.Keyboard.mapping[key] = { layer, note }
+				if not(Musician.DISABLED_KEYS[key]) then
+					Musician.Keyboard.mapping[key] = { layer, note }
+				end
 			end
 			scaleIndex = scaleIndex + 1
 		end
@@ -554,6 +565,10 @@ MusicianKeyboard.NoteKey = function(down, keyValue)
 	local layer = note[1]
 	local noteKey = note[2]
 	local instrument = Musician.Keyboard.config.instrument[layer]
+
+	if noteKey < Musician.MIN_KEY or noteKey > Musician.MAX_KEY then
+		return false
+	end
 
 	if Musician.Keyboard.config.powerChords[layer] then
 		Musician.Live.NoteOff(noteKey - 12, layer, instrument)

@@ -62,6 +62,7 @@ msg.CONFIGURE_KEYBOARD_START_OVER = "Start over"
 msg.CONFIGURE_KEYBOARD_SAVE = "Save configuration"
 msg.PRESS_KEY_BINDING = "Press the key #{col} in row #{row}."
 msg.KEY_CAN_BE_MERGED = "This key might be {key} on your keyboard."
+msg.KEY_IS_OPTIONAL = "This key is optional."
 
 local KEY = Musician.KEYBOARD_KEY
 msg.FIXED_KEY_NAMES = {
