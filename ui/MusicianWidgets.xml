@@ -5,8 +5,16 @@
 	<Font name="MusicianFontIconsNormal" inherits="GameFontNormal" font="Interface\AddOns\Musician\ui\fonts\musician-icons.ttf" height="12" virtual="true" />
 	<Font name="MusicianFontIconsHighlight" inherits="GameFontHighlight" font="Interface\AddOns\Musician\ui\fonts\musician-icons.ttf" height="12" virtual="true" />
 	<Font name="MusicianFontIconsDisable" inherits="GameFontDisable" font="Interface\AddOns\Musician\ui\fonts\musician-icons.ttf" height="12" virtual="true" />
-	<Font name="MusicianFontNormalLarge" inherits="GameFontNormalLarge" font="Interface\AddOns\Musician\ui\fonts\musician-icons.ttf" height="16" virtual="true" />
-	<Font name="MusicianFontHighlightLarge" inherits="GameFontHighlightLarge" font="Interface\AddOns\Musician\ui\fonts\musician-icons.ttf" height="16" virtual="true" />
+	<Font name="MusicianFontIconsNormalLarge" inherits="GameFontNormalLarge" font="Interface\AddOns\Musician\ui\fonts\musician-icons.ttf" height="16" virtual="true" />
+	<Font name="MusicianFontIconsHighlightLarge" inherits="GameFontHighlightLarge" font="Interface\AddOns\Musician\ui\fonts\musician-icons.ttf" height="16" virtual="true" />
+
+	<!-- Percussion icon fonts -->
+
+	<Font name="MusicianFontPercussionIconsNormal" inherits="GameFontNormal" font="Interface\AddOns\Musician\ui\fonts\musician-percussions.ttf" height="14" virtual="true" />
+	<Font name="MusicianFontPercussionIconsHighlight" inherits="GameFontHighlight" font="Interface\AddOns\Musician\ui\fonts\musician-percussions.ttf" height="14" virtual="true" />
+	<Font name="MusicianFontPercussionIconsDisable" inherits="GameFontDisable" font="Interface\AddOns\Musician\ui\fonts\musician-percussions.ttf" height="14" virtual="true" />
+	<Font name="MusicianFontPercussionIconsNormalLarge" inherits="GameFontNormalLarge" font="Interface\AddOns\Musician\ui\fonts\musician-percussions.ttf" height="20" virtual="true" />
+	<Font name="MusicianFontPercussionIconsHighlightLarge" inherits="GameFontHighlightLarge" font="Interface\AddOns\Musician\ui\fonts\musician-percussions.ttf" height="20" virtual="true" />
 
 	<!-- Dialog Window -->
 

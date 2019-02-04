@@ -20,6 +20,18 @@
 						<Anchor point="CENTER" x="0" y="-10" relativePoint="CENTER" relativeTo="$parent" />
 					</Anchors>
 				</FontString>
+				<FontString parentKey="percussionIcon" name="$parentPercussionIcon" inherits="MusicianFontPercussionIconsHighlightLarge">
+					<Size x="32" y="32" />
+					<Anchors>
+						<Anchor point="CENTER" x="0" y="18" relativePoint="CENTER" relativeTo="$parentSubText" />
+					</Anchors>
+				</FontString>
+				<FontString parentKey="percussionIconNumber" name="$parentPercussionIconNumber" inherits="GameFontHighlightSmall">
+					<Size x="8" y="8" />
+					<Anchors>
+						<Anchor point="TOPRIGHT" x="2" y="-8" relativePoint="TOPRIGHT" relativeTo="$parentPercussionIcon" />
+					</Anchors>
+				</FontString>
 			</Layer>
 		</Layers>
 		<ButtonText parentKey="Text" name="$parentText">
@@ -197,7 +209,7 @@
 					</Anchors>
 				</FontString>
 
-				<FontString name="$parentTitleIcon" parentKey="icon" inherits="MusicianFontHighlightLarge" justifyh="LEFT">
+				<FontString name="$parentTitleIcon" parentKey="icon" inherits="MusicianFontIconsHighlightLarge" justifyh="LEFT">
 					<Size x="32" y="32" />
 					<Anchors>
 						<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentTitle" />

@@ -16,6 +16,34 @@ local ICON = {
 	["LIVE_MODE"] = "+", -- speaker
 }
 
+local PERCUSSION_ICON = Musician.PercussionIcons
+local Percussion = Musician.MIDI_PERCUSSIONS
+
+local PercussionIconMapping = {
+	[Percussion.AcousticBassDrum] = { PERCUSSION_ICON.BassDrum, "1"},
+	[Percussion.BassDrum1] = { PERCUSSION_ICON.BassDrum, "2"},
+	[Percussion.AcousticSnare] = { PERCUSSION_ICON.Snare, "1"},
+	[Percussion.ElectricSnare] = { PERCUSSION_ICON.Snare, "2"},
+	[Percussion.SideStick] = { PERCUSSION_ICON.SideStick, ""},
+	[Percussion.LowFloorTom] = { PERCUSSION_ICON.FloorTom, "1"},
+	[Percussion.HighFloorTom] = { PERCUSSION_ICON.FloorTom, "2"},
+	[Percussion.LowTom] = { PERCUSSION_ICON.MidTom, "1"},
+	[Percussion.LowMidTom] = { PERCUSSION_ICON.MidTom, "2"},
+	[Percussion.HiMidTom] = { PERCUSSION_ICON.HighTom, "1"},
+	[Percussion.HighTom] = { PERCUSSION_ICON.HighTom, "2"},
+	[Percussion.ClosedHiHat] = { PERCUSSION_ICON.ClosedHiHat, ""},
+	[Percussion.PedalHiHat] = { PERCUSSION_ICON.PedalHiHat, ""},
+	[Percussion.OpenHiHat] = { PERCUSSION_ICON.OpenHiHat, ""},
+	[Percussion.CrashCymbal1] = { PERCUSSION_ICON.CrashCymbal, "1"},
+	[Percussion.CrashCymbal2] = { PERCUSSION_ICON.CrashCymbal, "2"},
+	[Percussion.RideCymbal1] = { PERCUSSION_ICON.RideCymbal, "1"},
+	[Percussion.RideCymbal2] = { PERCUSSION_ICON.RideCymbal, "2"},
+	[Percussion.RideBell] = { PERCUSSION_ICON.RideBell, ""},
+	[Percussion.Tambourine] = { PERCUSSION_ICON.Tambourine, ""},
+	[Percussion.Maracas] = { PERCUSSION_ICON.Maracas, ""},
+	[Percussion.HandClap] = { PERCUSSION_ICON.HandClap, ""},
+}
+
 Musician.Keyboard.NotesOn = {}
 
 --- Return the binding button for the given physical key.
@@ -79,27 +107,38 @@ local function setKeys()
 			if keyData ~= nil or keyValueName then
 				-- Ket key and note names
 				local noteName = ""
+				local percussionIcon = ""
+				local percussionIconNumber = ""
+				local isPercussion = false
 
 				if keyValue then
 					keyValueName = Musician.KeyboardUtils.GetKeyValueName(keyValue)
 				end
 
 				if keyData ~= nil and keyData[2] >= Musician.MIN_KEY and keyData[2] <= Musician.MAX_KEY and not(Musician.DISABLED_KEYS[key]) and Musician.KeyboardUtils.GetKeyValue(key) then
-					noteName = Musician.Utils.NoteName(keyData[2])
 					local instrumentName = Musician.MIDI_INSTRUMENT_MAPPING[config.instrument[keyData[1]]]
 					local r, g, b = unpack(Musician.INSTRUMENTS[instrumentName].color)
+					isPercussion = config.instrument[keyData[1]] >= 128
 
-					-- Black or white key
-					if string.match(noteName, "[%#b]") then
-						r = r / 4
-						g = g / 4
-						b = b / 4
+					if not(isPercussion) then
+						noteName = Musician.Utils.NoteName(keyData[2])
+
+						-- Black or white key
+						if string.match(noteName, "[%#b]") then
+							r = r / 4
+							g = g / 4
+							b = b / 4
+						end
+					else
+						percussionIcon = PercussionIconMapping[keyData[2]][1]
+						percussionIconNumber = PercussionIconMapping[keyData[2]][2]
 					end
+
 					button.background:SetColorTexture(r, g, b, 1)
 					button:Enable()
 					button:SetAlpha(1)
 
-					if config.instrument[keyData[1]] >= 128 then
+					if isPercussion then
 						button.tooltipText = Musician.Msg.MIDI_PERCUSSION_NAMES[keyData[2]]
 					else
 						button.tooltipText = nil
@@ -154,6 +193,8 @@ local function setKeys()
 
 				-- Set text
 				button:SetText(noteName)
+				button.percussionIcon:SetText(percussionIcon)
+				button.percussionIconNumber:SetText(percussionIconNumber)
 				button.subText:SetText(keyValueName)
 			else
 				keyVisible = false

@@ -25,6 +25,8 @@ constants\Musician.Layouts.lua
 
 locale\locale.xml
 
+ui\fonts\Musician.PercussionIcons.lua
+
 ui\MusicianWidgets.xml
 
 ui\MusicianFrame.xml
