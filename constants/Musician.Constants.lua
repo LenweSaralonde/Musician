@@ -51,6 +51,6 @@ Musician.Events.SongImportFailed = "MusicianSongImportFailed"
 Musician.Events.SourceSongLoaded = "MusicianSourceSongLoaded"
 Musician.Events.Bandwidth = "MusicianBandwidth"
 
-Musician.Icons = {}
-Musician.Icons.PlayerMuted = "Interface\\AddOns\\Musician\\ui\\textures\\muted.blp"
-Musician.Icons.PlayerUnmuted = "Interface\\AddOns\\Musician\\ui\\textures\\unmuted.blp"
+Musician.IconImages = {}
+Musician.IconImages.PlayerMuted = "Interface\\AddOns\\Musician\\ui\\textures\\muted.blp"
+Musician.IconImages.PlayerUnmuted = "Interface\\AddOns\\Musician\\ui\\textures\\unmuted.blp"

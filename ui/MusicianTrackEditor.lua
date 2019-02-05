@@ -1,8 +1,5 @@
 Musician.TrackEditor = LibStub("AceAddon-3.0"):NewAddon("Musician.TrackEditor", "AceEvent-3.0")
 
-Musician.TrackEditor.PAUSE_ICON = 'p'
-Musician.TrackEditor.PLAY_ICON = 'P'
-
 Musician.TrackEditor.MAX_NOTE_DURATION = 6
 
 local NOTE = Musician.Song.Indexes.NOTE
@@ -83,10 +80,10 @@ Musician.TrackEditor.UpdateButtons = function(event, song)
 	if song == Musician.sourceSong then
 		if song:IsPlaying() then
 			MusicianTrackEditorPlayButton.tooltipText = Musician.Msg.PAUSE
-			MusicianTrackEditorPlayButton:SetText(Musician.TrackEditor.PAUSE_ICON)
+			MusicianTrackEditorPlayButton:SetText(Musician.Icons.Pause)
 		else
 			MusicianTrackEditorPlayButton.tooltipText = Musician.Msg.PLAY
-			MusicianTrackEditorPlayButton:SetText(Musician.TrackEditor.PLAY_ICON)
+			MusicianTrackEditorPlayButton:SetText(Musician.Icons.Play)
 		end
 	end
 end

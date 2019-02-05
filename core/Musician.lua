@@ -210,11 +210,11 @@ function Musician.MutePlayer(playerName, isMuted)
 	local icon, msg
 	if isMuted then
 		Musician_Settings.mutedPlayers[playerName] = true
-		icon = Musician.Icons.PlayerMuted
+		icon = Musician.IconImages.PlayerMuted
 		msg = Musician.Msg.PLAYER_IS_MUTED
 	else
 		Musician_Settings.mutedPlayers[playerName] = nil
-		icon = Musician.Icons.PlayerUnmuted
+		icon = Musician.IconImages.PlayerUnmuted
 		msg = Musician.Msg.PLAYER_IS_UNMUTED
 	end
 
@@ -302,13 +302,13 @@ function Musician.SetupHooks()
 			local items = {
 				{
 					value = "MUSICIAN_SUBSECTION_TITLE_MUTED",
-					text = Musician.Msg.PLAYER_MENU_TITLE .. " " .. Musician.Utils.GetChatIcon(Musician.Icons.PlayerMuted),
+					text = Musician.Msg.PLAYER_MENU_TITLE .. " " .. Musician.Utils.GetChatIcon(Musician.IconImages.PlayerMuted),
 					isTitle = true,
 					visible = isPlayer and isRegistered and not(isMyself) and isMuted
 				},
 				{
 					value = "MUSICIAN_SUBSECTION_TITLE_UNMUTED",
-					text = Musician.Msg.PLAYER_MENU_TITLE .. " " .. Musician.Utils.GetChatIcon(Musician.Icons.PlayerUnmuted),
+					text = Musician.Msg.PLAYER_MENU_TITLE .. " " .. Musician.Utils.GetChatIcon(Musician.IconImages.PlayerUnmuted),
 					isTitle = true,
 					visible = isPlayer and isRegistered and not(isMyself) and not(isMuted)
 				},
@@ -448,8 +448,8 @@ function Musician.SetupHooks()
 		return false, msg, player, arg3, arg4, arg5, pflag, ...
 	end
 
-	CHAT_FLAG_MUSICIAN_MUTED = Musician.Utils.GetChatIcon(Musician.Icons.PlayerMuted)
-	CHAT_FLAG_MUSICIAN_UNMUTED = Musician.Utils.GetChatIcon(Musician.Icons.PlayerUnmuted)
+	CHAT_FLAG_MUSICIAN_MUTED = Musician.Utils.GetChatIcon(Musician.IconImages.PlayerMuted)
+	CHAT_FLAG_MUSICIAN_UNMUTED = Musician.Utils.GetChatIcon(Musician.IconImages.PlayerUnmuted)
 
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", messageEventFilter)
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", messageEventFilter)

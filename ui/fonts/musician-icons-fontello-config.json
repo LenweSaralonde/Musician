@@ -62,31 +62,31 @@
     },
     {
       "uid": "e44601720c64e6bb6a2d5cba6b0c588c",
-      "css": "volume-off-1",
+      "css": "speaker-off",
       "code": 48,
       "src": "fontawesome"
     },
     {
       "uid": "fee6e00f36e8ca8ef3e4a62caa213bf6",
-      "css": "volume-down",
+      "css": "speaker-low",
       "code": 45,
       "src": "fontawesome"
     },
     {
       "uid": "76857a03fbaa6857fe063b6c25aa98ed",
-      "css": "volume-up",
+      "css": "speaker",
       "code": 43,
       "src": "fontawesome"
     },
     {
       "uid": "0d20938846444af8deb1920dc85a29fb",
-      "css": "logout",
+      "css": "in-point",
       "code": 123,
       "src": "fontawesome"
     },
     {
       "uid": "3a00327e61b997b58518bd43ed83c3df",
-      "css": "login",
+      "css": "out-point",
       "code": 125,
       "src": "fontawesome"
     },
@@ -98,7 +98,7 @@
     },
     {
       "uid": "f805bb95d40c7ef2bc51b3d50d4f2e5c",
-      "css": "th-list",
+      "css": "list",
       "code": 95,
       "src": "fontawesome"
     },
@@ -110,13 +110,13 @@
     },
     {
       "uid": "48b87105bd38c20315f1b705b8c7b38c",
-      "css": "list",
+      "css": "list-2",
       "code": 61,
       "src": "fontawesome"
     },
     {
       "uid": "0e393c5fb8776a60df0d71b5ee46ca44",
-      "css": "asl-interpreting",
+      "css": "mute",
       "code": 47,
       "src": "fontawesome"
     },
@@ -128,7 +128,7 @@
     },
     {
       "uid": "af4312b5501867fa089ec3afeece5630",
-      "css": "podcast",
+      "css": "solo",
       "code": 115,
       "src": "fontawesome"
     },
@@ -146,19 +146,19 @@
     },
     {
       "uid": "9a76bc135eac17d2c8b8ad4a5774fc87",
-      "css": "download",
+      "css": "save",
       "code": 73,
       "src": "fontawesome"
     },
     {
       "uid": "eeec3208c90b7b48e804919d0d2d4a41",
-      "css": "upload",
+      "css": "load",
       "code": 88,
       "src": "fontawesome"
     },
     {
       "uid": "d59ff824282fc6edaeca991deab522aa",
-      "css": "server",
+      "css": "sliders-2",
       "code": 84,
       "src": "fontawesome"
     },
@@ -176,7 +176,7 @@
     },
     {
       "uid": "43c629249e2cca7e73cd4ef410c9551f",
-      "css": "mute",
+      "css": "mic-mute",
       "code": 109,
       "src": "fontawesome"
     },
@@ -188,7 +188,7 @@
     },
     {
       "uid": "966c413b6d77c149d3ed2c792e7c741f",
-      "css": "piano-keys-part",
+      "css": "piano-keys",
       "code": 107,
       "src": "custom_icons",
       "selected": true,
@@ -226,13 +226,13 @@
     },
     {
       "uid": "bc71f4c6e53394d5ba46b063040014f1",
-      "css": "cw",
+      "css": "reset",
       "code": 120,
       "src": "fontawesome"
     },
     {
       "uid": "b9120353d9353d7b0a9a566bdea6c9d5",
-      "css": "8487b0689da6771599d41a721015a725",
+      "css": "sign-of-horns",
       "code": 104,
       "src": "custom_icons",
       "selected": true,
@@ -241,36 +241,36 @@
         "width": 1000
       },
       "search": [
-        "8487b0689da6771599d41a721015a725"
+        "sign-of-horns"
       ]
     },
     {
       "uid": "3212f42c65d41ed91cb435d0490e29ed",
-      "css": "flash",
+      "css": "bolt",
       "code": 66,
       "src": "fontawesome"
     },
     {
       "uid": "ccddff8e8670dcd130e3cb55fdfc2fd0",
-      "css": "down-open",
+      "css": "down",
       "code": 100,
       "src": "fontawesome"
     },
     {
       "uid": "d870630ff8f81e6de3958ecaeac532f2",
-      "css": "left-open",
+      "css": "left",
       "code": 108,
       "src": "fontawesome"
     },
     {
       "uid": "399ef63b1e23ab1b761dfbb5591fa4da",
-      "css": "right-open",
+      "css": "right",
       "code": 114,
       "src": "fontawesome"
     },
     {
       "uid": "fe6697b391355dec12f3d86d6d490397",
-      "css": "up-open",
+      "css": "up",
       "code": 117,
       "src": "fontawesome"
     },

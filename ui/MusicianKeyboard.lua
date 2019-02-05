@@ -12,8 +12,8 @@ local keyButtons = {}
 local keyValueButtons = {}
 
 local ICON = {
-	["SOLO_MODE"] = "H", -- headphones
-	["LIVE_MODE"] = "+", -- speaker
+	["SOLO_MODE"] = Musician.Icons.Headphones,
+	["LIVE_MODE"] = Musician.Icons.Speaker
 }
 
 local PERCUSSION_ICON = Musician.PercussionIcons

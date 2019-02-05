@@ -8,9 +8,9 @@
 		<Layers>
 			<Layer level="BACKGROUND">
 				<FontString name="$parentTitle" inherits="GameFontNormal" justifyH="CENTER" justifyV="MIDDLE">
-					<Size x="50" y="0"/>
+					<Size x="60" y="0"/>
 					<Anchors>
-						<Anchor point="TOPLEFT" x="-5" y="35" relativePoint="TOPLEFT" relativeTo="$parent" />
+						<Anchor point="TOPRIGHT" x="0" y="35" relativePoint="TOPRIGHT" relativeTo="$parent" />
 					</Anchors>
 				</FontString>
 			</Layer>
@@ -302,7 +302,7 @@
 				</Scripts>
 			</Button>
 
-			<Button name="$parentPrevButton" inherits="MusicianIconButtonTemplate" text="«">
+			<Button name="$parentPrevButton" inherits="MusicianIconButtonTemplate">
 				<Size x="40" y="20" />
 				<Anchors>
 					<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentPlayButton" />
@@ -314,7 +314,7 @@
 				</Scripts>
 			</Button>
 
-			<Button name="$parentNextButton" inherits="MusicianIconButtonTemplate" text="»">
+			<Button name="$parentNextButton" inherits="MusicianIconButtonTemplate">
 				<Size x="40" y="20" />
 				<Anchors>
 					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentPlayButton" />
@@ -326,7 +326,7 @@
 				</Scripts>
 			</Button>
 
-			<Button name="$parentGoToStartButton" inherits="MusicianIconButtonTemplate" text="&lt;" >
+			<Button name="$parentGoToStartButton" inherits="MusicianIconButtonTemplate">
 				<Size x="40" y="20" />
 				<Anchors>
 					<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentPrevButton" />
@@ -338,7 +338,7 @@
 				</Scripts>
 			</Button>
 
-			<Button name="$parentGoToEndButton" inherits="MusicianIconButtonTemplate" text="&gt;" hidden="true">
+			<Button name="$parentGoToEndButton" inherits="MusicianIconButtonTemplate" hidden="true">
 				<Size x="40" y="20" />
 				<Anchors>
 					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentNextButton" />
@@ -350,7 +350,7 @@
 				</Scripts>
 			</Button>
 
-			<Button name="$parentSetCropFromButton" inherits="MusicianIconButtonTemplate" text="{" >
+			<Button name="$parentSetCropFromButton" inherits="MusicianIconButtonTemplate">
 				<Size x="40" y="20" />
 				<Anchors>
 					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentGoToEndButton" />
@@ -362,7 +362,7 @@
 				</Scripts>
 			</Button>
 
-			<Button name="$parentSetCropToButton" inherits="MusicianIconButtonTemplate" text="}" >
+			<Button name="$parentSetCropToButton" inherits="MusicianIconButtonTemplate">
 				<Size x="40" y="20" />
 				<Anchors>
 					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentSetCropFromButton" />
@@ -452,14 +452,14 @@
 					</Anchors>
 				</FontString>
 
-				<FontString name="$parentHeaderMute" inherits="MusicianFontIconsNormal" text="/">
+				<FontString name="$parentHeaderMute" inherits="MusicianFontIconsNormal">
 					<Size x="16" />
 					<Anchors>
 						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentHeaderTrackId" />
 					</Anchors>
 				</FontString>
 
-				<FontString name="$parentHeaderSolo" inherits="MusicianFontIconsNormal" text="s">
+				<FontString name="$parentHeaderSolo" inherits="MusicianFontIconsNormal">
 					<Size x="16" />
 					<Anchors>
 						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentHeaderMute" />
@@ -482,6 +482,19 @@
 
 			</Layer>
 		</Layers>
+
+		<Scripts>
+			<OnLoad>
+				MusicianTrackEditorPrevButton:SetText(Musician.Icons.FastBw)
+				MusicianTrackEditorNextButton:SetText(Musician.Icons.FastFw)
+				MusicianTrackEditorGoToStartButton:SetText(Musician.Icons.ToStart)
+				MusicianTrackEditorGoToEndButton:SetText(Musician.Icons.ToEnd)
+				MusicianTrackEditorSetCropFromButton:SetText(Musician.Icons.InPoint)
+				MusicianTrackEditorSetCropToButton:SetText(Musician.Icons.OutPoint)
+				MusicianTrackEditorHeaderMute:SetText(Musician.Icons.Mute)
+				MusicianTrackEditorHeaderSolo:SetText(Musician.Icons.Solo)
+			</OnLoad>
+		</Scripts>
 
 	</Frame>
 </Ui>

@@ -66,8 +66,8 @@
 			</OnMouseUp>
 			<OnLoad>
 				self:SetFrameLevel(Minimap:GetFrameLevel()+1000)
-				self:RegisterForClicks("LeftButtonUp","RightButtonUp")
-				self:RegisterForDrag("LeftButton","RightButton")
+				self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+				self:RegisterForDrag("LeftButton", "RightButton")
 			</OnLoad>
 			<OnDragStart>
 				self:LockHighlight()

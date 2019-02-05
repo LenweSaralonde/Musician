@@ -107,32 +107,31 @@
 				</Scripts>
 			</Frame>
 
-			<Button name="$parentShiftRight" inherits="MusicianKeyboardSquareButtonTemplate" text="R">
+			<Button name="$parentShiftRight" parentKey="shiftRight" inherits="MusicianKeyboardSquareButtonTemplate">
 				<Anchors>
 					<Anchor point="RIGHT" relativePoint="RIGHT" relativeTo="$parent" />
 				</Anchors>
 			</Button>
 
-			<Button name="$parentShiftReset" inherits="MusicianKeyboardSquareButtonTemplate" text="x">
+			<Button name="$parentShiftReset" parentKey="shiftReset" inherits="MusicianKeyboardSquareButtonTemplate">
 				<Anchors>
 					<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentShiftRight" />
 				</Anchors>
 			</Button>
 
-			<Button name="$parentShiftLeft" inherits="MusicianKeyboardSquareButtonTemplate" text="L">
+			<Button name="$parentShiftLeft" parentKey="shiftLeft" inherits="MusicianKeyboardSquareButtonTemplate">
 				<Anchors>
 					<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentShiftReset" />
 				</Anchors>
-				<ButtonText name="$parentText" parentKey="Text" />
 			</Button>
 
-			<Button name="$parentShiftUp" inherits="MusicianKeyboardSquareButtonTemplate" text="U">
+			<Button name="$parentShiftUp" parentKey="shiftUp" inherits="MusicianKeyboardSquareButtonTemplate">
 				<Anchors>
 					<Anchor point="BOTTOM" relativePoint="TOP" relativeTo="$parentShiftReset" />
 				</Anchors>
 			</Button>
 
-			<Button name="$parentShiftDown" inherits="MusicianKeyboardSquareButtonTemplate" text="D">
+			<Button name="$parentShiftDown" parentKey="shiftDown" inherits="MusicianKeyboardSquareButtonTemplate">
 				<Anchors>
 					<Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$parentShiftReset" />
 				</Anchors>
@@ -158,7 +157,7 @@
 
 		<Layers>
 			<Layer level="FOREGROUND">
-				<FontString name="$parentPowerChordsLabel" inherits="MusicianFontIconsNormal" justifyh="LEFT" text="B h">
+				<FontString name="$parentPowerChordsLabel" parentKey="powerChordsLabel" inherits="MusicianFontIconsNormal" justifyh="LEFT">
 					<Size x="250" y="32" />
 					<Anchors>
 						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentPowerChords" x="4" />
@@ -166,6 +165,18 @@
 				</FontString>
 			</Layer>
 		</Layers>
+
+		<Scripts>
+			<OnLoad>
+				self.shiftUp:SetText(Musician.Icons.UpBig)
+				self.shiftDown:SetText(Musician.Icons.DownBig)
+				self.shiftLeft:SetText(Musician.Icons.LeftBig)
+				self.shiftRight:SetText(Musician.Icons.RightBig)
+				self.shiftReset:SetText(Musician.Icons.Reset)
+				self.powerChordsLabel:SetText(Musician.Icons.Bolt ..  Musician.Icons.Blank .. Musician.Icons.SignOfHorns)
+			</OnLoad>
+		</Scripts>
+
 	</Frame>
 
 	<!-- Main frame -->
@@ -181,12 +192,12 @@
 					if visible then
 						MusicianKeyboard:SetHeight(400)
 						MusicianKeyboardKeys:Show()
-						MusicianKeyboardToggleKeyboardButton:SetText("u k")
+						MusicianKeyboardToggleKeyboardButton:SetText(Musician.Icons.Up ..  Musician.Icons.Blank .. Musician.Icons.PianoKeys)
 						MusicianKeyboardToggleKeyboardButton.tooltipText = Musician.Msg.HIDE_KEYBOARD
 					else
 						MusicianKeyboardKeys:Hide()
 						MusicianKeyboard:SetHeight(400 - MusicianKeyboardKeys:GetHeight())
-						MusicianKeyboardToggleKeyboardButton:SetText("d k")
+						MusicianKeyboardToggleKeyboardButton:SetText(Musician.Icons.Down ..  Musician.Icons.Blank .. Musician.Icons.PianoKeys)
 						MusicianKeyboardToggleKeyboardButton.tooltipText = Musician.Msg.SHOW_KEYBOARD
 					end
 
@@ -220,13 +231,14 @@
 
 		<Frames>
 
-			<Button name="$parentKeyboardConfigButton" inherits="MusicianIconButtonTemplate" text="G K">
+			<Button name="$parentKeyboardConfigButton" inherits="MusicianIconButtonTemplate">
 				<Size x="48" y="24" />
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT" y="-20" x="20"  />
 				</Anchors>
 				<Scripts>
 					<OnLoad>
+						self:SetText(Musician.Icons.Cog .. Musician.Icons.Blank .. Musician.Icons.Keyboard)
 						self.tooltipText = Musician.Msg.CONFIGURE_KEYBOARD
 					</OnLoad>
 					<OnClick>
@@ -236,13 +248,14 @@
 				</Scripts>
 			</Button>
 
-			<Button name="$parentToggleKeyboardButton" inherits="MusicianIconButtonTemplate" text="d k">
+			<Button name="$parentToggleKeyboardButton" inherits="MusicianIconButtonTemplate">
 				<Size x="48" y="24" />
 				<Anchors>
 					<Anchor point="TOPRIGHT" relativeTo="$parent" relativePoint="TOPRIGHT" y="-20" x="-20"  />
 				</Anchors>
 				<Scripts>
 					<OnLoad>
+						self:SetText(Musician.Icons.Down ..  Musician.Icons.Blank .. Musician.Icons.PianoKeys)
 						self.tooltipText = Musician.Msg.HIDE_KEYBOARD
 					</OnLoad>
 					<OnMouseDown>
@@ -331,7 +344,7 @@
 							<Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent" />
 						</Anchors>
 						<Scripts>
-							<OnLoad>
+							<OnLoad inherit="prepend">
 								self.layerName:SetText(Musician.Msg.LAYERS[Musician.KEYBOARD_LAYER.LOWER])
 							</OnLoad>
 						</Scripts>
@@ -342,7 +355,7 @@
 							<Anchor point="TOPRIGHT" relativePoint="TOPRIGHT" relativeTo="$parent" />
 						</Anchors>
 						<Scripts>
-							<OnLoad>
+							<OnLoad inherit="prepend">
 								self.layerName:SetText(Musician.Msg.LAYERS[Musician.KEYBOARD_LAYER.UPPER])
 							</OnLoad>
 						</Scripts>

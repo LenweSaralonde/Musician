@@ -29,7 +29,7 @@
 				<Scripts>
 					<OnLoad>
 						self:SetText(Musician.Msg.EDIT)
-						self.icon:SetText("T")
+						self.icon:SetText(Musician.Icons.Sliders2)
 					</OnLoad>
 					<OnClick>
 						MusicianFrame.TrackEditor()
@@ -44,7 +44,7 @@
 				</Anchors>
 				<Scripts>
 					<OnLoad>
-						self.icon:SetText("H")
+						self.icon:SetText(Musician.Icons.Headphones)
 					</OnLoad>
 					<OnClick>
 						MusicianFrame.Test()
@@ -59,7 +59,7 @@
 				</Anchors>
 				<Scripts>
 					<OnLoad>
-						self.icon:SetText("+")
+						self.icon:SetText(Musician.Icons.Speaker)
 					</OnLoad>
 					<OnClick>
 						MusicianFrame.Play()
@@ -131,7 +131,7 @@
 				</Scripts>
 			</Frame>
 
-			<Button name="$parentClearButton" inherits="MusicianIconButtonTemplate" level="OVERLAY" text="E">
+			<Button name="$parentClearButton" inherits="MusicianIconButtonTemplate" level="OVERLAY">
 				<Size x="24" y="24" />
 				<Anchors>
 					<Anchor point="BOTTOMRIGHT" x="-5" y="5" relativePoint="BOTTOMRIGHT" relativeTo="$parentTextBackground" />
@@ -143,6 +143,7 @@
 				</ButtonText>
 				<Scripts>
 					<OnLoad>
+						self:SetText(Musician.Icons.Edit)
 						self:SetFrameLevel(MusicianFrameSource:GetFrameLevel() + 1000)
 						self.tooltipText = Musician.Msg.SELECT_ALL
 					</OnLoad>
