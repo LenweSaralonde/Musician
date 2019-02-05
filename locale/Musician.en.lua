@@ -302,7 +302,7 @@ msg.MIDI_INSTRUMENT_NAMES = {
 	[Instrument.Gunshot] = "Gunshot",
 
 	[Instrument.Percussions] = "Percussions",
-	[Instrument.Drumkit] = "Drumkit",
+	[Instrument.Drumkit] = "Percussions",
 
 	[Instrument.None] = "(None)",
 }
