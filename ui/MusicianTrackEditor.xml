@@ -484,7 +484,7 @@
 		</Layers>
 
 		<Scripts>
-			<OnLoad>
+			<OnLoad inherit="prepend">
 				MusicianTrackEditorPrevButton:SetText(Musician.Icons.FastBw)
 				MusicianTrackEditorNextButton:SetText(Musician.Icons.FastFw)
 				MusicianTrackEditorGoToStartButton:SetText(Musician.Icons.ToStart)
