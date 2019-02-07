@@ -197,6 +197,8 @@ function Musician.OnUpdate(frame, elapsed)
 	for player, playerSong in pairs(Musician.songs) do
 		playerSong:OnUpdate(elapsed)
 	end
+
+	Musician.Comm:SendMessage(Musician.Events.Frame, elapsed)
 end
 
 --- Mute or unmute a player

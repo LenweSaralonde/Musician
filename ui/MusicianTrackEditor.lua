@@ -50,7 +50,7 @@ Musician.TrackEditor.Init = function()
 		Musician.sourceSong:Seek(Musician.Utils.ParseTime(self:GetText()))
 	end)
 
-	MusicianTrackEditor:SetScript("OnUpdate", Musician.TrackEditor.OnUpdate)
+	Musician.TrackEditor:RegisterMessage(Musician.Events.Frame, Musician.TrackEditor.OnUpdate)
 	Musician.TrackEditor:RegisterMessage(Musician.Events.NoteOn, Musician.TrackEditor.NoteOn)
 	Musician.TrackEditor:RegisterMessage(Musician.Events.NoteOff, Musician.TrackEditor.NoteOff)
 	Musician.TrackEditor:RegisterMessage(Musician.Events.SourceSongLoaded, Musician.TrackEditor.OnLoad)
@@ -309,10 +309,7 @@ end
 
 --- OnUpdate
 --
-Musician.TrackEditor.OnUpdate = function(self, elapsed)
-	local attack = .2
-	local maxLength = 6
-
+Musician.TrackEditor.OnUpdate = function(event, elapsed)
 	if Musician.sourceSong then
 		local track
 		-- Update track activity meters

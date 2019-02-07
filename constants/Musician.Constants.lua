@@ -32,6 +32,7 @@ Musician.Msg = {}
 Musician.Locale = {}
 
 Musician.Events = {}
+Musician.Events.Frame = "MusicianFrame"
 Musician.Events.RefreshFrame = "MusicianRefreshFrame"
 Musician.Events.CommReady = "MusicianCommReady"
 Musician.Events.SongPlay = "MusicianSongPlay"
