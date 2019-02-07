@@ -5,6 +5,8 @@ Musician.TrackEditor.MAX_NOTE_DURATION = 6
 local NOTE = Musician.Song.Indexes.NOTE
 local NOTEON = Musician.Song.Indexes.NOTEON
 
+--- Init
+--
 Musician.TrackEditor.Init = function()
 
 	MusicianTrackEditor:SetClampedToScreen(true)
@@ -54,6 +56,8 @@ Musician.TrackEditor.Init = function()
 	Musician.TrackEditor:RegisterMessage(Musician.Events.SourceSongLoaded, Musician.TrackEditor.OnLoad)
 end
 
+--- Song loaded handler
+--
 Musician.TrackEditor.OnLoad = function()
 	Musician.TrackEditor.UpdateSlider()
 	Musician.TrackEditor.UpdateButtons(nil, Musician.sourceSong)
@@ -64,7 +68,7 @@ Musician.TrackEditor.OnLoad = function()
 	local trackCount = #Musician.sourceSong.tracks
 	local trackIndex
 	for trackIndex = 1, trackCount, 1 do
-		Musician.TrackEditor.GetTrackWidget(trackIndex)
+		Musician.TrackEditor.CreateTrackWidget(trackIndex)
 	end
 	MusicianTrackEditorTrackContainer:SetHeight(32 * trackCount)
 
@@ -76,6 +80,9 @@ Musician.TrackEditor.OnLoad = function()
 	end
 end
 
+--- Update buttons when the song starts or stops playing
+-- @param event (string)
+-- @param song (Musician.Song)
 Musician.TrackEditor.UpdateButtons = function(event, song)
 	if song == Musician.sourceSong then
 		if song:IsPlaying() then
@@ -88,6 +95,8 @@ Musician.TrackEditor.UpdateButtons = function(event, song)
 	end
 end
 
+--- UpdateSlider
+--
 Musician.TrackEditor.UpdateSlider = function()
 	MusicianTrackEditorSourceSongSliderLow:SetText("")
 	MusicianTrackEditorSourceSongSliderHigh:SetText("")
@@ -95,6 +104,9 @@ Musician.TrackEditor.UpdateSlider = function()
 	MusicianTrackEditorSourceSongSlider:SetValue(Musician.sourceSong.cursor)
 end
 
+--- Update cursor position
+-- @param event (string)
+-- @param song (Musician.Song)
 Musician.TrackEditor.UpdateCursor = function(event, song)
 	if song == Musician.sourceSong then
 		if not(MusicianTrackEditorSourceSongSlider.dragging) then
@@ -109,12 +121,16 @@ Musician.TrackEditor.UpdateCursor = function(event, song)
 	end
 end
 
+--- UpdateBounds
+--
 Musician.TrackEditor.UpdateBounds = function()
 	MusicianTrackEditorCropFrom:SetText(Musician.Utils.FormatTime(Musician.sourceSong.cropFrom))
 	MusicianTrackEditorCropTo:SetText(Musician.Utils.FormatTime(Musician.sourceSong.cropTo))
 end
 
-Musician.TrackEditor.GetTrackWidget = function(trackIndex)
+--- Track widget factory
+-- @param trackIndex (number)
+Musician.TrackEditor.CreateTrackWidget = function(trackIndex)
 	local trackFrameName = 'MusicianTrackEditorTrack' .. trackIndex
 	local transposeDropdownName = trackFrameName .. 'TransposeDropdown'
 	local instrumentDropdownName = trackFrameName .. 'InstrumentDropdown'
@@ -143,8 +159,7 @@ Musician.TrackEditor.GetTrackWidget = function(trackIndex)
 
 		-- Meter
 		_G[trackFrameName .. 'Meter'].maxWidth = _G[trackFrameName .. 'Meter']:GetWidth()
-		_G[trackFrameName .. 'Meter'].decay = nil
-		_G[trackFrameName .. 'Meter'].time = nil
+		_G[trackFrameName .. 'Meter'].volumeMeter = Musician.VolumeMeter.create()
 	end
 
 	local track = Musician.sourceSong.tracks[trackIndex]
@@ -158,6 +173,7 @@ Musician.TrackEditor.GetTrackWidget = function(trackIndex)
 	-- Meter
 	_G[trackFrameName .. 'Meter']:SetWidth(0)
 	_G[trackFrameName .. 'Meter']:Hide()
+	_G[trackFrameName .. 'Meter'].volumeMeter:Reset()
 
 	-- Track name
 	local trackName = ""
@@ -198,6 +214,9 @@ Musician.TrackEditor.GetTrackWidget = function(trackIndex)
 	_G[trackFrameName]:Show()
 end
 
+--- Init track transpose dropdown
+-- @param dropdown (UIDropDownMenu)
+-- @param trackIndex (number)
 Musician.TrackEditor.InitTransposeDropdown = function(dropdown, trackIndex)
 
 	local transposeValues = {"+2", "+1", "0", "-1", "-2"}
@@ -237,6 +256,9 @@ Musician.TrackEditor.InitTransposeDropdown = function(dropdown, trackIndex)
 	dropdown.SetValue(Musician.sourceSong.tracks[trackIndex].transpose)
 end
 
+--- Init track instrument dropdown
+-- @param dropdown (UIDropDownMenu)
+-- @param trackIndex (number)
 Musician.TrackEditor.InitInstrumentDropdown = function(dropdown, trackIndex)
 	dropdown.trackIndex = trackIndex
 	dropdown.tooltipText = Musician.Msg.CHANGE_TRACK_INSTRUMENT
@@ -254,6 +276,8 @@ Musician.TrackEditor.InitInstrumentDropdown = function(dropdown, trackIndex)
 	end
 end
 
+--- Set crop start position
+-- @param position (number)
 Musician.TrackEditor.SetCropFrom = function(position)
 	if position < Musician.sourceSong.cropTo then
 		Musician.sourceSong.cropFrom = position
@@ -267,6 +291,9 @@ Musician.TrackEditor.SetCropFrom = function(position)
 	Musician.TrackEditor.UpdateBounds()
 end
 
+
+--- Set crop end position
+-- @param position (number)
 Musician.TrackEditor.SetCropTo = function(position)
 	if position > Musician.sourceSong.cropFrom then
 		Musician.sourceSong.cropTo = position
@@ -280,6 +307,8 @@ Musician.TrackEditor.SetCropTo = function(position)
 	Musician.TrackEditor.UpdateBounds()
 end
 
+--- OnUpdate
+--
 Musician.TrackEditor.OnUpdate = function(self, elapsed)
 	local attack = .2
 	local maxLength = 6
@@ -289,74 +318,46 @@ Musician.TrackEditor.OnUpdate = function(self, elapsed)
 		-- Update track activity meters
 		for _, track in pairs(Musician.sourceSong.tracks) do
 			local meter = _G['MusicianTrackEditorTrack' .. track.index .. 'Meter']
+			meter.volumeMeter:AddElapsed(elapsed)
 
-			if meter.time ~= nil then
-				meter.cursor = meter.cursor + elapsed
+			local width = meter.volumeMeter:GetLevel() * meter.maxWidth
+			meter:SetWidth(width)
 
-				if meter.cursor > meter.endTime then -- Decay phase
-					local decayProgression = (meter.decay - (meter.cursor - meter.endTime)) / meter.decay
-					local level = max(0, meter.sustainLevel * decayProgression)
-					meter:SetWidth(level * meter.maxWidth)
-
-					if level <= 0 then
-						meter:Hide()
-						meter.time = nil
-					end
-
-				elseif meter.cursor - meter.time <= attack then -- Attack phase
-					local attackProgression = (attack - (meter.cursor - meter.time)) / attack
-					local level = meter.sustainLevel + attackProgression * (1 - meter.sustainLevel)
-					meter:SetWidth(level * meter.maxWidth)
-
-				else -- Sustain phase
-					level = meter.sustainLevel + (.05 - random() * .1)
-					meter:SetWidth(level * meter.maxWidth)
-
-				end
-
+			if width > 0 then
+				meter:Show()
+			else
+				meter:Hide()
 			end
+
 		end
 	end
 end
 
-Musician.TrackEditor.NoteOn = function(self, song, track, noteIndex, endTime, decay)
+--- NoteOn handler
+-- @param event (string)
+-- @param song (Musician.Song)
+-- @param track (table)
+-- @param key (number)
+Musician.TrackEditor.NoteOn = function(event, song, track, key)
 	if song == Musician.sourceSong then
 		local meter = _G['MusicianTrackEditorTrack' .. track.index .. 'Meter']
-		local note = track.notes[noteIndex]
-		local _, instrumentData = Musician.Utils.GetSoundFile(track.instrument, note[NOTE.KEY] + track.transpose)
-		meter:SetWidth(meter.maxWidth)
-		meter.cursor = note[NOTE.TIME]
-		meter.time = note[NOTE.TIME]
-
-		if meter.endTime == nil then
-			meter.endTime = meter.time
-		end
-
-		if endTime == nil then
-			endTime = note[NOTE.TIME] + Musician.TrackEditor.MAX_NOTE_DURATION
-		end
-
-		if instrumentData.isPlucked or instrumentData.isPercussion then
-			meter.endTime = max(meter.endTime, min(meter.time + .2, endTime))
-			meter.sustainLevel = .5
-			meter.decay = 5
-		else
-			meter.endTime = max(meter.endTime, endTime)
-			meter.sustainLevel = .75
-		end
-		meter.decay = instrumentData.decay / 1000
+		local _, instrumentData = Musician.Utils.GetSoundFile(track.instrument, key)
+		meter.volumeMeter:NoteOn(instrumentData)
 		meter:Show()
 	end
 end
 
-Musician.TrackEditor.NoteOff = function(self, song, track, key)
+--- NoteOff handler
+-- @param event (string)
+-- @param song (Musician.Song)
+-- @param track (table)
+-- @param key (number)
+Musician.TrackEditor.NoteOff = function(event, song, track, key)
 	if song == Musician.sourceSong then
 		-- Stop if all notes of the track are off
 		if track.polyphony == 0 then
-			local _, instrumentData = Musician.Utils.GetSoundFile(track.instrument, key + track.transpose)
 			local meter = _G['MusicianTrackEditorTrack' .. track.index .. 'Meter']
-			meter.cursor = meter.endTime
-			meter.decay = (instrumentData and instrumentData.decay or 0) / 1000
+			meter.volumeMeter:NoteOff()
 		end
 	end
 end

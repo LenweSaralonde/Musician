@@ -407,7 +407,7 @@ function Musician.Song:NoteOn(track, noteIndex, noRetry)
 
 		track.polyphony = track.polyphony + 1
 		self.polyphony = self.polyphony + 1
-		Musician:SendMessage(Musician.Events.NoteOn, self, track, noteIndex, endTime, instrumentData.decay)
+		Musician:SendMessage(Musician.Events.NoteOn, self, track, key)
 	end
 end
 

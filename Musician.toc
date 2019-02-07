@@ -15,6 +15,7 @@ core\Musician.Registry.lua
 core\Musician.Preloader.lua
 core\Musician.KeyboardUtils.lua
 core\Musician.Live.lua
+core\Musician.VolumeMeter.lua
 
 constants\Musician.Constants.lua
 constants\Musician.Instruments.lua
