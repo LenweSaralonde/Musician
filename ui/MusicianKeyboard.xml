@@ -239,13 +239,13 @@
 					end
 
 					if visible then
-						MusicianKeyboard:SetHeight(435)
+						MusicianKeyboard:SetHeight(385)
 						MusicianKeyboardKeys:Show()
 						MusicianKeyboardToggleKeyboardButton:SetText(Musician.Icons.Up ..  Musician.Icons.Blank .. Musician.Icons.PianoKeys)
 						MusicianKeyboardToggleKeyboardButton.tooltipText = Musician.Msg.HIDE_KEYBOARD
 					else
 						MusicianKeyboardKeys:Hide()
-						MusicianKeyboard:SetHeight(435 - MusicianKeyboardKeys:GetHeight() - 10)
+						MusicianKeyboard:SetHeight(385 - MusicianKeyboardKeys:GetHeight() - 10)
 						MusicianKeyboardToggleKeyboardButton:SetText(Musician.Icons.Down ..  Musician.Icons.Blank .. Musician.Icons.PianoKeys)
 						MusicianKeyboardToggleKeyboardButton.tooltipText = Musician.Msg.SHOW_KEYBOARD
 					end
@@ -255,7 +255,7 @@
 			</OnLoad>
 		</Scripts>
 
-		<Size x="790" y="435" />
+		<Size x="790" y="385" />
 
 		<Layers>
 			<Layer level="BACKGROUND">

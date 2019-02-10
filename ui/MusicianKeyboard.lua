@@ -142,7 +142,7 @@ end
 local function generateKeys()
 
 	-- Size container
-	MusicianKeyboardKeys:SetHeight(5 * KEY_SIZE)
+	MusicianKeyboardKeys:SetHeight(4 * KEY_SIZE)
 	MusicianKeyboardKeys:SetWidth(15 * KEY_SIZE)
 
 	-- Create keys
@@ -297,7 +297,7 @@ local function setKeys()
 				keyVisible = false
 			end
 
-			if keyVisible then
+			if keyVisible and row ~= #Musician.KEYBOARD then -- Do not display the last row
 				button:Show()
 			else
 				button:Hide()
