@@ -103,6 +103,10 @@ msg.CHANGE_BASE_KEY = "Base key"
 msg.CHANGE_LOWER_INSTRUMENT = "Change lower instrument"
 msg.CHANGE_UPPER_INSTRUMENT = "Change upper instrument"
 msg.POWER_CHORDS = "Power chords"
+msg.PROGRAM_BUTTON = "P {num}"
+msg.LOAD_PROGRAM_NUM = "Load program #{num} ({key})"
+msg.SAVE_PROGRAM_NUM = "Save in program #{num} ({key})"
+msg.WRITE_PROGRAM = "Save program ({key})"
 
 msg.LAYERS = {
 	[Musician.KEYBOARD_LAYER.UPPER] = "Upper",

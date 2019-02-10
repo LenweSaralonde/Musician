@@ -66,7 +66,10 @@ local function createKeyboard()
 
 	-- Disable keys with fixed mapping
 	for _, key in pairs(Musician.KEYBOARD_FIXED_MAPPING) do
-		getKeyButton(key):Disable()
+		local button = getKeyButton(key)
+		if button then
+			button:Disable()
+		end
 	end
 end
 
@@ -111,13 +114,16 @@ Musician.KeyboardConfig.Reset = function()
 			keyName = Musician.KeyboardUtils.GetKeyName(key)
 		end
 
-		getKeyButton(key):SetText(keyName)
-		getKeyButton(key).keyValue = keyValue
+		local button = getKeyButton(key)
+		if button then
+			button:SetText(keyName)
+			button.keyValue = keyValue
 
-		if Musician.Msg.FIXED_KEY_NAMES[key] == nil and ALLOWED_DUPLICATES[key] == nil then
-			keysTodo = keysTodo + 1
-			if getKeyButton(key).keyValue ~= nil then
-				keysDone = keysDone + 1
+			if Musician.Msg.FIXED_KEY_NAMES[key] == nil and ALLOWED_DUPLICATES[key] == nil then
+				keysTodo = keysTodo + 1
+				if button.keyValue ~= nil then
+					keysDone = keysDone + 1
+				end
 			end
 		end
 	end
@@ -134,10 +140,13 @@ Musician.KeyboardConfig.Clear = function()
 	keysDone = 0
 	for _, key in pairs(Musician.KEYBOARD_KEY) do
 		if Musician.Msg.FIXED_KEY_NAMES[key] == nil then
-			getKeyButton(key):SetText("")
-			getKeyButton(key).keyValue = nil
-			if ALLOWED_DUPLICATES[key] == nil then
-				keysTodo = keysTodo + 1
+			local button = getKeyButton(key)
+			if button then
+				button:SetText("")
+				button.keyValue = nil
+				if ALLOWED_DUPLICATES[key] == nil then
+					keysTodo = keysTodo + 1
+				end
 			end
 		end
 	end

@@ -66,6 +66,19 @@ local KEY = {
 	Slash = "Slash",
 	Space = "Space",
 	Tab = "Tab",
+	WriteProgram = "WriteProgram",
+	F1 = "F1",
+	F2 = "F2",
+	F3 = "F3",
+	F4 = "F4",
+	F5 = "F5",
+	F6 = "F6",
+	F7 = "F7",
+	F8 = "F8",
+	F9 = "F9",
+	F10 = "F10",
+	F11 = "F11",
+	F12 = "F12",
 }
 
 Musician.KEYBOARD = {
@@ -125,6 +138,19 @@ Musician.KEYBOARD_FIXED_MAPPING = {
 	RMETA = KEY.MetaRight,
 	MENU = KEY.ContextMenu,
 	RCTRL = KEY.ControlRight,
+	WriteProgram = KEY.WriteProgram,
+	F1 = KEY.F1,
+	F2 = KEY.F2,
+	F3 = KEY.F3,
+	F4 = KEY.F4,
+	F5 = KEY.F5,
+	F6 = KEY.F6,
+	F7 = KEY.F7,
+	F8 = KEY.F8,
+	F9 = KEY.F9,
+	F10 = KEY.F10,
+	F11 = KEY.F11,
+	F12 = KEY.F12,
 }
 
 Musician.KEYBOARD_LAYER = {

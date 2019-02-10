@@ -673,6 +673,23 @@ function Musician.Utils.DeepCopy(orig)
 	return copy
 end
 
+--- Deep merge two tables
+-- @param merged (table)
+-- @param orig (table)
+-- @return (table)
+function Musician.Utils.DeepMerge(merged, orig)
+	local orig_type = type(orig)
+	if orig_type == 'table' then
+		local orig_key, orig_value
+		for orig_key, orig_value in next, orig, nil do
+			merged[orig_key] = Musician.Utils.DeepMerge(merged[orig_key], orig_value)
+		end
+	else -- number, string, boolean, etc
+		merged = orig
+	end
+	return merged
+end
+
 --- Flip a table
 -- @param orig (table)
 -- @return (table)

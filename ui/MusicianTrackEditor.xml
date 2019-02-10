@@ -95,7 +95,7 @@
 		<Size x="568" y="32" />
 
 		<Layers>
-			<Layer level="FOREGROUND">
+			<Layer level="OVERLAY">
 				<FontString name="$parentTrackId" inherits="GameFontHighlightLarge" justifyh="" justifyv="" text="00">
 					<Size x="32" y="32" />
 					<Anchors>

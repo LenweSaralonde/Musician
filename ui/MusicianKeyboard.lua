@@ -7,6 +7,10 @@ local KEY_SIZE = 50
 
 local lCtrlDown = false
 local rCtrlDown = false
+local writeProgramDown = false
+local savingProgram = false
+local savingProgramTime = 0
+local loadedProgram = nil
 
 local keyButtons = {}
 local keyValueButtons = {}
@@ -44,6 +48,36 @@ local PercussionIconMapping = {
 	[Percussion.HandClap] = { PERCUSSION_ICON.HandClap, ""},
 }
 
+local FunctionKeys = {
+	KEY.F1,
+	KEY.F2,
+	KEY.F3,
+	KEY.F4,
+	KEY.F5,
+	KEY.F6,
+	KEY.F7,
+	KEY.F8,
+	KEY.F9,
+	KEY.F10,
+	KEY.F11,
+	KEY.F12,
+}
+
+local ProgramKeys = {
+	[KEY.F1] = 1,
+	[KEY.F2] = 2,
+	[KEY.F3] = 3,
+	[KEY.F4] = 4,
+	[KEY.F5] = 5,
+	[KEY.F6] = 6,
+	[KEY.F7] = 7,
+	[KEY.F8] = 8,
+	[KEY.F9] = 9,
+	[KEY.F10] = 10,
+	[KEY.F11] = 11,
+	[KEY.F12] = 12,
+}
+
 Musician.Keyboard.NotesOn = {}
 
 --- Return the binding button for the given physical key.
@@ -51,6 +85,56 @@ Musician.Keyboard.NotesOn = {}
 -- @return (Button)
 local getKeyButton = function(key)
 	return _G["MusicianKeyboardKeys" .. key .. "Button"]
+end
+
+--- Return the binding button for the given physical function key.
+-- @param key (string)
+-- @return (Button)
+local getFunctionKeyButton = function(key)
+	return _G["MusicianKeyboardProgramKeys" .. key .. "Button"]
+end
+
+--- Update function key button LEDs
+-- @param [blinkTime] (number)
+local function updateFunctionKeysLEDs(blinkTime)
+	local key
+	for _, key in pairs(FunctionKeys) do
+		local program = ProgramKeys[key]
+		local button = getFunctionKeyButton(key)
+
+		if blinkTime ~= nil then
+			button.led:SetAlpha(abs(1 - 2 * (4 * blinkTime % 1)))
+		else
+			if MusicianKeyboard.HasSavedProgram(program) then
+				if MusicianKeyboard.IsCurrentProgram(program) then
+					button.led:SetAlpha(1)
+				else
+					button.led:SetAlpha(.33)
+				end
+			else
+				button.led:SetAlpha(0)
+			end
+		end
+	end
+end
+
+--- Update function key buttons
+--
+local function updateFunctionKeys()
+	local label
+	if MusicianKeyboard.IsSavingProgram() then
+		label = Musician.Msg.SAVE_PROGRAM_NUM
+	else
+		label = Musician.Msg.LOAD_PROGRAM_NUM
+	end
+
+	local key
+	for _, key in pairs(FunctionKeys) do
+		local programKeyLabel = string.gsub(label, "{num}", ProgramKeys[key])
+		getFunctionKeyButton(key).tooltipText = string.gsub(programKeyLabel, "{key}", key)
+	end
+
+	updateFunctionKeysLEDs()
 end
 
 --- Create the keyboard keys.
@@ -75,6 +159,16 @@ local function generateKeys()
 			button.index = #keyButtons
 		end
 	end
+
+	-- Create function keys
+	local keyX = 0
+	for col, key in pairs(FunctionKeys) do
+		local button = CreateFrame("Button", "$parent" .. key .. "Button", MusicianKeyboardProgramKeys, "MusicianProgramKeyTemplate")
+		table.insert(keyButtons, button)
+		button.key = key
+		button.col = col
+		button.index = #keyButtons
+	end
 end
 
 --- Set keyboard keys (notes, color etc)
@@ -82,6 +176,9 @@ end
 local function setKeys()
 	local config = Musician.Keyboard.config
 
+	keyValueButtons = {}
+
+	-- Set keyboard keys
 	local row, col, rowKeys, key
 	for row, rowKeys in pairs(Musician.KEYBOARD) do
 		local cursorX = 0
@@ -209,6 +306,34 @@ local function setKeys()
 			cursorX = keyX + keyWidth
 		end
 	end
+
+	-- Set function keys
+	local keyX = 0
+	for col, key in pairs(FunctionKeys) do
+		local button = getFunctionKeyButton(key)
+		local keyValueName = Musician.KeyboardUtils.GetKeyName(key)
+		local keyValue = Musician.KeyboardUtils.GetKeyValue(key)
+
+		button.keyValue = keyValue
+		if keyValue then
+			keyValueButtons[keyValue] = button
+		end
+
+		button:Enable()
+		button:SetAlpha(1)
+
+		button:SetWidth(58.5)
+		button:SetHeight(24)
+		button:SetPoint("TOPLEFT", MusicianKeyboardProgramKeys, "TOPLEFT", keyX, 0)
+		button:SetText(string.gsub(Musician.Msg.PROGRAM_BUTTON, "{num}", ProgramKeys[key]))
+
+		keyX = keyX + button:GetWidth()
+	end
+	updateFunctionKeys()
+
+	-- Set Write program button
+	keyValueButtons[KEY.WriteProgram] = MusicianKeyboardProgramKeysWriteProgram
+	MusicianKeyboardProgramKeysWriteProgram.keyValue = KEY.WriteProgram
 end
 
 --- Initialize a dropdown
@@ -225,11 +350,15 @@ local function initDropdown(dropdown, values, labels, initialValue, onChange, to
 	dropdown.index = nil
 	dropdown.tooltipText = tooltipText
 
-	dropdown.SetIndex = function(index)
+	dropdown.UpdateIndex = function(index)
 		dropdown.value = values[index]
 		dropdown.index = index
 		UIDropDownMenu_SetText(dropdown, labels[index])
-		onChange(values[index])
+	end
+
+	dropdown.SetIndex = function(index)
+		dropdown.UpdateIndex(index)
+		onChange(dropdown.value)
 	end
 
 	dropdown.OnClick = function(self, arg1, arg2, checked)
@@ -257,7 +386,7 @@ local function initDropdown(dropdown, values, labels, initialValue, onChange, to
 	end
 
 	UIDropDownMenu_Initialize(dropdown, dropdown.GetItems)
-	dropdown.SetIndex(initialIndex)
+	dropdown.UpdateIndex(initialIndex)
 end
 
 --- Initialize layout dropdown
@@ -436,8 +565,9 @@ function Musician.Keyboard.Init()
 	}
 
 	-- Set scripts
-	MusicianKeyboard:SetScript("OnKeyDown", Musician.Keyboard.OnKeyDown)
-	MusicianKeyboard:SetScript("OnKeyUp", Musician.Keyboard.OnKeyUp)
+	MusicianKeyboard:SetScript("OnKeyDown", Musician.Keyboard.OnPhysicalKeyDown)
+	MusicianKeyboard:SetScript("OnKeyUp", Musician.Keyboard.OnPhysicalKeyUp)
+	Musician.Keyboard:RegisterMessage(Musician.Events.Frame, Musician.Keyboard.OnFrame)
 
 	-- Generate keyboard keys
 	generateKeys()
@@ -467,94 +597,132 @@ Musician.Keyboard.Show = function()
 	end
 end
 
---- OnKeyDown
--- @param self (Frame)
--- @param keyValue (string)
-Musician.Keyboard.OnKeyDown = function(self, keyValue)
-	local button = keyValueButtons[keyValue]
-	if button then
-		button:SetButtonState("PUSHED")
-		button:GetScript("OnMouseDown")(button, "LeftButton")
-	else
-		Musician.Keyboard.KeyDown(keyValue)
+--- OnFrame
+--
+Musician.Keyboard.OnFrame = function(event, elapsed)
+	if MusicianKeyboard.IsSavingProgram() then
+		savingProgramTime = savingProgramTime + elapsed
+		updateFunctionKeysLEDs(savingProgramTime)
 	end
 end
 
---- OnKeyUp
--- @param self (Frame)
+--- OnPhysicalKeyDown
+-- @param event (string)
 -- @param keyValue (string)
-Musician.Keyboard.OnKeyUp = function(self, keyValue)
-	local button = keyValueButtons[keyValue]
-	if button then
-		button:SetButtonState("NORMAL")
-		button:GetScript("OnMouseUp")(button, "LeftButton")
-	else
-		Musician.Keyboard.KeyUp(keyValue)
+Musician.Keyboard.OnPhysicalKeyDown = function(event, keyValue)
+	Musician.Keyboard.OnPhysicalKey(keyValue, true)
+end
+
+--- OnPhysicalKeyUp
+-- @param event (string)
+-- @param keyValue (string)
+Musician.Keyboard.OnPhysicalKeyUp = function(event, keyValue)
+	Musician.Keyboard.OnPhysicalKey(keyValue, false)
+end
+
+--- Key up/down handler, from physical keyboard
+-- @param keyValue (string)
+-- @param down (boolean)
+Musician.Keyboard.OnPhysicalKey = function(keyValue, down)
+	if Musician.Keyboard.SetButtonState(keyValueButtons[keyValue], down) then
+		Musician.Keyboard.OnKey(keyValue, down)
 	end
 end
 
---- KeyDown
+--- Set logical keyboard button up/down state, without triggering its action
+-- Returns true if the button state was successfully changed.
+-- @param button (Button)
+-- @param down (boolean)
+-- @return (boolean)
+Musician.Keyboard.SetButtonState = function(button, down)
+	local changed = false
+	if button then
+		button.keyPressed = true
+		if down and button:GetButtonState() ~= "PUSHED" then
+			button:SetButtonState("PUSHED")
+			button:GetScript("OnMouseDown")(button, "LeftButton")
+			changed = true
+		elseif not(down) and button:GetButtonState() ~= "NORMAL" then
+			button:SetButtonState("NORMAL")
+			button:GetScript("OnMouseUp")(button, "LeftButton")
+			changed = true
+		end
+		button.keyPressed = false
+	end
+	return not(button) or changed and not(button.clicked)
+end
+
+--- Key up/down handler, from physical or logical keyboard
 -- @param keyValue (string)
-Musician.Keyboard.KeyDown = function(keyValue)
-	if keyValue == "ESCAPE" then
+-- @param down (boolean)
+Musician.Keyboard.OnKey = function(keyValue, down)
+	if down and keyValue == "ESCAPE" then
 		MusicianKeyboard:Hide()
 		return
 	end
 
-	if keyValue == "LCTRL"  then
-		lCtrlDown = true
-	elseif keyValue == "RCTRL" then
-		rCtrlDown = true
-	elseif not(lCtrlDown) and not(rCtrlDown) then
-		MusicianKeyboard.NoteKey(true, keyValue)
-	end
-end
-
---- KeyUp
--- @param keyValue (string)
-Musician.Keyboard.KeyUp = function(keyValue)
-	if keyValue == "LCTRL"  then
-		lCtrlDown = false
-	elseif keyValue == "RCTRL" then
-		rCtrlDown = false
-	elseif not(lCtrlDown) and not(rCtrlDown) then
-		MusicianKeyboard.NoteKey(false, keyValue)
-	end
+	MusicianKeyboard.NoteKey(down, keyValue)
+	MusicianKeyboard.FunctionKey(down, keyValue)
+	MusicianKeyboard.ControlKey(down, keyValue)
 end
 
 --- Change keyboard layout
 -- @param layout (string)
-Musician.Keyboard.SetLayout = function(layout)
-	local config = Musician.Keyboard.config
-	config.layout = layout
-	config.shift[LAYER.UPPER] = 0
-	config.shift[LAYER.LOWER] = 0
-	Musician.Live.AllNotesOff()
-	Musician.Keyboard.BuildMapping()
+-- @param [rebuildMapping (boolean)] Rebuild keys mapping when true (default)
+Musician.Keyboard.SetLayout = function(layout, rebuildMapping)
+	Musician.Keyboard.config.layout = layout
+	Musician.Keyboard.ShiftKeys(LAYER.UPPER, nil, false)
+	Musician.Keyboard.ShiftKeys(LAYER.LOWER, nil, false)
+
+	MusicianKeyboardControlsMainLayoutDropdown.UpdateIndex(layout)
+
+	if rebuildMapping == nil or rebuildMapping then
+		Musician.Live.AllNotesOff()
+		Musician.Keyboard.BuildMapping()
+	end
 end
 
 --- Change base key
 -- @param key (number)
-Musician.Keyboard.SetBaseKey = function(key)
+-- @param [rebuildMapping (boolean)] Rebuild keys mapping when true (default)
+Musician.Keyboard.SetBaseKey = function(key, rebuildMapping)
 	Musician.Keyboard.config.baseKey = key
-	Musician.Live.AllNotesOff()
-	Musician.Keyboard.BuildMapping()
+
+	MusicianKeyboardControlsMainBaseKeyDropdown.UpdateIndex(key + 1)
+
+	if rebuildMapping == nil or rebuildMapping then
+		Musician.Live.AllNotesOff()
+		Musician.Keyboard.BuildMapping()
+	end
 end
 
 --- Change Instrument
 -- @param layer (number)
 -- @param instrument (number)
-Musician.Keyboard.SetInstrument = function(layer, instrument)
+-- @param [rebuildMapping (boolean)] Rebuild keys mapping when true (default)
+Musician.Keyboard.SetInstrument = function(layer, instrument, rebuildMapping)
 	Musician.Keyboard.config.instrument[layer] = instrument
-	Musician.Live.AllNotesOff(layer)
+
+	local uiElementName = "MusicianKeyboardControls"
+	if layer == LAYER.LOWER then
+		uiElementName = uiElementName .. "LowerInstrument"
+	elseif layer == LAYER.UPPER then
+		uiElementName = uiElementName .. "UpperInstrument"
+	end
+	_G[uiElementName].UpdateValue(instrument)
 	enableLayerControls(layer, instrument < 128) -- Enable controls if not percussion
-	Musician.Keyboard.BuildMapping()
+
+	if rebuildMapping == nil or rebuildMapping then
+		Musician.Live.AllNotesOff(layer)
+		Musician.Keyboard.BuildMapping()
+	end
 end
 
 --- Shift keys
 -- @param layer (number)
 -- @param amount (number) If nil, shift value is reset
-Musician.Keyboard.ShiftKeys = function(layer, amount)
+-- @param [rebuildMapping (boolean)] Rebuild keys mapping when true (default)
+Musician.Keyboard.ShiftKeys = function(layer, amount, rebuildMapping)
 	local config = Musician.Keyboard.config
 
 	if amount ~= nil then
@@ -563,17 +731,31 @@ Musician.Keyboard.ShiftKeys = function(layer, amount)
 		config.shift[layer] = 0
 	end
 
-	Musician.Live.AllNotesOff(layer)
-	Musician.Keyboard.BuildMapping()
+	if rebuildMapping == nil or rebuildMapping then
+		Musician.Live.AllNotesOff(layer)
+		Musician.Keyboard.BuildMapping()
+	end
 end
 
 --- Set power chords \m/
 -- @param layer (number)
 -- @param enable (boolean)
-Musician.Keyboard.SetPowerChords = function(layer, enable)
+-- @param [rebuildMapping (boolean)] Rebuild keys mapping when true (default)
+Musician.Keyboard.SetPowerChords = function(layer, enable, rebuildMapping)
 	Musician.Keyboard.config.powerChords[layer] = enable
-	Musician.Live.AllNotesOff(layer)
-	Musician.Keyboard.BuildMapping()
+
+	local uiElementName = "MusicianKeyboardControls"
+	if layer == LAYER.LOWER then
+		uiElementName = uiElementName .. "LowerPowerChords"
+	elseif layer == LAYER.UPPER then
+		uiElementName = uiElementName .. "UpperPowerChords"
+	end
+	_G[uiElementName]:SetChecked(enable)
+
+	if rebuildMapping == nil or rebuildMapping then
+		Musician.Live.AllNotesOff(layer)
+		Musician.Keyboard.BuildMapping()
+	end
 end
 
 --- Build keyboard mapping from actual configuration
@@ -692,4 +874,116 @@ MusicianKeyboard.NoteKey = function(down, keyValue)
 	end
 
 	return true
+end
+
+--- Control key pressed
+-- @param down (boolean)
+-- @param keyValue (string)
+-- @return (boolean)
+MusicianKeyboard.ControlKey = function(down, keyValue)
+	local key = Musician.KeyboardUtils.GetKey(keyValue)
+
+	if key == KEY.ControlLeft or key == KEY.ControlRight or key == KEY.WriteProgram then
+		MusicianKeyboard.SetSavingProgram(down)
+	end
+end
+
+--- Function key pressed
+-- @param down (boolean)
+-- @param keyValue (string)
+-- @return (boolean)
+MusicianKeyboard.FunctionKey = function(down, keyValue)
+	local key = Musician.KeyboardUtils.GetKey(keyValue)
+
+	if key == nil or ProgramKeys[key] == nil then
+		return false
+	end
+
+	local program = ProgramKeys[key]
+	if down then
+		if MusicianKeyboard.IsSavingProgram() then
+			MusicianKeyboard.SaveProgram(program)
+			MusicianKeyboard.SetSavingProgram(false)
+		else
+			MusicianKeyboard.LoadProgram(program)
+		end
+		updateFunctionKeys()
+	end
+end
+
+--- Set program saving mode
+-- @param value (boolean)
+MusicianKeyboard.SetSavingProgram = function(value)
+	if savingProgram ~= value then
+		savingProgramTime = 0
+		savingProgram = value
+		Musician.Keyboard.SetButtonState(keyValueButtons[KEY.WriteProgram], value)
+		if value then
+			keyValueButtons[KEY.WriteProgram].hiddenButton:SetAlpha(0)
+		else
+			keyValueButtons[KEY.WriteProgram].hiddenButton:SetAlpha(1)
+		end
+		PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
+		updateFunctionKeys()
+	end
+end
+
+--- Get program saving mode
+-- @return (boolean)
+MusicianKeyboard.IsSavingProgram = function()
+	return savingProgram
+end
+
+--- Load configuration
+-- @param config (table)
+MusicianKeyboard.LoadConfig = function(config)
+	Musician.Keyboard.SetLayout(config.layout, false)
+	Musician.Keyboard.SetBaseKey(config.baseKey, false)
+	Musician.Keyboard.SetInstrument(LAYER.UPPER, config.instrument[LAYER.UPPER], false)
+	Musician.Keyboard.SetInstrument(LAYER.LOWER, config.instrument[LAYER.LOWER], false)
+	Musician.Keyboard.ShiftKeys(LAYER.UPPER, config.shift[LAYER.UPPER], false)
+	Musician.Keyboard.ShiftKeys(LAYER.LOWER, config.shift[LAYER.LOWER], false)
+	Musician.Keyboard.SetPowerChords(LAYER.UPPER, config.powerChords[LAYER.UPPER], false)
+	Musician.Keyboard.SetPowerChords(LAYER.LOWER, config.powerChords[LAYER.LOWER], false)
+
+	Musician.Live.AllNotesOff()
+	Musician.Keyboard.BuildMapping()
+end
+
+--- Has saved program
+-- @param program (number)
+-- @return (boolean)
+MusicianKeyboard.HasSavedProgram = function(program)
+	return Musician_Settings.keyboardPrograms and Musician_Settings.keyboardPrograms[program]
+end
+
+--- Indicates if the provided program is the current one that has been loaded
+-- @param program (number)
+-- @return (boolean)
+MusicianKeyboard.IsCurrentProgram = function(program)
+	return program == loadedProgram
+end
+
+--- Load saved program
+-- @param program (number)
+-- @return (boolean)
+MusicianKeyboard.LoadProgram = function(program)
+	if MusicianKeyboard.HasSavedProgram(program) then
+		MusicianKeyboard.LoadConfig(Musician_Settings.keyboardPrograms[program])
+		loadedProgram = program
+		return true
+	end
+
+	return false
+end
+
+--- Save program
+-- @param program (number)
+MusicianKeyboard.SaveProgram = function(program)
+	if Musician_Settings.keyboardPrograms == nil then
+		Musician_Settings.keyboardPrograms = {}
+	end
+
+	Musician_Settings.keyboardPrograms[program] = Musician.Utils.DeepCopy(Musician.Keyboard.config)
+	loadedProgram = program
 end

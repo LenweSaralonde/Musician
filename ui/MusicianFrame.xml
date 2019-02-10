@@ -113,7 +113,7 @@
 					</BackgroundInsets>
 				</Backdrop>
 				<Layers>
-					<Layer level="FOREGROUND">
+					<Layer level="OVERLAY">
 						<Texture name="$parentLoadingProgressBar" alphaMode="ADD">
 							<Size x="290" y="3"/>
 							<Anchors>

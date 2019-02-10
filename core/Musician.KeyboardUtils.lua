@@ -6,10 +6,11 @@ local keyValues -- Reverse mapping table (physical key => key value)
 --
 function Musician.KeyboardUtils.Init()
 	if Musician_Settings.keyboardMapping == nil then
-		Musician_Settings.keyboardMapping = Musician.KeyboardUtils.GetEmptyMapping()
+		Musician_Settings.keyboardMapping = {}
 		Musician_Settings.keyboardIsConfigured = false
 	end
-	keyValues = Musician.Utils.FlipTable(Musician_Settings.keyboardMapping)
+	Musician_Settings.keyboardMapping = Musician.Utils.DeepMerge(Musician.KeyboardUtils.GetEmptyMapping(), Musician_Settings.keyboardMapping)
+	keyValues = Musician.KeyboardUtils.GetReverseMapping()
 end
 
 --- Return a brand new empty mapping
@@ -27,14 +28,14 @@ end
 --- Return the current reverse mapping
 -- @return (table) physical key => key value
 function Musician.KeyboardUtils.GetReverseMapping()
-	return Musician.Utils.DeepCopy(keyValues)
+	return Musician.Utils.FlipTable(Musician.KeyboardUtils.GetMapping())
 end
 
 --- Set the keyboard mapping
 -- @param mapping (table) key value => physical key
 function Musician.KeyboardUtils.SetMapping(mapping)
-	Musician_Settings.keyboardMapping = Musician.Utils.DeepCopy(mapping)
-	keyValues = Musician.Utils.FlipTable(Musician_Settings.keyboardMapping)
+	Musician_Settings.keyboardMapping = Musician.Utils.DeepMerge(Musician.KeyboardUtils.GetEmptyMapping(), mapping)
+	keyValues = Musician.KeyboardUtils.GetReverseMapping()
 	Musician_Settings.keyboardIsConfigured = true
 end
 
@@ -83,6 +84,3 @@ function Musician.KeyboardUtils.GetKeyValueName(keyValue)
 
 	return GetBindingText(keyValue, "KEY_")
 end
-
-
-

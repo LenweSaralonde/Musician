@@ -1,4 +1,4 @@
-Musician.Locale.fr = {}
+Musician.Locale.fr = Musician.Utils.DeepCopy(Musician.Locale.en)
 
 local msg = Musician.Locale.fr
 local Instrument = Musician.MIDI_INSTRUMENTS
@@ -152,6 +152,10 @@ msg.CHANGE_BASE_KEY = "Changer la note de base"
 msg.CHANGE_LOWER_INSTRUMENT = "Changer l'instrument inférieur"
 msg.CHANGE_UPPER_INSTRUMENT = "Changer l'instrument supérieur"
 msg.POWER_CHORDS = "Power chords"
+msg.PROGRAM_BUTTON = "P {num}"
+msg.LOAD_PROGRAM_NUM = "Charger le programme n°{num} ({key})"
+msg.SAVE_PROGRAM_NUM = "Enregistrer dans le programme n°{num} ({key})"
+msg.WRITE_PROGRAM = "Enregistrer un programme ({key})"
 
 msg.LAYERS = {
 	[Musician.KEYBOARD_LAYER.UPPER] = "Supérieur",

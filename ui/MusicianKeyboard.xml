@@ -1,5 +1,9 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 
+	<!-- Instances for inheritance -->
+
+	<Button name="MusicianLEDTextButtonInstance" inherits="MusicianLEDTextButtonTemplate" />
+
 	<!-- Keyboard key template -->
 
 	<Button name="MusicianKeyboardKeyTemplate" inherits="UIMenuButtonStretchTemplate" virtual="true">
@@ -13,7 +17,7 @@
 					<Color a="1" r="1" g="1" b="1" />
 				</Texture>
 			</Layer>
-			<Layer level="FOREGROUND">
+			<Layer level="OVERLAY">
 				<FontString parentKey="subText" name="$parentSubText" inherits="GameFontHighlightSmall">
 					<Size x="32" y="32" />
 					<Anchors>
@@ -40,27 +44,25 @@
 			</Anchors>
 		</ButtonText>
 		<Scripts>
-			<OnLoad inherit="prepend">
+			<OnLoad>
 				self.background:SetDrawLayer("BACKGROUND", -8)
-				self.down = false
+				self.subTextPoint = { self.subText:GetPoint() }
 			</OnLoad>
-			<OnMouseDown inherit="prepend">
-				if not(self.down) then
-					self.down = true
-					local point, relativeTo, relativePoint, xOfs, yOfs = self.subText:GetPoint()
-					local x, y = self:GetPushedTextOffset()
-					self.subText:SetPoint(point, relativeTo, relativePoint, xOfs + x, yOfs + y)
-					Musician.Keyboard.KeyDown(self.keyValue)
+			<OnMouseDown inherit="append">
+				local point, relativeTo, relativePoint, xOfs, yOfs = unpack(self.subTextPoint)
+				local x, y = self:GetPushedTextOffset()
+				self.subText:SetPoint(point, relativeTo, relativePoint, xOfs + x, yOfs + y)
+				if not(self.keyPressed) and not(self.down) then
+					Musician.Keyboard.OnKey(self.keyValue, true)
 				end
+				self.down = true
 			</OnMouseDown>
-			<OnMouseUp inherit="prepend">
-				if self.down then
-					local point, relativeTo, relativePoint, xOfs, yOfs = self.subText:GetPoint()
-					local x, y = self:GetPushedTextOffset()
-					self.subText:SetPoint(point, relativeTo, relativePoint, xOfs - x, yOfs - y)
-					Musician.Keyboard.KeyUp(self.keyValue)
-					self.down = false
+			<OnMouseUp inherit="append">
+				self.subText:SetPoint(unpack(self.subTextPoint))
+				if not(self.keyPressed) and self.down then
+					Musician.Keyboard.OnKey(self.keyValue, false)
 				end
+				self.down = false
 			</OnMouseUp>
 			<OnSizeChanged>
 				self.background:SetWidth(w - 7)
@@ -74,6 +76,42 @@
 		<HighlightFont style="GameFontHighlightLarge"/>
 	</Button>
 
+	<!-- Program key template -->
+
+	<Button name="MusicianProgramKeyTemplate" inherits="MusicianLEDTextButtonTemplate" virtual="true">
+		<Size x="48" y="24" />
+		<Scripts>
+			<OnMouseDown>
+				MusicianLEDTextButtonInstance:GetScript("OnMouseDown")(self, button)
+				if not(self.keyPressed) and not(self.down) then
+					Musician.Keyboard.OnKey(self.keyValue, true)
+				end
+				self.down = true
+			</OnMouseDown>
+			<OnMouseUp>
+				MusicianLEDTextButtonInstance:GetScript("OnMouseUp")(self, button)
+				if not(self.keyPressed) and self.down then
+					Musician.Keyboard.OnKey(self.keyValue, false)
+				end
+				self.down = false
+			</OnMouseUp>
+		</Scripts>
+	</Button>
+
+	<Button name="MusicianProgramKeyNoLEDTemplate" inherits="MusicianProgramKeyTemplate" virtual="true">
+		<ButtonText name="$parentText" parentKey="Text">
+			<Anchors>
+				<Anchor point="CENTER" x="0" />
+			</Anchors>
+		</ButtonText>
+		<Scripts>
+			<OnLoad inherit="append">
+				self.led:Hide()
+				self.ledOff:Hide()
+			</OnLoad>
+		</Scripts>
+	</Button>
+
 	<!-- Square button template -->
 
 	<Button name="MusicianKeyboardSquareButtonTemplate" inherits="MusicianIconButtonTemplate" virtual="true">
@@ -85,7 +123,7 @@
 	<Frame name="MusicianLayerTemplate" virtual="true">
 		<Size x="250" y="92" />
 		<Layers>
-			<Layer level="FOREGROUND">
+			<Layer level="OVERLAY">
 				<FontString name="$parentLayerName" parentKey="layerName" inherits="GameFontHighlight" justifyh="LEFT">
 					<Size x="250" y="32" />
 					<Anchors>
@@ -156,7 +194,7 @@
 		</Frames>
 
 		<Layers>
-			<Layer level="FOREGROUND">
+			<Layer level="OVERLAY">
 				<FontString name="$parentPowerChordsLabel" parentKey="powerChordsLabel" inherits="MusicianFontIconsNormal" justifyh="LEFT">
 					<Size x="250" y="32" />
 					<Anchors>
@@ -190,13 +228,13 @@
 					end
 
 					if visible then
-						MusicianKeyboard:SetHeight(400)
+						MusicianKeyboard:SetHeight(435)
 						MusicianKeyboardKeys:Show()
 						MusicianKeyboardToggleKeyboardButton:SetText(Musician.Icons.Up ..  Musician.Icons.Blank .. Musician.Icons.PianoKeys)
 						MusicianKeyboardToggleKeyboardButton.tooltipText = Musician.Msg.HIDE_KEYBOARD
 					else
 						MusicianKeyboardKeys:Hide()
-						MusicianKeyboard:SetHeight(400 - MusicianKeyboardKeys:GetHeight())
+						MusicianKeyboard:SetHeight(435 - MusicianKeyboardKeys:GetHeight() - 10)
 						MusicianKeyboardToggleKeyboardButton:SetText(Musician.Icons.Down ..  Musician.Icons.Blank .. Musician.Icons.PianoKeys)
 						MusicianKeyboardToggleKeyboardButton.tooltipText = Musician.Msg.SHOW_KEYBOARD
 					end
@@ -206,7 +244,7 @@
 			</OnLoad>
 		</Scripts>
 
-		<Size x="790" y="400" />
+		<Size x="790" y="435" />
 
 		<Layers>
 			<Layer level="BACKGROUND">
@@ -277,9 +315,73 @@
 				</OnMouseDown>
 			</Button>
 
-			<Frame name="$parentKeys">
+			<Frame name="$parentProgramKeys">
+				<Size x="750" y="24" />
 				<Anchors>
 					<Anchor point="TOP" relativeTo="$parent" relativePoint="TOP" y="-50" />
+				</Anchors>
+
+				<Frames>
+					<Button name="$parentWriteProgram" inherits="MusicianProgramKeyNoLEDTemplate">
+						<Size x="48" y="24" />
+						<Anchors>
+							<Anchor point="TOPRIGHT" relativeTo="$parent" relativePoint="TOPRIGHT" />
+						</Anchors>
+						<Scripts>
+							<OnLoad inherit="append">
+								self:SetText(Musician.Icons.Save)
+								local KEY = Musician.KEYBOARD_KEY
+								self.tooltipText = string.gsub(Musician.Msg.WRITE_PROGRAM, "{key}", Musician.Msg.FIXED_KEY_NAMES[KEY.ControlLeft])
+							</OnLoad>
+						</Scripts>
+						<NormalFont style="MusicianFontIconsNormal"/>
+						<HighlightFont style="MusicianFontIconsHighlight"/>
+						<DisabledFont style="MusicianFontIconsDisable"/>
+					</Button>
+
+					<Button name="$parentWriteProgramToggle" inherits="MusicianProgramKeyNoLEDTemplate">
+						<Size x="48" y="24" />
+						<Anchors>
+							<Anchor point="CENTER" relativeTo="$parentWriteProgram" relativePoint="CENTER" />
+						</Anchors>
+						<Scripts>
+							<OnLoad inherit="append">
+								self.button = MusicianKeyboardProgramKeysWriteProgram
+								self:SetText(self.button:GetText())
+								self.button.hiddenButton = self
+								self:SetFrameLevel(self.button:GetFrameLevel() + 1)
+							</OnLoad>
+							<OnEnter inherit="append">
+								self.button:LockHighlight()
+								self.button:GetScript("OnEnter")(self.button, motion)
+							</OnEnter>
+							<OnLeave inherit="append">
+								self.button:UnlockHighlight()
+								self.button:GetScript("OnLeave")(self.button, motion)
+							</OnLeave>
+							<OnMouseDown inherit="append">
+								if self.button:GetButtonState() ~= "PUSHED" then
+									self:SetAlpha(0)
+									self.button:SetButtonState("PUSHED")
+									self.button:GetScript("OnMouseDown")(self.button, button)
+								else
+									self:SetAlpha(1)
+									self.button:SetButtonState("NORMAL")
+									self.button:GetScript("OnMouseUp")(self.button, button)
+								end
+							</OnMouseDown>
+						</Scripts>
+						<NormalFont style="MusicianFontIconsNormal"/>
+						<HighlightFont style="MusicianFontIconsHighlight"/>
+						<DisabledFont style="MusicianFontIconsDisable"/>
+					</Button>
+				</Frames>
+
+			</Frame>
+
+			<Frame name="$parentKeys">
+				<Anchors>
+					<Anchor point="TOP" relativeTo="$parentProgramKeys" relativePoint="BOTTOM" y="-10" />
 				</Anchors>
 			</Frame>
 
@@ -304,7 +406,7 @@
 						</Scripts>
 
 						<Layers>
-							<Layer level="FOREGROUND">
+							<Layer level="OVERLAY">
 								<FontString name="$parentTitle" parentKey="title" inherits="GameFontHighlight" justifyh="LEFT">
 									<Size x="200" y="32" />
 									<Anchors>

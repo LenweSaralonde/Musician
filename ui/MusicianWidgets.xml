@@ -1,5 +1,9 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 
+	<!-- Instances for inheritance -->
+
+	<Button name="MusicianUIPanelButtonInstance" inherits="UIPanelButtonTemplate" />
+
 	<!-- Icon fonts -->
 
 	<Font name="MusicianFontIconsNormal" inherits="GameFontNormal" font="Interface\AddOns\Musician\ui\fonts\musician-icons.ttf" height="12" virtual="true" />
@@ -91,7 +95,7 @@
 
 	<Button name="MusicianIconTextButtonTemplate" inherits="UIPanelButtonTemplate" virtual="true">
 		<Layers>
-			<Layer level="FOREGROUND">
+			<Layer level="OVERLAY">
 				<FontString name="$parentIcon" parentKey="icon" inherits="MusicianFontIconsNormal" justifyh="LEFT">
 					<Size x="32" y="32" />
 					<Anchors>
@@ -109,23 +113,23 @@
 
 		<Scripts>
 			<OnEnter>
-				MusicianUIPanelButton:GetScript("OnEnter")(self, motion)
+				MusicianUIPanelButtonInstance:GetScript("OnEnter")(self, motion)
 				if self:IsEnabled() then
 					self.icon:SetFontObject(MusicianFontIconsHighlight)
 				end
 			</OnEnter>
 			<OnLeave>
-				MusicianUIPanelButton:GetScript("OnLeave")(self, motion)
+				MusicianUIPanelButtonInstance:GetScript("OnLeave")(self, motion)
 				if self:IsEnabled() then
 					self.icon:SetFontObject(MusicianFontIconsNormal)
 				end
 			</OnLeave>
 			<OnEnable>
-				MusicianUIPanelButton:GetScript("OnEnable")(self)
+				MusicianUIPanelButtonInstance:GetScript("OnEnable")(self)
 				self.icon:SetFontObject(MusicianFontIconsNormal)
 			</OnEnable>
 			<OnDisable>
-				MusicianUIPanelButton:GetScript("OnDisable")(self)
+				MusicianUIPanelButtonInstance:GetScript("OnDisable")(self)
 				self.icon:SetFontObject(MusicianFontIconsDisable)
 			</OnDisable>
 			<OnMouseDown inherits="prepend">
@@ -147,13 +151,62 @@
 			</OnMouseUp>
 		</Scripts>
 	</Button>
-	<Button name="MusicianUIPanelButton" inherits="UIPanelButtonTemplate" />
+
+	<!-- Standard button with LED -->
+
+	<Button name="MusicianLEDTextButtonTemplate" inherits="UIPanelButtonTemplate" virtual="true">
+		<Layers>
+			<Layer level="OVERLAY">
+				<Texture parentKey="ledOff" name="$parentLedOff" file="Interface\AddOns\Musician\ui\textures\led-off">
+					<Size x="16" y="16" />
+					<Anchors>
+						<Anchor point="LEFT" relativePoint="LEFT" relativeTo="$parent" x="6" />
+					</Anchors>
+				</Texture>
+				<Texture parentKey="led" name="$parentLedOn" file="Interface\AddOns\Musician\ui\textures\led-on">
+					<Size x="16" y="16" />
+					<Anchors>
+						<Anchor point="CENTER" relativePoint="CENTER" relativeTo="$parentLedOff" />
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+
+		<ButtonText name="$parentText" parentKey="Text">
+			<Anchors>
+				<Anchor point="CENTER" x="6" />
+			</Anchors>
+		</ButtonText>
+
+		<Scripts>
+			<OnLoad inherits="append">
+				self.ledOff:SetDrawLayer("OVERLAY", 1)
+				self.led:SetDrawLayer("OVERLAY", 2)
+				self.led:SetAlpha(0)
+				self.oldPoint = { self.ledOff:GetPoint() }
+			</OnLoad>
+			<OnMouseDown>
+				MusicianUIPanelButtonInstance:GetScript("OnMouseDown")(self, button)
+				if self:IsEnabled() then
+					local point, relativeTo, relativePoint, x, y = unpack(self.oldPoint)
+					local ox, oy = self:GetPushedTextOffset()
+					self.ledOff:SetPoint(point, relativeTo, relativePoint, x + ox, y + oy)
+				end
+			</OnMouseDown>
+			<OnMouseUp>
+				MusicianUIPanelButtonInstance:GetScript("OnMouseUp")(self, button)
+				if self:IsEnabled() then
+					self.ledOff:SetPoint(unpack(self.oldPoint))
+				end
+			</OnMouseUp>
+		</Scripts>
+	</Button>
 
 	<!-- Button with icon and progress bar -->
 
 	<Button name="MusicianIconTextProgressBarButtonTemplate" inherits="MusicianIconTextButtonTemplate" virtual="true">
 		<Layers>
-			<Layer level="FOREGROUND">
+			<Layer level="OVERLAY">
 				<Texture name="$parentProgressBar" parentKey="progressBar" alphaMode="ADD">
 					<Size x="0" y="1"/>
 					<Anchors>
@@ -195,12 +248,14 @@
 
 				dropdown.value = nil
 
-				dropdown.SetValue = function(value)
+				dropdown.UpdateValue = function(value)
 					local originalMidiId = value
 					local instrumentId = Musician.MIDI_INSTRUMENT_MAPPING[originalMidiId]
 					local midiId = Musician.INSTRUMENTS[instrumentId].midi
 					local instrumentName = Musician.Msg.INSTRUMENT_NAMES[instrumentId]
 					dropdown.value = midiId
+					dropdown.midiId = midiId
+					dropdown.instrumentId = instrumentId
 
 					if Musician.INSTRUMENTS[instrumentId].color ~= nil then
 						local r, g, b = unpack(Musician.INSTRUMENTS[instrumentId].color)
@@ -208,9 +263,13 @@
 					end
 
 					UIDropDownMenu_SetText(dropdown, instrumentName)
+				end
+
+				dropdown.SetValue = function(value)
+					dropdown.UpdateValue(value)
 
 					if dropdown.OnChange then
-						dropdown.OnChange(midiId, instrumentId)
+						dropdown.OnChange(dropdown.midiId, dropdown.instrumentId)
 					end
 				end
 
