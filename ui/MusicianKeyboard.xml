@@ -195,10 +195,19 @@
 
 		<Layers>
 			<Layer level="OVERLAY">
-				<FontString name="$parentPowerChordsLabel" parentKey="powerChordsLabel" inherits="MusicianFontIconsNormal" justifyh="LEFT">
-					<Size x="250" y="32" />
+				<FontString name="$parentPowerChordsBolt" parentKey="powerChordsBolt" inherits="MusicianFontIconsNormal" justifyh="LEFT">
 					<Anchors>
 						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentPowerChords" x="4" />
+					</Anchors>
+				</FontString>
+				<FontString name="$parentPowerChordsLabel" parentKey="powerChordsLabel" inherits="GameFontNormal" justifyh="LEFT">
+					<Anchors>
+						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentPowerChordsBolt" x="4" />
+					</Anchors>
+				</FontString>
+				<FontString name="$parentPowerChordsHorns" parentKey="powerChordsHorns" inherits="MusicianFontIconsNormal" justifyh="LEFT">
+					<Anchors>
+						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentPowerChordsLabel" x="4" />
 					</Anchors>
 				</FontString>
 			</Layer>
@@ -211,7 +220,9 @@
 				self.shiftLeft:SetText(Musician.Icons.LeftBig)
 				self.shiftRight:SetText(Musician.Icons.RightBig)
 				self.shiftReset:SetText(Musician.Icons.Reset)
-				self.powerChordsLabel:SetText(Musician.Icons.Bolt ..  Musician.Icons.Blank .. Musician.Icons.SignOfHorns)
+				self.powerChordsBolt:SetText(Musician.Icons.Bolt)
+				self.powerChordsLabel:SetText(Musician.Msg.POWER_CHORDS)
+				self.powerChordsHorns:SetText(Musician.Icons.SignOfHorns)
 			</OnLoad>
 		</Scripts>
 
