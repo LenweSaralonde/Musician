@@ -73,6 +73,7 @@ function Musician.Live.CreateLiveSong()
 	local song = Musician.Song.create()
 	song.mode = Musician.Song.MODE_LIVE
 	song.chunkDuration = CHUNK_DURATION
+	song.name = Musician.Msg.LIVE_SONG_NAME
 
 	-- Create one track per instrument and per layer
 	local trackId, layerId, instrumentId

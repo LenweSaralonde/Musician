@@ -68,7 +68,6 @@ function Musician:OnInitialize()
 		-- Show main window
 		elseif cmd == "show" or cmd == "" then
 			MusicianFrame:Show()
-			MusicianFrameSource:SetFocus()
 
 		-- Show live keyboard
 		elseif cmd == "live" or cmd == "keyboard" then

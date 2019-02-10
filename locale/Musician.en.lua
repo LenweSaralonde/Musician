@@ -16,8 +16,13 @@ msg.MUTE = "Mute"
 msg.UNMUTE = "Unmute"
 
 msg.MENU_TITLE = "Musician"
-msg.MENU_PLAY_SONG = "Play a song"
-msg.MENU_PLAY_LIVE = "Play live"
+msg.MENU_IMPORT_SONG = "Import and play a song"
+msg.MENU_PLAY = msg.PLAY
+msg.MENU_STOP = msg.STOP
+msg.MENU_PLAY_PREVIEW = msg.TEST_SONG
+msg.MENU_STOP_PREVIEW = msg.STOP_TEST
+msg.MENU_LIVE_PLAY = "Live play"
+msg.MENU_SHOW_KEYBOARD = "Open keyboard"
 
 msg.STARTUP = "Welcome to Musician v{version}."
 
@@ -35,6 +40,7 @@ msg.PLAYER_COUNT_ONLINE_ONE = "There is another music fan around!"
 msg.INVALID_MUSIC_CODE = "Invalid music code."
 
 msg.PLAY_A_SONG = "Play a song"
+msg.IMPORT_A_SONG = "Import a song"
 msg.PASTE_MUSIC_CODE = "Import your song in MIDI format at:\n{url}\n\nthen paste the music code here ({shortcut})..."
 msg.SONG_IMPORTED = "Loaded song: {title}."
 
@@ -87,6 +93,7 @@ msg.FIXED_KEY_NAMES = {
 
 msg.KEYBOARD_LAYOUTS = {}
 
+msg.LIVE_SONG_NAME = "Live song"
 msg.SOLO_MODE = "Solo Mode"
 msg.LIVE_MODE = "Live Mode"
 msg.LIVE_MODE_DISABLED = "Live Mode is disabled during playback."

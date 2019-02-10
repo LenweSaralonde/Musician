@@ -16,14 +16,19 @@ msg.MUTE = "Rendre silencieux"
 msg.UNMUTE = "Rétablir la musique"
 
 msg.MENU_TITLE = "Musician"
-msg.MENU_PLAY_SONG = "Jouer un morceau"
-msg.MENU_PLAY_LIVE = "Jouer en direct"
+msg.MENU_IMPORT_SONG = "Importer et jouer un morceau"
+msg.MENU_PLAY = msg.PLAY
+msg.MENU_STOP = msg.STOP
+msg.MENU_PLAY_PREVIEW = msg.TEST_SONG
+msg.MENU_STOP_PREVIEW = "Arrêter l'aperçu"
+msg.MENU_LIVE_PLAY = "Jouer en direct"
+msg.MENU_SHOW_KEYBOARD = "Ouvrir le clavier"
 
 msg.STARTUP = "Bienvenue dans Musician v{version}."
 
 msg.NEW_VERSION = "Une nouvelle version de Musician est disponible ! Téléchargez la mise à jour sur {url} ."
 msg.NEW_MAJOR_VERSION = "Votre version de Musician est obsolète et n'est plus fonctionnelle.\nTéléchargez la mise à jour sur\n{url}"
-msg.SHOULD_CONFIGURE_KEYBOARD = "Vous devez configurer le clavier avant de jouer."
+msg.SHOULD_CONFIGURE_KEYBOARD = "Vous devez configurer le clavier avant de pouvoir jouer."
 
 msg.PLAYER_TOOLTIP = "Musician"
 msg.PLAYER_TOOLTIP_VERSION = "Musician v{version}"
@@ -35,6 +40,7 @@ msg.PLAYER_COUNT_ONLINE_ONE = "Il y a un autre amateur de musique dans le coin !
 msg.INVALID_MUSIC_CODE = "Le code musical est invalide."
 
 msg.PLAY_A_SONG = "Jouer un morceau"
+msg.IMPORT_A_SONG = "Importer un morceau"
 msg.PASTE_MUSIC_CODE = "Importez votre morceau au format MIDI à l'adresse :\n{url}\n\npuis collez le code de la musique ici ({shortcut})..."
 msg.SONG_IMPORTED = "Morceau importé : {title}."
 
@@ -136,6 +142,7 @@ msg.KEYBOARD_LAYOUTS = {
 	["Octave"] = "Octave",
 }
 
+msg.LIVE_SONG_NAME = "Morceau en direct"
 msg.SOLO_MODE = "Mode Solo"
 msg.LIVE_MODE = "Mode Direct"
 msg.LIVE_MODE_DISABLED = "Le Mode Direct est désactivé pendant la lecture."
