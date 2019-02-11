@@ -16,6 +16,24 @@
 					</Anchors>
 					<Color a="1" r="1" g="1" b="1" />
 				</Texture>
+
+				<Texture parentKey="glowColor">
+					<Anchors>
+						<Anchor point="CENTER" relativePoint="CENTER"/>
+					</Anchors>
+					<Color a="1" r="1" g="1" b="1" />
+				</Texture>
+
+				<MaskTexture parentKey="glowMask" file="Interface\AddOns\Musician\ui\textures\button-glow" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.glowColor" />
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.glowColor" />
+					</Anchors>
+					<MaskedTextures>
+						<MaskedTexture childKey="glowColor"/>
+					</MaskedTextures>
+				</MaskTexture>
+
 			</Layer>
 			<Layer level="OVERLAY">
 				<FontString parentKey="subText" name="$parentSubText" inherits="GameFontHighlightSmall">
@@ -65,8 +83,11 @@
 				self.down = false
 			</OnMouseUp>
 			<OnSizeChanged>
+				self.glowColor:SetAlpha(0)
 				self.background:SetWidth(w - 7)
 				self.background:SetHeight(h - 7)
+				self.glowColor:SetWidth(w * 1.75)
+				self.glowColor:SetHeight(h * 1.75)
 				self:SetHighlightTexture(nil)
 				self.subText:SetWidth(self:GetWidth())
 			</OnSizeChanged>

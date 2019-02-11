@@ -14,6 +14,7 @@ local loadedProgram = nil
 
 local keyButtons = {}
 local keyValueButtons = {}
+local noteButtons
 
 local ICON = {
 	["SOLO_MODE"] = Musician.Icons.Headphones,
@@ -77,8 +78,6 @@ local ProgramKeys = {
 	[KEY.F11] = 11,
 	[KEY.F12] = 12,
 }
-
-Musician.Keyboard.NotesOn = {}
 
 --- Return the binding button for the given physical key.
 -- @param key (string)
@@ -157,6 +156,7 @@ local function generateKeys()
 			button.row = row
 			button.col = col
 			button.index = #keyButtons
+			button.volumeMeter = Musician.VolumeMeter.create()
 		end
 	end
 
@@ -177,6 +177,10 @@ local function setKeys()
 	local config = Musician.Keyboard.config
 
 	keyValueButtons = {}
+	noteButtons	= {
+		[LAYER.LOWER] = {},
+		[LAYER.UPPER] = {}
+	}
 
 	-- Set keyboard keys
 	local row, col, rowKeys, key
@@ -240,6 +244,8 @@ local function setKeys()
 					else
 						button.tooltipText = nil
 					end
+
+					noteButtons[keyData[1]][keyData[2]] = button
 				else
 					button.background:SetColorTexture(0, 0, 0, 0)
 					button:Disable()
@@ -568,6 +574,8 @@ function Musician.Keyboard.Init()
 	MusicianKeyboard:SetScript("OnKeyDown", Musician.Keyboard.OnPhysicalKeyDown)
 	MusicianKeyboard:SetScript("OnKeyUp", Musician.Keyboard.OnPhysicalKeyUp)
 	Musician.Keyboard:RegisterMessage(Musician.Events.Frame, Musician.Keyboard.OnFrame)
+	Musician.Keyboard:RegisterMessage(Musician.Events.LiveNoteOn, Musician.Keyboard.OnLiveNoteOn)
+	Musician.Keyboard:RegisterMessage(Musician.Events.LiveNoteOff, Musician.Keyboard.OnLiveNoteOff)
 
 	-- Generate keyboard keys
 	generateKeys()
@@ -598,12 +606,63 @@ Musician.Keyboard.Show = function()
 end
 
 --- OnFrame
---
+-- @param event (string)
+-- @param elapsed (boolean)
 Musician.Keyboard.OnFrame = function(event, elapsed)
+	-- Make program key LEDs blink when saving program
 	if MusicianKeyboard.IsSavingProgram() then
 		savingProgramTime = savingProgramTime + elapsed
 		updateFunctionKeysLEDs(savingProgramTime)
 	end
+
+	-- Key glow
+	local buttons, button
+	for _, buttons in pairs(noteButtons) do
+		for _, button in pairs(buttons) do
+			button.volumeMeter:AddElapsed(elapsed)
+			button.glowColor:SetAlpha(button.volumeMeter:GetLevel() * 1)
+		end
+	end
+end
+
+--- OnLiveNoteOn
+-- @param event (string)
+-- @param key (number)
+-- @param layer (number)
+-- @param instrumentData (table)
+-- @param isChordNote (boolean)
+Musician.Keyboard.OnLiveNoteOn = function(event, key, layer, instrumentData, isChordNote)
+	local button = noteButtons[layer] and noteButtons[layer][key]
+
+	if not(button) then
+		return
+	end
+
+	-- Set glow color
+	local r, g, b = unpack(instrumentData.color)
+	local addedLuminance = .5
+	r = min(1, r + addedLuminance)
+	g = min(1, g + addedLuminance)
+	b = min(1, b + addedLuminance)
+	button.glowColor:SetColorTexture(r, g, b, 1)
+
+	button.volumeMeter:NoteOn(instrumentData)
+	button.volumeMeter.gain = isChordNote and .5 or 1 -- Make auto-chord notes dimmer
+	button.volumeMeter.entropy = button.volumeMeter.entropy / 2
+end
+
+--- OnLiveNoteOff
+-- @param event (string)
+-- @param key (number)
+-- @param layer (number)
+Musician.Keyboard.OnLiveNoteOff = function(event, key, layer)
+	local button = noteButtons[layer] and noteButtons[layer][key]
+
+	if not(button) then
+		return
+	end
+
+	button.volumeMeter:NoteOff()
 end
 
 --- OnPhysicalKeyDown
@@ -652,6 +711,23 @@ Musician.Keyboard.SetButtonState = function(button, down)
 	return not(button) or changed and not(button.clicked)
 end
 
+--- Set all buttons up
+-- @param [onlyForLayer (number)]
+Musician.Keyboard.SetButtonsUp = function(onlyForLayer)
+	local layers = (onlyForLayer ~= nil) and { onlyForLayer } or { LAYER.LOWER, LAYER.UPPER }
+
+	if noteButtons then
+		local button, layer
+		for _, layer in pairs(layers) do
+			for _, button in pairs(noteButtons[layer]) do
+				Musician.Keyboard.SetButtonState(button, false)
+				button.volumeMeter:Reset()
+				button.glowColor:SetAlpha(0)
+			end
+		end
+	end
+end
+
 --- Key up/down handler, from physical or logical keyboard
 -- @param keyValue (string)
 -- @param down (boolean)
@@ -677,6 +753,7 @@ Musician.Keyboard.SetLayout = function(layout, rebuildMapping)
 	MusicianKeyboardControlsMainLayoutDropdown.UpdateIndex(layout)
 
 	if rebuildMapping == nil or rebuildMapping then
+		Musician.Keyboard.SetButtonsUp()
 		Musician.Live.AllNotesOff()
 		Musician.Keyboard.BuildMapping()
 	end
@@ -691,6 +768,7 @@ Musician.Keyboard.SetBaseKey = function(key, rebuildMapping)
 	MusicianKeyboardControlsMainBaseKeyDropdown.UpdateIndex(key + 1)
 
 	if rebuildMapping == nil or rebuildMapping then
+		Musician.Keyboard.SetButtonsUp()
 		Musician.Live.AllNotesOff()
 		Musician.Keyboard.BuildMapping()
 	end
@@ -713,6 +791,7 @@ Musician.Keyboard.SetInstrument = function(layer, instrument, rebuildMapping)
 	enableLayerControls(layer, instrument < 128) -- Enable controls if not percussion
 
 	if rebuildMapping == nil or rebuildMapping then
+		Musician.Keyboard.SetButtonsUp(layer)
 		Musician.Live.AllNotesOff(layer)
 		Musician.Keyboard.BuildMapping()
 	end
@@ -732,6 +811,7 @@ Musician.Keyboard.ShiftKeys = function(layer, amount, rebuildMapping)
 	end
 
 	if rebuildMapping == nil or rebuildMapping then
+		Musician.Keyboard.SetButtonsUp(layer)
 		Musician.Live.AllNotesOff(layer)
 		Musician.Keyboard.BuildMapping()
 	end
@@ -753,6 +833,7 @@ Musician.Keyboard.SetPowerChords = function(layer, enable, rebuildMapping)
 	_G[uiElementName]:SetChecked(enable)
 
 	if rebuildMapping == nil or rebuildMapping then
+		Musician.Keyboard.SetButtonsUp(layer)
 		Musician.Live.AllNotesOff(layer)
 		Musician.Keyboard.BuildMapping()
 	end
@@ -777,12 +858,16 @@ Musician.Keyboard.BuildMapping = function()
 	-- @param baseKey (int) Base key
 	-- @param baseKeyIndex (int) Position of the base key (0 is the first one)
 	local function mapKeys(layer, scale, keyboardMapping, baseKey, baseKeyIndex)
+		local config = Musician.Keyboard.config
 		local scaleIndex = -baseKeyIndex
+		local isPercussion = config.instrument[layer] >= 128
+		local transpose = not(isPercussion) and config.baseKey or 0
+
 		for index, key in pairs(keyboardMapping) do
 			local scaleNote = scale[scaleIndex % #scale + 1]
 			if scaleNote ~= -1 then
 				local octave = floor(scaleIndex / #scale)
-				local note = scaleNote + baseKey + 12 * octave + Musician.Keyboard.config.baseKey
+				local note = scaleNote + baseKey + 12 * octave + transpose
 				if not(Musician.DISABLED_KEYS[key]) then
 					Musician.Keyboard.mapping[key] = { layer, note }
 				end
@@ -860,15 +945,15 @@ MusicianKeyboard.NoteKey = function(down, keyValue)
 	end
 
 	if powerChords then
-		Musician.Live.NoteOff(noteKey - 12, layer, instrument)
-		Musician.Live.NoteOff(noteKey - 5, layer, instrument)
+		Musician.Live.NoteOff(noteKey - 12, layer, instrument, true)
+		Musician.Live.NoteOff(noteKey - 5, layer, instrument, true)
 	end
 	Musician.Live.NoteOff(noteKey, layer, instrument)
 
 	if down then
 		if powerChords then
-			Musician.Live.NoteOn(noteKey - 12, layer, instrument)
-			Musician.Live.NoteOn(noteKey - 5, layer, instrument)
+			Musician.Live.NoteOn(noteKey - 12, layer, instrument, true)
+			Musician.Live.NoteOn(noteKey - 5, layer, instrument, true)
 		end
 		Musician.Live.NoteOn(noteKey, layer, instrument)
 	end
@@ -946,6 +1031,7 @@ MusicianKeyboard.LoadConfig = function(config)
 	Musician.Keyboard.SetPowerChords(LAYER.UPPER, config.powerChords[LAYER.UPPER], false)
 	Musician.Keyboard.SetPowerChords(LAYER.LOWER, config.powerChords[LAYER.LOWER], false)
 
+	Musician.Keyboard.SetButtonsUp()
 	Musician.Live.AllNotesOff()
 	Musician.Keyboard.BuildMapping()
 end

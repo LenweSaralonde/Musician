@@ -156,42 +156,60 @@ end
 -- @param key (int) MIDI key index
 -- @param layer (int)
 -- @param instrument (int)
-function Musician.Live.NoteOn(key, layer, instrument)
+-- @param isChordNote (boolean)
+function Musician.Live.NoteOn(key, layer, instrument, isChordNote)
 
 	local soundFile, instrumentData = Musician.Utils.GetSoundFile(instrument, key)
 	if soundFile == nil then
 		return
 	end
 
-	-- Insert note on in streaming song
-	Musician.Live.InsertNote(true, key, layer, instrument)
+	local noteOnKey = key .. '-' .. layer .. '-' .. instrument
 
-	-- Play note
-	if Musician.globalMute then
+	-- This is an auto-chord note but a higher priority note actually exists: do nothing
+	if isChordNote and Musician.Live.NotesOn[noteOnKey] and not(Musician.Live.NotesOn[noteOnKey].isChordNote) then
 		return
 	end
 
-	local play, handle = PlaySoundFile(soundFile, 'SFX')
-
-	if play then
-		Musician.Live.NotesOn[key .. '-' .. layer .. '-' .. instrument] = {handle, instrumentData.decay, layer, key, instrumentData.midi}
+	-- Play note
+	local handle
+	if Musician.globalMute then
+		handle = 0
+	else
+		_, handle = PlaySoundFile(soundFile, 'SFX')
 	end
+
+	-- Insert note on and trigger event
+	Musician.Live.InsertNote(true, key, layer, instrument)
+	Musician.Live.NotesOn[noteOnKey] = { handle, instrumentData.decay, layer, key, instrumentData.midi, isChordNote }
+	Musician.Comm:SendMessage(Musician.Events.LiveNoteOn, key, layer, instrumentData, isChordNote)
 end
 
 --- Send note off
 -- @param key (int) MIDI key index
 -- @param layer (int)
 -- @param instrument (int)
-function Musician.Live.NoteOff(key, layer, instrument)
-
-	-- Insert note off in streaming song
-	Musician.Live.InsertNote(false, key, layer, instrument)
+-- @param isChordNote (boolean)
+function Musician.Live.NoteOff(key, layer, instrument, isChordNote)
 
 	local noteOnKey = key .. '-' .. layer .. '-' .. instrument
 	if Musician.Live.NotesOn[noteOnKey] then
-		local handle, decay, _, _, _ = unpack(Musician.Live.NotesOn[noteOnKey])
-		StopSound(handle, decay)
+		local handle, decay, _, _, _, noteOnIsChordNote = unpack(Musician.Live.NotesOn[noteOnKey])
+
+		-- If current note off is from an auto-chord but actual note is not: do nothing
+		if isChordNote and not(noteOnIsChordNote) then
+			return
+		end
+
+		-- Stop playing note
+		if handle then
+			StopSound(handle, decay)
+		end
+
+		-- Insert note off and trigger event
+		Musician.Live.InsertNote(false, key, layer, instrument)
 		Musician.Live.NotesOn[noteOnKey] = nil
+		Musician.Comm:SendMessage(Musician.Events.LiveNoteOff, key, layer, isChordNote)
 	end
 end
 

@@ -22,6 +22,9 @@ function Musician.VolumeMeter.create()
 	-- @field entropy (number) Vibration entropy
 	self.entropy = 0
 
+	-- @field gain (number) Overall gain to be applied to the level
+	self.gain = 1
+
 	return self
 end
 
@@ -98,7 +101,7 @@ function Musician.VolumeMeter:GetLevel()
 	local sectionProgression = (self.time - time1) / (time2 - time1)
 	self.level = sectionProgression * (level2 - level1) + level1
 
-	return self.level - random() * self.entropy * self.level * min(1, self.time) / 1
+	return self.gain * (self.level - random() * self.entropy * self.level * min(1, self.time) / 1)
 end
 
 --- Add elapsed seconds after previous frame
