@@ -753,6 +753,7 @@ Musician.Keyboard.SetLayout = function(layout, rebuildMapping)
 	Musician.Keyboard.config.layout = layout
 	Musician.Keyboard.ShiftKeys(LAYER.UPPER, nil, false)
 	Musician.Keyboard.ShiftKeys(LAYER.LOWER, nil, false)
+	loadedProgram = nil
 
 	MusicianKeyboardControlsMainLayoutDropdown.UpdateIndex(layout)
 
@@ -760,6 +761,7 @@ Musician.Keyboard.SetLayout = function(layout, rebuildMapping)
 		Musician.Keyboard.SetButtonsUp()
 		Musician.Live.AllNotesOff()
 		Musician.Keyboard.BuildMapping()
+		updateFunctionKeys()
 	end
 end
 
@@ -768,6 +770,7 @@ end
 -- @param [rebuildMapping (boolean)] Rebuild keys mapping when true (default)
 Musician.Keyboard.SetBaseKey = function(key, rebuildMapping)
 	Musician.Keyboard.config.baseKey = key
+	loadedProgram = nil
 
 	MusicianKeyboardControlsMainBaseKeyDropdown.UpdateIndex(key + 1)
 
@@ -775,6 +778,7 @@ Musician.Keyboard.SetBaseKey = function(key, rebuildMapping)
 		Musician.Keyboard.SetButtonsUp()
 		Musician.Live.AllNotesOff()
 		Musician.Keyboard.BuildMapping()
+		updateFunctionKeys()
 	end
 end
 
@@ -784,6 +788,7 @@ end
 -- @param [rebuildMapping (boolean)] Rebuild keys mapping when true (default)
 Musician.Keyboard.SetInstrument = function(layer, instrument, rebuildMapping)
 	Musician.Keyboard.config.instrument[layer] = instrument
+	loadedProgram = nil
 
 	local uiElementName = "MusicianKeyboardControls"
 	if layer == LAYER.LOWER then
@@ -798,6 +803,7 @@ Musician.Keyboard.SetInstrument = function(layer, instrument, rebuildMapping)
 		Musician.Keyboard.SetButtonsUp(layer)
 		Musician.Live.AllNotesOff(layer)
 		Musician.Keyboard.BuildMapping()
+		updateFunctionKeys()
 	end
 end
 
@@ -827,6 +833,7 @@ end
 -- @param [rebuildMapping (boolean)] Rebuild keys mapping when true (default)
 Musician.Keyboard.SetPowerChords = function(layer, enable, rebuildMapping)
 	Musician.Keyboard.config.powerChords[layer] = enable
+	loadedProgram = nil
 
 	local uiElementName = "MusicianKeyboardControls"
 	if layer == LAYER.LOWER then
@@ -840,6 +847,7 @@ Musician.Keyboard.SetPowerChords = function(layer, enable, rebuildMapping)
 		Musician.Keyboard.SetButtonsUp(layer)
 		Musician.Live.AllNotesOff(layer)
 		Musician.Keyboard.BuildMapping()
+		updateFunctionKeys()
 	end
 end
 
@@ -996,7 +1004,6 @@ MusicianKeyboard.FunctionKey = function(down, keyValue)
 		else
 			MusicianKeyboard.LoadProgram(program)
 		end
-		updateFunctionKeys()
 	end
 end
 
@@ -1061,6 +1068,7 @@ MusicianKeyboard.LoadProgram = function(program)
 	if MusicianKeyboard.HasSavedProgram(program) then
 		MusicianKeyboard.LoadConfig(Musician_Settings.keyboardPrograms[program])
 		loadedProgram = program
+		updateFunctionKeys()
 		return true
 	end
 
