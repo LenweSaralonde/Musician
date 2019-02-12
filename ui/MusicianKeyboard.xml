@@ -253,6 +253,11 @@
 
 	<Frame name="MusicianKeyboard" inherits="MusicianDialogTemplate" enableKeyboard="true">
 		<Scripts>
+			<OnHide inherit="append">
+				Musician.Keyboard.SetButtonState(MusicianKeyboardProgramKeysWriteProgramToggle, true)
+				MusicianKeyboard.SetSavingProgram(false)
+				Musician.Keyboard.SetButtonState(MusicianKeyboardProgramKeysWriteProgramToggle, false)
+			</OnHide>
 			<OnLoad inherit="prepend">
 				MusicianKeyboard.showKeyboard = function(visible)
 					if visible == nil then

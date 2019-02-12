@@ -733,7 +733,11 @@ end
 -- @param down (boolean)
 Musician.Keyboard.OnKey = function(keyValue, down)
 	if down and keyValue == "ESCAPE" then
-		MusicianKeyboard:Hide()
+		if MusicianKeyboard.IsSavingProgram() then
+			MusicianKeyboard.SetSavingProgram(false)
+		else
+			MusicianKeyboard:Hide()
+		end
 		return
 	end
 
