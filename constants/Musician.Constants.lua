@@ -55,5 +55,5 @@ Musician.Events.SourceSongLoaded = "MusicianSourceSongLoaded"
 Musician.Events.Bandwidth = "MusicianBandwidth"
 
 Musician.IconImages = {}
-Musician.IconImages.PlayerMuted = "Interface\\AddOns\\Musician\\ui\\textures\\muted.blp"
-Musician.IconImages.PlayerUnmuted = "Interface\\AddOns\\Musician\\ui\\textures\\unmuted.blp"
+Musician.IconImages.NoteDisabled = "Interface\\AddOns\\Musician\\ui\\textures\\muted.blp"
+Musician.IconImages.Note = "Interface\\AddOns\\Musician\\ui\\textures\\unmuted.blp"

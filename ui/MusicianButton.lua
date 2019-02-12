@@ -118,7 +118,7 @@ function MusicianButton.GetMenu()
 
 		local labelPreview
 		if Musician.sourceSong:IsPlaying() then
-			labelPreview = Musician.Utils.GetChatIcon(Musician.IconImages.PlayerUnmuted) .. " " .. Musician.Msg.MENU_STOP_PREVIEW
+			labelPreview = Musician.Utils.GetChatIcon(Musician.IconImages.Note) .. " " .. Musician.Msg.MENU_STOP_PREVIEW
 		else
 			labelPreview = Musician.Msg.MENU_PLAY_PREVIEW
 		end
@@ -153,7 +153,7 @@ function MusicianButton.GetMenu()
 				})
 			end
 
-			labelPlay = Musician.Utils.GetChatIcon(Musician.IconImages.PlayerUnmuted) .. " " .. Musician.Msg.MENU_STOP
+			labelPlay = Musician.Utils.GetChatIcon(Musician.IconImages.Note) .. " " .. Musician.Msg.MENU_STOP
 		else
 			labelPlay = Musician.Msg.MENU_PLAY
 		end
