@@ -639,7 +639,7 @@ Musician.Keyboard.OnLiveNoteOn = function(event, key, layer, instrumentData, isC
 	end
 
 	-- Set glow color
-	local r, g, b = unpack(instrumentData.color)
+	local r, g, b = unpack(Musician.INSTRUMENTS[Musician.MIDI_INSTRUMENT_MAPPING[instrumentData.midi]].color)
 	local addedLuminance = .5
 	r = min(1, r + addedLuminance)
 	g = min(1, g + addedLuminance)
