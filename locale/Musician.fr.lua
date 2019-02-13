@@ -24,6 +24,17 @@ msg.MENU_STOP_PREVIEW = "Arrêter l'aperçu"
 msg.MENU_LIVE_PLAY = "Jouer en direct"
 msg.MENU_SHOW_KEYBOARD = "Ouvrir le clavier"
 
+msg.COMMAND_LIST_TITLE = "Commandes de Musician :"
+msg.COMMAND_SHOW = "Ouvrir la fenêtre d'import"
+msg.COMMAND_PREVIEW_PLAY = "Aperçu du morceau"
+msg.COMMAND_PREVIEW_STOP = "Arrêter l'aperçu"
+msg.COMMAND_PLAY = "Jouer le morceau"
+msg.COMMAND_STOP = "Arrêter de jouer le morceau"
+msg.COMMAND_SONG_EDITOR = "Ouvrir l'éditeur de morceau"
+msg.COMMAND_LIVE_KEYBOARD = "Ouvrir le clavier"
+msg.COMMAND_CONFIGURE_KEYBOARD = "Configurer le clavier"
+msg.COMMAND_HELP = "Afficher ce message d'aide"
+
 msg.STARTUP = "Bienvenue dans Musician v{version}."
 
 msg.NEW_VERSION = "Une nouvelle version de Musician est disponible ! Téléchargez la mise à jour sur {url} ."

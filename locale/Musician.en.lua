@@ -24,6 +24,17 @@ msg.MENU_STOP_PREVIEW = msg.STOP_TEST
 msg.MENU_LIVE_PLAY = "Live play"
 msg.MENU_SHOW_KEYBOARD = "Open keyboard"
 
+msg.COMMAND_LIST_TITLE = "Musician Commands:"
+msg.COMMAND_SHOW = "Show song import window"
+msg.COMMAND_PREVIEW_PLAY = "Preview song"
+msg.COMMAND_PREVIEW_STOP = "Stop previewing song"
+msg.COMMAND_PLAY = "Play song"
+msg.COMMAND_STOP = "Stop playing song"
+msg.COMMAND_SONG_EDITOR = "Open song editor"
+msg.COMMAND_LIVE_KEYBOARD = "Open live keyboard"
+msg.COMMAND_CONFIGURE_KEYBOARD = "Configure keyboard"
+msg.COMMAND_HELP = "Show this help message"
+
 msg.STARTUP = "Welcome to Musician v{version}."
 
 msg.NEW_VERSION = "A new version of Musician has been released! Download the update from {url} ."

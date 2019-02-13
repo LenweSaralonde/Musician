@@ -54,7 +54,9 @@ MusicianFrame.Clear = function(noFocus)
 end
 
 MusicianFrame.TrackEditor = function()
-	MusicianTrackEditor:Show()
+	if Musician.sourceSong then
+		MusicianTrackEditor:Show()
+	end
 end
 
 MusicianFrame.SourceChanged = function(self, isUserInput)

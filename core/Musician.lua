@@ -49,46 +49,160 @@ function Musician:OnInitialize()
 	Musician.playerFrame:SetScript("OnUpdate", Musician.OnUpdate)
 
 	-- /musician command
-	SlashCmdList["MUSICIAN"] = function(cmd)
-
-		cmd = strlower(strtrim(cmd))
-
-		-- Stop all music currently playing
-		if cmd == "stop" or cmd == "panic" then
-
-			if Musician.sourceSong then
-				Musician.sourceSong:Stop()
-			end
-
-			local song, player
-			for player, song in pairs(Musician.songs) do
-				song:Stop()
-			end
-
-		-- Show main window
-		elseif cmd == "show" or cmd == "" then
-			MusicianFrame:Show()
-
-		-- Show live keyboard
-		elseif cmd == "live" or cmd == "keyboard" then
-			Musician.Keyboard.Show()
-
-		end
-	end
+	SlashCmdList["MUSICIAN"] = Musician.RunCommandLine
 
 	SLASH_MUSICIAN1 = "/musician"
 	SLASH_MUSICIAN2 = "/music"
 	SLASH_MUSICIAN3 = "/mus"
+end
 
-	-- /stopmusic command
-	SlashCmdList["STOPMUSIC"] = function()
-		SlashCmdList["MUSICIAN"]("stop")
+--- Get command definitions
+-- @return (table)
+function Musician.GetCommands()
+	local commands = {}
+
+	-- Show main window
+
+	table.insert(commands, {
+		command = { "", "show", "import" },
+		text = Musician.Msg.COMMAND_SHOW,
+		func = function()
+			MusicianFrame:Show()
+		end
+	})
+
+	-- Play song
+
+	table.insert(commands, {
+		command = { "play" },
+		text = Musician.Msg.COMMAND_PLAY,
+		func = Musician.Comm.PlaySong
+	})
+
+	-- Stop playing song
+
+	table.insert(commands, {
+		command = { "stop" },
+		text = Musician.Msg.COMMAND_STOP,
+		func = Musician.Comm.StopSong
+	})
+
+	-- Preview song
+
+	table.insert(commands, {
+		command = {
+			"preview", "previewplay", "playpreview",
+			"test", "testplay", "playtest"
+		},
+		text = Musician.Msg.COMMAND_PREVIEW_PLAY,
+		func = function(arg)
+			if Musician.sourceSong then
+				Musician.sourceSong:Play()
+				Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
+			end
+		end
+	})
+
+	-- Stop previewing song
+
+	table.insert(commands, {
+		command = {
+			"previewstop", "stoppreview",
+			"teststop", "stoptest"
+		},
+		text = Musician.Msg.COMMAND_PREVIEW_STOP,
+		func = function(arg)
+			if Musician.sourceSong then
+				Musician.sourceSong:Stop()
+				Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
+			end
+		end
+	})
+
+	-- Open track editor
+
+	table.insert(commands, {
+		command = { "edit", "tracks" },
+		text = Musician.Msg.COMMAND_SONG_EDITOR,
+		func = MusicianFrame.TrackEditor
+	})
+
+	-- Show live keyboard
+
+	table.insert(commands, {
+		command = { "live", "keyboard" },
+		text = Musician.Msg.COMMAND_LIVE_KEYBOARD,
+		func = function()
+			MusicianFrameSource:ClearFocus()
+			Musician.Keyboard.Show()
+		end
+	})
+
+	-- Configure keyboard
+
+	table.insert(commands, {
+		command = {
+			"setupkeyboard", "keyboardsetup",
+			"configkeyboard", "keyboardconfig"
+		},
+		text = Musician.Msg.COMMAND_CONFIGURE_KEYBOARD,
+		func = function()
+			MusicianFrameSource:ClearFocus()
+			MusicianKeyboardConfig:Show()
+		end
+	})
+
+	-- Display help
+
+	table.insert(commands, {
+		command = { "help" },
+		text = Musician.Msg.COMMAND_HELP,
+		func = Musician.Help
+	})
+
+	return commands
+end
+
+--- Display command-line help
+--
+function Musician.Help()
+	Musician.Utils.Print(Musician.Msg.COMMAND_LIST_TITLE)
+
+	local row
+	for _, row in pairs(Musician.GetCommands()) do
+
+		local params = ""
+		if row.params then
+			params = Musician.Utils.FormatText(row.params) .. " "
+		end
+
+		local cmd = ""
+		if row.command[1] ~= "" then
+			cmd = row.command[1] .. " "
+		end
+
+		Musician.Utils.Print(
+			Musician.Utils.Highlight("/mus " .. cmd) ..
+			params ..
+			Musician.Utils.FormatText(row.text)
+		)
 	end
+end
 
-	SLASH_STOPMUSIC1 = "/stopmusic"
-	SLASH_STOPMUSIC2 = "/stopmus"
-	SLASH_STOPMUSIC3 = "/musicstop"
-	SLASH_STOPMUSIC4 = "/musstop"
+--- Run command line
+-- @param cmd (string)
+function Musician.RunCommandLine(cmd)
+	cmd = strlower(strtrim(cmd))
+
+	local row, command
+	for _, row in pairs(Musician.GetCommands()) do
+		for _, command in pairs(row.command) do
+			if cmd == command then
+				row.func()
+				return
+			end
+		end
+	end
 end
 
 --- Stop a song playing by a player
@@ -245,15 +359,15 @@ function Musician.SetupHooks()
 			if args[2] == "stop" then
 				PlaySound(80)
 				Musician.StopPlayerSong(args[3])
-			-- Mute player
+				-- Mute player
 			elseif args[2] == "mute" then
 				PlaySound(80)
 				Musician.MutePlayer(args[3], true)
-			-- Unmute player
+				-- Unmute player
 			elseif args[2] == "unmute" then
 				PlaySound(80)
 				Musician.MutePlayer(args[3], false)
-			-- Seek source song
+				-- Seek source song
 			elseif args[2] == "seek" and Musician.sourceSong ~= nil then
 				Musician.sourceSong:Seek(args[3])
 			end
@@ -407,19 +521,19 @@ function Musician.SetupHooks()
 					if not(Musician.PlayerIsMuted(fullPlayerName)) then
 						local stopAction = Musician.Utils.Highlight(Musician.Utils.GetLink("musician", Musician.Msg.STOP, "stop", fullPlayerName), 'FF0000')
 						msg = msg .. " " .. Musician.Utils.Highlight('[') .. stopAction .. Musician.Utils.Highlight(']')
-					-- Unmute player
+						-- Unmute player
 					else
 						local unmuteAction = Musician.Utils.Highlight(Musician.Utils.GetLink("musician", Musician.Msg.UNMUTE, "unmute", fullPlayerName), '00FF00')
 						msg = msg .. " " .. Musician.Utils.Highlight('[') .. unmuteAction .. Musician.Utils.Highlight(']')
 					end
 				end
 
-			-- Music is not loaded
+				-- Music is not loaded
 			else
 				-- Player is not in the registry and not in my group: it's from another realm
 				if not(Musician.Registry.PlayerIsOnline(player)) and not(Musician.Utils.PlayerIsInGroup(player)) then
 					msg = Musician.Msg.EMOTE_PLAYING_MUSIC .. " " .. Musician.Utils.Highlight(Musician.Msg.EMOTE_PLAYER_OTHER_REALM, 'FF0000')
-				-- Song has not been loaded
+					-- Song has not been loaded
 				else
 					local errorMsg = string.gsub(Musician.Msg.EMOTE_SONG_NOT_LOADED, '{player}', Musician.Utils.GetPlayerLink(fullPlayerName))
 					msg = Musician.Msg.EMOTE_PLAYING_MUSIC .. " " .. Musician.Utils.Highlight(errorMsg, 'FF0000')
@@ -456,5 +570,181 @@ function Musician.SetupHooks()
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", messageEventFilter)
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_EMOTE", messageEventFilter)
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

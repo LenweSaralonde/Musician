@@ -134,9 +134,7 @@ function MusicianButton.GetMenu()
 		table.insert(menu, {
 			notCheckable = true,
 			text = Musician.Msg.SONG_EDITOR,
-			func = function()
-				MusicianFrame.TrackEditor()
-			end
+			func = MusicianFrame.TrackEditor
 		})
 
 		-- Play imported song
