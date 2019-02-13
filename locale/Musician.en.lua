@@ -114,6 +114,7 @@ msg.PROGRAM_BUTTON = "P {num}"
 msg.LOAD_PROGRAM_NUM = "Load program #{num} ({key})"
 msg.SAVE_PROGRAM_NUM = "Save in program #{num} ({key})"
 msg.WRITE_PROGRAM = "Save program ({key})"
+msg.PROGRAM_SAVED = "Program #{num} saved."
 
 msg.LAYERS = {
 	[Musician.KEYBOARD_LAYER.UPPER] = "Upper",

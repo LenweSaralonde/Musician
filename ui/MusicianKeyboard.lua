@@ -1084,4 +1084,5 @@ MusicianKeyboard.SaveProgram = function(program)
 
 	Musician_Settings.keyboardPrograms[program] = Musician.Utils.DeepCopy(Musician.Keyboard.config)
 	loadedProgram = program
+	Musician.Utils.Print(string.gsub(Musician.Msg.PROGRAM_SAVED, '{num}', Musician.Utils.Highlight(program)))
 end
