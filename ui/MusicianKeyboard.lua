@@ -594,7 +594,7 @@ end
 --- Show
 --
 Musician.Keyboard.Show = function()
-	if not(Musician_Settings.keyboardIsConfigured) then
+	if not(Musician.KeyboardUtils.KeyboardIsConfigured()) then
 		Musician.Utils.Popup(Musician.Msg.SHOULD_CONFIGURE_KEYBOARD, function() MusicianKeyboardConfig:Show() end)
 		Musician.KeyboardConfig.showKeyboardOnComplete = true
 	else

@@ -7,10 +7,23 @@ local keyValues -- Reverse mapping table (physical key => key value)
 function Musician.KeyboardUtils.Init()
 	if Musician_Settings.keyboardMapping == nil then
 		Musician_Settings.keyboardMapping = {}
-		Musician_Settings.keyboardIsConfigured = false
+		Musician_Settings.keyboardIsConfigured = {}
 	end
-	Musician_Settings.keyboardMapping = Musician.Utils.DeepMerge(Musician.KeyboardUtils.GetEmptyMapping(), Musician_Settings.keyboardMapping)
+
+	local os = Musician.Utils.GetOs()
+	if Musician_Settings.keyboardMapping[os] == nil then
+		Musician_Settings.keyboardMapping[os] = {}
+		Musician_Settings.keyboardIsConfigured[os] = false
+	end
+
+	Musician_Settings.keyboardMapping[os] = Musician.Utils.DeepMerge(Musician.KeyboardUtils.GetEmptyMapping(), Musician_Settings.keyboardMapping[os])
 	keyValues = Musician.KeyboardUtils.GetReverseMapping()
+end
+
+--- Return true if the keyboard has been configured
+-- @return (boolean)
+function Musician.KeyboardUtils.KeyboardIsConfigured()
+	return Musician_Settings.keyboardIsConfigured and Musician_Settings.keyboardIsConfigured[Musician.Utils.GetOs()]
 end
 
 --- Return a brand new empty mapping
@@ -22,7 +35,7 @@ end
 --- Return the current keyboard mapping
 -- @return (table) key value => physical key
 function Musician.KeyboardUtils.GetMapping()
-	return Musician.Utils.DeepCopy(Musician_Settings.keyboardMapping)
+	return Musician.Utils.DeepCopy(Musician_Settings.keyboardMapping[Musician.Utils.GetOs()])
 end
 
 --- Return the current reverse mapping
@@ -34,17 +47,19 @@ end
 --- Set the keyboard mapping
 -- @param mapping (table) key value => physical key
 function Musician.KeyboardUtils.SetMapping(mapping)
-	Musician_Settings.keyboardMapping = Musician.Utils.DeepMerge(Musician.KeyboardUtils.GetEmptyMapping(), mapping)
+	local os = Musician.Utils.GetOs()
+	Musician_Settings.keyboardMapping[os] = Musician.Utils.DeepMerge(Musician.KeyboardUtils.GetEmptyMapping(), mapping)
 	keyValues = Musician.KeyboardUtils.GetReverseMapping()
-	Musician_Settings.keyboardIsConfigured = true
+	Musician_Settings.keyboardIsConfigured[os] = true
 end
 
 --- Return the physical key mapped to the actual key value.
 -- @param keyValue (string) key value
 -- @return (string) physical key
 function Musician.KeyboardUtils.GetKey(keyValue)
-	if Musician_Settings.keyboardMapping[keyValue] then
-		return Musician_Settings.keyboardMapping[keyValue]
+	local os = Musician.Utils.GetOs()
+	if Musician_Settings.keyboardMapping[os][keyValue] then
+		return Musician_Settings.keyboardMapping[os][keyValue]
 	end
 	return nil
 end

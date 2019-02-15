@@ -28,6 +28,10 @@ Musician.IMPORT_NOTE_RATE = 110 / 3 -- Number of notes to be imported in 1 ms
 Musician.BANDWIDTH_LIMIT_MIN = 255 -- Sending up to 255 characters in 1 message
 Musician.BANDWIDTH_LIMIT_MAX = 508 -- Sending up to 508 characters in 2 messages
 
+Musician.OS_WINDOWS = "Windows"
+Musician.OS_MAC = "MacOS"
+Musician.OS_LINUX = "Linux"
+
 Musician.Msg = {}
 Musician.Locale = {}
 

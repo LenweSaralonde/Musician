@@ -701,3 +701,12 @@ function Musician.Utils.FlipTable(orig)
 	end
 	return flipped
 end
+
+--- Return operating system name
+-- @return (string)
+function Musician.Utils.GetOs()
+	return
+		IsWindowsClient() and Musician.OS_WINDOWS or
+		IsMacClient() and Musician.OS_MAC or
+		IsLinuxClient() and Musician.OS_LINUX
+end
