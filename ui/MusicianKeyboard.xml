@@ -368,7 +368,8 @@
 							<OnLoad inherit="append">
 								self:SetText(Musician.Icons.Save)
 								local KEY = Musician.KEYBOARD_KEY
-								self.tooltipText = string.gsub(Musician.Msg.WRITE_PROGRAM, "{key}", Musician.Msg.FIXED_KEY_NAMES[KEY.ControlLeft])
+								local controlKey = IsMacClient() and KEY.ShiftLeft or KEY.ControlLeft -- Use Shift instead of Ctrl on MacOS
+								self.tooltipText = string.gsub(Musician.Msg.WRITE_PROGRAM, "{key}", Musician.Msg.FIXED_KEY_NAMES[controlKey])
 							</OnLoad>
 						</Scripts>
 						<NormalFont style="MusicianFontIconsNormal"/>

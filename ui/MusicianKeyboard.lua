@@ -5,8 +5,6 @@ local KEY = Musician.KEYBOARD_KEY
 
 local KEY_SIZE = 50
 
-local lCtrlDown = false
-local rCtrlDown = false
 local writeProgramDown = false
 local savingProgram = false
 local savingProgramTime = 0
@@ -979,8 +977,11 @@ end
 -- @return (boolean)
 MusicianKeyboard.ControlKey = function(down, keyValue)
 	local key = Musician.KeyboardUtils.GetKey(keyValue)
+	local isControlDown =
+		(key == KEY.ControlLeft or key == KEY.ControlRight) and not(IsMacClient()) or
+		(key == KEY.ShiftLeft or key == KEY.ShiftRight) and IsMacClient() -- Use Shift instead of Ctrl on MacOS
 
-	if key == KEY.ControlLeft or key == KEY.ControlRight or key == KEY.WriteProgram then
+	if isControlDown or key == KEY.WriteProgram then
 		MusicianKeyboard.SetSavingProgram(down)
 	end
 end
