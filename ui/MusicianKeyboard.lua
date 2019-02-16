@@ -641,6 +641,11 @@ Musician.Keyboard.OnFrame = function(event, elapsed)
 
 	if MusicianKeyboard:GetParent() ~= expectedParent then
 		MusicianKeyboard:SetParent(expectedParent)
+		if expectedParent == WorldFrame then
+			MusicianKeyboard:SetScale(UIParent:GetScale())
+		else
+			MusicianKeyboard:SetScale(1)
+		end
 	end
 end
 
