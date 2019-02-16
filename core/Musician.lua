@@ -192,7 +192,7 @@ function Musician.Help()
 
 		local params = ""
 		if row.params then
-			params = Musician.Utils.FormatText(row.params) .. "\n   "
+			params = Musician.Utils.FormatText(row.params) .. "\n"
 		end
 
 		local cmd = ""
