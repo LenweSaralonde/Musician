@@ -630,6 +630,18 @@ Musician.Keyboard.OnFrame = function(event, elapsed)
 			button.glowColor:SetAlpha(button.volumeMeter:GetLevel() * 1)
 		end
 	end
+
+	-- Update keyboard parent frame to make it visible when the main UI is hidden
+	local expectedParent
+	if UIParent:IsVisible() then
+		expectedParent = UIParent
+	else
+		expectedParent = WorldFrame
+	end
+
+	if MusicianKeyboard:GetParent() ~= expectedParent then
+		MusicianKeyboard:SetParent(expectedParent)
+	end
 end
 
 --- OnLiveNoteOn
