@@ -36,6 +36,7 @@ msg.COMMAND_CONFIGURE_KEYBOARD = "Configurer le clavier"
 msg.COMMAND_LIVE_DEMO = "Mode démo clavier"
 msg.COMMAND_LIVE_DEMO_PARAMS = "{ **<n° piste supérieur>** **<n° piste inférieur>** || **off** }"
 msg.COMMAND_HELP = "Afficher ce message d'aide"
+msg.ERR_COMMAND_UNKNOWN = "Commande \"{command}\" inconnue. Tapez {help} pour obtenir la liste des commandes disponibles."
 
 msg.STARTUP = "Bienvenue dans Musician v{version}."
 
@@ -54,7 +55,7 @@ msg.INVALID_MUSIC_CODE = "Le code musical est invalide."
 
 msg.PLAY_A_SONG = "Jouer un morceau"
 msg.IMPORT_A_SONG = "Importer un morceau"
-msg.PASTE_MUSIC_CODE = "Importez votre morceau au format MIDI à l'adresse :\n{url}\n\npuis collez le code de la musique ici ({shortcut})..."
+msg.PASTE_MUSIC_CODE = "Importez votre morceau au format MIDI à l'adresse :\n{url}\n\npuis collez le code de la musique ici ({shortcut})…"
 msg.SONG_IMPORTED = "Morceau importé : {title}."
 
 msg.SONG_EDITOR = "Éditeur de morceau"
@@ -78,7 +79,7 @@ msg.HEADER_OCTAVE = "Octave"
 msg.HEADER_INSTRUMENT = "Instrument"
 
 msg.CONFIGURE_KEYBOARD = "Configurer le clavier"
-msg.CONFIGURE_KEYBOARD_HINT = "Cliquez sur une touche à définir..."
+msg.CONFIGURE_KEYBOARD_HINT = "Cliquez sur une touche à définir…"
 msg.CONFIGURE_KEYBOARD_HINT_COMPLETE = "La configuration du clavier est terminée.\nVous pouvez maintenant enregistrer les modifications et commencer à jouer !"
 msg.CONFIGURE_KEYBOARD_START_OVER = "Recommencer"
 msg.CONFIGURE_KEYBOARD_SAVE = "Enregistrer"

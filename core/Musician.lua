@@ -161,6 +161,7 @@ function Musician.GetCommands()
 		},
 		params = Musician.Msg.COMMAND_LIVE_DEMO_PARAMS,
 		text = Musician.Msg.COMMAND_LIVE_DEMO,
+		unpackArgs = true,
 		func = function(upperTrackIndex, lowerTrackIndex)
 			if upperTrackIndex == 'off' then
 				MusicianKeyboard.DisableDemoMode()
@@ -191,7 +192,7 @@ function Musician.Help()
 
 		local params = ""
 		if row.params then
-			params = Musician.Utils.FormatText(row.params) .. " "
+			params = Musician.Utils.FormatText(row.params) .. "\n   "
 		end
 
 		local cmd = ""
@@ -210,19 +211,28 @@ end
 --- Run command line
 -- @param commandLine (string)
 function Musician.RunCommandLine(commandLine)
-	local normalizedCommandLine = string.gsub(strlower(commandLine), "[%s]+", " ")
-	local args = { string.split(' ', strtrim(normalizedCommandLine)) }
-	local cmd = table.remove(args, 1)
+	local normalizedCommandLine = string.gsub(commandLine, "[%s]+", " ")
+	local args = { string.split(" ", strtrim(normalizedCommandLine)) }
+	local cmd = strtrim(strlower(table.remove(args, 1)))
 
 	local row, command
 	for _, row in pairs(Musician.GetCommands()) do
 		for _, command in pairs(row.command) do
 			if cmd == command then
-				row.func(unpack(args))
+				if row.unpackArgs then
+					row.func(unpack(args))
+				else
+					row.func(table.concat(args, " "))
+				end
 				return
 			end
 		end
 	end
+
+	local errorMessage = Musician.Msg.ERR_COMMAND_UNKNOWN
+	errorMessage = string.gsub(errorMessage, "{command}", Musician.Utils.Highlight(cmd))
+	errorMessage = string.gsub(errorMessage, "{help}", Musician.Utils.Highlight("/mus help"))
+	Musician.Utils.PrintError(errorMessage)
 end
 
 --- Stop a song playing by a player
