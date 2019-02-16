@@ -579,6 +579,7 @@ function Musician.Keyboard.Init()
 	Musician.Keyboard:RegisterMessage(Musician.Events.NoteOn, Musician.Keyboard.OnNoteOn)
 	Musician.Keyboard:RegisterMessage(Musician.Events.NoteOff, Musician.Keyboard.OnNoteOff)
 	Musician.Keyboard:RegisterMessage(Musician.Events.SongPlay, Musician.Keyboard.OnSongPlay)
+	Musician.Keyboard:RegisterMessage(Musician.Events.SongInstrumentChange, Musician.Keyboard.OnSongPlay)
 
 	-- Generate keyboard keys
 	generateKeys()
@@ -1130,16 +1131,24 @@ MusicianKeyboard.EnableDemoMode = function(upperTrackIndex, lowerTrackIndex)
 	Musician.Keyboard.SetButtonsUp()
 
 	demoTrackMapping = {}
-	local strMapping = {}
 	if upperTrackIndex ~= nil then
-		demoTrackMapping[upperTrackIndex] = LAYER.UPPER
+		demoTrackMapping[LAYER.UPPER] = upperTrackIndex
 	end
 	if lowerTrackIndex ~= nil then
-		demoTrackMapping[lowerTrackIndex] = LAYER.LOWER
+		demoTrackMapping[LAYER.LOWER] = lowerTrackIndex
+	end
+
+	local mappings = {}
+	local layer, trackIndex
+	for layer, trackIndex in pairs(demoTrackMapping) do
+		local mapping = Musician.Msg.DEMO_MODE_MAPPING
+		mapping = string.gsub(mapping, "{layer}", Musician.Utils.Highlight(Musician.Msg.LAYERS[layer]))
+		mapping = string.gsub(mapping, "{track}", Musician.Utils.Highlight(trackIndex))
+		table.insert(mappings, mapping)
 	end
 
 	Musician.Keyboard.ConfigureDemo()
-	Musician.Utils.Print(Musician.Msg.DEMO_MODE_ENABLED)
+	Musician.Utils.Print(string.gsub(Musician.Msg.DEMO_MODE_ENABLED, "{mapping}", table.concat(mappings, "\n")))
 end
 
 --- Disable demo mode
@@ -1171,10 +1180,10 @@ Musician.Keyboard.ConfigureDemo = function()
 
 	Musician.Keyboard.SetLayout(Musician.DEFAULT_LAYOUT, false)
 
-	local track
-	for _, track in pairs(song.tracks) do
-		local layer = demoTrackMapping[track.index]
-		if layer ~= nil then
+	local layer, trackIndex
+	for layer, trackIndex in pairs(demoTrackMapping) do
+		local track = song.tracks[trackIndex]
+		if track ~= nil then
 			Musician.Keyboard.SetInstrument(layer, track.instrument, false)
 		end
 	end
@@ -1196,15 +1205,16 @@ Musician.Keyboard.OnNoteOn = function(event, song, track, key)
 	end
 
 	local _, instrument = Musician.Utils.GetSoundFile(track.instrument, key)
-	local layer = demoTrackMapping[track.index]
-	local button = (layer ~= nil) and noteButtons[layer] and noteButtons[layer][key]
-
-	if not(button) then
-		return
+	local layer, trackIndex
+	for layer, trackIndex in pairs(demoTrackMapping) do
+		if trackIndex == track.index then
+			local button = noteButtons[layer] and noteButtons[layer][key]
+			if button then
+				Musician.Keyboard.SetButtonState(button, true)
+				Musician.Keyboard.OnLiveNoteOn(event, key, layer, instrument)
+			end
+		end
 	end
-
-	Musician.Keyboard.SetButtonState(button, true)
-	Musician.Keyboard.OnLiveNoteOn(event, key, layer, instrument)
 end
 
 --- Demo mode OnNoteOff
@@ -1217,13 +1227,14 @@ Musician.Keyboard.OnNoteOff = function(event, song, track, key)
 		return
 	end
 
-	local layer = demoTrackMapping[track.index]
-	local button = (layer ~= nil) and noteButtons[layer] and noteButtons[layer][key]
-
-	if not(button) then
-		return
+	local layer, trackIndex
+	for layer, trackIndex in pairs(demoTrackMapping) do
+		if trackIndex == track.index then
+			local button = noteButtons[layer] and noteButtons[layer][key]
+			if button then
+				Musician.Keyboard.SetButtonState(button, false)
+				Musician.Keyboard.OnLiveNoteOff(event, key, layer)
+			end
+		end
 	end
-
-	Musician.Keyboard.SetButtonState(button, false)
-	Musician.Keyboard.OnLiveNoteOff(event, key, layer)
 end

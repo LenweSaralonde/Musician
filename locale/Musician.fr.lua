@@ -178,7 +178,8 @@ msg.LOAD_PROGRAM_NUM = "Charger le programme n°{num} ({key})"
 msg.SAVE_PROGRAM_NUM = "Enregistrer dans le programme n°{num} ({key})"
 msg.WRITE_PROGRAM = "Enregistrer un programme ({key})"
 msg.PROGRAM_SAVED = "Programme n°{num} enregistré."
-msg.DEMO_MODE_ENABLED = "Mode démo clavier activé."
+msg.DEMO_MODE_ENABLED = "Mode démo clavier activé :\n{mapping}"
+msg.DEMO_MODE_MAPPING = "{layer} → Piste n°{track}"
 msg.DEMO_MODE_DISABLED = "Mode démo clavier désactivé."
 
 msg.LAYERS = {

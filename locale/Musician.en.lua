@@ -129,7 +129,8 @@ msg.LOAD_PROGRAM_NUM = "Load program #{num} ({key})"
 msg.SAVE_PROGRAM_NUM = "Save in program #{num} ({key})"
 msg.WRITE_PROGRAM = "Save program ({key})"
 msg.PROGRAM_SAVED = "Program #{num} saved."
-msg.DEMO_MODE_ENABLED = "Keyboard demo mode enabled."
+msg.DEMO_MODE_ENABLED = "Keyboard demo mode enabled:\n{mapping}"
+msg.DEMO_MODE_MAPPING = "{layer} → Track #{track}"
 msg.DEMO_MODE_DISABLED = "Keyboard demo mode disabled."
 
 msg.LAYERS = {
@@ -142,8 +143,8 @@ msg.EMOTE_PROMO = "(Get \"Musician\" add-on or upgrade it from {url} to listen!)
 msg.EMOTE_SONG_NOT_LOADED = "(The song cannot play because {player} is using an incompatible version.)"
 msg.EMOTE_PLAYER_OTHER_REALM = "(This player is on another realm.)"
 
-msg.TOOLTIP_LEFT_CLICK = "**Left click** : {action}"
-msg.TOOLTIP_RIGHT_CLICK = "**Right click** : {action}"
+msg.TOOLTIP_LEFT_CLICK = "**Left click**: {action}"
+msg.TOOLTIP_RIGHT_CLICK = "**Right click**: {action}"
 msg.TOOLTIP_DRAG_AND_DROP = "**Drag and drop** to move"
 msg.TOOLTIP_ISMUTED = "(muted)"
 msg.TOOLTIP_ACTION_SHOW = "Show"

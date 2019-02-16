@@ -273,6 +273,8 @@ Musician.TrackEditor.InitInstrumentDropdown = function(dropdown, trackIndex)
 			_G[trackFrameName .. 'TrackInfo']:SetTextColor(r, g, b)
 			_G[trackFrameName .. 'TrackId']:SetTextColor(r, g, b)
 		end
+
+		Musician:SendMessage(Musician.Events.SongInstrumentChange, Musician.sourceSong, Musician.sourceSong.tracks[dropdown.trackIndex], midiId)
 	end
 end
 
