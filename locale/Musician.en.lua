@@ -33,6 +33,8 @@ msg.COMMAND_STOP = "Stop playing song"
 msg.COMMAND_SONG_EDITOR = "Open song editor"
 msg.COMMAND_LIVE_KEYBOARD = "Open live keyboard"
 msg.COMMAND_CONFIGURE_KEYBOARD = "Configure keyboard"
+msg.COMMAND_LIVE_DEMO = "Keyboard demo mode"
+msg.COMMAND_LIVE_DEMO_PARAMS = "{ **<upper track #>** **<lower track #>** || **off** }"
 msg.COMMAND_HELP = "Show this help message"
 
 msg.STARTUP = "Welcome to Musician v{version}."
@@ -126,6 +128,8 @@ msg.LOAD_PROGRAM_NUM = "Load program #{num} ({key})"
 msg.SAVE_PROGRAM_NUM = "Save in program #{num} ({key})"
 msg.WRITE_PROGRAM = "Save program ({key})"
 msg.PROGRAM_SAVED = "Program #{num} saved."
+msg.DEMO_MODE_ENABLED = "Keyboard demo mode enabled."
+msg.DEMO_MODE_DISABLED = "Keyboard demo mode disabled."
 
 msg.LAYERS = {
 	[Musician.KEYBOARD_LAYER.UPPER] = "Upper",

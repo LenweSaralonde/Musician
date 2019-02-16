@@ -33,6 +33,8 @@ msg.COMMAND_STOP = "Arrêter de jouer le morceau"
 msg.COMMAND_SONG_EDITOR = "Ouvrir l'éditeur de morceau"
 msg.COMMAND_LIVE_KEYBOARD = "Ouvrir le clavier"
 msg.COMMAND_CONFIGURE_KEYBOARD = "Configurer le clavier"
+msg.COMMAND_LIVE_DEMO = "Mode démo clavier"
+msg.COMMAND_LIVE_DEMO_PARAMS = "{ **<n° piste supérieur>** **<n° piste inférieur>** || **off** }"
 msg.COMMAND_HELP = "Afficher ce message d'aide"
 
 msg.STARTUP = "Bienvenue dans Musician v{version}."
@@ -175,6 +177,8 @@ msg.LOAD_PROGRAM_NUM = "Charger le programme n°{num} ({key})"
 msg.SAVE_PROGRAM_NUM = "Enregistrer dans le programme n°{num} ({key})"
 msg.WRITE_PROGRAM = "Enregistrer un programme ({key})"
 msg.PROGRAM_SAVED = "Programme n°{num} enregistré."
+msg.DEMO_MODE_ENABLED = "Mode démo clavier activé."
+msg.DEMO_MODE_DISABLED = "Mode démo clavier désactivé."
 
 msg.LAYERS = {
 	[Musician.KEYBOARD_LAYER.UPPER] = "Supérieur",

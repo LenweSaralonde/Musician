@@ -152,6 +152,24 @@ function Musician.GetCommands()
 		end
 	})
 
+	-- Live demo mode
+
+	table.insert(commands, {
+		command = {
+			"livedemo", "demolive",
+			"keyboarddemo", "demokeyboard",
+		},
+		params = Musician.Msg.COMMAND_LIVE_DEMO_PARAMS,
+		text = Musician.Msg.COMMAND_LIVE_DEMO,
+		func = function(upperTrackIndex, lowerTrackIndex)
+			if upperTrackIndex == 'off' then
+				MusicianKeyboard.DisableDemoMode()
+			else
+				MusicianKeyboard.EnableDemoMode(tonumber(upperTrackIndex), tonumber(lowerTrackIndex))
+			end
+		end
+	})
+
 	-- Display help
 
 	table.insert(commands, {
@@ -190,15 +208,17 @@ function Musician.Help()
 end
 
 --- Run command line
--- @param cmd (string)
-function Musician.RunCommandLine(cmd)
-	cmd = strlower(strtrim(cmd))
+-- @param commandLine (string)
+function Musician.RunCommandLine(commandLine)
+	local normalizedCommandLine = string.gsub(strlower(commandLine), "[%s]+", " ")
+	local args = { string.split(' ', strtrim(normalizedCommandLine)) }
+	local cmd = table.remove(args, 1)
 
 	local row, command
 	for _, row in pairs(Musician.GetCommands()) do
 		for _, command in pairs(row.command) do
 			if cmd == command then
-				row.func()
+				row.func(unpack(args))
 				return
 			end
 		end
@@ -570,181 +590,3 @@ function Musician.SetupHooks()
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", messageEventFilter)
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_EMOTE", messageEventFilter)
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

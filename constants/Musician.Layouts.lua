@@ -42,6 +42,8 @@ local function getPercussionScale(scale)
 	return shiftedScale
 end
 
+Musician.DEFAULT_LAYOUT = 2 -- Piano
+
 Musician.Layouts = {
 	getSeparator("Piano"),
 	{

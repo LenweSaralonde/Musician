@@ -4,11 +4,13 @@ local LAYER = Musician.KEYBOARD_LAYER
 local KEY = Musician.KEYBOARD_KEY
 
 local KEY_SIZE = 50
+local FUNCTION_KEY_SIZE = 58.5
 
 local writeProgramDown = false
 local savingProgram = false
 local savingProgramTime = 0
 local loadedProgram = nil
+local demoTrackMapping = nil
 
 local keyButtons = {}
 local keyValueButtons = {}
@@ -326,8 +328,8 @@ local function setKeys()
 		button:Enable()
 		button:SetAlpha(1)
 
-		button:SetWidth(58.5)
-		button:SetHeight(24)
+		button:SetWidth(FUNCTION_KEY_SIZE)
+		button:SetHeight(MusicianKeyboardProgramKeysWriteProgram:GetHeight())
 		button:SetPoint("TOPLEFT", MusicianKeyboardProgramKeys, "TOPLEFT", keyX, 0)
 		button:SetText(string.gsub(Musician.Msg.PROGRAM_BUTTON, "{num}", ProgramKeys[key]))
 
@@ -464,7 +466,7 @@ local function initLayerControls(layer)
 		Musician.Keyboard.ShiftKeys(layer, -#Musician.Layouts[config.layout].scale)
 	end)
 	_G[varNamePrefix .. "ShiftReset"]:SetScript("OnClick", function()
-		Musician.Keyboard.ShiftKeys(layer)
+		Musician.Keyboard.SetKeyShift(layer, 0)
 	end)
 
 	-- Power chords
@@ -552,10 +554,10 @@ function Musician.Keyboard.Init()
 
 	-- Base parameters
 	Musician.Keyboard.config = {
-		layout = 2, -- Piano
+		layout = Musician.DEFAULT_LAYOUT,
 		instrument = {
-			[LAYER.UPPER] = 24, -- lute
-			[LAYER.LOWER] = 24, -- lute
+			[LAYER.UPPER] = Musician.MIDI_INSTRUMENTS.AcousticGuitarNylon,
+			[LAYER.LOWER] = Musician.MIDI_INSTRUMENTS.AcousticGuitarNylon,
 		},
 		shift = {
 			[LAYER.UPPER] = 0,
@@ -574,6 +576,9 @@ function Musician.Keyboard.Init()
 	Musician.Keyboard:RegisterMessage(Musician.Events.Frame, Musician.Keyboard.OnFrame)
 	Musician.Keyboard:RegisterMessage(Musician.Events.LiveNoteOn, Musician.Keyboard.OnLiveNoteOn)
 	Musician.Keyboard:RegisterMessage(Musician.Events.LiveNoteOff, Musician.Keyboard.OnLiveNoteOff)
+	Musician.Keyboard:RegisterMessage(Musician.Events.NoteOn, Musician.Keyboard.OnNoteOn)
+	Musician.Keyboard:RegisterMessage(Musician.Events.NoteOff, Musician.Keyboard.OnNoteOff)
+	Musician.Keyboard:RegisterMessage(Musician.Events.SongPlay, Musician.Keyboard.OnSongPlay)
 
 	-- Generate keyboard keys
 	generateKeys()
@@ -586,6 +591,9 @@ function Musician.Keyboard.Init()
 	initLayerControls(LAYER.LOWER)
 	initLayerControls(LAYER.UPPER)
 	initLiveModeButton()
+
+	Musician.Keyboard.BuildMapping()
+	updateFunctionKeys()
 
 	-- Show or hide keyboard according to last settings
 	MusicianKeyboard.showKeyboard(Musician_Settings.keyboardVisible)
@@ -748,9 +756,13 @@ end
 -- @param layout (string)
 -- @param [rebuildMapping (boolean)] Rebuild keys mapping when true (default)
 Musician.Keyboard.SetLayout = function(layout, rebuildMapping)
+	if Musician.Keyboard.config.layout == layout then
+		return
+	end
+
 	Musician.Keyboard.config.layout = layout
-	Musician.Keyboard.ShiftKeys(LAYER.UPPER, nil, false)
-	Musician.Keyboard.ShiftKeys(LAYER.LOWER, nil, false)
+	Musician.Keyboard.SetKeyShift(LAYER.UPPER, 0, false)
+	Musician.Keyboard.SetKeyShift(LAYER.LOWER, 0, false)
 	loadedProgram = nil
 
 	MusicianKeyboardControlsMainLayoutDropdown.UpdateIndex(layout)
@@ -767,6 +779,10 @@ end
 -- @param key (number)
 -- @param [rebuildMapping (boolean)] Rebuild keys mapping when true (default)
 Musician.Keyboard.SetBaseKey = function(key, rebuildMapping)
+	if Musician.Keyboard.config.baseKey == key then
+		return
+	end
+
 	Musician.Keyboard.config.baseKey = key
 	loadedProgram = nil
 
@@ -785,6 +801,10 @@ end
 -- @param instrument (number)
 -- @param [rebuildMapping (boolean)] Rebuild keys mapping when true (default)
 Musician.Keyboard.SetInstrument = function(layer, instrument, rebuildMapping)
+	if Musician.Keyboard.config.instrument[layer] == instrument then
+		return
+	end
+
 	Musician.Keyboard.config.instrument[layer] = instrument
 	loadedProgram = nil
 
@@ -807,16 +827,23 @@ end
 
 --- Shift keys
 -- @param layer (number)
--- @param amount (number) If nil, shift value is reset
+-- @param amount (number)
 -- @param [rebuildMapping (boolean)] Rebuild keys mapping when true (default)
 Musician.Keyboard.ShiftKeys = function(layer, amount, rebuildMapping)
-	local config = Musician.Keyboard.config
+	local shift = Musician.Keyboard.config.shift[layer] + amount
+	Musician.Keyboard.SetKeyShift(layer, shift, rebuildMapping)
+end
 
-	if amount ~= nil then
-		config.shift[layer] = config.shift[layer] + amount
-	else
-		config.shift[layer] = 0
+--- Set key shift amount
+-- @param layer (number)
+-- @param shift (number) Shift amount
+-- @param [rebuildMapping (boolean)] Rebuild keys mapping when true (default)
+Musician.Keyboard.SetKeyShift = function(layer, shift, rebuildMapping)
+	if Musician.Keyboard.config.shift[layer] == shift then
+		return
 	end
+
+	Musician.Keyboard.config.shift[layer] = shift
 
 	if rebuildMapping == nil or rebuildMapping then
 		Musician.Keyboard.SetButtonsUp(layer)
@@ -830,6 +857,10 @@ end
 -- @param enable (boolean)
 -- @param [rebuildMapping (boolean)] Rebuild keys mapping when true (default)
 Musician.Keyboard.SetPowerChords = function(layer, enable, rebuildMapping)
+	if Musician.Keyboard.config.powerChords[layer] == enable then
+		return
+	end
+
 	Musician.Keyboard.config.powerChords[layer] = enable
 	loadedProgram = nil
 
@@ -1038,8 +1069,8 @@ MusicianKeyboard.LoadConfig = function(config)
 	Musician.Keyboard.SetBaseKey(config.baseKey, false)
 	Musician.Keyboard.SetInstrument(LAYER.UPPER, config.instrument[LAYER.UPPER], false)
 	Musician.Keyboard.SetInstrument(LAYER.LOWER, config.instrument[LAYER.LOWER], false)
-	Musician.Keyboard.ShiftKeys(LAYER.UPPER, config.shift[LAYER.UPPER], false)
-	Musician.Keyboard.ShiftKeys(LAYER.LOWER, config.shift[LAYER.LOWER], false)
+	Musician.Keyboard.SetKeyShift(LAYER.UPPER, config.shift[LAYER.UPPER], false)
+	Musician.Keyboard.SetKeyShift(LAYER.LOWER, config.shift[LAYER.LOWER], false)
 	Musician.Keyboard.SetPowerChords(LAYER.UPPER, config.powerChords[LAYER.UPPER], false)
 	Musician.Keyboard.SetPowerChords(LAYER.LOWER, config.powerChords[LAYER.LOWER], false)
 
@@ -1086,4 +1117,113 @@ MusicianKeyboard.SaveProgram = function(program)
 	Musician_Settings.keyboardPrograms[program] = Musician.Utils.DeepCopy(Musician.Keyboard.config)
 	loadedProgram = program
 	Musician.Utils.Print(string.gsub(Musician.Msg.PROGRAM_SAVED, '{num}', Musician.Utils.Highlight(program)))
+end
+
+--- Enable demo mode with provided track indexes
+-- @param upperTrackIndex (number)
+-- @param lowerTrackIndex (number)
+MusicianKeyboard.EnableDemoMode = function(upperTrackIndex, lowerTrackIndex)
+	if upperTrackIndex == nil and lowerTrackIndex == nil then
+		return MusicianKeyboard.DisableDemoMode()
+	end
+
+	Musician.Keyboard.SetButtonsUp()
+
+	demoTrackMapping = {}
+	local strMapping = {}
+	if upperTrackIndex ~= nil then
+		demoTrackMapping[upperTrackIndex] = LAYER.UPPER
+	end
+	if lowerTrackIndex ~= nil then
+		demoTrackMapping[lowerTrackIndex] = LAYER.LOWER
+	end
+
+	Musician.Keyboard.ConfigureDemo()
+	Musician.Utils.Print(Musician.Msg.DEMO_MODE_ENABLED)
+end
+
+--- Disable demo mode
+--
+MusicianKeyboard.DisableDemoMode = function()
+	Musician.Keyboard.SetButtonsUp()
+	demoTrackMapping = nil
+	Musician.Utils.Print(Musician.Msg.DEMO_MODE_DISABLED)
+end
+
+--- Demo mode OnSongPlay
+-- @param event (string)
+-- @param song (Musician.Song)
+Musician.Keyboard.OnSongPlay = function(event, song)
+	if song ~= Musician.sourceSong then
+		return
+	end
+
+	Musician.Keyboard.ConfigureDemo()
+end
+
+--- Configure demo mode relatively to the source song
+--
+Musician.Keyboard.ConfigureDemo = function()
+	local song = Musician.sourceSong
+	if demoTrackMapping == nil or not(song) then
+		return
+	end
+
+	Musician.Keyboard.SetLayout(Musician.DEFAULT_LAYOUT, false)
+
+	local track
+	for _, track in pairs(song.tracks) do
+		local layer = demoTrackMapping[track.index]
+		if layer ~= nil then
+			Musician.Keyboard.SetInstrument(layer, track.instrument, false)
+		end
+	end
+
+	Musician.Keyboard.SetButtonsUp()
+	Musician.Live.AllNotesOff()
+	Musician.Keyboard.BuildMapping()
+	updateFunctionKeys()
+end
+
+--- Demo mode OnNoteOn
+-- @param event (string)
+-- @param song (Musician.Song)
+-- @param track (number)
+-- @param key (number)
+Musician.Keyboard.OnNoteOn = function(event, song, track, key)
+	if demoTrackMapping == nil or not(Musician.sourceSong) or song ~= Musician.sourceSong then
+		return
+	end
+
+	local _, instrument = Musician.Utils.GetSoundFile(track.instrument, key)
+	local layer = demoTrackMapping[track.index]
+	local button = (layer ~= nil) and noteButtons[layer] and noteButtons[layer][key]
+
+	if not(button) then
+		return
+	end
+
+	Musician.Keyboard.SetButtonState(button, true)
+	Musician.Keyboard.OnLiveNoteOn(event, key, layer, instrument)
+end
+
+--- Demo mode OnNoteOff
+-- @param event (string)
+-- @param song (Musician.Song)
+-- @param track (number)
+-- @param key (number)
+Musician.Keyboard.OnNoteOff = function(event, song, track, key)
+	if demoTrackMapping == nil or not(Musician.sourceSong) or song ~= Musician.sourceSong then
+		return
+	end
+
+	local layer = demoTrackMapping[track.index]
+	local button = (layer ~= nil) and noteButtons[layer] and noteButtons[layer][key]
+
+	if not(button) then
+		return
+	end
+
+	Musician.Keyboard.SetButtonState(button, false)
+	Musician.Keyboard.OnLiveNoteOff(event, key, layer)
 end
