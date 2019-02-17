@@ -1,12 +1,11 @@
 Musician.Comm = LibStub("AceAddon-3.0"):NewAddon("Musician.Comm", "AceComm-3.0", "AceEvent-3.0")
 
-local LibCompress = LibStub:GetLibrary("LibCompress")
-local LibCompressEncodeTable = LibCompress:GetAddonEncodeTable()
+local LibDeflate = LibStub:GetLibrary("LibDeflate")
 
 Musician.Comm.event = {}
 Musician.Comm.event.stop   = "MusicianStop"
-Musician.Comm.event.stream = "MusicianStream"
-Musician.Comm.event.streamGroup = "MusicianGStream"
+Musician.Comm.event.stream = "MusicianStreamD"
+Musician.Comm.event.streamGroup = "MusicianGStreamD"
 
 Musician.Comm.isPlaySent = false
 Musician.Comm.isStopSent = false
@@ -151,7 +150,7 @@ end
 -- @return (boolean)
 function Musician.Comm.StreamSongChunk(packedChunk)
 	if not(Musician.Comm.isReady()) then return false end
-	local compressedchunk = LibCompressEncodeTable:Encode(LibCompress:CompressHuffman(packedChunk))
+	local compressedchunk = LibDeflate:EncodeForWoWAddonChannel(LibDeflate:CompressDeflate(packedChunk))
 
 	local bwMin = Musician.BANDWIDTH_LIMIT_MIN
 	local bwMax = Musician.BANDWIDTH_LIMIT_MAX + 1
@@ -182,7 +181,7 @@ local function OnChunk(prefix, message, distribution, sender)
 		return
 	end
 
-	local packedChunk = LibCompress:Decompress(LibCompressEncodeTable:Decode(message))
+	local packedChunk = LibDeflate:DecompressDeflate(LibDeflate:DecodeForWoWAddonChannel(message))
 	local chunk, mode, songId, chunkDuration, playtimeLeft, position = Musician.Song.UnpackChunk(packedChunk)
 
 	-- Invalid chunk
