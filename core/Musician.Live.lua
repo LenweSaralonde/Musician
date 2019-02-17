@@ -12,6 +12,8 @@ local NOTE = Musician.Song.Indexes.NOTE
 local CHUNK_DURATION = 1
 
 local streamingStartTimer
+local isPlayingLive = false
+local playingLiveTimer
 
 --- Init live mode
 --
@@ -42,6 +44,12 @@ end
 -- @return (boolean)
 function Musician.Live.IsEnabled()
 	return Musician.Live.enabled
+end
+
+--- Indicates whenever the player is playing live, regardless if in solo or live mode
+-- @return (boolean)
+function Musician.Live.IsPlayingLive()
+	return isPlayingLive
 end
 
 --- Indicates whenever the live mode can stream
@@ -171,6 +179,11 @@ function Musician.Live.NoteOn(key, layer, instrument, isChordNote)
 		return
 	end
 
+	isPlayingLive = true
+	if playingLiveTimer then
+		playingLiveTimer:Cancel()
+	end
+
 	-- Play note
 	local handle
 	if Musician.globalMute then
@@ -200,6 +213,14 @@ function Musician.Live.NoteOff(key, layer, instrument, isChordNote)
 		if isChordNote and not(noteOnIsChordNote) then
 			return
 		end
+
+		if playingLiveTimer then
+			playingLiveTimer:Cancel()
+		end
+		playingLiveTimer = C_Timer.NewTimer(STREAM_PADDING, function()
+			isPlayingLive = false
+			playingLiveTimer = nil
+		end)
 
 		-- Stop playing note
 		if handle then

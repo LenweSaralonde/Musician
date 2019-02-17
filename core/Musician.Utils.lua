@@ -383,7 +383,7 @@ function Musician.Utils.MuteGameMusic(force)
 	local mute
 
 	if GetCVar("Sound_EnableMusic") ~= "0" then
-		mute = Musician.Utils.SongIsPlaying()
+		mute = Musician.Utils.SongIsPlaying() or Musician.Live.IsPlayingLive()
 	else
 		mute = false
 	end
