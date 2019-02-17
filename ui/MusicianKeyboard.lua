@@ -645,6 +645,7 @@ Musician.Keyboard.OnFrame = function(event, elapsed)
 			MusicianKeyboard:SetScale(UIParent:GetScale())
 		else
 			MusicianKeyboard:SetScale(1)
+			MusicianKeyboard:SetFrameStrata("DIALOG")
 		end
 	end
 end
@@ -1199,8 +1200,6 @@ Musician.Keyboard.ConfigureDemo = function()
 	if demoTrackMapping == nil or not(song) then
 		return
 	end
-
-	Musician.Keyboard.SetLayout(Musician.DEFAULT_LAYOUT, false)
 
 	local layer, trackIndex
 	for layer, trackIndex in pairs(demoTrackMapping) do
