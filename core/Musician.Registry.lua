@@ -7,13 +7,16 @@ Musician.Registry.event = {}
 Musician.Registry.event.hello = "MusicianHello"
 Musician.Registry.event.query = "MusicianQuery"
 
+local newVersionNotified = false
+local newProtocolNotified = false
+
 --- Initialize registry
 --
 function Musician.Registry.Init()
 
 	local initialized = false
 
-	-- Finish initialization when player enters world 
+	-- Finish initialization when player enters world
 	Musician.Registry:RegisterEvent("PLAYER_ENTERING_WORLD", function()
 
 		if initialized then return end
@@ -37,13 +40,13 @@ function Musician.Registry.Init()
 
 		-- Send query to group
 		if Musician.Comm.GetGroupChatType() then
-			Musician.Registry:SendCommMessage(Musician.Registry.event.query, GetAddOnMetadata("Musician", "Version"), Musician.Comm.GetGroupChatType(), nil, "ALERT")
+			Musician.Registry:SendCommMessage(Musician.Registry.event.query, Musician.Registry.GetVersionString(), Musician.Comm.GetGroupChatType(), nil, "ALERT")
 		end
 	end)
 
 	-- Send query to group when joining
 	Musician.Registry:RegisterEvent("GROUP_JOINED", function()
-		Musician.Registry:SendCommMessage(Musician.Registry.event.query, GetAddOnMetadata("Musician", "Version"), Musician.Comm.GetGroupChatType(), nil, "ALERT")
+		Musician.Registry:SendCommMessage(Musician.Registry.event.query, Musician.Registry.GetVersionString(), Musician.Comm.GetGroupChatType(), nil, "ALERT")
 	end)
 
 	-- Query hello to hovered player
@@ -69,7 +72,7 @@ function Musician.Registry.Init()
 			if playerData.version == nil and not(playerData.query) then
 				playerData.query = true
 				if not(isNewlyGroupedPlayer) then -- If the player is in the group and has Musician, the version will be retrieved when joining.
-					Musician.Registry:SendCommMessage(Musician.Registry.event.query, GetAddOnMetadata("Musician", "Version"), 'WHISPER', player, "ALERT")
+					Musician.Registry:SendCommMessage(Musician.Registry.event.query, Musician.Registry.GetVersionString(), 'WHISPER', player, "ALERT")
 				end
 			end
 		end
@@ -268,7 +271,8 @@ function Musician.Registry.AddTooltipInfo(tooltip, player, fontSize)
 	local infoText = Musician.Msg.PLAYER_TOOLTIP
 
 	if localPlayerData.version then
-		infoText = string.gsub(Musician.Msg.PLAYER_TOOLTIP_VERSION, '{version}', localPlayerData.version)
+		local playerVersion = Musician.Registry.ExtractVersionAndProtocol(localPlayerData.version)
+		infoText = string.gsub(Musician.Msg.PLAYER_TOOLTIP_VERSION, '{version}', playerVersion)
 	end
 
 	tooltip:AddDoubleLine(" ", infoText, 1, 1, 1, 1, 1, 1)
@@ -283,7 +287,7 @@ end
 --
 function Musician.Registry.SendHello()
 	if Musician.Comm.getChannel() ~= nil then
-		Musician.Registry:SendCommMessage(Musician.Registry.event.hello, GetAddOnMetadata("Musician", "Version"), 'CHANNEL', Musician.Comm.getChannel(), "ALERT")
+		Musician.Registry:SendCommMessage(Musician.Registry.event.hello, Musician.Registry.GetVersionString(), 'CHANNEL', Musician.Comm.getChannel(), "ALERT")
 	end
 end
 
@@ -324,9 +328,9 @@ Musician.Registry:RegisterComm(Musician.Registry.event.query, function(prefix, m
 	Musician.Registry.NotifyNewVersion(version)
 
 	if distribution == 'WHISPER' then
-		Musician.Registry:SendCommMessage(Musician.Registry.event.hello, GetAddOnMetadata("Musician", "Version"), 'WHISPER', player, "ALERT")
+		Musician.Registry:SendCommMessage(Musician.Registry.event.hello, Musician.Registry.GetVersionString(), 'WHISPER', player, "ALERT")
 	elseif Musician.Comm.GetGroupChatType() then
-		Musician.Registry:SendCommMessage(Musician.Registry.event.hello, GetAddOnMetadata("Musician", "Version"), Musician.Comm.GetGroupChatType(), nil, "ALERT")
+		Musician.Registry:SendCommMessage(Musician.Registry.event.hello, Musician.Registry.GetVersionString(), Musician.Comm.GetGroupChatType(), nil, "ALERT")
 	end
 end)
 
@@ -337,37 +341,58 @@ function Musician.Registry.PlayerIsOnline(player)
 	return Musician.Registry.players[player] and Musician.Registry.players[player].online
 end
 
+--- Get full version string
+-- Version string contains actual addon version and protocol version
+-- @return (string)
+function Musician.Registry.GetVersionString()
+	local versionParts = { string.split('.', GetAddOnMetadata("Musician", "Version")) }
+	local protocolParts = { 0, 0, 0, 0 } -- Add Musician.PROTOCOL_VERSION at 5th position when a new version of the protocol is available
+	return table.concat(Musician.Utils.DeepMerge(protocolParts, versionParts), '.')
+end
+
+--- Extract version and protocol from received version string
+-- @param version (string)
+-- @return (string), (number)
+function Musician.Registry.ExtractVersionAndProtocol(version)
+	local versionParts = { string.split('.', version) }
+	local protocol = Musician.PROTOCOL_VERSION
+
+	-- Version string contains protocol version as 5th number
+	if #versionParts == 5 then
+		protocol = tonumber(table.remove(versionParts, 5))
+	end
+
+	return table.concat(versionParts, '.'), protocol
+end
+
 --- Display a message if a new version of the addon is available
 -- @param otherVersion (string)
 function Musician.Registry.NotifyNewVersion(otherVersion)
 
-	local myVersion = GetAddOnMetadata("Musician", "Version")
-	local myVersionParts = { string.split('.', myVersion) }
-	local otherVersionParts = { string.split('.', otherVersion) }
-	local myMajorVersion = myVersionParts[1] .. '.' .. myVersionParts[2]
-	local otherMajorVersion = otherVersionParts[1] .. '.' .. otherVersionParts[2]
+	local myVersion, myProtocol = Musician.Registry.ExtractVersionAndProtocol(Musician.Registry.GetVersionString())
+	local theirVersion, theirProtocol = Musician.Registry.ExtractVersionAndProtocol(otherVersion)
 
-	-- Compare minor version
-	if not(Musician.Registry.newVersionNotified) and Musician.Utils.VersionCompare(otherVersion, myVersion) == 1 then
-		Musician.Registry.newVersionNotified = true
+	-- Compare versions
+	if not(newVersionNotified) and Musician.Utils.VersionCompare(theirVersion, myVersion) == 1 then
+		newVersionNotified = true
 
 		local msg = Musician.Msg.NEW_VERSION
 		msg = string.gsub(msg, '{url}', Musician.Utils.Highlight(Musician.URL, '00FFFF'))
-		msg = string.gsub(msg, '{version}', Musician.Utils.Highlight(otherVersion))
+		msg = string.gsub(msg, '{version}', Musician.Utils.Highlight(theirVersion))
 
 		-- Display message with fanfare sound
 		local _, handle = PlaySound(67788, 'Master')
 		Musician.Utils.Print(msg)
 	end
 
-	-- Compare major version
-	if not(Musician.Registry.newMajorVersionNotified) and Musician.Utils.VersionCompare(otherMajorVersion, myMajorVersion) == 1 then
-		Musician.Registry.newMajorVersionNotified = true
-		Musician.Registry.newVersionNotified = true
+	-- Compare protocol versions
+	if not(newProtocolNotified) and theirProtocol > myProtocol then
+		newProtocolNotified = true
 
-		local msg = Musician.Msg.NEW_MAJOR_VERSION
+		local msg = Musician.Msg.NEW_PROTOCOL_VERSION
 		msg = string.gsub(msg, '{url}', Musician.Utils.Highlight(Musician.URL, '00FFFF'))
-		msg = string.gsub(msg, '{version}', Musician.Utils.Highlight(otherVersion))
+		msg = string.gsub(msg, '{version}', Musician.Utils.Highlight(theirVersion))
+		msg = string.gsub(msg, '{protocol}', Musician.Utils.Highlight(theirProtocol))
 
 		C_Timer.After(3, function() Musician.Utils.Popup(msg) end)
 	end

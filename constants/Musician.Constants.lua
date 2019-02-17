@@ -5,6 +5,7 @@ Musician.URL = "https://lenwe.info/musician"
 Musician.CONVERTER_URL = "https://lenwe.info/musician-midi-convert"
 
 Musician.FILE_HEADER = "MUS3"
+Musician.PROTOCOL_VERSION = 3
 Musician.MAX_NOTE_DURATION = 6
 Musician.NOTE_DURATION_FPS = 255 / Musician.MAX_NOTE_DURATION -- 8-bit
 Musician.CHUNK_DURATION = 2
