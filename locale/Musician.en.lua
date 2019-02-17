@@ -106,6 +106,8 @@ msg.FIXED_KEY_NAMES = {
 }
 
 msg.KEYBOARD_LAYOUTS = {}
+msg.HORIZONTAL_LAYOUT = "Horizontal"
+msg.VERTICAL_LAYOUT = "Vertical"
 
 msg.LIVE_SONG_NAME = "Live song"
 msg.SOLO_MODE = "Solo Mode"

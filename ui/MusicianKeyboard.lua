@@ -14,6 +14,7 @@ local demoTrackMapping = nil
 
 local keyButtons = {}
 local keyValueButtons = {}
+local layouts
 local noteButtons
 
 local ICON = {
@@ -395,28 +396,109 @@ local function initDropdown(dropdown, values, labels, initialValue, onChange, to
 	dropdown.UpdateIndex(initialIndex)
 end
 
+--- Initialize layout list
+--
+local function initLayouts()
+	local layoutCollections = {
+		{ Musician.PianoLayout },
+		Musician.HorizontalLayouts,
+		Musician.VerticalLayouts
+	}
+
+	layouts = {}
+	local collection
+	for _, collection in pairs(layoutCollections) do
+		local layout
+		for _, layout in pairs(collection) do
+			table.insert(layouts, layout)
+			layout.index = #layouts
+		end
+	end
+end
+
 --- Initialize layout dropdown
 --
 local function initLayoutDropdown()
-	local values = {}
-	local labels = {}
-	local index, layout
-	for index, layout in pairs(Musician.Layouts) do
-		if layout.scale ~= nil then
-			table.insert(values, index)
-		else
-			table.insert(values, "")
-		end
-		table.insert(labels, Musician.Msg.KEYBOARD_LAYOUTS[layout.name] or layout.name)
+	local menu = {}
+	table.insert(menu, {
+		text = Musician.Msg.KEYBOARD_LAYOUTS[Musician.PianoLayout.name] or Musician.PianoLayout.name,
+		value = Musician.PianoLayout
+	})
+
+	local horizontalMenu = {
+		text = Musician.Msg.HORIZONTAL_LAYOUT,
+		menuList = {}
+	}
+	table.insert(menu, horizontalMenu)
+
+	local verticalMenu = {
+		text = Musician.Msg.VERTICAL_LAYOUT,
+		menuList = {}
+	}
+	table.insert(menu, verticalMenu)
+
+	local layout
+	for _, layout in pairs(Musician.HorizontalLayouts) do
+		table.insert(horizontalMenu.menuList, {
+			text = Musician.Msg.KEYBOARD_LAYOUTS[layout.name] or layout.name,
+			value = layout
+		})
+	end
+	for _, layout in pairs(Musician.VerticalLayouts) do
+		table.insert(verticalMenu.menuList, {
+			text = Musician.Msg.KEYBOARD_LAYOUTS[layout.name] or layout.name,
+			value = layout
+		})
 	end
 
-	initDropdown(MusicianKeyboardControlsMainLayoutDropdown, values, labels, Musician.Keyboard.config.layout, Musician.Keyboard.SetLayout, Musician.Msg.CHANGE_KEYBOARD_LAYOUT)
+	local dropdown = MusicianKeyboardControlsMainLayoutDropdown
+
+	UIDropDownMenu_Initialize(dropdown, function(self, level, menuList)
+		local info = UIDropDownMenu_CreateInfo()
+		if (level or 1) == 1 then
+			local index, row
+			for index, row in pairs(menu) do
+				info.text = row.text
+				info.isTitle = row.value and row.value.scale == nil
+				info.notCheckable = false
+				info.hasArrow = row.menuList ~= nil
+				info.arg1 = row.value and row.value.index
+				info.func = row.value and self.SetValue
+				info.menuList = row.menuList
+				info.checked = row.value and row.value.index == Musician.Keyboard.config.layout
+				UIDropDownMenu_AddButton(info)
+			end
+		else
+			info.func = self.SetValue
+			local index, row
+			for index, row in pairs(menuList) do
+				info.text = row.text
+				info.isTitle = row.value.scale == nil
+				info.notCheckable = info.isTitle
+				info.disabled = info.isTitle
+				info.hasArrow = false
+				info.arg1 = row.value and row.value.index
+				info.checked = row.value and row.value.index == Musician.Keyboard.config.layout
+				UIDropDownMenu_AddButton(info, level)
+			end
+		end
+	end)
+
+	function dropdown:SetValue(layoutIndex)
+		Musician.Keyboard.SetLayout(layoutIndex)
+		CloseDropDownMenus()
+	end
+
+	DropDownList1:SetClampedToScreen(true)
+	DropDownList2:SetClampedToScreen(true)
+
+	local layout = layouts[Musician.Keyboard.config.layout]
+	UIDropDownMenu_SetText(dropdown, Musician.Msg.KEYBOARD_LAYOUTS[layout.name] or layout.name)
 end
 
 --- Initialize base key dropdown
 --
 local function initBaseKeyDropdown()
-
 	local values = {}
 	local labels = {}
 	local key
@@ -435,7 +517,7 @@ local function initLayerControls(layer)
 	local config = Musician.Keyboard.config
 	local instrument = config.instrument[layer]
 	local dropdownTooltipText
-	local layout = Musician.Layouts[config.layout]
+	local layout = layouts[config.layout]
 
 	if layer == LAYER.LOWER then
 		varNamePrefix = varNamePrefix .. "Lower"
@@ -454,16 +536,16 @@ local function initLayerControls(layer)
 
 	-- Keys shift buttons
 	_G[varNamePrefix .. "ShiftLeft"]:SetScript("OnClick", function()
-		Musician.Keyboard.ShiftKeys(layer, -Musician.Layouts[config.layout].shift)
+		Musician.Keyboard.ShiftKeys(layer, -layouts[config.layout].shift)
 	end)
 	_G[varNamePrefix .. "ShiftRight"]:SetScript("OnClick", function()
-		Musician.Keyboard.ShiftKeys(layer, Musician.Layouts[config.layout].shift)
+		Musician.Keyboard.ShiftKeys(layer, layouts[config.layout].shift)
 	end)
 	_G[varNamePrefix .. "ShiftDown"]:SetScript("OnClick", function()
-		Musician.Keyboard.ShiftKeys(layer, #Musician.Layouts[config.layout].scale)
+		Musician.Keyboard.ShiftKeys(layer, #layouts[config.layout].scale)
 	end)
 	_G[varNamePrefix .. "ShiftUp"]:SetScript("OnClick", function()
-		Musician.Keyboard.ShiftKeys(layer, -#Musician.Layouts[config.layout].scale)
+		Musician.Keyboard.ShiftKeys(layer, -#layouts[config.layout].scale)
 	end)
 	_G[varNamePrefix .. "ShiftReset"]:SetScript("OnClick", function()
 		Musician.Keyboard.SetKeyShift(layer, 0)
@@ -580,6 +662,9 @@ function Musician.Keyboard.Init()
 	Musician.Keyboard:RegisterMessage(Musician.Events.NoteOff, Musician.Keyboard.OnNoteOff)
 	Musician.Keyboard:RegisterMessage(Musician.Events.SongPlay, Musician.Keyboard.OnSongPlay)
 	Musician.Keyboard:RegisterMessage(Musician.Events.SongInstrumentChange, Musician.Keyboard.OnSongPlay)
+
+	-- Init layouts
+	initLayouts()
 
 	-- Generate keyboard keys
 	generateKeys()
@@ -772,19 +857,21 @@ Musician.Keyboard.OnKey = function(keyValue, down)
 end
 
 --- Change keyboard layout
--- @param layout (string)
+-- @param layoutIndex (number)
 -- @param [rebuildMapping (boolean)] Rebuild keys mapping when true (default)
-Musician.Keyboard.SetLayout = function(layout, rebuildMapping)
-	if Musician.Keyboard.config.layout == layout then
+Musician.Keyboard.SetLayout = function(layoutIndex, rebuildMapping)
+	if Musician.Keyboard.config.layout == layoutIndex then
 		return
 	end
 
-	Musician.Keyboard.config.layout = layout
+	local layout = layouts[layoutIndex]
+
+	Musician.Keyboard.config.layout = layoutIndex
 	Musician.Keyboard.SetKeyShift(LAYER.UPPER, 0, false)
 	Musician.Keyboard.SetKeyShift(LAYER.LOWER, 0, false)
 	loadedProgram = nil
 
-	MusicianKeyboardControlsMainLayoutDropdown.UpdateIndex(layout)
+	UIDropDownMenu_SetText(MusicianKeyboardControlsMainLayoutDropdown, Musician.Msg.KEYBOARD_LAYOUTS[layout.name] or layout.name)
 
 	if rebuildMapping == nil or rebuildMapping then
 		Musician.Keyboard.SetButtonsUp()
@@ -906,7 +993,7 @@ Musician.Keyboard.BuildMapping = function()
 	Musician.Keyboard.mapping = {}
 
 	-- Invalid layout
-	if Musician.Layouts[Musician.Keyboard.config.layout] == nil then
+	if layouts[Musician.Keyboard.config.layout] == nil then
 		setKeys()
 		return
 	end
@@ -936,16 +1023,23 @@ Musician.Keyboard.BuildMapping = function()
 		end
 	end
 
-	local layout = Musician.Layouts[Musician.Keyboard.config.layout]
+	local layout = layouts[Musician.Keyboard.config.layout]
 	local config = Musician.Keyboard.config
+	local percussionLayout
+
+	if layout.orientation == Musician.LAYOUT_ORIENTATION.HORIZONTAL then
+		percussionLayout = Musician.PercussionHorizontalLayout
+	else
+		percussionLayout = Musician.PercussionVerticalLayout
+	end
 
 	if config.instrument[LAYER.UPPER] >= 128 then
 		mapKeys(
 			LAYER.UPPER,
-			Musician.PercussionLayout.scale,
-			Musician.PercussionLayout.upper.keyboardMapping,
-			Musician.Utils.NoteKey(Musician.PercussionLayout.upper.baseKey),
-			Musician.PercussionLayout.upper.baseKeyIndex
+			percussionLayout.scale,
+			percussionLayout.upper.keyboardMapping,
+			Musician.Utils.NoteKey(percussionLayout.upper.baseKey),
+			percussionLayout.upper.baseKeyIndex
 		)
 	elseif config.instrument[LAYER.UPPER] >= 0 then
 		mapKeys(
@@ -960,10 +1054,10 @@ Musician.Keyboard.BuildMapping = function()
 	if config.instrument[LAYER.LOWER] >= 128 then
 		mapKeys(
 			LAYER.LOWER,
-			Musician.PercussionLayout.scale,
-			Musician.PercussionLayout.lower.keyboardMapping,
-			Musician.Utils.NoteKey(Musician.PercussionLayout.lower.baseKey),
-			Musician.PercussionLayout.lower.baseKeyIndex
+			percussionLayout.scale,
+			percussionLayout.lower.keyboardMapping,
+			Musician.Utils.NoteKey(percussionLayout.lower.baseKey),
+			percussionLayout.lower.baseKeyIndex
 		)
 	elseif config.instrument[LAYER.LOWER] >= 0 then
 		mapKeys(

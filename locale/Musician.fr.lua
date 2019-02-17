@@ -155,6 +155,8 @@ msg.KEYBOARD_LAYOUTS = {
 	["5th"] = "Quinte",
 	["Octave"] = "Octave",
 }
+msg.HORIZONTAL_LAYOUT = "Horizontal"
+msg.VERTICAL_LAYOUT = "Vertical"
 
 msg.LIVE_SONG_NAME = "Morceau en direct"
 msg.SOLO_MODE = "Mode Solo"
