@@ -343,59 +343,6 @@ local function setKeys()
 	MusicianKeyboardProgramKeysWriteProgram.keyValue = KEY.WriteProgram
 end
 
---- Initialize a dropdown
--- @param dropdown (UIDropDownMenu)
--- @param values (table)
--- @param labels (table)
--- @param initialValue (string)
--- @param onChange (function)
--- @param tooltipText (string)
-local function initDropdown(dropdown, values, labels, initialValue, onChange, tooltipText)
-	local initialIndex
-
-	dropdown.value = nil
-	dropdown.index = nil
-	dropdown.tooltipText = tooltipText
-
-	dropdown.UpdateIndex = function(index)
-		dropdown.value = values[index]
-		dropdown.index = index
-		UIDropDownMenu_SetText(dropdown, labels[index])
-	end
-
-	dropdown.SetIndex = function(index)
-		dropdown.UpdateIndex(index)
-		onChange(dropdown.value)
-	end
-
-	dropdown.OnClick = function(self, arg1, arg2, checked)
-		dropdown.SetIndex(arg1)
-	end
-
-	dropdown.GetItems = function(frame, level, menuList)
-		local index, value
-		for index, value in pairs(values) do
-			local info = UIDropDownMenu_CreateInfo()
-			info.func = dropdown.OnClick
-			info.text = labels[index]
-			if value ~= "" then
-				info.arg1 = index
-				info.checked = dropdown.value == value
-			else
-				info.isTitle = true
-				info.notCheckable = true
-			end
-			if value == initialValue then
-				initialIndex = index
-			end
-			UIDropDownMenu_AddButton(info)
-		end
-	end
-
-	UIDropDownMenu_Initialize(dropdown, dropdown.GetItems)
-	dropdown.UpdateIndex(initialIndex)
-end
-
 --- Initialize layout list
 --
 local function initLayouts()
@@ -499,15 +446,28 @@ end
 --- Initialize base key dropdown
 --
 local function initBaseKeyDropdown()
-	local values = {}
-	local labels = {}
-	local key
-	for key = 0, 11 do
-		table.insert(values, key)
-		table.insert(labels, Musician.NOTE_NAMES[key])
+	local dropdown = MusicianKeyboardControlsMainBaseKeyDropdown
+
+	UIDropDownMenu_Initialize(dropdown, function(self, level, menuList)
+		local info = UIDropDownMenu_CreateInfo()
+		info.func = self.SetValue
+
+		local key, name
+		for key, name in pairs(Musician.NOTE_NAMES) do
+			info.text = name
+			info.arg1 = key
+			info.checked = key == Musician.Keyboard.config.baseKey
+			UIDropDownMenu_AddButton(info)
+		end
+	end)
+
+	function dropdown:SetValue(key)
+		Musician.Keyboard.SetBaseKey(key)
+		CloseDropDownMenus()
 	end
 
-	initDropdown(MusicianKeyboardControlsMainBaseKeyDropdown, values, labels, Musician.Keyboard.config.baseKey, Musician.Keyboard.SetBaseKey, Musician.Msg.CHANGE_BASE_KEY)
+	DropDownList1:SetClampedToScreen(true)
+	UIDropDownMenu_SetText(dropdown, Musician.NOTE_NAMES[Musician.Keyboard.config.baseKey])
 end
 
 --- Init controls for a layer
@@ -892,7 +852,7 @@ Musician.Keyboard.SetBaseKey = function(key, rebuildMapping)
 	Musician.Keyboard.config.baseKey = key
 	loadedProgram = nil
 
-	MusicianKeyboardControlsMainBaseKeyDropdown.UpdateIndex(key + 1)
+	UIDropDownMenu_SetText(MusicianKeyboardControlsMainBaseKeyDropdown, Musician.NOTE_NAMES[key])
 
 	if rebuildMapping == nil or rebuildMapping then
 		Musician.Keyboard.SetButtonsUp()
