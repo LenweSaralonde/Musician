@@ -1119,6 +1119,11 @@ MusicianKeyboard.LoadProgram = function(program)
 		MusicianKeyboard.LoadConfig(Musician_Settings.keyboardPrograms[program])
 		loadedProgram = program
 		updateFunctionKeys()
+
+		if Musician.sourceSong and Musician.sourceSong:IsPlaying() then
+			Musician.Keyboard.ConfigureDemo()
+		end
+
 		return true
 	end
 
