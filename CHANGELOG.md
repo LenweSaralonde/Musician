@@ -1,6 +1,14 @@
 Changelog
 =========
 
+v1.5.0.0
+--------
+*"Go live!"*
+
+* Live play mode: turns your PC keyboard into a piano!
+* New *MUS4* streaming protocol using the powerful Deflate compression
+* Various bugfixes and improvements
+
 v1.4.1.1
 --------
 * Updated for WoW 8.1
