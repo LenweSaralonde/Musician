@@ -1138,18 +1138,14 @@ end
 --- Load configuration
 -- @param config (table)
 MusicianKeyboard.LoadConfig = function(config)
-	Musician.Keyboard.SetLayout(config.layout, false)
-	Musician.Keyboard.SetBaseKey(config.baseKey, false)
-	Musician.Keyboard.SetInstrument(LAYER.UPPER, config.instrument[LAYER.UPPER], false)
-	Musician.Keyboard.SetInstrument(LAYER.LOWER, config.instrument[LAYER.LOWER], false)
-	Musician.Keyboard.SetKeyShift(LAYER.UPPER, config.shift[LAYER.UPPER], false)
-	Musician.Keyboard.SetKeyShift(LAYER.LOWER, config.shift[LAYER.LOWER], false)
-	Musician.Keyboard.SetPowerChords(LAYER.UPPER, config.powerChords[LAYER.UPPER], false)
-	Musician.Keyboard.SetPowerChords(LAYER.LOWER, config.powerChords[LAYER.LOWER], false)
-
-	Musician.Keyboard.SetButtonsUp()
-	Musician.Live.AllNotesOff()
-	Musician.Keyboard.BuildMapping()
+	Musician.Keyboard.SetLayout(config.layout)
+	Musician.Keyboard.SetBaseKey(config.baseKey)
+	Musician.Keyboard.SetInstrument(LAYER.UPPER, config.instrument[LAYER.UPPER])
+	Musician.Keyboard.SetInstrument(LAYER.LOWER, config.instrument[LAYER.LOWER])
+	Musician.Keyboard.SetKeyShift(LAYER.UPPER, config.shift[LAYER.UPPER])
+	Musician.Keyboard.SetKeyShift(LAYER.LOWER, config.shift[LAYER.LOWER])
+	Musician.Keyboard.SetPowerChords(LAYER.UPPER, config.powerChords[LAYER.UPPER])
+	Musician.Keyboard.SetPowerChords(LAYER.LOWER, config.powerChords[LAYER.LOWER])
 end
 
 --- Has saved program
@@ -1205,8 +1201,6 @@ MusicianKeyboard.EnableDemoMode = function(upperTrackIndex, lowerTrackIndex)
 		return MusicianKeyboard.DisableDemoMode()
 	end
 
-	Musician.Keyboard.SetButtonsUp()
-
 	demoTrackMapping = {}
 	if upperTrackIndex ~= nil then
 		demoTrackMapping[LAYER.UPPER] = upperTrackIndex
@@ -1259,14 +1253,9 @@ Musician.Keyboard.ConfigureDemo = function()
 	for layer, trackIndex in pairs(demoTrackMapping) do
 		local track = song.tracks[trackIndex]
 		if track ~= nil then
-			Musician.Keyboard.SetInstrument(layer, track.instrument, false)
+			Musician.Keyboard.SetInstrument(layer, track.instrument)
 		end
 	end
-
-	Musician.Keyboard.SetButtonsUp()
-	Musician.Live.AllNotesOff()
-	Musician.Keyboard.BuildMapping()
-	updateFunctionKeys()
 end
 
 --- Demo mode OnNoteOn
