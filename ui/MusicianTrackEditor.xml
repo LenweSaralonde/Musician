@@ -91,8 +91,8 @@
 
 	<!-- Track row template -->
 
-	<Frame name="MusicianTrackTemplate" parent="MusicianTrackEditorTrackContainer" virtual="true">
-		<Size x="568" y="32" />
+	<Frame name="MusicianTrackTemplate" virtual="true">
+		<Size x="569" y="32" />
 
 		<Layers>
 			<Layer level="OVERLAY">
@@ -377,9 +377,9 @@
 			<!-- Track list -->
 
 			<ScrollFrame name="$parentScrollFrame" inherits="UIPanelScrollFrameTemplate">
-				<Size x="568" y="349"/>
+				<Size x="570" y="349"/>
 				<Anchors>
-					<Anchor point="BOTTOM" x="-12" y="13" relativeTo="$parent" />
+					<Anchor point="BOTTOM" x="-13" y="13" relativeTo="$parent" />
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
@@ -408,7 +408,10 @@
 					</Layer>
 				</Layers>
 				<Scripts>
-					<OnLoad function="ScrollFrame_OnLoad"/>
+					<OnScrollRangeChanged inherit="append">
+						-- Workaround to fix the gap in the scroll height
+						C_Timer.After(.0001, function() self.ScrollBar:SetMinMaxValues(0, max(0, yrange - 34)) end)
+					</OnScrollRangeChanged>
 				</Scripts>
 				<ScrollChild>
 					<Frame name="MusicianTrackEditorTrackContainer">
@@ -421,7 +424,7 @@
 			</ScrollFrame>
 
 			<Frame name="$parentBackground" inherits="MusicianFieldset">
-				<Size x="600" y="360" />
+				<Size x="604" y="360" />
 				<Anchors>
 					<Anchor point="TOPLEFT" x="-5" y="8" relativeTo="$parentScrollFrame" />
 				</Anchors>
