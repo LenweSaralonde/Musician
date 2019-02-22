@@ -410,7 +410,10 @@
 				<Scripts>
 					<OnScrollRangeChanged inherit="append">
 						-- Workaround to fix the gap in the scroll height
-						C_Timer.After(.0001, function() self.ScrollBar:SetMinMaxValues(0, max(0, yrange - 34)) end)
+						C_Timer.After(.0001, function()
+							local range = max(0, MusicianTrackEditorTrackContainer:GetHeight() - self:GetHeight() - 2)
+							self.ScrollBar:SetMinMaxValues(0, range)
+						end)	
 					</OnScrollRangeChanged>
 				</Scripts>
 				<ScrollChild>
