@@ -64,8 +64,8 @@ function Musician.VolumeMeter:NoteOn(instrument)
 		self.envelope = {
 			{ 0, self.level / 3 },
 			{ .075, 1 },
-			{ Musician.MAX_NOTE_DURATION, .75 },
-			{ Musician.MAX_NOTE_DURATION + instrument.decay / 1000, 0 },
+			{ Musician.MAX_NOTE_DURATION - .5, .75 },
+			{ Musician.MAX_NOTE_DURATION - .5 + instrument.decay / 1000, 0 },
 		}
 		self.entropy = .2
 	end
