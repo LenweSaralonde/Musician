@@ -454,7 +454,8 @@ local function initBaseKeyDropdown()
 		info.func = self.SetValue
 
 		local key, name
-		for key, name in pairs(Musician.NOTE_NAMES) do
+		for key = 0, 11, 1 do
+			name = Musician.NOTE_NAMES[key]
 			info.text = name
 			info.arg1 = key
 			info.checked = key == Musician.Keyboard.config.baseKey
