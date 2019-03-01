@@ -11,6 +11,7 @@ local savingProgram = false
 local savingProgramTime = 0
 local loadedProgram = nil
 local demoTrackMapping = nil
+local modifiedLayers = {}
 
 local keyButtons = {}
 local keyValueButtons = {}
@@ -781,6 +782,24 @@ Musician.Keyboard.SetButtonState = function(button, down)
 	return not(button) or changed and not(button.clicked)
 end
 
+--- Refresh keyboard layers after some settings have been modified, if needed
+--
+local function refreshKeyboard()
+
+	local layer, refresh
+	for layer, refresh in pairs(modifiedLayers) do
+		if refresh then
+			Musician.Keyboard.SetButtonsUp(layer)
+			Musician.Live.AllNotesOff(layer)
+		end
+	end
+
+	Musician.Keyboard.BuildMapping()
+	updateFunctionKeys()
+
+	modifiedLayers = {}
+end
+
 --- Set all buttons up
 -- @param [onlyForLayer (number)]
 Musician.Keyboard.SetButtonsUp = function(onlyForLayer)
@@ -818,8 +837,8 @@ end
 
 --- Change keyboard layout
 -- @param layoutIndex (number)
--- @param [rebuildMapping (boolean)] Rebuild keys mapping when true (default)
-Musician.Keyboard.SetLayout = function(layoutIndex, rebuildMapping)
+-- @param [doKeyboardRefresh (boolean)] Rebuild keys mapping when true (default)
+Musician.Keyboard.SetLayout = function(layoutIndex, doKeyboardRefresh)
 	if Musician.Keyboard.config.layout == layoutIndex then
 		return
 	end
@@ -833,18 +852,20 @@ Musician.Keyboard.SetLayout = function(layoutIndex, rebuildMapping)
 
 	UIDropDownMenu_SetText(MusicianKeyboardControlsMainLayoutDropdown, Musician.Msg.KEYBOARD_LAYOUTS[layout.name] or layout.name)
 
-	if rebuildMapping == nil or rebuildMapping then
-		Musician.Keyboard.SetButtonsUp()
-		Musician.Live.AllNotesOff()
-		Musician.Keyboard.BuildMapping()
-		updateFunctionKeys()
+	modifiedLayers = {
+		[LAYER.UPPER] = true,
+		[LAYER.LOWER] = true
+	}
+
+	if doKeyboardRefresh == nil or doKeyboardRefresh then
+		refreshKeyboard()
 	end
 end
 
 --- Change base key
 -- @param key (number)
--- @param [rebuildMapping (boolean)] Rebuild keys mapping when true (default)
-Musician.Keyboard.SetBaseKey = function(key, rebuildMapping)
+-- @param [doKeyboardRefresh (boolean)] Rebuild keys mapping when true (default)
+Musician.Keyboard.SetBaseKey = function(key, doKeyboardRefresh)
 	if Musician.Keyboard.config.baseKey == key then
 		return
 	end
@@ -854,19 +875,21 @@ Musician.Keyboard.SetBaseKey = function(key, rebuildMapping)
 
 	UIDropDownMenu_SetText(MusicianKeyboardControlsMainBaseKeyDropdown, Musician.NOTE_NAMES[key])
 
-	if rebuildMapping == nil or rebuildMapping then
-		Musician.Keyboard.SetButtonsUp()
-		Musician.Live.AllNotesOff()
-		Musician.Keyboard.BuildMapping()
-		updateFunctionKeys()
+	modifiedLayers = {
+		[LAYER.UPPER] = true,
+		[LAYER.LOWER] = true
+	}
+
+	if doKeyboardRefresh == nil or doKeyboardRefresh then
+		refreshKeyboard()
 	end
 end
 
 --- Change Instrument
 -- @param layer (number)
 -- @param instrument (number)
--- @param [rebuildMapping (boolean)] Rebuild keys mapping when true (default)
-Musician.Keyboard.SetInstrument = function(layer, instrument, rebuildMapping)
+-- @param [doKeyboardRefresh (boolean)] Rebuild keys mapping when true (default)
+Musician.Keyboard.SetInstrument = function(layer, instrument, doKeyboardRefresh)
 	if Musician.Keyboard.config.instrument[layer] == instrument then
 		return
 	end
@@ -883,46 +906,45 @@ Musician.Keyboard.SetInstrument = function(layer, instrument, rebuildMapping)
 	_G[uiElementName].UpdateValue(instrument)
 	enableLayerControls(layer, instrument < 128) -- Enable controls if not percussion
 
-	if rebuildMapping == nil or rebuildMapping then
-		Musician.Keyboard.SetButtonsUp(layer)
-		Musician.Live.AllNotesOff(layer)
-		Musician.Keyboard.BuildMapping()
-		updateFunctionKeys()
+	modifiedLayers[layer] = true
+
+	if doKeyboardRefresh == nil or doKeyboardRefresh then
+		refreshKeyboard()
 	end
 end
 
 --- Shift keys
 -- @param layer (number)
 -- @param amount (number)
--- @param [rebuildMapping (boolean)] Rebuild keys mapping when true (default)
-Musician.Keyboard.ShiftKeys = function(layer, amount, rebuildMapping)
+-- @param [doKeyboardRefresh (boolean)] Rebuild keys mapping when true (default)
+Musician.Keyboard.ShiftKeys = function(layer, amount, doKeyboardRefresh)
 	local shift = Musician.Keyboard.config.shift[layer] + amount
-	Musician.Keyboard.SetKeyShift(layer, shift, rebuildMapping)
+	Musician.Keyboard.SetKeyShift(layer, shift, doKeyboardRefresh)
 end
 
 --- Set key shift amount
 -- @param layer (number)
 -- @param shift (number) Shift amount
--- @param [rebuildMapping (boolean)] Rebuild keys mapping when true (default)
-Musician.Keyboard.SetKeyShift = function(layer, shift, rebuildMapping)
+-- @param [doKeyboardRefresh (boolean)] Rebuild keys mapping when true (default)
+Musician.Keyboard.SetKeyShift = function(layer, shift, doKeyboardRefresh)
 	if Musician.Keyboard.config.shift[layer] == shift then
 		return
 	end
 
 	Musician.Keyboard.config.shift[layer] = shift
 
-	if rebuildMapping == nil or rebuildMapping then
-		Musician.Keyboard.SetButtonsUp(layer)
-		Musician.Live.AllNotesOff(layer)
-		Musician.Keyboard.BuildMapping()
+	modifiedLayers[layer] = true
+
+	if doKeyboardRefresh == nil or doKeyboardRefresh then
+		refreshKeyboard()
 	end
 end
 
 --- Set power chords \m/
 -- @param layer (number)
 -- @param enable (boolean)
--- @param [rebuildMapping (boolean)] Rebuild keys mapping when true (default)
-Musician.Keyboard.SetPowerChords = function(layer, enable, rebuildMapping)
+-- @param [doKeyboardRefresh (boolean)] Rebuild keys mapping when true (default)
+Musician.Keyboard.SetPowerChords = function(layer, enable, doKeyboardRefresh)
 	if Musician.Keyboard.config.powerChords[layer] == enable then
 		return
 	end
@@ -938,11 +960,10 @@ Musician.Keyboard.SetPowerChords = function(layer, enable, rebuildMapping)
 	end
 	_G[uiElementName]:SetChecked(enable)
 
-	if rebuildMapping == nil or rebuildMapping then
-		Musician.Keyboard.SetButtonsUp(layer)
-		Musician.Live.AllNotesOff(layer)
-		Musician.Keyboard.BuildMapping()
-		updateFunctionKeys()
+	modifiedLayers[layer] = true
+
+	if doKeyboardRefresh == nil or doKeyboardRefresh then
+		refreshKeyboard()
 	end
 end
 
@@ -1138,14 +1159,15 @@ end
 --- Load configuration
 -- @param config (table)
 MusicianKeyboard.LoadConfig = function(config)
-	Musician.Keyboard.SetLayout(config.layout)
-	Musician.Keyboard.SetBaseKey(config.baseKey)
-	Musician.Keyboard.SetInstrument(LAYER.UPPER, config.instrument[LAYER.UPPER])
-	Musician.Keyboard.SetInstrument(LAYER.LOWER, config.instrument[LAYER.LOWER])
-	Musician.Keyboard.SetKeyShift(LAYER.UPPER, config.shift[LAYER.UPPER])
-	Musician.Keyboard.SetKeyShift(LAYER.LOWER, config.shift[LAYER.LOWER])
-	Musician.Keyboard.SetPowerChords(LAYER.UPPER, config.powerChords[LAYER.UPPER])
-	Musician.Keyboard.SetPowerChords(LAYER.LOWER, config.powerChords[LAYER.LOWER])
+	Musician.Keyboard.SetLayout(config.layout, false)
+	Musician.Keyboard.SetBaseKey(config.baseKey, false)
+	Musician.Keyboard.SetInstrument(LAYER.UPPER, config.instrument[LAYER.UPPER], false)
+	Musician.Keyboard.SetInstrument(LAYER.LOWER, config.instrument[LAYER.LOWER], false)
+	Musician.Keyboard.SetKeyShift(LAYER.UPPER, config.shift[LAYER.UPPER], false)
+	Musician.Keyboard.SetKeyShift(LAYER.LOWER, config.shift[LAYER.LOWER], false)
+	Musician.Keyboard.SetPowerChords(LAYER.UPPER, config.powerChords[LAYER.UPPER], false)
+	Musician.Keyboard.SetPowerChords(LAYER.LOWER, config.powerChords[LAYER.LOWER], false)
+	refreshKeyboard()
 end
 
 --- Has saved program
