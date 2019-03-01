@@ -121,17 +121,20 @@ end
 --- Update function key buttons
 --
 local function updateFunctionKeys()
-	local label
-	if MusicianKeyboard.IsSavingProgram() then
-		label = Musician.Msg.SAVE_PROGRAM_NUM
-	else
-		label = Musician.Msg.LOAD_PROGRAM_NUM
-	end
-
 	local key
 	for _, key in pairs(FunctionKeys) do
-		local programKeyLabel = string.gsub(label, "{num}", ProgramKeys[key])
-		getFunctionKeyButton(key).tooltipText = string.gsub(programKeyLabel, "{key}", key)
+		local label
+		if MusicianKeyboard.IsSavingProgram() then
+			label = Musician.Msg.SAVE_PROGRAM_NUM
+		elseif Musician_Settings.keyboardPrograms and Musician_Settings.keyboardPrograms[ProgramKeys[key]] then
+			label = Musician.Msg.LOAD_PROGRAM_NUM
+		else
+			label = Musician.Msg.EMPTY_PROGRAM
+		end
+
+		label = string.gsub(label, "{num}", ProgramKeys[key])
+		label = string.gsub(label, "{key}", key)
+		getFunctionKeyButton(key).tooltipText = label
 	end
 
 	updateFunctionKeysLEDs()

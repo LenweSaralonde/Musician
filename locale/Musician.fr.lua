@@ -178,6 +178,7 @@ msg.LOWER_INSTRUMENT_MAPPED_TO_CHANNEL = "Instrument inférieur (piste n°{track
 msg.UPPER_INSTRUMENT_MAPPED_TO_CHANNEL = "Instrument supérieur (piste n°{track})"
 msg.POWER_CHORDS = "Power chords"
 msg.PROGRAM_BUTTON = "P {num}"
+msg.EMPTY_PROGRAM = "Programme vide"
 msg.LOAD_PROGRAM_NUM = "Charger le programme n°{num} ({key})"
 msg.SAVE_PROGRAM_NUM = "Enregistrer dans le programme n°{num} ({key})"
 msg.WRITE_PROGRAM = "Enregistrer un programme ({key})"
