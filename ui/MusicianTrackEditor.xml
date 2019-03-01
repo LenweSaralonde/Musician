@@ -377,9 +377,9 @@
 			<!-- Track list -->
 
 			<ScrollFrame name="$parentScrollFrame" inherits="UIPanelScrollFrameTemplate">
-				<Size x="570" y="349"/>
+				<Size x="570" y="350"/>
 				<Anchors>
-					<Anchor point="BOTTOM" x="-13" y="13" relativeTo="$parent" />
+					<Anchor point="BOTTOM" x="-13" y="12" relativeTo="$parent" />
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
