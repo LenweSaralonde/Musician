@@ -10,7 +10,6 @@ local writeProgramDown = false
 local savingProgram = false
 local savingProgramTime = 0
 local loadedProgram = nil
-local demoTrackMapping = nil
 local modifiedLayers = {}
 
 local keyButtons = {}
@@ -612,6 +611,7 @@ function Musician.Keyboard.Init()
 			[LAYER.UPPER] = false,
 			[LAYER.LOWER] = false,
 		},
+		demoTrackMapping = nil,
 	}
 
 	-- Set scripts
@@ -797,6 +797,22 @@ local function refreshKeyboard()
 
 	Musician.Keyboard.BuildMapping()
 	updateFunctionKeys()
+
+	-- Refresh instrument dropdown tooltips in demo mode
+	local config = Musician.Keyboard.config
+	if config.demoTrackMapping then
+		if config.demoTrackMapping[LAYER.LOWER] then
+			MusicianKeyboardControlsLowerInstrument.tooltipText = string.gsub(Musician.Msg.LOWER_INSTRUMENT_MAPPED_TO_CHANNEL, "{track}", config.demoTrackMapping[LAYER.LOWER])
+		else
+			MusicianKeyboardControlsLowerInstrument.tooltipText = Musician.Msg.CHANGE_LOWER_INSTRUMENT
+		end
+
+		if config.demoTrackMapping[LAYER.UPPER] then
+			MusicianKeyboardControlsUpperInstrument.tooltipText = string.gsub(Musician.Msg.UPPER_INSTRUMENT_MAPPED_TO_CHANNEL, "{track}", config.demoTrackMapping[LAYER.UPPER])
+		else
+			MusicianKeyboardControlsUpperInstrument.tooltipText = Musician.Msg.CHANGE_UPPER_INSTRUMENT
+		end
+	end
 
 	modifiedLayers = {}
 end
@@ -1168,6 +1184,11 @@ MusicianKeyboard.LoadConfig = function(config)
 	Musician.Keyboard.SetKeyShift(LAYER.LOWER, config.shift[LAYER.LOWER], false)
 	Musician.Keyboard.SetPowerChords(LAYER.UPPER, config.powerChords[LAYER.UPPER], false)
 	Musician.Keyboard.SetPowerChords(LAYER.LOWER, config.powerChords[LAYER.LOWER], false)
+	Musician.Keyboard.EnableDemoMode(
+		config.demoTrackMapping and config.demoTrackMapping[LAYER.UPPER],
+		config.demoTrackMapping and config.demoTrackMapping[LAYER.LOWER],
+		false
+	)
 	refreshKeyboard()
 end
 
@@ -1185,6 +1206,14 @@ MusicianKeyboard.IsCurrentProgram = function(program)
 	return program == loadedProgram
 end
 
+--- Returns true if a demo song is playing
+-- @return (boolean)
+local function demoSongIsPlaying()
+	local song = Musician.sourceSong
+	local config = Musician.Keyboard.config
+	return config.demoTrackMapping and song and song:IsPlaying()
+end
+
 --- Load saved program
 -- @param program (number)
 -- @return (boolean)
@@ -1194,7 +1223,7 @@ MusicianKeyboard.LoadProgram = function(program)
 		loadedProgram = program
 		updateFunctionKeys()
 
-		if Musician.sourceSong and Musician.sourceSong:IsPlaying() then
+		if demoSongIsPlaying() then
 			Musician.Keyboard.ConfigureDemo()
 		end
 
@@ -1219,38 +1248,59 @@ end
 --- Enable demo mode with provided track indexes
 -- @param upperTrackIndex (number)
 -- @param lowerTrackIndex (number)
-MusicianKeyboard.EnableDemoMode = function(upperTrackIndex, lowerTrackIndex)
+-- @param [doKeyboardRefresh (boolean)] Rebuild keys mapping when true (default)
+Musician.Keyboard.EnableDemoMode = function(upperTrackIndex, lowerTrackIndex, doKeyboardRefresh)
+	local config = Musician.Keyboard.config
+
+	local currentUpperTrackIndex = config.demoTrackMapping and config.demoTrackMapping[LAYER.UPPER]
+	if currentUpperTrackIndex ~= upperTrackIndex then
+		loadedProgram = nil
+		if demoSongIsPlaying() then
+			modifiedLayers[LAYER.UPPER] = true
+		end
+	end
+
+	local currentLowerTrackIndex = config.demoTrackMapping and config.demoTrackMapping[LAYER.LOWER]
+	if currentLowerTrackIndex ~= lowerTrackIndex then
+		loadedProgram = nil
+		if demoSongIsPlaying() then
+			modifiedLayers[LAYER.LOWER] = true
+		end
+	end
+
 	if upperTrackIndex == nil and lowerTrackIndex == nil then
-		return MusicianKeyboard.DisableDemoMode()
+		config.demoTrackMapping = nil
+	else
+		config.demoTrackMapping = {
+			[LAYER.UPPER] = upperTrackIndex,
+			[LAYER.LOWER] = lowerTrackIndex
+		}
 	end
 
-	demoTrackMapping = {}
-	if upperTrackIndex ~= nil then
-		demoTrackMapping[LAYER.UPPER] = upperTrackIndex
-	end
-	if lowerTrackIndex ~= nil then
-		demoTrackMapping[LAYER.LOWER] = lowerTrackIndex
-	end
+	Musician.Keyboard.ConfigureDemo(doKeyboardRefresh)
 
-	local mappings = {}
-	local layer, trackIndex
-	for layer, trackIndex in pairs(demoTrackMapping) do
-		local mapping = Musician.Msg.DEMO_MODE_MAPPING
-		mapping = string.gsub(mapping, "{layer}", Musician.Utils.Highlight(Musician.Msg.LAYERS[layer]))
-		mapping = string.gsub(mapping, "{track}", Musician.Utils.Highlight(trackIndex))
-		table.insert(mappings, mapping)
+	if doKeyboardRefresh == nil or doKeyboardRefresh then
+		refreshKeyboard()
+		if config.demoTrackMapping then
+			local mappings = {}
+			local layer, trackIndex
+			for layer, trackIndex in pairs(config.demoTrackMapping) do
+				local mapping = Musician.Msg.DEMO_MODE_MAPPING
+				mapping = string.gsub(mapping, "{layer}", Musician.Utils.Highlight(Musician.Msg.LAYERS[layer]))
+				mapping = string.gsub(mapping, "{track}", Musician.Utils.Highlight(trackIndex))
+				table.insert(mappings, mapping)
+			end
+			Musician.Utils.Print(string.gsub(Musician.Msg.DEMO_MODE_ENABLED, "{mapping}", table.concat(mappings, "\n")))
+		else
+			Musician.Utils.Print(Musician.Msg.DEMO_MODE_DISABLED)
+		end
 	end
-
-	Musician.Keyboard.ConfigureDemo()
-	Musician.Utils.Print(string.gsub(Musician.Msg.DEMO_MODE_ENABLED, "{mapping}", table.concat(mappings, "\n")))
 end
 
 --- Disable demo mode
---
-MusicianKeyboard.DisableDemoMode = function()
-	Musician.Keyboard.SetButtonsUp()
-	demoTrackMapping = nil
-	Musician.Utils.Print(Musician.Msg.DEMO_MODE_DISABLED)
+-- @param [doKeyboardRefresh (boolean)] Rebuild keys mapping when true (default)
+Musician.Keyboard.DisableDemoMode = function(doKeyboardRefresh)
+	Musician.Keyboard.EnableDemoMode(nil, nil, doKeyboardRefresh)
 end
 
 --- Demo mode OnSongPlay
@@ -1265,18 +1315,19 @@ Musician.Keyboard.OnSongPlay = function(event, song)
 end
 
 --- Configure demo mode relatively to the source song
---
-Musician.Keyboard.ConfigureDemo = function()
+-- @param [doKeyboardRefresh (boolean)] Rebuild keys mapping when true (default)
+Musician.Keyboard.ConfigureDemo = function(doKeyboardRefresh)
 	local song = Musician.sourceSong
-	if demoTrackMapping == nil or not(song) then
+	local config = Musician.Keyboard.config
+	if config.demoTrackMapping == nil or not(song) then
 		return
 	end
 
 	local layer, trackIndex
-	for layer, trackIndex in pairs(demoTrackMapping) do
+	for layer, trackIndex in pairs(config.demoTrackMapping) do
 		local track = song.tracks[trackIndex]
 		if track ~= nil then
-			Musician.Keyboard.SetInstrument(layer, track.instrument)
+			Musician.Keyboard.SetInstrument(layer, track.instrument, doKeyboardRefresh)
 		end
 	end
 end
@@ -1287,13 +1338,15 @@ end
 -- @param track (number)
 -- @param key (number)
 Musician.Keyboard.OnNoteOn = function(event, song, track, key)
-	if demoTrackMapping == nil or not(Musician.sourceSong) or song ~= Musician.sourceSong then
+	local config = Musician.Keyboard.config
+	if config.demoTrackMapping == nil or not(Musician.sourceSong) or song ~= Musician.sourceSong then
 		return
 	end
+	Musician.Keyboard.ConfigureDemo()
 
 	local _, instrument = Musician.Utils.GetSoundFile(track.instrument, key)
 	local layer, trackIndex
-	for layer, trackIndex in pairs(demoTrackMapping) do
+	for layer, trackIndex in pairs(config.demoTrackMapping) do
 		if trackIndex == track.index then
 			local button = noteButtons[layer] and noteButtons[layer][key]
 			if button then
@@ -1310,12 +1363,13 @@ end
 -- @param track (number)
 -- @param key (number)
 Musician.Keyboard.OnNoteOff = function(event, song, track, key)
-	if demoTrackMapping == nil or not(Musician.sourceSong) or song ~= Musician.sourceSong then
+	local config = Musician.Keyboard.config
+	if config.demoTrackMapping == nil or not(Musician.sourceSong) or song ~= Musician.sourceSong then
 		return
 	end
 
 	local layer, trackIndex
-	for layer, trackIndex in pairs(demoTrackMapping) do
+	for layer, trackIndex in pairs(config.demoTrackMapping) do
 		if trackIndex == track.index then
 			local button = noteButtons[layer] and noteButtons[layer][key]
 			if button then

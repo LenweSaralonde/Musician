@@ -162,12 +162,16 @@ function Musician.GetCommands()
 		params = Musician.Msg.COMMAND_LIVE_DEMO_PARAMS,
 		text = Musician.Msg.COMMAND_LIVE_DEMO,
 		unpackArgs = true,
-		func = function(upperTrackIndex, lowerTrackIndex)
-			if upperTrackIndex == 'off' then
-				MusicianKeyboard.DisableDemoMode()
-			else
-				MusicianKeyboard.EnableDemoMode(tonumber(upperTrackIndex), tonumber(lowerTrackIndex))
+		func = function(param1, param2)
+			local upperTrackIndex = tonumber(param1)
+			if upperTrackIndex and upperTrackIndex <= 0 then
+				upperTrackIndex = nil
 			end
+			local lowerTrackIndex = tonumber(param2)
+			if lowerTrackIndex and lowerTrackIndex <= 0 then
+				lowerTrackIndex = nil
+			end
+			Musician.Keyboard.EnableDemoMode(upperTrackIndex, lowerTrackIndex)
 		end
 	})
 
