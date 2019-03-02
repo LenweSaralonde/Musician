@@ -758,32 +758,42 @@ end
 -- @param keyValue (string)
 -- @param down (boolean)
 Musician.Keyboard.OnPhysicalKey = function(keyValue, down)
-	if Musician.Keyboard.SetButtonState(keyValueButtons[keyValue], down) then
-		Musician.Keyboard.OnKey(keyValue, down)
+	MusicianKeyboard:SetPropagateKeyboardInput(true)
+	if Musician.Keyboard.KeyButtonStateDiffers(keyValue, down) then
+		if Musician.Keyboard.OnKey(keyValue, down) then
+			Musician.Keyboard.SetButtonState(keyValueButtons[keyValue], down)
+			MusicianKeyboard:SetPropagateKeyboardInput(false)
+		end
+	else
+		MusicianKeyboard:SetPropagateKeyboardInput(false)
 	end
 end
 
---- Set logical keyboard button up/down state, without triggering its action
--- Returns true if the button state was successfully changed.
--- @param button (Button)
+--- Returns true if the provided keypress' button down state differs from the provided one.
+-- @param keyValue (string)
 -- @param down (boolean)
 -- @return (boolean)
+Musician.Keyboard.KeyButtonStateDiffers = function(keyValue, down)
+	local button = keyValueButtons[keyValue]
+	local newButtonState = down and "PUSHED" or "NORMAL"
+	return not(button) or button:GetButtonState() ~= newButtonState and not(button.clicked)
+end
+
+--- Set on-screen keyboard button up/down state, without triggering its action.
+-- @param button (Button)
+-- @param down (boolean)
 Musician.Keyboard.SetButtonState = function(button, down)
-	local changed = false
 	if button then
 		button.keyPressed = true
 		if down and button:GetButtonState() ~= "PUSHED" then
 			button:SetButtonState("PUSHED")
 			button:GetScript("OnMouseDown")(button, "LeftButton")
-			changed = true
 		elseif not(down) and button:GetButtonState() ~= "NORMAL" then
 			button:SetButtonState("NORMAL")
 			button:GetScript("OnMouseUp")(button, "LeftButton")
-			changed = true
 		end
 		button.keyPressed = false
 	end
-	return not(button) or changed and not(button.clicked)
 end
 
 --- Refresh keyboard layers after some settings have been modified, if needed
@@ -837,9 +847,10 @@ Musician.Keyboard.SetButtonsUp = function(onlyForLayer)
 	end
 end
 
---- Key up/down handler, from physical or logical keyboard
+--- Key up/down handler, from physical or on-screen keyboard
 -- @param keyValue (string)
 -- @param down (boolean)
+-- @return (boolean) True if the keypress was consumed
 Musician.Keyboard.OnKey = function(keyValue, down)
 	if down and keyValue == "ESCAPE" then
 		if MusicianKeyboard.IsSavingProgram() then
@@ -847,12 +858,10 @@ Musician.Keyboard.OnKey = function(keyValue, down)
 		else
 			MusicianKeyboard:Hide()
 		end
-		return
+		return true
 	end
 
-	MusicianKeyboard.NoteKey(down, keyValue)
-	MusicianKeyboard.FunctionKey(down, keyValue)
-	MusicianKeyboard.ControlKey(down, keyValue)
+	return MusicianKeyboard.NoteKey(down, keyValue) or MusicianKeyboard.FunctionKey(down, keyValue) or MusicianKeyboard.WriteProgramKey(down, keyValue) 
 end
 
 --- Change keyboard layout
@@ -1076,7 +1085,7 @@ end
 --- Note key pressed
 -- @param down (boolean)
 -- @param keyValue (string)
--- @return (boolean)
+-- @return (boolean) True if the keypress was consumed
 MusicianKeyboard.NoteKey = function(down, keyValue)
 	local key = Musician.KeyboardUtils.GetKey(keyValue)
 
@@ -1084,10 +1093,20 @@ MusicianKeyboard.NoteKey = function(down, keyValue)
 		return false
 	end
 
+	local button = keyValueButtons[keyValue]
+	if not(button.row) or button.row >= 5 then
+		return false
+	end
+
+	-- Modifier key down
+	if IsMacClient() and IsShiftKeyDown() or IsControlKeyDown() or IsAltKeyDown() then
+		return false
+	end
+
 	local note = Musician.Keyboard.mapping[key]
 
 	if note == nil then
-		return false
+		return true
 	end
 
 	local layer = note[1]
@@ -1096,7 +1115,7 @@ MusicianKeyboard.NoteKey = function(down, keyValue)
 	local powerChords = Musician.Keyboard.config.powerChords[layer] and instrument < 128 -- No power chords for percussions
 
 	if noteKey < Musician.MIN_KEY or noteKey > Musician.MAX_KEY or instrument < 0 then
-		return false
+		return true
 	end
 
 	if powerChords then
@@ -1119,8 +1138,8 @@ end
 --- Control key pressed
 -- @param down (boolean)
 -- @param keyValue (string)
--- @return (boolean)
-MusicianKeyboard.ControlKey = function(down, keyValue)
+-- @return (boolean) True if the keypress was consumed
+MusicianKeyboard.WriteProgramKey = function(down, keyValue)
 	local key = Musician.KeyboardUtils.GetKey(keyValue)
 	local isControlDown =
 		(key == KEY.ControlLeft or key == KEY.ControlRight) and not(IsMacClient()) or
@@ -1128,13 +1147,16 @@ MusicianKeyboard.ControlKey = function(down, keyValue)
 
 	if isControlDown or key == KEY.WriteProgram then
 		MusicianKeyboard.SetSavingProgram(down)
+		return true
 	end
+
+	return false
 end
 
 --- Function key pressed
 -- @param down (boolean)
 -- @param keyValue (string)
--- @return (boolean)
+-- @return (boolean) True if the keypress was consumed
 MusicianKeyboard.FunctionKey = function(down, keyValue)
 	local key = Musician.KeyboardUtils.GetKey(keyValue)
 
@@ -1151,6 +1173,8 @@ MusicianKeyboard.FunctionKey = function(down, keyValue)
 			MusicianKeyboard.LoadProgram(program)
 		end
 	end
+
+	return true
 end
 
 --- Set program saving mode
