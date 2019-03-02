@@ -279,7 +279,7 @@
 					Musician_Settings.keyboardVisible = visible
 				end
 			</OnLoad>
-			<OnShow inherits="append">
+			<OnShow inherit="append">
 				self:SetScale(1)
 			</OnShow>
 		</Scripts>
