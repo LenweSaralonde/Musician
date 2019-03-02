@@ -268,6 +268,28 @@ Musician.KeyboardConfig.SelectNextKeyBinding = function()
 	Musician.KeyboardConfig.SelectKeyBinding(keyButtons[index].key)
 end
 
+--- Clear selected binding
+--
+Musician.KeyboardConfig.ClearSelectedKeyBinding = function()
+	if selectedKeyButton and selectedKeyButton.keyValue then
+		local keyValue = selectedKeyButton.keyValue
+
+		if Musician.KEYBOARD_FIXED_MAPPING[keyValue] then
+			currentMapping[keyValue] = Musician.KEYBOARD_FIXED_MAPPING[keyValue]
+		else
+			currentMapping[keyValue] = nil
+		end
+
+		if ALLOWED_DUPLICATES[selectedKeyButton.key] == nil then
+			keysDone = keysDone - 1
+		end
+
+		selectedKeyButton.keyValue = nil
+		selectedKeyButton:SetText("")
+		Musician.KeyboardConfig.UpdateCompletion()
+	end
+end
+
 --- Key bindings OnClick
 --
 Musician.KeyboardConfig.Key_OnClick = function(self, button, down)
@@ -287,6 +309,18 @@ Musician.KeyboardConfig.SelectKeyBinding = function(key)
 	BindingButtonTemplate_SetSelected(button, true)
 	selectedKeyButton = button
 	Musician.KeyboardConfig.UpdateHint()
+
+	local point, relativeTo, relativePoint, xOfs, yOfs
+
+	MusicianKeyboardConfigNextKeyButton:SetParent(button)
+	point, relativeTo, relativePoint, xOfs, yOfs = MusicianKeyboardConfigNextKeyButton:GetPoint(1)
+	MusicianKeyboardConfigNextKeyButton:SetPoint(point, selectedKeyButton, relativePoint, xOfs, yOfs)
+	MusicianKeyboardConfigNextKeyButton:Show()
+
+	MusicianKeyboardConfigClearKeyButton:SetParent(button)
+	point, relativeTo, relativePoint, xOfs, yOfs = MusicianKeyboardConfigClearKeyButton:GetPoint(1)
+	MusicianKeyboardConfigClearKeyButton:SetPoint(point, selectedKeyButton, relativePoint, xOfs, yOfs)
+	MusicianKeyboardConfigClearKeyButton:Show()
 end
 
 --- Unselect key binding
@@ -296,6 +330,8 @@ Musician.KeyboardConfig.UnselectKeyBinding = function()
 		BindingButtonTemplate_SetSelected(selectedKeyButton, false)
 		selectedKeyButton = nil
 		Musician.KeyboardConfig.UpdateHint()
+		MusicianKeyboardConfigNextKeyButton:Hide()
+		MusicianKeyboardConfigClearKeyButton:Hide()
 	end
 end
 
@@ -308,13 +344,22 @@ Musician.KeyboardConfig.UpdateHint = function()
 		msg = string.gsub(msg, '{row}', Musician.Utils.Highlight(selectedKeyButton.row))
 
 		if ALLOWED_DUPLICATES[selectedKeyButton.key] ~= nil then
+			local msg2Action
 			if Musician.DISABLED_KEY_VALUES[ALLOWED_DUPLICATES[selectedKeyButton.key]] then
-				msg = msg .. "\n" .. Musician.Msg.KEY_IS_OPTIONAL
+				msg2Action = Musician.Msg.KEY_CANNOT_BE_MERGED
 			else
-				local msg2 = Musician.Msg.KEY_CAN_BE_MERGED
-				msg2 = string.gsub(msg2, '{key}', Musician.Utils.Highlight(Musician.KeyboardUtils.GetKeyValueName(ALLOWED_DUPLICATES[selectedKeyButton.key])))
-				msg = msg .. "\n" .. msg2
+				msg2Action = Musician.Msg.KEY_CAN_BE_MERGED
 			end
+
+			local highlightedKey = Musician.Utils.Highlight(Musician.KeyboardUtils.GetKeyValueName(ALLOWED_DUPLICATES[selectedKeyButton.key]))
+
+			msg2Action = string.gsub(msg2Action, '{key}', highlightedKey)
+
+			local msg2 = Musician.Msg.KEY_IS_MERGEABLE
+			msg2 = string.gsub(msg2, '{key}', highlightedKey)
+			msg2 = string.gsub(msg2, '{action}', msg2Action)
+
+			msg = msg .. "\n" .. msg2
 		end
 
 		MusicianKeyboardConfigHint:SetText(msg)

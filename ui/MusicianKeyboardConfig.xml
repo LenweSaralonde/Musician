@@ -78,6 +78,38 @@
 					</OnClick>
 				</Scripts>
 			</Button>
+
+			<Button name="$parentNextKeyButton" inherits="MusicianIconButtonTemplate" hidden="true">
+				<Size x="24" y="24" />
+				<Anchors>
+					<Anchor point="LEFT" x="-3" relativePoint="RIGHT" />
+				</Anchors>
+				<Scripts>
+					<OnClick inherit="append">
+						Musician.KeyboardConfig.SelectNextKeyBinding()
+					</OnClick>
+					<OnLoad>
+						self:SetText(Musician.Icons.Right)
+						self.tooltipText = Musician.Msg.NEXT_KEY
+					</OnLoad>
+				</Scripts>
+			</Button>
+
+			<Button name="$parentClearKeyButton" inherits="UIPanelButtonTemplate" hidden="true" text="x">
+				<Size x="24" y="24" />
+				<Anchors>
+					<Anchor point="TOPRIGHT" x="8" y="8" relativePoint="TOPRIGHT" />
+				</Anchors>
+				<Scripts>
+					<OnClick inherit="append">
+						Musician.KeyboardConfig.ClearSelectedKeyBinding()
+					</OnClick>
+					<OnLoad>
+						self:SetScale(0.75)
+						self.tooltipText = Musician.Msg.CLEAR_KEY
+					</OnLoad>
+				</Scripts>
+			</Button>
 		</Frames>
 
 		<Layers>
