@@ -685,24 +685,6 @@ Musician.Keyboard.OnFrame = function(event, elapsed)
 			button.glowColor:SetAlpha(button.volumeMeter:GetLevel() * 1)
 		end
 	end
-
-	-- Update keyboard parent frame to make it visible when the main UI is hidden
-	local expectedParent
-	if UIParent:IsVisible() then
-		expectedParent = UIParent
-	else
-		expectedParent = WorldFrame
-	end
-
-	if MusicianKeyboard:GetParent() ~= expectedParent then
-		MusicianKeyboard:SetParent(expectedParent)
-		if expectedParent == WorldFrame then
-			MusicianKeyboard:SetScale(UIParent:GetScale())
-		else
-			MusicianKeyboard:SetScale(1)
-			MusicianKeyboard:SetFrameStrata("DIALOG")
-		end
-	end
 end
 
 --- OnLiveNoteOn
@@ -763,6 +745,14 @@ end
 -- @param keyValue (string)
 -- @param down (boolean)
 Musician.Keyboard.OnPhysicalKey = function(keyValue, down)
+
+	-- Override standard Toggle UI to keep the keyboard visible on screen
+	if down and GetBindingFromClick(keyValue) == "TOGGLEUI" then
+		Musician.Keyboard.ToggleUI()
+		MusicianKeyboard:SetPropagateKeyboardInput(false)
+		return
+	end
+
 	MusicianKeyboard:SetPropagateKeyboardInput(true)
 	if Musician.Keyboard.KeyButtonStateDiffers(keyValue, down) then
 		if Musician.Keyboard.OnKey(keyValue, down) then
@@ -1317,6 +1307,30 @@ MusicianKeyboard.DeleteProgram = function(program)
 	Musician_Settings.keyboardPrograms[program] = nil
 	loadedProgram = program
 	Musician.Utils.Print(string.gsub(Musician.Msg.PROGRAM_DELETED, '{num}', Musician.Utils.Highlight(program)))
+end
+
+--- Toggle UI, keeping the keyboard visible
+--
+Musician.Keyboard.ToggleUI = function()
+	ToggleFrame(UIParent)
+
+	-- Update keyboard parent frame to make it visible when the main UI is hidden
+	local expectedParent
+	if UIParent:IsVisible() then
+		expectedParent = UIParent
+	else
+		expectedParent = WorldFrame
+	end
+
+	if MusicianKeyboard:GetParent() ~= expectedParent then
+		MusicianKeyboard:SetParent(expectedParent)
+		if expectedParent == WorldFrame then
+			MusicianKeyboard:SetScale(UIParent:GetScale())
+		else
+			MusicianKeyboard:SetScale(1)
+			MusicianKeyboard:SetFrameStrata("DIALOG")
+		end
+	end
 end
 
 --- Enable demo mode with provided track indexes
