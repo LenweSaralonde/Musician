@@ -25,6 +25,11 @@ local ICON = {
 local PERCUSSION_ICON = Musician.PercussionIcons
 local Percussion = Musician.MIDI_PERCUSSIONS
 
+local LayerNames = {
+	[LAYER.UPPER] = "Upper",
+	[LAYER.LOWER] = "Lower",
+}
+
 local PercussionIconMapping = {
 	[Percussion.AcousticBassDrum] = { PERCUSSION_ICON.BassDrum, "1"},
 	[Percussion.BassDrum1] = { PERCUSSION_ICON.BassDrum, "2"},
@@ -477,17 +482,15 @@ end
 --- Init controls for a layer
 -- @param layer (int)
 local function initLayerControls(layer)
-	local varNamePrefix = "MusicianKeyboardControls"
+	local varNamePrefix = "MusicianKeyboardControls" .. LayerNames[layer]
 	local config = Musician.Keyboard.config
 	local instrument = config.instrument[layer]
 	local dropdownTooltipText
 	local layout = layouts[config.layout]
 
 	if layer == LAYER.LOWER then
-		varNamePrefix = varNamePrefix .. "Lower"
 		dropdownTooltipText = Musician.Msg.CHANGE_LOWER_INSTRUMENT
 	elseif layer == LAYER.UPPER then
-		varNamePrefix = varNamePrefix .. "Upper"
 		dropdownTooltipText = Musician.Msg.CHANGE_UPPER_INSTRUMENT
 	end
 
@@ -576,13 +579,7 @@ end
 -- @param enable (boolean)
 local function enableLayerControls(layer, enable)
 	local controlNames = { "ShiftRight", "ShiftLeft", "ShiftUp", "ShiftDown", "ShiftReset", "PowerChords" }
-	local layerVarName = "MusicianKeyboardControls"
-
-	if layer == LAYER.UPPER then
-		layerVarName = layerVarName .. "Upper"
-	else
-		layerVarName = layerVarName .. "Lower"
-	end
+	local layerVarName = "MusicianKeyboardControls" .. LayerNames[layer]
 
 	local controlName
 	for _, controlName in pairs(controlNames) do
@@ -861,7 +858,7 @@ Musician.Keyboard.OnKey = function(keyValue, down)
 		return true
 	end
 
-	return MusicianKeyboard.NoteKey(down, keyValue) or MusicianKeyboard.FunctionKey(down, keyValue) or MusicianKeyboard.WriteProgramKey(down, keyValue) 
+	return MusicianKeyboard.NoteKey(down, keyValue) or MusicianKeyboard.FunctionKey(down, keyValue) or MusicianKeyboard.WriteProgramKey(down, keyValue)
 end
 
 --- Change keyboard layout
@@ -1346,15 +1343,29 @@ end
 Musician.Keyboard.ConfigureDemo = function(doKeyboardRefresh)
 	local song = Musician.sourceSong
 	local config = Musician.Keyboard.config
-	if config.demoTrackMapping == nil or not(song) then
-		return
+
+	-- Set instrument and power chords
+	if config.demoTrackMapping and song then
+		local layer, trackIndex
+		for layer, trackIndex in pairs(config.demoTrackMapping) do
+			local track = song.tracks[trackIndex]
+			if track ~= nil then
+				Musician.Keyboard.SetInstrument(layer, track.instrument, doKeyboardRefresh)
+			end
+		end
 	end
 
-	local layer, trackIndex
-	for layer, trackIndex in pairs(config.demoTrackMapping) do
-		local track = song.tracks[trackIndex]
-		if track ~= nil then
-			Musician.Keyboard.SetInstrument(layer, track.instrument, doKeyboardRefresh)
+	-- Enable or disable instrument and power chords controls
+	local layer, layerName
+	for layer, layerName in pairs(LayerNames) do
+		local layerVarName = "MusicianKeyboardControls" .. layerName
+		if config.demoTrackMapping and config.demoTrackMapping[layer] then
+			UIDropDownMenu_DisableDropDown(_G[layerVarName .. "Instrument"])
+			_G[layerVarName .. "PowerChords"]:Disable()
+			Musician.Keyboard.SetPowerChords(layer, false, doKeyboardRefresh)
+		else
+			UIDropDownMenu_EnableDropDown(_G[layerVarName .. "Instrument"])
+			_G[layerVarName .. "PowerChords"]:Enable()
 		end
 	end
 end
