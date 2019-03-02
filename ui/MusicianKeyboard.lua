@@ -7,8 +7,9 @@ local KEY_SIZE = 50
 local FUNCTION_KEY_SIZE = 58.5
 
 local writeProgramDown = false
+local programLedBlinkTime = 0
 local savingProgram = false
-local savingProgramTime = 0
+local deletingProgram = false
 local loadedProgram = nil
 local modifiedLayers = {}
 
@@ -101,20 +102,27 @@ end
 
 --- Update function key button LEDs
 -- @param [blinkTime] (number)
-local function updateFunctionKeysLEDs(blinkTime)
+-- @param [isDeleting] (boolean) True when deleting the program
+local function updateFunctionKeysLEDs(blinkTime, isDeleting)
 	local key
 	for _, key in pairs(FunctionKeys) do
 		local program = ProgramKeys[key]
 		local button = getFunctionKeyButton(key)
 
-		if blinkTime ~= nil then
+		if isDeleting then
+			button.led:SetVertexColor(1, .15, 0, 1)
+		else
+			button.led:SetVertexColor(.33, 1, 0, 1)
+		end
+
+		if blinkTime ~= nil and (not(isDeleting) or MusicianKeyboard.HasSavedProgram(program)) then
 			button.led:SetAlpha(abs(1 - 2 * (4 * blinkTime % 1)))
 		else
 			if MusicianKeyboard.HasSavedProgram(program) then
 				if MusicianKeyboard.IsCurrentProgram(program) then
 					button.led:SetAlpha(1)
 				else
-					button.led:SetAlpha(.33)
+					button.led:SetAlpha(.25)
 				end
 			else
 				button.led:SetAlpha(0)
@@ -663,10 +671,10 @@ end
 -- @param event (string)
 -- @param elapsed (boolean)
 Musician.Keyboard.OnFrame = function(event, elapsed)
-	-- Make program key LEDs blink when saving program
-	if MusicianKeyboard.IsSavingProgram() then
-		savingProgramTime = savingProgramTime + elapsed
-		updateFunctionKeysLEDs(savingProgramTime)
+	-- Make program key LEDs blink when saving or deleting a program
+	if MusicianKeyboard.IsSavingProgram() or MusicianKeyboard.IsDeletingProgram() then
+		programLedBlinkTime = programLedBlinkTime + elapsed
+		updateFunctionKeysLEDs(programLedBlinkTime, MusicianKeyboard.IsDeletingProgram())
 	end
 
 	-- Key glow
@@ -858,7 +866,7 @@ Musician.Keyboard.OnKey = function(keyValue, down)
 		return true
 	end
 
-	return MusicianKeyboard.NoteKey(down, keyValue) or MusicianKeyboard.FunctionKey(down, keyValue) or MusicianKeyboard.WriteProgramKey(down, keyValue)
+	return MusicianKeyboard.NoteKey(down, keyValue) or MusicianKeyboard.FunctionKey(down, keyValue) or MusicianKeyboard.ProgramActionKey(down, keyValue)
 end
 
 --- Change keyboard layout
@@ -1136,11 +1144,17 @@ MusicianKeyboard.NoteKey = function(down, keyValue)
 	return true
 end
 
---- Control key pressed
+--- Program action key pressed
 -- @param down (boolean)
 -- @param keyValue (string)
 -- @return (boolean) True if the keypress was consumed
-MusicianKeyboard.WriteProgramKey = function(down, keyValue)
+MusicianKeyboard.ProgramActionKey = function(down, keyValue)
+
+	if keyValue == "DELETE" then
+		MusicianKeyboard.SetDeletingProgram(down)
+		return true
+	end
+
 	local key = Musician.KeyboardUtils.GetKey(keyValue)
 	local isControlDown =
 		(key == KEY.ControlLeft or key == KEY.ControlRight) and not(IsMacClient()) or
@@ -1170,6 +1184,9 @@ MusicianKeyboard.FunctionKey = function(down, keyValue)
 		if MusicianKeyboard.IsSavingProgram() then
 			MusicianKeyboard.SaveProgram(program)
 			MusicianKeyboard.SetSavingProgram(false)
+		elseif MusicianKeyboard.IsDeletingProgram() then
+			MusicianKeyboard.DeleteProgram(program)
+			MusicianKeyboard.SetDeletingProgram(false)
 		else
 			MusicianKeyboard.LoadProgram(program)
 		end
@@ -1182,7 +1199,7 @@ end
 -- @param value (boolean)
 MusicianKeyboard.SetSavingProgram = function(value)
 	if savingProgram ~= value then
-		savingProgramTime = 0
+		programLedBlinkTime = 0
 		savingProgram = value
 		Musician.Keyboard.SetButtonState(keyValueButtons[KEY.WriteProgram], value)
 		if value then
@@ -1195,10 +1212,27 @@ MusicianKeyboard.SetSavingProgram = function(value)
 	end
 end
 
+--- Set program deleting mode
+-- @param value (boolean)
+MusicianKeyboard.SetDeletingProgram = function(value)
+	if deletingProgram ~= value then
+		programLedBlinkTime = 0
+		deletingProgram = value
+		PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
+		updateFunctionKeys()
+	end
+end
+
 --- Get program saving mode
 -- @return (boolean)
 MusicianKeyboard.IsSavingProgram = function()
 	return savingProgram
+end
+
+--- Get program deleting mode
+-- @return (boolean)
+MusicianKeyboard.IsDeletingProgram = function()
+	return deletingProgram
 end
 
 --- Load configuration
@@ -1271,6 +1305,18 @@ MusicianKeyboard.SaveProgram = function(program)
 	Musician_Settings.keyboardPrograms[program] = Musician.Utils.DeepCopy(Musician.Keyboard.config)
 	loadedProgram = program
 	Musician.Utils.Print(string.gsub(Musician.Msg.PROGRAM_SAVED, '{num}', Musician.Utils.Highlight(program)))
+end
+
+--- Delete a program
+-- @param program (number)
+MusicianKeyboard.DeleteProgram = function(program)
+	if Musician_Settings.keyboardPrograms == nil or Musician_Settings.keyboardPrograms[program] == nil then
+		return
+	end
+
+	Musician_Settings.keyboardPrograms[program] = nil
+	loadedProgram = program
+	Musician.Utils.Print(string.gsub(Musician.Msg.PROGRAM_DELETED, '{num}', Musician.Utils.Highlight(program)))
 end
 
 --- Enable demo mode with provided track indexes

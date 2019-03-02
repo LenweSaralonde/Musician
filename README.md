@@ -1,4 +1,5 @@
 
+
 Musician
 ========
 Hear and play music with nearby players. For the first time in World of Warcraft, your character can litterally become a bard!
@@ -59,7 +60,10 @@ Various keyboard layouts are available, including simplified ones with limited n
 
 In **Live Mode**, the other players hear you playing while in **Solo Mode**, you play for yourself. In Live Mode, keep in mind that if you hear the sound playing instantly at the press of the key, the other players will hear it after a slight delay of approximately 2 seconds.
 
-The keyboard settings can be saved in 12 program slots, accessible using the 12 Function keys. Press **Ctrl + Function key** (**Shift + Function key** on Mac) to save the current settings in a program.
+The keyboard settings can be saved in 12 program slots, accessible using the 12 Function keys:
+* Press the **Function key** to load a program.
+* Press **Ctrl** (or **Shift** on Mac) **+** the **Function key** to save the current settings in a program.
+* Press **Delete +** the **Function key** to erase a program.
 
 Song editor
 -----------
