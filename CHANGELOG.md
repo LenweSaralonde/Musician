@@ -1,6 +1,16 @@
 Changelog
 =========
 
+v1.5.0.1
+--------
+* Live keyboard no longer blocks default keypresses unnecessarily
+* Added program deletion in live keyboard
+* Improved keyboard configuration UX to make it more intuitive
+* Fixed ordering in live keyboard base key dropdown
+* Fixed track list scrolling gap in song editor
+* Live demo settings are now saved in live keyboard programs
+* Minor bugfixes and improvements
+
 v1.5.0.0
 --------
 *"Go live!"*
