@@ -1095,8 +1095,12 @@ MusicianKeyboard.NoteKey = function(down, keyValue)
 		return false
 	end
 
-	-- Modifier key down
-	if IsMacClient() and IsShiftKeyDown() or IsControlKeyDown() or IsAltKeyDown() then
+	-- Ignore when any modifier key is in action
+	if
+		IsMacClient() and (IsShiftKeyDown() or keyValue == "LSHIFT" or keyValue == "RSHIFT") or
+		IsControlKeyDown() or keyValue == "LCTRL" or keyValue == "RCTRL" or
+		IsAltKeyDown() or keyValue == "LALT" or keyValue == "RALT"
+	then
 		return false
 	end
 
