@@ -140,7 +140,11 @@ local function updateFunctionKeys()
 		if MusicianKeyboard.IsSavingProgram() then
 			label = Musician.Msg.SAVE_PROGRAM_NUM
 		elseif Musician_Settings.keyboardPrograms and Musician_Settings.keyboardPrograms[ProgramKeys[key]] then
-			label = Musician.Msg.LOAD_PROGRAM_NUM
+			if MusicianKeyboard.IsDeletingProgram() then
+				label = Musician.Msg.DELETE_PROGRAM_NUM
+			else
+				label = Musician.Msg.LOAD_PROGRAM_NUM
+			end
 		else
 			label = Musician.Msg.EMPTY_PROGRAM
 		end
