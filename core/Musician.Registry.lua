@@ -10,6 +10,8 @@ Musician.Registry.event.query = "MusicianQuery"
 local newVersionNotified = false
 local newProtocolNotified = false
 
+local tooltipPlayerName
+
 --- Initialize registry
 --
 function Musician.Registry.Init()
@@ -27,7 +29,11 @@ function Musician.Registry.Init()
 		GameTooltip:HookScript("OnTooltipSetUnit", function()
 			local _, unitType = GameTooltip:GetUnit()
 			if UnitIsPlayer(unitType) then
-				Musician.Registry.AddTooltipInfo(GameTooltip, GetUnitName(unitType, true), 10)
+				local player = Musician.Utils.NormalizePlayerName(GetUnitName(unitType, true))
+				tooltipPlayerName = player
+				Musician.Registry.AddTooltipInfo(GameTooltip, player, 10)
+			else
+				tooltipPlayerName = nil
 			end
 		end)
 
@@ -266,12 +272,10 @@ function Musician.Registry.AddTooltipInfo(tooltip, player, fontSize)
 
 	if not(Musician.Registry.PlayerIsOnline(player)) then return end
 
-	local localPlayerData = Musician.Registry.players[player]
-
 	local infoText = Musician.Msg.PLAYER_TOOLTIP
 
-	if localPlayerData.version then
-		local playerVersion = Musician.Registry.ExtractVersionAndProtocol(localPlayerData.version)
+	local playerVersion = Musician.Registry.GetPlayerVersion(player)
+	if playerVersion then
 		infoText = string.gsub(Musician.Msg.PLAYER_TOOLTIP_VERSION, '{version}', playerVersion)
 	end
 
@@ -281,6 +285,51 @@ function Musician.Registry.AddTooltipInfo(tooltip, player, fontSize)
 	line:SetFont(font, fontSize, flag)
 	tooltip:Show()
 	tooltip:GetTop()
+end
+
+--- Update missing Musician client version in tooltip, if applicable.
+-- @param tooltip (table)
+-- @param player (string)
+-- @param fontSize (int)
+function Musician.Registry.UpdateTooltipInfo(tooltip, player, fontSize)
+	player = Musician.Utils.NormalizePlayerName(player)
+
+	if not(Musician.Registry.PlayerIsOnline(player)) then return end
+
+	local playerVersion = Musician.Registry.GetPlayerVersion(player)
+	if not(playerVersion) then
+		return
+	end
+
+	local infoText = string.gsub(Musician.Msg.PLAYER_TOOLTIP_VERSION, '{version}', playerVersion)
+
+	local tooltipName = tooltip:GetName()
+	local line
+	local i = 1
+	while _G[tooltipName .. 'TextRight' .. i] do
+		local line = _G[tooltipName .. 'TextRight' .. i]
+
+		if line:GetText() == Musician.Msg.PLAYER_TOOLTIP then
+			line:SetText(infoText)
+			return
+		end
+
+		i = i + 1
+	end
+end
+
+--- Update player tooltip to add missing Musician client version, if applicable.
+-- @param player (string)
+function Musician.Registry.UpdatePlayerTooltip(player)
+	-- Standard player tooltip
+	if tooltipPlayerName == player then
+		Musician.Registry.UpdateTooltipInfo(GameTooltip, player, 10)
+	end
+
+	-- Total RP player tooltip
+	if TRP3_CharacterTooltip ~= nil and TRP3_CharacterTooltip.target == player then
+		Musician.Registry.UpdateTooltipInfo(TRP3_CharacterTooltip, player, TRP3_API.ui.tooltip.getSmallLineFontSize())
+	end
 end
 
 --- Send a hello to the channel
@@ -304,6 +353,7 @@ Musician.Registry:RegisterComm(Musician.Registry.event.hello, function(prefix, m
 	Musician.Registry.players[player].query = true
 	Musician.Registry.players[player].version = message
 
+	Musician.Registry.UpdatePlayerTooltip(player)
 	Musician.Registry.NotifyNewVersion(message)
 end)
 
@@ -325,6 +375,7 @@ Musician.Registry:RegisterComm(Musician.Registry.event.query, function(prefix, m
 	Musician.Registry.players[player].version = version
 	Musician.Registry.players[player].query = true
 
+	Musician.Registry.UpdatePlayerTooltip(player)
 	Musician.Registry.NotifyNewVersion(version)
 
 	if distribution == 'WHISPER' then
@@ -363,6 +414,20 @@ function Musician.Registry.ExtractVersionAndProtocol(version)
 	end
 
 	return table.concat(versionParts, '.'), protocol
+end
+
+--- Return version and protocol for player
+-- @param player (string)
+-- @return (string), (number)
+function Musician.Registry.GetPlayerVersion(player)
+	player = Musician.Utils.NormalizePlayerName(player)
+	local entry = Musician.Registry.players[player]
+
+	if not(entry) or not (entry.version) then
+		return nil, nil
+	end
+
+	return Musician.Registry.ExtractVersionAndProtocol(entry.version)
 end
 
 --- Display a message if a new version of the addon is available
