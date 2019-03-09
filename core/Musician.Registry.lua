@@ -52,7 +52,9 @@ function Musician.Registry.Init()
 
 	-- Send query to group when joining
 	Musician.Registry:RegisterEvent("GROUP_JOINED", function()
-		Musician.Registry:SendCommMessage(Musician.Registry.event.query, Musician.Registry.GetVersionString(), Musician.Comm.GetGroupChatType(), nil, "ALERT")
+		if Musician.Comm.GetGroupChatType() then
+			Musician.Registry:SendCommMessage(Musician.Registry.event.query, Musician.Registry.GetVersionString(), Musician.Comm.GetGroupChatType(), nil, "ALERT")
+		end
 	end)
 
 	-- Query hello to hovered player
