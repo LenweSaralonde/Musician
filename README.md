@@ -65,6 +65,10 @@ The keyboard settings can be saved in 12 program slots, accessible using the 12 
 * Press **Ctrl** (or **Shift** on Mac) **+** the **Function key** to save the current settings in a program.
 * Press **Delete +** the **Function key** to erase a program.
 
+### Play with a MIDI keyboard
+
+There is no support for MIDI keyboards in World of Warcraft. However, it's possible to emulate keystrokes with a MIDI keyboard using third party software. Check out [this tutorial](https://gist.github.com/LenweSaralonde/ea5d1312b264521e27734029d78df9f3) to learn how to do this.
+
 Song editor
 -----------
 Some basic modifications can be made to the imported song in the song editor, which is accessible from the **Edit** button or the main menu:
