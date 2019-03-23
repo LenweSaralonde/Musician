@@ -41,11 +41,13 @@ msg.ERR_COMMAND_UNKNOWN = "Unknown \"{command}\" command. Type {help} to get the
 msg.STARTUP = "Welcome to Musician v{version}."
 
 msg.NEW_VERSION = "A new version of Musician has been released! Download the update from {url} ."
-msg.NEW_PROTOCOL_VERSION = "Your version of Musician is obsolete and does not work anymore.\nPlease download the update from\n{url}"
+msg.NEW_PROTOCOL_VERSION = "Your version of Musician is outdated and does not work anymore.\nPlease download the update from\n{url}"
 msg.SHOULD_CONFIGURE_KEYBOARD = "You have to configure the keyboard before playing."
 
 msg.PLAYER_TOOLTIP = "Musician"
 msg.PLAYER_TOOLTIP_VERSION = "Musician v{version}"
+msg.PLAYER_TOOLTIP_VERSION_OUTDATED = " (Outdated)"
+msg.PLAYER_TOOLTIP_VERSION_INCOMPATIBLE = " (INCOMPATIBLE)"
 msg.PLAYER_TOOLTIP_PRELOADING = "Preloading sounds… ({progress})"
 
 msg.PLAYER_COUNT_ONLINE = "There are {count} other music fans around!"

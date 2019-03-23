@@ -36,12 +36,14 @@ end
 
 --- Highlight text
 -- @param text (string)
--- @param color (string)
+-- @param color (string|Color)
 -- @return (string)
 function Musician.Utils.Highlight(text, color)
 
 	if color == nil then
 		color = 'FFFFFF'
+	elseif type(color) == 'table' and color.GenerateHexColorMarkup then
+		return color:GenerateHexColorMarkup() .. text .. "|r"
 	end
 
 	return "|cFF" .. color .. text .. "|r"
@@ -416,17 +418,32 @@ end
 
 --- Return the simple player name, including realm slug if needed
 -- @param name (string)
+-- @return (string), (string), (string) Player name, realm name, full name
+local function getPlayerNameParts(name)
+	local fullName = Musician.Utils.NormalizePlayerName(name)
+	local simpleName, realmName = string.split('-', fullName)
+	return simpleName, realmName, fullName
+end
+
+--- Return the simple player name, including realm slug if needed
+-- @param name (string)
 -- @return (string)
 function Musician.Utils.SimplePlayerName(name)
-	local fullName = Musician.Utils.NormalizePlayerName(name)
-	local myRealmName = string.gsub(GetRealmName(), "%s+", "")
-	local simpleName, realmName = string.split('-', fullName)
+	local _, myRealmName = getPlayerNameParts(UnitName("player"))
+	local simpleName, realmName, fullName = getPlayerNameParts(name)
 
 	if realmName == myRealmName then
 		return simpleName
 	end
 
 	return fullName
+end
+
+--- Return the player realm slug
+-- @param name (string)
+-- @return (string)
+function Musician.Utils.PlayerRealm(name)
+	return select(2, getPlayerNameParts(name))
 end
 
 --- Returns true if the player is in my party or raid
@@ -462,6 +479,28 @@ end
 -- @return (boolean)
 function Musician.Utils.PlayerIsMyself(player)
 	return player ~= nil and Musician.Utils.NormalizePlayerName(player) == Musician.Utils.NormalizePlayerName(UnitName("player"))
+end
+
+--- Return true if the provided player name is on the same realm or connected realm as me
+-- @param name (string)
+-- @return (boolean)
+function Musician.Utils.PlayerIsOnSameRealm(player)
+	local playerRealm = Musician.Utils.PlayerRealm(player)
+
+	-- Is on the same realm
+	if playerRealm == Musician.Utils.PlayerRealm(UnitName("player")) then
+		return true
+	end
+
+	-- Is on a connected realm
+	local realm
+	for _, realm in pairs(GetAutoCompleteRealms()) do
+		if realm == playerRealm then
+			return true
+		end
+	end
+
+	return false
 end
 
 --- Return the emote for "Player is playing music" with promo URL
@@ -502,8 +541,8 @@ function Musician.Utils.VersionCompare(versionA, versionB)
 
 	local i
 	for i = 1, min(countA, countB) do
-		local a = tonumber(partsA[i])
-		local b = tonumber(partsB[i])
+		local a = tonumber(partsA[i]) or 0
+		local b = tonumber(partsB[i]) or 0
 
 		if a > b then
 			return 1
@@ -559,7 +598,7 @@ end
 -- @return (number)
 function Musician.Utils.ParseTime(timestamp)
 	local parts = {string.split(':', timestamp)}
-	local m, s
+	local m, s, cs
 
 	if #parts >= 2 then
 		m = string.match(parts[#parts - 1], "(%d*)")

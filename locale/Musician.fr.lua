@@ -41,11 +41,13 @@ msg.ERR_COMMAND_UNKNOWN = "Commande \"{command}\" inconnue. Tapez {help} pour ob
 msg.STARTUP = "Bienvenue dans Musician v{version}."
 
 msg.NEW_VERSION = "Une nouvelle version de Musician est disponible ! Téléchargez la mise à jour sur {url} ."
-msg.NEW_PROTOCOL_VERSION = "Votre version de Musician est obsolète et n'est plus fonctionnelle.\nTéléchargez la mise à jour sur\n{url}"
+msg.NEW_PROTOCOL_VERSION = "Votre version de Musician est périmée et n'est plus fonctionnelle.\nTéléchargez la mise à jour sur\n{url}"
 msg.SHOULD_CONFIGURE_KEYBOARD = "Vous devez configurer le clavier avant de pouvoir jouer."
 
 msg.PLAYER_TOOLTIP = "Musician"
 msg.PLAYER_TOOLTIP_VERSION = "Musician v{version}"
+msg.PLAYER_TOOLTIP_VERSION_OUTDATED = " (Périmé)"
+msg.PLAYER_TOOLTIP_VERSION_INCOMPATIBLE = " (INCOMPATIBLE)"
 msg.PLAYER_TOOLTIP_PRELOADING = "Préchargement des sons… ({progress})"
 
 msg.PLAYER_COUNT_ONLINE = "Il y a {count} autres amateurs de musique dans le coin !"

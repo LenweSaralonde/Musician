@@ -116,17 +116,6 @@ function Musician.Comm.isReady()
 	return Musician.Comm.getChannel() ~= nil
 end
 
---- Return true if the player supports group communication
--- @param name (string)
--- @return (boolean)
-function Musician.Comm.PlayerHasGroupSupport(name)
-	if not(Musician.Registry.players[name]) then
-		return false
-	end
-	local player = Musician.Registry.players[name]
-	return player.groupSupport or player.version and (Musician.Utils.VersionCompare(player.version, '1.4.1.0') >= 0)
-end
-
 --- Play song
 -- @return (boolean)
 function Musician.Comm.PlaySong()
@@ -167,17 +156,10 @@ local function OnChunk(prefix, message, distribution, sender)
 	local isGroup = distribution ~= 'CHANNEL'
 	local senderIsInGroup = Musician.Utils.PlayerIsInGroup(sender)
 
-	-- Consider the sender has group support since the message was received via group chat
-	if isGroup then
-		if Musician.Registry.players[sender] == nil then
-			Musician.Registry.players[sender] = {}
-		end
-
-		Musician.Registry.players[sender].groupSupport = true
-	end
+	Musician.Registry.EnablePlayerDistribution(sender, distribution)
 
 	-- Rejecting channel chunks if the sender is also sending group chunks
-	if not(isGroup) and senderIsInGroup and Musician.Comm.PlayerHasGroupSupport(sender) then
+	if not(isGroup) and senderIsInGroup and Musician.Registry.PlayerHasGroupSupport(sender) then
 		return
 	end
 

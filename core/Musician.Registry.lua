@@ -2,6 +2,7 @@ Musician.Registry = LibStub("AceAddon-3.0"):NewAddon("Musician.Registry", "AceEv
 
 Musician.Registry.players = {}
 Musician.Registry.playersFetched = false
+Musician.Registry.playersQueried = {}
 
 Musician.Registry.event = {}
 Musician.Registry.event.hello = "MusicianHello"
@@ -68,21 +69,14 @@ function Musician.Registry.Init()
 			return
 		end
 
-		-- Player is in group but not (yet) in registry
-		local isNewlyGroupedPlayer = (Musician.Registry.players[player] == nil) and Musician.Utils.PlayerIsInGroup(player)
+		local isQueried = Musician.Registry.playersQueried[player]
+		local isOnline = Musician.Registry.PlayerIsOnline(player)
+		local hasNoVersion = isOnline and Musician.Registry.players[player].version == nil
 
-		if isNewlyGroupedPlayer or Musician.Registry.players[player] ~= nil then
-			if Musician.Registry.players[player] == nil then
-				Musician.Registry.players[player] = {}
-			end
-
-			local playerData = Musician.Registry.players[player]
-			if playerData.version == nil and not(playerData.query) then
-				playerData.query = true
-				if not(isNewlyGroupedPlayer) then -- If the player is in the group and has Musician, the version will be retrieved when joining.
-					Musician.Registry:SendCommMessage(Musician.Registry.event.query, Musician.Registry.GetVersionString(), 'WHISPER', player, "ALERT")
-				end
-			end
+		-- No version information available and not on the same realm: do query
+		if hasNoVersion and isOnline and not(isQueried) then
+			Musician.Registry.playersQueried[player] = true
+			Musician.Registry:SendCommMessage(Musician.Registry.event.query, Musician.Registry.GetVersionString(), 'WHISPER', player, "ALERT")
 		end
 	end)
 
@@ -98,11 +92,7 @@ function Musician.Registry.Init()
 		for player in string.gmatch(players, "([^, *]+)") do
 			player = Musician.Utils.NormalizePlayerName(player)
 
-			if Musician.Registry.players[player] == nil then
-				Musician.Registry.players[player] = {}
-			end
-
-			Musician.Registry.players[player].online = true
+			Musician.Registry.EnablePlayerDistribution(player, "CHANNEL")
 		end
 
 		-- Finalize when all CHAT_MSG_CHANNEL_LIST pages are received (no new page received after 1 second)
@@ -116,8 +106,8 @@ function Musician.Registry.Init()
 
 			-- Display the number of players online
 			local playerCount = 0
-			for _, player in pairs(Musician.Registry.players) do
-				if player.online then
+			for player, _ in pairs(Musician.Registry.players) do
+				if Musician.Registry.PlayerIsInChannel(player) then
 					playerCount = playerCount + 1
 				end
 			end
@@ -158,11 +148,7 @@ function Musician.Registry.Init()
 
 		player = Musician.Utils.NormalizePlayerName(player)
 
-		if Musician.Registry.players[player] == nil then
-			Musician.Registry.players[player] = {}
-		end
-
-		Musician.Registry.players[player].online = true
+		Musician.Registry.EnablePlayerDistribution(player, "CHANNEL")
 	end)
 
 	-- A player leaves: remove from registry
@@ -210,7 +196,6 @@ end
 function Musician.Registry.UpdatePlayerPositionAndGUID(player, posY, posX, posZ, instanceID, guid)
 	if Musician.Registry.players[player] == nil then
 		Musician.Registry.players[player] = {}
-		Musician.Registry.players[player].online = true
 	end
 
 	Musician.Registry.players[player].posY = posY
@@ -233,7 +218,7 @@ function Musician.Registry.PlayerIsInRange(player, radius)
 	end
 
 	-- Player not in registry
-	if not(Musician.Registry.PlayerIsOnline(player)) or Musician.Registry.players[player].guid == nil then
+	if not(Musician.Registry.PlayerIsOnline(player)) then
 		return false
 	end
 
@@ -265,20 +250,41 @@ function Musician.Registry.GetPlayerGUID(player)
 	return nil
 end
 
+--- Return player tooltip text
+-- @param player (string)
+-- @return (string)
+local function getPlayerTooltipText(player)
+	player = Musician.Utils.NormalizePlayerName(player)
+
+	if not(Musician.Registry.PlayerIsOnline(player)) or not(Musician.Utils.PlayerIsOnSameRealm(player)) and not(Musician.Utils.PlayerIsInGroup(player)) then
+		return nil
+	end
+
+	local infoText = Musician.Msg.PLAYER_TOOLTIP
+
+	local playerVersion, playerProtocol = Musician.Registry.GetPlayerVersion(player)
+	if playerVersion then
+		infoText = string.gsub(Musician.Msg.PLAYER_TOOLTIP_VERSION, '{version}', playerVersion)
+
+		if playerProtocol < Musician.PROTOCOL_VERSION then
+			infoText = infoText .. " " .. Musician.Utils.Highlight(Musician.Msg.PLAYER_TOOLTIP_VERSION_OUTDATED, DIM_RED_FONT_COLOR)
+		elseif playerProtocol > Musician.PROTOCOL_VERSION then
+			infoText = infoText .. " " ..  Musician.Utils.Highlight(Musician.Msg.PLAYER_TOOLTIP_VERSION_INCOMPATIBLE, RED_FONT_COLOR)
+		end
+	end
+
+	return infoText
+end
+
 --- Append Musician client version to player tooltip, if applicable.
 -- @param tooltip (table)
 -- @param player (string)
 -- @param fontSize (int)
 function Musician.Registry.AddTooltipInfo(tooltip, player, fontSize)
-	player = Musician.Utils.NormalizePlayerName(player)
+	local infoText = getPlayerTooltipText(player)
 
-	if not(Musician.Registry.PlayerIsOnline(player)) then return end
-
-	local infoText = Musician.Msg.PLAYER_TOOLTIP
-
-	local playerVersion = Musician.Registry.GetPlayerVersion(player)
-	if playerVersion then
-		infoText = string.gsub(Musician.Msg.PLAYER_TOOLTIP_VERSION, '{version}', playerVersion)
+	if infoText == nil then
+		return
 	end
 
 	tooltip:AddDoubleLine(" ", infoText, 1, 1, 1, 1, 1, 1)
@@ -294,16 +300,11 @@ end
 -- @param player (string)
 -- @param fontSize (int)
 function Musician.Registry.UpdateTooltipInfo(tooltip, player, fontSize)
-	player = Musician.Utils.NormalizePlayerName(player)
+	local infoText = getPlayerTooltipText(player)
 
-	if not(Musician.Registry.PlayerIsOnline(player)) then return end
-
-	local playerVersion = Musician.Registry.GetPlayerVersion(player)
-	if not(playerVersion) then
+	if infoText == nil then
 		return
 	end
-
-	local infoText = string.gsub(Musician.Msg.PLAYER_TOOLTIP_VERSION, '{version}', playerVersion)
 
 	local tooltipName = tooltip:GetName()
 	local line
@@ -342,22 +343,22 @@ function Musician.Registry.SendHello()
 	end
 end
 
---- Receive hello message
+--- Handle incoming version message
 --
-Musician.Registry:RegisterComm(Musician.Registry.event.hello, function(prefix, message, distribution, player)
+local function handleVersionMessage(prefix, version, distribution, player)
 	player = Musician.Utils.NormalizePlayerName(player)
 
-	if Musician.Registry.players[player] == nil then
-		Musician.Registry.players[player] = {}
-	end
+	Musician.Registry.EnablePlayerDistribution(player, distribution)
 
-	Musician.Registry.players[player].online = true
-	Musician.Registry.players[player].query = true
-	Musician.Registry.players[player].version = message
+	Musician.Registry.players[player].version = version
 
 	Musician.Registry.UpdatePlayerTooltip(player)
-	Musician.Registry.NotifyNewVersion(message)
-end)
+	Musician.Registry.NotifyNewVersion(version)
+end
+
+--- Receive hello message
+--
+Musician.Registry:RegisterComm(Musician.Registry.event.hello, handleVersionMessage)
 
 --- Receive query message
 --
@@ -369,16 +370,7 @@ Musician.Registry:RegisterComm(Musician.Registry.event.query, function(prefix, m
 		return
 	end
 
-	if Musician.Registry.players[player] == nil then
-		Musician.Registry.players[player] = {}
-	end
-
-	Musician.Registry.players[player].online = true
-	Musician.Registry.players[player].version = version
-	Musician.Registry.players[player].query = true
-
-	Musician.Registry.UpdatePlayerTooltip(player)
-	Musician.Registry.NotifyNewVersion(version)
+	handleVersionMessage(prefix, message, distribution, player)
 
 	if distribution == 'WHISPER' then
 		Musician.Registry:SendCommMessage(Musician.Registry.event.hello, Musician.Registry.GetVersionString(), 'WHISPER', player, "ALERT")
@@ -387,11 +379,46 @@ Musician.Registry:RegisterComm(Musician.Registry.event.query, function(prefix, m
 	end
 end)
 
---- Return true if this player is online and has Musician
+--- Add an available distribution channel to player
+-- @param player (string)
+-- @param distribution (string) (CHANNEL, WHISPER, PARTY etc)
+function Musician.Registry.EnablePlayerDistribution(player, distribution)
+	player = Musician.Utils.NormalizePlayerName(player)
+
+	if Musician.Registry.players[player] == nil then
+		Musician.Registry.players[player] = {}
+	end
+
+	if distribution == "CHANNEL" then
+		Musician.Registry.players[player].isInChannel = true
+	elseif distribution ~= "WHISPER" then
+		Musician.Registry.players[player].groupSupport = true
+	end
+end
+
+--- Return true if this player has Musician
 -- @param player (string)
 -- @return (boolean)
 function Musician.Registry.PlayerIsOnline(player)
-	return Musician.Registry.players[player] and Musician.Registry.players[player].online
+	return Musician.Registry.players[player] ~= nil
+end
+
+--- Return true if this player has Musician and is in the channel
+-- @param player (string)
+-- @return (boolean)
+function Musician.Registry.PlayerIsInChannel(player)
+	return Musician.Registry.players[player] and Musician.Registry.players[player].isInChannel
+end
+
+--- Return true if the player supports group communication
+-- @param name (string)
+-- @return (boolean)
+function Musician.Registry.PlayerHasGroupSupport(name)
+	if not(Musician.Registry.players[name]) then
+		return false
+	end
+	local player = Musician.Registry.players[name]
+	return player.groupSupport or player.version and (Musician.Utils.VersionCompare(player.version, '1.4.1.0') >= 0)
 end
 
 --- Get full version string
@@ -410,9 +437,20 @@ function Musician.Registry.ExtractVersionAndProtocol(version)
 	local versionParts = { string.split('.', version) }
 	local protocol = Musician.PROTOCOL_VERSION
 
+	local majorVersion = tonumber(versionParts[1]) or 0
+	local minorVersion = tonumber(versionParts[2]) or 0
+
 	-- Version string contains protocol version as 5th number
 	if #versionParts == 5 then
-		protocol = tonumber(table.remove(versionParts, 5))
+		protocol = tonumber(table.remove(versionParts, 5)) or 0
+	elseif majorVersion == 1 and minorVersion >= 5 then -- 1.5.xx -> MUS4
+		protocol = 4
+	elseif majorVersion == 1 and minorVersion >= 4 then -- 1.4.xx -> MUS3
+		protocol = 3
+	elseif majorVersion == 1 and minorVersion >= 1 then -- 1.1.xx -> MUS2
+		protocol = 2
+	else -- 1.0.xx -> MUS1
+		protocol = 1
 	end
 
 	return table.concat(versionParts, '.'), protocol
