@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.5.0.2
+--------
+* Player tooltips now show a warning for players who use an incompatible outdated version of the addon
+* Minor bugfixes and improvements
+
 v1.5.0.1
 --------
 * Live keyboard no longer blocks default keypresses unnecessarily
