@@ -445,7 +445,7 @@ function Musician.SetupHooks()
 				isMyself = Musician.Utils.PlayerIsMyself(player)
 				isMuted = Musician.PlayerIsMuted(player)
 				isPlaying = Musician.songs[player] ~= nil and Musician.songs[player]:IsPlaying()
-				isRegistered = Musician.Registry.PlayerIsOnline(player)
+				isRegistered = Musician.Registry.PlayerIsRegistered(player)
 			end
 
 			local items = {

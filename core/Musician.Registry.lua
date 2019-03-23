@@ -70,11 +70,11 @@ function Musician.Registry.Init()
 		end
 
 		local isQueried = Musician.Registry.playersQueried[player]
-		local isOnline = Musician.Registry.PlayerIsOnline(player)
-		local hasNoVersion = isOnline and Musician.Registry.players[player].version == nil
+		local isRegistered = Musician.Registry.PlayerIsRegistered(player)
+		local hasNoVersion = isRegistered and Musician.Registry.players[player].version == nil
 
-		-- No version information available and not on the same realm: do query
-		if hasNoVersion and isOnline and not(isQueried) then
+		-- No version information available but player is registered: do query
+		if hasNoVersion and isRegistered and not(isQueried) then
 			Musician.Registry.playersQueried[player] = true
 			Musician.Registry:SendCommMessage(Musician.Registry.event.query, Musician.Registry.GetVersionString(), 'WHISPER', player, "ALERT")
 		end
@@ -218,7 +218,7 @@ function Musician.Registry.PlayerIsInRange(player, radius)
 	end
 
 	-- Player not in registry
-	if not(Musician.Registry.PlayerIsOnline(player)) then
+	if not(Musician.Registry.PlayerIsRegistered(player)) then
 		return false
 	end
 
@@ -256,7 +256,7 @@ end
 local function getPlayerTooltipText(player)
 	player = Musician.Utils.NormalizePlayerName(player)
 
-	if not(Musician.Registry.PlayerIsOnline(player)) or not(Musician.Utils.PlayerIsOnSameRealm(player)) and not(Musician.Utils.PlayerIsInGroup(player)) then
+	if not(Musician.Registry.PlayerIsRegistered(player)) or not(Musician.Utils.PlayerIsOnSameRealm(player)) and not(Musician.Utils.PlayerIsInGroup(player)) then
 		return nil
 	end
 
@@ -399,7 +399,7 @@ end
 --- Return true if this player has Musician
 -- @param player (string)
 -- @return (boolean)
-function Musician.Registry.PlayerIsOnline(player)
+function Musician.Registry.PlayerIsRegistered(player)
 	return Musician.Registry.players[player] ~= nil
 end
 
