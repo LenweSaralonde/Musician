@@ -305,48 +305,6 @@
       "search": [
         "blank"
       ]
-    },
-    {
-      "uid": "77c2c133143f781811b7030964eb5f60",
-      "css": "blank",
-      "code": 32,
-      "src": "custom_icons",
-      "selected": false,
-      "svg": {
-        "path": "",
-        "width": 1000
-      },
-      "search": [
-        "blank"
-      ]
-    },
-    {
-      "uid": "2cb371af8f3c946b45552e2856518376",
-      "css": "blank",
-      "code": 59394,
-      "src": "custom_icons",
-      "selected": false,
-      "svg": {
-        "path": "",
-        "width": 250
-      },
-      "search": [
-        "blank"
-      ]
-    },
-    {
-      "uid": "dcf45bef00defb87692e693c31ed6cf6",
-      "css": "blank",
-      "code": 32,
-      "src": "custom_icons",
-      "selected": false,
-      "svg": {
-        "path": "M286.1 1000",
-        "width": 478
-      },
-      "search": [
-        "blank"
-      ]
     }
   ]
 }
