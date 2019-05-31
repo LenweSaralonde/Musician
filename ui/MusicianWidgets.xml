@@ -231,14 +231,22 @@
 			<OnLoad>
 				MSA_DropDownMenu_Create(self, self:GetParent())
 			</OnLoad>
+			<OnKeyDown inherit="append">
+				if _G["MSA_DropDownList1"]:IsShown() and key == "ESCAPE" then
+					self:SetPropagateKeyboardInput(false)
+					MSA_DropDownMenu_OnHide(self)
+				else
+					self:SetPropagateKeyboardInput(true)
+				end
+			</OnKeyDown>
 			<OnEnter>
 				if(self.tooltipText ~= nil) then
-					GameTooltip_AddNewbieTip(self, self.tooltipText, 1.0, 1.0, 1.0, self.newbieText);
+					GameTooltip_AddNewbieTip(self, self.tooltipText, 1.0, 1.0, 1.0, self.newbieText)
 				end
 			</OnEnter>
 			<OnLeave>
 				if(self.tooltipText ~= nil) then
-					GameTooltip:Hide();
+					GameTooltip:Hide()
 				end
 			</OnLeave>
 		</Scripts>
