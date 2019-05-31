@@ -410,7 +410,7 @@ function Musician.Utils.NormalizePlayerName(name)
 
 	-- Append missing realm name
 	if string.find(name, '-') == nil then
-		return name .. '-' .. string.gsub(GetRealmName(), "%s+", "")
+		return name .. '-' .. GetNormalizedRealmName()
 	end
 
 	return name
