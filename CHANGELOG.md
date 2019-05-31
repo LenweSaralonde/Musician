@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.5.0.3
+--------
+* Fixed "Musician has been blocked from an action only available to the Blizzard UI." error popups that occurred in various UI areas
+* The Escape key now only closes the current window
+
 v1.5.0.2
 --------
 * Player tooltips now show a warning for players who use an incompatible outdated version of the addon
