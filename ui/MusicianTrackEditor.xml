@@ -207,8 +207,8 @@
 					<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentInstrumentDropdown" x="32" />
 				</Anchors>
 				<Scripts>
-					<OnLoad>
-						UIDropDownMenu_SetWidth(self, 40)
+					<OnLoad inherit="prepend">
+						MSA_DropDownMenu_SetWidth(self, 40)
 					</OnLoad>
 				</Scripts>
 			</Frame>
@@ -413,7 +413,7 @@
 						C_Timer.After(.0001, function()
 							local range = max(0, MusicianTrackEditorTrackContainer:GetHeight() - self:GetHeight() - 2)
 							self.ScrollBar:SetMinMaxValues(0, range)
-						end)	
+						end)
 					</OnScrollRangeChanged>
 				</Scripts>
 				<ScrollChild>

@@ -215,7 +215,7 @@ Musician.TrackEditor.CreateTrackWidget = function(trackIndex)
 end
 
 --- Init track transpose dropdown
--- @param dropdown (UIDropDownMenu)
+-- @param dropdown (MSA_DropDownMenu)
 -- @param trackIndex (number)
 Musician.TrackEditor.InitTransposeDropdown = function(dropdown, trackIndex)
 
@@ -232,7 +232,7 @@ Musician.TrackEditor.InitTransposeDropdown = function(dropdown, trackIndex)
 	dropdown.SetIndex = function(index)
 		dropdown.index = index
 		Musician.sourceSong.tracks[dropdown.trackIndex].transpose = (-index + 3) * 12
-		UIDropDownMenu_SetText(dropdown, transposeValues[index])
+		MSA_DropDownMenu_SetText(dropdown, transposeValues[index])
 	end
 
 	dropdown.OnClick = function(self, arg1, arg2, checked)
@@ -240,7 +240,7 @@ Musician.TrackEditor.InitTransposeDropdown = function(dropdown, trackIndex)
 	end
 
 	dropdown.GetItems = function(frame, level, menuList)
-		local info = UIDropDownMenu_CreateInfo()
+		local info = MSA_DropDownMenu_CreateInfo()
 		info.func = dropdown.OnClick
 
 		local index, label
@@ -248,16 +248,16 @@ Musician.TrackEditor.InitTransposeDropdown = function(dropdown, trackIndex)
 			info.text = label
 			info.arg1 = index
 			info.checked = dropdown.index == index
-			UIDropDownMenu_AddButton(info)
+			MSA_DropDownMenu_AddButton(info)
 		end
 	end
 
-	UIDropDownMenu_Initialize(dropdown, dropdown.GetItems)
+	MSA_DropDownMenu_Initialize(dropdown, dropdown.GetItems)
 	dropdown.SetValue(Musician.sourceSong.tracks[trackIndex].transpose)
 end
 
 --- Init track instrument dropdown
--- @param dropdown (UIDropDownMenu)
+-- @param dropdown (MSA_DropDownMenu)
 -- @param trackIndex (number)
 Musician.TrackEditor.InitInstrumentDropdown = function(dropdown, trackIndex)
 	dropdown.trackIndex = trackIndex

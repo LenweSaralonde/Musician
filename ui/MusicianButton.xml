@@ -54,7 +54,7 @@
 					</OnUpdate>
 				</Scripts>
 			</Frame>
-			<Frame name="MusicianButton_Menu" inherits="UIDropDownMenuTemplate" />
+			<Frame name="MusicianButton_Menu" inherits="MusicianDropDownMenuTooltipTemplate" />
 		</Frames>
 		<HighlightTexture alphaMode="ADD" file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight"/>
 		<Scripts>

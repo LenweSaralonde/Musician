@@ -161,7 +161,7 @@
 				</Anchors>
 				<Scripts>
 					<OnLoad inherit="prepend">
-						UIDropDownMenu_SetWidth(self, 150)
+						MSA_DropDownMenu_SetWidth(self, 150)
 					</OnLoad>
 				</Scripts>
 			</Frame>
@@ -463,8 +463,8 @@
 									<Anchor point="TOPLEFT" x="-18" relativePoint="BOTTOMLEFT" relativeTo="$parentTitle" />
 								</Anchors>
 								<Scripts>
-									<OnLoad>
-										UIDropDownMenu_SetWidth(self, 130)
+									<OnLoad inherit="prepend">
+										MSA_DropDownMenu_SetWidth(self, 130)
 									</OnLoad>
 								</Scripts>
 							</Frame>
@@ -474,8 +474,8 @@
 									<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentLayoutDropdown" x="-32" />
 								</Anchors>
 								<Scripts>
-									<OnLoad>
-										UIDropDownMenu_SetWidth(self, 40)
+									<OnLoad inherit="prepend">
+										MSA_DropDownMenu_SetWidth(self, 40)
 									</OnLoad>
 								</Scripts>
 							</Frame>

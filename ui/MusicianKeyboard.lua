@@ -420,8 +420,8 @@ local function initLayoutDropdown()
 
 	local dropdown = MusicianKeyboardControlsMainLayoutDropdown
 
-	UIDropDownMenu_Initialize(dropdown, function(self, level, menuList)
-		local info = UIDropDownMenu_CreateInfo()
+	MSA_DropDownMenu_Initialize(dropdown, function(self, level, menuList)
+		local info = MSA_DropDownMenu_CreateInfo()
 		if (level or 1) == 1 then
 			local index, row
 			for index, row in pairs(menu) do
@@ -433,7 +433,7 @@ local function initLayoutDropdown()
 				info.func = row.value and self.SetValue
 				info.menuList = row.menuList
 				info.checked = row.value and row.value.index == Musician.Keyboard.config.layout
-				UIDropDownMenu_AddButton(info)
+				MSA_DropDownMenu_AddButton(info)
 			end
 		else
 			info.func = self.SetValue
@@ -446,21 +446,21 @@ local function initLayoutDropdown()
 				info.hasArrow = false
 				info.arg1 = row.value and row.value.index
 				info.checked = row.value and row.value.index == Musician.Keyboard.config.layout
-				UIDropDownMenu_AddButton(info, level)
+				MSA_DropDownMenu_AddButton(info, level)
 			end
 		end
 	end)
 
 	function dropdown:SetValue(layoutIndex)
 		Musician.Keyboard.SetLayout(layoutIndex)
-		CloseDropDownMenus()
+		MSA_CloseDropDownMenus()
 	end
 
 	DropDownList1:SetClampedToScreen(true)
 	DropDownList2:SetClampedToScreen(true)
 
 	local layout = layouts[Musician.Keyboard.config.layout]
-	UIDropDownMenu_SetText(dropdown, Musician.Msg.KEYBOARD_LAYOUTS[layout.name] or layout.name)
+	MSA_DropDownMenu_SetText(dropdown, Musician.Msg.KEYBOARD_LAYOUTS[layout.name] or layout.name)
 end
 
 --- Initialize base key dropdown
@@ -468,8 +468,8 @@ end
 local function initBaseKeyDropdown()
 	local dropdown = MusicianKeyboardControlsMainBaseKeyDropdown
 
-	UIDropDownMenu_Initialize(dropdown, function(self, level, menuList)
-		local info = UIDropDownMenu_CreateInfo()
+	MSA_DropDownMenu_Initialize(dropdown, function(self, level, menuList)
+		local info = MSA_DropDownMenu_CreateInfo()
 		info.func = self.SetValue
 
 		local key, name
@@ -478,17 +478,17 @@ local function initBaseKeyDropdown()
 			info.text = name
 			info.arg1 = key
 			info.checked = key == Musician.Keyboard.config.baseKey
-			UIDropDownMenu_AddButton(info)
+			MSA_DropDownMenu_AddButton(info)
 		end
 	end)
 
 	function dropdown:SetValue(key)
 		Musician.Keyboard.SetBaseKey(key)
-		CloseDropDownMenus()
+		MSA_CloseDropDownMenus()
 	end
 
 	DropDownList1:SetClampedToScreen(true)
-	UIDropDownMenu_SetText(dropdown, Musician.NOTE_NAMES[Musician.Keyboard.config.baseKey])
+	MSA_DropDownMenu_SetText(dropdown, Musician.NOTE_NAMES[Musician.Keyboard.config.baseKey])
 end
 
 --- Init controls for a layer
@@ -878,7 +878,7 @@ Musician.Keyboard.SetLayout = function(layoutIndex, doKeyboardRefresh)
 	Musician.Keyboard.SetKeyShift(LAYER.LOWER, 0, false)
 	loadedProgram = nil
 
-	UIDropDownMenu_SetText(MusicianKeyboardControlsMainLayoutDropdown, Musician.Msg.KEYBOARD_LAYOUTS[layout.name] or layout.name)
+	MSA_DropDownMenu_SetText(MusicianKeyboardControlsMainLayoutDropdown, Musician.Msg.KEYBOARD_LAYOUTS[layout.name] or layout.name)
 
 	modifiedLayers = {
 		[LAYER.UPPER] = true,
@@ -901,7 +901,7 @@ Musician.Keyboard.SetBaseKey = function(key, doKeyboardRefresh)
 	Musician.Keyboard.config.baseKey = key
 	loadedProgram = nil
 
-	UIDropDownMenu_SetText(MusicianKeyboardControlsMainBaseKeyDropdown, Musician.NOTE_NAMES[key])
+	MSA_DropDownMenu_SetText(MusicianKeyboardControlsMainBaseKeyDropdown, Musician.NOTE_NAMES[key])
 
 	modifiedLayers = {
 		[LAYER.UPPER] = true,
@@ -1428,11 +1428,11 @@ Musician.Keyboard.ConfigureDemo = function(doKeyboardRefresh)
 	for layer, layerName in pairs(LayerNames) do
 		local layerVarName = "MusicianKeyboardControls" .. layerName
 		if config.demoTrackMapping and config.demoTrackMapping[layer] then
-			UIDropDownMenu_DisableDropDown(_G[layerVarName .. "Instrument"])
+			MSA_DropDownMenu_DisableDropDown(_G[layerVarName .. "Instrument"])
 			_G[layerVarName .. "PowerChords"]:Disable()
 			Musician.Keyboard.SetPowerChords(layer, false, doKeyboardRefresh)
 		else
-			UIDropDownMenu_EnableDropDown(_G[layerVarName .. "Instrument"])
+			MSA_DropDownMenu_EnableDropDown(_G[layerVarName .. "Instrument"])
 			_G[layerVarName .. "PowerChords"]:Enable()
 		end
 	end

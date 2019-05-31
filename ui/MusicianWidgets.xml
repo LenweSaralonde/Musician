@@ -226,8 +226,11 @@
 
 	<!-- Dropdown menu with tooltip -->
 
-	<Frame name="MusicianDropDownMenuTooltipTemplate" inherits="UIDropDownMenuTemplate" virtual="true">
+	<Frame name="MusicianDropDownMenuTooltipTemplate" virtual="true">
 		<Scripts>
+			<OnLoad>
+				MSA_DropDownMenu_Create(self, self:GetParent())
+			</OnLoad>
 			<OnEnter>
 				if(self.tooltipText ~= nil) then
 					GameTooltip_AddNewbieTip(self, self.tooltipText, 1.0, 1.0, 1.0, self.newbieText);
@@ -245,8 +248,8 @@
 
 	<Frame name="MusicianInstrumentDropdownTemplate" inherits="MusicianDropDownMenuTooltipTemplate" virtual="true">
 		<Scripts>
-			<OnLoad>
-				UIDropDownMenu_SetWidth(self, 115)
+			<OnLoad inherit="prepend">
+				MSA_DropDownMenu_SetWidth(self, 115)
 				local dropdown = self
 
 				dropdown.value = nil
@@ -265,7 +268,7 @@
 						instrumentName = Musician.Utils.GetColorCode(unpack(Musician.INSTRUMENTS[instrumentId].color)) .. instrumentName .. "|r"
 					end
 
-					UIDropDownMenu_SetText(dropdown, instrumentName)
+					MSA_DropDownMenu_SetText(dropdown, instrumentName)
 				end
 
 				dropdown.SetValue = function(value)
@@ -281,7 +284,7 @@
 				end
 
 				dropdown.GetItems = function(frame, level, menuList)
-					local info = UIDropDownMenu_CreateInfo()
+					local info = MSA_DropDownMenu_CreateInfo()
 					info.func = dropdown.OnClick
 
 					local instrumentId
@@ -293,11 +296,11 @@
 						if Musician.INSTRUMENTS[instrumentId].color ~= nil then
 							info.colorCode = Musician.Utils.GetColorCode(unpack(Musician.INSTRUMENTS[instrumentId].color))
 						end
-						UIDropDownMenu_AddButton(info)
+						MSA_DropDownMenu_AddButton(info)
 					end
 				end
 
-				UIDropDownMenu_Initialize(dropdown, dropdown.GetItems)
+				MSA_DropDownMenu_Initialize(dropdown, dropdown.GetItems)
 			</OnLoad>
 		</Scripts>
 	</Frame>

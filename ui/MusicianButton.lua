@@ -197,7 +197,7 @@ function MusicianButton.OpenMenu()
 		end
 	end
 
-	EasyMenu(menu, MusicianButton_Menu, "cursor", 0 , 0, "MENU")
+	Musician.Utils.EasyMenu(menu, MusicianButton_Menu, "cursor", 0 , 0, "MENU")
 end
 
 --- ShowTooltip

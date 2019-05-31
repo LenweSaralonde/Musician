@@ -756,3 +756,26 @@ function Musician.Utils.GetOs()
 		IsMacClient() and Musician.OS_MAC or
 		IsLinuxClient() and Musician.OS_LINUX
 end
+
+--- Blizzard's EasyMenu using MSA_DropDownMenu
+--
+function Musician.Utils.EasyMenu(menuList, menuFrame, anchor, x, y, displayMode, autoHideDelay )
+	if ( displayMode == "MENU" ) then
+		menuFrame.displayMode = displayMode;
+	end
+	MSA_DropDownMenu_Initialize(menuFrame, Musician.Utils.EasyMenu_Initialize, displayMode, nil, menuList);
+	MSA_ToggleDropDownMenu(1, nil, menuFrame, anchor, x, y, menuList, nil, autoHideDelay);
+end
+
+--- Blizzard's EasyMenu_Initialize using MSA_DropDownMenu
+--
+function Musician.Utils.EasyMenu_Initialize( frame, level, menuList )
+	for index = 1, #menuList do
+		local value = menuList[index]
+		if (value.text) then
+			value.index = index;
+			MSA_DropDownMenu_AddButton( value, level );
+		end
+	end
+end
+
