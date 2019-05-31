@@ -28,9 +28,14 @@
 			<OnLoad>self:RegisterForDrag("LeftButton")</OnLoad>
 			<OnDragStart>self:StartMoving()</OnDragStart>
 			<OnDragStop>self:StopMovingOrSizing()</OnDragStop>
-			<OnLoad inherit="prepend">
-				tinsert(UISpecialFrames, self:GetName())
-			</OnLoad>
+			<OnKeyDown inherit="append">
+				if self:IsShown() and key == "ESCAPE" then
+					self:SetPropagateKeyboardInput(false)
+					self:Hide()
+				else
+					self:SetPropagateKeyboardInput(true)
+				end
+			</OnKeyDown>
 			<OnShow>
 				PlaySound(SOUNDKIT.IG_QUEST_LIST_OPEN)
 			</OnShow>
