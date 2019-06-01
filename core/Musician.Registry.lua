@@ -38,13 +38,6 @@ function Musician.Registry.Init()
 			end
 		end)
 
-		-- Total RP player tooltip hook
-		if TRP3_CharacterTooltip ~= nil then
-			TRP3_CharacterTooltip:HookScript("OnShow", function(t)
-				Musician.Registry.AddTooltipInfo(TRP3_CharacterTooltip, t.target, TRP3_API.ui.tooltip.getSmallLineFontSize())
-			end)
-		end
-
 		-- Send query to group
 		if Musician.Comm.GetGroupChatType() then
 			Musician.Registry:SendCommMessage(Musician.Registry.event.query, Musician.Registry.GetVersionString(), Musician.Comm.GetGroupChatType(), nil, "ALERT")
@@ -324,14 +317,8 @@ end
 --- Update player tooltip to add missing Musician client version, if applicable.
 -- @param player (string)
 function Musician.Registry.UpdatePlayerTooltip(player)
-	-- Standard player tooltip
 	if tooltipPlayerName == player then
 		Musician.Registry.UpdateTooltipInfo(GameTooltip, player, 10)
-	end
-
-	-- Total RP player tooltip
-	if TRP3_CharacterTooltip ~= nil and TRP3_CharacterTooltip.target == player then
-		Musician.Registry.UpdateTooltipInfo(TRP3_CharacterTooltip, player, TRP3_API.ui.tooltip.getSmallLineFontSize())
 	end
 end
 
