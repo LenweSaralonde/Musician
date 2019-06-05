@@ -503,11 +503,15 @@ function Musician.Utils.PlayerIsOnSameRealm(player)
 	return false
 end
 
---- Return the emote for "Player is playing music" with promo URL
+--- Return the "Player is playing music" emote with promo message
 -- @return (string)
 function Musician.Utils.GetPromoEmote()
-	local promo = string.gsub(Musician.Msg.EMOTE_PROMO, "{url}", Musician.URL)
-	return Musician.Msg.EMOTE_PLAYING_MUSIC .. " " .. promo
+	if Musician_Settings.enableEmotePromo then
+		local promo = string.gsub(Musician.Msg.EMOTE_PROMO, "{url}", Musician.URL)
+		return Musician.Msg.EMOTE_PLAYING_MUSIC .. " " .. promo
+	else
+		return Musician.Msg.EMOTE_PLAYING_MUSIC
+	end
 end
 
 --- Return true if the message contains the promo emote, in any language
@@ -522,6 +526,25 @@ function Musician.Utils.HasPromoEmote(message)
 	end
 
 	return false
+end
+
+--- Send the "Player is playing music" emote with promo message
+-- @return (string)
+function Musician.Utils.SendPromoEmote()
+	if Musician_Settings.enableEmote then
+		SendChatMessage(Musician.Utils.GetPromoEmote(), "EMOTE")
+
+		-- Show a hint to the user that an emote is also being sent by default
+		if not(Musician_Settings.emoteHintShown) then
+			Musician_Settings.emoteHintShown = true
+			local emoteHint = Musician.Msg.OPTIONS_EMOTE_HINT
+			local emoteHintLinkText = emoteHint:match("%[(.+)%]")
+			local emoteHintLink = Musician.Utils.Highlight(Musician.Utils.GetLink("musician", emoteHintLinkText, "options"), '00BBBB')
+			emoteHintLink = Musician.Utils.Highlight('[', 'BBBBBB') .. emoteHintLink .. Musician.Utils.Highlight(']', 'BBBBBB')
+			emoteHint = string.gsub(emoteHint, '%[' .. emoteHintLinkText .. '%]', emoteHintLink)
+			DEFAULT_CHAT_FRAME:AddMessage(emoteHint, ORANGE_FONT_COLOR.r * .75, ORANGE_FONT_COLOR.g * .75, ORANGE_FONT_COLOR.b * .75)
+		end
+	end
 end
 
 --- Compare two version numbers

@@ -47,3 +47,6 @@ ui\MusicianKeyboard.lua
 
 ui\MusicianKeyboardConfig.xml
 ui\MusicianKeyboardConfig.lua
+
+ui\MusicianOptions.xml
+ui\MusicianOptions.lua

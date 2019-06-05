@@ -7,6 +7,9 @@ function Musician:OnInitialize()
 	local defaultSettings = {
 		minimapPosition = 154,
 		nextSongId = 0,
+		enableEmote = true,
+		enableEmotePromo = true,
+		emoteHintShown = false,
 		mutedPlayers = {}
 	}
 	if Musician_Settings ~= nil then
@@ -34,6 +37,7 @@ function Musician:OnInitialize()
 	Musician.KeyboardConfig.Init()
 	Musician.Live.Init()
 	Musician.Keyboard.Init()
+	Musician.Options.Init()
 
 	Musician:RegisterMessage(Musician.Events.SongStop, Musician.OnSongStopped)
 	Musician:RegisterMessage(Musician.Events.SongPlay, Musician.OnSongPlayed)
@@ -261,7 +265,7 @@ function Musician.OnSongPlayed(event, song)
 	if Musician.Utils.PlayerIsMyself(playerName) then
 		Musician.songIsPlaying = true
 		Musician.Comm.isPlaySent = false
-		SendChatMessage(Musician.Utils.GetPromoEmote(), "EMOTE")
+		Musician.Utils.SendPromoEmote()
 	end
 
 	Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
@@ -393,17 +397,20 @@ function Musician.SetupHooks()
 			if args[2] == "stop" then
 				PlaySound(80)
 				Musician.StopPlayerSong(args[3])
-				-- Mute player
+			-- Mute player
 			elseif args[2] == "mute" then
 				PlaySound(80)
 				Musician.MutePlayer(args[3], true)
-				-- Unmute player
+			-- Unmute player
 			elseif args[2] == "unmute" then
 				PlaySound(80)
 				Musician.MutePlayer(args[3], false)
-				-- Seek source song
+			-- Seek source song
 			elseif args[2] == "seek" and Musician.sourceSong ~= nil then
 				Musician.sourceSong:Seek(args[3])
+			-- Open options panel
+			elseif args[2] == "options" then
+				Musician.Options.Show()
 			end
 		end
 	end)

@@ -3,6 +3,7 @@ Musician.PASSWORD = "TrustMeIMAMusician"
 
 Musician.URL = "https://lenwe.info/musician"
 Musician.CONVERTER_URL = "https://lenwe.info/musician-midi-convert"
+Musician.DISCORD_URL = "https://discord.gg/ypfpGxK"
 
 Musician.FILE_HEADER = "MUS4"
 Musician.PROTOCOL_VERSION = 4

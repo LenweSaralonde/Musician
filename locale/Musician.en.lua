@@ -38,6 +38,13 @@ msg.COMMAND_LIVE_DEMO_PARAMS = "{ **<upper track #>** **<lower track #>** || **o
 msg.COMMAND_HELP = "Show this help message"
 msg.ERR_COMMAND_UNKNOWN = "Unknown \"{command}\" command. Type {help} to get the command list."
 
+msg.OPTIONS_TITLE = "Musician"
+msg.OPTIONS_SUB_TEXT = "Join the Discord server for support! {url}"
+msg.OPTIONS_CATEGORY_EMOTE = "Emote"
+msg.OPTIONS_ENABLE_EMOTE_LABEL = "Send a text emote to players who don't have Musician when playing a song."
+msg.OPTIONS_ENABLE_EMOTE_PROMO_LABEL = "Include a short text inviting them to install it so that they can hear the music you play."
+msg.OPTIONS_EMOTE_HINT = "A text emote is shown to the players who don't have Musician when you play a song. You can disable it in the [options]."
+
 msg.STARTUP = "Welcome to Musician v{version}."
 
 msg.NEW_VERSION = "A new version of Musician has been released! Download the update from {url} ."
@@ -151,7 +158,7 @@ msg.LAYERS = {
 }
 
 msg.EMOTE_PLAYING_MUSIC = "is playing a song."
-msg.EMOTE_PROMO = "(Get \"Musician\" add-on or upgrade it from {url} to listen!)"
+msg.EMOTE_PROMO = "(Get the \"Musician\" add-on to listen)"
 msg.EMOTE_SONG_NOT_LOADED = "(The song cannot play because {player} is using an incompatible version.)"
 msg.EMOTE_PLAYER_OTHER_REALM = "(This player is on another realm.)"
 

@@ -38,6 +38,13 @@ msg.COMMAND_LIVE_DEMO_PARAMS = "{ **<n° piste supérieur>** **<n° piste infér
 msg.COMMAND_HELP = "Afficher ce message d'aide"
 msg.ERR_COMMAND_UNKNOWN = "Commande \"{command}\" inconnue. Tapez {help} pour obtenir la liste des commandes disponibles."
 
+msg.OPTIONS_TITLE = "Musician"
+msg.OPTIONS_SUB_TEXT = "Rejoignez le serveur Discord pour obtenir de l'aide ! {url}"
+msg.OPTIONS_CATEGORY_EMOTE = "Emote"
+msg.OPTIONS_ENABLE_EMOTE_LABEL = "Envoyer une emote aux joueurs n'ayant pas Musician lorsque vous jouez un morceau."
+msg.OPTIONS_ENABLE_EMOTE_PROMO_LABEL = "Y inclure une invitation à l'installer afin qu'ils puissent vous écouter."
+msg.OPTIONS_EMOTE_HINT = "Une emote est affichée aux joueurs n'ayant pas Musician lorsque vous jouez un morceau. Vous pouvez la désactiver dans les [options]."
+
 msg.STARTUP = "Bienvenue dans Musician v{version}."
 
 msg.NEW_VERSION = "Une nouvelle version de Musician est disponible ! Téléchargez la mise à jour sur {url} ."
@@ -200,7 +207,7 @@ msg.LAYERS = {
 }
 
 msg.EMOTE_PLAYING_MUSIC = "joue de la musique."
-msg.EMOTE_PROMO = "(Installez ou mettez à jour l'add-on \"Musician\" sur {url} pour l'écouter !)"
+msg.EMOTE_PROMO = "(Installez l'add-on \"Musician\" pour l'écouter)"
 msg.EMOTE_SONG_NOT_LOADED = "(Le morceau ne peut pas être joué car {player} utilise une version incompatible.)"
 msg.EMOTE_PLAYER_OTHER_REALM = "(Ce joueur est sur un autre royaume.)"
 
