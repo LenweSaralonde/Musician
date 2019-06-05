@@ -1,5 +1,3 @@
-
-
 Musician
 ========
 Hear and play music with nearby players. For the first time in World of Warcraft, your character can litterally become a bard!
@@ -18,17 +16,17 @@ Type `/mus help` in the chat window to get the command list.
 
 How to listen to music
 ----------------------
-All you need is to have the addon installed. Nothing more is required.
+All you need is to have the add-on installed. Nothing more is required.
 
 * To mute a player, right-click on his/her name or portrait to open the menu then select **Mute**. Do the same to unmute.
 * You can also just stop the song being played by clicking the **[Stop]** hyperlink in the player's emote.
-* Right click on the minimap button to enable or disable all the music from the addon.
+* Right click on the minimap button to enable or disable all the music from the add-on.
 
 How to play music
 -----------------
 Musician plays music files in **MIDI format**. MIDI files have a **.mid**, **.midi** or **.kar** extension and do not contain any sound like MP3s, but a sequence of notes. This is why a MIDI file sounds differently according to the software or musical instrument it's played on.
 
-You can find millions of MIDI files very easily by searching for *MIDI* + *music genre/title/etc.* on Google. I also made a [selection of cool music files](https://www.dropbox.com/sh/6ypecquora72sne/AADAS0HnHS142bhpMNurRfX8a?dl=0) you can try with the addon.
+You can find millions of MIDI files very easily by searching for *MIDI* + *music genre/title/etc.* on Google. I also made a [selection of cool music files](https://www.dropbox.com/sh/6ypecquora72sne/AADAS0HnHS142bhpMNurRfX8a?dl=0) you can try with the add-on.
 
 ### How to play a song:
 
@@ -40,7 +38,7 @@ You can find millions of MIDI files very easily by searching for *MIDI* + *music
 6. Click **Play**.
 
 ### Save and load songs in game
-Songs can be saved and loaded back in game using the optional addon [MusicianList](https://www.lenwe.info/musicianlist).
+Songs can be saved and loaded back in game using the optional add-on [MusicianList](https://www.lenwe.info/musicianlist).
 
 Play live
 ---------
@@ -84,10 +82,11 @@ Tips
 ----
 * You can preview the song at any moment prior to playing it for other players by clicking the **Preview** button or using the song editor. If another song is playing nearby, it will be muted for you only.
 * If another player has Musician, it will be shown in his/her tooltip. Just hover the other players with your mouse cursor to see who can hear you!
-* You can add lyrics by combining Musician with the [StoryTeller addon](https://www.lenwe.info/story-teller)!
+* You can add lyrics by combining Musician with the [StoryTeller add-on](https://www.lenwe.info/story-teller)!
 * Load the next song while the current one is playing to reduce waiting time between songs.
 * The radius for hearing the music is approximately 40 meters.
 * Play songs that are relevant with your "band" composition. It's nonsense to play orchestral music with only two bards ! 😃 However you can still roleplay as if your character owns a kind of gnomish *Music-o-Matic* machine that is capable of reproducing a whole band.
+* A text emote is shown to the players who don't have Musician when you play a song. You can disable this emote in the add-on options.
 
 Compose your own music
 ----------------------
@@ -125,7 +124,7 @@ Unfortunately, due to limitations of the WoW UI, velocity and controls (volume, 
 
 Limitations and known issues
 ----------------------------
-This addon is still experimental. Here is a summary of the problems you may encounter:
+Here is a summary of the problems you may encounter:
 
 * There is no support for velocity and modulation. This is actually not possible with the WoW UI.
 * It is **NOT possible to play live with other players** since the other players do not hear what you play instantly but only after 1 or 2 seconds.

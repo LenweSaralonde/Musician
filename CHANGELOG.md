@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.5.0.4
+--------
+* Reworked the "promo" emote to make it less intrusive
+* Added options panel
+
 v1.5.0.3
 --------
 * Fixed "Musician has been blocked from an action only available to the Blizzard UI." error popups that occurred in various UI areas
