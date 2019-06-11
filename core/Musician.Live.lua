@@ -56,7 +56,7 @@ end
 -- @return (boolean)
 function Musician.Live.CanStream()
 	-- Communication not yet ready
-	if not(Musician.Comm.isReady()) then
+	if not(Musician.Comm.CanBroadcast()) then
 		return false
 	end
 

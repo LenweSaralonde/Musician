@@ -10,6 +10,11 @@ Musician.Comm.event.streamGroup = "MusicianGStreamD"
 Musician.Comm.isPlaySent = false
 Musician.Comm.isStopSent = false
 
+local canJoinChannel = true
+local channelIsJoined = false
+local channelWasAlreadyJoined = false
+local joinChannelAfter
+
 --- Initialize communication
 --
 function Musician.Comm.Init()
@@ -31,25 +36,77 @@ end
 --- Join the communication channel and keep it joined
 --
 function Musician.Comm.JoinChannel()
+	-- Channel joiner already active
 	if Musician.Comm.channelJoiner ~= nil then return end
 
-	local joinedChannelCount = #{GetChannelList()}
+	--- Function executed when the channel has been successfullly joined
+	local function OnChannelJoined(reason)
+		channelIsJoined = true
+		channelWasAlreadyJoined = true
+		canJoinChannel = true
+		Musician.Registry.playersFetched = false
+		Musician.Registry.FetchPlayers()
+		Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
+	end
 
-	Musician.Comm.channelJoiner = C_Timer.NewTicker(4, function()
-		local channelId, _ = GetChannelName(Musician.CHANNEL)
+	--- Function executed when failed to join the channel
+	local function OnChannelFailed(reason)
+		canJoinChannel = false
+		channelIsJoined = false
+		Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
+		if reason == WRONG_PASSWORD then
+			joinChannelAfter = GetTime() + 300 -- Try again in 5 minutes
+		else
+			joinChannelAfter = GetTime() + 10 -- Try again in 10 seconds
+		end
+	end
 
-		if channelId == 0 then
-			Musician.Registry.playersFetched = false
+	--- Function executed when leaving the channel
+	local function OnChannelLeft(reason)
+		canJoinChannel = true
+		channelIsJoined = false
+		Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
+		joinChannelAfter = GetTime() -- Rejoin ASAP
+	end
+
+	-- Channel status changed
+	Musician.Comm:RegisterEvent("CHAT_MSG_CHANNEL_NOTICE", function(event, text, _, _, _, _, _, _, _, channelName)
+		if channelName == Musician.CHANNEL then
+			-- Successfully joined channed
+			if text == 'YOU_CHANGED' or text == 'YOU_JOINED' then
+				OnChannelJoined(text)
+			-- Something went wrong
+			elseif text == 'WRONG_PASSWORD' or text == 'BANNED' then
+				OnChannelFailed(text)
+			-- Left channel
+			elseif text == 'YOU_LEFT' then
+				OnChannelLeft(text)
+			end
+		end
+	end)
+
+	-- Channel is already joined
+	if Musician.Comm.getChannel() ~= nil then
+		OnChannelJoined()
+	end
+
+	-- Join channel with keepalive
+	local joinedChannelCount
+	Musician.Comm.channelJoiner = C_Timer.NewTicker(1, function()
+		if not(channelIsJoined) then
 			local newJoinedChannelCount = #{GetChannelList()}
 
-			if newJoinedChannelCount > 0 and newJoinedChannelCount == joinedChannelCount then
-				JoinTemporaryChannel(Musician.CHANNEL, Musician.PASSWORD)
+			-- Channel has not been joined yet and the number of joined channels is still changing
+			if not(channelWasAlreadyJoined) and newJoinedChannelCount ~= joinedChannelCount then
+				joinedChannelCount = newJoinedChannelCount
+				joinChannelAfter = GetTime() + 4 -- Wait 4 seconds
 			end
 
-			joinedChannelCount = newJoinedChannelCount
+			if joinChannelAfter and joinChannelAfter < GetTime() then
+				joinChannelAfter = nil
+				JoinTemporaryChannel(Musician.CHANNEL, Musician.PASSWORD)
+			end
 		end
-
-		Musician.Registry.FetchPlayers()
 	end)
 end
 
@@ -93,7 +150,7 @@ function Musician.Comm.BroadcastCommMessage(message, type, groupType)
 	if groupChatType then
 		Musician.Comm:SendCommMessage(groupType, message, groupChatType, nil, "ALERT")
 	end
-	if not(IsInInstance()) or groupChatType == nil then
+	if not(IsInInstance()) and Musician.Comm.ChannelIsReady() then
 		Musician.Comm:SendCommMessage(type, message, "CHANNEL", Musician.Comm.getChannel(), "ALERT")
 	end
 end
@@ -110,16 +167,22 @@ function Musician.Comm.getChannel()
 	end
 end
 
---- Return true if the communication prototcol is ready
+--- Return true if the communication channel is ready
 -- @return (boolean)
-function Musician.Comm.isReady()
-	return Musician.Comm.getChannel() ~= nil
+function Musician.Comm.ChannelIsReady()
+	return channelIsJoined
+end
+
+--- Return true if the player can broadcast via the channel or the group chat
+-- @return (boolean)
+function Musician.Comm.CanBroadcast()
+	return Musician.Comm.ChannelIsReady() or Musician.Comm.GetGroupChatType() ~= nil
 end
 
 --- Play song
 -- @return (boolean)
 function Musician.Comm.PlaySong()
-	if not(Musician.Comm.isReady()) or not(Musician.sourceSong) then return false end
+	if not(Musician.Comm.CanBroadcast()) or not(Musician.sourceSong) then return false end
 
 	Musician.Comm.isPlaySent = true
 	Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
@@ -138,7 +201,7 @@ end
 -- @param packedChunk (string)
 -- @return (boolean)
 function Musician.Comm.StreamSongChunk(packedChunk)
-	if not(Musician.Comm.isReady()) then return false end
+	if not(Musician.Comm.CanBroadcast()) then return false end
 	local compressedchunk = LibDeflate:EncodeForWoWAddonChannel(LibDeflate:CompressDeflate(packedChunk))
 
 	local bwMin = Musician.BANDWIDTH_LIMIT_MIN
@@ -210,7 +273,7 @@ Musician.Comm:RegisterComm(Musician.Comm.event.streamGroup, OnChunk)
 --- Stop song
 -- @return (boolean)
 function Musician.Comm.StopSong()
-	if not(Musician.Comm.isReady()) then return false end
+	if not(Musician.Comm.CanBroadcast()) then return false end
 	if Musician.streamingSong and Musician.streamingSong.streaming then
 		Musician.streamingSong:StopStreaming()
 		Musician.streamingSong = nil

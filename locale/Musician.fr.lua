@@ -59,6 +59,7 @@ msg.PLAYER_TOOLTIP_PRELOADING = "Préchargement des sons… ({progress})"
 
 msg.PLAYER_COUNT_ONLINE = "Il y a {count} autres amateurs de musique dans le coin !"
 msg.PLAYER_COUNT_ONLINE_ONE = "Il y a un autre amateur de musique dans le coin !"
+msg.PLAYER_COUNT_ONLINE_NONE = "Il n'y a pas encore d'autre amateur de musique dans le coin."
 
 msg.INVALID_MUSIC_CODE = "Le code musical est invalide."
 

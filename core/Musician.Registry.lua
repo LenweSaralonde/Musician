@@ -110,6 +110,8 @@ function Musician.Registry.Init()
 				Musician.Utils.Print(string.gsub(Musician.Msg.PLAYER_COUNT_ONLINE, '{count}', Musician.Utils.Highlight(playerCount - 1)))
 			elseif playerCount == 2 then
 				Musician.Utils.Print(Musician.Msg.PLAYER_COUNT_ONLINE_ONE)
+			elseif playerCount < 2 then
+				Musician.Utils.Print(Musician.Msg.PLAYER_COUNT_ONLINE_NONE)
 			end
 
 			-- Say hello to them
@@ -226,7 +228,7 @@ function Musician.Registry.PlayerIsInRange(player, inLoadingRange)
 	local pp = Musician.Registry.players[player]
 
 	-- True when the player is actually visible (in the same shard and phase)
-	local isVisible = C_PlayerInfo.IsConnected(PlayerLocation:CreateFromGUID(pp.guid))
+	local isVisible = pp.guid and C_PlayerInfo.IsConnected(PlayerLocation:CreateFromGUID(pp.guid))
 	if not(isVisible) then
 		return false
 	end

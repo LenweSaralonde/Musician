@@ -143,7 +143,7 @@ MusicianFrame.Refresh = function()
 	end
 
 	-- Play button
-	if Musician.Comm.isPlaySent or Musician.Comm.isStopSent or not(Musician.sourceSong) and not(Musician.songIsPlaying) then
+	if not(Musician.Comm.CanBroadcast()) or Musician.Comm.isPlaySent or Musician.Comm.isStopSent or not(Musician.sourceSong) and not(Musician.songIsPlaying) then
 		MusicianFramePlayButton:Disable()
 	else
 		MusicianFramePlayButton:Enable()
