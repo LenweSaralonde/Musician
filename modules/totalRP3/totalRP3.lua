@@ -13,7 +13,7 @@ end
 function Musician.TRP3.HookTooltip()
 	-- Add Musician version to Total RP player tooltip
 	TRP3_CharacterTooltip:HookScript("OnShow", function(t)
-		Musician.Registry.AddTooltipInfo(TRP3_CharacterTooltip, t.target, TRP3_API.ui.tooltip.getSmallLineFontSize())
+		Musician.Registry.UpdateTooltipInfo(TRP3_CharacterTooltip, t.target, TRP3_API.ui.tooltip.getSmallLineFontSize())
 	end)
 
 	--- Update Total RP player tooltip to add missing Musician client version, if applicable.

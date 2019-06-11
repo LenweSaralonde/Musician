@@ -32,7 +32,7 @@ function Musician.Registry.Init()
 			if UnitIsPlayer(unitType) then
 				local player = Musician.Utils.NormalizePlayerName(GetUnitName(unitType, true))
 				tooltipPlayerName = player
-				Musician.Registry.AddTooltipInfo(GameTooltip, player, 10)
+				Musician.Registry.UpdateTooltipInfo(GameTooltip, player, 10)
 			else
 				tooltipPlayerName = nil
 			end
@@ -62,13 +62,14 @@ function Musician.Registry.Init()
 			return
 		end
 
-		local isQueried = Musician.Registry.playersQueried[player]
+		local queryTime = Musician.Registry.playersQueried[player]
+		local isQueried = queryTime and ((queryTime + 3) > GetTime()) -- Retry after 3 seconds
 		local isRegistered = Musician.Registry.PlayerIsRegistered(player)
 		local hasNoVersion = isRegistered and Musician.Registry.players[player].version == nil
 
 		-- No version information available but player is registered: do query
 		if hasNoVersion and isRegistered and not(isQueried) then
-			Musician.Registry.playersQueried[player] = true
+			Musician.Registry.playersQueried[player] = GetTime()
 			Musician.Registry:SendCommMessage(Musician.Registry.event.query, Musician.Registry.GetVersionString(), 'WHISPER', player, "ALERT")
 		end
 	end)
@@ -269,25 +270,6 @@ local function getPlayerTooltipText(player)
 	return infoText
 end
 
---- Append Musician client version to player tooltip, if applicable.
--- @param tooltip (table)
--- @param player (string)
--- @param fontSize (int)
-function Musician.Registry.AddTooltipInfo(tooltip, player, fontSize)
-	local infoText = getPlayerTooltipText(player)
-
-	if infoText == nil then
-		return
-	end
-
-	tooltip:AddDoubleLine(" ", infoText, 1, 1, 1, 1, 1, 1)
-	local line = _G[strconcat(tooltip:GetName(), "TextRight", tooltip:NumLines())]
-	local font, _ , flag = line:GetFont()
-	line:SetFont(font, fontSize, flag)
-	tooltip:Show()
-	tooltip:GetTop()
-end
-
 --- Update missing Musician client version in tooltip, if applicable.
 -- @param tooltip (table)
 -- @param player (string)
@@ -305,6 +287,12 @@ function Musician.Registry.UpdateTooltipInfo(tooltip, player, fontSize)
 	while _G[tooltipName .. 'TextRight' .. i] do
 		local line = _G[tooltipName .. 'TextRight' .. i]
 
+		-- Info text is already present: no update needed
+		if line:GetText() == infoText then
+			return
+		end
+
+		-- Default is already present: update it by the detailed info text
 		if line:GetText() == Musician.Msg.PLAYER_TOOLTIP then
 			line:SetText(infoText)
 			return
@@ -312,6 +300,14 @@ function Musician.Registry.UpdateTooltipInfo(tooltip, player, fontSize)
 
 		i = i + 1
 	end
+
+	-- No existing text was not found: add it
+	tooltip:AddDoubleLine(" ", infoText, 1, 1, 1, 1, 1, 1)
+	local line = _G[strconcat(tooltip:GetName(), "TextRight", tooltip:NumLines())]
+	local font, _ , flag = line:GetFont()
+	line:SetFont(font, fontSize, flag)
+	tooltip:Show()
+	tooltip:GetTop()
 end
 
 --- Update player tooltip to add missing Musician client version, if applicable.
@@ -338,6 +334,7 @@ local function handleVersionMessage(prefix, version, distribution, player)
 	Musician.Registry.EnablePlayerDistribution(player, distribution)
 
 	Musician.Registry.players[player].version = version
+	Musician.Registry.playersQueried[player] = nil
 
 	Musician.Registry.UpdatePlayerTooltip(player)
 	Musician.Registry.NotifyNewVersion(version)
