@@ -370,7 +370,7 @@ function Musician.Utils.SongIsPlaying()
 	if not(isPlaying) then
 		local song, player
 		for player, song in pairs(Musician.songs) do
-			if song:IsPlaying() and Musician.Registry.PlayerIsInRange(player, Musician.LISTENING_RADIUS) and not(Musician.globalMute) and not(Musician.PlayerIsMuted(player)) then
+			if song:IsPlaying() and Musician.Registry.PlayerIsInRange(player) and not(Musician.globalMute) and not(Musician.PlayerIsMuted(player)) then
 				return true
 			end
 		end

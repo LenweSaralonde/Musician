@@ -175,7 +175,7 @@ local function OnChunk(prefix, message, distribution, sender)
 	Musician.Registry.UpdatePlayerPositionAndGUID(sender, unpack(position))
 
 	-- Not in loading range
-	if not(isGroup) and not(Musician.Registry.PlayerIsInRange(sender, Musician.LOADING_RADIUS)) then
+	if not(isGroup) and not(Musician.Registry.PlayerIsInRange(sender, true)) then
 		-- Stop currently playing music
 		if Musician.songs[sender] ~= nil then
 			Musician.songs[sender]:Stop()

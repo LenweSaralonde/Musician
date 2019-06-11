@@ -355,12 +355,13 @@ function Musician.Song:NoteOn(track, noteIndex, noRetry)
 	local time = track.notes[noteIndex][NOTE.TIME]
 	local duration = track.notes[noteIndex][NOTE.DURATION]
 	local soundFile, instrumentData = Musician.Utils.GetSoundFile(track.instrument, key)
+	local playerIsInRange = self.player ~= nil and Musician.Registry.PlayerIsInRange(self.player)
 	if soundFile == nil then
 		return
 	end
 
 	-- Send notification emote
-	if self.player ~= nil and Musician.Registry.PlayerIsInRange(self.player, Musician.LISTENING_RADIUS) and not(self.notified) then
+	if playerIsInRange and not(self.notified) then
 		Musician.Utils.DisplayEmote(self.player, Musician.Registry.GetPlayerGUID(self.player), Musician.Msg.EMOTE_PLAYING_MUSIC)
 		self.notified = true
 	end
@@ -372,7 +373,7 @@ function Musician.Song:NoteOn(track, noteIndex, noRetry)
 
 	-- Do not play note if the source song is playing or if the player is out of range
 	local sourceSongIsPlaying = Musician.sourceSong ~= nil and Musician.sourceSong:IsPlaying()
-	if self.player ~= nil and (sourceSongIsPlaying or not(Musician.Registry.PlayerIsInRange(self.player, Musician.LISTENING_RADIUS))) or self:TrackIsMuted(track) or Musician.globalMute or Musician.PlayerIsMuted(self.player) then
+	if self.player ~= nil and (sourceSongIsPlaying or not(playerIsInRange)) or self:TrackIsMuted(track) or Musician.globalMute or Musician.PlayerIsMuted(self.player) then
 		return
 	end
 

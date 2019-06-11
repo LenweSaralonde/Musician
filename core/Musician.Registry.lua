@@ -199,11 +199,17 @@ function Musician.Registry.UpdatePlayerPositionAndGUID(player, posY, posX, posZ,
 	Musician.Registry.players[player].guid = guid
 end
 
---- Returns true if the player is in range
+--- Returns true if the player is in listening range
 -- @param player (string)
--- @param radius (number) Distance in yards
+-- @param inLoadingRange (boolean)
 -- @return (boolean)
-function Musician.Registry.PlayerIsInRange(player, radius)
+function Musician.Registry.PlayerIsInRange(player, inLoadingRange)
+
+	local radius = Musician.LISTENING_RADIUS
+	if inLoadingRange then
+		radius = Musician.LOADING_RADIUS
+	end
+
 	player = Musician.Utils.NormalizePlayerName(player)
 
 	-- Player is always in range with itself
@@ -211,13 +217,19 @@ function Musician.Registry.PlayerIsInRange(player, radius)
 		return true
 	end
 
-	-- Player not in registry
+	-- Player not in the registry
 	if not(Musician.Registry.PlayerIsRegistered(player)) then
 		return false
 	end
 
 	local posY, posX, posZ, instanceID = UnitPosition("player")
 	local pp = Musician.Registry.players[player]
+
+	-- True when the player is actually visible (in the same shard and phase)
+	local isVisible = C_PlayerInfo.IsConnected(PlayerLocation:CreateFromGUID(pp.guid))
+	if not(isVisible) then
+		return false
+	end
 
 	-- Not the same instance
 	if pp.instanceID ~= instanceID then
