@@ -150,7 +150,7 @@ function Musician.Comm.BroadcastCommMessage(message, type, groupType)
 	if groupChatType then
 		Musician.Comm:SendCommMessage(groupType, message, groupChatType, nil, "ALERT")
 	end
-	if not(IsInInstance()) and Musician.Comm.ChannelIsReady() then
+	if Musician.Comm.ChannelIsReady() then
 		Musician.Comm:SendCommMessage(type, message, "CHANNEL", Musician.Comm.getChannel(), "ALERT")
 	end
 end
@@ -237,8 +237,8 @@ local function OnChunk(prefix, message, distribution, sender)
 	-- Update player position
 	Musician.Registry.UpdatePlayerPositionAndGUID(sender, unpack(position))
 
-	-- Not in loading range
-	if not(isGroup) and not(Musician.Registry.PlayerIsInRange(sender, true)) then
+	-- No longer in loading range
+	if not(Musician.Registry.PlayerIsInLoadingRange(sender)) then
 		-- Stop currently playing music
 		if Musician.songs[sender] ~= nil then
 			Musician.songs[sender]:Stop()

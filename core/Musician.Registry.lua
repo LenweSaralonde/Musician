@@ -201,17 +201,10 @@ function Musician.Registry.UpdatePlayerPositionAndGUID(player, posY, posX, posZ,
 	Musician.Registry.players[player].guid = guid
 end
 
---- Returns true if the player is in listening range
+--- Returns true if the player is in loading range
 -- @param player (string)
--- @param inLoadingRange (boolean)
 -- @return (boolean)
-function Musician.Registry.PlayerIsInRange(player, inLoadingRange)
-
-	local radius = Musician.LISTENING_RADIUS
-	if inLoadingRange then
-		radius = Musician.LOADING_RADIUS
-	end
-
+function Musician.Registry.PlayerIsInLoadingRange(player)
 	player = Musician.Utils.NormalizePlayerName(player)
 
 	-- Player is always in range with itself
@@ -219,32 +212,41 @@ function Musician.Registry.PlayerIsInRange(player, inLoadingRange)
 		return true
 	end
 
-	-- Player not in the registry
+	-- Player is not in the registry
 	if not(Musician.Registry.PlayerIsRegistered(player)) then
 		return false
 	end
 
-	local posY, posX, posZ, instanceID = UnitPosition("player")
-	local pp = Musician.Registry.players[player]
-
-	-- True when the player is actually visible (in the same shard and phase)
-	local isVisible = pp.guid and C_PlayerInfo.IsConnected(PlayerLocation:CreateFromGUID(pp.guid))
+	-- Player is not "connected" (in the same shard and phase and close enough to interact with the character)
+	local guid = Musician.Registry.players[player].guid
+	local isVisible = guid and C_PlayerInfo.IsConnected(PlayerLocation:CreateFromGUID(guid))
 	if not(isVisible) then
 		return false
 	end
 
-	-- Not the same instance
-	if pp.instanceID ~= instanceID then
+	return true
+end
+
+--- Returns true if the player is in listening range
+-- @param player (string)
+-- @return (boolean)
+function Musician.Registry.PlayerIsInRange(player)
+	-- Already checks if the player is close enough to load the data and in the same phase/instance
+	if not(Musician.Registry.PlayerIsInLoadingRange(player)) then
 		return false
 	end
 
-	-- Current player is in an instance
-	if IsInInstance() then
-		return UnitInRange(Musician.Utils.SimplePlayerName(player)) -- Only works when the player is in our group
+	-- Only works when the player is in our group but more precise
+	local inRange, checkedRange = UnitInRange(Musician.Utils.SimplePlayerName(player))
+	if checkedRange then
+		return inRange
 	end
 
 	-- Range check
-	return radius ^ 2 > (pp.posY - (posY or 0)) ^ 2 + (pp.posX - (posX or 0)) ^ 2 + (pp.posZ - (posZ or 0)) ^ 2
+	player = Musician.Utils.NormalizePlayerName(player)
+	local posY, posX, posZ, instanceID = UnitPosition("player")
+	local pp = Musician.Registry.players[player]
+	return Musician.LISTENING_RADIUS ^ 2 > (pp.posY - (posY or 0)) ^ 2 + (pp.posX - (posX or 0)) ^ 2 + (pp.posZ - (posZ or 0)) ^ 2
 end
 
 --- Return player GUID
