@@ -450,8 +450,11 @@ end
 -- @param name (string)
 -- @return (boolean)
 function Musician.Utils.PlayerIsInGroup(name)
+	if not(IsInGroup()) and not(IsInRaid()) then
+		return false
+	end
 
-	if Musician.Utils.PlayerIsMyself(name) and (IsInGroup() or IsInRaid()) then
+	if Musician.Utils.PlayerIsMyself(name) then
 		return true
 	end
 

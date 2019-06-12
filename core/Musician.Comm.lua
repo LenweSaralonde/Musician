@@ -202,37 +202,41 @@ end
 -- @return (boolean)
 function Musician.Comm.StreamSongChunk(packedChunk)
 	if not(Musician.Comm.CanBroadcast()) then return false end
-	local compressedchunk = LibDeflate:EncodeForWoWAddonChannel(LibDeflate:CompressDeflate(packedChunk))
+	Musician.Comm.StreamCompressedSongChunk(LibDeflate:CompressDeflate(packedChunk))
+end
 
+--- Stream a compressed song chunk
+-- @param packedChunk (string)
+-- @return (boolean)
+function Musician.Comm.StreamCompressedSongChunk(compressedChunk)
+	if not(Musician.Comm.CanBroadcast()) then return false end
+	local serializedChunk = LibDeflate:EncodeForWoWAddonChannel(compressedChunk)
+
+	-- Calculate used bandwidth
 	local bwMin = Musician.BANDWIDTH_LIMIT_MIN
 	local bwMax = Musician.BANDWIDTH_LIMIT_MAX + 1
-	local bandwidth = (max(bwMin, min(bwMax, #compressedchunk)) - bwMin) / (bwMax - bwMin)
+	local bandwidth = (max(bwMin, min(bwMax, #serializedChunk)) - bwMin) / (bwMax - bwMin)
 	Musician.Comm:SendMessage(Musician.Events.Bandwidth, bandwidth)
-	Musician.Comm.BroadcastCommMessage(compressedchunk, Musician.Comm.event.stream, Musician.Comm.event.streamGroup)
+
+	Musician.Comm.BroadcastCommMessage(serializedChunk, Musician.Comm.event.stream, Musician.Comm.event.streamGroup)
 	return true
 end
 
---- Play a received song chunk
---
-local function OnChunk(prefix, message, distribution, sender)
-	sender = Musician.Utils.NormalizePlayerName(sender)
-	local isGroup = distribution ~= 'CHANNEL'
-	local senderIsInGroup = Musician.Utils.PlayerIsInGroup(sender)
+--- Process a packed chunk
+-- @param packedChunk (string)
+-- @param sender (string)
+-- @param [forcePlay (boolean)] Force the chunk to be played, even if the player is not in range (groups)
+function Musician.Comm.ProcessChunk(packedChunk, sender, forcePlay)
 
-	Musician.Registry.EnablePlayerDistribution(sender, distribution)
-
-	-- Rejecting channel chunks if the sender is also sending group chunks
-	if not(isGroup) and senderIsInGroup and Musician.Registry.PlayerHasGroupSupport(sender) then
-		return
-	end
-
-	local packedChunk = LibDeflate:DecompressDeflate(LibDeflate:DecodeForWoWAddonChannel(message))
-	local chunk, mode, songId, chunkDuration, playtimeLeft, position = Musician.Song.UnpackChunk(packedChunk)
+	-- Decode chunk header
+	local mode, songId, chunkDuration, playtimeLeft, position = Musician.Song.UnpackChunkHeader(packedChunk)
 
 	-- Invalid chunk
-	if chunk == nil then
+	if mode == nil then
 		return
 	end
+
+	sender = Musician.Utils.NormalizePlayerName(sender)
 
 	-- Update player position
 	Musician.Registry.UpdatePlayerPositionAndGUID(sender, unpack(position))
@@ -257,6 +261,12 @@ local function OnChunk(prefix, message, distribution, sender)
 		collectgarbage()
 	end
 
+	-- Decode chunk data
+	local chunk = Musician.Song.UnpackChunkData(packedChunk)
+	if chunk == nil then
+		return
+	end
+
 	-- Append chunk data
 	Musician.songs[sender]:AppendChunk(chunk, mode, songId, chunkDuration, playtimeLeft, sender)
 
@@ -265,6 +275,22 @@ local function OnChunk(prefix, message, distribution, sender)
 		Musician.songs[sender].willPlay = true
 		Musician.songs[sender]:Play(chunkDuration / 2)
 	end
+end
+
+--- Receive compressed chunk
+--
+local function OnChunk(prefix, message, distribution, sender)
+	Musician.Registry.RegisterPlayer(sender)
+
+	-- Rejecting channel chunks if the sender is also sending group chunks
+	local isGroup = distribution ~= 'CHANNEL'
+	local senderIsInGroup = Musician.Utils.PlayerIsInGroup(sender)
+	if not(isGroup) and senderIsInGroup then
+		return
+	end
+
+	local packedChunk = LibDeflate:DecompressDeflate(LibDeflate:DecodeForWoWAddonChannel(message))
+	Musician.Comm.ProcessChunk(packedChunk, sender, isGroup)
 end
 
 Musician.Comm:RegisterComm(Musician.Comm.event.stream, OnChunk)

@@ -5,8 +5,8 @@ Musician.Registry.playersFetched = false
 Musician.Registry.playersQueried = {}
 
 Musician.Registry.event = {}
-Musician.Registry.event.hello = "MusicianHello"
-Musician.Registry.event.query = "MusicianQuery"
+Musician.Registry.event.hello = "MusicianHello" -- Send my version number to a player or a group of players
+Musician.Registry.event.query = "MusicianQuery" -- Query hello from a player to retreive its version
 
 local newVersionNotified = false
 local newProtocolNotified = false
@@ -38,20 +38,20 @@ function Musician.Registry.Init()
 			end
 		end)
 
-		-- Send query to group
+		-- Send Query to group
 		if Musician.Comm.GetGroupChatType() then
 			Musician.Registry:SendCommMessage(Musician.Registry.event.query, Musician.Registry.GetVersionString(), Musician.Comm.GetGroupChatType(), nil, "ALERT")
 		end
 	end)
 
-	-- Send query to group when joining
+	-- Send Query to group when joining
 	Musician.Registry:RegisterEvent("GROUP_JOINED", function()
 		if Musician.Comm.GetGroupChatType() then
 			Musician.Registry:SendCommMessage(Musician.Registry.event.query, Musician.Registry.GetVersionString(), Musician.Comm.GetGroupChatType(), nil, "ALERT")
 		end
 	end)
 
-	-- Query hello to hovered player
+	-- Query Hello to hovered player
 	Musician.Registry:RegisterEvent("UPDATE_MOUSEOVER_UNIT", function()
 		if not(UnitIsPlayer("mouseover")) then
 			return
@@ -67,7 +67,7 @@ function Musician.Registry.Init()
 		local isRegistered = Musician.Registry.PlayerIsRegistered(player)
 		local hasNoVersion = isRegistered and Musician.Registry.players[player].version == nil
 
-		-- No version information available but player is registered: do query
+		-- No version information available but player is registered: send Query to get the version
 		if hasNoVersion and isRegistered and not(isQueried) then
 			Musician.Registry.playersQueried[player] = GetTime()
 			Musician.Registry:SendCommMessage(Musician.Registry.event.query, Musician.Registry.GetVersionString(), 'WHISPER', player, "ALERT")
@@ -85,8 +85,7 @@ function Musician.Registry.Init()
 		-- Get connected players
 		for player in string.gmatch(players, "([^, *]+)") do
 			player = Musician.Utils.NormalizePlayerName(player)
-
-			Musician.Registry.EnablePlayerDistribution(player, "CHANNEL")
+			Musician.Registry.RegisterPlayer(player)
 		end
 
 		-- Finalize when all CHAT_MSG_CHANNEL_LIST pages are received (no new page received after 1 second)
@@ -101,9 +100,7 @@ function Musician.Registry.Init()
 			-- Display the number of players online
 			local playerCount = 0
 			for player, _ in pairs(Musician.Registry.players) do
-				if Musician.Registry.PlayerIsInChannel(player) then
-					playerCount = playerCount + 1
-				end
+				playerCount = playerCount + 1
 			end
 
 			if playerCount > 2 then
@@ -114,7 +111,7 @@ function Musician.Registry.Init()
 				Musician.Utils.Print(Musician.Msg.PLAYER_COUNT_ONLINE_NONE)
 			end
 
-			-- Say hello to them
+			-- Send Hello to them
 			Musician.Registry.SendHello()
 
 			-- We're done!
@@ -142,9 +139,7 @@ function Musician.Registry.Init()
 			return
 		end
 
-		player = Musician.Utils.NormalizePlayerName(player)
-
-		Musician.Registry.EnablePlayerDistribution(player, "CHANNEL")
+		Musician.Registry.RegisterPlayer(player)
 	end)
 
 	-- A player leaves: remove from registry
@@ -155,9 +150,7 @@ function Musician.Registry.Init()
 			return
 		end
 
-		player = Musician.Utils.NormalizePlayerName(player)
-
-		Musician.Registry.players[player] = nil
+		Musician.Registry.UnregisterPlayer(player)
 	end)
 
 	-- Send "Hello" every 5 minutes
@@ -190,10 +183,8 @@ end
 -- @param instanceID (string)
 -- @param guid (string)
 function Musician.Registry.UpdatePlayerPositionAndGUID(player, posY, posX, posZ, instanceID, guid)
-	if Musician.Registry.players[player] == nil then
-		Musician.Registry.players[player] = {}
-	end
-
+	player = Musician.Utils.NormalizePlayerName(player)
+	Musician.Registry.RegisterPlayer(player)
 	Musician.Registry.players[player].posY = posY
 	Musician.Registry.players[player].posX = posX
 	Musician.Registry.players[player].posZ = posZ
@@ -266,7 +257,7 @@ end
 local function getPlayerTooltipText(player)
 	player = Musician.Utils.NormalizePlayerName(player)
 
-	if not(Musician.Registry.PlayerIsRegistered(player)) or not(Musician.Utils.PlayerIsOnSameRealm(player)) and not(Musician.Utils.PlayerIsInGroup(player)) then
+	if not(Musician.Registry.PlayerIsRegistered(player)) then
 		return nil
 	end
 
@@ -334,7 +325,7 @@ function Musician.Registry.UpdatePlayerTooltip(player)
 	end
 end
 
---- Send a hello to the channel
+--- Send a Hello to the channel
 --
 function Musician.Registry.SendHello()
 	if Musician.Comm.getChannel() ~= nil then
@@ -342,13 +333,12 @@ function Musician.Registry.SendHello()
 	end
 end
 
---- Handle incoming version message
---
-local function handleVersionMessage(prefix, version, distribution, player)
+--- Set player version
+-- @param player (string)
+-- @param version (string)
+function Musician.Registry.SetPlayerVersion(player, version)
 	player = Musician.Utils.NormalizePlayerName(player)
-
-	Musician.Registry.EnablePlayerDistribution(player, distribution)
-
+	Musician.Registry.RegisterPlayer(player)
 	Musician.Registry.players[player].version = version
 	Musician.Registry.playersQueried[player] = nil
 
@@ -356,11 +346,17 @@ local function handleVersionMessage(prefix, version, distribution, player)
 	Musician.Registry.NotifyNewVersion(version)
 end
 
---- Receive hello message
+--- Handle incoming version message from Hello or Query
+--
+local function handleVersionMessage(prefix, version, distribution, player)
+	Musician.Registry.SetPlayerVersion(player, version)
+end
+
+--- Receive Hello message
 --
 Musician.Registry:RegisterComm(Musician.Registry.event.hello, handleVersionMessage)
 
---- Receive query message
+--- Receive Query message
 --
 Musician.Registry:RegisterComm(Musician.Registry.event.query, function(prefix, message, distribution, player)
 	player = Musician.Utils.NormalizePlayerName(player)
@@ -379,21 +375,21 @@ Musician.Registry:RegisterComm(Musician.Registry.event.query, function(prefix, m
 	end
 end)
 
---- Add an available distribution channel to player
+--- Add player to registry
 -- @param player (string)
--- @param distribution (string) (CHANNEL, WHISPER, PARTY etc)
-function Musician.Registry.EnablePlayerDistribution(player, distribution)
+function Musician.Registry.RegisterPlayer(player)
 	player = Musician.Utils.NormalizePlayerName(player)
 
 	if Musician.Registry.players[player] == nil then
 		Musician.Registry.players[player] = {}
 	end
+end
 
-	if distribution == "CHANNEL" then
-		Musician.Registry.players[player].isInChannel = true
-	elseif distribution ~= "WHISPER" then
-		Musician.Registry.players[player].groupSupport = true
-	end
+--- Remove player from registry
+-- @param player (string)
+function Musician.Registry.UnregisterPlayer(player)
+	player = Musician.Utils.NormalizePlayerName(player)
+	Musician.Registry.players[player] = nil
 end
 
 --- Return true if this player has Musician
@@ -401,24 +397,6 @@ end
 -- @return (boolean)
 function Musician.Registry.PlayerIsRegistered(player)
 	return Musician.Registry.players[player] ~= nil
-end
-
---- Return true if this player has Musician and is in the channel
--- @param player (string)
--- @return (boolean)
-function Musician.Registry.PlayerIsInChannel(player)
-	return Musician.Registry.players[player] and Musician.Registry.players[player].isInChannel
-end
-
---- Return true if the player supports group communication
--- @param name (string)
--- @return (boolean)
-function Musician.Registry.PlayerHasGroupSupport(name)
-	if not(Musician.Registry.players[name]) then
-		return false
-	end
-	local player = Musician.Registry.players[name]
-	return player.groupSupport or player.version and (Musician.Utils.VersionCompare(player.version, '1.4.1.0') >= 0)
 end
 
 --- Get full version string

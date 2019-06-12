@@ -1018,10 +1018,10 @@ function Musician.Song:PackChunk(chunk)
 	return packedVersionAndMode .. packedChunkDuration .. packedSongId .. packedPlaytimeLeft .. packedPlayerPosition .. packedTrackCount .. packedTrackInfo .. packedNoteData
 end
 
---- Unpack a song chunk
--- @param chunk (table)
--- @return (table), (number), (number), (number), (number), (table) chunk, mode, song ID, chunk duration, playtimeLeft, player position and GUID
-Musician.Song.UnpackChunk = function(str)
+--- Unpack song chunk header
+-- @param str (string)
+-- @return (number), (number), (number), (number), (table), (number), (number) mode, song ID, chunk duration, playtimeLeft, player position and GUID, track count and cursor position
+Musician.Song.UnpackChunkHeader = function(str)
 
 	local cursor = 1
 	local advanceCursor = function(bytes, isLastBit)
@@ -1031,10 +1031,9 @@ Musician.Song.UnpackChunk = function(str)
 		end
 	end
 
-	local chunk, mode, songId, chunkDuration, playtimeLeft, position
+	local mode, songId, chunkDuration, playtimeLeft, position, trackCount
 
 	local success = pcall(function()
-		local packedChunkLength = string.len(str)
 
 		-- Version and mode (1)
 		local versionAndModeByte = Musician.Utils.UnpackNumber(string.sub(str, cursor, cursor))
@@ -1064,9 +1063,40 @@ Musician.Song.UnpackChunk = function(str)
 		advanceCursor(18)
 
 		-- Number of tracks (1)
-		local trackCount = Musician.Utils.UnpackNumber(string.sub(str, cursor, cursor))
+		trackCount = Musician.Utils.UnpackNumber(string.sub(str, cursor, cursor))
 		advanceCursor(1)
+	end)
 
+	if not(success) then
+		return nil
+	end
+
+	return mode, songId, chunkDuration, playtimeLeft, position, trackCount, cursor
+end
+
+--- Unpack song chunk data
+-- @param chunk (table)
+-- @return (table)
+Musician.Song.UnpackChunkData = function(str)
+
+	-- Get header data
+	local mode, songId, chunkDuration, playtimeLeft, position, trackCount, cursor = Musician.Song.UnpackChunkHeader(str)
+
+	-- Failed to decode header
+	if mode == nil then
+		return nil
+	end
+
+	local advanceCursor = function(bytes, isLastBit)
+		cursor = cursor + bytes
+		if cursor > #str + 1 then
+			error(Musician.Msg.INVALID_MUSIC_CODE)
+		end
+	end
+
+	local chunk
+
+	local success = pcall(function()
 		-- Track information: trackId (1), instrumentId (1), note count (2)
 		chunk = {}
 		local t, trackData
@@ -1137,7 +1167,7 @@ Musician.Song.UnpackChunk = function(str)
 		return nil
 	end
 
-	return chunk, mode, songId, chunkDuration, playtimeLeft, position
+	return chunk
 end
 
 --- Convert song to live mode
