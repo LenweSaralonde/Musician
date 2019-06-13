@@ -82,6 +82,9 @@ function Musician.Registry.Init()
 			return
 		end
 
+		-- No more need to retry
+		Musician.Registry.listChannelsRetryTimer:Cancel()
+
 		-- Get connected players
 		for player in string.gmatch(players, "([^, *]+)") do
 			player = Musician.Utils.NormalizePlayerName(player)
@@ -110,9 +113,6 @@ function Musician.Registry.Init()
 			elseif playerCount < 2 then
 				Musician.Utils.Print(Musician.Msg.PLAYER_COUNT_ONLINE_NONE)
 			end
-
-			-- Send Hello to them
-			Musician.Registry.SendHello()
 
 			-- We're done!
 			Musician.Registry.playersFetched = true
@@ -165,13 +165,20 @@ end
 --- Fetch the connected players
 --
 function Musician.Registry.FetchPlayers()
-	-- Already fetched
-	if Musician.Registry.playersFetched then return end
+	-- Already fetching or fetched
+	if Musician.Registry.playersFetched and not(Musician.Registry.fetchingPlayers) then
+		return
+	end
 
 	-- Send fetch players request to the server
 	if Musician.Comm.getChannel() ~= nil then
 		Musician.Registry.fetchingPlayers = true
-		ListChannelByName(Musician.Comm.getChannel())
+		ListChannelByName(Musician.CHANNEL)
+
+		-- The request may not work on the first attempt so try again every second until it succeeds
+ 		Musician.Registry.listChannelsRetryTimer = C_Timer.NewTicker(1, function()
+ 			ListChannelByName(Musician.CHANNEL)
+		end)
 	end
 end
 
@@ -346,27 +353,22 @@ function Musician.Registry.SetPlayerVersion(player, version)
 	Musician.Registry.NotifyNewVersion(version)
 end
 
---- Handle incoming version message from Hello or Query
---
-local function handleVersionMessage(prefix, version, distribution, player)
-	Musician.Registry.SetPlayerVersion(player, version)
-end
-
 --- Receive Hello message
 --
-Musician.Registry:RegisterComm(Musician.Registry.event.hello, handleVersionMessage)
+Musician.Registry:RegisterComm(Musician.Registry.event.hello, function(prefix, version, distribution, player)
+	Musician.Registry.SetPlayerVersion(player, version)
+end)
 
 --- Receive Query message
 --
-Musician.Registry:RegisterComm(Musician.Registry.event.query, function(prefix, message, distribution, player)
+Musician.Registry:RegisterComm(Musician.Registry.event.query, function(prefix, version, distribution, player)
 	player = Musician.Utils.NormalizePlayerName(player)
-	local version = message
 
 	if Musician.Utils.PlayerIsMyself(player) then
 		return
 	end
 
-	handleVersionMessage(prefix, message, distribution, player)
+	Musician.Registry.SetPlayerVersion(player, version)
 
 	if distribution == 'WHISPER' then
 		Musician.Registry:SendCommMessage(Musician.Registry.event.hello, Musician.Registry.GetVersionString(), 'WHISPER', player, "ALERT")
