@@ -45,6 +45,7 @@ function Musician.Comm.JoinChannel()
 		channelWasAlreadyJoined = true
 		canJoinChannel = true
 		Musician.Registry.playersFetched = false
+		Musician.Registry.SendHello()
 		Musician.Registry.FetchPlayers()
 		Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
 	end
