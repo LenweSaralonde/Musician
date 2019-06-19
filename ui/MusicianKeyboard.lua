@@ -1442,7 +1442,7 @@ end
 --- Demo mode OnNoteOn
 -- @param event (string)
 -- @param song (Musician.Song)
--- @param track (number)
+-- @param track (table)
 -- @param key (number)
 Musician.Keyboard.OnNoteOn = function(event, song, track, key)
 	local config = Musician.Keyboard.config
