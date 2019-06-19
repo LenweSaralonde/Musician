@@ -18,7 +18,13 @@ end
 function MusicianButton.Reposition()
 	local radius = Minimap:GetWidth() / 2 + 8
 	MusicianButton:SetPoint("CENTER", "Minimap", "CENTER", radius * cos(Musician_Settings.minimapPosition), radius * sin(Musician_Settings.minimapPosition))
+	MusicianButton.UpdateIcons()
+	MusicianButton:SetFrameLevel(Minimap:GetFrameLevel() + 1000)
+end
 
+--- Update icons
+--
+function MusicianButton.UpdateIcons()
 	if Musician.globalMute then
 		MusicianButton_IconMuted:Show()
 		MusicianButton_IconUnmuted:Hide()
@@ -26,8 +32,6 @@ function MusicianButton.Reposition()
 		MusicianButton_IconMuted:Hide()
 		MusicianButton_IconUnmuted:Show()
 	end
-
-	MusicianButton:SetFrameLevel(Minimap:GetFrameLevel()+1000)
 end
 
 --- DraggingFrame_OnUpdate
@@ -77,7 +81,7 @@ function MusicianButton.OnClick(event, button)
 			PlaySound(SOUNDKIT.IG_MINIMAP_ZOOM_IN)
 		end
 	end
-	MusicianButton.Reposition()
+	MusicianButton.UpdateIcons()
 	MusicianButton.ShowTooltip()
 end
 
