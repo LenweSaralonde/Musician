@@ -189,7 +189,7 @@ function Musician.Live.NoteOn(key, layer, instrument, isChordNote)
 	if Musician.globalMute then
 		handle = 0
 	else
-		_, handle = PlaySoundFile(soundFile, 'SFX')
+		_, handle = Musician.Utils.PlaySoundFile(soundFile, 'SFX')
 	end
 
 	-- Insert note on and trigger event

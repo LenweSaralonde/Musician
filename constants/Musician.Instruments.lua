@@ -162,13 +162,13 @@ Musician.INSTRUMENTS = {
 	-- Percussion
 	["clap"] = {
 		pathList = {
-			"Sound\\Character\\EmoteClap1",
-			"Sound\\Character\\EmoteClap2",
-			"Sound\\Character\\EmoteClap3",
-			"Sound\\Character\\EmoteClap4",
-			"Sound\\Character\\EmoteClap5",
-			"Sound\\Character\\EmoteClap6",
-			"Sound\\Character\\EmoteClap7",
+			"Interface\\AddOns\\Musician\\instruments\\claps\\clap1",
+			"Interface\\AddOns\\Musician\\instruments\\claps\\clap2",
+			"Interface\\AddOns\\Musician\\instruments\\claps\\clap3",
+			"Interface\\AddOns\\Musician\\instruments\\claps\\clap4",
+			"Interface\\AddOns\\Musician\\instruments\\claps\\clap5",
+			"Interface\\AddOns\\Musician\\instruments\\claps\\clap6",
+			"Interface\\AddOns\\Musician\\instruments\\claps\\clap7",
 		},
 		decay = 100,
 		isPercussion = true
