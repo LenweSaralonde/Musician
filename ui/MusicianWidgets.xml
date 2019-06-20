@@ -73,10 +73,11 @@
 
 	<!-- Basic message dialog -->
 
-	<Frame name="MusicianBasicMessageDialog" inherits="DialogBoxFrame">
-		<Size>
-			<AbsDimension x="384" y="128"/>
-		</Size>
+	<Frame name="MusicianBasicMessageDialog" toplevel="true" frameStrata="DIALOG" hidden="true">
+		<Size x="384" y="128"/>
+		<Anchors>
+			<Anchor point="CENTER"/>
+		</Anchors>
 		<Layers>
 			<Layer level="ARTWORK">
 				<FontString parentKey="Text" inherits="GameFontNormalLarge" justifyH="CENTER" justifyV="CENTER" nonspacewrap="true">
@@ -89,6 +90,26 @@
 				</FontString>
 			</Layer>
 		</Layers>
+		<Frames>
+			<Frame parentKey="Border" inherits="DialogBorderTemplate"/>
+			<Button name="$parentButton">
+				<Size x="128" y="32"/>
+				<Anchors>
+					<Anchor point="BOTTOM" x="0" y="16"/>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						self:GetParent():Hide();
+					</OnClick>
+				</Scripts>
+				<NormalTexture inherits="DialogButtonNormalTexture"/>
+				<PushedTexture inherits="DialogButtonPushedTexture"/>
+				<HighlightTexture inherits="DialogButtonHighlightTexture"/>
+				<ButtonText text="OKAY"/>
+				<NormalFont style="DialogButtonNormalText"/>
+				<HighlightFont style="DialogButtonHighlightText"/>
+			</Button>
+		</Frames>
 	</Frame>
 
 	<!-- Standard button with icon font template -->
