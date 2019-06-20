@@ -1,4 +1,4 @@
-## Interface: 80100
+## Interface: 80200
 ## Title: Musician
 ## Author: LenweSaralonde
 ## Version: 1.5.0.4
