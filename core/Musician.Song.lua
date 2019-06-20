@@ -418,7 +418,9 @@ end
 function Musician.Song:NoteOff(track, key)
 	if track.notesOn[key] ~= nil then
 		local handle = track.notesOn[key][NOTEON.HANDLE]
-		StopSound(handle, track.notesOn[key][NOTEON.DECAY])
+		if handle then
+			StopSound(handle, track.notesOn[key][NOTEON.DECAY])
+		end
 		track.notesOn[key] = nil
 		track.polyphony = track.polyphony - 1
 		self.polyphony = self.polyphony - 1

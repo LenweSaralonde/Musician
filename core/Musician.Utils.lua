@@ -8,18 +8,30 @@ function Musician.Utils.Print(msg)
 	DEFAULT_CHAT_FRAME:AddMessage(msg, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
 end
 
+--- Safely play a sound file, even if the sound file does not exist.
+-- @param soundFile (string)
+-- @param channel (string)
+-- @return willPlay, soundHandle (boolean), (number)
+function Musician.Utils.PlaySoundFile(soundFile, channel)
+	local willPlay, soundHandle
+	pcall(function()
+		willPlay, soundHandle = PlaySoundFile(soundFile, channel)
+	end)
+	return willPlay, soundHandle
+end
+
 --- Display an error message in the console
 -- @param msg (string)
 function Musician.Utils.PrintError(msg)
 	DEFAULT_CHAT_FRAME:AddMessage(msg, RED_FONT_COLOR.r, RED_FONT_COLOR.g, RED_FONT_COLOR.b)
-	PlaySoundFile("Sound\\interface\\Error.ogg")
+	PlaySound(32051)
 end
 
 --- Display an error message in a popup
 -- @param msg (string)
 function Musician.Utils.Error(msg)
 	message(msg)
-	PlaySoundFile("Sound\\interface\\Error.ogg")
+	PlaySound(32051)
 end
 
 --- Display an message in a popup
@@ -698,7 +710,7 @@ function Musician.Utils.PlayNote(instrument, key)
 	local sampleId = Musician.Utils.GetSampleId(instrumentData, key)
 	local play, handle = false
 	if soundFile then
-		play, handle = PlaySoundFile(soundFile, 'SFX')
+		play, handle = Musician.Utils.PlaySoundFile(soundFile, 'SFX')
 	end
 	Musician.Preloader.AddPreloaded(sampleId)
 	return play, handle, instrumentData
@@ -715,7 +727,7 @@ function Musician.Utils.PreloadNote(instrument, key)
 	local startTime = debugprofilestop()
 	for i, soundFile in pairs(soundFiles) do
 		local play, handle
-		play, handle = PlaySoundFile(soundFile, 'SFX')
+		play, handle = Musician.Utils.PlaySoundFile(soundFile, 'SFX')
 		if play then
 			hasSample = true
 			StopSound(handle, 0)
