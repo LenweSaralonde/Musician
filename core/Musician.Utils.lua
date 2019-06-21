@@ -415,14 +415,26 @@ function Musician.Utils.MuteGameMusic(force)
 	end
 end
 
+local currentNormalizedRealmName
+
+--- Return the normalized realm name the player belongs to
+-- Safer than the standard GetNormalizedRealmName() that may return nil sometimes
+-- @return (string)
+function Musician.Utils.GetNormalizedRealmName()
+	if currentNormalizedRealmName then
+		return currentNormalizedRealmName
+	end
+	currentNormalizedRealmName = GetNormalizedRealmName()
+	return currentNormalizedRealmName
+end
+
 --- Return the normalized player name, including realm slug
 -- @param name (string)
 -- @return (string)
 function Musician.Utils.NormalizePlayerName(name)
-
 	-- Append missing realm name
 	if string.find(name, '-') == nil then
-		return name .. '-' .. GetNormalizedRealmName()
+		return name .. '-' .. Musician.Utils.GetNormalizedRealmName()
 	end
 
 	return name
