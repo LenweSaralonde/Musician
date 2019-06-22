@@ -75,12 +75,12 @@ function Musician.GetCommands()
 		end
 	})
 
-	-- Play song
+	-- Play/stop song
 
 	table.insert(commands, {
-		command = { "play" },
+		command = { "play", "tplay", "toggleplay" },
 		text = Musician.Msg.COMMAND_PLAY,
-		func = Musician.Comm.PlaySong
+		func = Musician.Comm.TogglePlaySong
 	})
 
 	-- Stop playing song
@@ -91,17 +91,22 @@ function Musician.GetCommands()
 		func = Musician.Comm.StopSong
 	})
 
-	-- Preview song
+	-- Preview/stop previewing song
 
 	table.insert(commands, {
 		command = {
 			"preview", "previewplay", "playpreview",
+			"tpreview", "tpreviewplay", "tplaypreview", "togglepreviewplay", "toggleplaypreview",
 			"test", "testplay", "playtest"
 		},
 		text = Musician.Msg.COMMAND_PREVIEW_PLAY,
 		func = function(arg)
 			if Musician.sourceSong then
-				Musician.sourceSong:Play()
+				if Musician.sourceSong:IsPlaying() then
+					Musician.sourceSong:Stop()
+				else
+					Musician.sourceSong:Play()
+				end
 				Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
 			end
 		end
@@ -116,7 +121,7 @@ function Musician.GetCommands()
 		},
 		text = Musician.Msg.COMMAND_PREVIEW_STOP,
 		func = function(arg)
-			if Musician.sourceSong then
+			if Musician.sourceSong and Musician.sourceSong:IsPlaying() then
 				Musician.sourceSong:Stop()
 				Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
 			end
