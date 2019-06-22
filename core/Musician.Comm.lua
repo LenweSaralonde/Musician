@@ -201,6 +201,7 @@ end
 --- Toggle play song
 -- @return (boolean)
 function Musician.Comm.TogglePlaySong()
+	if Musician.Comm.isStopSent or Musician.Comm.isPlaySent then return end
 	if Musician.streamingSong and Musician.streamingSong.streaming then
 		Musician.Comm.StopSong()
 	else
