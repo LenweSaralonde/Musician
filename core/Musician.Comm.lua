@@ -198,6 +198,16 @@ function Musician.Comm.PlaySong()
 	return true
 end
 
+--- Toggle play song
+-- @return (boolean)
+function Musician.Comm.TogglePlaySong()
+	if Musician.streamingSong and Musician.streamingSong.streaming then
+		Musician.Comm.StopSong()
+	else
+		Musician.Comm.PlaySong()
+	end
+end
+
 --- Stream a packed song chunk
 -- @param packedChunk (string)
 -- @return (boolean)
