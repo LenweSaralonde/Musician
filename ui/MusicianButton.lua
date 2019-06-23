@@ -1,69 +1,55 @@
-Musician.Button = LibStub("AceAddon-3.0"):NewAddon("Musician.Button", "AceEvent-3.0")
+MusicianButton = LibStub("AceAddon-3.0"):NewAddon("MusicianButton", "AceEvent-3.0")
+
+local icon = LibStub("LibDBIcon-1.0")
+local menuFrame
+
+local MUSICIAN_ICON = "Interface\\AddOns\\Musician\\ui\\textures\\button-unmuted"
+local MUSICIAN_ICON_MUTED = "Interface\\AddOns\\Musician\\ui\\textures\\button-muted"
 
 --- Init
 --
 function MusicianButton.Init()
-	MusicianButton.Reposition()
+	local musicianLDB = LibStub("LibDataBroker-1.1"):NewDataObject("Musician", {
+		type = "data source",
+		text = "Musician",
+		icon = MUSICIAN_ICON,
+		OnClick = MusicianButton.OnClick,
+		OnEnter = MusicianButton.ShowTooltip,
+		OnLeave = MusicianButton.HideTooltip
+	})
+
+	-- Convert old minimap position format
+	if tonumber(Musician_Settings.minimapPosition) ~= nil then
+		Musician_Settings.minimap = {
+			minimapPos = Musician_Settings.minimapPosition,
+			hide = false
+		}
+		Musician_Settings.minimapPosition = nil
+	end
+
+	-- Create button
+	icon:Register("Musician", musicianLDB, Musician_Settings.minimap)
+
+	-- Create menu frame
+	menuFrame = CreateFrame("Frame", "MusicianButton_Menu", icon:GetMinimapButton("Musician"), "MusicianDropDownMenuTooltipTemplate")
+
+	-- Update tooltip text when preloading
 	MusicianButton.tooltipIsVisible = false
-	MusicianButton:SetScript("OnClick", MusicianButton.OnClick)
-	Musician.Button:RegisterMessage(Musician.Events.PreloadingProgress, function()
+	MusicianButton:RegisterMessage(Musician.Events.PreloadingProgress, function()
 		if MusicianButton.tooltipIsVisible then
 			MusicianButton.UpdateTooltipText(true)
 		end
 	end)
 end
 
---- Reposition button
---
-function MusicianButton.Reposition()
-	local radius = Minimap:GetWidth() / 2 + 8
-	MusicianButton:SetPoint("CENTER", "Minimap", "CENTER", radius * cos(Musician_Settings.minimapPosition), radius * sin(Musician_Settings.minimapPosition))
-	MusicianButton.UpdateIcons()
-	MusicianButton:SetFrameLevel(Minimap:GetFrameLevel() + 1000)
-end
-
 --- Update icons
 --
 function MusicianButton.UpdateIcons()
 	if Musician.globalMute then
-		MusicianButton_IconMuted:Show()
-		MusicianButton_IconUnmuted:Hide()
+		icon:GetMinimapButton("Musician").icon:SetTexture(MUSICIAN_ICON_MUTED)
 	else
-		MusicianButton_IconMuted:Hide()
-		MusicianButton_IconUnmuted:Show()
+		icon:GetMinimapButton("Musician").icon:SetTexture(MUSICIAN_ICON)
 	end
-end
-
---- DraggingFrame_OnUpdate
---
-function MusicianButton.DraggingFrame_OnUpdate()
-	local xpos, ypos = GetCursorPosition()
-	local xmin, ymin = Minimap:GetCenter()
-	local scale = UIParent:GetScale()
-
-	xpos = xpos / scale
-	ypos = ypos / scale
-
-	Musician_Settings.minimapPosition = math.deg(math.atan2(ypos - ymin, xpos - xmin)) % 360
-	MusicianButton.Reposition()
-end
-
---- OnMouseDown
---
-function MusicianButton.OnMouseDown()
-	MusicianButton_IconUnmuted:SetWidth(14)
-	MusicianButton_IconUnmuted:SetHeight(14)
-	MusicianButton_IconMuted:SetWidth(14)
-	MusicianButton_IconMuted:SetHeight(14)
-end
-
---- OnMouseUp
---
-function MusicianButton.OnMouseUp()
-	MusicianButton_IconUnmuted:SetWidth(16)
-	MusicianButton_IconUnmuted:SetHeight(16)
-	MusicianButton_IconMuted:SetWidth(16)
-	MusicianButton_IconMuted:SetHeight(16)
 end
 
 --- OnClick
@@ -72,6 +58,7 @@ end
 function MusicianButton.OnClick(event, button)
 	if button == "LeftButton" then
 		PlaySound(SOUNDKIT.IG_MINIMAP_ZOOM_IN)
+		MusicianButton.HideTooltip()
 		MusicianButton.OpenMenu()
 	elseif button == "RightButton" then
 		Musician.globalMute = not(Musician.globalMute)
@@ -80,9 +67,9 @@ function MusicianButton.OnClick(event, button)
 		else
 			PlaySound(SOUNDKIT.IG_MINIMAP_ZOOM_IN)
 		end
+		MusicianButton.UpdateIcons()
+		MusicianButton.ShowTooltip()
 	end
-	MusicianButton.UpdateIcons()
-	MusicianButton.ShowTooltip()
 end
 
 --- Return main menu elements
@@ -209,7 +196,7 @@ end
 --- ShowTooltip
 --
 function MusicianButton.ShowTooltip()
-	GameTooltip:SetOwner(MusicianButton, "ANCHOR_BOTTOMLEFT")
+	GameTooltip:SetOwner(icon:GetMinimapButton("Musician"), "ANCHOR_BOTTOMLEFT")
 	MusicianButton.UpdateTooltipText(false)
 	GameTooltip:Show()
 	MusicianButton.tooltipIsVisible = true

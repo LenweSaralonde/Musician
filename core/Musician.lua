@@ -5,7 +5,10 @@ function Musician:OnInitialize()
 
 	-- Init settings
 	local defaultSettings = {
-		minimapPosition = 154,
+		minimap = {
+			minimapPos = 154,
+			hide = false
+		},
 		nextSongId = 0,
 		enableEmote = true,
 		enableEmotePromo = true,
