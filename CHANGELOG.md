@@ -1,6 +1,14 @@
 Changelog
 =========
 
+v1.5.0.5
+--------
+* WoW 8.2 update
+* Play and Preview commands now behave as a toggle (Issue #12)
+* Fixed range and phasing detection (Issue #5)
+* Fixed communication channel not joining no channel has been joined (Issue #9)
+* Fixed import of MIDI files with missing tempo information (Issue #14)
+
 v1.5.0.4
 --------
 * Reworked the "promo" emote to make it less intrusive
