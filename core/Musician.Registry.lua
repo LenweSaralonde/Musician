@@ -7,6 +7,8 @@ Musician.Registry.playersQueried = {}
 Musician.Registry.event = {}
 Musician.Registry.event.hello = "MusicianHello" -- Send my version number to a player or a group of players
 Musician.Registry.event.query = "MusicianQuery" -- Query hello from a player to retreive its version
+Musician.Registry.event.playerRegistered = "MusicianPlayerRegistered" -- A player has been registered
+Musician.Registry.event.playerUnregistered = "MusicianPlayerUnregistered" -- A player has been unregistered
 
 local newVersionNotified = false
 local newProtocolNotified = false
@@ -384,6 +386,7 @@ function Musician.Registry.RegisterPlayer(player)
 
 	if Musician.Registry.players[player] == nil then
 		Musician.Registry.players[player] = {}
+		Musician.Registry:SendMessage(Musician.Registry.event.playerRegistered, player)
 	end
 end
 
@@ -391,7 +394,10 @@ end
 -- @param player (string)
 function Musician.Registry.UnregisterPlayer(player)
 	player = Musician.Utils.NormalizePlayerName(player)
-	Musician.Registry.players[player] = nil
+	if Musician.Registry.players[player] then
+		Musician.Registry.players[player] = nil
+		Musician.Registry:SendMessage(Musician.Registry.event.playerUnregistered, player)
+	end
 end
 
 --- Return true if this player has Musician
