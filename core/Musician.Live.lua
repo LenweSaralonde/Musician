@@ -149,7 +149,9 @@ function Musician.Live.InsertNote(noteOn, key, layer, instrument)
 		return
 	end
 
-	table.insert(Musician.streamingSong.tracks[trackId].notes, {
+	local track = Musician.streamingSong.tracks[trackId]
+
+	table.insert(track.notes, {
 		[NOTE.ON] = noteOn,
 		[NOTE.KEY] = key,
 		[NOTE.TIME] = noteTime
@@ -158,6 +160,13 @@ function Musician.Live.InsertNote(noteOn, key, layer, instrument)
 	-- Update song bounds
 	Musician.streamingSong.cropTo = noteTime + STREAM_PADDING
 	Musician.streamingSong.duration = noteTime + STREAM_PADDING
+
+	-- Send visual note event
+	if noteOn then
+		Musician:SendMessage(Musician.Events.VisualNoteOn, Musician.streamingSong, track, key)
+	else
+		Musician:SendMessage(Musician.Events.VisualNoteOff, Musician.streamingSong, track, key)
+	end
 end
 
 --- Send note on

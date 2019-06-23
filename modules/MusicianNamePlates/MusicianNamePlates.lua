@@ -48,7 +48,7 @@ function Musician.NamePlates:OnEnable()
 	Musician.NamePlates:RegisterMessage(Musician.Registry.event.playerRegistered, Musician.NamePlates.OnPlayerRegistered)
 
 	-- Note On
-	Musician.NamePlates:RegisterMessage(Musician.Events.NoteOn, Musician.NamePlates.OnNoteOn)
+	Musician.NamePlates:RegisterMessage(Musician.Events.VisualNoteOn, Musician.NamePlates.OnNoteOn)
 end
 
 --- Render a single animated note
@@ -407,9 +407,9 @@ end
 -- @param track (table)
 -- @param key (Number)
 function Musician.NamePlates.OnNoteOn(event, song, track, key)
-	if not(song.player) then return end
+	if not(song.player) and song ~= Musician.streamingSong then return end
 
-	if not(Musician.Utils.PlayerIsMyself(song.player)) then
+	if song ~= Musician.streamingSong and not(Musician.Utils.PlayerIsMyself(song.player)) then
 		local namePlate = playerNamePlates[song.player]
 		if namePlate then
 			addNote(namePlate.musicianAnimatedNotesFrame, song, track, key)
@@ -418,4 +418,3 @@ function Musician.NamePlates.OnNoteOn(event, song, track, key)
 		addNote(playerAnimatedNotesFrame, song, track, key)
 	end
 end
-

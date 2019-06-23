@@ -371,14 +371,20 @@ function Musician.Song:NoteOn(track, noteIndex, noRetry)
 		return
 	end
 
+	-- Track is muted
+	if self:TrackIsMuted(track) then return end
+
+	-- A note should be displayed
+	Musician:SendMessage(Musician.Events.VisualNoteOn, self, track, key)
+
 	-- Do not play note if the source song is playing or if the player is out of range
 	local sourceSongIsPlaying = Musician.sourceSong ~= nil and Musician.sourceSong:IsPlaying()
-	if self.player ~= nil and (sourceSongIsPlaying or not(playerIsInRange)) or self:TrackIsMuted(track) or Musician.globalMute or Musician.PlayerIsMuted(self.player) then
+	if self.player ~= nil and (sourceSongIsPlaying or not(playerIsInRange)) or Musician.globalMute or Musician.PlayerIsMuted(self.player) then
 		return
 	end
 
 	-- The note cannot be already playing on the same track
-	self:NoteOff(track, key)
+	self:NoteOff(track, key, false)
 
 	-- Play note sound file
 	local play, handle = Musician.Utils.PlayNote(track.instrument, key)
@@ -415,7 +421,8 @@ end
 --- Stop a note of a track
 -- @param track (table) Reference to the track
 -- @param key (int) Note key
-function Musician.Song:NoteOff(track, key)
+-- @param sendVisualEvent (boolean)
+function Musician.Song:NoteOff(track, key, sendVisualEvent)
 	if track.notesOn[key] ~= nil then
 		local handle = track.notesOn[key][NOTEON.HANDLE]
 		if handle then
@@ -425,6 +432,10 @@ function Musician.Song:NoteOff(track, key)
 		track.polyphony = track.polyphony - 1
 		self.polyphony = self.polyphony - 1
 		Musician:SendMessage(Musician.Events.NoteOff, self, track, key)
+
+		if sendVisualEvent == nil or sendVisualEvent then
+			Musician:SendMessage(Musician.Events.VisualNoteOff, self, track, key)
+		end
 	end
 end
 
