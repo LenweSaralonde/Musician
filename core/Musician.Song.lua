@@ -371,11 +371,11 @@ function Musician.Song:NoteOn(track, noteIndex, noRetry)
 		return
 	end
 
-	-- Track is muted
-	if self:TrackIsMuted(track) then return end
-
 	-- A note should be displayed
 	Musician:SendMessage(Musician.Events.VisualNoteOn, self, track, key)
+
+	-- Track is muted
+	if self:TrackIsMuted(track) then return end
 
 	-- Do not play note if the source song is playing or if the player is out of range
 	local sourceSongIsPlaying = Musician.sourceSong ~= nil and Musician.sourceSong:IsPlaying()
@@ -432,10 +432,9 @@ function Musician.Song:NoteOff(track, key, sendVisualEvent)
 		track.polyphony = track.polyphony - 1
 		self.polyphony = self.polyphony - 1
 		Musician:SendMessage(Musician.Events.NoteOff, self, track, key)
-
-		if sendVisualEvent == nil or sendVisualEvent then
-			Musician:SendMessage(Musician.Events.VisualNoteOff, self, track, key)
-		end
+	end
+	if sendVisualEvent == nil or sendVisualEvent then
+		Musician:SendMessage(Musician.Events.VisualNoteOff, self, track, key)
 	end
 end
 

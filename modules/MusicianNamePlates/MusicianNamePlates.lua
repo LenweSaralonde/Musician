@@ -407,6 +407,7 @@ end
 -- @param track (table)
 -- @param key (Number)
 function Musician.NamePlates.OnNoteOn(event, song, track, key)
+	if song:TrackIsMuted(track) then return end
 	if not(song.player) and song ~= Musician.streamingSong then return end
 
 	if song ~= Musician.streamingSong and not(Musician.Utils.PlayerIsMyself(song.player)) then
