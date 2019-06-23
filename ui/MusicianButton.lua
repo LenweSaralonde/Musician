@@ -120,18 +120,19 @@ function MusicianButton.GetMenu()
 
 		-- Preview imported song
 
-		local labelPreview
 		if Musician.sourceSong:IsPlaying() then
-			labelPreview = Musician.Utils.GetChatIcon(Musician.IconImages.Note) .. " " .. Musician.Msg.MENU_STOP_PREVIEW
+			table.insert(menu, {
+				notCheckable = true,
+				text = Musician.Utils.GetChatIcon(Musician.IconImages.Note) .. " " .. Musician.Msg.MENU_STOP_PREVIEW,
+				func = function() Musician.sourceSong:Stop() end
+			})
 		else
-			labelPreview = Musician.Msg.MENU_PLAY_PREVIEW
+			table.insert(menu, {
+				notCheckable = true,
+				text = Musician.Msg.MENU_PLAY_PREVIEW,
+				func = function() Musician.sourceSong:Play() end
+			})
 		end
-
-		table.insert(menu, {
-			notCheckable = true,
-			text = labelPreview,
-			func = MusicianFrame.Test
-		})
 
 		-- Open track editor
 
@@ -141,9 +142,8 @@ function MusicianButton.GetMenu()
 			func = MusicianFrame.TrackEditor
 		})
 
-		-- Play imported song
+		-- Play/stop imported song
 
-		local labelPlay
 		if Musician.songIsPlaying then
 
 			-- If the song being playing is not the same as the source song, show its title
@@ -155,16 +155,18 @@ function MusicianButton.GetMenu()
 				})
 			end
 
-			labelPlay = Musician.Utils.GetChatIcon(Musician.IconImages.Note) .. " " .. Musician.Msg.MENU_STOP
+			table.insert(menu, {
+				notCheckable = true,
+				text = Musician.Utils.GetChatIcon(Musician.IconImages.Note) .. " " .. Musician.Msg.MENU_STOP,
+				func = Musician.Comm.StopSong
+			})
 		else
-			labelPlay = Musician.Msg.MENU_PLAY
+			table.insert(menu, {
+				notCheckable = true,
+				text = Musician.Msg.MENU_PLAY,
+				func = Musician.Comm.PlaySong
+			})
 		end
-
-		table.insert(menu, {
-			notCheckable = true,
-			text = labelPlay,
-			func = MusicianFrame.Play
-		})
 	end
 
 	-- Live play separator
