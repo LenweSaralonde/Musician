@@ -51,8 +51,8 @@ Musician.TrackEditor.Init = function()
 	end)
 
 	Musician.TrackEditor:RegisterMessage(Musician.Events.Frame, Musician.TrackEditor.OnUpdate)
-	Musician.TrackEditor:RegisterMessage(Musician.Events.NoteOn, Musician.TrackEditor.NoteOn)
-	Musician.TrackEditor:RegisterMessage(Musician.Events.NoteOff, Musician.TrackEditor.NoteOff)
+	Musician.TrackEditor:RegisterMessage(Musician.Events.VisualNoteOn, Musician.TrackEditor.NoteOn)
+	Musician.TrackEditor:RegisterMessage(Musician.Events.VisualNoteOff, Musician.TrackEditor.NoteOff)
 	Musician.TrackEditor:RegisterMessage(Musician.Events.SourceSongLoaded, Musician.TrackEditor.OnLoad)
 end
 
@@ -321,6 +321,12 @@ Musician.TrackEditor.OnUpdate = function(event, elapsed)
 
 			local width = meter.volumeMeter:GetLevel() * meter.maxWidth
 			meter:SetWidth(width)
+
+			if Musician.sourceSong:TrackIsMuted(track) then
+				meter:SetAlpha(.25)
+			else
+				meter:SetAlpha(1)
+			end
 
 			if width > 0 then
 				meter:Show()
