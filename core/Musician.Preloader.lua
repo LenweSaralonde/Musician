@@ -61,7 +61,7 @@ function Musician.Preloader.PreloadNext()
 
 	local sampleIsPreloaded = false
 
-	while	not(sampleIsPreloaded) do
+	while not(sampleIsPreloaded) do
 		local key = Musician.Preloader.GetCursorKey(keyCursor)
 		local instrumentName = Musician.INSTRUMENTS_AVAILABLE[instrumentCursor]
 		local instrumentData = Musician.Utils.GetInstrumentData(instrumentName, key)
@@ -111,6 +111,14 @@ function Musician.Preloader.PreloadNext()
 			end
 		end
 	end
+end
+
+function Musician.Preloader.GetLoadedSamples()
+	return totalLoadedSamples
+end
+
+function Musician.Preloader.GetAverageLoadingTime()
+	return totalLoadingTime / totalLoadedSamples
 end
 
 --- Return frame waiting time in seconds

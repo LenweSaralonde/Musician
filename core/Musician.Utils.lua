@@ -736,17 +736,19 @@ function Musician.Utils.PreloadNote(instrument, key)
 	local soundFile, instrumentData, soundFiles = Musician.Utils.GetSoundFile(instrument, key)
 	local sampleId = Musician.Utils.GetSampleId(instrumentData, key)
 	local hasSample = false
+	local count = 0
 	local startTime = debugprofilestop()
 	for i, soundFile in pairs(soundFiles) do
 		local play, handle
 		play, handle = Musician.Utils.PlaySoundFile(soundFile, 'SFX')
 		if play then
 			hasSample = true
+			count = count + 1
 			StopSound(handle, 0)
 		end
 	end
 	Musician.Preloader.AddPreloaded(sampleId)
-	return hasSample, debugprofilestop() - startTime
+	return hasSample, (debugprofilestop() - startTime) / count
 end
 
 --- Deep copy a table
