@@ -474,31 +474,7 @@ end
 -- @param name (string)
 -- @return (boolean)
 function Musician.Utils.PlayerIsInGroup(name)
-	if not(IsInGroup()) and not(IsInRaid()) then
-		return false
-	end
-
-	if Musician.Utils.PlayerIsMyself(name) then
-		return true
-	end
-
-	local slug = 'party'
-	local to = 4
-	name = Musician.Utils.NormalizePlayerName(name)
-
-	if IsInRaid() then
-		slug = 'raid'
-		to = 40
-	end
-
-	local i
-	for i = 1, to do
-		if GetUnitName(slug .. i, true) and Musician.Utils.NormalizePlayerName(GetUnitName(slug .. i, true)) == name then
-			return true
-		end
-	end
-
-	return false
+	return UnitInParty(Musician.Utils.SimplePlayerName(name))
 end
 
 --- Return true if the provided player name is myself
