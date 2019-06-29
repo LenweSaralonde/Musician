@@ -58,7 +58,7 @@ function Musician.CrossRP.Init()
 			Musician.Registry.playersQueried[player] = GetTime()
 			CrossRP.Proto.Send(
 				destination,
-				{ Musician.Registry.event.query, Musician.Registry.GetVersionString() },
+				{ Musician.Registry.event.query, Musician.CrossRP.GetHelloString() },
 				{ guarantee = true, priority = "URGENT" }
 			)
 		end
@@ -78,6 +78,25 @@ function Musician.CrossRP.Init()
 	--- Receive compressed chunk
 	--
 	CrossRP.Proto.SetMessageHandler(Musician.Comm.event.stream, Musician.CrossRP.OnSongChunk)
+
+	--- A player has been registered
+	--
+	Musician.CrossRP:RegisterMessage(Musician.Registry.event.playerRegistered, function(event, player)
+		-- Add CrossRP player attributes if in my group
+		if Musician.Utils.PlayerIsInGroup(player) then
+			local simplePlayerName = Musician.Utils.SimplePlayerName(player)
+			local faction = Musician.CrossRP.GetFactionId(UnitFactionGroup(simplePlayerName))
+			local source = CrossRP.Proto.DestFromFullname(player, faction)
+			local guid = UnitGUID(simplePlayerName)
+			Musician.CrossRP.RegisterPlayerFromSource(source, guid)
+		end
+	end)
+end
+
+--- Return data string for CrossRP Hello/Query messages
+-- @return (string)
+function Musician.CrossRP.GetHelloString()
+	return Musician.Registry.GetVersionString() .. " " .. UnitGUID("player")
 end
 
 --- Return faction ID from faction name
@@ -85,6 +104,21 @@ end
 -- @return (string) (H, A or N)
 function Musician.CrossRP.GetFactionId(faction)
 	return string.sub(faction, 1, 1)
+end
+
+--- Return player's adverse band (ie 537H for EU-KirinTor Alliance)
+-- @return (string)
+function Musician.CrossRP.GetAdverseBand()
+	local playerBand = CrossRP.Proto.GetBandFromUnit("player")
+	local bandNumber, faction = string.match(playerBand, "(%d+)([AHN])")
+
+	if faction == "A" then
+		return bandNumber .. "H"
+	elseif faction == "H" then
+		return bandNumber .. "A"
+	else
+		return nil
+	end
 end
 
 --- Return destination string for targetted unit
@@ -100,13 +134,44 @@ function Musician.CrossRP.GetUnitDestination(unit)
 	return CrossRP.Proto.DestFromFullname(player, faction)
 end
 
+--- Return CrossRP destination for broadcast, based on the presence of nearby foreign players
+-- @return (string)
+function Musician.CrossRP.GetBroadcastDestination()
+	local myBand = CrossRP.Proto.GetBandFromUnit("player")
+	local adverseBand = Musician.CrossRP.GetAdverseBand()
+	local destination = nil
+	local player, playerData
+	for player, playerData in pairs(Musician.Registry.players) do
+		-- Player has CrossRP attributes, is not in my group and is visible (connected)
+		if playerData.crossRpSource
+			and playerData.guid
+			and not(Musician.Utils.PlayerIsInGroup(player))
+			and C_PlayerInfo.IsConnected(PlayerLocation:CreateFromGUID(playerData.guid))
+		then
+			-- Adverse band
+			if CrossRP.Proto.IsDestLinked(playerData.crossRpBand, adverseBand) then
+				destination = adverseBand
+			-- Foreign player
+			elseif not(CrossRP.Proto.IsDestLinked(playerData.crossRpBand, myBand)) then
+				return "all"
+			end
+		end
+	end
+	return destination
+end
+
 --- Register player from its source string
 -- @param source (string)
-function Musician.CrossRP.RegisterPlayerFromSource(source)
+-- @param [guid] (string)
+function Musician.CrossRP.RegisterPlayerFromSource(source, guid)
 	local player = CrossRP.Proto.DestToFullname(source)
 	if player then
 		Musician.Registry.RegisterPlayer(player)
 		Musician.Registry.players[player].crossRpSource = source
+		Musician.Registry.players[player].crossRpBand = CrossRP.Proto.GetBandFromDest(source)
+		if guid then
+			Musician.Registry.players[player].guid = guid
+		end
 	end
 end
 
@@ -124,7 +189,7 @@ function Musician.CrossRP.SendHello(destination)
 	if destination then
 		CrossRP.Proto.Send(
 			destination,
-			{ Musician.Registry.event.hello, Musician.Registry.GetVersionString() },
+			{ Musician.Registry.event.hello, Musician.CrossRP.GetHelloString() },
 			options
 		)
 	end
@@ -136,10 +201,10 @@ end
 -- @param complete (boolean)
 function Musician.CrossRP.OnHelloOrQuery(source, message, complete)
 	local player = CrossRP.Proto.DestToFullname(source)
-	local type, version = message:match("^(%S+) (.*)")
+	local type, version, guid = message:match("^(%S+) (%S+) (%S+)")
 
 	if player then
-		Musician.CrossRP.RegisterPlayerFromSource(source)
+		Musician.CrossRP.RegisterPlayerFromSource(source, guid)
 		Musician.Registry.SetPlayerVersion(player, version)
 	end
 end
@@ -147,6 +212,11 @@ end
 --- Send a compressed chunk
 -- @param compressedChunk (string)
 function Musician.CrossRP.StreamCompressedSongChunk(compressedChunk)
+	local destination = Musician.CrossRP.GetBroadcastDestination()
+
+	-- No broadcast destination: no need to send the chunk over CrossRP
+	if not(destination) then return end
+
 	-- Get chunk ID
 	if streamingSongId ~= Musician.streamingSong:GetId() then
 		streamingSongId = Musician.streamingSong:GetId()
@@ -163,7 +233,7 @@ function Musician.CrossRP.StreamCompressedSongChunk(compressedChunk)
 
 	-- Send chunk
 	CrossRP.Proto.Send(
-		"all",
+		destination,
 		{ Musician.Comm.event.stream, serializedData },
 		{ guarantee = false, priority = "FAST" }
 	)
