@@ -3,9 +3,17 @@ Musician.Plater = LibStub("AceAddon-3.0"):NewAddon("Musician.Plater", "AceEvent-
 --- OnEnable
 --
 function Musician.Plater:OnEnable()
-	hooksecurefunc(Musician.NamePlates, "updateNamePlateIcons", function(namePlate)
-		if namePlate.ActorNameSpecial then
-			Musician.NamePlates.updateNoteIcon(namePlate, namePlate, namePlate.ActorNameSpecial)
-		end
-	end)
+	-- Add musical note icon next to player name
+	if Plater and Plater.UpdatePlateText then
+		hooksecurefunc(Plater, "UpdatePlateText", function(plateFrame, plateConfigs, needReset)
+			Musician.NamePlates.updateNoteIcon(plateFrame, plateFrame.unitFrame, plateFrame.CurrentUnitNameString)
+		end)
+	end
+
+	-- Fix player name layer ordering
+	if Plater and Plater.CheckRange then
+		hooksecurefunc(Plater, "CheckRange", function(plateFrame, onAdded)
+			plateFrame.CurrentUnitNameString:SetParent(plateFrame.unitFrame)
+		end)
+	end
 end
