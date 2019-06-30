@@ -174,6 +174,7 @@ local function addNote(animatedNotesFrame, song, track, key)
 	local noteFrame = table.remove(releasedNoteFrames)
 	if not(noteFrame) then
 		noteFrame = CreateFrame("Frame")
+		noteFrame:SetFrameStrata("BACKGROUND")
 		noteFrame.texture = noteFrame:CreateTexture(nil, "BACKGROUND", nil, -8)
 		noteFrame.texture:SetAllPoints(noteFrame)
 		noteFrame.texture:SetBlendMode("ADD")
@@ -262,7 +263,6 @@ function Musician.NamePlates.OnNamePlateAdded(event, unitToken)
 	-- Add references to the name plate
 	local player = Musician.Utils.NormalizePlayerName(GetUnitName(unitToken, true))
 	playerNamePlates[player] = C_NamePlate.GetNamePlateForUnit(unitToken)
-	playerNamePlates[player].musicianPlayer = player
 	namePlatePlayers[unitToken] = player
 
 	-- Attach name plate
@@ -279,7 +279,6 @@ function Musician.NamePlates.OnNamePlateRemoved(event, unitToken)
 	local player = namePlatePlayers[unitToken]
 	if player and playerNamePlates[player] then
 		Musician.NamePlates.DetachNamePlate(playerNamePlates[player])
-		playerNamePlates[player].musicianPlayer = nil
 		playerNamePlates[player] = nil
 	end
 
@@ -303,6 +302,7 @@ function Musician.NamePlates.updateNoteIcon(namePlate, unitFrame, textObject)
 	-- Create icon frame
 	if not(unitFrame.musicianNoteIcon) then
 		unitFrame.musicianNoteIcon = CreateFrame("Frame")
+		unitFrame.musicianNoteIcon:SetFrameStrata("BACKGROUND")
 		unitFrame.musicianNoteIcon:SetParent(unitFrame)
 		unitFrame.musicianNoteIcon:SetWidth(textObject:GetHeight())
 		unitFrame.musicianNoteIcon:SetScript("OnSizeChanged", function(self, width, height)
@@ -310,13 +310,14 @@ function Musician.NamePlates.updateNoteIcon(namePlate, unitFrame, textObject)
 		end)
 		unitFrame.musicianNoteIcon:SetPoint("TOPRIGHT", textObject, "TOPLEFT", -3, 0)
 		unitFrame.musicianNoteIcon:SetPoint("BOTTOMRIGHT", textObject, "BOTTOMLEFT", -3, 0)
-		unitFrame.musicianNoteIcon.texture = unitFrame.musicianNoteIcon:CreateTexture(nil, "BACKGROUND")
+		unitFrame.musicianNoteIcon.texture = unitFrame.musicianNoteIcon:CreateTexture(nil, "ARTWORK")
 		unitFrame.musicianNoteIcon.texture:SetAllPoints()
 		unitFrame.musicianNoteIcon.texture:SetTexture(Musician.IconImages.Note)
 	end
 
 	-- Show it if player is registered
-	if UnitIsPlayer(namePlate.namePlateUnitToken) and namePlate.musicianPlayer and not(Musician.Utils.PlayerIsMyself(namePlate.musicianPlayer)) and Musician.Registry.PlayerIsRegistered(namePlate.musicianPlayer) then
+	local player = UnitIsPlayer(namePlate.namePlateUnitToken) and Musician.Utils.NormalizePlayerName(GetUnitName(namePlate.namePlateUnitToken, true))
+	if player and not(Musician.Utils.PlayerIsMyself(player)) and Musician.Registry.PlayerIsRegistered(player) then
 		textObject:SetPoint("CENTER", textObject:GetHeight() / 2 + 1.5, 0)
 		unitFrame.musicianNoteIcon:Show()
 	else
@@ -345,6 +346,7 @@ function Musician.NamePlates.AttachNamePlate(namePlate, player)
 	-- Create or show animated notes frames
 	if not(namePlate.musicianAnimatedNotesFrame) then
 		namePlate.musicianAnimatedNotesFrame = CreateFrame("Frame")
+		namePlate.musicianAnimatedNotesFrame:SetFrameStrata("BACKGROUND")
 		namePlate.musicianAnimatedNotesFrame:SetParent(namePlate)
 		namePlate.musicianAnimatedNotesFrame:SetFrameLevel(0)
 		namePlate.musicianAnimatedNotesFrame:SetPoint("BOTTOM", namePlate, "BOTTOM", 0, -20)
