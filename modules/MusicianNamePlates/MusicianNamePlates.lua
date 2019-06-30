@@ -91,8 +91,8 @@ end
 -- @param noteFrame (Frame)
 local function removeNote(noteFrame)
 	noteFrame:Hide()
-	noteFrame.texture:Hide()
 	noteFrame:SetParent(nil)
+	noteFrame:ClearAllPoints()
 	table.insert(releasedNoteFrames, noteFrame)
 end
 
@@ -248,6 +248,7 @@ end
 -- @param event (string)
 -- @param unitToken (string)
 function Musician.NamePlates.OnNamePlateAdded(event, unitToken)
+
 	if not(UnitIsPlayer(unitToken)) then return end
 
 	-- May return "Unknown" on first attempt: try again later.
@@ -373,10 +374,8 @@ function Musician.NamePlates.DetachNamePlate(namePlate)
 	namePlate.musicianAnimatedNotesFrame:Hide()
 
 	-- Remove animated notes frames
-	local noteFrame
-	local children = { namePlate.musicianAnimatedNotesFrame:GetChildren() }
-	for _, noteFrame in ipairs(children) do
-		removeNote(noteFrame)
+	while namePlate.musicianAnimatedNotesFrame:GetNumChildren() > 0 do
+		removeNote(select(1, namePlate.musicianAnimatedNotesFrame:GetChildren()))
 	end
 end
 
