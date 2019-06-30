@@ -7,6 +7,7 @@ Musician.CrossRP.isReady = false
 local streamingSongId
 local chunkId
 local receivedChunkIds = {}
+local foreigners = {}
 
 --- OnEnable
 --
@@ -141,13 +142,10 @@ function Musician.CrossRP.GetBroadcastDestination()
 	local adverseBand = Musician.CrossRP.GetAdverseBand()
 	local destination = nil
 	local player, playerData
-	for player, playerData in pairs(Musician.Registry.players) do
+	for _, player in ipairs(foreigners) do
 		-- Player has CrossRP attributes, is not in my group and is visible (connected)
-		if playerData.crossRpSource
-			and playerData.guid
-			and not(Musician.Utils.PlayerIsInGroup(player))
-			and C_PlayerInfo.IsConnected(PlayerLocation:CreateFromGUID(playerData.guid))
-		then
+		local playerData = Musician.Registry.players[player]
+		if playerData.guid and not(Musician.Utils.PlayerIsInGroup(player)) and Musician.Utils.PlayerGuidIsVisible(guid) then
 			-- Adverse band
 			if CrossRP.Proto.IsDestLinked(playerData.crossRpBand, adverseBand) then
 				destination = adverseBand
@@ -167,10 +165,19 @@ function Musician.CrossRP.RegisterPlayerFromSource(source, guid)
 	local player = CrossRP.Proto.DestToFullname(source)
 	if player then
 		Musician.Registry.RegisterPlayer(player)
-		Musician.Registry.players[player].crossRpSource = source
-		Musician.Registry.players[player].crossRpBand = CrossRP.Proto.GetBandFromDest(source)
+
+		local myBand = CrossRP.Proto.GetBandFromUnit("player")
+		local isInMyBand = CrossRP.Proto.IsDestLinked(myBand, source)
+		local playerData = Musician.Registry.players[player]
+
+		if not(isInMyBand) and not(playerData.crossRpSource) then
+			playerData.crossRpSource = source
+			playerData.crossRpBand = CrossRP.Proto.GetBandFromDest(source)
+			table.insert(foreigners, player)
+		end
+
 		if guid then
-			Musician.Registry.players[player].guid = guid
+			playerData.guid = guid
 		end
 	end
 end
