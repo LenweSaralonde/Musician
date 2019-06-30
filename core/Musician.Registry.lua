@@ -219,8 +219,7 @@ function Musician.Registry.PlayerIsInLoadingRange(player)
 
 	-- Player is not "connected" (in the same shard and phase and close enough to interact with the character)
 	local guid = Musician.Registry.players[player].guid
-	local isVisible = guid and C_PlayerInfo.IsConnected(PlayerLocation:CreateFromGUID(guid))
-	if not(isVisible) then
+	if not(Musician.Utils.PlayerGuidIsVisible(guid)) then
 		return false
 	end
 

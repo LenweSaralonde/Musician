@@ -506,6 +506,13 @@ function Musician.Utils.PlayerIsOnSameRealm(player)
 	return false
 end
 
+--- Return true if the player whose GUID is provided is visible (loaded) by the game client
+-- @param guid (string)
+-- @return (boolean)
+function Musician.Utils.PlayerGuidIsVisible(guid)
+	return guid and C_PlayerInfo.IsConnected(PlayerLocation:CreateFromGUID(guid))
+end
+
 --- Return the "Player is playing music" emote with promo message
 -- @return (string)
 function Musician.Utils.GetPromoEmote()
