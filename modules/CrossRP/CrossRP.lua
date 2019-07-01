@@ -145,7 +145,7 @@ function Musician.CrossRP.GetBroadcastDestination()
 	for _, player in ipairs(foreigners) do
 		-- Player has CrossRP attributes, is not in my group and is visible (connected)
 		local playerData = Musician.Registry.players[player]
-		if playerData.guid and not(Musician.Utils.PlayerIsInGroup(player)) and Musician.Utils.PlayerGuidIsVisible(guid) then
+		if playerData.guid and not(Musician.Utils.PlayerIsInGroup(player)) and Musician.Utils.PlayerGuidIsVisible(playerData.guid) then
 			-- Adverse band
 			if CrossRP.Proto.IsDestLinked(playerData.crossRpBand, adverseBand) then
 				destination = adverseBand
