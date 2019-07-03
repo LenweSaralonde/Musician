@@ -13,6 +13,7 @@ function Musician:OnInitialize()
 		enableEmote = true,
 		enableEmotePromo = true,
 		emoteHintShown = false,
+		debug = {},
 		mutedPlayers = {}
 	}
 	if Musician_Settings ~= nil then

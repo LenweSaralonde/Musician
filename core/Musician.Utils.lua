@@ -8,6 +8,15 @@ function Musician.Utils.Print(msg)
 	DEFAULT_CHAT_FRAME:AddMessage(msg, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
 end
 
+--- Prints debug stuff in the console
+-- @param module (string)
+-- @param ... (string)
+function Musician.Utils.Debug(module, ...)
+	if Musician_Settings.debug[module] then
+		print("[|cFFFFFF00Musician DEBUG|r]", module, ...)
+	end
+end
+
 --- Safely play a sound file, even if the sound file does not exist.
 -- @param soundFile (string)
 -- @param channel (string)
