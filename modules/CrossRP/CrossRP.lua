@@ -8,6 +8,31 @@ local streamingSongId
 local chunkId
 local receivedChunkIds = {}
 local foreigners = {}
+local queriedPlayers = {}
+local pendingPlayerQueries = {} -- CrossRP Query messages queue
+
+local QUERY_RATE = .5
+local QUERY_MAX_TRIES = 2
+local QUERY_RETRY_AFTER = 5
+
+--- Prints debug message
+-- @param out (boolean) Outgoing message
+-- @param event (string)
+-- @param source (string)
+-- @param ... (string)
+local function debug(out, event, source, ...)
+	local prefix
+	if out then
+		prefix = "|cFFFF0000>>>>>|r"
+	else
+		prefix = "|cFF00FF00<<<<<|r"
+	end
+
+	event = "|cFFFF8000" .. event .. "|r"
+	source = "|cFF00FFFF" .. source .. "|r"
+
+	Musician.Utils.Debug("CrossRP", prefix, event, source, ...)
+end
 
 --- OnEnable
 --
@@ -37,6 +62,7 @@ function Musician.CrossRP.Init()
 	--- Send CrossRP Query to hovered player
 	--
 	Musician.CrossRP:RegisterEvent("UPDATE_MOUSEOVER_UNIT", function()
+
 		local destination = Musician.CrossRP.GetUnitDestination("mouseover")
 		if not(destination) then
 			return
@@ -48,29 +74,46 @@ function Musician.CrossRP.Init()
 		end
 
 		local myBand = CrossRP.Proto.GetBandFromUnit("player")
-		local queryTime = Musician.Registry.playersQueried[player]
-		local isQueried = queryTime and ((queryTime + 5) > GetTime()) -- Retry after 5 seconds
 		local isInMyBand = CrossRP.Proto.IsDestLinked(myBand, destination)
 		local isPlayerBandReachable = CrossRP.Proto.SelectBridge(destination, false)
-		local hasVersion = Musician.Registry.GetPlayerVersion(player)
 
-		-- Player is not in my band and has no version information: send Query via CrossRP if possible
-		if isPlayerBandReachable and not(hasVersion) and not(isInMyBand) and not(isQueried) and Musician.CrossRP.isReady then
-			Musician.Registry.playersQueried[player] = GetTime()
+		-- Player is not in my band and is not registered: send Query message via CrossRP if possible
+		if not(isInMyBand) and isPlayerBandReachable and not(Musician.Registry.PlayerIsRegistered(player)) then
+			local query = queriedPlayers[player]
+			local queryCount = query and query[1] or 0
+			local queryTime = query and query[2] or 0
+
+			if ((queryTime + QUERY_RETRY_AFTER) <= GetTime()) and (queryCount < QUERY_MAX_TRIES) then
+				queriedPlayers[player] = { queryCount + 1, GetTime(), destination }
+				table.insert(pendingPlayerQueries, player)
+			end
+		end
+	end)
+
+	-- Periodically send enqueued Query message
+	C_Timer.NewTicker(QUERY_RATE, function()
+		local player = table.remove(pendingPlayerQueries, 1)
+
+		while player and Musician.Registry.PlayerIsRegistered(player) do
+			player = table.remove(pendingPlayerQueries, 1)
+		end
+
+		if player and not(Musician.Registry.PlayerIsRegistered(player)) then
+			local destination = queriedPlayers[player][3]
+
+			debug(true, Musician.Registry.event.query, destination, player, unpack(queriedPlayers[player]))
+
 			CrossRP.Proto.Send(
 				destination,
-				{ Musician.Registry.event.query, Musician.CrossRP.GetHelloString() },
+				{ Musician.Registry.event.query, player, Musician.CrossRP.GetHelloString() },
 				{ guarantee = true, priority = "URGENT" }
 			)
 		end
 	end)
 
-	--- Receive CrossRP Query
+	--- Receive CrossRP Query message
 	--
-	CrossRP.Proto.SetMessageHandler(Musician.Registry.event.query, function(source, message, complete)
-		Musician.CrossRP.OnHelloOrQuery(source, message, complete)
-		Musician.CrossRP.SendHello(source)
-	end)
+	CrossRP.Proto.SetMessageHandler(Musician.Registry.event.query, Musician.CrossRP.OnHelloOrQuery)
 
 	--- Send compressed chunk
 	--
@@ -97,7 +140,7 @@ end
 --- Return data string for CrossRP Hello/Query messages
 -- @return (string)
 function Musician.CrossRP.GetHelloString()
-	return Musician.Registry.GetVersionString() .. " " .. UnitGUID("player")
+	return UnitGUID("player") .. " " .. Musician.Registry.GetVersionString()
 end
 
 --- Return faction ID from faction name
@@ -194,6 +237,7 @@ function Musician.CrossRP.SendHello(destination)
 	end
 
 	if destination then
+		debug(true, Musician.Registry.event.hello, destination)
 		CrossRP.Proto.Send(
 			destination,
 			{ Musician.Registry.event.hello, Musician.CrossRP.GetHelloString() },
@@ -207,12 +251,30 @@ end
 -- @param message (string)
 -- @param complete (boolean)
 function Musician.CrossRP.OnHelloOrQuery(source, message, complete)
+
 	local player = CrossRP.Proto.DestToFullname(source)
-	local type, version, guid = message:match("^(%S+) (%S+) (%S+)")
+	local type, rawData = message:match("^(%S+) (.*)")
+	local destination, version, guid
 
 	if player then
+		if type == Musician.Registry.event.query then
+			destination, guid, version = rawData:match("^(%S+) (%S+) (.*)")
+			debug(false, type, source, destination, guid, version, Musician.CrossRP.GetUnitDestination("player"))
+			-- This query is not for me
+			if not(Musician.Utils.PlayerIsMyself(destination)) then
+				return
+			-- Reply with a Hello
+			else
+				Musician.CrossRP.SendHello(source)
+			end
+		else
+			guid, version = rawData:match("^(%S+) (.*)")
+			debug(false, type, source, guid, version)
+		end
+
 		Musician.CrossRP.RegisterPlayerFromSource(source, guid)
 		Musician.Registry.SetPlayerVersion(player, version)
+		queriedPlayers[player] = nil
 	end
 end
 
@@ -239,6 +301,7 @@ function Musician.CrossRP.StreamCompressedSongChunk(compressedChunk)
 	local serializedData = LibDeflate:EncodeForWoWChatChannel(packedChunkId .. compressedChunk)
 
 	-- Send chunk
+	debug(true, Musician.Comm.event.stream, destination, streamingSongId, packedChunkId, #serializedData)
 	CrossRP.Proto.Send(
 		destination,
 		{ Musician.Comm.event.stream, serializedData },
@@ -266,6 +329,8 @@ function Musician.CrossRP.OnSongChunk(source, message, complete)
 		local chunkId = Musician.Utils.UnpackNumber(string.sub(data, 1, 2))
 		local packedChunk = LibDeflate:DecompressDeflate(string.sub(data, 3))
 		local mode, songId = Musician.Song.UnpackChunkHeader(packedChunk)
+
+		debug(false, type, source, songId, packedChunk, #serializedData)
 
 		-- Invalid chunk
 		if mode == nil then
