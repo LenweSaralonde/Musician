@@ -2,7 +2,7 @@ Musician.Registry = LibStub("AceAddon-3.0"):NewAddon("Musician.Registry", "AceEv
 
 Musician.Registry.players = {}
 Musician.Registry.playersFetched = false
-Musician.Registry.playersQueried = {}
+Musician.Registry.queriedPlayers = {}
 
 Musician.Registry.event = {}
 Musician.Registry.event.hello = "MusicianHello" -- Send my version number to a player or a group of players
@@ -10,10 +10,35 @@ Musician.Registry.event.query = "MusicianQuery" -- Query hello from a player to 
 Musician.Registry.event.playerRegistered = "MusicianPlayerRegistered" -- A player has been registered
 Musician.Registry.event.playerUnregistered = "MusicianPlayerUnregistered" -- A player has been unregistered
 
+local QUERY_RATE = .1
+local QUERY_MAX_TRIES = 3
+local QUERY_RETRY_AFTER = 3
+
 local newVersionNotified = false
 local newProtocolNotified = false
 
 local tooltipPlayerName
+
+local pendingPlayerQueries = {} -- Query messages queue
+
+--- Prints debug message
+-- @param out (boolean) Outgoing message
+-- @param event (string)
+-- @param source (string)
+-- @param ... (string)
+local function debug(out, event, source, ...)
+	local prefix
+	if out then
+		prefix = "|cFFFF0000>>>>>|r"
+	else
+		prefix = "|cFF00FF00<<<<<|r"
+	end
+
+	event = "|cFFFF8000" .. event .. "|r"
+	source = "|cFF00FFFF" .. source .. "|r"
+
+	Musician.Utils.Debug("Registry", prefix, event, source, ...)
+end
 
 --- Initialize registry
 --
@@ -40,20 +65,22 @@ function Musician.Registry.Init()
 			end
 		end)
 
-		-- Send Query to group
+		-- Send Query message to group
 		if Musician.Comm.GetGroupChatType() then
+			debug(true, Musician.Registry.event.query, Musician.Comm.GetGroupChatType())
 			Musician.Registry:SendCommMessage(Musician.Registry.event.query, Musician.Registry.GetVersionString(), Musician.Comm.GetGroupChatType(), nil, "ALERT")
 		end
 	end)
 
-	-- Send Query to group when joining
+	-- Send Query message to group when joining
 	Musician.Registry:RegisterEvent("GROUP_JOINED", function()
 		if Musician.Comm.GetGroupChatType() then
+			debug(true, Musician.Registry.event.query, Musician.Comm.GetGroupChatType())
 			Musician.Registry:SendCommMessage(Musician.Registry.event.query, Musician.Registry.GetVersionString(), Musician.Comm.GetGroupChatType(), nil, "ALERT")
 		end
 	end)
 
-	-- Query Hello to hovered player
+	-- Enqueue Query message for hovered player
 	Musician.Registry:RegisterEvent("UPDATE_MOUSEOVER_UNIT", function()
 		if not(UnitIsPlayer("mouseover")) then
 			return
@@ -64,14 +91,28 @@ function Musician.Registry.Init()
 			return
 		end
 
-		local queryTime = Musician.Registry.playersQueried[player]
-		local isQueried = queryTime and ((queryTime + 3) > GetTime()) -- Retry after 3 seconds
-		local isRegistered = Musician.Registry.PlayerIsRegistered(player)
-		local hasNoVersion = isRegistered and Musician.Registry.players[player].version == nil
+		if Musician.Registry.PlayerIsRegisteredWithNoVersion(player) then
+			local query = Musician.Registry.queriedPlayers[player]
+			local queryCount = query and query[1] or 0
+			local queryTime = query and query[2] or 0
 
-		-- No version information available but player is registered: send Query to get the version
-		if hasNoVersion and isRegistered and not(isQueried) then
-			Musician.Registry.playersQueried[player] = GetTime()
+			if ((queryTime + QUERY_RETRY_AFTER) <= GetTime()) and (queryCount < QUERY_MAX_TRIES) then
+				Musician.Registry.queriedPlayers[player] = { queryCount + 1, GetTime() }
+				table.insert(pendingPlayerQueries, player)
+			end
+		end
+	end)
+
+	-- Periodically send enqueued Query message
+	C_Timer.NewTicker(QUERY_RATE, function()
+		local player = table.remove(pendingPlayerQueries, 1)
+
+		while player and not(Musician.Registry.PlayerIsRegisteredWithNoVersion(player)) do
+			player = table.remove(pendingPlayerQueries, 1)
+		end
+
+		if player and Musician.Registry.PlayerIsRegisteredWithNoVersion(player) then
+			debug(true, Musician.Registry.event.query, player)
 			Musician.Registry:SendCommMessage(Musician.Registry.event.query, Musician.Registry.GetVersionString(), 'WHISPER', player, "ALERT")
 		end
 	end)
@@ -337,6 +378,7 @@ end
 --
 function Musician.Registry.SendHello()
 	if Musician.Comm.getChannel() ~= nil then
+		debug(true, Musician.Registry.event.hello, Musician.Comm.getChannel())
 		Musician.Registry:SendCommMessage(Musician.Registry.event.hello, Musician.Registry.GetVersionString(), 'CHANNEL', Musician.Comm.getChannel(), "ALERT")
 	end
 end
@@ -348,7 +390,7 @@ function Musician.Registry.SetPlayerVersion(player, version)
 	player = Musician.Utils.NormalizePlayerName(player)
 	Musician.Registry.RegisterPlayer(player)
 	Musician.Registry.players[player].version = version
-	Musician.Registry.playersQueried[player] = nil
+	Musician.Registry.queriedPlayers[player] = nil
 
 	Musician.Registry.UpdatePlayerTooltip(player)
 	Musician.Registry.NotifyNewVersion(version)
@@ -357,12 +399,14 @@ end
 --- Receive Hello message
 --
 Musician.Registry:RegisterComm(Musician.Registry.event.hello, function(prefix, version, distribution, player)
+	debug(false, prefix, player, distribution, version)
 	Musician.Registry.SetPlayerVersion(player, version)
 end)
 
 --- Receive Query message
 --
 Musician.Registry:RegisterComm(Musician.Registry.event.query, function(prefix, version, distribution, player)
+	debug(false, prefix, player, distribution, version)
 	player = Musician.Utils.NormalizePlayerName(player)
 
 	if Musician.Utils.PlayerIsMyself(player) then
@@ -372,8 +416,10 @@ Musician.Registry:RegisterComm(Musician.Registry.event.query, function(prefix, v
 	Musician.Registry.SetPlayerVersion(player, version)
 
 	if distribution == 'WHISPER' then
+		debug(true, Musician.Registry.event.hello, player)
 		Musician.Registry:SendCommMessage(Musician.Registry.event.hello, Musician.Registry.GetVersionString(), 'WHISPER', player, "ALERT")
 	elseif Musician.Comm.GetGroupChatType() then
+		debug(true, Musician.Registry.event.hello, Musician.Comm.GetGroupChatType())
 		Musician.Registry:SendCommMessage(Musician.Registry.event.hello, Musician.Registry.GetVersionString(), Musician.Comm.GetGroupChatType(), nil, "ALERT")
 	end
 end)
@@ -404,6 +450,13 @@ end
 -- @return (boolean)
 function Musician.Registry.PlayerIsRegistered(player)
 	return Musician.Registry.players[player] ~= nil
+end
+
+--- Return true if this player has Musician but with unknown version number
+-- @param player (string)
+-- @return (boolean)
+function Musician.Registry.PlayerIsRegisteredWithNoVersion(player)
+	return Musician.Registry.PlayerIsRegistered(player) and Musician.Registry.players[player].version == nil
 end
 
 --- Get full version string
