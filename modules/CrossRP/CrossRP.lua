@@ -23,6 +23,10 @@ local QUERY_RETRY_AFTER = 5
 
 local FOREIGNERS_SCAN_MAX_TIME = .5 -- Max time allowed per frame for foreigners scan (ms)
 
+Musician.CrossRP.event = {}
+Musician.CrossRP.event.stop = "MusicianS"
+Musician.CrossRP.event.chunk = "MusicianC"
+
 --- Prints debug message
 -- @param out (boolean) Outgoing message
 -- @param event (string)
@@ -34,6 +38,10 @@ local function debug(out, event, source, ...)
 		prefix = "|cFFFF0000>>>>>|r"
 	else
 		prefix = "|cFF00FF00<<<<<|r"
+	end
+
+	if type(source) == "table" then
+		source = table.concat(source, ":")
 	end
 
 	event = "|cFFFF8000" .. event .. "|r"
@@ -140,7 +148,15 @@ function Musician.CrossRP.Init()
 
 	--- Receive compressed chunk
 	--
-	CrossRP.Proto.SetMessageHandler(Musician.Comm.event.stream, Musician.CrossRP.OnSongChunk)
+	CrossRP.Proto.SetMessageHandler(Musician.CrossRP.event.chunk, Musician.CrossRP.OnSongChunk)
+
+	--- Stop song
+	--
+	hooksecurefunc(Musician.Comm, "StopSong", Musician.CrossRP.StopSong)
+
+	--- Receive song stop
+	--
+	CrossRP.Proto.SetMessageHandler(Musician.CrossRP.event.stop, Musician.CrossRP.OnSongStop)
 
 	--- A player has been registered
 	--
@@ -249,7 +265,7 @@ function Musician.CrossRP.GetUnitDestination(unit)
 end
 
 --- Return CrossRP destination for broadcast, based on the presence of nearby foreign players
--- @return (string)
+-- @return (array)
 function Musician.CrossRP.GetBroadcastDestination()
 
 	local myBand = CrossRP.Proto.GetBandFromUnit("player")
@@ -261,12 +277,10 @@ function Musician.CrossRP.GetBroadcastDestination()
 		end
 	end
 
-	if #destination == 0 then
-		return nil
-	elseif #destination == 1 then
-		return destination[1]
+	if #destination > 0 then
+		return destination
 	else
-		return "all"
+		return nil
 	end
 end
 
@@ -350,6 +364,7 @@ end
 --- Send a compressed chunk
 -- @param compressedChunk (string)
 function Musician.CrossRP.StreamCompressedSongChunk(compressedChunk)
+
 	local destination = Musician.CrossRP.GetBroadcastDestination()
 
 	-- No broadcast destination: no need to send the chunk over CrossRP
@@ -370,10 +385,10 @@ function Musician.CrossRP.StreamCompressedSongChunk(compressedChunk)
 	local serializedData = LibDeflate:EncodeForWoWChatChannel(packedChunkId .. compressedChunk)
 
 	-- Send chunk
-	debug(true, Musician.Comm.event.stream, destination, streamingSongId, chunkId, #serializedData)
+	debug(true, Musician.CrossRP.event.chunk, destination, streamingSongId, chunkId, #(Musician.CrossRP.event.chunk .. " " .. serializedData))
 	CrossRP.Proto.Send(
 		destination,
-		{ Musician.Comm.event.stream, serializedData },
+		{ Musician.CrossRP.event.chunk, serializedData },
 		{ guarantee = false, priority = "FAST" }
 	)
 end
@@ -399,7 +414,7 @@ function Musician.CrossRP.OnSongChunk(source, message, complete)
 		local packedChunk = LibDeflate:DecompressDeflate(string.sub(data, 3))
 		local mode, songId = Musician.Song.UnpackChunkHeader(packedChunk)
 
-		debug(false, type, source, songId, chunkId, #serializedData)
+		debug(false, type, source, songId, chunkId, #(type .. " " .. serializedData))
 
 		-- Invalid chunk
 		if mode == nil then
@@ -428,4 +443,41 @@ function Musician.CrossRP.OnSongChunk(source, message, complete)
 		Musician.CrossRP.RegisterPlayerFromSource(source)
 		Musician.Comm.ProcessChunk(packedChunk, player)
 	end
+end
+
+--- Stop song
+--
+function Musician.CrossRP.StopSong()
+
+	local destination = Musician.CrossRP.GetBroadcastDestination()
+
+	-- No broadcast destination: no need to send the chunk over CrossRP
+	if not(destination) then return end
+
+	debug(true, Musician.CrossRP.event.stop, destination)
+	CrossRP.Proto.Send(
+		destination,
+		{ Musician.CrossRP.event.stop },
+		{ guarantee = true, priority = "FAST" }
+	)
+end
+
+--- Process a received music stop
+-- @param source (string)
+-- @param message (string)
+-- @param complete (boolean)
+function Musician.CrossRP.OnSongStop(source, message, complete)
+
+	local myBand = CrossRP.Proto.GetBandFromUnit("player")
+	local player = CrossRP.Proto.DestToFullname(source)
+
+	-- Do not process if receiving a stop from my own band or from someone in my group
+	if CrossRP.Proto.IsDestLinked(myBand, source) or not(player) or Musician.Utils.PlayerIsInGroup(player) then
+		return
+	end
+
+	local type = message:match("^(%S+)")
+	debug(false, type, source)
+
+	Musician.StopPlayerSong(player, true)
 end
