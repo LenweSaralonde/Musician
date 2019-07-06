@@ -1,5 +1,8 @@
 Musician.NamePlates = LibStub("AceAddon-3.0"):NewAddon("Musician.NamePlates", "AceEvent-3.0")
 
+local MODULE_NAME = "NamePlates"
+Musician.AddModule(MODULE_NAME)
+
 local playerNamePlates = {}
 local namePlatePlayers = {}
 local NOTES_TEXTURE = 167069 -- "spells\\t_vfx_note.blp"

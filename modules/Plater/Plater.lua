@@ -1,5 +1,8 @@
 Musician.Plater = LibStub("AceAddon-3.0"):NewAddon("Musician.Plater", "AceEvent-3.0")
 
+local MODULE_NAME = "Plater"
+Musician.AddModule(MODULE_NAME)
+
 --- OnEnable
 --
 function Musician.Plater:OnEnable()

@@ -1,5 +1,8 @@
 Musician.KuiNamePlates = LibStub("AceAddon-3.0"):NewAddon("Musician.KuiNamePlates", "AceEvent-3.0")
 
+local MODULE_NAME = "KuiNamePlates"
+Musician.AddModule(MODULE_NAME)
+
 --- OnEnable
 --
 function Musician.KuiNamePlates:OnEnable()
