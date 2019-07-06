@@ -214,7 +214,7 @@ end
 -- @return (boolean)
 function Musician.Comm.StreamSongChunk(packedChunk)
 	if not(Musician.Comm.CanBroadcast()) then return false end
-	Musician.Comm.StreamCompressedSongChunk(LibDeflate:CompressDeflate(packedChunk))
+	Musician.Comm.StreamCompressedSongChunk(LibDeflate:CompressDeflate(packedChunk, { level = 9 }))
 end
 
 --- Stream a compressed song chunk
