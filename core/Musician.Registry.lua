@@ -459,6 +459,13 @@ function Musician.Registry.PlayerIsRegisteredWithNoVersion(player)
 	return Musician.Registry.PlayerIsRegistered(player) and Musician.Registry.players[player].version == nil
 end
 
+--- Return true if this player has Musician with version number
+-- @param player (string)
+-- @return (boolean)
+function Musician.Registry.PlayerIsRegisteredWithVersion(player)
+	return Musician.Registry.PlayerIsRegistered(player) and Musician.Registry.players[player].version ~= nil
+end
+
 --- Get full version string
 -- Version string contains actual addon version and protocol version
 -- @return (string)
