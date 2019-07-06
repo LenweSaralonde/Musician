@@ -1,5 +1,8 @@
 Musician.TRP3 = LibStub("AceAddon-3.0"):NewAddon("Musician.TRP3", "AceEvent-3.0")
 
+local MODULE_NAME = "TRP3"
+Musician.AddModule(MODULE_NAME)
+
 function Musician.TRP3:OnEnable()
 	if TRP3_API then
 		TRP3_API.Events.registerCallback("WORKFLOW_ON_FINISH", function()
