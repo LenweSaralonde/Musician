@@ -1,5 +1,8 @@
 Musician.CrossRP = LibStub("AceAddon-3.0"):NewAddon("Musician.CrossRP", "AceEvent-3.0")
 
+local MODULE_NAME = "CrossRP"
+Musician.AddModule(MODULE_NAME)
+
 local LibDeflate = LibStub:GetLibrary("LibDeflate")
 
 Musician.CrossRP.isReady = false
