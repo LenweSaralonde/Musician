@@ -1,5 +1,8 @@
 Musician.Keyboard = LibStub("AceAddon-3.0"):NewAddon("Musician.Keyboard", "AceEvent-3.0")
 
+local MODULE_NAME = "Keyboard"
+Musician.AddModule(MODULE_NAME)
+
 local LAYER = Musician.KEYBOARD_LAYER
 local KEY = Musician.KEYBOARD_KEY
 

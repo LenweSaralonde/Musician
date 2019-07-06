@@ -1,5 +1,8 @@
 Musician.TrackEditor = LibStub("AceAddon-3.0"):NewAddon("Musician.TrackEditor", "AceEvent-3.0")
 
+local MODULE_NAME = "TrackEditor"
+Musician.AddModule(MODULE_NAME)
+
 Musician.TrackEditor.MAX_NOTE_DURATION = 6
 
 local NOTE = Musician.Song.Indexes.NOTE

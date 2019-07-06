@@ -1,5 +1,8 @@
 Musician.KeyboardUtils = LibStub("AceAddon-3.0"):NewAddon("Musician.KeyboardUtils")
 
+local MODULE_NAME = "KeyboardUtils"
+Musician.AddModule(MODULE_NAME)
+
 local keyValues -- Reverse mapping table (physical key => key value)
 
 --- Init

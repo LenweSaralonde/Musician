@@ -1,5 +1,8 @@
 Musician = LibStub("AceAddon-3.0"):NewAddon("Musician", "AceEvent-3.0")
 
+local MODULE_NAME = "Main"
+Musician.modules = { MODULE_NAME } -- All modules
+
 function Musician:OnInitialize()
 	Musician.Utils.Print(string.gsub(Musician.Msg.STARTUP, "{version}", Musician.Utils.Highlight(GetAddOnMetadata("Musician", "Version"))))
 
@@ -62,6 +65,12 @@ function Musician:OnInitialize()
 	SLASH_MUSICIAN1 = "/musician"
 	SLASH_MUSICIAN2 = "/music"
 	SLASH_MUSICIAN3 = "/mus"
+end
+
+--- Add a module
+-- @param moduleName (string)
+function Musician.AddModule(moduleName)
+	table.insert(Musician.modules, moduleName)
 end
 
 --- Get command definitions
@@ -232,8 +241,50 @@ function Musician.RunCommandLine(commandLine)
 	local args = { string.split(" ", strtrim(normalizedCommandLine)) }
 	local cmd = strtrim(strlower(table.remove(args, 1)))
 
+	local commands = Musician.GetCommands()
+
+	-- Add hidden debug command
+	table.insert(commands, {
+		command = {
+			"debug"
+		},
+		unpackArgs = true,
+		func = function(arg1, arg2)
+			local module, state
+			if arg2 == nil then
+				state = arg1
+			else
+				module, state = arg1, arg2
+			end
+
+			if state == "on" then state = true
+			elseif state == "off" then state = false
+			else state = nil end
+
+			if module ~= nil then
+				if state then
+					Musician_Settings.debug[module] = true
+					Musician.Utils.Debug(module, "Debug mode enabled for module " .. module .. ".")
+				else
+					Musician_Settings.debug[module] = nil
+					Musician.Utils.Debug(module, "Debug mode disabled for module " .. module .. ".")
+				end
+			else
+				if state then
+					for _, module in ipairs(Musician.modules) do
+						Musician_Settings.debug[module] = true
+					end
+					Musician.Utils.Debug(nil, "Debug mode enabled for all modules.")
+				else
+					Musician_Settings.debug = {}
+					Musician.Utils.Debug(nil, "Debug mode disabled for all modules.")
+				end
+			end
+		end
+	})
+
 	local row, command
-	for _, row in pairs(Musician.GetCommands()) do
+	for _, row in pairs(commands) do
 		for _, command in pairs(row.command) do
 			if cmd == command then
 				if row.unpackArgs then

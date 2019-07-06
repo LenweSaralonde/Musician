@@ -1,4 +1,8 @@
 Musician.VolumeMeter = {}
+
+local MODULE_NAME = "VolumeMeter"
+Musician.AddModule(MODULE_NAME)
+
 Musician.VolumeMeter.__index = Musician.VolumeMeter
 
 --- Constructor

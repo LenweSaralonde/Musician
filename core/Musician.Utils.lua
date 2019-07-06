@@ -1,5 +1,8 @@
 Musician.Utils = LibStub("AceAddon-3.0"):NewAddon("Musician.Utils")
 
+local MODULE_NAME = "Utils"
+Musician.AddModule(MODULE_NAME)
+
 Musician.Utils.gameMusicIsMuted = false
 
 --- Display a message in the console
@@ -12,8 +15,12 @@ end
 -- @param module (string)
 -- @param ... (string)
 function Musician.Utils.Debug(module, ...)
-	if Musician_Settings.debug[module] then
-		print("[|cFFFFFF00Musician DEBUG|r]", module, ...)
+	if module ~= nil then
+		if Musician_Settings.debug[module] then
+			print("[|cFFFFFF00Musician DEBUG|r]", module, ...)
+		end
+	else
+		print("[|cFFFFFF00Musician DEBUG|r]", ...)
 	end
 end
 

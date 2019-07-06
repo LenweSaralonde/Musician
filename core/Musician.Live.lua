@@ -1,5 +1,8 @@
 Musician.Live = LibStub("AceAddon-3.0"):NewAddon("Musician.Live", "AceEvent-3.0")
 
+local MODULE_NAME = "Live"
+Musician.AddModule(MODULE_NAME)
+
 local STREAM_PADDING = 10 -- Number of seconds to wait before ending streaming without activity
 
 Musician.Live.NotesOn = {}

@@ -1,4 +1,8 @@
 Musician.Song = {}
+
+local MODULE_NAME = "Song"
+Musician.AddModule(MODULE_NAME)
+
 Musician.Song.__index = Musician.Song
 
 Musician.Song.Indexes = {}

@@ -1,5 +1,8 @@
 Musician.Options = {}
 
+local MODULE_NAME = "Options"
+Musician.AddModule(MODULE_NAME)
+
 --- Options panel initialization
 --
 function Musician.Options.Init()

@@ -1,5 +1,8 @@
 Musician.Comm = LibStub("AceAddon-3.0"):NewAddon("Musician.Comm", "AceComm-3.0", "AceEvent-3.0")
 
+local MODULE_NAME = "Comm"
+Musician.AddModule(MODULE_NAME)
+
 local LibDeflate = LibStub:GetLibrary("LibDeflate")
 
 Musician.Comm.event = {}

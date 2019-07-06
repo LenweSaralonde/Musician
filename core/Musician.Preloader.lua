@@ -1,5 +1,8 @@
 Musician.Preloader = {}
 
+local MODULE_NAME = "Preloader"
+Musician.AddModule(MODULE_NAME)
+
 Musician.Preloader.preloadedSamples = {}
 
 local DEFAULT_LOADING_TIME = 30 -- Average loading time in ms of an uncached sample from a 5400 RPM HDD

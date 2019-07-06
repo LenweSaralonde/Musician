@@ -1,5 +1,8 @@
 Musician.Registry = LibStub("AceAddon-3.0"):NewAddon("Musician.Registry", "AceEvent-3.0", "AceComm-3.0")
 
+local MODULE_NAME = "Registry"
+Musician.AddModule(MODULE_NAME)
+
 Musician.Registry.players = {}
 Musician.Registry.playersFetched = false
 Musician.Registry.queriedPlayers = {}

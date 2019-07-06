@@ -1,5 +1,8 @@
 Musician.KeyboardConfig = LibStub("AceAddon-3.0"):NewAddon("Musician.KeyboardConfig", "AceEvent-3.0")
 
+local MODULE_NAME = "KeyboardConfig"
+Musician.AddModule(MODULE_NAME)
+
 local KEY = Musician.KEYBOARD_KEY
 
 local KEY_SIZE = 50
