@@ -306,7 +306,7 @@ end
 --- Return player tooltip text
 -- @param player (string)
 -- @return (string)
-local function getPlayerTooltipText(player)
+function Musician.Registry.GetPlayerTooltipText(player)
 	player = Musician.Utils.NormalizePlayerName(player)
 
 	if not(Musician.Registry.PlayerIsRegistered(player)) then
@@ -334,7 +334,16 @@ end
 -- @param player (string)
 -- @param fontSize (int)
 function Musician.Registry.UpdateTooltipInfo(tooltip, player, fontSize)
-	local infoText = getPlayerTooltipText(player)
+
+	-- Reposition line if it's not in the last position
+	local repositionLine = function(tooltip, line, i)
+		if i ~= tooltip:NumLines() then
+			line:SetText("")
+			Musician.Registry.UpdateTooltipInfo(tooltip, player, fontSize)
+		end
+	end
+
+	local infoText = Musician.Registry.GetPlayerTooltipText(player)
 
 	if infoText == nil then
 		return
@@ -348,12 +357,14 @@ function Musician.Registry.UpdateTooltipInfo(tooltip, player, fontSize)
 
 		-- Info text is already present: no update needed
 		if line:GetText() == infoText then
+			repositionLine(tooltip, line, i)
 			return
 		end
 
 		-- Default is already present: update it by the detailed info text
 		if line:GetText() == Musician.Msg.PLAYER_TOOLTIP then
 			line:SetText(infoText)
+			repositionLine(tooltip, line, i)
 			return
 		end
 

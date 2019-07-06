@@ -1,5 +1,6 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Include file="totalRP3\totalRP3.xml"/>
+	<Include file="MyRolePlay\MyRolePlay.xml"/>
 	<Include file="CrossRP\CrossRP.xml"/>
 	<Include file="MusicianNamePlates\MusicianNamePlates.xml"/>
 	<Include file="Plater\Plater.xml"/>
