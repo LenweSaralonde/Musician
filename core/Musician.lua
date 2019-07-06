@@ -264,10 +264,10 @@ function Musician.RunCommandLine(commandLine)
 			if module ~= nil then
 				if state then
 					Musician_Settings.debug[module] = true
-					Musician.Utils.Debug(module, "Debug mode enabled for module " .. module .. ".")
+					Musician.Utils.Debug(nil, "Debug mode enabled for module " .. module .. ".")
 				else
 					Musician_Settings.debug[module] = nil
-					Musician.Utils.Debug(module, "Debug mode disabled for module " .. module .. ".")
+					Musician.Utils.Debug(nil, "Debug mode disabled for module " .. module .. ".")
 				end
 			else
 				if state then
