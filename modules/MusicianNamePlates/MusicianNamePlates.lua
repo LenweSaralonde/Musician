@@ -39,7 +39,11 @@ local playerAnimatedNotesFrame
 --- OnEnable
 --
 function Musician.NamePlates:OnEnable()
+
 	Musician.NamePlates.CreatePlayerAnimatedNotesFrame()
+
+	-- Name plate created
+	Musician.NamePlates:RegisterEvent("NAME_PLATE_CREATED", Musician.NamePlates.OnNamePlateCreated)
 
 	-- Name plate added
 	Musician.NamePlates:RegisterEvent("NAME_PLATE_UNIT_ADDED", Musician.NamePlates.OnNamePlateAdded)
@@ -248,6 +252,31 @@ function Musician.NamePlates.OnNamePlateNotesFrameUpdate(animatedNotesFrame, ela
 	animateNotes(animatedNotesFrame, elapsed)
 end
 
+--- OnNamePlateCreated
+-- @param namePlate (Frame)
+-- @param elapsed (number)
+local function namePlateOnUpdate(namePlate, elapsed)
+	-- Hide health bars when not in combat
+	if not(GetCVarBool("nameplateShowOnlyNames")) then
+		local isInCombat = UnitAffectingCombat(namePlate.namePlateUnitToken)
+		local health = UnitHealth(namePlate.namePlateUnitToken)
+		local healthMax = UnitHealthMax(namePlate.namePlateUnitToken)
+
+		if isInCombat or (health < healthMax) or not(Musician_Settings.hideNamePlateBars) then
+			namePlate.UnitFrame.healthBar:Show()
+		else
+			namePlate.UnitFrame.healthBar:Hide()
+		end
+	end
+end
+
+--- OnNamePlateCreated
+-- @param event (string)
+-- @param unitToken (string)
+function Musician.NamePlates.OnNamePlateCreated(event, namePlate)
+	namePlate:HookScript("OnUpdate", namePlateOnUpdate)
+end
+
 --- OnNamePlateAdded
 -- @param event (string)
 -- @param unitToken (string)
@@ -356,6 +385,7 @@ function Musician.NamePlates.AttachNamePlate(namePlate, player)
 		namePlate.musicianAnimatedNotesFrame:SetWidth(NOTES_ANIMATION_WIDTH)
 		namePlate.musicianAnimatedNotesFrame:SetHeight(NOTES_ANIMATION_HEIGHT)
 		namePlate.musicianAnimatedNotesFrame:SetScript("OnUpdate", Musician.NamePlates.OnNamePlateNotesFrameUpdate)
+		namePlate.musicianAnimatedNotesFrame.namePlate = namePlate
 	else
 		namePlate.musicianAnimatedNotesFrame:Show()
 	end

@@ -1,0 +1,120 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+	<Frame name="MusicianOptionsPanelUnitNamePlates" parent="MusicianOptionsPanel">
+		<Size>
+			<AbsDimension x="580" y="75"/>
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="MusicianOptionsPanelUnitEmote" relativePoint="BOTTOMLEFT"  x="0" y="-10" />
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentTitle" inherits="GameFontNormal" justifyH="LEFT" justifyV="TOP">
+					<Anchors>
+						<Anchor point="TOPLEFT" />
+					</Anchors>
+				</FontString>
+				<FontString name="$parentSubText" inherits="GameFontHighlightSmall" nonspacewrap="true" maxLines="3" justifyH="LEFT" justifyV="TOP">
+					<Size>
+						<AbsDimension y="32" x="0"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT">
+							<Offset>
+								<AbsDimension x="0" y="-8"/>
+							</Offset>
+						</Anchor>
+						<Anchor point="RIGHT">
+							<Offset>
+								<AbsDimension x="-32" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<CheckButton name="$parentEnable" inherits="InterfaceOptionsCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentSubText" relativePoint="BOTTOMLEFT" x="0" y="4"/>
+				</Anchors>
+				<HitRectInsets>
+					<AbsInset left="0" right="-310" top="0" bottom="0"/>
+				</HitRectInsets>
+				<Scripts>
+					<OnLoad>
+						_G[self:GetName().."Text"]:SetText(Musician.Msg.OPTIONS_ENABLE_NAME_PLATES)
+						self.type = CONTROLTYPE_CHECKBOX
+						BlizzardOptionsPanel_RegisterControl(self, self:GetParent():GetParent())
+						BlizzardOptionsPanel_SetupControl(self)
+						self:HookScript("OnClick", function()
+							local showAll = InterfaceOptionsNamesPanelUnitNameplatesShowAll
+							local enemies = InterfaceOptionsNamesPanelUnitNameplatesEnemies
+							local friends = InterfaceOptionsNamesPanelUnitNameplatesFriends
+
+							-- Check all 3 boxes when enabling name plates
+							if self:GetChecked() then
+								showAll:SetChecked(true)
+								showAll:GetScript("OnClick")(showAll)
+
+								enemies:SetChecked(true)
+								enemies:GetScript("OnClick")(enemies)
+
+								friends:SetChecked(true)
+								friends:GetScript("OnClick")(friends)
+
+							-- Onlu uncheck "show all" when disabling
+							else
+								showAll:SetChecked(false)
+								showAll:GetScript("OnClick")(showAll)
+							end
+						end)
+					</OnLoad>
+				</Scripts>
+			</CheckButton>
+			<CheckButton name="$parentHideNamePlateBars" inherits="InterfaceOptionsSmallCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentEnable" relativePoint="BOTTOMLEFT" x="10" y="4"/>
+				</Anchors>
+				<HitRectInsets>
+					<AbsInset left="0" right="-300" top="0" bottom="0"/>
+				</HitRectInsets>
+				<Scripts>
+					<OnLoad>
+						_G[self:GetName().."Text"]:SetText(Musician.Msg.OPTIONS_HIDE_HEALTH_BARS)
+						self.type = CONTROLTYPE_CHECKBOX
+						BlizzardOptionsPanel_RegisterControl(self, self:GetParent():GetParent())
+						BlizzardOptionsPanel_SetupDependentControl(_G[self:GetParent():GetName().."Enable"], self)
+						self:HookScript("OnClick", function()
+							Musician.NamePlates.Options.Save()
+						end)
+					</OnLoad>
+				</Scripts>
+			</CheckButton>
+			<CheckButton name="$parentHideNPCs" inherits="InterfaceOptionsSmallCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentHideNamePlateBars" relativePoint="BOTTOMLEFT" x="0" y="4"/>
+				</Anchors>
+				<HitRectInsets>
+					<AbsInset left="0" right="-300" top="0" bottom="0"/>
+				</HitRectInsets>
+				<Scripts>
+					<OnLoad>
+						_G[self:GetName().."Text"]:SetText(Musician.Msg.OPTIONS_HIDE_NPC_NAME_PLATES)
+						self.type = CONTROLTYPE_CHECKBOX
+						BlizzardOptionsPanel_RegisterControl(self, self:GetParent():GetParent())
+						BlizzardOptionsPanel_SetupDependentControl(_G[self:GetParent():GetName().."Enable"], self)
+						self:HookScript("OnClick", function()
+							Musician.NamePlates.Options.Save()
+						end)
+					</OnLoad>
+				</Scripts>
+			</CheckButton>
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				MusicianOptionsPanelUnitNamePlatesTitle:SetText(Musician.Msg.OPTIONS_CATEGORY_NAME_PLATES)
+				MusicianOptionsPanelUnitNamePlatesSubText:SetText(Musician.Msg.OPTIONS_CATEGORY_NAME_PLATES_SUB_TEXT)
+			</OnLoad>
+		</Scripts>
+	</Frame>
+</Ui>
