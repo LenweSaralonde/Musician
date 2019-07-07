@@ -23,6 +23,8 @@ msg.MENU_PLAY_PREVIEW = msg.TEST_SONG
 msg.MENU_STOP_PREVIEW = "Arrêter l'aperçu"
 msg.MENU_LIVE_PLAY = "Jouer en direct"
 msg.MENU_SHOW_KEYBOARD = "Ouvrir le clavier"
+msg.MENU_SETTINGS = "Paramètres"
+msg.MENU_OPTIONS = "Options"
 
 msg.COMMAND_LIST_TITLE = "Commandes de Musician :"
 msg.COMMAND_SHOW = "Ouvrir la fenêtre d'import"

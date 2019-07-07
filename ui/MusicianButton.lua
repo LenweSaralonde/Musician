@@ -175,6 +175,24 @@ function MusicianButton.GetMenu()
 		end
 	})
 
+	-- Settings separator
+
+	table.insert(menu, {
+		notCheckable = true,
+		text = Musician.Msg.MENU_SETTINGS,
+		isTitle = true
+	})
+
+	-- Show options
+
+	table.insert(menu, {
+		notCheckable = true,
+		text = Musician.Msg.MENU_OPTIONS,
+		func = function()
+			Musician.Options.Show()
+		end
+	})
+
 	return menu
 end
 
