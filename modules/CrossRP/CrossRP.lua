@@ -13,6 +13,7 @@ local receivedChunkIds = {}
 local foreigners = {} -- All players having Musician + CrossRP found on other bands
 local queriedPlayers = {}
 local pendingPlayerQueries = {} -- CrossRP Query messages queue
+local foreignPromoEmotes = {} -- Received foreign promo emotes that didn't make it because the song was not loaded yet
 
 local activeBands = {} -- All bands having in-range and visible foreigners
 local foreignerScanActiveBands = {}
@@ -171,6 +172,21 @@ function Musician.CrossRP.Init()
 			local source = CrossRP.Proto.DestFromFullname(player, faction)
 			local guid = UnitGUID(simplePlayerName)
 			Musician.CrossRP.RegisterPlayerFromSource(source, guid)
+		end
+	end)
+
+	--- Handle cross realm promo emotes
+	--
+	Musician.CrossRP:RegisterMessage(Musician.Events.PromoEmote, function(event, isPromoEmoteSuccessful, msg, fullPlayerName, ...)
+		local languageName, channelName, playerName2, pflag, zoneChannelID, channelIndex, channelBaseName, unused, lineID = ...
+
+		if not(Musician.Utils.PlayerIsOnSameRealm(fullPlayerName)) and not(Musician.Utils.PlayerIsInGroup(fullPlayerName)) then
+			if not(isPromoEmoteSuccessful) then
+				foreignPromoEmotes[fullPlayerName] = lineID
+			elseif isPromoEmoteSuccessful and foreignPromoEmotes[fullPlayerName] ~= nil then
+				Musician.Utils.RemoveChatMessage(foreignPromoEmotes[fullPlayerName])
+				foreignPromoEmotes[fullPlayerName] = nil
+			end
 		end
 	end)
 

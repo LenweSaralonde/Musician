@@ -59,6 +59,7 @@ Musician.Events.SongImportComplete = "MusicianSongImportComplete"
 Musician.Events.SongImportSucessful = "MusicianSongImportSucessful"
 Musician.Events.SongImportFailed = "MusicianSongImportFailed"
 Musician.Events.SourceSongLoaded = "MusicianSourceSongLoaded"
+Musician.Events.PromoEmote = "MusicianPromoEmote"
 Musician.Events.Bandwidth = "MusicianBandwidth"
 
 Musician.IconImages = {}

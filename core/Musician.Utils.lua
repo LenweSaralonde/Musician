@@ -162,6 +162,20 @@ function Musician.Utils.DisplayEmote(player, playerGUID, message)
 	end
 end
 
+--- Remove a chat message by its line ID
+-- @param lineID (number)
+function Musician.Utils.RemoveChatMessage(lineID)
+	local i
+	for i = 1, NUM_CHAT_WINDOWS do
+		local chatFrame = _G["ChatFrame" .. i]
+		if chatFrame then
+			chatFrame:RemoveMessagesByPredicate(function(text)
+				return text:match("^|Hplayer:(%S+):" .. lineID .. ":")
+			end)
+		end
+	end
+end
+
 --- Return the note name corresponding its MIDI key
 -- @param key (int) MIDI key index
 -- @return (string)

@@ -597,12 +597,19 @@ function Musician.SetupHooks()
 
 	-- Add muted/unmuted status to player messages when playing
 	-- Add stop button to "Player plays music" emote
-	local messageEventFilter = function(self, event, msg, player, arg3, arg4, arg5, pflag, ...)
+	local messageEventFilter = function(self, event, msg, player, ...)
+
+		local languageName, channelName, playerName2, pflag, zoneChannelID, channelIndex, channelBaseName, unused, lineID = ...
 
 		local fullPlayerName = Musician.Utils.NormalizePlayerName(player)
 
+		local isPromoEmote = false
+		local isPromoEmoteSuccessful = false
+
 		-- "Player is playing music."
 		if Musician.Utils.HasPromoEmote(msg) and event == "CHAT_MSG_EMOTE" then
+
+			isPromoEmote = true
 
 			-- Music is loaded and actually playing
 			if Musician.songs[fullPlayerName] ~= nil and Musician.songs[fullPlayerName]:IsPlaying() then
@@ -629,6 +636,8 @@ function Musician.SetupHooks()
 					end
 				end
 
+				isPromoEmoteSuccessful = true
+
 				-- Music is not loaded
 			else
 				-- Player is not in the channel and not in my group: it's from another realm
@@ -638,6 +647,8 @@ function Musician.SetupHooks()
 					local errorMsg = string.gsub(Musician.Msg.EMOTE_SONG_NOT_LOADED, '{player}', Musician.Utils.GetPlayerLink(fullPlayerName))
 					msg = Musician.Msg.EMOTE_PLAYING_MUSIC .. " " .. Musician.Utils.Highlight(errorMsg, 'FF0000')
 				end
+
+				isPromoEmoteSuccessful = false
 			end
 		end
 
@@ -660,7 +671,12 @@ function Musician.SetupHooks()
 			end
 		end
 
-		return false, msg, player, arg3, arg4, arg5, pflag, ...
+		-- Send promo emote event
+		if isPromoEmote then
+			Musician:SendMessage(Musician.Events.PromoEmote, isPromoEmoteSuccessful, msg, fullPlayerName, ...)
+		end
+
+		return false, msg, player, ...
 	end
 
 	CHAT_FLAG_MUSICIAN_MUTED = Musician.Utils.GetChatIcon(Musician.IconImages.NoteDisabled)
