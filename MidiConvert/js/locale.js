@@ -28,7 +28,7 @@ window.onload = function() {
 	document.querySelector("#BattleNet img").alt = MUSICIAN_MSG.joinBattleNet;
 
 	var localeScriptTag = document.createElement('script');
-	localeScriptTag.src = 'https://www.lenwe.info/musician-midi-convert/get-last-version/';
+	localeScriptTag.src = 'https://musician.lenwe.io/version/';
 	document.body.appendChild(localeScriptTag);
 };
 

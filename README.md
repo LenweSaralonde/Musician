@@ -4,7 +4,7 @@ Hear and play music with nearby players. For the first time in World of Warcraft
 
 Join our [Discord server](https://discord.gg/ypfpGxK) (EN/FR) and our [Battle.net group](https://blizzard.com/invite/X2Gy7ztwX7) for help, bug reports, good music and more!
 
-Download the optional module [MusicianList](https://www.lenwe.info/musicianlist) to add in-game loading and saving features.
+Download the optional module [MusicianList](https://musician.lenwe.io/musicianlist) to add in-game loading and saving features.
 
 Un [Guide en français](https://www.lenwe.info/guide-musician/) est également disponible. 🇫🇷🥖🍷
 
@@ -30,7 +30,7 @@ You can find millions of MIDI files very easily by searching for *MIDI* + *music
 
 ### How to play a song:
 
-1. Open the [**MIDI converter**](https://www.lenwe.info/musician-midi-convert/) located at [lenwe.info/musician-midi-convert](https://www.lenwe.info/musician-midi-convert/) in your web browser. (You can also find the converter in the **Interface/AddOns/Musician/MidiConvert** folder.)
+1. Open the [**MIDI import tool**](https://musician.lenwe.io/import/) located at [musician.lenwe.io/import](https://musician.lenwe.io/import/) in your web browser. (You can also find the import tool in the **Interface/AddOns/Musician/MidiConvert** folder.)
 2. Drag and drop a **MIDI file**.
 3. Copy the generated music code by clicking the **Copy** button.
 4. Back in WoW, left-click on the minimap button to open the main menu then choose **Import and play a song**  to open the main window (or type `/music`).
@@ -38,7 +38,7 @@ You can find millions of MIDI files very easily by searching for *MIDI* + *music
 6. Click **Play**.
 
 ### Save and load songs in game
-Songs can be saved and loaded back in game using the optional add-on [MusicianList](https://www.lenwe.info/musicianlist).
+Songs can be saved and loaded back in game using the optional add-on [MusicianList](https://musician.lenwe.io/musicianlist).
 
 Play live
 ---------
@@ -82,7 +82,7 @@ Tips
 ----
 * You can preview the song at any moment prior to playing it for other players by clicking the **Preview** button or using the song editor. If another song is playing nearby, it will be muted for you only.
 * If another player has Musician, it will be shown in his/her tooltip. Just hover the other players with your mouse cursor to see who can hear you!
-* You can add lyrics by combining Musician with the [StoryTeller add-on](https://www.lenwe.info/story-teller)!
+* You can add lyrics by combining Musician with the [StoryTeller add-on](https://musician.lenwe.io/storyteller)!
 * Load the next song while the current one is playing to reduce waiting time between songs.
 * The radius for hearing the music is approximately 40 meters.
 * Play songs that are relevant with your "band" composition. It's nonsense to play orchestral music with only two bards ! 😃 However you can still roleplay as if your character owns a kind of gnomish *Music-o-Matic* machine that is capable of reproducing a whole band.
@@ -90,7 +90,7 @@ Tips
 
 Compose your own music
 ----------------------
-You can compose music for Musician using any MIDI sequencer, even in your browser with this [free online sequencer](https://onlinesequencer.net/).
+You can compose music for Musician using any MIDI sequencer such as [LMMS](https://lmms.io/) (free and cross-platform).
 
 The 16 instruments available are:
 
