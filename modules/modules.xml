@@ -5,4 +5,5 @@
 	<Include file="MusicianNamePlates\MusicianNamePlates.xml"/>
 	<Include file="Plater\Plater.xml"/>
 	<Include file="KuiNamePlates\KuiNamePlates.xml"/>
+	<Include file="ElvUI\ElvUI.xml"/>
 </Ui>

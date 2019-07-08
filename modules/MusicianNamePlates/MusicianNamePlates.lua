@@ -36,6 +36,8 @@ local releasedNoteFrames = {}
 
 local playerAnimatedNotesFrame
 
+Musician.NamePlates.playerNamePlates = playerNamePlates
+
 --- OnEnable
 --
 function Musician.NamePlates:OnEnable()
