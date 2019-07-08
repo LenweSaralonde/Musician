@@ -49,7 +49,7 @@ msg.OPTIONS_EMOTE_HINT = "A text emote is shown to the players who don't have Mu
 msg.OPTIONS_CATEGORY_NAME_PLATES = "Name plates"
 msg.OPTIONS_CATEGORY_NAME_PLATES_SUB_TEXT = "See who can hear you at a glance.\nAdds an animation when someone is playing music."
 msg.OPTIONS_ENABLE_NAME_PLATES = "Enable name plates"
-msg.OPTIONS_HIDE_HEALTH_BARS = "Hide unit health bar when not in combat"
+msg.OPTIONS_HIDE_HEALTH_BARS = "Hide friendly unit health bars when not in combat"
 msg.OPTIONS_HIDE_NPC_NAME_PLATES = "Hide NPC name plates"
 
 msg.STARTUP = "Welcome to Musician v{version}."

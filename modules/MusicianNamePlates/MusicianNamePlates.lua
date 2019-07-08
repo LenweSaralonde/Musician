@@ -258,15 +258,17 @@ end
 -- @param namePlate (Frame)
 -- @param elapsed (number)
 local function namePlateOnUpdate(namePlate, elapsed)
-	-- Hide health bars when not in combat
-	if not(GetCVarBool("nameplateShowOnlyNames")) then
+	-- Hide friendly health bars when not in combat
+	if not(IsInInstance()) and not(GetCVarBool("nameplateShowOnlyNames")) and namePlate.namePlateUnitToken and UnitIsFriend(namePlate.namePlateUnitToken, "player") then
 		local isInCombat = UnitAffectingCombat(namePlate.namePlateUnitToken)
 		local health = UnitHealth(namePlate.namePlateUnitToken)
 		local healthMax = UnitHealthMax(namePlate.namePlateUnitToken)
 
 		if isInCombat or (health < healthMax) or not(Musician_Settings.hideNamePlateBars) then
+			namePlate.UnitFrame.ClassificationFrame:Show()
 			namePlate.UnitFrame.healthBar:Show()
 		else
+			namePlate.UnitFrame.ClassificationFrame:Hide()
 			namePlate.UnitFrame.healthBar:Hide()
 		end
 	end
@@ -372,6 +374,8 @@ end
 -- @param namePlate (Frame)
 -- @param player (string)
 function Musician.NamePlates.AttachNamePlate(namePlate, player)
+
+	namePlateOnUpdate(namePlate)
 
 	Musician.NamePlates.updateNamePlateIcons(namePlate)
 
