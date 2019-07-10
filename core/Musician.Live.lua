@@ -184,6 +184,7 @@ function Musician.Live.NoteOn(key, layer, instrument, isChordNote)
 		return
 	end
 
+	local sampleId = Musician.Utils.GetSampleId(instrumentData, key)
 	local noteOnKey = key .. '-' .. layer .. '-' .. instrument
 
 	-- This is an auto-chord note but a higher priority note actually exists: do nothing
@@ -198,7 +199,7 @@ function Musician.Live.NoteOn(key, layer, instrument, isChordNote)
 
 	-- Play note
 	local handle
-	if Musician.globalMute then
+	if Musician.globalMute or not(Musician.Preloader.IsPreloaded(sampleId)) then
 		handle = 0
 	else
 		_, handle = Musician.Utils.PlaySoundFile(soundFile, 'SFX')

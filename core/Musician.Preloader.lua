@@ -57,10 +57,6 @@ end
 --- Preload next sample
 --
 function Musician.Preloader.PreloadNext()
-	-- Disable preloading while a song is playing
-	if Musician.Utils.SongIsPlaying() then
-		return
-	end
 
 	local sampleIsPreloaded = false
 
@@ -73,7 +69,7 @@ function Musician.Preloader.PreloadNext()
 			local sampleId = Musician.Utils.GetSampleId(instrumentData, key)
 
 			-- Sample not preloaded
-			if sampleId and not(Musician.Preloader.IsPreloaded(sampleId)) then
+			if sampleId and not(Musician.Preloader.IsPreloaded(sampleId, true)) then
 				-- Preload note samples
 				local hasSample, preloadTime = Musician.Utils.PreloadNote(instrumentData.midi, key)
 				if hasSample then
@@ -81,7 +77,7 @@ function Musician.Preloader.PreloadNext()
 					if not(preloaded) then
 						totalLoadingTime = totalLoadingTime + preloadTime
 						totalLoadedSamples = totalLoadedSamples + 1
-						averageLoadingTime = totalLoadingTime / totalLoadedSamples
+						averageLoadingTime = Musician.Preloader.GetAverageLoadingTime()
 					end
 				end
 				sampleIsPreloaded = true
@@ -104,6 +100,7 @@ function Musician.Preloader.PreloadNext()
 				if not(preloaded) then
 					preloaded = true
 					Musician:SendMessage(Musician.Events.PreloadingProgress, Musician.Preloader.GetProgress())
+					Musician:SendMessage(Musician.Events.PreloadingComplete)
 				end
 
 				-- Start a new cycle at lower rate to maintain the samples in cache
@@ -168,7 +165,7 @@ end
 --- Flag a note sample as preloaded
 -- @param sampleId (string) as returned by Musician.Utils.GetSampleId()
 function Musician.Preloader.AddPreloaded(sampleId)
-	if not(Musician.Preloader.IsPreloaded(sampleId)) then
+	if not(Musician.Preloader.IsPreloaded(sampleId, true)) then
 		Musician.Preloader.preloadedSamples[sampleId] = true
 		preloadedSamples = preloadedSamples + 1
 		if not(preloaded) then
@@ -179,7 +176,20 @@ end
 
 --- Return true if the note sample has been preloaded
 -- @param sampleId (string) as returned by Musician.Utils.GetSampleId()
+-- @param currentCycle (boolean) for current preloading cycle only (even if the sample is already in cache)
 -- @return (boolean)
-function Musician.Preloader.IsPreloaded(sampleId)
+function Musician.Preloader.IsPreloaded(sampleId, currentCycle)
+
+	-- Consider the sample as preloaded if the average loading time is < 1 ms
+	if not(currentCycle) and (Musician.Preloader.IsComplete() or averageLoadingTime < 1) then
+		return true
+	end
+
 	return sampleId == nil or Musician.Preloader.preloadedSamples[sampleId] ~= nil
+end
+
+--- Return true if all the samples have been preloaded
+-- @return (boolean)
+function Musician.Preloader.IsComplete()
+	return preloaded
 end

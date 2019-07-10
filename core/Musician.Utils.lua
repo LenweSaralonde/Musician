@@ -734,10 +734,13 @@ function Musician.Utils.PlayNote(instrument, key)
 	local soundFile, instrumentData = Musician.Utils.GetSoundFile(instrument, key)
 	local sampleId = Musician.Utils.GetSampleId(instrumentData, key)
 	local play, handle = false
-	if soundFile then
+
+	if not(Musician.Preloader.IsPreloaded(sampleId)) then
+		play, handle = true, 0 -- Silent note
+	elseif soundFile then
 		play, handle = Musician.Utils.PlaySoundFile(soundFile, 'SFX')
 	end
-	Musician.Preloader.AddPreloaded(sampleId)
+
 	return play, handle, instrumentData
 end
 

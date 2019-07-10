@@ -5,6 +5,8 @@ local menuFrame
 
 local MUSICIAN_ICON = "Interface\\AddOns\\Musician\\ui\\textures\\button-unmuted"
 local MUSICIAN_ICON_MUTED = "Interface\\AddOns\\Musician\\ui\\textures\\button-muted"
+local MUSICIAN_ICON_WAIT = "Interface\\AddOns\\Musician\\ui\\textures\\button-wait"
+local HOURGLASS = "Interface\\AddOns\\Musician\\ui\\textures\\hourglass"
 
 --- Init
 --
@@ -12,7 +14,7 @@ function MusicianButton.Init()
 	local musicianLDB = LibStub("LibDataBroker-1.1"):NewDataObject("Musician", {
 		type = "data source",
 		text = "Musician",
-		icon = MUSICIAN_ICON,
+		icon = MUSICIAN_ICON_WAIT,
 		OnClick = MusicianButton.OnClick,
 		OnEnter = MusicianButton.ShowTooltip,
 		OnLeave = MusicianButton.HideTooltip
@@ -31,7 +33,15 @@ function MusicianButton.Init()
 	icon:Register("Musician", musicianLDB, Musician_Settings.minimap)
 
 	-- Create menu frame
-	menuFrame = CreateFrame("Frame", "MusicianButton_Menu", icon:GetMinimapButton("Musician"), "MusicianDropDownMenuTooltipTemplate")
+	local buttonFrame = icon:GetMinimapButton("Musician")
+	menuFrame = CreateFrame("Frame", "MusicianButton_Menu", buttonFrame, "MusicianDropDownMenuTooltipTemplate")
+
+	-- Hourglass icon for preloading
+	local hourglass = buttonFrame:CreateTexture(nil, "OVERLAY", nil, 7)
+	hourglass:SetTexture(HOURGLASS)
+	hourglass:SetPoint("BOTTOMRIGHT", 2, -2)
+	hourglass:SetPoint("TOPLEFT", 10, -10)
+	buttonFrame.hourglass = hourglass
 
 	-- Update tooltip text when preloading
 	MusicianButton.tooltipIsVisible = false
@@ -40,15 +50,27 @@ function MusicianButton.Init()
 			MusicianButton.UpdateTooltipText(true)
 		end
 	end)
+
+	-- Update icons when preloading is complete
+	MusicianButton:RegisterMessage(Musician.Events.PreloadingComplete, MusicianButton.UpdateIcons)
 end
 
 --- Update icons
 --
 function MusicianButton.UpdateIcons()
+	local button = icon:GetMinimapButton("Musician")
 	if Musician.globalMute then
-		icon:GetMinimapButton("Musician").icon:SetTexture(MUSICIAN_ICON_MUTED)
+		button.icon:SetTexture(MUSICIAN_ICON_MUTED)
+	elseif Musician.Preloader.IsComplete() then
+		button.icon:SetTexture(MUSICIAN_ICON)
 	else
-		icon:GetMinimapButton("Musician").icon:SetTexture(MUSICIAN_ICON)
+		button.icon:SetTexture(MUSICIAN_ICON_WAIT)
+	end
+
+	if Musician.Preloader.IsComplete() then
+		button.hourglass:Hide()
+	else
+		button.hourglass:Show()
 	end
 end
 
