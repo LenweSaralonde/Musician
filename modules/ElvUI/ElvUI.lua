@@ -30,7 +30,7 @@ function Musician.ElvUI:OnEnable()
 			addNote(namePlate)
 		end)
 
-		-- Update name plate when player is registered
+		-- Update nameplate when player is registered
 		Musician.ElvUI:RegisterMessage(Musician.Registry.event.playerRegistered, function(event, player)
 			local player = Musician.Utils.NormalizePlayerName(player)
 			if not(Musician.NamePlates.playerNamePlates[player]) then return end

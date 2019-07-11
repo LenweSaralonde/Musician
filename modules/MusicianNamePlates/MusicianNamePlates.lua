@@ -44,13 +44,13 @@ function Musician.NamePlates:OnEnable()
 
 	Musician.NamePlates.CreatePlayerAnimatedNotesFrame()
 
-	-- Name plate created
+	-- Nameplate created
 	Musician.NamePlates:RegisterEvent("NAME_PLATE_CREATED", Musician.NamePlates.OnNamePlateCreated)
 
-	-- Name plate added
+	-- Nameplate added
 	Musician.NamePlates:RegisterEvent("NAME_PLATE_UNIT_ADDED", Musician.NamePlates.OnNamePlateAdded)
 
-	-- Name plate removed
+	-- Nameplate removed
 	Musician.NamePlates:RegisterEvent("NAME_PLATE_UNIT_REMOVED", Musician.NamePlates.OnNamePlateRemoved)
 
 	-- Player registered
@@ -218,7 +218,7 @@ end
 -- @param elapsed (number)
 function Musician.NamePlates.OnNamePlateNotesFrameUpdate(animatedNotesFrame, elapsed)
 
-	-- Adjust frame position for fixed player frame (not hooked to a name plate)
+	-- Adjust frame position for fixed player frame (not hooked to a nameplate)
 	if animatedNotesFrame == playerAnimatedNotesFrame then
 
 		-- Get current zoom level
@@ -296,12 +296,12 @@ function Musician.NamePlates.OnNamePlateAdded(event, unitToken)
 		return
 	end
 
-	-- Add references to the name plate
+	-- Add references to the nameplate
 	local player = Musician.Utils.NormalizePlayerName(GetUnitName(unitToken, true))
 	playerNamePlates[player] = C_NamePlate.GetNamePlateForUnit(unitToken)
 	namePlatePlayers[unitToken] = player
 
-	-- Attach name plate
+	-- Attach nameplate
 	Musician.NamePlates.AttachNamePlate(playerNamePlates[player], player)
 end
 
@@ -311,7 +311,7 @@ end
 function Musician.NamePlates.OnNamePlateRemoved(event, unitToken)
 	if not(UnitIsPlayer(unitToken)) then return end
 
-	-- Detach name plate and remove references
+	-- Detach nameplate and remove references
 	local player = namePlatePlayers[unitToken]
 	if player and playerNamePlates[player] then
 		Musician.NamePlates.DetachNamePlate(playerNamePlates[player])
@@ -321,7 +321,7 @@ function Musician.NamePlates.OnNamePlateRemoved(event, unitToken)
 	namePlatePlayers[unitToken] = nil
 end
 
---- Update name plate for player when registered
+--- Update nameplate for player when registered
 -- @param event (string)
 -- @param player (string)
 function Musician.NamePlates.OnPlayerRegistered(event, player)
@@ -330,7 +330,7 @@ function Musician.NamePlates.OnPlayerRegistered(event, player)
 	Musician.NamePlates.AttachNamePlate(playerNamePlates[player], player)
 end
 
---- Update the note icon for the name plate unit name frame
+--- Update the note icon for the nameplate unit name frame
 -- @param namePlate (Frame)
 -- @param unitFrame (Frame)
 -- @param textObject (FontString)
@@ -362,7 +362,7 @@ function Musician.NamePlates.updateNoteIcon(namePlate, unitFrame, textObject)
 	end
 end
 
---- Update Musician icon in name plate
+--- Update Musician icon in nameplate
 -- @param namePlate (Frame)
 function Musician.NamePlates.updateNamePlateIcons(namePlate)
 	if namePlate.UnitFrame and namePlate.UnitFrame.name then
@@ -370,7 +370,7 @@ function Musician.NamePlates.updateNamePlateIcons(namePlate)
 	end
 end
 
---- Attach Musician name plate
+--- Attach Musician nameplate
 -- @param namePlate (Frame)
 -- @param player (string)
 function Musician.NamePlates.AttachNamePlate(namePlate, player)
@@ -403,7 +403,7 @@ function Musician.NamePlates.AttachNamePlate(namePlate, player)
 	namePlate.musicianAnimatedNotesFrame.notesAddedDuringFrame = {}
 end
 
---- Detach Musician name plate
+--- Detach Musician nameplate
 -- @param namePlate (Frame)
 function Musician.NamePlates.DetachNamePlate(namePlate)
 

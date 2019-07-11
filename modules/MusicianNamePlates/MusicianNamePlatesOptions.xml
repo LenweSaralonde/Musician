@@ -42,7 +42,7 @@
 				</HitRectInsets>
 				<Scripts>
 					<OnLoad>
-						_G[self:GetName().."Text"]:SetText(Musician.Msg.OPTIONS_ENABLE_NAME_PLATES)
+						_G[self:GetName().."Text"]:SetText(Musician.Msg.OPTIONS_ENABLE_NAMEPLATES)
 						self.type = CONTROLTYPE_CHECKBOX
 						BlizzardOptionsPanel_RegisterControl(self, self:GetParent():GetParent())
 						BlizzardOptionsPanel_SetupControl(self)
@@ -51,7 +51,7 @@
 							local enemies = InterfaceOptionsNamesPanelUnitNameplatesEnemies
 							local friends = InterfaceOptionsNamesPanelUnitNameplatesFriends
 
-							-- Check all 3 boxes when enabling name plates
+							-- Check all 3 boxes when enabling nameplates
 							if self:GetChecked() then
 								showAll:SetChecked(true)
 								showAll:GetScript("OnClick")(showAll)
@@ -99,7 +99,7 @@
 				</HitRectInsets>
 				<Scripts>
 					<OnLoad>
-						_G[self:GetName().."Text"]:SetText(Musician.Msg.OPTIONS_HIDE_NPC_NAME_PLATES)
+						_G[self:GetName().."Text"]:SetText(Musician.Msg.OPTIONS_HIDE_NPC_NAMEPLATES)
 						self.type = CONTROLTYPE_CHECKBOX
 						BlizzardOptionsPanel_RegisterControl(self, self:GetParent():GetParent())
 						BlizzardOptionsPanel_SetupDependentControl(_G[self:GetParent():GetName().."Enable"], self)
@@ -112,8 +112,8 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				MusicianOptionsPanelUnitNamePlatesTitle:SetText(Musician.Msg.OPTIONS_CATEGORY_NAME_PLATES)
-				MusicianOptionsPanelUnitNamePlatesSubText:SetText(Musician.Msg.OPTIONS_CATEGORY_NAME_PLATES_SUB_TEXT)
+				MusicianOptionsPanelUnitNamePlatesTitle:SetText(Musician.Msg.OPTIONS_CATEGORY_NAMEPLATES)
+				MusicianOptionsPanelUnitNamePlatesSubText:SetText(Musician.Msg.OPTIONS_CATEGORY_NAMEPLATES_SUB_TEXT)
 			</OnLoad>
 		</Scripts>
 	</Frame>
