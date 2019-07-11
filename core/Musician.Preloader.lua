@@ -58,6 +58,11 @@ end
 --
 function Musician.Preloader.PreloadNext()
 
+	-- Suspend preloading while a song is playing after the first cycle
+	if preloaded and Musician.Utils.SongIsPlaying() then
+		return
+	end
+
 	local sampleIsPreloaded = false
 
 	while not(sampleIsPreloaded) do
