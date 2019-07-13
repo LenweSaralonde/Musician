@@ -53,6 +53,14 @@ function Musician.NamePlates:OnEnable()
 	-- Nameplate removed
 	Musician.NamePlates:RegisterEvent("NAME_PLATE_UNIT_REMOVED", Musician.NamePlates.OnNamePlateRemoved)
 
+	-- Health bar updated
+	hooksecurefunc("CompactUnitFrame_UpdateHealth", function(frame)
+		local namePlate = frame:GetParent()
+		if namePlate and namePlate.namePlateUnitToken then
+			Musician.NamePlates.NamePlateOnUpdate(namePlate)
+		end
+	end)
+
 	-- Player registered
 	Musician.NamePlates:RegisterMessage(Musician.Registry.event.playerRegistered, Musician.NamePlates.OnPlayerRegistered)
 
@@ -256,40 +264,38 @@ end
 
 --- NamePlateOnUpdate
 -- @param namePlate (Frame)
--- @param elapsed (number)
-function Musician.NamePlates.NamePlateOnUpdate(namePlate, elapsed)
+function Musician.NamePlates.NamePlateOnUpdate(namePlate)
 	local unitToken = namePlate.namePlateUnitToken
 	local isPlayerOrFriendly = unitToken and (UnitIsFriend(unitToken, "player") or UnitIsPlayer(unitToken))
 
 	-- Hide friendly and player health bars when not in combat
-	if not(IsInInstance()) and not(GetCVarBool("nameplateShowOnlyNames")) and isPlayerOrFriendly then
+	if not(IsInInstance()) and isPlayerOrFriendly then
 
 		local healthBarIsVisible, classificationFrameIsVisible
 
 		local isInCombat = UnitAffectingCombat(namePlate.namePlateUnitToken)
 		local health = UnitHealth(namePlate.namePlateUnitToken)
 		local healthMax = UnitHealthMax(namePlate.namePlateUnitToken)
+		local showHealthBar = not(Musician_Settings.hideNamePlateBars)
 
 		if isInCombat or (health < healthMax) or not(Musician_Settings.hideNamePlateBars) then
-			healthBarIsVisible = namePlate.musicianInitialHealthBarIsVisible
-			classificationFrameIsVisible = namePlate.musicianInitialClassificationFrameIsVisible
+			healthBarIsVisible = true
+			classificationFrameIsVisible = true
 		else
 			healthBarIsVisible = false
 			classificationFrameIsVisible = false
 		end
 
-		local refreshIcon = false
+		if GetCVarBool("nameplateShowOnlyNames") then
+			healthBarIsVisible = false
+			classificationFrameIsVisible = false
+		end
+
 		if healthBarIsVisible ~= namePlate.UnitFrame.healthBar:IsVisible() then
 			namePlate.UnitFrame.healthBar:SetShown(healthBarIsVisible)
-			refreshIcon = true
 		end
 		if classificationFrameIsVisible ~= namePlate.UnitFrame.ClassificationFrame:IsVisible() then
 			namePlate.UnitFrame.ClassificationFrame:SetShown(classificationFrameIsVisible)
-			refreshIcon = true
-		end
-
-		if refreshIcon then
-			Musician.NamePlates.UpdateNoteIcon(namePlate)
 		end
 	end
 end
@@ -367,6 +373,9 @@ function Musician.NamePlates.AddNoteIcon(namePlate, textElement, append)
 	if player and not(Musician.Utils.PlayerIsMyself(player)) and Musician.Registry.PlayerIsRegistered(player) then
 		local iconString = Musician.Utils.GetChatIcon(Musician.IconImages.Note)
 		local nameString = textElement:GetText()
+
+		if nameString == nil then return end
+
 		local from, to = string.find(nameString, iconString, 1, true)
 
 		-- Note icon is present but not at the right position: remove it
@@ -392,11 +401,6 @@ end
 -- @param player (string)
 -- @param event (string)
 function Musician.NamePlates.AttachNamePlate(namePlate, player, event)
-
-	if event == "NAME_PLATE_UNIT_ADDED" then
-		namePlate.musicianInitialHealthBarIsVisible = namePlate.UnitFrame.healthBar:IsVisible()
-		namePlate.musicianInitialClassificationFrameIsVisible = namePlate.UnitFrame.ClassificationFrame:IsVisible()
-	end
 
 	Musician.NamePlates.NamePlateOnUpdate(namePlate)
 
