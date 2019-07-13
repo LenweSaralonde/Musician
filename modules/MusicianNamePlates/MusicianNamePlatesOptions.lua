@@ -67,6 +67,7 @@ end)
 hooksecurefunc(Musician.Options, "Cancel", function()
 	setCVarBool("nameplateShowFriendlyNPCs", oldSettings.nameplateShowFriendlyNPCs)
 	Musician_Settings.hideNamePlateBars = oldSettings.hideNamePlateBars
+	Musician.NamePlates.UpdateAll()
 end)
 
 --- Save values
@@ -74,5 +75,6 @@ end)
 Musician.NamePlates.Options.Save = function()
 	setCVarBool("nameplateShowFriendlyNPCs", not(MusicianOptionsPanelUnitNamePlatesHideNPCs:GetChecked()))
 	Musician_Settings.hideNamePlateBars = MusicianOptionsPanelUnitNamePlatesHideNamePlateBars:GetChecked()
+	Musician.NamePlates.UpdateAll()
 end
 hooksecurefunc(Musician.Options, "Save", Musician.NamePlates.Options.Save)

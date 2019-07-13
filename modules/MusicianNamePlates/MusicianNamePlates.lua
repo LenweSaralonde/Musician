@@ -44,9 +44,6 @@ function Musician.NamePlates:OnEnable()
 
 	Musician.NamePlates.CreatePlayerAnimatedNotesFrame()
 
-	-- Nameplate created
-	Musician.NamePlates:RegisterEvent("NAME_PLATE_CREATED", Musician.NamePlates.OnNamePlateCreated)
-
 	-- Nameplate added
 	Musician.NamePlates:RegisterEvent("NAME_PLATE_UNIT_ADDED", Musician.NamePlates.OnNamePlateAdded)
 
@@ -54,20 +51,14 @@ function Musician.NamePlates:OnEnable()
 	Musician.NamePlates:RegisterEvent("NAME_PLATE_UNIT_REMOVED", Musician.NamePlates.OnNamePlateRemoved)
 
 	-- Health bar updated
-	hooksecurefunc("CompactUnitFrame_UpdateHealth", function(frame)
-		local namePlate = frame:GetParent()
-		if namePlate and namePlate.namePlateUnitToken then
-			Musician.NamePlates.NamePlateOnUpdate(namePlate)
-		end
-	end)
+	hooksecurefunc("CompactUnitFrame_UpdateHealth", Musician.NamePlates.OnUnitFrameUpdate)
+	hooksecurefunc("CompactUnitFrame_UpdateMaxHealth", Musician.NamePlates.OnUnitFrameUpdate)
+
+	-- Auras (combat) updated
+	hooksecurefunc("CompactUnitFrame_UpdateAuras", Musician.NamePlates.OnUnitFrameUpdate)
 
 	-- Name updated
-	hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
-		local namePlate = frame:GetParent()
-		if namePlate and namePlate.namePlateUnitToken then
-			Musician.NamePlates.UpdateNoteIcon(namePlate)
-		end
-	end)
+	hooksecurefunc("CompactUnitFrame_UpdateName", Musician.NamePlates.OnUnitFrameUpdate)
 
 	-- Player registered
 	Musician.NamePlates:RegisterMessage(Musician.Registry.event.playerRegistered, Musician.NamePlates.OnPlayerRegistered)
@@ -270,9 +261,9 @@ function Musician.NamePlates.OnNamePlateNotesFrameUpdate(animatedNotesFrame, ela
 	animateNotes(animatedNotesFrame, elapsed)
 end
 
---- NamePlateOnUpdate
+--- UpdateNamePlate
 -- @param namePlate (Frame)
-function Musician.NamePlates.NamePlateOnUpdate(namePlate)
+function Musician.NamePlates.UpdateNamePlate(namePlate)
 	local unitToken = namePlate.namePlateUnitToken
 	local isPlayerOrFriendly = unitToken and (UnitIsFriend(unitToken, "player") or UnitIsPlayer(unitToken))
 
@@ -306,13 +297,27 @@ function Musician.NamePlates.NamePlateOnUpdate(namePlate)
 			namePlate.UnitFrame.ClassificationFrame:SetShown(classificationFrameIsVisible)
 		end
 	end
+
+	-- Update icon
+	Musician.NamePlates.UpdateNoteIcon(namePlate)
 end
 
---- OnNamePlateCreated
--- @param event (string)
--- @param unitToken (string)
-function Musician.NamePlates.OnNamePlateCreated(event, namePlate)
-	namePlate:HookScript("OnUpdate", Musician.NamePlates.NamePlateOnUpdate)
+--- Update all nameplates
+--
+function Musician.NamePlates.UpdateAll()
+	local namePlate
+	for _, namePlate in pairs(C_NamePlate.GetNamePlates()) do
+		Musician.NamePlates.UpdateNamePlate(namePlate)
+	end
+end
+
+--- OnUnitFrameUpdate
+-- @param frame (Frame)
+function Musician.NamePlates.OnUnitFrameUpdate(frame)
+	local namePlate = frame:GetParent()
+	if namePlate and namePlate.namePlateUnitToken then
+		Musician.NamePlates.UpdateNamePlate(namePlate)
+	end
 end
 
 --- OnNamePlateAdded
@@ -410,11 +415,9 @@ end
 -- @param event (string)
 function Musician.NamePlates.AttachNamePlate(namePlate, player, event)
 
-	Musician.NamePlates.NamePlateOnUpdate(namePlate)
+	Musician.NamePlates.UpdateNamePlate(namePlate)
 
 	if not(Musician.Registry.PlayerIsRegistered(player)) then return end
-
-	Musician.NamePlates.UpdateNoteIcon(namePlate)
 
 	-- Create or show animated notes frames
 	if not(namePlate.musicianAnimatedNotesFrame) then
