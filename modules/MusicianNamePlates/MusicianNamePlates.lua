@@ -277,7 +277,7 @@ function Musician.NamePlates.NamePlateOnUpdate(namePlate)
 	local isPlayerOrFriendly = unitToken and (UnitIsFriend(unitToken, "player") or UnitIsPlayer(unitToken))
 
 	-- Hide friendly and player health bars when not in combat
-	if not(IsInInstance()) and isPlayerOrFriendly then
+	if not(IsInInstance()) and not(UnitIsUnit(unitToken, "player")) and isPlayerOrFriendly then
 
 		local healthBarIsVisible, classificationFrameIsVisible
 
