@@ -61,6 +61,14 @@ function Musician.NamePlates:OnEnable()
 		end
 	end)
 
+	-- Name updated
+	hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
+		local namePlate = frame:GetParent()
+		if namePlate and namePlate.namePlateUnitToken then
+			Musician.NamePlates.UpdateNoteIcon(namePlate)
+		end
+	end)
+
 	-- Player registered
 	Musician.NamePlates:RegisterMessage(Musician.Registry.event.playerRegistered, Musician.NamePlates.OnPlayerRegistered)
 
