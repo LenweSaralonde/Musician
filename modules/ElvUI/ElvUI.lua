@@ -26,18 +26,20 @@ function Musician.ElvUI:OnEnable()
 
 		-- Add musical note icon next to player name
 		hooksecurefunc(NP, "StyleFilterNameChanged", function(self)
-			local namePlate = self:GetParent():GetParent()
-			addNote(namePlate)
+			local ElvNamePlate = self:GetParent():GetParent()
+			local namePlate = ElvNamePlate:GetParent()
+			Musician.NamePlates.AppendNoteIcon(namePlate, ElvNamePlate.Name)
 		end)
 
 		-- Update nameplate when player is registered
 		Musician.ElvUI:RegisterMessage(Musician.Registry.event.playerRegistered, function(event, player)
 			local player = Musician.Utils.NormalizePlayerName(player)
-			if not(Musician.NamePlates.playerNamePlates[player]) then return end
-			local namePlateName = Musician.NamePlates.playerNamePlates[player]:GetName()
-			local namePlate = _G["ElvNP_" .. namePlateName]
+			local namePlate = Musician.NamePlates.playerNamePlates[player]
 			if not(namePlate) then return end
-			addNote(namePlate)
+			local namePlateName = namePlate:GetName()
+			local ElvNamePlate = _G["ElvNP_" .. namePlateName]
+			if not(ElvNamePlate) then return end
+			Musician.NamePlates.AppendNoteIcon(namePlate, ElvNamePlate.Name)
 		end)
 	end
 end

@@ -8,15 +8,14 @@ Musician.AddModule(MODULE_NAME)
 function Musician.Plater:OnEnable()
 	-- Add musical note icon next to player name
 	if Plater and Plater.UpdatePlateText then
-		hooksecurefunc(Plater, "UpdatePlateText", function(plateFrame, plateConfigs, needReset)
-			Musician.NamePlates.updateNoteIcon(plateFrame, plateFrame.unitFrame, plateFrame.CurrentUnitNameString)
-		end)
-	end
 
-	-- Fix player name layer ordering
-	if Plater and Plater.CheckRange then
-		hooksecurefunc(Plater, "CheckRange", function(plateFrame, onAdded)
-			plateFrame.CurrentUnitNameString:SetParent(plateFrame.unitFrame)
+		hooksecurefunc(Musician.NamePlates, "UpdateNoteIcon", function(namePlate, player)
+			Musician.NamePlates.AppendNoteIcon(namePlate, namePlate.CurrentUnitNameString)
 		end)
+
+		hooksecurefunc(Plater, "UpdatePlateText", function(namePlate, player)
+			Musician.NamePlates.UpdateNoteIcon(namePlate)
+		end)
+
 	end
 end

@@ -4,6 +4,6 @@
 	<Include file="CrossRP\CrossRP.xml"/>
 	<Include file="MusicianNamePlates\MusicianNamePlates.xml"/>
 	<Include file="Plater\Plater.xml"/>
-	<Include file="KuiNamePlates\KuiNamePlates.xml"/>
+	<Include file="Kui_Nameplates\Kui_Nameplates.xml"/>
 	<Include file="ElvUI\ElvUI.xml"/>
 </Ui>

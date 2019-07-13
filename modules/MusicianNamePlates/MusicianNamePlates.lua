@@ -254,22 +254,42 @@ function Musician.NamePlates.OnNamePlateNotesFrameUpdate(animatedNotesFrame, ela
 	animateNotes(animatedNotesFrame, elapsed)
 end
 
---- OnNamePlateCreated
+--- NamePlateOnUpdate
 -- @param namePlate (Frame)
 -- @param elapsed (number)
-local function namePlateOnUpdate(namePlate, elapsed)
-	-- Hide friendly health bars when not in combat
-	if not(IsInInstance()) and not(GetCVarBool("nameplateShowOnlyNames")) and namePlate.namePlateUnitToken and UnitIsFriend(namePlate.namePlateUnitToken, "player") then
+function Musician.NamePlates.NamePlateOnUpdate(namePlate, elapsed)
+	local unitToken = namePlate.namePlateUnitToken
+	local isPlayerOrFriendly = unitToken and (UnitIsFriend(unitToken, "player") or UnitIsPlayer(unitToken))
+
+	-- Hide friendly and player health bars when not in combat
+	if not(IsInInstance()) and not(GetCVarBool("nameplateShowOnlyNames")) and isPlayerOrFriendly then
+
+		local healthBarIsVisible, classificationFrameIsVisible
+
 		local isInCombat = UnitAffectingCombat(namePlate.namePlateUnitToken)
 		local health = UnitHealth(namePlate.namePlateUnitToken)
 		local healthMax = UnitHealthMax(namePlate.namePlateUnitToken)
 
 		if isInCombat or (health < healthMax) or not(Musician_Settings.hideNamePlateBars) then
-			namePlate.UnitFrame.ClassificationFrame:Show()
-			namePlate.UnitFrame.healthBar:Show()
+			healthBarIsVisible = namePlate.musicianInitialHealthBarIsVisible
+			classificationFrameIsVisible = namePlate.musicianInitialClassificationFrameIsVisible
 		else
-			namePlate.UnitFrame.ClassificationFrame:Hide()
-			namePlate.UnitFrame.healthBar:Hide()
+			healthBarIsVisible = false
+			classificationFrameIsVisible = false
+		end
+
+		local refreshIcon = false
+		if healthBarIsVisible ~= namePlate.UnitFrame.healthBar:IsVisible() then
+			namePlate.UnitFrame.healthBar:SetShown(healthBarIsVisible)
+			refreshIcon = true
+		end
+		if classificationFrameIsVisible ~= namePlate.UnitFrame.ClassificationFrame:IsVisible() then
+			namePlate.UnitFrame.ClassificationFrame:SetShown(classificationFrameIsVisible)
+			refreshIcon = true
+		end
+
+		if refreshIcon then
+			Musician.NamePlates.UpdateNoteIcon(namePlate)
 		end
 	end
 end
@@ -278,7 +298,7 @@ end
 -- @param event (string)
 -- @param unitToken (string)
 function Musician.NamePlates.OnNamePlateCreated(event, namePlate)
-	namePlate:HookScript("OnUpdate", namePlateOnUpdate)
+	namePlate:HookScript("OnUpdate", Musician.NamePlates.NamePlateOnUpdate)
 end
 
 --- OnNamePlateAdded
@@ -286,7 +306,7 @@ end
 -- @param unitToken (string)
 function Musician.NamePlates.OnNamePlateAdded(event, unitToken)
 
-	if not(UnitIsPlayer(unitToken)) then return end
+	local namePlate = C_NamePlate.GetNamePlateForUnit(unitToken)
 
 	-- May return "Unknown" on first attempt: try again later.
 	if GetUnitName(unitToken, true) == UNKNOWN then
@@ -296,13 +316,15 @@ function Musician.NamePlates.OnNamePlateAdded(event, unitToken)
 		return
 	end
 
-	-- Add references to the nameplate
-	local player = Musician.Utils.NormalizePlayerName(GetUnitName(unitToken, true))
-	playerNamePlates[player] = C_NamePlate.GetNamePlateForUnit(unitToken)
-	namePlatePlayers[unitToken] = player
+	if UnitIsPlayer(unitToken) then
+		-- Add references to the nameplate
+		local player = Musician.Utils.NormalizePlayerName(GetUnitName(unitToken, true))
+		playerNamePlates[player] = namePlate
+		namePlatePlayers[unitToken] = player
 
-	-- Attach nameplate
-	Musician.NamePlates.AttachNamePlate(playerNamePlates[player], player)
+		-- Attach nameplate
+		Musician.NamePlates.AttachNamePlate(namePlate, player, event)
+	end
 end
 
 --- OnNamePlateRemoved
@@ -327,59 +349,45 @@ end
 function Musician.NamePlates.OnPlayerRegistered(event, player)
 	local player = Musician.Utils.NormalizePlayerName(player)
 	if not(playerNamePlates[player]) then return end
-	Musician.NamePlates.AttachNamePlate(playerNamePlates[player], player)
+	Musician.NamePlates.AttachNamePlate(playerNamePlates[player], player, event)
 end
 
---- Update the note icon for the nameplate unit name frame
+--- Update note icon next to player name
 -- @param namePlate (Frame)
--- @param unitFrame (Frame)
--- @param textObject (FontString)
-function Musician.NamePlates.updateNoteIcon(namePlate, unitFrame, textObject)
-	-- Create icon frame
-	if not(unitFrame.musicianNoteIcon) then
-		unitFrame.musicianNoteIcon = CreateFrame("Frame")
-		unitFrame.musicianNoteIcon:SetFrameStrata("BACKGROUND")
-		unitFrame.musicianNoteIcon:SetParent(unitFrame)
-		unitFrame.musicianNoteIcon:SetWidth(textObject:GetHeight())
-		unitFrame.musicianNoteIcon:SetScript("OnSizeChanged", function(self, width, height)
-			self:SetWidth(textObject:GetHeight())
-		end)
-		unitFrame.musicianNoteIcon:SetPoint("TOPRIGHT", textObject, "TOPLEFT", -3, 0)
-		unitFrame.musicianNoteIcon:SetPoint("BOTTOMRIGHT", textObject, "BOTTOMLEFT", -3, 0)
-		unitFrame.musicianNoteIcon.texture = unitFrame.musicianNoteIcon:CreateTexture(nil, "ARTWORK")
-		unitFrame.musicianNoteIcon.texture:SetAllPoints()
-		unitFrame.musicianNoteIcon.texture:SetTexture(Musician.IconImages.Note)
-	end
+function Musician.NamePlates.UpdateNoteIcon(namePlate)
+	Musician.NamePlates.AppendNoteIcon(namePlate, namePlate.UnitFrame.name)
+end
 
-	-- Show it if player is registered
+--- Append note icon in nameplate's textElement, if needed
+-- @param namePlate (Frame)
+-- @param textElement (FontString)
+function Musician.NamePlates.AppendNoteIcon(namePlate, textElement)
 	local player = UnitIsPlayer(namePlate.namePlateUnitToken) and Musician.Utils.NormalizePlayerName(GetUnitName(namePlate.namePlateUnitToken, true))
 	if player and not(Musician.Utils.PlayerIsMyself(player)) and Musician.Registry.PlayerIsRegistered(player) then
-		textObject:SetPoint("CENTER", textObject:GetHeight() / 2 + 1.5, 0)
-		unitFrame.musicianNoteIcon:Show()
-	else
-		textObject:SetPoint("CENTER", 0, 0)
-		unitFrame.musicianNoteIcon:Hide()
-	end
-end
-
---- Update Musician icon in nameplate
--- @param namePlate (Frame)
-function Musician.NamePlates.updateNamePlateIcons(namePlate)
-	if namePlate.UnitFrame and namePlate.UnitFrame.name then
-		Musician.NamePlates.updateNoteIcon(namePlate, namePlate.UnitFrame, namePlate.UnitFrame.name)
+		local iconString = Musician.Utils.GetChatIcon(Musician.IconImages.Note) .. " "
+		local nameString = textElement:GetText()
+		if string.find(nameString, iconString, 1, true) == nil then
+			textElement:SetText(iconString .. nameString)
+		end
 	end
 end
 
 --- Attach Musician nameplate
 -- @param namePlate (Frame)
 -- @param player (string)
-function Musician.NamePlates.AttachNamePlate(namePlate, player)
+-- @param event (string)
+function Musician.NamePlates.AttachNamePlate(namePlate, player, event)
 
-	namePlateOnUpdate(namePlate)
+	if event == "NAME_PLATE_UNIT_ADDED" then
+		namePlate.musicianInitialHealthBarIsVisible = namePlate.UnitFrame.healthBar:IsVisible()
+		namePlate.musicianInitialClassificationFrameIsVisible = namePlate.UnitFrame.ClassificationFrame:IsVisible()
+	end
 
-	Musician.NamePlates.updateNamePlateIcons(namePlate)
+	Musician.NamePlates.NamePlateOnUpdate(namePlate)
 
 	if not(Musician.Registry.PlayerIsRegistered(player)) then return end
+
+	Musician.NamePlates.UpdateNoteIcon(namePlate)
 
 	-- Create or show animated notes frames
 	if not(namePlate.musicianAnimatedNotesFrame) then
@@ -406,8 +414,6 @@ end
 --- Detach Musician nameplate
 -- @param namePlate (Frame)
 function Musician.NamePlates.DetachNamePlate(namePlate)
-
-	Musician.NamePlates.updateNamePlateIcons(namePlate)
 
 	if not(namePlate.musicianAnimatedNotesFrame) then return end
 

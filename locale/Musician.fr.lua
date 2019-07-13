@@ -49,7 +49,7 @@ msg.OPTIONS_EMOTE_HINT = "Une emote est affichée aux joueurs n'ayant pas Musici
 msg.OPTIONS_CATEGORY_NAMEPLATES = "Barres d'info des unités"
 msg.OPTIONS_CATEGORY_NAMEPLATES_SUB_TEXT = "Voyez qui peut vous écouter d'un seul coup d'œil.\nAffiche une animation lorsque quelqu'un joue de la musique."
 msg.OPTIONS_ENABLE_NAMEPLATES = "Activer les barres d'info des unités"
-msg.OPTIONS_HIDE_HEALTH_BARS = "Masquer la barre de vie des unités amicales hors combat"
+msg.OPTIONS_HIDE_HEALTH_BARS = "Masquer la barre de vie des joueurs et des unités amicales hors combat"
 msg.OPTIONS_HIDE_NPC_NAMEPLATES = "Masquer les barres d'info des PNJs"
 
 msg.STARTUP = "Bienvenue dans Musician v{version}."
