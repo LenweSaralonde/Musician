@@ -21,6 +21,9 @@ end
 --
 function Musician.ElvUI:OnEnable()
 	if ElvUI then
+
+		Musician.Utils.Debug(MODULE_NAME, "ElvUI detected.")
+
 		local E, L, V, P, G = unpack(ElvUI) --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 		local NP = E:GetModule("NamePlates")
 
@@ -28,7 +31,7 @@ function Musician.ElvUI:OnEnable()
 		hooksecurefunc(NP, "StyleFilterNameChanged", function(self)
 			local ElvNamePlate = self:GetParent():GetParent()
 			local namePlate = ElvNamePlate:GetParent()
-			Musician.NamePlates.AppendNoteIcon(namePlate, ElvNamePlate.Name)
+			Musician.NamePlates.AddNoteIcon(namePlate, ElvNamePlate.Name)
 		end)
 
 		-- Update nameplate when player is registered
@@ -39,7 +42,7 @@ function Musician.ElvUI:OnEnable()
 			local namePlateName = namePlate:GetName()
 			local ElvNamePlate = _G["ElvNP_" .. namePlateName]
 			if not(ElvNamePlate) then return end
-			Musician.NamePlates.AppendNoteIcon(namePlate, ElvNamePlate.Name)
+			Musician.NamePlates.AddNoteIcon(namePlate, ElvNamePlate.Name)
 		end)
 	end
 end

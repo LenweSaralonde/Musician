@@ -9,13 +9,14 @@ function Musician.Plater:OnEnable()
 	-- Add musical note icon next to player name
 	if Plater and Plater.UpdatePlateText then
 
+		Musician.Utils.Debug(MODULE_NAME, "Plater nameplates detected.")
+
 		hooksecurefunc(Musician.NamePlates, "UpdateNoteIcon", function(namePlate, player)
-			Musician.NamePlates.AppendNoteIcon(namePlate, namePlate.CurrentUnitNameString)
+			Musician.NamePlates.AddNoteIcon(namePlate, namePlate.CurrentUnitNameString)
 		end)
 
 		hooksecurefunc(Plater, "UpdatePlateText", function(namePlate, player)
 			Musician.NamePlates.UpdateNoteIcon(namePlate)
 		end)
-
 	end
 end

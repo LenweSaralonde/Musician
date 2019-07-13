@@ -355,19 +355,34 @@ end
 --- Update note icon next to player name
 -- @param namePlate (Frame)
 function Musician.NamePlates.UpdateNoteIcon(namePlate)
-	Musician.NamePlates.AppendNoteIcon(namePlate, namePlate.UnitFrame.name)
+	Musician.NamePlates.AddNoteIcon(namePlate, namePlate.UnitFrame.name)
 end
 
---- Append note icon in nameplate's textElement, if needed
+--- Add note icon in nameplate's textElement, if needed
 -- @param namePlate (Frame)
 -- @param textElement (FontString)
-function Musician.NamePlates.AppendNoteIcon(namePlate, textElement)
+-- @param append (boolean) Add note icon at the end of the string
+function Musician.NamePlates.AddNoteIcon(namePlate, textElement, append)
 	local player = UnitIsPlayer(namePlate.namePlateUnitToken) and Musician.Utils.NormalizePlayerName(GetUnitName(namePlate.namePlateUnitToken, true))
 	if player and not(Musician.Utils.PlayerIsMyself(player)) and Musician.Registry.PlayerIsRegistered(player) then
-		local iconString = Musician.Utils.GetChatIcon(Musician.IconImages.Note) .. " "
+		local iconString = Musician.Utils.GetChatIcon(Musician.IconImages.Note)
 		local nameString = textElement:GetText()
-		if string.find(nameString, iconString, 1, true) == nil then
-			textElement:SetText(iconString .. nameString)
+		local from, to = string.find(nameString, iconString, 1, true)
+
+		-- Note icon is present but not at the right position: remove it
+		if append and to and to ~= nameString or not(append) and from and from ~= 1 then
+			nameString = string.sub(nameString, 1, from - 1) .. string.sub(nameString, to + 1, #nameString)
+			nameString = strtrim(string.gsub(nameString, '%s+', ' '))
+			from, to = nil, nil
+		end
+
+		-- Add icon string if not found or previously removed
+		if from == nil then
+			if append then
+				textElement:SetText(nameString .. " " .. iconString)
+			else
+				textElement:SetText(iconString .. " " .. nameString)
+			end
 		end
 	end
 end
