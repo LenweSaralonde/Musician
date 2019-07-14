@@ -19,11 +19,8 @@ function Musician:OnInitialize()
 		debug = {},
 		mutedPlayers = {}
 	}
-	if Musician_Settings ~= nil then
-		local k, v
-		for k,v in pairs(Musician_Settings) do defaultSettings[k] = v end
-	end
-	Musician_Settings = defaultSettings
+
+	Musician_Settings = Mixin(defaultSettings, Musician_Settings or {})
 
 	Musician.songs = {}
 	Musician.sourceSong = nil
