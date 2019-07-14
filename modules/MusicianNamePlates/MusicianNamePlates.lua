@@ -41,7 +41,10 @@ Musician.NamePlates.playerNamePlates = playerNamePlates
 --- OnEnable
 --
 function Musician.NamePlates:OnEnable()
+	-- Init settings
+	Musician_Settings = Mixin(Musician.NamePlates.Options.GetDefaults(), Musician_Settings)
 
+	-- Create animated notes frame for player
 	Musician.NamePlates.CreatePlayerAnimatedNotesFrame()
 
 	-- Nameplate added
@@ -65,6 +68,21 @@ function Musician.NamePlates:OnEnable()
 
 	-- Note On
 	Musician.NamePlates:RegisterMessage(Musician.Events.VisualNoteOn, Musician.NamePlates.OnNoteOn)
+
+	-- Cinematic mode
+	UIParent:HookScript("OnShow", Musician.NamePlates.UpdateAll)
+	UIParent:HookScript("OnHide", Musician.NamePlates.UpdateAll)
+
+	-- Toggle cinematic mode
+	Musician.playerFrame:EnableKeyboard()
+	Musician.playerFrame:HookScript("OnKeyDown", function(self, keyValue)
+		if Musician_Settings.cinematicMode and GetBindingFromClick(keyValue) == "TOGGLEUI" then
+			Musician.NamePlates.ToggleCinematicMode()
+			Musician.playerFrame:SetPropagateKeyboardInput(false)
+			return
+		end
+		Musician.playerFrame:SetPropagateKeyboardInput(true)
+	end)
 end
 
 --- Render a single animated note
@@ -264,10 +282,32 @@ end
 --- UpdateNamePlate
 -- @param namePlate (Frame)
 function Musician.NamePlates.UpdateNamePlate(namePlate)
+
+	-- Attach animated notes frame to WorldFrame if hiding nameplates in cinematic mode
+	if not(Musician_Settings.cinematicModeNamePlates) and Musician_Settings.cinematicMode then
+		local parent, scale
+		if Musician.NamePlates.IsCinematicMode() then
+			parent = WorldFrame
+			scale = namePlate:GetScale()
+		else
+			parent = namePlate
+			scale = 1
+		end
+
+		if namePlate.musicianAnimatedNotesFrame and namePlate.musicianAnimatedNotesFrame:GetParent() ~= parent then
+			namePlate.musicianAnimatedNotesFrame:SetParent(parent)
+			namePlate.musicianAnimatedNotesFrame:SetScale(scale)
+		end
+	end
+
+	-- Handle cinematic mode
+	Musician.NamePlates.UpdateNamePlateCinematicMode(namePlate)
+
+	-- Hide friendly and player health bars when not in combat
+
 	local unitToken = namePlate.namePlateUnitToken
 	local isPlayerOrFriendly = unitToken and (UnitIsFriend(unitToken, "player") or UnitIsPlayer(unitToken))
 
-	-- Hide friendly and player health bars when not in combat
 	if not(IsInInstance()) and not(UnitIsUnit(unitToken, "player")) and isPlayerOrFriendly then
 
 		local healthBarIsVisible, classificationFrameIsVisible
@@ -369,6 +409,20 @@ function Musician.NamePlates.OnPlayerRegistered(event, player)
 	local player = Musician.Utils.NormalizePlayerName(player)
 	if not(playerNamePlates[player]) then return end
 	Musician.NamePlates.AttachNamePlate(playerNamePlates[player], player, event)
+end
+
+--- Hide nameplates in cinematic mode if nameplates are not enabled in this mode
+-- @param namePlate (Frame)
+function Musician.NamePlates.UpdateNamePlateCinematicMode(namePlate)
+	if not(Musician_Settings.cinematicModeNamePlates) and Musician_Settings.cinematicMode then
+		if Musician.NamePlates.IsCinematicMode() then
+			namePlate:Hide()
+		else
+			namePlate:Show()
+		end
+	elseif not(Musician_Settings.cinematicMode) then
+		namePlate:SetShown(UIParent:IsVisible())
+	end
 end
 
 --- Update note icon next to player name
@@ -494,4 +548,16 @@ function Musician.NamePlates.OnNoteOn(event, song, track, key)
 	else
 		addNote(playerAnimatedNotesFrame, song, track, key)
 	end
+end
+
+--- Returns true when in cinematic mode
+-- @return (boolean)
+function Musician.NamePlates.IsCinematicMode()
+	return not(UIParent:IsVisible())
+end
+
+--- Toggle cinematic mode
+--
+function Musician.NamePlates.ToggleCinematicMode()
+	ToggleFrame(UIParent)
 end

@@ -51,6 +51,8 @@ msg.OPTIONS_CATEGORY_NAMEPLATES_SUB_TEXT = "See who can hear you at a glance.\nA
 msg.OPTIONS_ENABLE_NAMEPLATES = "Enable nameplates"
 msg.OPTIONS_HIDE_HEALTH_BARS = "Hide player and friendly unit health bars when not in combat"
 msg.OPTIONS_HIDE_NPC_NAMEPLATES = "Hide NPC nameplates"
+msg.OPTIONS_CINEMATIC_MODE = "Enable cinematic mode with {binding}"
+msg.OPTIONS_NAMEPLATES_CINEMATIC_MODE = "Show nameplates in cinematic mode"
 
 msg.STARTUP = "Welcome to Musician v{version}."
 

@@ -54,5 +54,16 @@ function Musician.KuiNamePlates:OnEnable()
 				end
 			end)
 		end
+
+		-- Handle cinematic mode
+		hooksecurefunc(Musician.NamePlates, "UpdateNamePlateCinematicMode", function(namePlate)
+			if namePlate.kui then
+				Musician.NamePlates.UpdateNamePlateCinematicMode(namePlate.kui)
+				-- Refresh parent to fix layer ordering issues
+				local parent = namePlate.kui:GetParent()
+				namePlate.kui:SetParent(WorldFrame)
+				namePlate.kui:SetParent(parent)
+			end
+		end)
 	end
 end

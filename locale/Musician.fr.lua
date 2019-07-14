@@ -51,6 +51,8 @@ msg.OPTIONS_CATEGORY_NAMEPLATES_SUB_TEXT = "Voyez qui peut vous écouter d'un se
 msg.OPTIONS_ENABLE_NAMEPLATES = "Activer les barres d'info des unités"
 msg.OPTIONS_HIDE_HEALTH_BARS = "Masquer la barre de vie des joueurs et des unités amicales hors combat"
 msg.OPTIONS_HIDE_NPC_NAMEPLATES = "Masquer les barres d'info des PNJs"
+msg.OPTIONS_CINEMATIC_MODE = "Activer le mode cinématique avec {binding}"
+msg.OPTIONS_NAMEPLATES_CINEMATIC_MODE = "Afficher les barres d'info en mode cinématique"
 
 msg.STARTUP = "Bienvenue dans Musician v{version}."
 

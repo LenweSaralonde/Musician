@@ -36,7 +36,7 @@
 
 			<Frame name="$parentImage" inherits="MusicianAnimatedImage">
 				<Anchors>
-					<Anchor point="TOPRIGHT" y="32" />
+					<Anchor point="TOPRIGHT" />
 				</Anchors>
 				<Size>
 					<AbsDimension y="170" x="170"/>
@@ -82,7 +82,7 @@
 								friends:SetChecked(true)
 								friends:GetScript("OnClick")(friends)
 
-							-- Onlu uncheck "show all" when disabling
+							-- Only uncheck "show all" when disabling
 							else
 								showAll:SetChecked(false)
 								showAll:GetScript("OnClick")(showAll)
@@ -123,6 +123,46 @@
 						self.type = CONTROLTYPE_CHECKBOX
 						BlizzardOptionsPanel_RegisterControl(self, self:GetParent():GetParent())
 						BlizzardOptionsPanel_SetupDependentControl(_G[self:GetParent():GetName().."Enable"], self)
+						self:HookScript("OnClick", function()
+							Musician.NamePlates.Options.Save(true)
+						end)
+					</OnLoad>
+				</Scripts>
+			</CheckButton>
+			<CheckButton name="$parentCinematicMode" inherits="InterfaceOptionsCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentHideNPCs" relativePoint="BOTTOMLEFT" x="-10" y="4"/>
+				</Anchors>
+				<HitRectInsets>
+					<AbsInset left="0" right="-310" top="0" bottom="0"/>
+				</HitRectInsets>
+				<Scripts>
+					<OnLoad>
+						self.type = CONTROLTYPE_CHECKBOX
+						BlizzardOptionsPanel_RegisterControl(self, self:GetParent():GetParent())
+						BlizzardOptionsPanel_SetupControl(self)
+						self:HookScript("OnClick", function()
+							Musician.NamePlates.Options.Save(true)
+						end)
+					</OnLoad>
+					<OnShow inherits="prepend">
+						_G[self:GetName().."Text"]:SetText(string.gsub(Musician.Msg.OPTIONS_CINEMATIC_MODE, '{binding}', GetBindingKey("TOGGLEUI")))
+					</OnShow>
+				</Scripts>
+			</CheckButton>
+			<CheckButton name="$parentCinematicModeNamePlates" inherits="InterfaceOptionsSmallCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentCinematicMode" relativePoint="BOTTOMLEFT" x="10" y="4"/>
+				</Anchors>
+				<HitRectInsets>
+					<AbsInset left="0" right="-300" top="0" bottom="0"/>
+				</HitRectInsets>
+				<Scripts>
+					<OnLoad>
+						_G[self:GetName().."Text"]:SetText(Musician.Msg.OPTIONS_NAMEPLATES_CINEMATIC_MODE)
+						self.type = CONTROLTYPE_CHECKBOX
+						BlizzardOptionsPanel_RegisterControl(self, self:GetParent():GetParent())
+						BlizzardOptionsPanel_SetupDependentControl(_G[self:GetParent():GetName().."CinematicMode"], self)
 						self:HookScript("OnClick", function()
 							Musician.NamePlates.Options.Save(true)
 						end)
