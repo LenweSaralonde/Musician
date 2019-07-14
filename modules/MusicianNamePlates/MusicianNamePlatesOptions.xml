@@ -33,6 +33,26 @@
 			</Layer>
 		</Layers>
 		<Frames>
+
+			<Frame name="$parentImage" inherits="MusicianAnimatedImage">
+				<Anchors>
+					<Anchor point="TOPRIGHT" y="32" />
+				</Anchors>
+				<Size>
+					<AbsDimension y="170" x="170"/>
+				</Size>
+				<Scripts>
+					<OnLoad inherit="prepend">
+						self.fps = 30
+						self.width = 2048
+						self.height = 2048
+						self.tileHeight = 256
+						self.tileWidth = 256
+						self.textureFile = "Interface\\AddOns\\Musician\\ui\\textures\\nameplates-demo.blp"
+					</OnLoad>
+				</Scripts>
+			</Frame>
+
 			<CheckButton name="$parentEnable" inherits="InterfaceOptionsCheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentSubText" relativePoint="BOTTOMLEFT" x="0" y="4"/>
@@ -85,7 +105,7 @@
 						BlizzardOptionsPanel_RegisterControl(self, self:GetParent():GetParent())
 						BlizzardOptionsPanel_SetupDependentControl(_G[self:GetParent():GetName().."Enable"], self)
 						self:HookScript("OnClick", function()
-							Musician.NamePlates.Options.Save()
+							Musician.NamePlates.Options.Save(true)
 						end)
 					</OnLoad>
 				</Scripts>
@@ -104,7 +124,7 @@
 						BlizzardOptionsPanel_RegisterControl(self, self:GetParent():GetParent())
 						BlizzardOptionsPanel_SetupDependentControl(_G[self:GetParent():GetName().."Enable"], self)
 						self:HookScript("OnClick", function()
-							Musician.NamePlates.Options.Save()
+							Musician.NamePlates.Options.Save(true)
 						end)
 					</OnLoad>
 				</Scripts>

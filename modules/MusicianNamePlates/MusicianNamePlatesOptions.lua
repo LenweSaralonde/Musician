@@ -54,9 +54,12 @@ Musician.NamePlates.Options.Refresh = function()
 		hideNamePlateBars = Musician_Settings.hideNamePlateBars,
 	}
 	Musician.NamePlates.Options.RefreshCheckboxes()
+	MusicianOptionsPanelUnitNamePlatesImage:Show()
 end
 hooksecurefunc(Musician.Options, "Refresh", Musician.NamePlates.Options.Refresh)
 
+--- Refresh panel when CVar changed
+--
 MusicianOptionsPanelUnitNamePlates:RegisterEvent("CVAR_UPDATE")
 MusicianOptionsPanelUnitNamePlates:SetScript("OnEvent", function(event, ...)
 	Musician.NamePlates.Options.RefreshCheckboxes()
@@ -68,13 +71,17 @@ hooksecurefunc(Musician.Options, "Cancel", function()
 	setCVarBool("nameplateShowFriendlyNPCs", oldSettings.nameplateShowFriendlyNPCs)
 	Musician_Settings.hideNamePlateBars = oldSettings.hideNamePlateBars
 	Musician.NamePlates.UpdateAll()
+	MusicianOptionsPanelUnitNamePlatesImage:Hide()
 end)
 
 --- Save values
 --
-Musician.NamePlates.Options.Save = function()
+Musician.NamePlates.Options.Save = function(fromButton)
 	setCVarBool("nameplateShowFriendlyNPCs", not(MusicianOptionsPanelUnitNamePlatesHideNPCs:GetChecked()))
 	Musician_Settings.hideNamePlateBars = MusicianOptionsPanelUnitNamePlatesHideNamePlateBars:GetChecked()
 	Musician.NamePlates.UpdateAll()
+	if not(fromButton) then
+		MusicianOptionsPanelUnitNamePlatesImage:Hide()
+	end
 end
 hooksecurefunc(Musician.Options, "Save", Musician.NamePlates.Options.Save)
