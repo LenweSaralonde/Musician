@@ -339,4 +339,46 @@
 		</Scripts>
 	</Frame>
 
+	<!-- Animated image -->
+
+	<Frame name="MusicianAnimatedImage" virtual="true">
+		<Scripts>
+			<OnLoad>
+				self.texture = self:CreateTexture(nil, "ARTWORK", nil, 7)
+				self.texture:SetAllPoints(self)
+				self:Hide()
+				self.fps = 30
+				self.width = 1024
+				self.height = 1024
+				self.tileWidth = 128
+				self.tileHeight = 128
+				self.textureFile = 1
+			</OnLoad>
+			<OnShow>
+				self.frame = 0
+				self.elapsed = 0
+				self.texture:SetTexture(self.textureFile)
+			</OnShow>
+			<OnHide>
+				self.texture:SetTexture(1)
+			</OnHide>
+			<OnUpdate>
+				local frameW = self.tileWidth / self.width
+				local frameH = self.tileHeight / self.height
+
+				local framesX = floor(self.width / self.tileWidth)
+				local framesY = floor(self.height / self.tileHeight)
+				local frames = framesX * framesY
+
+				self.elapsed = self.elapsed + elapsed
+				self.frame = floor(self.fps * (self.elapsed % (frames / self.fps)))
+
+				local row = math.floor(self.frame / framesY)
+				local col = self.frame % framesX
+
+				self.texture:SetTexCoord(col * frameW, (col + 1) * frameW, row * frameH, (row + 1) * frameH)
+			</OnUpdate>
+		</Scripts>
+	</Frame>
+
 </Ui>
