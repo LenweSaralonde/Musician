@@ -140,7 +140,7 @@
 					<OnLoad>
 						self.type = CONTROLTYPE_CHECKBOX
 						BlizzardOptionsPanel_RegisterControl(self, self:GetParent():GetParent())
-						BlizzardOptionsPanel_SetupControl(self)
+						BlizzardOptionsPanel_SetupDependentControl(_G[self:GetParent():GetName().."Enable"], self)
 						self:HookScript("OnClick", function()
 							Musician.NamePlates.Options.Save(true)
 						end)
@@ -162,6 +162,7 @@
 						_G[self:GetName().."Text"]:SetText(Musician.Msg.OPTIONS_NAMEPLATES_CINEMATIC_MODE)
 						self.type = CONTROLTYPE_CHECKBOX
 						BlizzardOptionsPanel_RegisterControl(self, self:GetParent():GetParent())
+						BlizzardOptionsPanel_SetupDependentControl(_G[self:GetParent():GetName().."Enable"], self)
 						BlizzardOptionsPanel_SetupDependentControl(_G[self:GetParent():GetName().."CinematicMode"], self)
 						self:HookScript("OnClick", function()
 							Musician.NamePlates.Options.Save(true)

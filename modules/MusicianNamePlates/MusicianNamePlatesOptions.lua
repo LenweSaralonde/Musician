@@ -53,15 +53,17 @@ Musician.NamePlates.Options.RefreshCheckboxes = function()
 	if enable then -- SetEnabled() can't be used here since Enable and Disable are extended
 		MusicianOptionsPanelUnitNamePlatesHideNamePlateBars:Enable()
 		MusicianOptionsPanelUnitNamePlatesHideNPCs:Enable()
+		MusicianOptionsPanelUnitNamePlatesCinematicMode:Enable()
 	else
 		MusicianOptionsPanelUnitNamePlatesHideNamePlateBars:Disable()
 		MusicianOptionsPanelUnitNamePlatesHideNPCs:Disable()
+		MusicianOptionsPanelUnitNamePlatesCinematicMode:Disable()
 	end
 
 	MusicianOptionsPanelUnitNamePlatesCinematicMode:SetChecked(Musician_Settings.cinematicMode)
 	MusicianOptionsPanelUnitNamePlatesCinematicModeNamePlates:SetChecked(Musician_Settings.cinematicModeNamePlates)
 
-	if Musician_Settings.cinematicMode then
+	if Musician_Settings.cinematicMode and enable then
 		MusicianOptionsPanelUnitNamePlatesCinematicModeNamePlates:Enable()
 	else
 		MusicianOptionsPanelUnitNamePlatesCinematicModeNamePlates:Disable()
