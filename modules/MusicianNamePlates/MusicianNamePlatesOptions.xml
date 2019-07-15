@@ -36,7 +36,7 @@
 
 			<Frame name="$parentImage" inherits="MusicianAnimatedImage">
 				<Anchors>
-					<Anchor point="TOPRIGHT" />
+					<Anchor point="TOPRIGHT" x="20" />
 				</Anchors>
 				<Size>
 					<AbsDimension y="170" x="170"/>
@@ -57,12 +57,10 @@
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentSubText" relativePoint="BOTTOMLEFT" x="0" y="4"/>
 				</Anchors>
-				<HitRectInsets>
-					<AbsInset left="0" right="-310" top="0" bottom="0"/>
-				</HitRectInsets>
 				<Scripts>
 					<OnLoad>
 						_G[self:GetName().."Text"]:SetText(Musician.Msg.OPTIONS_ENABLE_NAMEPLATES)
+						self:SetHitRectInsets(0, -_G[self:GetName().."Text"]:GetWidth(), 0, 0)
 						self.type = CONTROLTYPE_CHECKBOX
 						BlizzardOptionsPanel_RegisterControl(self, self:GetParent():GetParent())
 						BlizzardOptionsPanel_SetupControl(self)
@@ -95,12 +93,10 @@
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentEnable" relativePoint="BOTTOMLEFT" x="10" y="4"/>
 				</Anchors>
-				<HitRectInsets>
-					<AbsInset left="0" right="-300" top="0" bottom="0"/>
-				</HitRectInsets>
 				<Scripts>
 					<OnLoad>
 						_G[self:GetName().."Text"]:SetText(Musician.Msg.OPTIONS_HIDE_HEALTH_BARS)
+						self:SetHitRectInsets(0, -_G[self:GetName().."Text"]:GetWidth(), 0, 0)
 						self.type = CONTROLTYPE_CHECKBOX
 						BlizzardOptionsPanel_RegisterControl(self, self:GetParent():GetParent())
 						BlizzardOptionsPanel_SetupDependentControl(_G[self:GetParent():GetName().."Enable"], self)
@@ -114,12 +110,10 @@
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentHideNamePlateBars" relativePoint="BOTTOMLEFT" x="0" y="4"/>
 				</Anchors>
-				<HitRectInsets>
-					<AbsInset left="0" right="-300" top="0" bottom="0"/>
-				</HitRectInsets>
 				<Scripts>
 					<OnLoad>
 						_G[self:GetName().."Text"]:SetText(Musician.Msg.OPTIONS_HIDE_NPC_NAMEPLATES)
+						self:SetHitRectInsets(0, -_G[self:GetName().."Text"]:GetWidth(), 0, 0)
 						self.type = CONTROLTYPE_CHECKBOX
 						BlizzardOptionsPanel_RegisterControl(self, self:GetParent():GetParent())
 						BlizzardOptionsPanel_SetupDependentControl(_G[self:GetParent():GetName().."Enable"], self)
@@ -131,11 +125,8 @@
 			</CheckButton>
 			<CheckButton name="$parentCinematicMode" inherits="InterfaceOptionsCheckButtonTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentHideNPCs" relativePoint="BOTTOMLEFT" x="-10" y="4"/>
+					<Anchor point="TOPLEFT" relativeTo="$parentHideNPCs" relativePoint="BOTTOMLEFT" x="-10" y="-6"/>
 				</Anchors>
-				<HitRectInsets>
-					<AbsInset left="0" right="-310" top="0" bottom="0"/>
-				</HitRectInsets>
 				<Scripts>
 					<OnLoad>
 						self.type = CONTROLTYPE_CHECKBOX
@@ -147,6 +138,7 @@
 					</OnLoad>
 					<OnShow inherits="prepend">
 						_G[self:GetName().."Text"]:SetText(string.gsub(Musician.Msg.OPTIONS_CINEMATIC_MODE, '{binding}', GetBindingKey("TOGGLEUI")))
+						self:SetHitRectInsets(0, -_G[self:GetName().."Text"]:GetWidth(), 0, 0)
 					</OnShow>
 				</Scripts>
 			</CheckButton>
@@ -154,12 +146,10 @@
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentCinematicMode" relativePoint="BOTTOMLEFT" x="10" y="4"/>
 				</Anchors>
-				<HitRectInsets>
-					<AbsInset left="0" right="-300" top="0" bottom="0"/>
-				</HitRectInsets>
 				<Scripts>
 					<OnLoad>
 						_G[self:GetName().."Text"]:SetText(Musician.Msg.OPTIONS_NAMEPLATES_CINEMATIC_MODE)
+						self:SetHitRectInsets(0, -_G[self:GetName().."Text"]:GetWidth(), 0, 0)
 						self.type = CONTROLTYPE_CHECKBOX
 						BlizzardOptionsPanel_RegisterControl(self, self:GetParent():GetParent())
 						BlizzardOptionsPanel_SetupDependentControl(_G[self:GetParent():GetName().."Enable"], self)
