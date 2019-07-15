@@ -36,7 +36,7 @@
 
 			<Frame name="$parentImage" inherits="MusicianAnimatedImage">
 				<Anchors>
-					<Anchor point="TOPRIGHT" x="20" />
+					<Anchor point="TOPRIGHT" x="20" y="7" />
 				</Anchors>
 				<Size>
 					<AbsDimension y="170" x="170"/>
