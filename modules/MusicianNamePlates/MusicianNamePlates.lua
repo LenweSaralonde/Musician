@@ -83,6 +83,9 @@ function Musician.NamePlates:OnEnable()
 		end
 		Musician.playerFrame:SetPropagateKeyboardInput(true)
 	end)
+
+	--- Tips and tricks
+	Musician.NamePlates.InitTipsAndTricks()
 end
 
 --- Render a single animated note
@@ -561,4 +564,23 @@ end
 --
 function Musician.NamePlates.ToggleCinematicMode()
 	ToggleFrame(UIParent)
+end
+
+--- Initialize tips and tricks
+--
+function Musician.NamePlates.InitTipsAndTricks()
+	-- Already shown
+	if Musician_Settings.namePlatesHintShown then return end
+
+	-- Already enabled
+	local nameplatesEnabled = C_CVar.GetCVarBool("nameplateShowAll") and C_CVar.GetCVarBool("nameplateShowFriends")
+	if nameplatesEnabled then
+		Musician_Settings.namePlatesHintShown = true
+		return
+	end
+
+	-- Add tip
+	Musician.AddTipsAndTricks(function()
+		MusicianNamePlatesTipsAndTricks:Show()
+	end, true)
 end

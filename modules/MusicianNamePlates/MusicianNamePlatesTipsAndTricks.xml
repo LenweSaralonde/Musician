@@ -1,0 +1,131 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+
+	<Frame name="MusicianNamePlatesTipsAndTricks" inherits="GlowBoxTemplate" hidden="true">
+
+		<Size x="640" y="360" />
+
+		<Anchors>
+			<Anchor point="CENTER" />
+		</Anchors>
+
+		<Frames>
+
+			<Frame inherits="ShadowOverlaySmallTemplate" setAllPoints="true" />
+
+			<Button name="$parentCancelButton" inherits="UIMenuButtonStretchTemplate" level="OVERLAY">
+				<Size y="30" x="30" />
+				<Anchors>
+					<Anchor point="BOTTOM" y="10" relativePoint="BOTTOM" relativeTo="$parent" />
+				</Anchors>
+				<ButtonText name="$parentText" parentKey="Text" />
+				<Scripts>
+					<OnLoad>
+						self:SetText(Musician.Msg.TIPS_AND_TRICKS_NAMEPLATES_CANCEL)
+						self:SetWidth(self.Text:GetStringWidth() + 24)
+					</OnLoad>
+					<OnClick>
+						UIPanelCloseButton_OnClick(self)
+						Musician_Settings.namePlatesHintShown = true
+					</OnClick>
+				</Scripts>
+			</Button>
+
+			<Button name="$parentOKButton" inherits="UIMenuButtonStretchTemplate" level="OVERLAY">
+				<Size y="44" x="44" />
+				<Anchors>
+					<Anchor point="BOTTOM" y="10" relativePoint="TOP" relativeTo="$parentCancelButton" />
+				</Anchors>
+
+				<Layers>
+					<Layer level="BACKGROUND">
+						<Texture parentKey="background" name="$parentBackground">
+							<Anchors>
+								<Anchor point="TOPLEFT" x="3" y="-3" />
+								<Anchor point="BOTTOMRIGHT" x="-3" y="3" />
+							</Anchors>
+							<Color a="1" r=".75" g="0" b="0" />
+						</Texture>
+					</Layer>
+				</Layers>
+
+				<ButtonText name="$parentText" parentKey="Text" />
+				<NormalFont style="GameFontNormalHuge"/>
+				<HighlightFont style="GameFontHighlightHuge"/>
+				<DisabledFont style="GameFontDisableHuge"/>
+				<Scripts>
+					<OnLoad>
+						self.background:SetDrawLayer("BACKGROUND", -8)
+						self:SetText(Musician.Msg.TIPS_AND_TRICKS_NAMEPLATES_OK)
+						self:SetWidth(self.Text:GetStringWidth() + 40)
+					</OnLoad>
+					<OnClick>
+						Musician.NamePlates.Options.Defaults()
+						UIPanelCloseButton_OnClick(self)
+						Musician_Settings.namePlatesHintShown = true
+					</OnClick>
+				</Scripts>
+			</Button>
+
+		</Frames>
+
+		<Layers>
+			<Layer level="ARTWORK">
+
+				<FontString name="$parentTitle" parentKey="title" inherits="GameFontNormalShadowHuge2" justifyH="CENTER" justifyV="TOP">
+					<Anchors>
+						<Anchor point="TOP" y="-16"/>
+						<Anchor point="LEFT" x="10"/>
+						<Anchor point="RIGHT" x="-10"/>
+					</Anchors>
+				</FontString>
+
+				<FontString name="$parentText" parentKey="text" inherits="GameFontHighlightLarge" justifyH="LEFT" justifyV="MIDDLE">
+					<Size y="150" />
+					<Anchors>
+						<Anchor point="TOP" relativeTo="$parentTitle" relativePoint="BOTTOM" />
+						<Anchor point="BOTTOM" relativeTo="$parentOKButton" relativePoint="TOP" />
+						<Anchor point="LEFT" x="180"/>
+						<Anchor point="RIGHT" x="-30"/>
+					</Anchors>
+				</FontString>
+
+			</Layer>
+		</Layers>
+
+		<Frames>
+			<Frame name="$parentImage" inherits="MusicianAnimatedImage" parentKey="image">
+				<Anchors>
+					<Anchor point="RIGHT" relativeTo="$parentText" relativePoint="LEFT" y="10" />
+				</Anchors>
+				<Size>
+					<AbsDimension y="170" x="170"/>
+				</Size>
+				<Scripts>
+					<OnLoad inherit="prepend">
+						self.fps = 30
+						self.width = 2048
+						self.height = 2048
+						self.tileHeight = 256
+						self.tileWidth = 256
+						self.textureFile = "Interface\\AddOns\\Musician\\ui\\textures\\nameplates-demo.blp"
+					</OnLoad>
+				</Scripts>
+			</Frame>
+		</Frames>
+
+		<Scripts>
+			<OnLoad>
+				self.title:SetText(Musician.Msg.TIPS_AND_TRICKS_NAMEPLATES_TITLE)
+				local text = string.gsub(Musician.Msg.TIPS_AND_TRICKS_NAMEPLATES_TEXT, '{icon}', Musician.Utils.GetChatIcon(Musician.IconImages.Note))
+				self.text:SetText(text)
+				self.image:Show()
+			</OnLoad>
+			<OnShow>
+				PlaySound(SOUNDKIT.IG_QUEST_LIST_OPEN)
+			</OnShow>
+			<OnHide>
+				PlaySound(SOUNDKIT.IG_QUEST_LIST_CLOSE)
+			</OnHide>
+		</Scripts>
+	</Frame>
+</Ui>

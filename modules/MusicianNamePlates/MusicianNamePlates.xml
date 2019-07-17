@@ -2,4 +2,5 @@
 	<Script file="MusicianNamePlates.lua"/>
 	<Include file="MusicianNamePlatesOptions.xml"/>
 	<Script file="MusicianNamePlatesOptions.lua"/>
+	<Include file="MusicianNamePlatesTipsAndTricks.xml"/>
 </Ui>

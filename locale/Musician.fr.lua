@@ -54,6 +54,13 @@ msg.OPTIONS_HIDE_NPC_NAMEPLATES = "Masquer les barres d'info des PNJs."
 msg.OPTIONS_CINEMATIC_MODE = "Afficher les animations lorsque l'interface est masquée avec {binding}."
 msg.OPTIONS_NAMEPLATES_CINEMATIC_MODE = "Afficher les barres d'info lorsque l'interface est masquée."
 
+msg.TIPS_AND_TRICKS_NAMEPLATES_TITLE = "Animations et barres d'info"
+msg.TIPS_AND_TRICKS_NAMEPLATES_TEXT = "Une animation spéciale est visible sur les personnages qui jouent de la musique lorsque les barres d'info sont activées.\n\n" ..
+	"Une icône {icon} apparaît également pour les joueurs qui ont Musician et qui peuvent vous écouter.\n\n" ..
+	"Souhaitez-vous activer les barres d'info et les animations maintenant ?"
+msg.TIPS_AND_TRICKS_NAMEPLATES_OK = "Activer les barres d'info et les animations"
+msg.TIPS_AND_TRICKS_NAMEPLATES_CANCEL = "Non merci"
+
 msg.STARTUP = "Bienvenue dans Musician v{version}."
 
 msg.NEW_VERSION = "Une nouvelle version de Musician est disponible ! Téléchargez la mise à jour sur {url} ."

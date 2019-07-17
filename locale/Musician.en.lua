@@ -54,6 +54,13 @@ msg.OPTIONS_HIDE_NPC_NAMEPLATES = "Hide NPC nameplates."
 msg.OPTIONS_CINEMATIC_MODE = "Show animations when the UI is hidden with {binding}."
 msg.OPTIONS_NAMEPLATES_CINEMATIC_MODE = "Show nameplates when the UI is hidden."
 
+msg.TIPS_AND_TRICKS_NAMEPLATES_TITLE = "Animations and nameplates"
+msg.TIPS_AND_TRICKS_NAMEPLATES_TEXT = "A special animation is visible on characters who play music when nameplates are enabled.\n\n" ..
+	"An icon {icon} also indicates who have Musician and can hear you.\n\n" ..
+	"Do you want to enable nameplates and animations now?"
+msg.TIPS_AND_TRICKS_NAMEPLATES_OK = "Enable nameplates and animations"
+msg.TIPS_AND_TRICKS_NAMEPLATES_CANCEL = "Later"
+
 msg.STARTUP = "Welcome to Musician v{version}."
 
 msg.NEW_VERSION = "A new version of Musician has been released! Download the update from {url} ."
