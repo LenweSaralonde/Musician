@@ -354,6 +354,7 @@ end
 --- OnUnitFrameUpdate
 -- @param frame (Frame)
 function Musician.NamePlates.OnUnitFrameUpdate(frame)
+	if IsInInstance() then return end
 	local namePlate = frame:GetParent()
 	if namePlate and namePlate.namePlateUnitToken then
 		Musician.NamePlates.UpdateNamePlate(namePlate)
