@@ -3,6 +3,10 @@ Musician = LibStub("AceAddon-3.0"):NewAddon("Musician", "AceEvent-3.0")
 local MODULE_NAME = "Main"
 Musician.modules = { MODULE_NAME } -- All modules
 
+local tipsAndTricks = {}
+
+--- OnInitialize
+--
 function Musician:OnInitialize()
 	Musician.Utils.Print(string.gsub(Musician.Msg.STARTUP, "{version}", Musician.Utils.Highlight(GetAddOnMetadata("Musician", "Version"))))
 
@@ -62,6 +66,12 @@ function Musician:OnInitialize()
 	SLASH_MUSICIAN1 = "/musician"
 	SLASH_MUSICIAN2 = "/music"
 	SLASH_MUSICIAN3 = "/mus"
+end
+
+--- OnEnable
+--
+function Musician:OnEnable()
+	Musician.ShowTipsAndTricks()
 end
 
 --- Add a module
@@ -683,3 +693,24 @@ function Musician.SetupHooks()
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", messageEventFilter)
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_EMOTE", messageEventFilter)
 end
+
+--- Add a tips and tricks callback
+-- @param callback {function}
+-- @param priority {boolean} If true, add the tip to the top of the list
+function Musician.AddTipsAndTricks(callback, priority)
+	if priority then
+		table.insert(tipsAndTricks, 1, callback)
+	else
+		table.insert(tipsAndTricks, callback)
+	end
+end
+
+--- Show the first
+-- @param callback {function}
+function Musician.ShowTipsAndTricks()
+	if #tipsAndTricks > 0 then
+		local callback = table.remove(tipsAndTricks, 1)
+		callback()
+	end
+end
+

@@ -51,6 +51,7 @@ function Musician.Comm.JoinChannel()
 		Musician.Registry.SendHello()
 		Musician.Registry.FetchPlayers()
 		Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
+		Musician.ShowTipsAndTricks()
 	end
 
 	--- Function executed when failed to join the channel
