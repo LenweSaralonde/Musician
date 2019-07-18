@@ -53,6 +53,10 @@ msg.OPTIONS_HIDE_HEALTH_BARS = "Masquer la barre de vie des joueurs et des unit�
 msg.OPTIONS_HIDE_NPC_NAMEPLATES = "Masquer les barres d'info des PNJs."
 msg.OPTIONS_CINEMATIC_MODE = "Afficher les animations lorsque l'interface est masquée avec {binding}."
 msg.OPTIONS_NAMEPLATES_CINEMATIC_MODE = "Afficher les barres d'info lorsque l'interface est masquée."
+msg.OPTIONS_CROSS_RP_TITLE = "Cross RP"
+msg.OPTIONS_CROSS_RP_SUB_TEXT = "Installez l'add-on Cross RP de Tammya-MoonGuard pour activer la musique inter-faction et inter-royaumes !"
+msg.OPTIONS_CROSS_RP_SUB_TEXT_NO_GATEWAY = "Il n'y a aucun relais Cross RP de disponible pour le moment.\nPatientez un peu…"
+msg.OPTIONS_CROSS_RP_SUB_TEXT_ACTIVE = "La communication Cross RP est active pour les destinations suivantes :\n\n{bands}"
 
 msg.TIPS_AND_TRICKS_NAMEPLATES_TITLE = "Animations et barres d'info"
 msg.TIPS_AND_TRICKS_NAMEPLATES_TEXT = "Une animation spéciale est visible sur les personnages qui jouent de la musique lorsque les barres d'info sont activées.\n\n" ..

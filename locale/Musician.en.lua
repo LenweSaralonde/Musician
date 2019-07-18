@@ -53,6 +53,10 @@ msg.OPTIONS_HIDE_HEALTH_BARS = "Hide player and friendly unit health bars when n
 msg.OPTIONS_HIDE_NPC_NAMEPLATES = "Hide NPC nameplates."
 msg.OPTIONS_CINEMATIC_MODE = "Show animations when the UI is hidden with {binding}."
 msg.OPTIONS_NAMEPLATES_CINEMATIC_MODE = "Show nameplates when the UI is hidden."
+msg.OPTIONS_CROSS_RP_TITLE = "Cross RP"
+msg.OPTIONS_CROSS_RP_SUB_TEXT = "Install the Cross RP add-on by Tammya-MoonGuard to activate cross-faction and cross-realm music!"
+msg.OPTIONS_CROSS_RP_SUB_TEXT_NO_GATEWAY = "There is no Cross RP node available for the moment.\nPlease be patient..."
+msg.OPTIONS_CROSS_RP_SUB_TEXT_ACTIVE = "Cross RP communication is active for the following locations:\n\n{bands}"
 
 msg.TIPS_AND_TRICKS_NAMEPLATES_TITLE = "Animations and nameplates"
 msg.TIPS_AND_TRICKS_NAMEPLATES_TEXT = "A special animation is visible on characters who play music when nameplates are enabled.\n\n" ..

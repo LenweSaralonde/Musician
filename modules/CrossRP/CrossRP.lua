@@ -240,6 +240,9 @@ function Musician.CrossRP.Init()
 		foreignerScanLastDuration = debugprofilestop() - startTime
 		foreignerScanLastAmount = scans
 	end)
+
+	-- Init options
+	Musician.CrossRP.Options.Init()
 end
 
 --- Return data string for CrossRP Hello/Query messages

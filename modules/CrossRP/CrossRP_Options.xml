@@ -1,0 +1,37 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+	<Frame name="MusicianOptionsPanelCrossRP" parent="MusicianOptionsPanelUnitNamePlates">
+		<Size>
+			<AbsDimension x="580" y="75"/>
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="MusicianOptionsPanelUnitNamePlates" relativePoint="BOTTOMLEFT"  x="0" y="-10" />
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentTitle" inherits="GameFontNormal" justifyH="LEFT" justifyV="TOP">
+					<Anchors>
+						<Anchor point="TOPLEFT" />
+					</Anchors>
+				</FontString>
+				<FontString name="$parentSubText" inherits="GameFontHighlight" nonspacewrap="false" maxLines="300" justifyH="LEFT" justifyV="TOP">
+					<Size>
+						<AbsDimension y="100" x="0"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-8" />
+						<Anchor point="RIGHT" x="-32" y="0" />
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				MusicianOptionsPanelCrossRPTitle:SetText(Musician.Msg.OPTIONS_CROSS_RP_TITLE)
+				MusicianOptionsPanelCrossRPSubText:SetText(Musician.Msg.OPTIONS_CROSS_RP_SUB_TEXT)
+			</OnLoad>
+		</Scripts>
+	</Frame>
+</Ui>
