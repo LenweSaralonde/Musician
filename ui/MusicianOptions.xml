@@ -5,28 +5,16 @@
 			<Layer level="ARTWORK">
 				<FontString name="$parentTitle" inherits="GameFontNormalLarge" justifyH="LEFT" justifyV="TOP">
 					<Anchors>
-						<Anchor point="TOPLEFT">
-							<Offset>
-								<AbsDimension x="16" y="-16"/>
-							</Offset>
-						</Anchor>
+						<Anchor point="TOPLEFT" x="16" y="-16"/>
 					</Anchors>
 				</FontString>
-				<FontString name="$parentSubText" inherits="GameFontHighlightSmall" nonspacewrap="true" maxLines="3" justifyH="LEFT" justifyV="TOP">
+				<FontString name="$parentSubText" inherits="GameFontHighlight" nonspacewrap="true" maxLines="3" justifyH="LEFT" justifyV="TOP">
 					<Size>
 						<AbsDimension y="32" x="0"/>
 					</Size>
 					<Anchors>
-						<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT">
-							<Offset>
-								<AbsDimension x="0" y="-8"/>
-							</Offset>
-						</Anchor>
-						<Anchor point="RIGHT">
-							<Offset>
-								<AbsDimension x="-32" y="0"/>
-							</Offset>
-						</Anchor>
+						<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-8"/>
+						<Anchor point="RIGHT" x="-32" y="0"/>
 					</Anchors>
 				</FontString>
 			</Layer>
