@@ -1,7 +1,7 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Frame name="MusicianOptionsPanelUnitNamePlates" parent="MusicianOptionsPanel">
 		<Size>
-			<AbsDimension x="580" y="75"/>
+			<AbsDimension x="580" y="177"/>
 		</Size>
 		<Anchors>
 			<Anchor point="TOPLEFT" relativeTo="MusicianOptionsPanelUnitEmote" relativePoint="BOTTOMLEFT"  x="0" y="-10" />
@@ -18,16 +18,8 @@
 						<AbsDimension y="32" x="0"/>
 					</Size>
 					<Anchors>
-						<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT">
-							<Offset>
-								<AbsDimension x="0" y="-8"/>
-							</Offset>
-						</Anchor>
-						<Anchor point="RIGHT">
-							<Offset>
-								<AbsDimension x="-32" y="0"/>
-							</Offset>
-						</Anchor>
+						<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-8" />
+						<Anchor point="RIGHT" x="-32" y="0"/>
 					</Anchors>
 				</FontString>
 			</Layer>
