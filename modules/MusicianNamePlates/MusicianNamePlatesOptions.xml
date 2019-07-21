@@ -132,7 +132,12 @@
 						end)
 					</OnLoad>
 					<OnShow inherits="prepend">
-						_G[self:GetName().."Text"]:SetText(string.gsub(Musician.Msg.OPTIONS_CINEMATIC_MODE, '{binding}', GetBindingKey("TOGGLEUI")))
+						local binding = GetBindingKey("TOGGLEUI")
+						if binding then
+							_G[self:GetName().."Text"]:SetText(string.gsub(Musician.Msg.OPTIONS_CINEMATIC_MODE, '{binding}', binding))
+						else
+							_G[self:GetName().."Text"]:SetText(Musician.Msg.OPTIONS_CINEMATIC_MODE_NO_BINDING)
+						end
 						self:SetHitRectInsets(0, -_G[self:GetName().."Text"]:GetWidth(), 0, 0)
 					</OnShow>
 				</Scripts>
