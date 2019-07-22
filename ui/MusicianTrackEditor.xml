@@ -413,6 +413,7 @@
 						C_Timer.After(.0001, function()
 							local range = max(0, MusicianTrackEditorTrackContainer:GetHeight() - self:GetHeight() - 2)
 							self.ScrollBar:SetMinMaxValues(0, range)
+							ScrollFrame_OnScrollRangeChanged(self, 0, range)
 						end)
 					</OnScrollRangeChanged>
 				</Scripts>
