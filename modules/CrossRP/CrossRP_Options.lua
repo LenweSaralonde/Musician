@@ -52,3 +52,15 @@ Musician.CrossRP.Options.GetActiveBandStrings = function()
 
 	return bands
 end
+
+hooksecurefunc(Musician.Options, "Refresh", function()
+	MusicianOptionsPanelCrossRPImage:Show()
+end)
+
+hooksecurefunc(Musician.Options, "Cancel", function()
+	MusicianOptionsPanelCrossRPImage:Hide()
+end)
+
+hooksecurefunc(Musician.Options, "Save", function(fromButton)
+	MusicianOptionsPanelCrossRPImage:Hide()
+end)

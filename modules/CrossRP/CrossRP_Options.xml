@@ -1,7 +1,7 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Frame name="MusicianOptionsPanelCrossRP" parent="MusicianOptionsPanelUnitNamePlates">
 		<Size>
-			<AbsDimension x="580" y="75"/>
+			<AbsDimension x="580" y="150"/>
 		</Size>
 		<Anchors>
 			<Anchor point="TOPLEFT" relativeTo="MusicianOptionsPanelUnitNamePlates" relativePoint="BOTTOMLEFT"  x="0" y="-10" />
@@ -19,13 +19,30 @@
 					</Size>
 					<Anchors>
 						<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-8" />
-						<Anchor point="RIGHT" x="-32" y="0" />
+						<Anchor point="RIGHT" x="-266" y="0" />
 					</Anchors>
 				</FontString>
 			</Layer>
 		</Layers>
 		<Frames>
-
+			<Frame name="$parentImage" inherits="MusicianAnimatedImage">
+				<Anchors>
+					<Anchor point="TOPRIGHT" x="00" y="0" />
+				</Anchors>
+				<Size>
+					<AbsDimension x="256" y="128" />
+				</Size>
+				<Scripts>
+					<OnLoad inherit="prepend">
+						self.fps = 1
+						self.width = 1024
+						self.height = 512
+						self.tileWidth = 1024
+						self.tileHeight = 512
+						self.textureFile = "Interface\\AddOns\\Musician\\ui\\textures\\cross-rp.blp"
+					</OnLoad>
+				</Scripts>
+			</Frame>
 		</Frames>
 		<Scripts>
 			<OnLoad>
