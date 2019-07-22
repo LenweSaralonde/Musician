@@ -73,6 +73,12 @@ end
 --- Refresh panel and store old values
 --
 Musician.NamePlates.Options.Refresh = function()
+
+	local binding = GetBindingKey("TOGGLEUI")
+	if binding then
+		MusicianOptionsPanelUnitNamePlatesCinematicModeText:SetText(string.gsub(Musician.Msg.OPTIONS_CINEMATIC_MODE, '{binding}', binding))
+	end
+
 	oldSettings = {
 		nameplateShowFriendlyNPCs = C_CVar.GetCVarBool("nameplateShowFriendlyNPCs"),
 		hideNamePlateBars = Musician_Settings.hideNamePlateBars,
