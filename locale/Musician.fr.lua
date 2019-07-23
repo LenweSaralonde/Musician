@@ -55,7 +55,7 @@ msg.OPTIONS_CINEMATIC_MODE = "Afficher les animations lorsque l'interface est ma
 msg.OPTIONS_CINEMATIC_MODE_NO_BINDING = "Afficher les animations lorsque l'interface est masquée."
 msg.OPTIONS_NAMEPLATES_CINEMATIC_MODE = "Afficher les barres d'info lorsque l'interface est masquée."
 msg.OPTIONS_CROSS_RP_TITLE = "Cross RP"
-msg.OPTIONS_CROSS_RP_SUB_TEXT = "Installez l'add-on Cross RP de Tammya-MoonGuard pour activer la musique inter-faction et inter-royaumes !"
+msg.OPTIONS_CROSS_RP_SUB_TEXT = "Installez l'add-on Cross RP de Tammya-MoonGuard pour activer\nla musique inter-faction et inter-royaumes !"
 msg.OPTIONS_CROSS_RP_SUB_TEXT_NO_GATEWAY = "Il n'y a aucun relais Cross RP de disponible pour le moment.\nPatientez un peu…"
 msg.OPTIONS_CROSS_RP_SUB_TEXT_ACTIVE = "La communication Cross RP est active pour les destinations suivantes :\n\n{bands}"
 

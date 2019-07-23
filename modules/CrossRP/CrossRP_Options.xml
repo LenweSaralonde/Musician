@@ -1,10 +1,11 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
-	<Frame name="MusicianOptionsPanelCrossRP" parent="MusicianOptionsPanelUnitNamePlates">
+	<Frame name="MusicianOptionsPanelCrossRP" parent="MusicianOptionsPanel">
 		<Size>
-			<AbsDimension x="580" y="150"/>
+			<AbsDimension x="580" y="200"/>
 		</Size>
 		<Anchors>
 			<Anchor point="TOPLEFT" relativeTo="MusicianOptionsPanelUnitNamePlates" relativePoint="BOTTOMLEFT"  x="0" y="-10" />
+			<Anchor point="BOTTOM" relativeTo="$parent"/>
 		</Anchors>
 		<Layers>
 			<Layer level="ARTWORK">
@@ -13,13 +14,13 @@
 						<Anchor point="TOPLEFT" />
 					</Anchors>
 				</FontString>
-				<FontString name="$parentSubText" inherits="GameFontHighlight" nonspacewrap="false" maxLines="300" justifyH="LEFT" justifyV="TOP">
+				<FontString name="$parentSubText" inherits="GameFontHighlight" nonspacewrap="false" maxLines="300" justifyH="CENTER" justifyV="TOP">
 					<Size>
-						<AbsDimension y="100" x="0"/>
+						<AbsDimension y="85" x="0"/>
 					</Size>
 					<Anchors>
 						<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-8" />
-						<Anchor point="RIGHT" x="-266" y="0" />
+						<Anchor point="RIGHT" x="-32" y="0" />
 					</Anchors>
 				</FontString>
 			</Layer>
@@ -27,10 +28,10 @@
 		<Frames>
 			<Frame name="$parentImage" inherits="MusicianAnimatedImage">
 				<Anchors>
-					<Anchor point="TOPRIGHT" x="00" y="0" />
+					<Anchor point="BOTTOM" y="10" />
 				</Anchors>
 				<Size>
-					<AbsDimension x="256" y="128" />
+					<AbsDimension x="341.333333" y="170.666667" />
 				</Size>
 				<Scripts>
 					<OnLoad inherit="prepend">

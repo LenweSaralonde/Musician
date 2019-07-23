@@ -13,6 +13,9 @@ local NBSP = " " -- non breaking space
 Musician.CrossRP.Options.Init = function()
 	C_Timer.NewTicker(1, Musician.CrossRP.Options.UpdateActiveBands)
 	MusicianOptionsPanelCrossRP:SetScript("OnShow", Musician.CrossRP.Options.UpdateActiveBands)
+	MusicianOptionsPanelCrossRPImage:ClearAllPoints()
+	MusicianOptionsPanelCrossRPImage:SetPoint("BOTTOMRIGHT", 10, 10)
+	MusicianOptionsPanelCrossRPSubText:SetJustifyH("LEFT")
 end
 
 --- Update active bands list in options panel
@@ -54,6 +57,7 @@ Musician.CrossRP.Options.GetActiveBandStrings = function()
 end
 
 hooksecurefunc(Musician.Options, "Refresh", function()
+	MusicianOptionsPanelCrossRPImage:SetFrameLevel(MusicianOptionsPanelCrossRP:GetFrameLevel() - 1)
 	MusicianOptionsPanelCrossRPImage:Show()
 end)
 

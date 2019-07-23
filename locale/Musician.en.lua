@@ -55,7 +55,7 @@ msg.OPTIONS_CINEMATIC_MODE = "Show animations when the UI is hidden with {bindin
 msg.OPTIONS_CINEMATIC_MODE_NO_BINDING = "Show animations when the UI is hidden."
 msg.OPTIONS_NAMEPLATES_CINEMATIC_MODE = "Show nameplates when the UI is hidden."
 msg.OPTIONS_CROSS_RP_TITLE = "Cross RP"
-msg.OPTIONS_CROSS_RP_SUB_TEXT = "Install the Cross RP add-on by Tammya-MoonGuard to activate cross-faction and cross-realm music!"
+msg.OPTIONS_CROSS_RP_SUB_TEXT = "Install the Cross RP add-on by Tammya-MoonGuard to activate\ncross-faction and cross-realm music!"
 msg.OPTIONS_CROSS_RP_SUB_TEXT_NO_GATEWAY = "There is no Cross RP node available for the moment.\nPlease be patient…"
 msg.OPTIONS_CROSS_RP_SUB_TEXT_ACTIVE = "Cross RP communication is active for the following locations:\n\n{bands}"
 
