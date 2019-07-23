@@ -90,7 +90,7 @@ Tips
 
 Compose your own music
 ----------------------
-You can compose music for Musician using any MIDI sequencer such as [LMMS](https://lmms.io/) (free and cross-platform).
+You can compose music for Musician using any MIDI sequencer such as [MidiEditor](https://www.midieditor.org/) (free and cross-platform).
 
 The 16 instruments available are:
 
