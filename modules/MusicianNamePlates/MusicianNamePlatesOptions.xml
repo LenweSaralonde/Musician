@@ -28,18 +28,19 @@
 
 			<Frame name="$parentImage" inherits="MusicianAnimatedImage">
 				<Anchors>
-					<Anchor point="TOPRIGHT" x="20" y="7" />
+					<Anchor point="TOPRIGHT" x="0" y="7" />
 				</Anchors>
 				<Size>
-					<AbsDimension y="170" x="170"/>
+					<!-- Original size: 160 x 256 -->
+					<AbsDimension x="106.666667" y="170.666667"/>
 				</Size>
 				<Scripts>
 					<OnLoad inherit="prepend">
 						self.fps = 30
-						self.width = 2048
-						self.height = 2048
+						self.width = 1024
+						self.height = 1024
+						self.tileWidth = 128
 						self.tileHeight = 256
-						self.tileWidth = 256
 						self.textureFile = "Interface\\AddOns\\Musician\\ui\\textures\\nameplates-demo.blp"
 					</OnLoad>
 				</Scripts>
