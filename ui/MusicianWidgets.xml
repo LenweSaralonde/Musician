@@ -373,7 +373,7 @@
 				self.elapsed = self.elapsed + elapsed
 				self.frame = floor(self.fps * (self.elapsed % (frames / self.fps)))
 
-				local row = math.floor(self.frame / framesY)
+				local row = math.floor(self.frame / framesX)
 				local col = self.frame % framesX
 
 				self.texture:SetTexCoord(col * frameW, (col + 1) * frameW, row * frameH, (row + 1) * frameH)
