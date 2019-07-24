@@ -3,6 +3,8 @@ Musician.Utils = LibStub("AceAddon-3.0"):NewAddon("Musician.Utils")
 local MODULE_NAME = "Utils"
 Musician.AddModule(MODULE_NAME)
 
+local LibRealmInfo = LibStub:GetLibrary("LibRealmInfo")
+
 Musician.Utils.gameMusicIsMuted = false
 
 --- Display a message in the console
@@ -451,6 +453,13 @@ function Musician.Utils.GetNormalizedRealmName()
 	return currentNormalizedRealmName
 end
 
+--- Return the short locale code of the realm the player belongs to
+-- @return (string)
+function Musician.Utils.GetRealmLocale()
+	local locale = select(5, LibRealmInfo:GetRealmInfoByUnit("player"))
+	return string.gsub(locale, "[A-Z]+", "")
+end
+
 --- Return the normalized player name, including realm slug
 -- @param name (string)
 -- @return (string)
@@ -539,11 +548,14 @@ end
 --- Return the "Player is playing music" emote with promo message
 -- @return (string)
 function Musician.Utils.GetPromoEmote()
+	local locale = Musician.Utils.GetRealmLocale()
+	local EMOTE_PLAYING_MUSIC = Musician.Locale[locale] and Musician.Locale[locale].EMOTE_PLAYING_MUSIC or Musician.Msg.EMOTE_PLAYING_MUSIC
+	local EMOTE_PROMO = Musician.Locale[locale] and Musician.Locale[locale].EMOTE_PROMO or Musician.Msg.EMOTE_PROMO
 	if Musician_Settings.enableEmotePromo then
-		local promo = string.gsub(Musician.Msg.EMOTE_PROMO, "{url}", Musician.URL)
-		return Musician.Msg.EMOTE_PLAYING_MUSIC .. " " .. promo
+		local promo = string.gsub(EMOTE_PROMO, "{url}", Musician.URL)
+		return EMOTE_PLAYING_MUSIC .. " " .. promo
 	else
-		return Musician.Msg.EMOTE_PLAYING_MUSIC
+		return EMOTE_PLAYING_MUSIC
 	end
 end
 
