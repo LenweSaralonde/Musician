@@ -127,18 +127,11 @@ function Musician.Utils.GetPlayerLink(player)
 	return Musician.Utils.GetLink('player', player, player)
 end
 
---- Return the code to insert an icon in a chat message
+--- Return the code to insert an icon in a chat message or a text string
 -- @param path (string)
 -- @return (string)
 function Musician.Utils.GetChatIcon(path)
-	local _, fontHeight = FCF_GetChatWindowInfo(DEFAULT_CHAT_FRAME:GetID())
-
-	if fontHeight == 0 then
-		-- fontHeight will be 0 if it's still at the default (14)
-		fontHeight = 14;
-	end
-
-	return "|T" .. path .. ":" .. fontHeight .. "|t"
+	return "|T" .. path .. ":0|t"
 end
 
 --- Display a faked emote
