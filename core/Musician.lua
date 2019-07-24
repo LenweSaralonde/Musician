@@ -604,9 +604,11 @@ function Musician.SetupHooks()
 
 	-- Add muted/unmuted status to player messages when playing
 	-- Add stop button to "Player plays music" emote
-	local messageEventFilter = function(self, event, msg, player, ...)
 
-		local languageName, channelName, playerName2, pflag, zoneChannelID, channelIndex, channelBaseName, unused, lineID = ...
+	CHAT_FLAG_MUSICIAN_MUTED = Musician.Utils.GetChatIcon(Musician.IconImages.NoteDisabled)
+	CHAT_FLAG_MUSICIAN_UNMUTED = Musician.Utils.GetChatIcon(Musician.IconImages.Note)
+
+	local messageEventFilter = function(self, event, msg, player, languageName, channelName, playerName2, pflag, ...)
 
 		local fullPlayerName = Musician.Utils.NormalizePlayerName(player)
 
@@ -683,11 +685,8 @@ function Musician.SetupHooks()
 			Musician:SendMessage(Musician.Events.PromoEmote, isPromoEmoteSuccessful, msg, fullPlayerName, ...)
 		end
 
-		return false, msg, player, ...
+		return false, msg, player, languageName, channelName, playerName2, pflag, ...
 	end
-
-	CHAT_FLAG_MUSICIAN_MUTED = Musician.Utils.GetChatIcon(Musician.IconImages.NoteDisabled)
-	CHAT_FLAG_MUSICIAN_UNMUTED = Musician.Utils.GetChatIcon(Musician.IconImages.Note)
 
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", messageEventFilter)
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", messageEventFilter)
