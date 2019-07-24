@@ -7,6 +7,7 @@ function Musician.TRP3:OnEnable()
 	if TRP3_API then
 		Musician.Utils.Debug(MODULE_NAME, "Total RP3 module started.")
 		Musician.TRP3.HookNamePlates()
+		Musician.TRP3.HookPlayerMap()
 		TRP3_API.Events.registerCallback("WORKFLOW_ON_FINISH", function()
 			Musician.TRP3.HookTooltip()
 		end)
@@ -40,4 +41,46 @@ function Musician.TRP3.HookNamePlates()
 			Musician.NamePlates.UpdateNoteIcon(namePlate)
 		end)
 	end
+end
+
+--- Hook TRP player map
+--
+function Musician.TRP3.HookPlayerMap()
+
+	if TRP3_PlayerMapPinMixin then
+
+		if TRP3_PlayerMapPinMixin.GetDisplayDataFromPoiInfo then
+			local TRP3_PlayerMapPinMixin_GetDisplayDataFromPoiInfo = TRP3_PlayerMapPinMixin.GetDisplayDataFromPoiInfo
+			TRP3_PlayerMapPinMixin.GetDisplayDataFromPoiInfo = function(self, poiInfo, ...)
+				local displayData = TRP3_PlayerMapPinMixin_GetDisplayDataFromPoiInfo(self, poiInfo, ...)
+
+				displayData.musicianIsRegistered = Musician.Registry.PlayerIsRegistered(poiInfo.sender)
+
+				-- Slightly raise priority if the player has no special relationship with this one
+				if displayData.musicianIsRegistered and displayData.categoryPriority == -1 then
+					displayData.categoryPriority = -.5
+				end
+
+				return displayData
+			end
+		end
+
+		if TRP3_PlayerMapPinMixin.Decorate then
+			local TRP3_PlayerMapPinMixin_Decorate = TRP3_PlayerMapPinMixin.Decorate
+			TRP3_PlayerMapPinMixin.Decorate = function(self, displayData, ...)
+
+				local newDisplayData = Mixin({}, displayData)
+
+				-- Append note icon to player name and replace pin texture by a musical note
+				if displayData.musicianIsRegistered then
+					newDisplayData.playerName = newDisplayData.playerName .. " " .. Musician.Utils.GetChatIcon(Musician.IconImages.Note)
+					self.Texture:SetTexture("Interface\\AddOns\\Musician\\ui\\textures\\map-pin.blp")
+					self.HighlightTexture:SetTexture("Interface\\AddOns\\Musician\\ui\\textures\\map-pin-highlight.blp")
+				end
+
+				TRP3_PlayerMapPinMixin_Decorate(self, newDisplayData, ...)
+			end
+		end
+	end
+
 end
