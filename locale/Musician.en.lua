@@ -59,6 +59,8 @@ msg.OPTIONS_CROSS_RP_SUB_TEXT = "Install the Cross RP add-on by Tammya-MoonGuard
 msg.OPTIONS_CROSS_RP_SUB_TEXT_NO_GATEWAY = "There is no Cross RP node available for the moment.\nPlease be patient…"
 msg.OPTIONS_CROSS_RP_SUB_TEXT_ACTIVE = "Cross RP communication is active for the following locations:\n\n{bands}"
 
+msg.TIPS_AND_TRICKS_ENABLE = "Show tips and tricks on startup."
+
 msg.TIPS_AND_TRICKS_NAMEPLATES_TITLE = "Animations and nameplates"
 msg.TIPS_AND_TRICKS_NAMEPLATES_TEXT = "A special animation is visible on characters who play music when nameplates are enabled.\n\n" ..
 	"An icon {icon} also indicates who have Musician and can hear you.\n\n" ..

@@ -20,6 +20,7 @@ function Musician:OnInitialize()
 		enableEmote = true,
 		enableEmotePromo = true,
 		emoteHintShown = false,
+		enableTipsAndTricks = true,
 		debug = {},
 		mutedPlayers = {}
 	}
@@ -707,6 +708,7 @@ end
 --- Show the first
 -- @param callback {function}
 function Musician.ShowTipsAndTricks()
+	if not(Musician_Settings.enableTipsAndTricks) then return end
 	if #tipsAndTricks > 0 then
 		local callback = table.remove(tipsAndTricks, 1)
 		callback()
