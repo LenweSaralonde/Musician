@@ -2,4 +2,5 @@
 	<Script file="CrossRP.lua"/>
 	<Include file="CrossRP_Options.xml"/>
 	<Script file="CrossRP_Options.lua"/>
+	<Include file="CrossRP_TipsAndTricks.xml"/>
 </Ui>

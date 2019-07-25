@@ -68,6 +68,10 @@ msg.TIPS_AND_TRICKS_NAMEPLATES_TEXT = "Une animation spéciale est visible sur l
 msg.TIPS_AND_TRICKS_NAMEPLATES_OK = "Activer les barres d'info et les animations"
 msg.TIPS_AND_TRICKS_NAMEPLATES_CANCEL = "Non merci"
 
+msg.TIPS_AND_TRICKS_CROSS_RP_TITLE = "Musique inter-faction avec Cross RP"
+msg.TIPS_AND_TRICKS_CROSS_RP_TEXT = msg.OPTIONS_CROSS_RP_SUB_TEXT
+msg.TIPS_AND_TRICKS_CROSS_RP_OK = "OK"
+
 msg.STARTUP = "Bienvenue dans Musician v{version}."
 
 msg.NEW_VERSION = "Une nouvelle version de Musician est disponible ! Téléchargez la mise à jour sur {url} ."

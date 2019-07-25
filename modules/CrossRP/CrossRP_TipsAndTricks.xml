@@ -1,0 +1,59 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+
+	<Frame name="MusicianCrossRP_TipsAndTricks" inherits="MusicianTipsAndTricksTemplate">
+		<Frames>
+
+			<Button name="$parentOKButton" parentKey="okButton" inherits="MusicianTipsAndTricksOkButtonTemplate">
+				<Anchors>
+					<Anchor point="BOTTOM" y="10" />
+				</Anchors>
+				<Scripts>
+					<OnLoad inherit="append">
+						self:SetText(Musician.Msg.TIPS_AND_TRICKS_CROSS_RP_OK)
+					</OnLoad>
+					<OnClick inherit="append">
+						Musician_Settings.crossRP_HintShown = true
+					</OnClick>
+				</Scripts>
+			</Button>
+
+			<Frame name="$parentImage" parentKey="image" inherits="MusicianImageTemplate">
+				<Anchors>
+					<Anchor point="BOTTOM" y="10"  relativePoint="TOP" relativeTo="$parentOKButton" />
+				</Anchors>
+				<Size>
+					<AbsDimension x="512" y="256" />
+				</Size>
+				<Scripts>
+					<OnLoad inherit="prepend">
+						self.textureFile = "Interface\\AddOns\\Musician\\ui\\textures\\cross-rp.blp"
+					</OnLoad>
+				</Scripts>
+			</Frame>
+
+			<Frame name="$parentOverlayText" parentKey="overlayText">
+				<Anchors>
+					<Anchor point="TOP" relativeTo="$parentTitle" relativePoint="BOTTOM" />
+					<Anchor point="BOTTOM" y="-80" relativeTo="$parentImage" relativePoint="TOP" />
+					<Anchor point="LEFT" x="30"/>
+					<Anchor point="RIGHT" x="-30"/>
+				</Anchors>
+				<Layers>
+					<Layer level="OVERLAY">
+						<FontString name="$parentText" parentKey="text" inherits="GameFontHighlightLarge" justifyH="CENTER" justifyV="MIDDLE" setallpoints="true" />
+					</Layer>
+				</Layers>
+			</Frame>
+		</Frames>
+
+		<Scripts>
+			<OnShow inherits="prepend">
+				self.image:Show()
+			</OnShow>
+			<OnLoad>
+				self.title:SetText(Musician.Msg.TIPS_AND_TRICKS_CROSS_RP_TITLE)
+				self.overlayText.text:SetText(Musician.Msg.TIPS_AND_TRICKS_CROSS_RP_TEXT)
+			</OnLoad>
+		</Scripts>
+	</Frame>
+</Ui>

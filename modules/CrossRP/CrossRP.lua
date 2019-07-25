@@ -60,6 +60,7 @@ function Musician.CrossRP:OnEnable()
 	if CrossRP then
 		Musician.CrossRP.Init()
 	end
+	Musician.CrossRP.InitTipsAndTricks()
 end
 
 --- Init
@@ -502,4 +503,22 @@ function Musician.CrossRP.OnSongStop(source, message, complete)
 	debug(false, type, source)
 
 	Musician.StopPlayerSong(player, true)
+end
+
+--- Initialize tips and tricks
+--
+function Musician.CrossRP.InitTipsAndTricks()
+	-- Already shown
+	if Musician_Settings.crossRP_HintShown then return end
+
+	-- Already enabled
+	if CrossRP then
+		Musician_Settings.crossRP_HintShown = true
+		return
+	end
+
+	-- Add tip
+	Musician.AddTipsAndTricks(function()
+		MusicianCrossRP_TipsAndTricks:Show()
+	end, false)
 end

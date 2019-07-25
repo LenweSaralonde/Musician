@@ -68,6 +68,10 @@ msg.TIPS_AND_TRICKS_NAMEPLATES_TEXT = "A special animation is visible on charact
 msg.TIPS_AND_TRICKS_NAMEPLATES_OK = "Enable nameplates and animations"
 msg.TIPS_AND_TRICKS_NAMEPLATES_CANCEL = "Later"
 
+msg.TIPS_AND_TRICKS_CROSS_RP_TITLE = "Cross-faction music with Cross RP"
+msg.TIPS_AND_TRICKS_CROSS_RP_TEXT = msg.OPTIONS_CROSS_RP_SUB_TEXT
+msg.TIPS_AND_TRICKS_CROSS_RP_OK = "OK"
+
 msg.STARTUP = "Welcome to Musician v{version}."
 
 msg.NEW_VERSION = "A new version of Musician has been released! Download the update from {url} ."
