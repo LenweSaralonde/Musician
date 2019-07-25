@@ -26,7 +26,7 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<Frame name="$parentImage" inherits="MusicianAnimatedImage">
+			<Frame name="$parentImage" inherits="MusicianImageTemplate">
 				<Anchors>
 					<Anchor point="BOTTOM" y="10" />
 				</Anchors>
@@ -35,11 +35,6 @@
 				</Size>
 				<Scripts>
 					<OnLoad inherit="prepend">
-						self.fps = 1
-						self.width = 1024
-						self.height = 512
-						self.tileWidth = 1024
-						self.tileHeight = 512
 						self.textureFile = "Interface\\AddOns\\Musician\\ui\\textures\\cross-rp.blp"
 					</OnLoad>
 				</Scripts>

@@ -31,7 +31,7 @@
 				</Scripts>
 			</Button>
 
-			<Frame name="$parentImage" inherits="MusicianAnimatedImage" parentKey="image">
+			<Frame name="$parentImage" inherits="MusicianAnimatedImageTemplate" parentKey="image">
 				<Anchors>
 					<Anchor point="RIGHT" relativeTo="$parentText" relativePoint="LEFT" y="10" x="-24" />
 				</Anchors>
