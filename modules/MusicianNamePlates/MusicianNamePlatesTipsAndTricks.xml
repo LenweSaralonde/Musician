@@ -53,6 +53,9 @@
 		</Frames>
 
 		<Scripts>
+			<OnShow inherits="prepend">
+				self.image:Show()
+			</OnShow>
 			<OnLoad>
 				self.title:SetText(Musician.Msg.TIPS_AND_TRICKS_NAMEPLATES_TITLE)
 
@@ -60,8 +63,6 @@
 				self.text:SetPoint("LEFT", 180, 0)
 				self.text:SetPoint("BOTTOM", self.okButton, "TOP")
 				self.text:SetText(text)
-
-				self.image:Show()
 			</OnLoad>
 		</Scripts>
 	</Frame>
