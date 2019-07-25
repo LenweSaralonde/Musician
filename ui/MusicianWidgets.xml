@@ -373,9 +373,6 @@
 				self.frame = 0
 				self.elapsed = 0
 			</OnShow>
-			<OnHide>
-				self.texture:SetTexture(1)
-			</OnHide>
 			<OnUpdate>
 				local frameW = self.tileWidth / self.width
 				local frameH = self.tileHeight / self.height
@@ -461,6 +458,7 @@
 		<Scripts>
 			<OnLoad>
 				self:SetWidth(self.Text:GetStringWidth() + 24)
+				self:GetHighlightTexture():SetTexCoord(0, 1, 0.2086, 0.5659)
 			</OnLoad>
 			<OnClick>
 				UIPanelCloseButton_OnClick(self)
@@ -488,7 +486,8 @@
 		<Scripts>
 			<OnLoad>
 				self.background:SetDrawLayer("BACKGROUND", -8)
-				self:SetWidth(self.Text:GetStringWidth() + 40)
+				self:SetWidth(max(128, self.Text:GetStringWidth() + 40))
+				self:GetHighlightTexture():SetTexCoord(0, 1, 0.2086, 0.5659)
 			</OnLoad>
 			<OnClick>
 				UIPanelCloseButton_OnClick(self)

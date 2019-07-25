@@ -69,12 +69,6 @@ function Musician:OnInitialize()
 	SLASH_MUSICIAN3 = "/mus"
 end
 
---- OnEnable
---
-function Musician:OnEnable()
-	Musician.ShowTipsAndTricks()
-end
-
 --- Add a module
 -- @param moduleName (string)
 function Musician.AddModule(moduleName)
