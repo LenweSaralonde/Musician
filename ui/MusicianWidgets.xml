@@ -29,7 +29,7 @@
 			<OnDragStart>self:StartMoving()</OnDragStart>
 			<OnDragStop>self:StopMovingOrSizing()</OnDragStop>
 			<OnKeyDown inherit="append">
-				if self:IsShown() and key == "ESCAPE" then
+				if self:IsShown() and key == "ESCAPE" and not(self.noEscape) then
 					self:SetPropagateKeyboardInput(false)
 					self:Hide()
 				else

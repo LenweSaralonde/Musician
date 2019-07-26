@@ -15,6 +15,7 @@
 
 		<Scripts>
 			<OnLoad inherit="prepend">
+				self.noEscape = true
 				MusicianFrameTitle:SetText(Musician.Msg.PLAY_A_SONG)
 			</OnLoad>
 		</Scripts>
