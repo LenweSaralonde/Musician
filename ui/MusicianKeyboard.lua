@@ -585,7 +585,7 @@ local function initLiveModeButton()
 	updateLiveModeButton()
 
 	Musician.Keyboard:RegisterMessage(Musician.Events.RefreshFrame, updateLiveModeButton)
-	Musician.Keyboard:RegisterMessage(Musician.Events.CommReady, updateLiveModeButton)
+	Musician.Keyboard:RegisterMessage(Musician.Events.CommChannelUpdate, updateLiveModeButton)
 	Musician.Keyboard:RegisterMessage(Musician.Events.StreamStart, updateLiveModeButton)
 	Musician.Keyboard:RegisterMessage(Musician.Events.StreamStop, updateLiveModeButton)
 end

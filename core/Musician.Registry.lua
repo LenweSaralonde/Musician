@@ -164,7 +164,7 @@ function Musician.Registry.Init()
 			Musician.Registry.playersFetched = true
 			Musician.Registry.fetchingPlayers = false
 			Musician.Registry.fetchingPlayersTimer = nil
-			Musician.Registry:SendMessage(Musician.Events.CommReady)
+			Musician.Registry:SendMessage(Musician.Events.RegistryReady)
 		end)
 	end)
 
