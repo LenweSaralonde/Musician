@@ -1,50 +1,37 @@
 Musician.Frame = LibStub("AceAddon-3.0"):NewAddon("Musician.Frame", "AceEvent-3.0")
 
+local MODULE_NAME = "MusicianFrame"
+Musician.AddModule(MODULE_NAME)
+
 local sourceBuffer
-local i
+local sourceBufferCharIndex
 
-local bandwidthLevel = 0
-
+--- Init
+--
 MusicianFrame.Init = function()
 	MusicianFrame:SetClampedToScreen(true)
-	MusicianFrame.Refresh()
 
-	local onSongLoaded = function(event, ...)
-		MusicianFrame.Refresh()
-		MusicianFrame.Clear(true)
-	end
-
-	local onSongPlayStop = function(event, song)
-		MusicianFrame.Refresh()
-		MusicianFrame.RefreshPlayingProgressBar(event, song)
-	end
-
-	local doRefresh = function(event, ...)
-		MusicianFrame.Refresh()
-	end
-
-	Musician.Frame:RegisterMessage(Musician.Events.RefreshFrame, MusicianFrame.Refresh)
-	Musician.Frame:RegisterMessage(Musician.Events.CommChannelUpdate, doRefresh)
-	Musician.Frame:RegisterMessage(Musician.Events.CommSendAction, doRefresh)
-	Musician.Frame:RegisterMessage(Musician.Events.CommSendActionComplete, doRefresh)
+	Musician.Frame:RegisterMessage(Musician.Events.CommChannelUpdate, MusicianFrame.OnCommChannelUpdate)
+	Musician.Frame:RegisterMessage(Musician.Events.CommSendAction, MusicianFrame.OnCommSendAction)
+	Musician.Frame:RegisterMessage(Musician.Events.CommSendActionComplete, MusicianFrame.OnCommSendAction)
 	Musician.Frame:RegisterMessage(Musician.Events.SongImportProgress, MusicianFrame.RefreshLoadingProgressBar)
 	Musician.Frame:RegisterMessage(Musician.Events.SongImportComplete, MusicianFrame.RefreshLoadingProgressBar)
-	Musician.Frame:RegisterMessage(Musician.Events.SongPlay, onSongPlayStop)
-	Musician.Frame:RegisterMessage(Musician.Events.SongStop, onSongPlayStop)
+	Musician.Frame:RegisterMessage(Musician.Events.SongPlay, MusicianFrame.OnSongPlayOrStop)
+	Musician.Frame:RegisterMessage(Musician.Events.SongStop, MusicianFrame.OnSongPlayOrStop)
 	Musician.Frame:RegisterMessage(Musician.Events.SongCursor, MusicianFrame.RefreshPlayingProgressBar)
-	Musician.Frame:RegisterMessage(Musician.Events.SourceSongLoaded, onSongLoaded)
-	Musician.Frame:RegisterMessage(Musician.Events.SongImportFailed, doRefresh)
+	Musician.Frame:RegisterMessage(Musician.Events.SourceSongLoaded, MusicianFrame.OnSourceSongUpdated)
+	Musician.Frame:RegisterMessage(Musician.Events.SongImportFailed, MusicianFrame.OnSourceSongUpdated)
 	Musician.Frame:RegisterMessage(Musician.Events.Bandwidth, MusicianFrame.RefreshBandwidthIndicator)
 
-	MusicianFrame:SetScript("OnUpdate", MusicianFrame.OnUpdate)
-
+	MusicianFrame.UpdatePreviewButton(false, false)
+	MusicianFrame.UpdatePlayButton(false, false)
 	MusicianFrame.Clear()
 
 	MusicianFrameSource:SetMaxBytes(512)
-	MusicianFrameSource:SetScript("OnTextChanged", MusicianFrame.SourceChanged)
+	MusicianFrameSource:SetScript("OnTextChanged", MusicianFrame.OnSourceChanged)
 	MusicianFrameSource:SetScript("OnChar", function(self, c)
-		sourceBuffer[i] = c
-		i = i + 1
+		sourceBuffer[sourceBufferCharIndex] = c
+		sourceBufferCharIndex = sourceBufferCharIndex + 1
 	end)
 
 	MusicianFrameTextBackgroundLoadingProgressBar:Hide()
@@ -52,6 +39,8 @@ MusicianFrame.Init = function()
 	MusicianFramePlayButtonProgressBar:Hide()
 end
 
+--- Set focus to import field
+--
 MusicianFrame.Focus = function()
 	if not(MusicianFrameSource:HasFocus()) then
 		MusicianFrameSource:HighlightText(0)
@@ -59,9 +48,11 @@ MusicianFrame.Focus = function()
 	end
 end
 
+--- Clear import field
+--
 MusicianFrame.Clear = function(noFocus)
 	sourceBuffer = {}
-	i = 1
+	sourceBufferCharIndex = 1
 
 	MusicianFrameSource:SetText(MusicianFrame.GetDefaultText())
 	MusicianFrameSource:HighlightText(0)
@@ -69,15 +60,22 @@ MusicianFrame.Clear = function(noFocus)
 	if not(noFocus) then
 		MusicianFrameSource:SetFocus()
 	end
+
+	-- Frame contents have been refreshed
+	Musician.Frame:SendMessage(Musician.Events.RefreshFrame)
 end
 
+--- Open track editor
+--
 MusicianFrame.TrackEditor = function()
 	if Musician.sourceSong then
 		MusicianTrackEditor:Show()
 	end
 end
 
-MusicianFrame.SourceChanged = function(self, isUserInput)
+--- OnSourceChanged
+--
+MusicianFrame.OnSourceChanged = function(self, isUserInput)
 	MusicianFrameSource:HighlightText(0, 0)
 	MusicianFrameSource:ClearFocus()
 
@@ -85,10 +83,12 @@ MusicianFrame.SourceChanged = function(self, isUserInput)
 		MusicianFrame.ImportSource()
 		MusicianFrame.Focus()
 		sourceBuffer = {}
-		i = 1
+		sourceBufferCharIndex = 1
 	end
 end
 
+--- Import source song
+--
 MusicianFrame.ImportSource = function()
 	local source = table.concat(sourceBuffer)
 	if source == "" or source == MusicianFrame.GetDefaultText() then
@@ -98,6 +98,8 @@ MusicianFrame.ImportSource = function()
 	Musician.ImportSource(source)
 end
 
+--- Preview source song
+--
 MusicianFrame.Test = function()
 	if Musician.sourceSong then
 		if Musician.sourceSong:IsPlaying() then
@@ -108,6 +110,8 @@ MusicianFrame.Test = function()
 	end
 end
 
+--- Play song
+--
 MusicianFrame.Play = function()
 	if Musician.songIsPlaying then
 		Musician.Comm.StopSong()
@@ -116,6 +120,8 @@ MusicianFrame.Play = function()
 	end
 end
 
+--- Return default text for import text field
+-- @return (string)
 MusicianFrame.GetDefaultText = function()
 	local defaultText = string.gsub(Musician.Msg.PASTE_MUSIC_CODE, "{url}", Musician.CONVERTER_URL)
 	local shortcut
@@ -136,48 +142,77 @@ MusicianFrame.GetDefaultText = function()
 	return defaultText
 end
 
-MusicianFrame.Refresh = function(event, isComplete)
+--- Update Preview button
+-- @param isEnabled (boolean)
+-- @param isPlaying (boolean)
+MusicianFrame.UpdatePreviewButton = function(isEnabled, isPlaying)
+	MusicianFrameTestButton:SetText(isPlaying and Musician.Msg.STOP_TEST or Musician.Msg.TEST_SONG)
+	MusicianFrameTestButton:SetEnabled(isEnabled)
+end
 
-	if isComplete then return end
+--- Update Play button
+-- @param isEnabled (boolean)
+-- @param isPlaying (boolean)
+MusicianFrame.UpdatePlayButton = function(isEnabled, isPlaying)
+	MusicianFramePlayButton:SetText(isPlaying and Musician.Msg.STOP or Musician.Msg.PLAY)
+	MusicianFramePlayButton:SetEnabled(isEnabled)
+end
 
-	-- Track editor button
+--- OnCommChannelUpdate
+-- @param event (string)
+-- @param isConnected (boolean)
+MusicianFrame.OnCommChannelUpdate = function(event, isConnected)
+	MusicianFramePlayButton:SetEnabled(isConnected)
+end
+
+--- OnCommSendAction
+-- @param event (string)
+-- @param action (string)
+MusicianFrame.OnCommSendAction = function(event, action)
+	local isComplete = event == Musician.Events.CommSendActionComplete
+
+	if action == Musician.Comm.action.play then
+		MusicianFrame.UpdatePlayButton(isComplete, true)
+	elseif action == Musician.Comm.action.stop then
+		MusicianFrame.UpdatePlayButton(isComplete, false)
+	end
+end
+
+--- OnCommSendAction
+-- @param event (string)
+-- @param song (Musician.Song)
+MusicianFrame.OnSongPlayOrStop = function(event, song)
+	local isPlaying = event == Musician.Events.SongPlay
+	local isSourceSong = song == Musician.sourceSong
+	local isMySong = Musician.Utils.PlayerIsMyself(song.player) and Musician.songs[song.player]
+
+	if isSourceSong then
+		MusicianFrame.UpdatePreviewButton(true, isPlaying)
+		MusicianFrame.RefreshPlayingProgressBar(event, song)
+	elseif isMySong then
+		MusicianFrame.UpdatePlayButton(true, isPlaying)
+		MusicianFrame.RefreshPlayingProgressBar(event, song)
+	end
+end
+
+--- OnSourceSongUpdated
+--
+MusicianFrame.OnSourceSongUpdated = function(event, ...)
 	if Musician.sourceSong == nil then
+		MusicianFrameTestButton:Disable()
 		MusicianFrameTrackEditorButton:Disable()
 		MusicianTrackEditor:Hide()
 	else
+		MusicianFrameTestButton:Enable()
 		MusicianFrameTrackEditorButton:Enable()
 	end
-
-	-- Test song button
-	if Musician.sourceSong == nil then
-		MusicianFrameTestButton:Disable()
-	else
-		MusicianFrameTestButton:Enable()
-	end
-
-	if Musician.sourceSong ~= nil and Musician.sourceSong:IsPlaying() then
-		MusicianFrameTestButton:SetText(Musician.Msg.STOP_TEST)
-	else
-		MusicianFrameTestButton:SetText(Musician.Msg.TEST_SONG)
-	end
-
-	-- Play button
-	if not(Musician.Comm.CanBroadcast()) or Musician.Comm.isPlaySent or Musician.Comm.isStopSent or not(Musician.sourceSong) and not(Musician.songIsPlaying) then
-		MusicianFramePlayButton:Disable()
-	else
-		MusicianFramePlayButton:Enable()
-	end
-
-	if Musician.songIsPlaying then
-		MusicianFramePlayButton:SetText(Musician.Msg.STOP)
-	else
-		MusicianFramePlayButton:SetText(Musician.Msg.PLAY)
-	end
-
-	-- Refresh is complete
-	Musician.Frame:SendMessage(Musician.Events.RefreshFrame, true)
+	MusicianFrame.Clear()
 end
 
+--- Refresh loading progress bar
+-- @param event (string)
+-- @param song (Musician.Song)
+-- @param progression (number)
 MusicianFrame.RefreshLoadingProgressBar = function(event, song, progression)
 	if not(song.importing) then
 		MusicianFrameTextBackgroundLoadingProgressBar:Hide()
@@ -191,12 +226,17 @@ MusicianFrame.RefreshLoadingProgressBar = function(event, song, progression)
 	end
 end
 
+--- Regresh progress bar of the song
+-- @param event (string)
+-- @param song (Musician.Song) Can be the source song or the song currently playing
 MusicianFrame.RefreshPlayingProgressBar = function(event, song)
 	local button
+	local isSourceSong = song == Musician.sourceSong
+	local isMySong = Musician.Utils.PlayerIsMyself(song.player) and Musician.songs[song.player]
 
-	if song == Musician.sourceSong then
+	if isSourceSong then
 		button = MusicianFrameTestButton
-	elseif song == Musician.songs[Musician.Utils.NormalizePlayerName(UnitName("player"))] then
+	elseif isMySong then
 		button = MusicianFramePlayButton
 	else
 		return
@@ -211,18 +251,16 @@ MusicianFrame.RefreshPlayingProgressBar = function(event, song)
 	end
 end
 
+--- Regresh bandwidth indicator
+-- @param event (string)
+-- @param bandwidth (number)
 MusicianFrame.RefreshBandwidthIndicator = function(event, bandwidth)
-	bandwidthLevel = bandwidth
-end
-
-MusicianFrame.OnUpdate = function()
-
-	local r = max(0, min(1, bandwidthLevel * 2))
-	local g = max(0, min(1, 2 - bandwidthLevel * 2))
+	local r = max(0, min(1, bandwidth * 2))
+	local g = max(0, min(1, 2 - bandwidth * 2))
 	local b = 0
 	local a = 1
 
-	if bandwidthLevel == 1 then
+	if bandwidth == 1 then
 		local t = GetTime()
 		r = sin((t - floor(t)) * 720) * .33 + .67
 	end
