@@ -9,13 +9,31 @@ MusicianFrame.Init = function()
 	MusicianFrame:SetClampedToScreen(true)
 	MusicianFrame.Refresh()
 
+	local onSongLoaded = function(event, ...)
+		MusicianFrame.Refresh()
+		MusicianFrame.Clear(true)
+	end
+
+	local onSongPlayStop = function(event, song)
+		MusicianFrame.Refresh()
+		MusicianFrame.RefreshPlayingProgressBar(event, song)
+	end
+
+	local doRefresh = function(event, ...)
+		MusicianFrame.Refresh()
+	end
+
 	Musician.Frame:RegisterMessage(Musician.Events.RefreshFrame, MusicianFrame.Refresh)
+	Musician.Frame:RegisterMessage(Musician.Events.CommChannelUpdate, doRefresh)
+	Musician.Frame:RegisterMessage(Musician.Events.CommSendAction, doRefresh)
+	Musician.Frame:RegisterMessage(Musician.Events.CommSendActionComplete, doRefresh)
 	Musician.Frame:RegisterMessage(Musician.Events.SongImportProgress, MusicianFrame.RefreshLoadingProgressBar)
 	Musician.Frame:RegisterMessage(Musician.Events.SongImportComplete, MusicianFrame.RefreshLoadingProgressBar)
-	Musician.Frame:RegisterMessage(Musician.Events.SongPlay, MusicianFrame.RefreshPlayingProgressBar)
-	Musician.Frame:RegisterMessage(Musician.Events.SongStop, MusicianFrame.RefreshPlayingProgressBar)
+	Musician.Frame:RegisterMessage(Musician.Events.SongPlay, onSongPlayStop)
+	Musician.Frame:RegisterMessage(Musician.Events.SongStop, onSongPlayStop)
 	Musician.Frame:RegisterMessage(Musician.Events.SongCursor, MusicianFrame.RefreshPlayingProgressBar)
-	Musician.Frame:RegisterMessage(Musician.Events.SourceSongLoaded, function() MusicianFrame.Clear(true) end)
+	Musician.Frame:RegisterMessage(Musician.Events.SourceSongLoaded, onSongLoaded)
+	Musician.Frame:RegisterMessage(Musician.Events.SongImportFailed, doRefresh)
 	Musician.Frame:RegisterMessage(Musician.Events.Bandwidth, MusicianFrame.RefreshBandwidthIndicator)
 
 	MusicianFrame:SetScript("OnUpdate", MusicianFrame.OnUpdate)
@@ -88,7 +106,6 @@ MusicianFrame.Test = function()
 			Musician.sourceSong:Play()
 		end
 	end
-	Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
 end
 
 MusicianFrame.Play = function()
@@ -119,7 +136,9 @@ MusicianFrame.GetDefaultText = function()
 	return defaultText
 end
 
-MusicianFrame.Refresh = function()
+MusicianFrame.Refresh = function(event, isComplete)
+
+	if isComplete then return end
 
 	-- Track editor button
 	if Musician.sourceSong == nil then
@@ -154,6 +173,9 @@ MusicianFrame.Refresh = function()
 	else
 		MusicianFramePlayButton:SetText(Musician.Msg.PLAY)
 	end
+
+	-- Refresh is complete
+	Musician.Frame:SendMessage(Musician.Events.RefreshFrame, true)
 end
 
 MusicianFrame.RefreshLoadingProgressBar = function(event, song, progression)

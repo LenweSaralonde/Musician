@@ -1,4 +1,4 @@
-Musician.Song = {}
+Musician.Song = LibStub("AceAddon-3.0"):NewAddon("Musician.Song", "AceEvent-3.0")
 
 local MODULE_NAME = "Song"
 Musician.AddModule(MODULE_NAME)
@@ -170,7 +170,7 @@ function Musician.Song:Play(delay)
 			self:Resume(true)
 			self.willPlayTimer = nil
 		end)
-		Musician.Comm:SendMessage(Musician.Events.SongPlay, self)
+		Musician.Song:SendMessage(Musician.Events.SongPlay, self)
 	else
 		self:Resume()
 	end
@@ -261,7 +261,7 @@ function Musician.Song:Seek(cursor)
 	end
 
 	self.cursor = cursor
-	Musician.Comm:SendMessage(Musician.Events.SongCursor, self)
+	Musician.Song:SendMessage(Musician.Events.SongCursor, self)
 end
 
 --- Resume a song playing
@@ -269,7 +269,7 @@ end
 function Musician.Song:Resume(eventSent)
 	self.playing = true
 	if not(eventSent) then
-		Musician.Comm:SendMessage(Musician.Events.SongPlay, self)
+		Musician.Song:SendMessage(Musician.Events.SongPlay, self)
 	end
 end
 
@@ -282,7 +282,7 @@ function Musician.Song:Stop()
 	end
 	if self.playing then
 		self.playing = false
-		Musician.Comm:SendMessage(Musician.Events.SongStop, self)
+		Musician.Song:SendMessage(Musician.Events.SongStop, self)
 	end
 end
 
@@ -336,12 +336,12 @@ function Musician.Song:PlayOnFrame(elapsed)
 
 	end
 
-	Musician.Comm:SendMessage(Musician.Events.SongCursor, self)
+	Musician.Song:SendMessage(Musician.Events.SongCursor, self)
 
 	-- Dropped notes
 	if drops > 0 then
 		self.drops = self.drops + drops
-		Musician.Comm:SendMessage(Musician.Events.NoteDropped, self, self.drops, drops)
+		Musician.Song:SendMessage(Musician.Events.NoteDropped, self, self.drops, drops)
 	end
 
 	-- Song has ended
@@ -376,7 +376,7 @@ function Musician.Song:NoteOn(track, noteIndex, noRetry)
 	end
 
 	-- A note should be displayed
-	Musician:SendMessage(Musician.Events.VisualNoteOn, self, track, key)
+	Musician.Song:SendMessage(Musician.Events.VisualNoteOn, self, track, key)
 
 	-- Track is muted
 	if self:TrackIsMuted(track) then return end
@@ -418,7 +418,7 @@ function Musician.Song:NoteOn(track, noteIndex, noRetry)
 
 		track.polyphony = track.polyphony + 1
 		self.polyphony = self.polyphony + 1
-		Musician:SendMessage(Musician.Events.NoteOn, self, track, key)
+		Musician.Song:SendMessage(Musician.Events.NoteOn, self, track, key)
 	end
 end
 
@@ -435,10 +435,10 @@ function Musician.Song:NoteOff(track, key, sendVisualEvent)
 		track.notesOn[key] = nil
 		track.polyphony = track.polyphony - 1
 		self.polyphony = self.polyphony - 1
-		Musician:SendMessage(Musician.Events.NoteOff, self, track, key)
+		Musician.Song:SendMessage(Musician.Events.NoteOff, self, track, key)
 	end
 	if sendVisualEvent == nil or sendVisualEvent then
-		Musician:SendMessage(Musician.Events.VisualNoteOff, self, track, key)
+		Musician.Song:SendMessage(Musician.Events.VisualNoteOff, self, track, key)
 	end
 end
 
@@ -500,8 +500,8 @@ function Musician.Song:Import(str, crop)
 
 	self.importing = true
 
-	Musician.Comm:SendMessage(Musician.Events.SongImportStart, self)
-	Musician.Comm:SendMessage(Musician.Events.SongImportProgress, self, import.progression)
+	Musician.Song:SendMessage(Musician.Events.SongImportStart, self)
+	Musician.Song:SendMessage(Musician.Events.SongImportProgress, self, import.progression)
 end
 
 --- Advance the song importing process on frame
@@ -520,8 +520,8 @@ function Musician.Song:ImportOnFrame(elapsed)
 	if not(success) then
 		Musician.Utils.Error(Musician.Msg.INVALID_MUSIC_CODE)
 		self.importing = false
-		Musician.Comm:SendMessage(Musician.Events.SongImportComplete, self)
-		Musician.Comm:SendMessage(Musician.Events.SongImportFailed, self)
+		Musician.Song:SendMessage(Musician.Events.SongImportComplete, self)
+		Musician.Song:SendMessage(Musician.Events.SongImportFailed, self)
 	end
 end
 
@@ -561,7 +561,7 @@ function Musician.Song:ImportStep(elapsed)
 
 		-- Update progression
 		import.progression = BASE64DECODE_PROGRESSION_RATIO * to / #import.encodedData
-		Musician.Comm:SendMessage(Musician.Events.SongImportProgress, self, import.progression)
+		Musician.Song:SendMessage(Musician.Events.SongImportProgress, self, import.progression)
 
 		-- Base 64 decoding is complete
 		if to == #import.encodedData then
@@ -651,7 +651,7 @@ function Musician.Song:ImportStep(elapsed)
 
 		-- Update progression
 		import.progression = BASE64DECODE_PROGRESSION_RATIO + NOTE_PROGRESSION_RATIO * 1 / (import.noteCount + 2)
-		Musician.Comm:SendMessage(Musician.Events.SongImportProgress, self, import.progression)
+		Musician.Song:SendMessage(Musician.Events.SongImportProgress, self, import.progression)
 
 		-- Advance to step 3
 		import.step = 3
@@ -732,7 +732,7 @@ function Musician.Song:ImportStep(elapsed)
 
 		-- Update progression
 		import.progression = BASE64DECODE_PROGRESSION_RATIO + NOTE_PROGRESSION_RATIO * (import.importedNotes + 1) / (import.noteCount + 2)
-		Musician.Comm:SendMessage(Musician.Events.SongImportProgress, self, import.progression)
+		Musician.Song:SendMessage(Musician.Events.SongImportProgress, self, import.progression)
 
 		return
 	end
@@ -772,12 +772,12 @@ function Musician.Song:ImportStep(elapsed)
 
 		-- Update progression
 		import.progression = 1
-		Musician.Comm:SendMessage(Musician.Events.SongImportProgress, self, import.progression)
+		Musician.Song:SendMessage(Musician.Events.SongImportProgress, self, import.progression)
 
 		-- Import is complete!
 		self.importing = false
-		Musician.Comm:SendMessage(Musician.Events.SongImportComplete, self)
-		Musician.Comm:SendMessage(Musician.Events.SongImportSucessful, self)
+		Musician.Song:SendMessage(Musician.Events.SongImportComplete, self)
+		Musician.Song:SendMessage(Musician.Events.SongImportSucessful, self)
 	end
 
 end
@@ -801,7 +801,7 @@ function Musician.Song:Stream()
 	self:StopStreaming() -- Stop and reset streaming
 	self.streaming = true
 	self.timeSinceLastStreamChunk = self.chunkDuration
-	Musician.Comm:SendMessage(Musician.Events.StreamStart, self)
+	Musician.Song:SendMessage(Musician.Events.StreamStart, self)
 end
 
 --- Stop streaming song
@@ -820,7 +820,7 @@ function Musician.Song:StopStreaming()
 	self.songId = nil
 
 	if wasStreaming then
-		Musician.Comm:SendMessage(Musician.Events.StreamStop, self)
+		Musician.Song:SendMessage(Musician.Events.StreamStop, self)
 	end
 end
 

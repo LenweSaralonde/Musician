@@ -6,9 +6,13 @@ Musician.AddModule(MODULE_NAME)
 local LibDeflate = LibStub:GetLibrary("LibDeflate")
 
 Musician.Comm.event = {}
-Musician.Comm.event.stop   = "MusicianStop"
+Musician.Comm.event.stop = "MusicianStop"
 Musician.Comm.event.stream = "MusicianStreamD"
 Musician.Comm.event.streamGroup = "MusicianGStreamD"
+
+Musician.Comm.action = {}
+Musician.Comm.action.play = "play"
+Musician.Comm.action.stop = "stop"
 
 Musician.Comm.isPlaySent = false
 Musician.Comm.isStopSent = false
@@ -50,14 +54,14 @@ function Musician.Comm.JoinChannel()
 		Musician.Registry.playersFetched = false
 		Musician.Registry.SendHello()
 		Musician.Registry.FetchPlayers()
-		Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
+		Musician.Comm:SendMessage(Musician.Events.CommChannelUpdate, true)
 	end
 
 	--- Function executed when failed to join the channel
 	local function OnChannelFailed(reason)
 		canJoinChannel = false
 		channelIsJoined = false
-		Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
+		Musician.Comm:SendMessage(Musician.Events.CommChannelUpdate, false)
 		if reason == WRONG_PASSWORD then
 			joinChannelAfter = GetTime() + 300 -- Try again in 5 minutes
 		else
@@ -69,7 +73,7 @@ function Musician.Comm.JoinChannel()
 	local function OnChannelLeft(reason)
 		canJoinChannel = true
 		channelIsJoined = false
-		Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
+		Musician.Comm:SendMessage(Musician.Events.CommChannelUpdate, false)
 		joinChannelAfter = GetTime() -- Rejoin ASAP
 	end
 
@@ -189,7 +193,7 @@ function Musician.Comm.PlaySong()
 	if not(Musician.Comm.CanBroadcast()) or not(Musician.sourceSong) then return false end
 
 	Musician.Comm.isPlaySent = true
-	Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
+	Musician.Comm:SendMessage(Musician.Events.CommSendAction, Musician.Comm.action.play)
 
 	if Musician.streamingSong and Musician.streamingSong.streaming then
 		Musician.streamingSong:StopStreaming()
@@ -287,6 +291,9 @@ function Musician.Comm.ProcessChunk(packedChunk, sender, forcePlay)
 
 	-- Play song if not already started
 	if not(Musician.songs[sender]:IsPlaying()) and not(Musician.songs[sender].willPlay) then
+		if Musician.Utils.PlayerIsMyself(sender) then
+			Musician.Comm:SendMessage(Musician.Events.CommSendActionComplete, Musician.Comm.action.play)
+		end
 		Musician.songs[sender].willPlay = true
 		Musician.songs[sender]:Play(chunkDuration / 2)
 	end
@@ -321,7 +328,7 @@ function Musician.Comm.StopSong()
 		collectgarbage()
 	end
 	Musician.Comm.isStopSent = true
-	Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
+	Musician.Comm:SendMessage(Musician.Events.CommSendAction, Musician.Comm.action.stop)
 	Musician.Comm.BroadcastCommMessage(Musician.Comm.event.stop, Musician.Comm.event.stop)
 	return true
 end
@@ -333,7 +340,7 @@ Musician.Comm:RegisterComm(Musician.Comm.event.stop, function(prefix, message, d
 	Musician.StopPlayerSong(sender, true)
 	if sender == Musician.Utils.NormalizePlayerName(UnitName("player")) then
 		Musician.Comm.isStopSent = false
-		Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
+		Musician.Comm:SendMessage(Musician.Events.CommSendActionComplete, Musician.Comm.action.stop)
 	end
 end)
 

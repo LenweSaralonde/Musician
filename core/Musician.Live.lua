@@ -166,9 +166,9 @@ function Musician.Live.InsertNote(noteOn, key, layer, instrument)
 
 	-- Send visual note event
 	if noteOn then
-		Musician:SendMessage(Musician.Events.VisualNoteOn, Musician.streamingSong, track, key)
+		Musician.Live:SendMessage(Musician.Events.VisualNoteOn, Musician.streamingSong, track, key)
 	else
-		Musician:SendMessage(Musician.Events.VisualNoteOff, Musician.streamingSong, track, key)
+		Musician.Live:SendMessage(Musician.Events.VisualNoteOff, Musician.streamingSong, track, key)
 	end
 end
 
@@ -208,7 +208,7 @@ function Musician.Live.NoteOn(key, layer, instrument, isChordNote)
 	-- Insert note on and trigger event
 	Musician.Live.InsertNote(true, key, layer, instrument)
 	Musician.Live.NotesOn[noteOnKey] = { handle, instrumentData.decay, layer, key, instrumentData.midi, isChordNote }
-	Musician.Comm:SendMessage(Musician.Events.LiveNoteOn, key, layer, instrumentData, isChordNote)
+	Musician.Live:SendMessage(Musician.Events.LiveNoteOn, key, layer, instrumentData, isChordNote)
 end
 
 --- Send note off
@@ -243,7 +243,7 @@ function Musician.Live.NoteOff(key, layer, instrument, isChordNote)
 		-- Insert note off and trigger event
 		Musician.Live.InsertNote(false, key, layer, instrument)
 		Musician.Live.NotesOn[noteOnKey] = nil
-		Musician.Comm:SendMessage(Musician.Events.LiveNoteOff, key, layer, isChordNote)
+		Musician.Live:SendMessage(Musician.Events.LiveNoteOff, key, layer, isChordNote)
 	end
 end
 

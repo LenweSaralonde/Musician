@@ -1,4 +1,4 @@
-Musician.Preloader = {}
+Musician.Preloader = LibStub("AceAddon-3.0"):NewAddon("Musician.Preloader", "AceEvent-3.0")
 
 local MODULE_NAME = "Preloader"
 Musician.AddModule(MODULE_NAME)
@@ -104,8 +104,8 @@ function Musician.Preloader.PreloadNext()
 				-- No more note to preload
 				if not(preloaded) then
 					preloaded = true
-					Musician:SendMessage(Musician.Events.PreloadingProgress, Musician.Preloader.GetProgress())
-					Musician:SendMessage(Musician.Events.PreloadingComplete)
+					Musician.Preloader:SendMessage(Musician.Events.PreloadingProgress, Musician.Preloader.GetProgress())
+					Musician.Preloader:SendMessage(Musician.Events.PreloadingComplete)
 				end
 
 				-- Start a new cycle at lower rate to maintain the samples in cache
@@ -174,7 +174,7 @@ function Musician.Preloader.AddPreloaded(sampleId)
 		Musician.Preloader.preloadedSamples[sampleId] = true
 		preloadedSamples = preloadedSamples + 1
 		if not(preloaded) then
-			Musician:SendMessage(Musician.Events.PreloadingProgress, Musician.Preloader.GetProgress())
+			Musician.Preloader:SendMessage(Musician.Events.PreloadingProgress, Musician.Preloader.GetProgress())
 		end
 	end
 end

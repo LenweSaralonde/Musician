@@ -122,7 +122,6 @@ function Musician.GetCommands()
 				else
 					Musician.sourceSong:Play()
 				end
-				Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
 			end
 		end
 	})
@@ -138,7 +137,6 @@ function Musician.GetCommands()
 		func = function(arg)
 			if Musician.sourceSong and Musician.sourceSong:IsPlaying() then
 				Musician.sourceSong:Stop()
-				Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
 			end
 		end
 	})
@@ -329,8 +327,6 @@ function Musician.OnSongPlayed(event, song)
 		Musician.Comm.isPlaySent = false
 		Musician.Utils.SendPromoEmote()
 	end
-
-	Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
 end
 
 --- Handle stopped song
@@ -346,8 +342,6 @@ function Musician.OnSongStopped(event, song)
 		end
 		Musician.Utils.MuteGameMusic()
 	end
-
-	Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
 end
 
 --- Import song from encoded string
@@ -376,8 +370,7 @@ function Musician.OnSourceImportSuccessful()
 	Musician.importingSong = nil
 	collectgarbage()
 
-	Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
-	Musician.Comm:SendMessage(Musician.Events.SourceSongLoaded)
+	Musician:SendMessage(Musician.Events.SourceSongLoaded)
 end
 
 --- Handle failed source import
@@ -385,7 +378,6 @@ end
 function Musician.OnSourceImportFailed()
 	Musician.importingSong = nil
 	collectgarbage()
-	Musician.Comm:SendMessage(Musician.Events.RefreshFrame)
 end
 
 --- Perform all on-frame actions
@@ -411,7 +403,7 @@ function Musician.OnUpdate(frame, elapsed)
 		playerSong:OnUpdate(elapsed)
 	end
 
-	Musician.Comm:SendMessage(Musician.Events.Frame, elapsed)
+	Musician:SendMessage(Musician.Events.Frame, elapsed)
 end
 
 --- Mute or unmute a player
