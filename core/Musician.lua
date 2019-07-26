@@ -324,7 +324,6 @@ function Musician.OnSongPlayed(event, song)
 
 	if Musician.Utils.PlayerIsMyself(playerName) then
 		Musician.songIsPlaying = true
-		Musician.Comm.isPlaySent = false
 		Musician.Utils.SendPromoEmote()
 	end
 end

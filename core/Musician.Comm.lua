@@ -190,6 +190,7 @@ end
 --- Play song
 -- @return (boolean)
 function Musician.Comm.PlaySong()
+	if Musician.Comm.isStopSent or Musician.Comm.isPlaySent then return false end
 	if not(Musician.Comm.CanBroadcast()) or not(Musician.sourceSong) then return false end
 
 	Musician.Comm.isPlaySent = true
@@ -208,7 +209,6 @@ end
 --- Toggle play song
 -- @return (boolean)
 function Musician.Comm.TogglePlaySong()
-	if Musician.Comm.isStopSent or Musician.Comm.isPlaySent then return end
 	if Musician.streamingSong and Musician.streamingSong.streaming then
 		Musician.Comm.StopSong()
 	else
@@ -291,11 +291,12 @@ function Musician.Comm.ProcessChunk(packedChunk, sender, forcePlay)
 
 	-- Play song if not already started
 	if not(Musician.songs[sender]:IsPlaying()) and not(Musician.songs[sender].willPlay) then
-		if Musician.Utils.PlayerIsMyself(sender) then
-			Musician.Comm:SendMessage(Musician.Events.CommSendActionComplete, Musician.Comm.action.play)
-		end
 		Musician.songs[sender].willPlay = true
 		Musician.songs[sender]:Play(chunkDuration / 2)
+		if Musician.Utils.PlayerIsMyself(sender) then
+			Musician.Comm.isPlaySent = false
+			Musician.Comm:SendMessage(Musician.Events.CommSendActionComplete, Musician.Comm.action.play)
+		end
 	end
 end
 
@@ -321,6 +322,7 @@ Musician.Comm:RegisterComm(Musician.Comm.event.streamGroup, OnChunk)
 --- Stop song
 -- @return (boolean)
 function Musician.Comm.StopSong()
+	if Musician.Comm.isStopSent or Musician.Comm.isPlaySent then return false end
 	if not(Musician.Comm.CanBroadcast()) then return false end
 	if Musician.streamingSong and Musician.streamingSong.streaming then
 		Musician.streamingSong:StopStreaming()

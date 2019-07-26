@@ -47,7 +47,7 @@
 						self.icon:SetText(Musician.Icons.Headphones)
 					</OnLoad>
 					<OnClick>
-						MusicianFrame.Test()
+						MusicianFrame.TogglePreviewSong()
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -62,7 +62,7 @@
 						self.icon:SetText(Musician.Icons.Speaker)
 					</OnLoad>
 					<OnClick>
-						MusicianFrame.Play()
+						Musician.Comm.TogglePlaySong()
 					</OnClick>
 				</Scripts>
 			</Button>

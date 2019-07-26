@@ -100,23 +100,13 @@ end
 
 --- Preview source song
 --
-MusicianFrame.Test = function()
+MusicianFrame.TogglePreviewSong = function()
 	if Musician.sourceSong then
 		if Musician.sourceSong:IsPlaying() then
 			Musician.sourceSong:Stop()
 		else
 			Musician.sourceSong:Play()
 		end
-	end
-end
-
---- Play song
---
-MusicianFrame.Play = function()
-	if Musician.songIsPlaying then
-		Musician.Comm.StopSong()
-	else
-		Musician.Comm.PlaySong()
 	end
 end
 
