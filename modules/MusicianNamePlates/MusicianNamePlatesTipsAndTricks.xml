@@ -53,7 +53,7 @@
 		</Frames>
 
 		<Scripts>
-			<OnShow inherits="prepend">
+			<OnShow inherit="prepend">
 				self.image:Show()
 			</OnShow>
 			<OnLoad>

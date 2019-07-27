@@ -1,9 +1,5 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 
-	<!-- Instances for inheritance -->
-
-	<Button name="MusicianLEDTextButtonInstance" inherits="MusicianLEDTextButtonTemplate" />
-
 	<!-- Keyboard key template -->
 
 	<Button name="MusicianKeyboardKeyTemplate" inherits="UIMenuButtonStretchTemplate" virtual="true">
@@ -102,15 +98,13 @@
 	<Button name="MusicianProgramKeyTemplate" inherits="MusicianLEDTextButtonTemplate" virtual="true">
 		<Size x="48" y="24" />
 		<Scripts>
-			<OnMouseDown>
-				MusicianLEDTextButtonInstance:GetScript("OnMouseDown")(self, button)
+			<OnMouseDown inherit="append">
 				if not(self.keyPressed) and not(self.down) then
 					Musician.Keyboard.OnKey(self.keyValue, true)
 				end
 				self.down = true
 			</OnMouseDown>
-			<OnMouseUp>
-				MusicianLEDTextButtonInstance:GetScript("OnMouseUp")(self, button)
+			<OnMouseUp inherit="append">
 				if not(self.keyPressed) and self.down then
 					Musician.Keyboard.OnKey(self.keyValue, false)
 				end
@@ -350,7 +344,7 @@
 				<Anchors>
 					<Anchor point="RIGHT" relativeTo="$parentToggleKeyboardButton" relativePoint="LEFT" />
 				</Anchors>
-				<OnMouseDown inherits="prepend">
+				<OnMouseDown inherit="prepend">
 					PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
 				</OnMouseDown>
 			</Button>

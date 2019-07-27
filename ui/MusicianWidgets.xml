@@ -1,9 +1,5 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 
-	<!-- Instances for inheritance -->
-
-	<Button name="MusicianUIPanelButtonInstance" inherits="UIPanelButtonTemplate" />
-
 	<!-- Icon fonts -->
 
 	<Font name="MusicianFontIconsNormal" inherits="GameFontNormal" font="Interface\AddOns\Musician\ui\fonts\musician-icons.ttf" height="12" virtual="true" />
@@ -141,27 +137,23 @@
 		</ButtonText>
 
 		<Scripts>
-			<OnEnter>
-				MusicianUIPanelButtonInstance:GetScript("OnEnter")(self, motion)
+			<OnEnter inherit="append">
 				if self:IsEnabled() then
 					self.icon:SetFontObject(MusicianFontIconsHighlight)
 				end
 			</OnEnter>
-			<OnLeave>
-				MusicianUIPanelButtonInstance:GetScript("OnLeave")(self, motion)
+			<OnLeave inherit="append">
 				if self:IsEnabled() then
 					self.icon:SetFontObject(MusicianFontIconsNormal)
 				end
 			</OnLeave>
-			<OnEnable>
-				MusicianUIPanelButtonInstance:GetScript("OnEnable")(self)
+			<OnEnable inherit="append">
 				self.icon:SetFontObject(MusicianFontIconsNormal)
 			</OnEnable>
-			<OnDisable>
-				MusicianUIPanelButtonInstance:GetScript("OnDisable")(self)
+			<OnDisable inherit="append">
 				self.icon:SetFontObject(MusicianFontIconsDisable)
 			</OnDisable>
-			<OnMouseDown inherits="prepend">
+			<OnMouseDown inherit="prepend">
 				if self:IsEnabled() then
 					if (not self.icon.oldPoint) then
 						local point, relativeTo, relativePoint, x, y = self.icon:GetPoint(1)
@@ -173,7 +165,7 @@
 					self.icon:SetPoint(self.icon.oldPoint, self.icon.oldX + ox, self.icon.oldY + oy)
 				end
 			</OnMouseDown>
-			<OnMouseUp inherits="prepend">
+			<OnMouseUp inherit="prepend">
 				if self:IsEnabled() then
 					self.icon:SetPoint(self.icon.oldPoint, self.icon.oldX, self.icon.oldY)
 				end
@@ -208,22 +200,20 @@
 		</ButtonText>
 
 		<Scripts>
-			<OnLoad inherits="append">
+			<OnLoad inherit="append">
 				self.ledOff:SetDrawLayer("OVERLAY", 1)
 				self.led:SetDrawLayer("OVERLAY", 2)
 				self.led:SetAlpha(0)
 				self.oldPoint = { self.ledOff:GetPoint() }
 			</OnLoad>
-			<OnMouseDown>
-				MusicianUIPanelButtonInstance:GetScript("OnMouseDown")(self, button)
+			<OnMouseDown inherit="append">
 				if self:IsEnabled() then
 					local point, relativeTo, relativePoint, x, y = unpack(self.oldPoint)
 					local ox, oy = self:GetPushedTextOffset()
 					self.ledOff:SetPoint(point, relativeTo, relativePoint, x + ox, y + oy)
 				end
 			</OnMouseDown>
-			<OnMouseUp>
-				MusicianUIPanelButtonInstance:GetScript("OnMouseUp")(self, button)
+			<OnMouseUp inherit="append">
 				if self:IsEnabled() then
 					self.ledOff:SetPoint(unpack(self.oldPoint))
 				end
