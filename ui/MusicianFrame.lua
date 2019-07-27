@@ -23,8 +23,11 @@ MusicianFrame.Init = function()
 	Musician.Frame:RegisterMessage(Musician.Events.SongImportFailed, MusicianFrame.OnSourceSongUpdated)
 	Musician.Frame:RegisterMessage(Musician.Events.Bandwidth, MusicianFrame.RefreshBandwidthIndicator)
 
-	MusicianFrame.UpdatePreviewButton(false, false)
-	MusicianFrame.UpdatePlayButton(false, false)
+	MusicianFrameTestButton:SetText(Musician.Msg.TEST_SONG)
+	MusicianFrameTestButton:SetEnabled(false)
+	MusicianFramePlayButton:SetText(Musician.Msg.PLAY)
+	MusicianFramePlayButton.isReady = true
+	MusicianFrame.UpdatePlayButton()
 	MusicianFrame.Clear()
 
 	MusicianFrameSource:SetMaxBytes(512)
@@ -132,19 +135,11 @@ MusicianFrame.GetDefaultText = function()
 	return defaultText
 end
 
---- Update Preview button
--- @param isEnabled (boolean)
--- @param isPlaying (boolean)
-MusicianFrame.UpdatePreviewButton = function(isEnabled, isPlaying)
-	MusicianFrameTestButton:SetText(isPlaying and Musician.Msg.STOP_TEST or Musician.Msg.TEST_SONG)
-	MusicianFrameTestButton:SetEnabled(isEnabled)
-end
-
 --- Update Play button
 -- @param isEnabled (boolean)
 -- @param isPlaying (boolean)
-MusicianFrame.UpdatePlayButton = function(isEnabled, isPlaying)
-	MusicianFramePlayButton:SetText(isPlaying and Musician.Msg.STOP or Musician.Msg.PLAY)
+MusicianFrame.UpdatePlayButton = function()
+	isEnabled = Musician.sourceSong and Musician.Comm.ChannelIsReady() and MusicianFramePlayButton.isReady
 	MusicianFramePlayButton:SetEnabled(isEnabled)
 end
 
@@ -152,7 +147,7 @@ end
 -- @param event (string)
 -- @param isConnected (boolean)
 MusicianFrame.OnCommChannelUpdate = function(event, isConnected)
-	MusicianFramePlayButton:SetEnabled(isConnected)
+	MusicianFrame.UpdatePlayButton()
 end
 
 --- OnCommSendAction
@@ -161,10 +156,9 @@ end
 MusicianFrame.OnCommSendAction = function(event, action)
 	local isComplete = event == Musician.Events.CommSendActionComplete
 
-	if action == Musician.Comm.action.play then
-		MusicianFrame.UpdatePlayButton(isComplete, true)
-	elseif action == Musician.Comm.action.stop then
-		MusicianFrame.UpdatePlayButton(isComplete, false)
+	if (action == Musician.Comm.action.play) or (action == Musician.Comm.action.stop) then
+		MusicianFramePlayButton.isReady = isComplete
+		MusicianFrame.UpdatePlayButton()
 	end
 end
 
@@ -177,10 +171,10 @@ MusicianFrame.OnSongPlayOrStop = function(event, song)
 	local isMySong = Musician.Utils.PlayerIsMyself(song.player) and Musician.songs[song.player]
 
 	if isSourceSong then
-		MusicianFrame.UpdatePreviewButton(true, isPlaying)
+		MusicianFrameTestButton:SetText(isPlaying and Musician.Msg.STOP_TEST or Musician.Msg.TEST_SONG)
 		MusicianFrame.RefreshPlayingProgressBar(event, song)
 	elseif isMySong then
-		MusicianFrame.UpdatePlayButton(true, isPlaying)
+		MusicianFramePlayButton:SetText(isPlaying and Musician.Msg.STOP or Musician.Msg.PLAY)
 		MusicianFrame.RefreshPlayingProgressBar(event, song)
 	end
 end
@@ -195,6 +189,7 @@ MusicianFrame.OnSourceSongUpdated = function(event, ...)
 	else
 		MusicianFrameTestButton:Enable()
 		MusicianFrameTrackEditorButton:Enable()
+		MusicianFrame.UpdatePlayButton()
 	end
 	MusicianFrame.Clear()
 end
