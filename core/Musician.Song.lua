@@ -3,6 +3,8 @@ Musician.Song = LibStub("AceAddon-3.0"):NewAddon("Musician.Song", "AceEvent-3.0"
 local MODULE_NAME = "Song"
 Musician.AddModule(MODULE_NAME)
 
+LibCRC32 = LibStub:GetLibrary("LibCRC32")
+
 Musician.Song.__index = Musician.Song
 
 Musician.Song.Indexes = {}
@@ -43,6 +45,9 @@ function Musician.Song.create()
 
 	-- @field id (number) Song ID, used for streaming
 	self.id = nil
+
+	-- @field crc32 (number) CRC32 of imported song data
+	self.crc32 = nil
 
 	-- @field tracks (table) Song tracks, including instrument and notes
 	self.tracks = {}
@@ -497,6 +502,7 @@ function Musician.Song:Import(str, crop)
 	import.cursor = 1
 	import.progression = 0
 	import.crop = crop
+	import.chunksCrc32 = nil
 
 	self.importing = true
 
@@ -536,10 +542,13 @@ function Musician.Song:ImportStep(elapsed)
 	local NOTE_PROGRESSION_RATIO = .25
 	local PROCESS_FRAME_TIME_RATIO = .5
 
-	local advanceCursor = function(bytes)
+	local advanceCursor = function(bytes, updateCrc32)
 		import.cursor = import.cursor + bytes
 		if import.cursor > #import.data + 1 then
 			error(Musician.Msg.INVALID_MUSIC_CODE)
+		elseif updateCrc32 then
+			local chunk = string.sub(import.data, import.cursor - bytes, import.cursor - 1)
+			import.chunksCrc32 = LibCRC32:hashChunk(chunk, import.chunksCrc32)
 		end
 	end
 
@@ -592,11 +601,11 @@ function Musician.Song:ImportStep(elapsed)
 		self.duration = Musician.Utils.UnpackNumber(string.sub(import.data, import.cursor, import.cursor + 2))
 		self.cropFrom = 0
 		self.cropTo = self.duration
-		advanceCursor(3)
+		advanceCursor(3, true)
 
 		-- Number of tracks (1)
 		local trackCount = Musician.Utils.UnpackNumber(string.sub(import.data, import.cursor, import.cursor))
-		advanceCursor(1)
+		advanceCursor(1, true)
 
 		-- Track information: instrument (1), channel (1), number of notes (2)
 		local track, trackIndex
@@ -616,7 +625,7 @@ function Musician.Song:ImportStep(elapsed)
 			-- Note count (2)
 			track.noteCount = Musician.Utils.UnpackNumber(string.sub(import.data, import.cursor, import.cursor + 1))
 			import.noteCount = import.noteCount + track.noteCount
-			advanceCursor(2)
+			advanceCursor(2, true)
 
 			-- Track index
 			track.index = trackIndex
@@ -684,7 +693,7 @@ function Musician.Song:ImportStep(elapsed)
 
 			-- Key (1)
 			local key = Musician.Utils.UnpackNumber(string.sub(import.data, import.cursor, import.cursor))
-			advanceCursor(1)
+			advanceCursor(1, true)
 
 			-- This is a spacer (key 0xFF)
 			if key == 0xFF then
@@ -694,11 +703,11 @@ function Musician.Song:ImportStep(elapsed)
 
 				-- Time (2)
 				local time = import.trackOffset + Musician.Utils.UnpackTime(string.sub(import.data, import.cursor, import.cursor + 1), Musician.NOTE_TIME_FPS)
-				advanceCursor(2)
+				advanceCursor(2, true)
 
 				-- Duration (1)
 				local duration = Musician.Utils.UnpackTime(string.sub(import.data, import.cursor, import.cursor), Musician.NOTE_DURATION_FPS)
-				advanceCursor(1)
+				advanceCursor(1, true)
 
 				-- Insert note
 				table.insert(track.notes, {
@@ -769,6 +778,9 @@ function Musician.Song:ImportStep(elapsed)
 			end
 		end
 		self.cursor = self.cropFrom
+
+		-- CRC32
+		self.crc32 = LibCRC32:getFinalCrc(import.chunksCrc32)
 
 		-- Update progression
 		import.progression = 1
