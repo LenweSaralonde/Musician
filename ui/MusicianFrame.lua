@@ -23,6 +23,7 @@ MusicianFrame.Init = function()
 	Musician.Frame:RegisterMessage(Musician.Events.SongImportFailed, MusicianFrame.OnSourceSongUpdated)
 	Musician.Frame:RegisterMessage(Musician.Events.Bandwidth, MusicianFrame.RefreshBandwidthIndicator)
 
+	MusicianFrameTrackEditorButton:Disable()
 	MusicianFrameTestButton:SetText(Musician.Msg.TEST_SONG)
 	MusicianFrameTestButton:SetEnabled(false)
 	MusicianFramePlayButton:SetText(Musician.Msg.PLAY)
