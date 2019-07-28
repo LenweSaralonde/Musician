@@ -95,7 +95,7 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						self:GetParent():Hide();
+						self:GetParent():Hide()
 					</OnClick>
 				</Scripts>
 				<NormalTexture inherits="DialogButtonNormalTexture"/>
