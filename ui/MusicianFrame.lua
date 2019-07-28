@@ -6,6 +6,11 @@ Musician.AddModule(MODULE_NAME)
 local sourceBuffer
 local sourceBufferCharIndex
 
+local isCommActionPending = false
+local readyBandPlayPlayers = {}
+
+MusicianFrame.bandPlayReadyPlayers = {}
+
 --- Init
 --
 MusicianFrame.Init = function()
@@ -22,13 +27,19 @@ MusicianFrame.Init = function()
 	Musician.Frame:RegisterMessage(Musician.Events.SourceSongLoaded, MusicianFrame.OnSourceSongUpdated)
 	Musician.Frame:RegisterMessage(Musician.Events.SongImportFailed, MusicianFrame.OnSourceSongUpdated)
 	Musician.Frame:RegisterMessage(Musician.Events.Bandwidth, MusicianFrame.RefreshBandwidthIndicator)
+	Musician.Frame:RegisterMessage(Musician.Events.BandPlay, MusicianFrame.OnBandPlay)
+	Musician.Frame:RegisterMessage(Musician.Events.BandStop, MusicianFrame.OnBandStop)
+	Musician.Frame:RegisterMessage(Musician.Events.BandPlayReady, MusicianFrame.OnBandPlayReady)
+	Musician.Frame:RegisterEvent("GROUP_JOINED", MusicianFrame.OnGroupJoined)
+	Musician.Frame:RegisterEvent("GROUP_LEFT", MusicianFrame.OnGroupLeft)
+	Musician.Frame:RegisterEvent("GROUP_ROSTER_UPDATE", MusicianFrame.OnRosterUpdate)
 
 	MusicianFrameTrackEditorButton:Disable()
 	MusicianFrameTestButton:SetText(Musician.Msg.TEST_SONG)
 	MusicianFrameTestButton:SetEnabled(false)
 	MusicianFramePlayButton:SetText(Musician.Msg.PLAY)
-	MusicianFramePlayButton.isReady = true
 	MusicianFrame.UpdatePlayButton()
+	MusicianFrame.UpdateBandPlayButton()
 	MusicianFrame.Clear()
 
 	MusicianFrameSource:SetMaxBytes(512)
@@ -140,7 +151,7 @@ end
 -- @param isEnabled (boolean)
 -- @param isPlaying (boolean)
 MusicianFrame.UpdatePlayButton = function()
-	isEnabled = Musician.sourceSong and Musician.Comm.ChannelIsReady() and MusicianFramePlayButton.isReady
+	isEnabled = Musician.sourceSong and Musician.Comm.ChannelIsReady() and not(isCommActionPending)
 	MusicianFramePlayButton:SetEnabled(isEnabled)
 end
 
@@ -149,6 +160,7 @@ end
 -- @param isConnected (boolean)
 MusicianFrame.OnCommChannelUpdate = function(event, isConnected)
 	MusicianFrame.UpdatePlayButton()
+	MusicianFrame.UpdateBandPlayButton()
 end
 
 --- OnCommSendAction
@@ -156,11 +168,9 @@ end
 -- @param action (string)
 MusicianFrame.OnCommSendAction = function(event, action)
 	local isComplete = event == Musician.Events.CommSendActionComplete
-
-	if (action == Musician.Comm.action.play) or (action == Musician.Comm.action.stop) then
-		MusicianFramePlayButton.isReady = isComplete
-		MusicianFrame.UpdatePlayButton()
-	end
+	isCommActionPending = not(isComplete)
+	MusicianFrame.UpdatePlayButton()
+	MusicianFrame.UpdateBandPlayButton()
 end
 
 --- OnCommSendAction
@@ -177,6 +187,11 @@ MusicianFrame.OnSongPlayOrStop = function(event, song)
 	elseif isMySong then
 		MusicianFramePlayButton:SetText(isPlaying and Musician.Msg.STOP or Musician.Msg.PLAY)
 		MusicianFrame.RefreshPlayingProgressBar(event, song)
+
+		-- My song started in band playing mode: set the button LED still
+		if Musician.Comm.IsBandPlayReady() and isPlaying then
+			MusicianFrameBandPlayButton:SetBlinking(false)
+		end
 	end
 end
 
@@ -190,8 +205,10 @@ MusicianFrame.OnSourceSongUpdated = function(event, ...)
 	else
 		MusicianFrameTestButton:Enable()
 		MusicianFrameTrackEditorButton:Enable()
-		MusicianFrame.UpdatePlayButton()
 	end
+	MusicianFrame.UpdatePlayButton()
+	MusicianFrame.UpdateBandPlayButton()
+	MusicianFrameBandPlayButton:SetChecked(false)
 	MusicianFrame.Clear()
 end
 
@@ -252,4 +269,101 @@ MusicianFrame.RefreshBandwidthIndicator = function(event, bandwidth)
 	end
 
 	MusicianFramePlayButtonProgressBar:SetColorTexture(r, g, b, a)
+end
+
+--- OnGroupJoined
+--
+MusicianFrame.OnGroupJoined = function()
+	MusicianFrameBandPlayButton:SetChecked(false)
+	MusicianFrame.UpdateBandPlayButton()
+	MusicianFrameBandPlayButton.count:Hide()
+end
+
+--- OnGroupLeft
+--
+MusicianFrame.OnGroupLeft = function()
+	MusicianFrameBandPlayButton:SetChecked(false)
+	MusicianFrame.UpdateBandPlayButton()
+	MusicianFrameBandPlayButton.count:Hide()
+end
+
+--- OnRosterUpdate
+--
+MusicianFrame.OnRosterUpdate = function()
+	MusicianFrame.UpdateBandPlayButton()
+end
+
+--- Update band play button
+--
+MusicianFrame.UpdateBandPlayButton = function()
+
+	-- Update button visibility
+
+	local isVisible = IsInGroup()
+	local isEnabled = Musician.sourceSong and (Musician.Comm.GetGroupChatType() ~= nil) and not(isCommActionPending)
+	MusicianFrameBandPlayButton:SetShown(isVisible)
+	MusicianFrameBandPlayButton:SetEnabled(isEnabled)
+
+	-- Update tooltip and the number of ready players
+
+	local players = Musician.Comm.GetReadyBandPlayers()
+	local tooltipText = Musician.Msg.PLAY_IN_BAND
+
+	if not(Musician.Comm.IsBandPlayReady()) then
+		tooltipText = tooltipText .. "\n" .. Musician.Utils.Highlight(Musician.Msg.PLAY_IN_BAND_HINT, "00FFFF")
+	end
+
+	if #players > 0 then
+		MusicianFrameBandPlayButton.count.text:SetText(#players)
+		MusicianFrameBandPlayButton.count:Show()
+
+		local playerNames = {}
+		local playerName
+		for _, playerName in ipairs(players) do
+			table.insert(playerNames, "– " .. Musician.Utils.FormatPlayerName(playerName))
+		end
+
+		tooltipText = tooltipText .. "\n" .. Musician.Msg.PLAY_IN_BAND_READY_PLAYERS
+		tooltipText = tooltipText .. "\n" .. strjoin("\n", unpack(playerNames))
+	else
+		MusicianFrameBandPlayButton.count:Hide()
+	end
+	MusicianFrameBandPlayButton:SetTooltipText(tooltipText)
+end
+
+--- OnBandPlayReady
+--
+MusicianFrame.OnBandPlayReady = function(event, player, songCrc32, isReady, origEvent)
+	-- Check button LED
+	if Musician.Utils.PlayerIsMyself(player) then
+		MusicianFrameBandPlayButton:SetChecked(isReady)
+		MusicianFrameBandPlayButton:SetBlinking(true)
+	end
+
+	-- Display "Is ready" emote in the chat
+	if Musician.sourceSong and Musician.sourceSong.crc32 == songCrc32 and origEvent ~= Musician.Events.SongStop then
+		local emote = isReady and Musician.Msg.EMOTE_PLAYER_IS_READY or Musician.Msg.EMOTE_PLAYER_IS_NOT_READY
+		Musician.Utils.DisplayEmote(player, UnitGUID(Musician.Utils.SimplePlayerName(player)), emote)
+	end
+
+	-- Update button
+	MusicianFrame.UpdateBandPlayButton()
+end
+
+--- OnBandPlay
+--
+MusicianFrame.OnBandPlay = function(event, player, songCrc32)
+	-- Display "Started band play" emote in the chat
+	if Musician.sourceSong and Musician.sourceSong.crc32 == songCrc32 then
+		Musician.Utils.DisplayEmote(player, UnitGUID(Musician.Utils.SimplePlayerName(player)), Musician.Msg.EMOTE_PLAY_IN_BAND_START)
+	end
+end
+
+--- OnBandStop
+--
+MusicianFrame.OnBandStop = function(event, player, songCrc32)
+	-- Display "Stopped band play" emote in the chat
+	if Musician.sourceSong and Musician.sourceSong.crc32 == songCrc32 then
+		Musician.Utils.DisplayEmote(player, UnitGUID(Musician.Utils.SimplePlayerName(player)), Musician.Msg.EMOTE_PLAY_IN_BAND_STOP)
+	end
 end

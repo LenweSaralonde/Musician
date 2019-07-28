@@ -65,6 +65,9 @@ Musician.Events.SongImportFailed = "MusicianSongImportFailed"
 Musician.Events.SourceSongLoaded = "MusicianSourceSongLoaded"
 Musician.Events.PromoEmote = "MusicianPromoEmote"
 Musician.Events.Bandwidth = "MusicianBandwidth"
+Musician.Events.BandPlay = "MusicianBandPlay"
+Musician.Events.BandStop = "MusicianBandStop"
+Musician.Events.BandPlayReady = "MusicianBandPlayReady"
 
 Musician.IconImages = {}
 Musician.IconImages.NoteDisabled = "Interface\\AddOns\\Musician\\ui\\textures\\muted.blp"

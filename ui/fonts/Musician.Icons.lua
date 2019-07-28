@@ -44,5 +44,6 @@ Musician.Icons = {
 	Cog = "G",
 	Paste = "C",
 	FileCode = "c",
+	BandPlay = "g",
 	Blank = " ",
 }

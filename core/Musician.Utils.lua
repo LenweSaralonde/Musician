@@ -129,6 +129,13 @@ function Musician.Utils.GetPlayerLink(player)
 	return Musician.Utils.GetLink('player', player, player)
 end
 
+--- Get player name for display
+-- @param player (string)
+-- @return (string)
+function Musician.Utils.FormatPlayerName(player)
+	return Musician.Utils.SimplePlayerName(player)
+end
+
 --- Return the code to insert an icon in a chat message or a text string
 -- @param path (string)
 -- @return (string)
@@ -506,7 +513,8 @@ end
 -- @param name (string)
 -- @return (boolean)
 function Musician.Utils.PlayerIsInGroup(name)
-	return UnitInParty(Musician.Utils.SimplePlayerName(name))
+	local simpleName = Musician.Utils.SimplePlayerName(name)
+	return UnitInParty(simpleName) and UnitIsConnected(simpleName)
 end
 
 --- Return true if the provided player name is myself
