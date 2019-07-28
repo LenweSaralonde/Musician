@@ -414,46 +414,15 @@ function Musician.Comm.GetReadyBandPlayers()
 	if not(Musician.sourceSong) then return {} end
 	local songCrc32 = Musician.sourceSong.crc32
 	local readyPlayers = {}
-	local player, playerData
+	local player, playerCrc32
 
-	for player, playerData in pairs(readyBandPlayers) do
-		if playerData[1] == songCrc32 then
+	for player, playerCrc32 in pairs(readyBandPlayers) do
+		if playerCrc32 == songCrc32 then
 			table.insert(readyPlayers, player)
 		end
 	end
 
 	return readyPlayers
-end
-
---- Return the band latency (ms)
--- @return (number)
-function Musician.Comm.GetBandLatency()
-	if not(Musician.sourceSong) then return nil end
-	local songCrc32 = Musician.sourceSong.crc32
-	local latency = 0
-	local player, playerData
-
-	for player, playerData in pairs(readyBandPlayers) do
-		if playerData[1] == songCrc32 then
-			latency = max(latency, playerData[2])
-		end
-	end
-
-	return latency
-end
-
---- Return "band ready" message contents
--- @param isReady (boolean)
--- @return (string)
-function Musician.Comm.GetBandReadyMessage(isReady)
-	if not(Musician.sourceSong) or not(Musician.sourceSong.crc32) then return end
-
-	if isReady then
-		local latency = select(4, GetNetStats())
-		return Musician.sourceSong.crc32 .. " " .. latency
-	else
-		return tostring(Musician.sourceSong.crc32)
-	end
 end
 
 --- OnGroupJoined
@@ -476,11 +445,12 @@ function Musician.Comm.OnBandReadyQuery(prefix, message, distribution, sender)
 	debug(false, prefix, sender .. "(" .. distribution .. ")", message)
 
 	if not(Musician.Utils.PlayerIsInGroup(sender)) then return end
+	if not(Musician.sourceSong) or not(Musician.sourceSong.crc32) then return end
 
-	-- Send ready query to the player
+	-- Send ready message in return
 	local groupChatType = Musician.Comm.GetGroupChatType()
 	if isBandPlayReady and groupChatType then
-		local message = Musician.Comm.GetBandReadyMessage(true)
+		local message = tostring(Musician.sourceSong.crc32)
 		local groupChatType = Musician.Comm.GetGroupChatType()
 		debug(true, Musician.Comm.event.bandReady, groupChatType, message)
 		Musician.Comm:SendCommMessage(Musician.Comm.event.bandReady, message, groupChatType, nil, "ALERT")
@@ -488,7 +458,7 @@ function Musician.Comm.OnBandReadyQuery(prefix, message, distribution, sender)
 
 	-- If the player was ready before, it's obvious that it's no longer the case so remove it
 	if readyBandPlayers[sender] then
-		local songCrc32 = readyBandPlayers[sender][1]
+		local songCrc32 = readyBandPlayers[sender]
 		readyBandPlayers[sender] = nil
 		Musician.Comm:SendMessage(Musician.Events.BandPlayReady, sender, songCrc32, false, prefix)
 	end
@@ -509,7 +479,7 @@ function Musician.Comm.OnRosterUpdate(event)
 	local player
 	for player, _ in pairs(readyBandPlayers) do
 		if not(Musician.Utils.PlayerIsInGroup(player)) then
-			local songCrc32 = readyBandPlayers[player][1]
+			local songCrc32 = readyBandPlayers[player]
 			readyBandPlayers[player] = nil
 			Musician.Comm:SendMessage(Musician.Events.BandPlayReady, player, songCrc32, false, event)
 		end
@@ -576,7 +546,7 @@ function Musician.Comm.SetBandPlayReady(isReady)
 
 	local type = isReady and Musician.Comm.event.bandReady or Musician.Comm.event.bandNotReady
 	local action = isReady and Musician.Comm.action.bandReady or Musician.Comm.action.bandNotReady
-	local message = Musician.Comm.GetBandReadyMessage(isReady)
+	local message = tostring(Musician.sourceSong.crc32)
 	Musician.Comm:SendMessage(Musician.Events.CommSendAction, action)
 	debug(true, type, groupChatType, message)
 	Musician.Comm:SendCommMessage(type, message, groupChatType, nil, "ALERT")
@@ -594,9 +564,7 @@ function Musician.Comm.OnBandPlayReady(prefix, message, distribution, sender)
 	if not(Musician.Utils.PlayerIsInGroup(sender)) then return end
 
 	local isReady = prefix == Musician.Comm.event.bandReady
-	local songCrc32, latency = strsplit(" ", message)
-	songCrc32 = tonumber(songCrc32)
-	latency = tonumber(latency)
+	local songCrc32 = tonumber(message)
 
 	if Musician.Utils.PlayerIsMyself(sender) then
 		isBandPlayReady = isReady
@@ -607,7 +575,7 @@ function Musician.Comm.OnBandPlayReady(prefix, message, distribution, sender)
 
 	-- Add/remove player in ready band members
 	local wasReady = not(not(readyBandPlayers[sender]))
-	readyBandPlayers[sender] = isReady and { songCrc32, latency } or nil
+	readyBandPlayers[sender] = isReady and songCrc32 or nil
 
 	-- Trigger local event if ready status have changed
 	if wasReady ~= isReady then
@@ -630,7 +598,7 @@ function Musician.Comm.PlaySongBand()
 
 	Musician.Comm.isBandActionSent = true
 
-	local message = Musician.sourceSong.crc32 .. " " .. Musician.Comm.GetBandLatency()
+	local message = tostring(Musician.sourceSong.crc32)
 	Musician.Comm:SendMessage(Musician.Events.CommSendAction, Musician.Comm.action.bandPlay)
 	debug(true, Musician.Comm.event.bandPlay, groupChatType, message)
 	Musician.Comm:SendCommMessage(Musician.Comm.event.bandPlay, message, groupChatType, nil, "ALERT")
@@ -645,12 +613,9 @@ function Musician.Comm.OnBandPlay(prefix, message, distribution, sender)
 	debug(false, prefix, sender .. "(" .. distribution .. ")", message)
 
 	if not(Musician.Utils.PlayerIsInGroup(sender)) then return end
-
-	local songCrc32, bandLatency = strsplit(" ", message)
-	songCrc32 = tonumber(songCrc32)
-	bandLatency = tonumber(bandLatency)
-
 	if not(isBandPlayReady) then return end
+
+	local songCrc32 = tonumber(message)
 	if not(Musician.sourceSong) or Musician.sourceSong.crc32 ~= songCrc32 then return end
 
 	if Musician.Utils.PlayerIsMyself(sender) then
@@ -658,10 +623,7 @@ function Musician.Comm.OnBandPlay(prefix, message, distribution, sender)
 		Musician.Comm:SendMessage(Musician.Events.CommSendActionComplete, Musician.Comm.action.bandPlay)
 	end
 
-	local myLatency = select(4, GetNetStats())
-	local delay = max(0, bandLatency - myLatency) / 1000
-
-	C_Timer.After(delay, Musician.Comm.PlaySong)
+	Musician.Comm.PlaySong()
 
 	Musician.Comm:SendMessage(Musician.Events.BandPlay, sender, songCrc32)
 end
@@ -724,7 +686,7 @@ function Musician.Comm.OnSongStop(event, song)
 
 	-- Add/remove player in ready band members
 	local wasReady = not(not(readyBandPlayers[player]))
-	readyBandPlayers[player] = isReady and { songCrc32, latency } or nil
+	readyBandPlayers[player] = isReady and songCrc32 or nil
 
 	-- Trigger local event if ready status have changed
 	if wasReady ~= isReady then

@@ -69,9 +69,9 @@
 			</Button>
 
 			<Button name="$parentBandPlayButton" inherits="MusicianLEDTextButtonTemplate" hidden="true">
-				<Size x="50" y="22" />
+				<Size x="64" y="22" />
 				<Anchors>
-					<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentPlayButton" />
+					<Anchor point="BOTTOM" y="10" />
 				</Anchors>
 				<NormalFont style="MusicianFontIconsNormal" />
 				<HighlightFont style="MusicianFontIconsHighlight" />
@@ -80,7 +80,7 @@
 					<Frame name="$parentReadyCount" parentKey="count" hidden="true">
 						<Size x="12" y="12" />
 						<Anchors>
-							<Anchor point="CENTER" relativePoint="TOPRIGHT" x="-5" y="-3" />
+							<Anchor point="CENTER" relativePoint="TOPRIGHT" x="-10" y="-4" />
 						</Anchors>
 						<Layers>
 							<Layer level="ARTWORK">
