@@ -5,8 +5,30 @@ Musician.AddModule(MODULE_NAME)
 
 function Musician.MyRolePlay:OnEnable()
 	if mrp then
+		Musician.MyRolePlay.HookPlayerNames()
 		Musician.MyRolePlay.HookTooltip()
 	end
+end
+
+--- Return RP display name for player
+-- @param player (string)
+-- @return (string)
+function Musician.MyRolePlay.GetRpName(player)
+	player = Musician.Utils.NormalizePlayerName(player)
+
+	if msp and msp.char and msp.char[player] and msp.char[player].field and msp.char[player].field.NA then
+		if msp.char[player].field.NA ~= "" then
+			return msp.char[player].field.NA
+		end
+	end
+
+	return Musician.Utils.SimplePlayerName(player)
+end
+
+--- Hook player name formatting
+--
+function Musician.MyRolePlay.HookPlayerNames()
+	Musician.Utils.FormatPlayerName = Musician.MyRolePlay.GetRpName
 end
 
 --- Hook MyRolePlay player tooltip

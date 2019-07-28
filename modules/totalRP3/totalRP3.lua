@@ -6,12 +6,28 @@ Musician.AddModule(MODULE_NAME)
 function Musician.TRP3:OnEnable()
 	if TRP3_API then
 		Musician.Utils.Debug(MODULE_NAME, "Total RP3 module started.")
+		Musician.TRP3.HookPlayerNames()
 		Musician.TRP3.HookNamePlates()
 		Musician.TRP3.HookPlayerMap()
 		TRP3_API.Events.registerCallback("WORKFLOW_ON_FINISH", function()
 			Musician.TRP3.HookTooltip()
 		end)
 	end
+end
+
+--- Return RP display name for player
+-- @param player (string)
+-- @return (string)
+function Musician.TRP3.GetRpName(player)
+	player = Musician.Utils.NormalizePlayerName(player)
+	local trpPlayer = AddOn_TotalRP3.Player.static.CreateFromCharacterID(player)
+	return trpPlayer:GetCustomColoredRoleplayingNamePrefixedWithIcon()
+end
+
+--- Hook player name formatting
+--
+function Musician.TRP3.HookPlayerNames()
+	Musician.Utils.FormatPlayerName = Musician.TRP3.GetRpName
 end
 
 --- Hook TRP player tooltip
