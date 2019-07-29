@@ -334,10 +334,10 @@ end
 --- OnBandPlayReady
 --
 MusicianFrame.OnBandPlayReady = function(event, player, songCrc32, isReady, origEvent)
-	-- Check button LED
+	-- Update button LED
 	if Musician.Utils.PlayerIsMyself(player) then
 		MusicianFrameBandPlayButton:SetChecked(isReady)
-		MusicianFrameBandPlayButton:SetBlinking(true)
+		MusicianFrameBandPlayButton:SetBlinking(not(Musician.Comm.IsSongPlaying()))
 	end
 
 	-- Display "Is ready" emote in the chat

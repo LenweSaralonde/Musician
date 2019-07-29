@@ -616,16 +616,17 @@ function Musician.Comm.OnBandPlay(prefix, message, distribution, sender)
 	sender = Musician.Utils.NormalizePlayerName(sender)
 	debug(false, prefix, sender .. "(" .. distribution .. ")", message)
 
-	if not(Musician.Utils.PlayerIsInGroup(sender)) then return end
-	if not(isBandPlayReady) then return end
-
-	local songCrc32 = tonumber(message)
-	if not(Musician.sourceSong) or Musician.sourceSong.crc32 ~= songCrc32 then return end
-
 	if Musician.Utils.PlayerIsMyself(sender) then
 		Musician.Comm.isBandActionSent = false
 		Musician.Comm:SendMessage(Musician.Events.CommSendActionComplete, Musician.Comm.action.bandPlay)
 	end
+
+	if not(Musician.Utils.PlayerIsInGroup(sender)) then return end
+	if not(isBandPlayReady) then return end
+	if Musician.Comm.IsSongPlaying() then return false end
+
+	local songCrc32 = tonumber(message)
+	if not(Musician.sourceSong) or Musician.sourceSong.crc32 ~= songCrc32 then return end
 
 	Musician.Comm.PlaySong()
 
@@ -659,17 +660,18 @@ function Musician.Comm.OnBandStop(prefix, message, distribution, sender)
 	sender = Musician.Utils.NormalizePlayerName(sender)
 	debug(false, prefix, sender .. "(" .. distribution .. ")", message)
 
+	if Musician.Utils.PlayerIsMyself(sender) then
+		Musician.Comm.isBandActionSent = false
+		Musician.Comm:SendMessage(Musician.Events.CommSendActionComplete, Musician.Comm.action.bandStop)
+	end
+
 	if not(Musician.Utils.PlayerIsInGroup(sender)) then return end
 
 	songCrc32 = tonumber(message)
 
 	if not(isBandPlayReady) then return end
+	if not(Musician.Comm.IsSongPlaying()) then return false end
 	if not(Musician.sourceSong) or Musician.sourceSong.crc32 ~= songCrc32 then return end
-
-	if Musician.Utils.PlayerIsMyself(sender) then
-		Musician.Comm.isBandActionSent = false
-		Musician.Comm:SendMessage(Musician.Events.CommSendActionComplete, Musician.Comm.action.bandStop)
-	end
 
 	Musician.Comm.StopSong()
 
