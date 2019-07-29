@@ -86,6 +86,14 @@ function Musician.Comm.Init()
 	Musician.Comm:RegisterEvent("GROUP_JOINED", Musician.Comm.OnGroupJoined)
 	Musician.Comm:RegisterEvent("GROUP_LEFT", Musician.Comm.OnGroupLeft)
 	Musician.Comm:RegisterEvent("GROUP_ROSTER_UPDATE", Musician.Comm.OnRosterUpdate)
+	Musician.Comm:RegisterComm(Musician.Comm.event.stream, Musician.Comm.OnChunk)
+	Musician.Comm:RegisterComm(Musician.Comm.event.streamGroup, Musician.Comm.OnChunk)
+	Musician.Comm:RegisterComm(Musician.Comm.event.stop, Musician.Comm.OnStopSong)
+	Musician.Comm:RegisterComm(Musician.Comm.event.bandReadyQuery, Musician.Comm.OnBandReadyQuery)
+	Musician.Comm:RegisterComm(Musician.Comm.event.bandReady, Musician.Comm.OnBandPlayReady)
+	Musician.Comm:RegisterComm(Musician.Comm.event.bandNotReady, Musician.Comm.OnBandPlayReady)
+	Musician.Comm:RegisterComm(Musician.Comm.event.bandPlay, Musician.Comm.OnBandPlay)
+	Musician.Comm:RegisterComm(Musician.Comm.event.bandStop, Musician.Comm.OnBandStop)
 end
 
 --- Join the communication channel and keep it joined
@@ -361,7 +369,7 @@ end
 
 --- Receive compressed chunk
 --
-local function OnChunk(prefix, message, distribution, sender)
+function Musician.Comm.OnChunk(prefix, message, distribution, sender)
 	debug(false, prefix, sender .. "(" .. distribution .. ")", message)
 
 	Musician.Registry.RegisterPlayer(sender)
@@ -376,9 +384,6 @@ local function OnChunk(prefix, message, distribution, sender)
 	local packedChunk = LibDeflate:DecompressDeflate(LibDeflate:DecodeForWoWAddonChannel(message))
 	Musician.Comm.ProcessChunk(packedChunk, sender, isGroup)
 end
-
-Musician.Comm:RegisterComm(Musician.Comm.event.stream, OnChunk)
-Musician.Comm:RegisterComm(Musician.Comm.event.streamGroup, OnChunk)
 
 --- Stop song
 -- @return (boolean)
@@ -404,7 +409,7 @@ end
 
 --- Stop a song
 --
-Musician.Comm:RegisterComm(Musician.Comm.event.stop, function(prefix, message, distribution, sender)
+function Musician.Comm.OnStopSong(prefix, message, distribution, sender)
 	sender = Musician.Utils.NormalizePlayerName(sender)
 	debug(false, prefix, sender .. "(" .. distribution .. ")", message)
 	Musician.StopPlayerSong(sender, true)
@@ -412,7 +417,7 @@ Musician.Comm:RegisterComm(Musician.Comm.event.stop, function(prefix, message, d
 		isStopPending = false
 		Musician.Comm:SendMessage(Musician.Events.CommSendActionComplete, Musician.Comm.action.stop)
 	end
-end)
+end
 
 --- Return the list of ready band players for the current source song
 -- @return (table)
@@ -469,7 +474,6 @@ function Musician.Comm.OnBandReadyQuery(prefix, message, distribution, sender)
 		Musician.Comm:SendMessage(Musician.Events.BandPlayReady, sender, songCrc32, false, prefix)
 	end
 end
-Musician.Comm:RegisterComm(Musician.Comm.event.bandReadyQuery, Musician.Comm.OnBandReadyQuery)
 
 --- OnGroupLeft
 --
@@ -589,9 +593,6 @@ function Musician.Comm.OnBandPlayReady(prefix, message, distribution, sender)
 	end
 end
 
-Musician.Comm:RegisterComm(Musician.Comm.event.bandReady, Musician.Comm.OnBandPlayReady)
-Musician.Comm:RegisterComm(Musician.Comm.event.bandNotReady, Musician.Comm.OnBandPlayReady)
-
 --- Play song as a band
 -- @return (boolean)
 function Musician.Comm.PlaySongBand()
@@ -634,7 +635,6 @@ function Musician.Comm.OnBandPlay(prefix, message, distribution, sender)
 
 	Musician.Comm:SendMessage(Musician.Events.BandPlay, sender, songCrc32)
 end
-Musician.Comm:RegisterComm(Musician.Comm.event.bandPlay, Musician.Comm.OnBandPlay)
 
 --- Stop song as a band
 -- @return (boolean)
@@ -679,7 +679,6 @@ function Musician.Comm.OnBandStop(prefix, message, distribution, sender)
 
 	Musician.Comm:SendMessage(Musician.Events.BandStop, sender, songCrc32)
 end
-Musician.Comm:RegisterComm(Musician.Comm.event.bandStop, Musician.Comm.OnBandStop)
 
 --- OnSongPlay
 --

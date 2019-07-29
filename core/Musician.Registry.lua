@@ -75,6 +75,10 @@ function Musician.Registry.Init()
 		end
 	end)
 
+	-- Init communication messages
+	Musician.Registry:RegisterComm(Musician.Registry.event.hello, Musician.Registry.OnQuery)
+	Musician.Registry:RegisterComm(Musician.Registry.event.hello, Musician.Registry.OnHello)
+
 	-- Send Query message to group when joining
 	Musician.Registry:RegisterEvent("GROUP_JOINED", function()
 		if Musician.Comm.GetGroupChatType() then
@@ -412,14 +416,14 @@ end
 
 --- Receive Hello message
 --
-Musician.Registry:RegisterComm(Musician.Registry.event.hello, function(prefix, version, distribution, player)
+function Musician.Registry.OnQuery(prefix, version, distribution, player)
 	debug(false, prefix, player, distribution, version)
 	Musician.Registry.SetPlayerVersion(player, version)
-end)
+end
 
 --- Receive Query message
 --
-Musician.Registry:RegisterComm(Musician.Registry.event.query, function(prefix, version, distribution, player)
+function Musician.Registry.OnHello(prefix, version, distribution, player)
 	debug(false, prefix, player, distribution, version)
 	player = Musician.Utils.NormalizePlayerName(player)
 
@@ -436,7 +440,7 @@ Musician.Registry:RegisterComm(Musician.Registry.event.query, function(prefix, v
 		debug(true, Musician.Registry.event.hello, Musician.Comm.GetGroupChatType())
 		Musician.Registry:SendCommMessage(Musician.Registry.event.hello, Musician.Registry.GetVersionString(), Musician.Comm.GetGroupChatType(), nil, "ALERT")
 	end
-end)
+end
 
 --- Add player to registry
 -- @param player (string)
