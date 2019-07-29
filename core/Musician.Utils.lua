@@ -5,7 +5,7 @@ Musician.AddModule(MODULE_NAME)
 
 local LibRealmInfo = LibStub:GetLibrary("LibRealmInfo")
 
-Musician.Utils.gameMusicIsMuted = false
+local isGameMusicMuted = false
 
 --- Display a message in the console
 -- @param msg (string)
@@ -434,9 +434,9 @@ function Musician.Utils.MuteGameMusic(force)
 		mute = false
 	end
 
-	if not(force) and Musician.Utils.gameMusicIsMuted == mute then return end
+	if not(force) and isGameMusicMuted == mute then return end
 
-	Musician.Utils.gameMusicIsMuted = mute
+	isGameMusicMuted = mute
 
 	if mute then
 		-- Play a silent music track to mute and fade actual game music

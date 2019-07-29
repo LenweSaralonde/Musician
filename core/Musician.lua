@@ -37,6 +37,9 @@ function Musician:OnInitialize()
 	Musician.Preloader.Init()
 
 	C_Timer.NewTicker(0.5, function() Musician.Utils.MuteGameMusic() end)
+	Musician:RegisterEvent("PLAYER_ENTERING_WORLD", function()
+		C_Timer.After(1, function() Musician.Utils.MuteGameMusic(true) end)
+	end)
 
 	MusicianFrame.Init()
 	MusicianButton.Init()

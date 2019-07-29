@@ -175,6 +175,7 @@ function Musician.Song:Play(delay)
 			self:Resume(true)
 			self.willPlayTimer = nil
 		end)
+		Musician.Utils.MuteGameMusic()
 		Musician.Song:SendMessage(Musician.Events.SongPlay, self)
 	else
 		self:Resume()
@@ -287,6 +288,7 @@ function Musician.Song:Stop()
 	end
 	if self.playing then
 		self.playing = false
+		Musician.Utils.MuteGameMusic()
 		Musician.Song:SendMessage(Musician.Events.SongStop, self)
 	end
 end

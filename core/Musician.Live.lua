@@ -193,6 +193,7 @@ function Musician.Live.NoteOn(key, layer, instrument, isChordNote)
 	end
 
 	isPlayingLive = true
+	Musician.Utils.MuteGameMusic()
 	if playingLiveTimer then
 		playingLiveTimer:Cancel()
 	end
@@ -232,6 +233,7 @@ function Musician.Live.NoteOff(key, layer, instrument, isChordNote)
 		end
 		playingLiveTimer = C_Timer.NewTimer(STREAM_PADDING, function()
 			isPlayingLive = false
+			Musician.Utils.MuteGameMusic()
 			playingLiveTimer = nil
 		end)
 
