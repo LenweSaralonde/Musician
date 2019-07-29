@@ -37,7 +37,6 @@ Musician.Locale = {}
 
 Musician.Events = {}
 Musician.Events.Frame = "MusicianFrame"
-Musician.Events.RefreshFrame = "MusicianRefreshFrame"
 Musician.Events.RegistryReady = "MusicianRegistryReady"
 Musician.Events.CommChannelUpdate = "MusicianCommChannelUpdate"
 Musician.Events.CommSendAction = "MusicianCommSendAction"

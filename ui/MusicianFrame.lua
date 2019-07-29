@@ -75,9 +75,6 @@ MusicianFrame.Clear = function(noFocus)
 	if not(noFocus) then
 		MusicianFrameSource:SetFocus()
 	end
-
-	-- Frame contents have been refreshed
-	Musician.Frame:SendMessage(Musician.Events.RefreshFrame)
 end
 
 --- Open track editor
