@@ -27,6 +27,7 @@ Musician.Comm.isPlaySent = false
 Musician.Comm.isStopSent = false
 Musician.Comm.isBandActionSent = false
 
+local isSongPlaying = false
 local canJoinChannel = true
 local channelIsJoined = false
 local channelWasAlreadyJoined = false
@@ -82,6 +83,7 @@ function Musician.Comm.Init()
 	end)
 
 	Musician.Comm:RegisterMessage(Musician.Events.SourceSongLoaded, Musician.Comm.OnSongLoaded)
+	Musician.Comm:RegisterMessage(Musician.Events.SongPlay, Musician.Comm.OnSongPlay)
 	Musician.Comm:RegisterMessage(Musician.Events.SongStop, Musician.Comm.OnSongStop)
 	Musician.Comm:RegisterEvent("GROUP_JOINED", Musician.Comm.OnGroupJoined)
 	Musician.Comm:RegisterEvent("GROUP_LEFT", Musician.Comm.OnGroupLeft)
@@ -396,6 +398,12 @@ function Musician.Comm.StopSong()
 	return true
 end
 
+--- Indicates if the player song is playing
+-- @return (boolean)
+function Musician.Comm.IsSongPlaying()
+	return isSongPlaying
+end
+
 --- Stop a song
 --
 Musician.Comm:RegisterComm(Musician.Comm.event.stop, function(prefix, message, distribution, sender)
@@ -673,15 +681,29 @@ function Musician.Comm.OnBandStop(prefix, message, distribution, sender)
 end
 Musician.Comm:RegisterComm(Musician.Comm.event.bandStop, Musician.Comm.OnBandStop)
 
+--- OnSongPlay
+--
+function Musician.Comm.OnSongPlay(event, song)
+	if not(song.player) then return end
+	local player = song.player
+
+	-- This is my song
+	if Musician.Utils.PlayerIsMyself(player) and Musician.songs[player] ~= nil then
+		isSongPlaying = true
+	end
+end
+
 --- OnSongStop
 --
 function Musician.Comm.OnSongStop(event, song)
 	if not(song.player) then return end
 	local player = song.player
 
-	-- I am no longer ready
-	if Musician.Utils.PlayerIsMyself(player) then
-		isBandPlayReady = false
+	-- This is my song
+	if Musician.Utils.PlayerIsMyself(player) and Musician.songs[player] ~= nil then
+		isSongPlaying = false
+		isBandPlayReady = false -- I am no longer ready
+		Musician.Comm.isStopSent = false
 	end
 
 	-- Add/remove player in ready band members

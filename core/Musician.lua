@@ -29,7 +29,6 @@ function Musician:OnInitialize()
 
 	Musician.songs = {}
 	Musician.sourceSong = nil
-	Musician.songIsPlaying = false
 	Musician.globalMute = false
 
 	Musician.Comm.Init()
@@ -48,7 +47,6 @@ function Musician:OnInitialize()
 	Musician.Keyboard.Init()
 	Musician.Options.Init()
 
-	Musician:RegisterMessage(Musician.Events.SongStop, Musician.OnSongStopped)
 	Musician:RegisterMessage(Musician.Events.SongPlay, Musician.OnSongPlayed)
 	Musician:RegisterMessage(Musician.Events.SongImportSucessful, Musician.OnSourceImportSuccessful)
 	Musician:RegisterMessage(Musician.Events.SongImportFailed, Musician.OnSourceImportFailed)
@@ -320,26 +318,9 @@ end
 -- @param event (table)
 -- @param song (Musician.Song)
 function Musician.OnSongPlayed(event, song)
-	local playerName = song.player
-
-	if Musician.Utils.PlayerIsMyself(playerName) then
-		Musician.songIsPlaying = true
+	-- Send promo emote if my song is playing
+	if song.player and Musician.songs[song.player] ~= nil and Musician.Utils.PlayerIsMyself(song.player) then
 		Musician.Utils.SendPromoEmote()
-	end
-end
-
---- Handle stopped song
--- @param event (table)
--- @param song (Musician.Song)
-function Musician.OnSongStopped(event, song)
-	local playerName = song.player
-
-	if playerName ~= nil and Musician.songs[playerName] ~= nil then
-		if Musician.Utils.PlayerIsMyself(playerName) then
-			Musician.songIsPlaying = false
-			Musician.Comm.isStopSent = false
-		end
-		Musician.Utils.MuteGameMusic()
 	end
 end
 

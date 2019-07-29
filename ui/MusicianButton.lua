@@ -153,7 +153,7 @@ function MusicianButton.GetMenu()
 
 		-- Play/stop imported song
 
-		if Musician.songIsPlaying then
+		if Musician.Comm.IsSongPlaying() then
 
 			-- If the song being playing is not the same as the source song, show its title
 			if Musician.sourceSong and Musician.streamingSong and Musician.sourceSong.name ~= Musician.streamingSong.name then
