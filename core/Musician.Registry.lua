@@ -20,8 +20,6 @@ local QUERY_RETRY_AFTER = 3
 local newVersionNotified = false
 local newProtocolNotified = false
 
-local tooltipPlayerName
-
 local pendingPlayerQueries = {} -- Query messages queue
 
 --- Prints debug message
@@ -61,10 +59,7 @@ function Musician.Registry.Init()
 			local _, unitType = GameTooltip:GetUnit()
 			if UnitIsPlayer(unitType) then
 				local player = Musician.Utils.NormalizePlayerName(GetUnitName(unitType, true))
-				tooltipPlayerName = player
 				Musician.Registry.UpdateTooltipInfo(GameTooltip, player, 10)
-			else
-				tooltipPlayerName = nil
 			end
 		end)
 
@@ -387,7 +382,10 @@ end
 --- Update player tooltip to add missing Musician client version, if applicable.
 -- @param player (string)
 function Musician.Registry.UpdatePlayerTooltip(player)
-	if tooltipPlayerName == player then
+	local _, unitType = GameTooltip:GetUnit()
+	if not(UnitIsPlayer(unitType)) then return end
+	local tooltipPlayer = Musician.Utils.NormalizePlayerName(GetUnitName(unitType, true))
+	if tooltipPlayer == player then
 		Musician.Registry.UpdateTooltipInfo(GameTooltip, player, 10)
 	end
 end
@@ -450,6 +448,7 @@ function Musician.Registry.RegisterPlayer(player)
 	if Musician.Registry.players[player] == nil then
 		Musician.Registry.players[player] = {}
 		Musician.Registry:SendMessage(Musician.Registry.event.playerRegistered, player)
+		Musician.Registry.UpdatePlayerTooltip(player)
 	end
 end
 
