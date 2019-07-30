@@ -326,6 +326,7 @@ function Musician.Comm.ProcessChunk(packedChunk, sender, forcePlay)
 
 	-- Update player position
 	Musician.Registry.UpdatePlayerPositionAndGUID(sender, unpack(position))
+	Musician.Comm:SendMessage(Musician.Events.SongChunk, sender, mode, songId, chunkDuration, playtimeLeft, unpack(position))
 
 	-- No longer in loading range
 	if not(Musician.Registry.PlayerIsInLoadingRange(sender)) then
