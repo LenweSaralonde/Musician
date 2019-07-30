@@ -138,9 +138,19 @@ end
 
 --- Return the code to insert an icon in a chat message or a text string
 -- @param path (string)
+-- @param [r (number)]
+-- @param [g (number)]
+-- @param [b (number)]
 -- @return (string)
-function Musician.Utils.GetChatIcon(path)
-	return "|T" .. path .. ":0|t"
+function Musician.Utils.GetChatIcon(path, r, g, b)
+	if r ~= nil and g ~= nil and b ~= nil then
+		r = floor(r * 255)
+		g = floor(g * 255)
+		b = floor(b * 255)
+		return "|T" .. path .. ":0:aspectRatio:0:0:1:1:0:1:0:1:" .. r .. ":" .. g .. ":" .. b .. "|t"
+	end
+
+	return "|T" .. path .. ":0:aspectRatio|t"
 end
 
 --- Display a faked emote
