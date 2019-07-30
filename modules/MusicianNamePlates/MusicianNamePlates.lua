@@ -72,17 +72,7 @@ function Musician.NamePlates:OnEnable()
 	-- Cinematic mode
 	UIParent:HookScript("OnShow", Musician.NamePlates.UpdateAll)
 	UIParent:HookScript("OnHide", Musician.NamePlates.UpdateAll)
-
-	-- Toggle cinematic mode
-	Musician.playerFrame:EnableKeyboard()
-	Musician.playerFrame:HookScript("OnKeyDown", function(self, keyValue)
-		if Musician_Settings.cinematicMode and GetBindingFromClick(keyValue) == "TOGGLEUI" then
-			Musician.NamePlates.ToggleCinematicMode()
-			Musician.playerFrame:SetPropagateKeyboardInput(false)
-			return
-		end
-		Musician.playerFrame:SetPropagateKeyboardInput(true)
-	end)
+	hooksecurefunc("SetUIVisibility", Musician.NamePlates.OnSetUIVisibility)
 
 	--- Tips and tricks
 	Musician.NamePlates.InitTipsAndTricks()
@@ -286,23 +276,6 @@ end
 -- @param namePlate (Frame)
 function Musician.NamePlates.UpdateNamePlate(namePlate)
 
-	-- Attach animated notes frame to WorldFrame if hiding nameplates in cinematic mode
-	if not(Musician_Settings.cinematicModeNamePlates) and Musician_Settings.cinematicMode then
-		local parent, scale
-		if Musician.NamePlates.IsCinematicMode() then
-			parent = WorldFrame
-			scale = namePlate:GetScale()
-		else
-			parent = namePlate
-			scale = 1
-		end
-
-		if namePlate.musicianAnimatedNotesFrame and namePlate.musicianAnimatedNotesFrame:GetParent() ~= parent then
-			namePlate.musicianAnimatedNotesFrame:SetParent(parent)
-			namePlate.musicianAnimatedNotesFrame:SetScale(scale)
-		end
-	end
-
 	-- Handle cinematic mode
 	Musician.NamePlates.UpdateNamePlateCinematicMode(namePlate)
 
@@ -418,14 +391,37 @@ end
 --- Hide nameplates in cinematic mode if nameplates are not enabled in this mode
 -- @param namePlate (Frame)
 function Musician.NamePlates.UpdateNamePlateCinematicMode(namePlate)
+
+	if InCombatLockdown() then return end
+
+	local UIParentIsVisible = UIParent:IsVisible()
+
+	-- Attach animated notes frame to WorldFrame if hiding nameplates in cinematic mode
 	if not(Musician_Settings.cinematicModeNamePlates) and Musician_Settings.cinematicMode then
-		if Musician.NamePlates.IsCinematicMode() then
+		local parent, scale
+		if not(UIParentIsVisible) then
+			parent = WorldFrame
+			scale = namePlate:GetScale()
+		else
+			parent = namePlate
+			scale = 1
+		end
+
+		if namePlate.musicianAnimatedNotesFrame and namePlate.musicianAnimatedNotesFrame:GetParent() ~= parent then
+			namePlate.musicianAnimatedNotesFrame:SetParent(parent)
+			namePlate.musicianAnimatedNotesFrame:SetScale(scale)
+		end
+	end
+
+	-- Show or hide the nameplate
+	if not(Musician_Settings.cinematicModeNamePlates) and Musician_Settings.cinematicMode then
+		if not(UIParentIsVisible) then
 			namePlate:Hide()
 		else
 			namePlate:Show()
 		end
 	elseif not(Musician_Settings.cinematicMode) then
-		namePlate:SetShown(UIParent:IsVisible())
+		namePlate:SetShown(UIParentIsVisible)
 	end
 end
 
@@ -554,16 +550,16 @@ function Musician.NamePlates.OnNoteOn(event, song, track, key)
 	end
 end
 
---- Returns true when in cinematic mode
--- @return (boolean)
-function Musician.NamePlates.IsCinematicMode()
-	return not(UIParent:IsVisible())
-end
-
---- Toggle cinematic mode
---
-function Musician.NamePlates.ToggleCinematicMode()
-	ToggleFrame(UIParent)
+--- OnSetUIVisibility
+-- @param isVisible (boolean)
+function Musician.NamePlates.OnSetUIVisibility(isVisible)
+	if not(isVisible) then
+		if Musician_Settings.cinematicMode then
+			SetInWorldUIVisibility(true)
+		end
+	else
+		SetInWorldUIVisibility(true)
+	end
 end
 
 --- Initialize tips and tricks
