@@ -754,7 +754,7 @@ end
 Musician.Keyboard.OnPhysicalKey = function(keyValue, down)
 
 	-- Override standard Toggle UI to keep the keyboard visible on screen
-	if down and GetBindingFromClick(keyValue) == "TOGGLEUI" then
+	if down and GetBindingFromClick(keyValue) == "TOGGLEUI" and not(InCombatLockdown()) then
 		Musician.Keyboard.ToggleUI()
 		MusicianKeyboard:SetPropagateKeyboardInput(false)
 		return
