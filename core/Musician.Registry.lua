@@ -76,7 +76,7 @@ function Musician.Registry.Init()
 	end)
 
 	-- Init communication messages
-	Musician.Registry:RegisterComm(Musician.Registry.event.hello, Musician.Registry.OnQuery)
+	Musician.Registry:RegisterComm(Musician.Registry.event.query, Musician.Registry.OnQuery)
 	Musician.Registry:RegisterComm(Musician.Registry.event.hello, Musician.Registry.OnHello)
 
 	-- Send Query message to group when joining
@@ -416,14 +416,14 @@ end
 
 --- Receive Hello message
 --
-function Musician.Registry.OnQuery(prefix, version, distribution, player)
+function Musician.Registry.OnHello(prefix, version, distribution, player)
 	debug(false, prefix, player, distribution, version)
 	Musician.Registry.SetPlayerVersion(player, version)
 end
 
 --- Receive Query message
 --
-function Musician.Registry.OnHello(prefix, version, distribution, player)
+function Musician.Registry.OnQuery(prefix, version, distribution, player)
 	debug(false, prefix, player, distribution, version)
 	player = Musician.Utils.NormalizePlayerName(player)
 
