@@ -64,7 +64,6 @@ local function debug(out, event, source, message, ...)
 
 	Musician.Utils.Debug(MODULE_NAME, prefix, event, source, message, ...)
 end
-Musician.Comm.Debug = debug
 
 --- Initialize communication
 --
@@ -463,7 +462,6 @@ function Musician.Comm.OnBandReadyQuery(prefix, message, distribution, sender)
 	local groupChatType = Musician.Comm.GetGroupChatType()
 	if isBandPlayReady and groupChatType then
 		local message = tostring(Musician.sourceSong.crc32)
-		local groupChatType = Musician.Comm.GetGroupChatType()
 		debug(true, Musician.Comm.event.bandReady, groupChatType, message)
 		Musician.Comm:SendCommMessage(Musician.Comm.event.bandReady, message, groupChatType, nil, "ALERT")
 	end
