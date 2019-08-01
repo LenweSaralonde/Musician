@@ -279,7 +279,7 @@ function Musician.Live.InsertNote(noteOn, key, layer, instrument)
 	Musician.streamingSong.duration = noteTime + STREAM_PADDING
 
 	-- Send visual note event
-	if not(Musician.Live.IsBandSyncMode()) then
+	if not(Musician.Live.IsBandSyncMode() and Musician.Live.IsEnabled()) then
 		if noteOn then
 			Musician.Live:SendMessage(Musician.Events.VisualNoteOn, Musician.streamingSong, track, key)
 		else
@@ -313,7 +313,7 @@ function Musician.Live.NoteOn(key, layer, instrument, isChordNote)
 
 	-- Play note
 	local handle = 0
-	if not(Musician.Live.IsBandSyncMode()) and not(Musician.globalMute) and Musician.Preloader.IsPreloaded(sampleId) then
+	if not(Musician.Live.IsBandSyncMode() and Musician.Live.IsEnabled()) and not(Musician.globalMute) and Musician.Preloader.IsPreloaded(sampleId) then
 		_, handle = Musician.Utils.PlaySoundFile(soundFile, 'SFX')
 	end
 
@@ -367,7 +367,7 @@ end
 -- @param instrument (int)
 -- @param isChordNote (boolean)
 function Musician.Live.BandNote(noteOn, key, layer, instrument)
-	if not(Musician.Live.IsBandSyncMode()) then return end
+	if not(Musician.Live.IsBandSyncMode() and Musician.Live.IsEnabled()) then return end
 
 	local noteOn = noteOn and "ON" or "OFF"
 	local posY, posX, posZ, instanceID = UnitPosition("player")
