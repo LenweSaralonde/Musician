@@ -542,7 +542,7 @@ function Musician.NamePlates.OnNoteOn(event, song, track, key)
 
 	if song ~= Musician.streamingSong and not(Musician.Utils.PlayerIsMyself(song.player)) then
 		local namePlate = playerNamePlates[song.player]
-		if namePlate then
+		if namePlate and namePlate.musicianAnimatedNotesFrame then
 			addNote(namePlate.musicianAnimatedNotesFrame, song, track, key)
 		end
 	else
