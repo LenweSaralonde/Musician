@@ -382,6 +382,11 @@ function Musician.Song:NoteOn(track, noteIndex, noRetry)
 		return
 	end
 
+	-- Don't play back other player's live notes
+	if Musician.Live.IsPlayerSynced(self.player) and self.mode == Musician.Song.MODE_LIVE then
+		return
+	end
+
 	-- A note should be displayed
 	Musician.Song:SendMessage(Musician.Events.VisualNoteOn, self, track, key)
 

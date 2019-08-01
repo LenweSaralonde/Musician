@@ -583,7 +583,7 @@ end
 function Musician.Utils.HasPromoEmote(message)
 	local lang
 	for lang, locale in pairs(Musician.Locale) do
-		if string.find(message, locale.EMOTE_PLAYING_MUSIC) == 1 then
+		if string.find(message, locale.EMOTE_PLAYING_MUSIC, 1, true) == 1 then
 			return true
 		end
 	end

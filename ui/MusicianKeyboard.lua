@@ -639,6 +639,8 @@ function Musician.Keyboard.Init()
 	Musician.Keyboard:RegisterMessage(Musician.Events.NoteOff, Musician.Keyboard.OnNoteOff)
 	Musician.Keyboard:RegisterMessage(Musician.Events.SongPlay, Musician.Keyboard.OnSongPlay)
 	Musician.Keyboard:RegisterMessage(Musician.Events.SongInstrumentChange, Musician.Keyboard.OnSongPlay)
+	Musician.Keyboard:RegisterMessage(Musician.Events.LiveBandSync, Musician.Keyboard.OnLiveBandSync)
+	Musician.Keyboard:RegisterEvent("GROUP_ROSTER_UPDATE", Musician.Keyboard.UpdateBandSyncButton)
 
 	-- Init layouts
 	initLayouts()
@@ -660,6 +662,9 @@ function Musician.Keyboard.Init()
 
 	-- Show or hide keyboard according to last settings
 	MusicianKeyboard.showKeyboard(Musician_Settings.keyboardVisible)
+
+	-- Update band sync button
+	Musician.Keyboard.UpdateBandSyncButton()
 end
 
 --- Show
@@ -1487,4 +1492,61 @@ Musician.Keyboard.OnNoteOff = function(event, song, track, key)
 			end
 		end
 	end
+end
+
+--- Update band sync button
+--
+Musician.Keyboard.UpdateBandSyncButton = function()
+
+	-- Update button visibility
+
+	local isVisible = IsInGroup()
+	local isEnabled = Musician.Comm.GetGroupChatType() ~= nil
+
+	local button = MusicianKeyboardBandSyncButton
+	button:SetShown(isVisible)
+	button:SetEnabled(isEnabled)
+
+	-- Update button LED
+
+	MusicianKeyboardBandSyncButton:SetChecked(Musician.Live.IsBandSyncMode())
+
+	-- Update tooltip and the number of ready players
+
+	local players = Musician.Live.GetSyncedBandPlayers()
+	local tooltipText = Musician.Msg.LIVE_SYNC
+
+	if not(Musician.Live.IsBandSyncMode()) then
+		tooltipText = tooltipText .. "\n" .. Musician.Utils.Highlight(Musician.Msg.LIVE_SYNC_HINT, "00FFFF")
+	end
+
+	if #players > 0 then
+		button.count.text:SetText(#players)
+		button.count:Show()
+
+		local playerNames = {}
+		local playerName
+		for _, playerName in ipairs(players) do
+			table.insert(playerNames, "– " .. Musician.Utils.FormatPlayerName(playerName))
+		end
+
+		tooltipText = tooltipText .. "\n" .. Musician.Msg.SYNCED_PLAYERS
+		tooltipText = tooltipText .. "\n" .. strjoin("\n", unpack(playerNames))
+	else
+		button.count:Hide()
+	end
+	button:SetTooltipText(tooltipText)
+end
+
+--- OnLiveBandSync
+--
+Musician.Keyboard.OnLiveBandSync = function(event, player, isSynced)
+	-- Display "Is synced" emote in the chat
+	if not(Musician.Utils.PlayerIsMyself(player)) then
+		local emote = isSynced and Musician.Msg.EMOTE_PLAYER_LIVE_SYNC_ENABLED or Musician.Msg.EMOTE_PLAYER_LIVE_SYNC_DISABLED
+		Musician.Utils.DisplayEmote(player, UnitGUID(Musician.Utils.SimplePlayerName(player)), emote)
+	end
+
+	-- Update button
+	Musician.Keyboard.UpdateBandSyncButton()
 end

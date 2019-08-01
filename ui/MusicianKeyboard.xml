@@ -320,6 +320,21 @@
 				</Scripts>
 			</Button>
 
+			<Button name="$parentBandSyncButton" inherits="MusicianBandPlayButtonTemplate">
+				<Anchors>
+					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentKeyboardConfigButton" />
+				</Anchors>
+				<Scripts>
+					<OnClick inherit="append">
+						Musician.Live.ToggleBandSyncMode()
+					</OnClick>
+					<OnLoad inherit="append">
+						self.count:SetPoint("CENTER", self, "TOPRIGHT", -4, -4)
+						self.tooltipText = Musician.Msg.LIVE_SYNC
+					</OnLoad>
+				</Scripts>
+			</Button>
+
 			<Button name="$parentToggleKeyboardButton" inherits="MusicianIconButtonTemplate">
 				<Size x="48" y="24" />
 				<Anchors>

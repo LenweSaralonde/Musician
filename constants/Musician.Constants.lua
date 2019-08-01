@@ -68,6 +68,7 @@ Musician.Events.Bandwidth = "MusicianBandwidth"
 Musician.Events.BandPlay = "MusicianBandPlay"
 Musician.Events.BandStop = "MusicianBandStop"
 Musician.Events.BandPlayReady = "MusicianBandPlayReady"
+Musician.Events.LiveBandSync = "MusicianLiveBandSync"
 
 Musician.IconImages = {}
 Musician.IconImages.NoteDisabled = "Interface\\AddOns\\Musician\\ui\\textures\\muted.blp"

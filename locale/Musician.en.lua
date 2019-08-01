@@ -103,6 +103,12 @@ msg.EMOTE_PLAYER_IS_NOT_READY = "is no longer ready for band play."
 msg.EMOTE_PLAY_IN_BAND_START = "started band play."
 msg.EMOTE_PLAY_IN_BAND_STOP = "stopped band play."
 
+msg.LIVE_SYNC = "Live band mode"
+msg.LIVE_SYNC_HINT = "Click here to play live with your band."
+msg.SYNCED_PLAYERS = "Band players:"
+msg.EMOTE_PLAYER_LIVE_SYNC_ENABLED = "is playing music with you."
+msg.EMOTE_PLAYER_LIVE_SYNC_DISABLED = "stopped playing music with you."
+
 msg.SONG_EDITOR = "Song editor"
 msg.MARKER_FROM = "From"
 msg.MARKER_TO = "To"
