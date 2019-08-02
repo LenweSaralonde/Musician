@@ -65,13 +65,13 @@
 							-- Check all 3 boxes when enabling nameplates
 							if self:GetChecked() then
 								showAll:SetChecked(true)
-								showAll:GetScript("OnClick")(showAll)
+								ExecuteFrameScript(showAll, "OnClick", "LeftButton")
 
 								enemies:SetChecked(true)
-								enemies:GetScript("OnClick")(enemies)
+								ExecuteFrameScript(enemies, "OnClick", "LeftButton")
 
 								friends:SetChecked(true)
-								friends:GetScript("OnClick")(friends)
+								ExecuteFrameScript(friends, "OnClick", "LeftButton")
 
 								-- Do not stack nameplates
 								InterfaceOptionsNamesPanelUnitNameplatesMotionDropDown:SetValue(0)
@@ -79,7 +79,7 @@
 							-- Only uncheck "show all" when disabling
 							else
 								showAll:SetChecked(false)
-								showAll:GetScript("OnClick")(showAll)
+								ExecuteFrameScript(showAll, "OnClick", "LeftButton")
 							end
 						end)
 					</OnLoad>

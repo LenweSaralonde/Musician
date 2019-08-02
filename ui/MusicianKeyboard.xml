@@ -403,21 +403,21 @@
 							</OnLoad>
 							<OnEnter inherit="append">
 								self.button:LockHighlight()
-								self.button:GetScript("OnEnter")(self.button, motion)
+								ExecuteFrameScript(self.button, "OnEnter", motion)
 							</OnEnter>
 							<OnLeave inherit="append">
 								self.button:UnlockHighlight()
-								self.button:GetScript("OnLeave")(self.button, motion)
+								ExecuteFrameScript(self.button, "OnLeave", motion)
 							</OnLeave>
 							<OnMouseDown inherit="append">
 								if self.button:GetButtonState() ~= "PUSHED" then
 									self:SetAlpha(0)
 									self.button:SetButtonState("PUSHED")
-									self.button:GetScript("OnMouseDown")(self.button, button)
+									ExecuteFrameScript(self.button, "OnMouseDown", button)
 								else
 									self:SetAlpha(1)
 									self.button:SetButtonState("NORMAL")
-									self.button:GetScript("OnMouseUp")(self.button, button)
+									ExecuteFrameScript(self.button, "OnMouseUp", button)
 								end
 							</OnMouseDown>
 						</Scripts>

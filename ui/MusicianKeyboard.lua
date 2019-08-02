@@ -794,10 +794,10 @@ Musician.Keyboard.SetButtonState = function(button, down)
 		button.keyPressed = true
 		if down and button:GetButtonState() ~= "PUSHED" then
 			button:SetButtonState("PUSHED")
-			button:GetScript("OnMouseDown")(button, "LeftButton")
+			ExecuteFrameScript(button, "OnMouseDown", "LeftButton")
 		elseif not(down) and button:GetButtonState() ~= "NORMAL" then
 			button:SetButtonState("NORMAL")
-			button:GetScript("OnMouseUp")(button, "LeftButton")
+			ExecuteFrameScript(button, "OnMouseUp", "LeftButton")
 		end
 		button.keyPressed = false
 	end

@@ -33,7 +33,7 @@ end
 --
 Musician.NamePlates.Options.Defaults = function()
 	MusicianOptionsPanelUnitNamePlatesEnable:SetChecked(true)
-	MusicianOptionsPanelUnitNamePlatesEnable:GetScript("OnClick")(MusicianOptionsPanelUnitNamePlatesEnable)
+	ExecuteFrameScript(MusicianOptionsPanelUnitNamePlatesEnable, "OnClick", "LeftButton")
 	setCVarBool("nameplateShowFriendlyNPCs", false)
 	Musician_Settings = Mixin(Musician_Settings, Musician.NamePlates.Options.GetDefaults())
 end
