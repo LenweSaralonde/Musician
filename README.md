@@ -79,6 +79,16 @@ Some basic modifications can be made to the imported song in the song editor, wh
 
 The song editor also shows some information about the tracks (MIDI instrument, start and end points, number of notes...) and the activity while the song is playing.
 
+Cross-faction play
+------------------
+Cross-faction (and cross-realm) music can be achieved through the [Cross RP add-on](https://www.curseforge.com/wow/addons/cross-rp) by Tammya-MoonGuard.
+
+This add-on is very straightforward, just install it and it works!
+
+Cross RP relies on a peer to peer network established by the players who run it so the faction/realm you want to play with may not be always reachable. Feel free to encourage other players to install Cross RP and expand the network!
+
+You can see what realms and factions you're connected to in Musician's options or by mousing over the Cross RP minimap button.
+
 Tips
 ----
 * You can preview the song at any moment prior to playing it for other players by clicking the **Preview** button or using the song editor. If another song is playing nearby, it will be muted for you only.
