@@ -1,6 +1,6 @@
 Musician
 ========
-Hear and play music with nearby players. For the first time in World of Warcraft, your character can litterally become a bard!
+Hear and play music with nearby players. For the first time in World of Warcraft, your character can literally become a bard!
 
 Join our [Discord server](https://discord.gg/ypfpGxK) (EN/FR) and our [Battle.net group](https://blizzard.com/invite/X2Gy7ztwX7) for help, bug reports, good music and more!
 
@@ -116,9 +116,9 @@ Cross RP relies on a peer to peer network established by the players who run it 
 
 You can see what realms and factions you're connected to in Musician's options or by mousing over the Cross RP minimap button.
 
-Roleplaying add-ons integration
--------------------------------
-Musician integrates with roleplaying add-ons [Total RP](https://www.curseforge.com/wow/addons/total-rp-3) and [MyRolePlay](https://www.curseforge.com/wow/addons/my-role-play) to benefit from some of their features, such as roleplay character names and tooltips.
+Integration with role-playing add-ons
+-------------------------------------
+Musician integrates with role-playing add-ons [Total RP](https://www.curseforge.com/wow/addons/total-rp-3) and [MyRolePlay](https://www.curseforge.com/wow/addons/my-role-play) to benefit from some of their features, such as roleplay character names and tooltips.
 
 [Total RP](https://www.curseforge.com/wow/addons/total-rp-3)'s map scan feature shows players who also have Musician with a 🎵 icon. The icon blinks for players who are currently playing music.
 
@@ -129,7 +129,7 @@ Tips
 * You can add lyrics by combining Musician with the [StoryTeller add-on](https://musician.lenwe.io/storyteller)!
 * Load the next song while the current one is playing to reduce waiting time between songs.
 * The radius for hearing the music is approximately 40 meters.
-* Play songs that are relevant with your "band" composition. It's nonsense to play orchestral music with only two bards ! 😃 However you can still roleplay as if your character owns a kind of gnomish *Music-o-Matic* machine that is capable of reproducing a whole band.
+* Play songs that are relevant with your "band" composition. It's nonsense to play orchestral music with only two bards ! 😃 However you can still role-play as if your character owns a kind of gnomish *Music-o-Matic* jukebox machine that is capable of reproducing a whole band.
 * A text emote is shown to the players who don't have Musician when you play a song. You can disable this emote in the add-on options.
 * Nameplates animations and icons are compatible with the most popular nameplate add-ons (KuiNameplates, Plater, ElvUI...).
 
@@ -172,10 +172,10 @@ Limitations and known issues
 Here is a summary of the problems you may encounter:
 
 * There is no support for velocity and modulation. This is actually not possible with the WoW UI.
-* It is **NOT possible to play live with other players** since the other players do not hear what you play instantly but only after 1 or 2 seconds.
-* Sound latency may be experienced with the live keyboard on Windows, depending on your sound card model and drivers.
 * Wait for the preloading process to complete before playing to ensure good conditions.
+* Sound latency may be experienced with the live keyboard on Windows, depending on your sound card model and drivers.
 * Music playing relies on the refresh rate of the screen so stuttering may occur on slower computers. Adjust your settings to maintain a framerate above 30 FPS for good results.
 * The polyphony is limited, some notes may drop if there are too many playing at the same time.
 * Songs having an overly high note rate may stutter.
 * Clipping may occur for some songs if you have all your volume settings maxed out. Just reduce in-game volume to avoid this.
+* Play as a band features do not work with trial accounts in raid mode.
