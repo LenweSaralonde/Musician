@@ -18,6 +18,7 @@ How to listen to music
 ----------------------
 All you need is to have the add-on installed. Nothing more is required.
 
+* Enable nameplates with **SHIFT+V** (or from the add-on options) to see cool animations on characters playing music and show a 🎵 next to the name of your fellow music addicts.
 * To mute a player, right-click on his/her name or portrait to open the menu then select **Mute**. Do the same to unmute.
 * You can also just stop the song being played by clicking the **[Stop]** hyperlink in the player's emote.
 * Right click on the minimap button to enable or disable all the music from the add-on.
@@ -87,6 +88,7 @@ Tips
 * The radius for hearing the music is approximately 40 meters.
 * Play songs that are relevant with your "band" composition. It's nonsense to play orchestral music with only two bards ! 😃 However you can still roleplay as if your character owns a kind of gnomish *Music-o-Matic* machine that is capable of reproducing a whole band.
 * A text emote is shown to the players who don't have Musician when you play a song. You can disable this emote in the add-on options.
+* Nameplates animations and icons are compatible with the most popular nameplate add-ons (KuiNameplates, Plater, ElvUI...).
 
 Compose your own music
 ----------------------
