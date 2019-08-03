@@ -249,12 +249,7 @@ function MusicianButton.UpdateTooltipText(alwaysShowLoadingProgression)
 	local mainLine = string.gsub(Musician.Msg.PLAYER_TOOLTIP_VERSION, "{version}", GetAddOnMetadata("Musician", "Version"))
 
 	local leftClickLine = Musician.Msg.TOOLTIP_LEFT_CLICK
-	local leftAction
-	if MusicianFrame:IsVisible() then
-		leftAction = Musician.Msg.TOOLTIP_ACTION_HIDE
-	else
-		leftAction = Musician.Msg.TOOLTIP_ACTION_SHOW
-	end
+	local leftAction = Musician.Msg.TOOLTIP_ACTION_OPEN_MENU
 	leftClickLine = string.gsub(leftClickLine, "{action}", leftAction)
 
 	local rightClickLine = Musician.Msg.TOOLTIP_RIGHT_CLICK
