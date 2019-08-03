@@ -539,6 +539,9 @@ function Musician.Registry.NotifyNewVersion(otherVersion)
 	local myVersion, myProtocol = Musician.Registry.ExtractVersionAndProtocol(Musician.Registry.GetVersionString())
 	local theirVersion, theirProtocol = Musician.Registry.ExtractVersionAndProtocol(otherVersion)
 
+	-- Do not notify new version if version number contains non numeric characters
+	if theirVersion:match("[^0-9\\.]") then return end
+
 	-- Compare versions
 	if not(newVersionNotified) and Musician.Utils.VersionCompare(theirVersion, myVersion) == 1 then
 		newVersionNotified = true
