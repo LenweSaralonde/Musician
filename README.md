@@ -23,6 +23,8 @@ All you need is to have the add-on installed. Nothing more is required.
 * You can also just stop the song being played by clicking the **[Stop]** hyperlink in the player's emote.
 * Right click on the minimap button to enable or disable all the music from the add-on.
 
+![Main window](./img/nameplates.gif)
+
 How to play music
 -----------------
 Musician plays music files in **MIDI format**. MIDI files have a **.mid**, **.midi** or **.kar** extension and do not contain any sound like MP3s, but a sequence of notes. This is why a MIDI file sounds differently according to the software or musical instrument it's played on.
@@ -38,7 +40,7 @@ You can find millions of MIDI files very easily by searching for *MIDI* + *music
 5. Click the **Select all** button then paste the music code in the edit window (*Ctrl+V* or *CMD+V* on Mac).
 6. Click **Play**.
 
- ![Main window](./img/main-window.png)
+![Main window](./img/main-window.png)
 
 ### Save and load songs in game
 Songs can be saved and loaded back in game using the optional add-on [MusicianList](https://musician.lenwe.io/musicianlist).
