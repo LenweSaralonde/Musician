@@ -38,6 +38,8 @@ You can find millions of MIDI files very easily by searching for *MIDI* + *music
 5. Click the **Select all** button then paste the music code in the edit window (*Ctrl+V* or *CMD+V* on Mac).
 6. Click **Play**.
 
+ ![Main window](./img/main-window.png)
+
 ### Save and load songs in game
 Songs can be saved and loaded back in game using the optional add-on [MusicianList](https://musician.lenwe.io/musicianlist).
 
@@ -48,7 +50,7 @@ To allow synchronized play, all band members should be grouped in the same party
 
 1. Load the same song as the other members of the band from MIDI of [from the list](https://musician.lenwe.io/musicianlist).
 2. Open the **Song Editor** then check **Solo** for the tracks you want to play with your character. Adjust other track settings as you like.
-3. Click the **Play as a band** button when you're done (the green LED starts blinking).
+3. Click the **Play as a band** button ![Play as band button](./img/band-play-button-song.png) when you're done (the green LED starts blinking).
 4. When every member is ready, the band leader clicks the **Play** button for synchronized start (the green LED turns on).
 5. Song stops playing if the band leader clicks the **Stop** button.
 
@@ -70,6 +72,8 @@ Before using the keyboard for the first time, you have configure it to determine
 
 This process is straightforward and takes approximately 30 seconds to complete, just follow the on-screen instructions.
 
+![Configuration example for the US keyboard](./img/configure-keyboard-us.png)
+
 ### The live keyboard
 The live keyboard consists in two layers, **Upper** and **Lower**, respectively the two first and two last rows of your keyboard (or the right and left side, depending on the layout used). Each layer has its own instrument setting so 2 different instruments can be played at the same time or the same instrument can be set to both layers to take advantage of the full keyboard.
 
@@ -82,10 +86,12 @@ The keyboard settings can be saved in 12 program slots, accessible using the 12 
 * Press **Ctrl** (or **Shift** on Mac) **+** the **Function key** to save the current settings in a program.
 * Press **Delete +** the **Function key** to erase a program.
 
+![The live keyboard](./img/live-keyboard.png)
+
 ### Play as a band
 It's possible to play as a band in Live Mode. All the members of the band should be grouped in the same party or raid.
 
-Click the **Play live as a band** button on the live keyboard window to turn on the synchronization. In counterpart, this may result in some latency so you won't be able to play fast paced songs in this mode.
+Click the **Play live as a band** button ![Play live as a band button](./img/band-play-button-live.png) on the live keyboard window to turn on the synchronization. In counterpart, this may result in some latency so you won't be able to play fast paced songs in this mode.
 
 Use the **Solo Mode** if you need to do some adjustments you don't want the other members of the band to hear.
 
@@ -106,6 +112,8 @@ Some basic modifications can be made to the imported song in the song editor, wh
 
 The song editor also shows some information about the tracks (MIDI instrument, start and end points, number of notes...) and the activity while the song is playing.
 
+![Song editor](./img/song-editor.png)
+
 Cross-faction play
 ------------------
 Cross-faction (and cross-realm) music can be achieved through the [Cross RP add-on](https://www.curseforge.com/wow/addons/cross-rp) by Tammya-MoonGuard.
@@ -116,11 +124,15 @@ Cross RP relies on a peer to peer network established by the players who run it 
 
 You can see what realms and factions you're connected to in Musician's options or by mousing over the Cross RP minimap button.
 
+![Cross-faction play with Cross RP](./img/cross-rp.png)
+
 Integration with role-playing add-ons
 -------------------------------------
 Musician integrates with role-playing add-ons [Total RP](https://www.curseforge.com/wow/addons/total-rp-3) and [MyRolePlay](https://www.curseforge.com/wow/addons/my-role-play) to benefit from some of their features, such as roleplay character names and tooltips.
 
 [Total RP](https://www.curseforge.com/wow/addons/total-rp-3)'s map scan feature shows players who also have Musician with a 🎵 icon. The icon blinks for players who are currently playing music.
+
+![Total RP map scan](./img/trp-map-scan.png)
 
 Tips
 ----
