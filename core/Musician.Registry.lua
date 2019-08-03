@@ -496,6 +496,7 @@ end
 -- @param version (string)
 -- @return (string), (number)
 function Musician.Registry.ExtractVersionAndProtocol(version)
+	version = string.gsub(version, "%s.+", "")
 	local versionParts = { string.split('.', version) }
 	local protocol = Musician.PROTOCOL_VERSION
 
