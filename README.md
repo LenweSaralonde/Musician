@@ -41,6 +41,24 @@ You can find millions of MIDI files very easily by searching for *MIDI* + *music
 ### Save and load songs in game
 Songs can be saved and loaded back in game using the optional add-on [MusicianList](https://musician.lenwe.io/musicianlist).
 
+### Play as a band
+Songs can be played in sync as a band, in which each member is playing a different part.
+
+To allow synchronized play, all band members should be grouped in the same party or raid.
+
+1. Load the same song as the other members of the band from MIDI of [from the list](https://musician.lenwe.io/musicianlist).
+2. Open the **Song Editor** then check **Solo** for the tracks you want to play with your character. Adjust other track settings as you like.
+3. Click the **Play as a band** button when you're done (the green LED starts blinking).
+4. When every member is ready, the band leader clicks the **Play** button for synchronized start (the green LED turns on).
+5. Song stops playing if the band leader clicks the **Stop** button.
+
+Remarks:
+
+* The song should be loaded from the same MIDI file to work.
+* Mouse over the **Play as a band** button to check which members of the band are ready.
+* Each band member can do all the changes they want in the Song Editor, except changing the start and end points that would result in being out of sync.
+* Keep in mind that the overall polyphony is limited and is shared among all the members of the band.
+
 Play live
 ---------
 Live Mode literally turns your computer keyboard into a piano.
