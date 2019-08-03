@@ -23,7 +23,7 @@ All you need is to have the add-on installed. Nothing more is required.
 * You can also just stop the song being played by clicking the **[Stop]** hyperlink in the player's emote.
 * Right click on the minimap button to enable or disable all the music from the add-on.
 
-![Main window](./img/nameplates.gif)
+![Nameplate animations](./img/nameplates.gif)
 
 How to play music
 -----------------
