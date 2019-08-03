@@ -89,6 +89,12 @@ Cross RP relies on a peer to peer network established by the players who run it 
 
 You can see what realms and factions you're connected to in Musician's options or by mousing over the Cross RP minimap button.
 
+Roleplaying add-ons integration
+-------------------------------
+Musician integrates with roleplaying add-ons [Total RP](https://www.curseforge.com/wow/addons/total-rp-3) and [MyRolePlay](https://www.curseforge.com/wow/addons/my-role-play) to benefit from some of their features, such as roleplay character names and tooltips.
+
+[Total RP](https://www.curseforge.com/wow/addons/total-rp-3)'s map scan feature shows players who also have Musician with a 🎵 icon. The icon blinks for players who are currently playing music.
+
 Tips
 ----
 * You can preview the song at any moment prior to playing it for other players by clicking the **Preview** button or using the song editor. If another song is playing nearby, it will be muted for you only.
