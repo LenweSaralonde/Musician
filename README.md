@@ -82,6 +82,15 @@ The keyboard settings can be saved in 12 program slots, accessible using the 12 
 * Press **Ctrl** (or **Shift** on Mac) **+** the **Function key** to save the current settings in a program.
 * Press **Delete +** the **Function key** to erase a program.
 
+### Play as a band
+It's possible to play as a band in Live Mode. All the members of the band should be grouped in the same party or raid.
+
+Click the **Play live as a band** button on the live keyboard window to turn on the synchronization. In counterpart, this may result in some latency so you won't be able to play fast paced songs in this mode.
+
+Use the **Solo Mode** if you need to do some adjustments you don't want the other members of the band to hear.
+
+Enable nameplates to see who is playing what.
+
 ### Play with a MIDI keyboard
 
 There is no support for MIDI keyboards in World of Warcraft. However, it's possible to emulate keystrokes with a MIDI keyboard using third party software. Check out [this tutorial](https://gist.github.com/LenweSaralonde/ea5d1312b264521e27734029d78df9f3) to learn how to do this.
