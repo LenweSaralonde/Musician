@@ -423,12 +423,11 @@ end
 -- @return (table)
 function Musician.Comm.GetReadyBandPlayers()
 	if not(Musician.sourceSong) then return {} end
-	local songCrc32 = currentSongCrc32
 	local readyPlayers = {}
 	local player, playerCrc32
 
 	for player, playerCrc32 in pairs(readyBandPlayers) do
-		if playerCrc32 == songCrc32 then
+		if playerCrc32 == currentSongCrc32 then
 			table.insert(readyPlayers, player)
 		end
 	end
@@ -442,6 +441,7 @@ function Musician.Comm.OnGroupJoined()
 	readyBandPlayers = {}
 	isBandPlayReady = false
 	Musician.Comm.QueryBandReady()
+	Musician.Comm:SendMessage(Musician.Events.BandReadyPlayersUpdated)
 end
 
 --- QueryBandReady
@@ -477,6 +477,7 @@ function Musician.Comm.OnBandReadyQuery(prefix, message, distribution, sender)
 		local songCrc32 = readyBandPlayers[sender]
 		readyBandPlayers[sender] = nil
 		Musician.Comm:SendMessage(Musician.Events.BandPlayReady, sender, songCrc32, false, prefix)
+		Musician.Comm:SendMessage(Musician.Events.BandReadyPlayersUpdated)
 	end
 end
 
@@ -485,55 +486,70 @@ end
 function Musician.Comm.OnGroupLeft()
 	readyBandPlayers = {}
 	isBandPlayReady = false
+	Musician.Comm:SendMessage(Musician.Events.BandReadyPlayersUpdated)
 end
 
 --- OnRosterUpdate
 --
 function Musician.Comm.OnRosterUpdate(event)
 	-- Remove players from readyBandPlayers who are no longer in the group
-	local player
-	for player, _ in pairs(readyBandPlayers) do
+	local player, songCrc32
+	local isUpdated = false
+	for player, songCrc32 in pairs(readyBandPlayers) do
 		if not(Musician.Utils.PlayerIsInGroup(player)) then
-			local songCrc32 = readyBandPlayers[player]
 			readyBandPlayers[player] = nil
 			Musician.Comm:SendMessage(Musician.Events.BandPlayReady, player, songCrc32, false, event)
+			isUpdated = true
 		end
+	end
+
+	if isUpdated then
+		Musician.Comm:SendMessage(Musician.Events.BandReadyPlayersUpdated)
 	end
 end
 
---- OnSongLoaded
---
-function Musician.Comm.OnSongLoaded()
+--- Returns current song CRC32
+-- @return (number)
+function Musician.Comm.GetCurrentSongCrc32()
+	return currentSongCrc32
+end
 
-	-- A song is already playing: keep the references to the song currently streaming
-	if Musician.Comm.IsSongPlaying() then return end
+--- Update current song CRC32
+-- @param songCrc32 (number)
+function Musician.Comm.UpdateCurrentSongCrc32(songCrc32)
+	-- Not changed
+	if songCrc32 == currentSongCrc32 then return end
 
+	-- Set new CRC32
 	local previousSongcrc32 = currentSongCrc32
+	currentSongCrc32 = songCrc32
 
 	-- Send a "not ready" message for the previous song
 	local groupChatType = Musician.Comm.GetGroupChatType()
 	if isBandPlayReady and groupChatType ~= nil and previousSongcrc32 ~= nil then
 		local message = tostring(previousSongcrc32)
 		isBandActionPending = true
-		isBandPlayReady = false
 		Musician.Comm:SendMessage(Musician.Events.CommSendAction, Musician.Comm.action.bandNotReady)
 		debug(true, Musician.Comm.event.bandNotReady, groupChatType, message)
 		Musician.Comm:SendCommMessage(Musician.Comm.event.bandNotReady, message, groupChatType, nil, "ALERT")
 	end
 
-	-- Update song CRC32 by the one from the loaded song
-	currentSongCrc32 = Musician.sourceSong and Musician.sourceSong.crc32
-
 	-- Band play is no longer ready
-	local wasReady = isBandPlayReady
 	isBandPlayReady = false
 	local player = Musician.Utils.NormalizePlayerName(UnitName("player"))
 	readyBandPlayers[player] = nil
 
-	-- Send local event
-	if wasReady then
-		Musician.Comm:SendMessage(Musician.Events.BandPlayReady, player, previousSongcrc32, false, event)
-	end
+	Musician.Comm:SendMessage(Musician.Events.BandReadyPlayersUpdated)
+end
+
+--- OnSongLoaded
+--
+function Musician.Comm.OnSongLoaded()
+	-- A song is already playing: keep the references to the song currently streaming
+	if Musician.Comm.IsSongPlaying() then return end
+
+	-- Update song CRC32 by the one from the loaded song
+	Musician.Comm.UpdateCurrentSongCrc32(Musician.sourceSong and Musician.sourceSong.crc32)
 end
 
 --- Indicates if the player is ready for band play
@@ -594,9 +610,10 @@ function Musician.Comm.OnBandPlayReady(prefix, message, distribution, sender)
 	local wasReady = not(not(readyBandPlayers[sender]))
 	readyBandPlayers[sender] = isReady and songCrc32 or nil
 
-	-- Trigger local event if ready status have changed
+	-- Trigger local events if ready status have changed
 	if wasReady ~= isReady then
 		Musician.Comm:SendMessage(Musician.Events.BandPlayReady, sender, songCrc32, isReady, prefix)
+		Musician.Comm:SendMessage(Musician.Events.BandReadyPlayersUpdated)
 	end
 end
 
@@ -634,6 +651,7 @@ function Musician.Comm.OnBandPlay(prefix, message, distribution, sender)
 	if not(Musician.Utils.PlayerIsInGroup(sender)) then return end
 	if not(isBandPlayReady) then return end
 	if Musician.Comm.IsSongPlaying() then return false end
+	if Musician.Comm.GetGroupChatType() == nil then return end
 
 	local songCrc32 = tonumber(message)
 	if currentSongCrc32 ~= songCrc32 then return end
@@ -681,6 +699,7 @@ function Musician.Comm.OnBandStop(prefix, message, distribution, sender)
 	if not(isBandPlayReady) then return end
 	if not(Musician.Comm.IsSongPlaying()) then return false end
 	if currentSongCrc32 ~= songCrc32 then return end
+	if Musician.Comm.GetGroupChatType() == nil then return end
 
 	Musician.Comm.StopSong()
 
@@ -711,15 +730,12 @@ function Musician.Comm.OnSongStop(event, song)
 		isBandPlayReady = false -- I am no longer ready
 		isStopPending = false
 		-- Update song CRC32 by the one from the loaded song
-		currentSongCrc32 = Musician.sourceSong and Musician.sourceSong.crc32
+		Musician.Comm.UpdateCurrentSongCrc32(Musician.sourceSong and Musician.sourceSong.crc32)
 	end
 
 	-- Remove player from ready band members
 	local wasReady = not(not(readyBandPlayers[player]))
 	readyBandPlayers[player] = nil
 
-	-- Trigger local event if ready status have changed
-	if wasReady then
-		Musician.Comm:SendMessage(Musician.Events.BandPlayReady, player, songCrc32, isReady, event)
-	end
+	Musician.Comm:SendMessage(Musician.Events.BandReadyPlayersUpdated)
 end

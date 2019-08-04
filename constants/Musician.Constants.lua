@@ -68,6 +68,7 @@ Musician.Events.Bandwidth = "MusicianBandwidth"
 Musician.Events.BandPlay = "MusicianBandPlay"
 Musician.Events.BandStop = "MusicianBandStop"
 Musician.Events.BandPlayReady = "MusicianBandPlayReady"
+Musician.Events.BandReadyPlayersUpdated = "MusicianBandReadyPlayersUpdated"
 Musician.Events.LiveBandSync = "MusicianLiveBandSync"
 
 Musician.IconImages = {}

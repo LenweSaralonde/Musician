@@ -30,7 +30,8 @@ MusicianFrame.Init = function()
 	Musician.Frame:RegisterMessage(Musician.Events.BandPlay, MusicianFrame.OnBandPlay)
 	Musician.Frame:RegisterMessage(Musician.Events.BandStop, MusicianFrame.OnBandStop)
 	Musician.Frame:RegisterMessage(Musician.Events.BandPlayReady, MusicianFrame.OnBandPlayReady)
-	Musician.Frame:RegisterEvent("GROUP_ROSTER_UPDATE", MusicianFrame.UpdateBandPlayButton)
+	Musician.Frame:RegisterMessage(Musician.Events.BandReadyPlayersUpdated, MusicianFrame.UpdateBandPlayButton)
+	Musician.Frame:RegisterEvent("GROUP_ROSTER_UPDATE", MusicianFrame.OnRosterUpdate)
 
 	MusicianFrameTrackEditorButton:Disable()
 	MusicianFrameTestButton:SetText(Musician.Msg.TEST_SONG)
@@ -147,7 +148,20 @@ end
 -- @param isPlaying (boolean)
 MusicianFrame.UpdatePlayButton = function()
 	isEnabled = Musician.sourceSong and Musician.Comm.ChannelIsReady() and not(isCommActionPending)
+
+	-- This may happen on trial accounts in raid mode
+	if IsInGroup() and (Musician.Comm.GetGroupChatType() == nil) then
+		isEnabled = false
+	end
+
 	MusicianFramePlayButton:SetEnabled(isEnabled)
+end
+
+--- OnRosterUpdate
+--
+MusicianFrame.OnRosterUpdate = function(event)
+	MusicianFrame.UpdatePlayButton()
+	MusicianFrame.UpdateBandPlayButton()
 end
 
 --- OnCommChannelUpdate
@@ -310,22 +324,19 @@ end
 
 --- OnBandPlayReady
 --
-MusicianFrame.OnBandPlayReady = function(event, player, songCrc32, isReady, origEvent)
+MusicianFrame.OnBandPlayReady = function(event, player, songCrc32, isReady)
 	-- Display "Is ready" emote in the chat
-	if Musician.sourceSong and Musician.sourceSong.crc32 == songCrc32 and origEvent ~= Musician.Events.SongStop then
+	if Musician.Comm.GetCurrentSongCrc32() == songCrc32 then
 		local emote = isReady and Musician.Msg.EMOTE_PLAYER_IS_READY or Musician.Msg.EMOTE_PLAYER_IS_NOT_READY
 		Musician.Utils.DisplayEmote(player, UnitGUID(Musician.Utils.SimplePlayerName(player)), emote)
 	end
-
-	-- Update button
-	MusicianFrame.UpdateBandPlayButton()
 end
 
 --- OnBandPlay
 --
 MusicianFrame.OnBandPlay = function(event, player, songCrc32)
 	-- Display "Started band play" emote in the chat
-	if Musician.sourceSong and Musician.sourceSong.crc32 == songCrc32 then
+	if Musician.Comm.GetCurrentSongCrc32() == songCrc32 then
 		Musician.Utils.DisplayEmote(player, UnitGUID(Musician.Utils.SimplePlayerName(player)), Musician.Msg.EMOTE_PLAY_IN_BAND_START)
 	end
 end
@@ -334,7 +345,7 @@ end
 --
 MusicianFrame.OnBandStop = function(event, player, songCrc32)
 	-- Display "Stopped band play" emote in the chat
-	if Musician.sourceSong and Musician.sourceSong.crc32 == songCrc32 then
+	if Musician.Comm.GetCurrentSongCrc32() == songCrc32 then
 		Musician.Utils.DisplayEmote(player, UnitGUID(Musician.Utils.SimplePlayerName(player)), Musician.Msg.EMOTE_PLAY_IN_BAND_STOP)
 	end
 end
