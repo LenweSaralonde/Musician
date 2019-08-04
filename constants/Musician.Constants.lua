@@ -5,7 +5,7 @@ Musician.URL = "https://musician.lenwe.io"
 Musician.CONVERTER_URL = "https://musician.lenwe.io/import"
 Musician.DISCORD_URL = "https://musician.lenwe.io/discord"
 
-Musician.FILE_HEADER = "MUS4"
+Musician.FILE_HEADER = "MUS5"
 Musician.PROTOCOL_VERSION = 4
 Musician.MAX_NOTE_DURATION = 6
 Musician.NOTE_DURATION_FPS = 255 / Musician.MAX_NOTE_DURATION -- 8-bit

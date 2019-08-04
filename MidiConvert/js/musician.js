@@ -3,7 +3,7 @@ var Musician = {};
 
 Musician.C0_INDEX = 12;
 
-Musician.FILE_HEADER = 'MUS4';
+Musician.FILE_HEADER = 'MUS5';
 Musician.MAX_NOTE_DURATION = 6;
 Musician.NOTE_DURATION_FPS = 255 / Musician.MAX_NOTE_DURATION; // 8-bit
 Musician.NOTE_TIME_FPS = 240;
