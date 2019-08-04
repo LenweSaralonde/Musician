@@ -423,7 +423,7 @@ end
 -- @return (table)
 function Musician.Comm.GetReadyBandPlayers()
 	if not(Musician.sourceSong) then return {} end
-	local songCrc32 = Musician.sourceSong.crc32
+	local songCrc32 = currentSongCrc32
 	local readyPlayers = {}
 	local player, playerCrc32
 
@@ -441,6 +441,12 @@ end
 function Musician.Comm.OnGroupJoined()
 	readyBandPlayers = {}
 	isBandPlayReady = false
+	Musician.Comm.QueryBandReady()
+end
+
+--- QueryBandReady
+--
+function Musician.Comm.QueryBandReady()
 	local groupChatType = Musician.Comm.GetGroupChatType()
 	if groupChatType then
 		local message = Musician.Comm.event.bandReadyQuery
@@ -456,12 +462,12 @@ function Musician.Comm.OnBandReadyQuery(prefix, message, distribution, sender)
 	debug(false, prefix, sender .. "(" .. distribution .. ")", message)
 
 	if not(Musician.Utils.PlayerIsInGroup(sender)) then return end
-	if not(Musician.sourceSong) or not(Musician.sourceSong.crc32) then return end
+	if not(currentSongCrc32) then return end
 
 	-- Send ready message in return
 	local groupChatType = Musician.Comm.GetGroupChatType()
 	if isBandPlayReady and groupChatType then
-		local message = tostring(Musician.sourceSong.crc32)
+		local message = tostring(currentSongCrc32)
 		debug(true, Musician.Comm.event.bandReady, groupChatType, message)
 		Musician.Comm:SendCommMessage(Musician.Comm.event.bandReady, message, groupChatType, nil, "ALERT")
 	end
@@ -497,12 +503,17 @@ end
 
 --- OnSongLoaded
 --
-function Musician.Comm.OnSongLoaded(event)
+function Musician.Comm.OnSongLoaded()
+
+	-- A song is already playing: keep the references to the song currently streaming
+	if Musician.Comm.IsSongPlaying() then return end
+
+	local previousSongcrc32 = currentSongCrc32
 
 	-- Send a "not ready" message for the previous song
 	local groupChatType = Musician.Comm.GetGroupChatType()
-	if isBandPlayReady and groupChatType ~= nil and currentSongCrc32 ~= nil then
-		local message = tostring(currentSongCrc32)
+	if isBandPlayReady and groupChatType ~= nil and previousSongcrc32 ~= nil then
+		local message = tostring(previousSongcrc32)
 		isBandActionPending = true
 		isBandPlayReady = false
 		Musician.Comm:SendMessage(Musician.Events.CommSendAction, Musician.Comm.action.bandNotReady)
@@ -510,22 +521,16 @@ function Musician.Comm.OnSongLoaded(event)
 		Musician.Comm:SendCommMessage(Musician.Comm.event.bandNotReady, message, groupChatType, nil, "ALERT")
 	end
 
+	-- Update song CRC32 by the one from the loaded song
+	currentSongCrc32 = Musician.sourceSong and Musician.sourceSong.crc32
+
 	-- Band play is no longer ready
-	local wasReady = isBandPlayReady
 	isBandPlayReady = false
-
 	local player = Musician.Utils.NormalizePlayerName(UnitName("player"))
-
-	-- Send local event
-	if wasReady then
-		Musician.Comm:SendMessage(Musician.Events.BandPlayReady, player, currentSongCrc32, false, event)
-	end
-
-	-- Remove myself from readyBandPlayers
 	readyBandPlayers[player] = nil
 
-	-- Update current song CRC32
-	currentSongCrc32 = Musician.sourceSong and Musician.sourceSong.crc32
+	-- Send local event
+	Musician.Comm:SendMessage(Musician.Events.BandPlayReady, player, previousSongcrc32, false, event)
 end
 
 --- Indicates if the player is ready for band play
@@ -546,7 +551,7 @@ end
 function Musician.Comm.SetBandPlayReady(isReady)
 	if isBandActionPending then return false end
 	if not(Musician.Comm.CanBroadcast()) then return false end
-	if not(Musician.sourceSong) or not(Musician.sourceSong.crc32) then return false end
+	if not(currentSongCrc32) then return false end
 
 	local groupChatType = Musician.Comm.GetGroupChatType()
 	if groupChatType == nil then return false end
@@ -555,7 +560,7 @@ function Musician.Comm.SetBandPlayReady(isReady)
 
 	local type = isReady and Musician.Comm.event.bandReady or Musician.Comm.event.bandNotReady
 	local action = isReady and Musician.Comm.action.bandReady or Musician.Comm.action.bandNotReady
-	local message = tostring(Musician.sourceSong.crc32)
+	local message = tostring(currentSongCrc32)
 	Musician.Comm:SendMessage(Musician.Events.CommSendAction, action)
 	debug(true, type, groupChatType, message)
 	Musician.Comm:SendCommMessage(type, message, groupChatType, nil, "ALERT")
@@ -597,14 +602,14 @@ end
 function Musician.Comm.PlaySongBand()
 	if isBandActionPending then return false end
 	if not(Musician.Comm.CanBroadcast()) then return false end
-	if not(Musician.sourceSong) or not(Musician.sourceSong.crc32) then return false end
+	if not(currentSongCrc32) then return false end
 
 	local groupChatType = Musician.Comm.GetGroupChatType()
 	if groupChatType == nil then return false end
 
 	isBandActionPending = true
 
-	local message = tostring(Musician.sourceSong.crc32)
+	local message = tostring(currentSongCrc32)
 	Musician.Comm:SendMessage(Musician.Events.CommSendAction, Musician.Comm.action.bandPlay)
 	debug(true, Musician.Comm.event.bandPlay, groupChatType, message)
 	Musician.Comm:SendCommMessage(Musician.Comm.event.bandPlay, message, groupChatType, nil, "ALERT")
@@ -628,7 +633,7 @@ function Musician.Comm.OnBandPlay(prefix, message, distribution, sender)
 	if Musician.Comm.IsSongPlaying() then return false end
 
 	local songCrc32 = tonumber(message)
-	if not(Musician.sourceSong) or Musician.sourceSong.crc32 ~= songCrc32 then return end
+	if currentSongCrc32 ~= songCrc32 then return end
 
 	Musician.Comm.PlaySong()
 
@@ -640,14 +645,14 @@ end
 function Musician.Comm.StopSongBand()
 	if isBandActionPending then return false end
 	if not(Musician.Comm.CanBroadcast()) then return false end
-	if not(Musician.sourceSong) or not(Musician.sourceSong.crc32) then return false end
+	if not(currentSongCrc32) then return false end
 
 	local groupChatType = Musician.Comm.GetGroupChatType()
 	if groupChatType == nil then return false end
 
 	isBandActionPending = true
 
-	local message = tostring(Musician.sourceSong.crc32)
+	local message = tostring(currentSongCrc32)
 	Musician.Comm:SendMessage(Musician.Events.CommSendAction, Musician.Comm.action.bandStop)
 	debug(true, Musician.Comm.event.bandStop, groupChatType, message)
 	Musician.Comm:SendCommMessage(Musician.Comm.event.bandStop, message, groupChatType, nil, "ALERT")
@@ -672,7 +677,7 @@ function Musician.Comm.OnBandStop(prefix, message, distribution, sender)
 
 	if not(isBandPlayReady) then return end
 	if not(Musician.Comm.IsSongPlaying()) then return false end
-	if not(Musician.sourceSong) or Musician.sourceSong.crc32 ~= songCrc32 then return end
+	if currentSongCrc32 ~= songCrc32 then return end
 
 	Musician.Comm.StopSong()
 
@@ -702,14 +707,16 @@ function Musician.Comm.OnSongStop(event, song)
 		isSongPlaying = false
 		isBandPlayReady = false -- I am no longer ready
 		isStopPending = false
+		-- Update song CRC32 by the one from the loaded song
+		currentSongCrc32 = Musician.sourceSong and Musician.sourceSong.crc32
 	end
 
-	-- Add/remove player in ready band members
+	-- Remove player from ready band members
 	local wasReady = not(not(readyBandPlayers[player]))
-	readyBandPlayers[player] = isReady and songCrc32 or nil
+	readyBandPlayers[player] = nil
 
 	-- Trigger local event if ready status have changed
-	if wasReady ~= isReady then
+	if wasReady then
 		Musician.Comm:SendMessage(Musician.Events.BandPlayReady, player, songCrc32, isReady, event)
 	end
 end

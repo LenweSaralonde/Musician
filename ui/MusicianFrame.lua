@@ -203,7 +203,6 @@ MusicianFrame.OnSourceSongUpdated = function(event, ...)
 	end
 	MusicianFrame.UpdatePlayButton()
 	MusicianFrame.UpdateBandPlayButton()
-	MusicianFrameBandPlayButton:SetChecked(false)
 	MusicianFrame.Clear()
 end
 
