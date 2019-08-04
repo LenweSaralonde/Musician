@@ -1,6 +1,17 @@
 Changelog
 =========
 
+v1.5.5.0
+--------
+*"Rock Band"*
+
+* Nameplate animations with support of the major nameplate add-ons
+* "Play as a band" mode for MIDI songs and live performance
+* Cross RP integration to allow cross-faction music playing
+* Integration with role-playing add-ons Total RP and MyRolePlay
+* Improved preloading to avoid freezings for HDD users during startup
+* Minor bugfixes and improvements
+
 v1.5.0.5
 --------
 * WoW 8.2 update
