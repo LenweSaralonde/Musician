@@ -31,7 +31,7 @@ Musician plays music files in **MIDI format**. MIDI files have a **.mid**, **.mi
 
 You can find millions of MIDI files very easily by searching for *MIDI* + *music genre/title/etc.* on Google. I also made a [selection of cool music files](https://www.dropbox.com/sh/6ypecquora72sne/AADAS0HnHS142bhpMNurRfX8a?dl=0) you can try with the add-on.
 
-### How to play a song:
+### How to play a song
 
 1. Open the [**MIDI import tool**](https://musician.lenwe.io/import/) located at [musician.lenwe.io/import](https://musician.lenwe.io/import/) in your web browser. (You can also find the import tool in the **Interface/AddOns/Musician/MidiConvert** folder.)
 2. Drag and drop a **MIDI file**.
