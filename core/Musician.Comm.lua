@@ -525,12 +525,15 @@ function Musician.Comm.OnSongLoaded()
 	currentSongCrc32 = Musician.sourceSong and Musician.sourceSong.crc32
 
 	-- Band play is no longer ready
+	local wasReady = isBandPlayReady
 	isBandPlayReady = false
 	local player = Musician.Utils.NormalizePlayerName(UnitName("player"))
 	readyBandPlayers[player] = nil
 
 	-- Send local event
-	Musician.Comm:SendMessage(Musician.Events.BandPlayReady, player, previousSongcrc32, false, event)
+	if wasReady then
+		Musician.Comm:SendMessage(Musician.Events.BandPlayReady, player, previousSongcrc32, false, event)
+	end
 end
 
 --- Indicates if the player is ready for band play
