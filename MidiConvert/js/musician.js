@@ -183,6 +183,11 @@ Musician.PackSong = function(song, fileName) {
 			var noteKey = Musician.C0_INDEX + rawNote.midi + (rawTrack.isPercussion ? Musician.PERCUSSION_KEY_OFFSET : 0);
 			var noteDuration = Math.min(rawNote.duration, Musician.MAX_NOTE_DURATION);
 
+			// Do not pack notes having zero duration
+			if (noteDuration === 0) {
+				return;
+			}
+
 			// Insert note spacers if needed
 			var noteSpacer = '';
 			while (noteTime > Musician.MAX_NOTE_TIME) {
