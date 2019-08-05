@@ -463,6 +463,6 @@ msg.MIDI_PERCUSSION_NAMES = {
 	[Percussion.SnareDrumBrush] = "军鼓擦杆",
 }
 
-if ( GetLocale() == "cnCN" ) then
+if ( GetLocale() == "zhCN" ) then
 	Musician.Msg = msg
 end
