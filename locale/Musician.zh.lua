@@ -1,6 +1,6 @@
-Musician.Locale.cn = Musician.Utils.DeepCopy(Musician.Locale.en)
+Musician.Locale.zh = Musician.Utils.DeepCopy(Musician.Locale.en)
 
-local msg = Musician.Locale.cn
+local msg = Musician.Locale.zh
 local Instrument = Musician.MIDI_INSTRUMENTS
 local Percussion = Musician.MIDI_PERCUSSIONS
 
@@ -463,6 +463,6 @@ msg.MIDI_PERCUSSION_NAMES = {
 	[Percussion.SnareDrumBrush] = "军鼓擦杆",
 }
 
-if ( GetLocale() == "zhCN" ) then
-	Musician.Msg = msg
+if (GetLocale() == "zhCN" or GetLocale() == "zhTW") then
+    Musician.Msg = msg
 end
