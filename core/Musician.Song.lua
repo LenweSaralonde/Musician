@@ -133,7 +133,7 @@ end
 -- @param isMuted (boolean)
 function Musician.Song:SetTrackMuted(track, isMuted)
 	if isMuted then
-		self:TrackNotesOff(track)
+		self:TrackNotesOff(track, true)
 	end
 
 	track.muted = isMuted
@@ -159,7 +159,7 @@ function Musician.Song:SetTrackSolo(track, isSolo)
 		local track
 		for _, track in pairs(self.tracks) do
 			if self:TrackIsMuted(track) then
-				self:TrackNotesOff(track)
+				self:TrackNotesOff(track, true)
 			end
 		end
 	end
@@ -387,23 +387,22 @@ function Musician.Song:NoteOn(track, noteIndex, noRetry)
 		return
 	end
 
-	-- A note should be displayed
-	Musician.Song:SendMessage(Musician.Events.VisualNoteOn, self, track, key)
-
-	-- Track is muted
-	if self:TrackIsMuted(track) then return end
+	local shouldPlay = true
 
 	-- Do not play note if the source song is playing or if the player is out of range
 	local sourceSongIsPlaying = Musician.sourceSong ~= nil and Musician.sourceSong:IsPlaying()
-	if self.player ~= nil and (sourceSongIsPlaying or not(playerIsInRange)) or Musician.globalMute or Musician.PlayerIsMuted(self.player) then
-		return
+	if self.player ~= nil and (sourceSongIsPlaying or not(playerIsInRange)) or self:TrackIsMuted(track) or Musician.globalMute or Musician.PlayerIsMuted(self.player) then
+		shouldPlay = false
 	end
 
 	-- The note cannot be already playing on the same track
-	self:NoteOff(track, key, false)
+	self:NoteOff(track, key)
 
 	-- Play note sound file
-	local play, handle = Musician.Utils.PlayNote(track.instrument, key)
+	local play, handle
+	if shouldPlay then
+		play, handle = Musician.Utils.PlayNote(track.instrument, key)
+	end
 
 	-- Note dropped: interrupt the oldest one and retry
 	if not(play) and not(noRetry) then
@@ -415,51 +414,57 @@ function Musician.Song:NoteOn(track, noteIndex, noRetry)
 	end
 
 	-- Add note to notesOn with sound handle and note off time
+	local endTime = nil
+	if duration ~= nil then
+		endTime = self.cursor + duration
+	end
+
+	track.notesOn[key] = {
+		[NOTEON.TIME] = time,
+		[NOTEON.ENDTIME] = endTime,
+		[NOTEON.HANDLE] = play and handle or 0,
+		[NOTEON.DECAY] = instrumentData.decay
+	}
+
 	if play then
-		local endTime = nil
-		if duration ~= nil then
-			endTime = self.cursor + duration
-		end
-
-		track.notesOn[key] = {
-			[NOTEON.TIME] = time,
-			[NOTEON.ENDTIME] = endTime,
-			[NOTEON.HANDLE] = handle,
-			[NOTEON.DECAY] = instrumentData.decay
-		}
-
 		track.polyphony = track.polyphony + 1
 		self.polyphony = self.polyphony + 1
 		Musician.Song:SendMessage(Musician.Events.NoteOn, self, track, key)
 	end
+
+	Musician.Song:SendMessage(Musician.Events.VisualNoteOn, self, track, key, play)
 end
 
 --- Stop a note of a track
 -- @param track (table) Reference to the track
 -- @param key (int) Note key
--- @param sendVisualEvent (boolean)
-function Musician.Song:NoteOff(track, key, sendVisualEvent)
+-- @param keepVisual (boolean)
+function Musician.Song:NoteOff(track, key, keepVisual)
 	if track.notesOn[key] ~= nil then
 		local handle = track.notesOn[key][NOTEON.HANDLE]
-		if handle then
+		if handle ~= 0 then
 			StopSound(handle, track.notesOn[key][NOTEON.DECAY])
+			track.polyphony = track.polyphony - 1
+			self.polyphony = self.polyphony - 1
 		end
-		track.notesOn[key] = nil
-		track.polyphony = track.polyphony - 1
-		self.polyphony = self.polyphony - 1
 		Musician.Song:SendMessage(Musician.Events.NoteOff, self, track, key)
-	end
-	if sendVisualEvent == nil or sendVisualEvent then
-		Musician.Song:SendMessage(Musician.Events.VisualNoteOff, self, track, key)
+
+		if keepVisual then
+			track.notesOn[key][NOTEON.HANDLE] = 0
+		else
+			track.notesOn[key] = nil
+			Musician.Song:SendMessage(Musician.Events.VisualNoteOff, self, track, key)
+		end
 	end
 end
 
 --- Stop all notes of a track
 -- @param track (table) Reference to the track
-function Musician.Song:TrackNotesOff(track)
+-- @param keepVisual (boolean)
+function Musician.Song:TrackNotesOff(track, keepVisual)
 	local noteKey, noteOn
 	for noteKey, noteOn in pairs(track.notesOn) do
-		self:NoteOff(track, noteKey)
+		self:NoteOff(track, noteKey, keepVisual)
 	end
 end
 
