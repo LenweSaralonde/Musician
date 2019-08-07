@@ -12,9 +12,11 @@ function Musician.TRP3:OnEnable()
 		Musician.TRP3.HookPlayerNames()
 		Musician.TRP3.HookNamePlates()
 		Musician.TRP3.HookPlayerMap()
-		TRP3_API.Events.registerCallback("WORKFLOW_ON_FINISH", function()
+		if TRP3_CharacterTooltip then
 			Musician.TRP3.HookTooltip()
-		end)
+		else
+			TRP3_API.Events.registerCallback("WORKFLOW_ON_FINISH", Musician.TRP3.HookTooltip)
+		end
 		Musician.TRP3:RegisterMessage(Musician.Events.SongChunk, Musician.TRP3.OnSongChunk)
 	end
 end
