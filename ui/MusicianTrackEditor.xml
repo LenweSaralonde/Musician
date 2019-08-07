@@ -374,6 +374,18 @@
 				</Scripts>
 			</Button>
 
+			<Button name="$parentSynchronizeButton" inherits="MusicianIconButtonTemplate">
+				<Size x="40" y="20" />
+				<Anchors>
+					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentSetCropToButton" x="20" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						Musician.TrackEditor.Synchronize()
+					</OnClick>
+				</Scripts>
+			</Button>
+
 			<!-- Track list -->
 
 			<ScrollFrame name="$parentScrollFrame" inherits="UIPanelScrollFrameTemplate">
@@ -498,6 +510,8 @@
 				MusicianTrackEditorGoToEndButton:SetText(Musician.Icons.ToEnd)
 				MusicianTrackEditorSetCropFromButton:SetText(Musician.Icons.InPoint)
 				MusicianTrackEditorSetCropToButton:SetText(Musician.Icons.OutPoint)
+				MusicianTrackEditorSynchronizeButton:SetText(Musician.Icons.Reset)
+				MusicianTrackEditorSynchronizeButton.tooltipText = Musician.Msg.SYNCHRONIZE_TRACKS
 				MusicianTrackEditorHeaderMute:SetText(Musician.Icons.Mute)
 				MusicianTrackEditorHeaderSolo:SetText(Musician.Icons.Solo)
 			</OnLoad>

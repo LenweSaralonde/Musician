@@ -57,6 +57,11 @@ Musician.TrackEditor.Init = function()
 	Musician.TrackEditor:RegisterMessage(Musician.Events.VisualNoteOn, Musician.TrackEditor.NoteOn)
 	Musician.TrackEditor:RegisterMessage(Musician.Events.VisualNoteOff, Musician.TrackEditor.NoteOff)
 	Musician.TrackEditor:RegisterMessage(Musician.Events.SourceSongLoaded, Musician.TrackEditor.OnLoad)
+
+	Musician.TrackEditor:RegisterMessage(Musician.Events.StreamStart, Musician.TrackEditor.UpdateSyncButton)
+	Musician.TrackEditor:RegisterMessage(Musician.Events.StreamStop, Musician.TrackEditor.UpdateSyncButton)
+	Musician.TrackEditor:RegisterMessage(Musician.Events.SourceSongLoaded, Musician.TrackEditor.UpdateSyncButton)
+	Musician.TrackEditor.UpdateSyncButton()
 end
 
 --- Song loaded handler
@@ -96,6 +101,18 @@ Musician.TrackEditor.UpdateButtons = function(event, song)
 			MusicianTrackEditorPlayButton:SetText(Musician.Icons.Play)
 		end
 	end
+end
+
+--- Returns true when the source song is currently streaming
+-- @return (boolean)
+local function isSourceSongStreaming()
+	return Musician.streamingSong and Musician.streamingSong.streaming and Musician.sourceSong and Musician.sourceSong.crc32 == Musician.streamingSong.crc32
+end
+
+--- UpdateSyncButton
+--
+Musician.TrackEditor.UpdateSyncButton = function()
+	MusicianTrackEditorSynchronizeButton:SetEnabled(isSourceSongStreaming())
 end
 
 --- UpdateSlider
@@ -310,6 +327,20 @@ Musician.TrackEditor.SetCropTo = function(position)
 
 	Musician.TrackEditor.UpdateSlider()
 	Musician.TrackEditor.UpdateBounds()
+end
+
+--- Synchronize track settings with currently streaming song
+--
+Musician.TrackEditor.Synchronize = function()
+	if not(isSourceSongStreaming()) then return end
+
+	local trackIndex, sourceTrack
+	for trackIndex, sourceTrack in pairs(Musician.sourceSong.tracks) do
+		local streamingTrack = Musician.streamingSong.tracks[trackIndex]
+		streamingTrack.instrument = sourceTrack.instrument
+		streamingTrack.transpose = sourceTrack.transpose
+		streamingTrack.muted = Musician.sourceSong:TrackIsMuted(sourceTrack)
+	end
 end
 
 --- OnUpdate
