@@ -60,7 +60,6 @@ Musician.TrackEditor.Init = function()
 
 	Musician.TrackEditor:RegisterMessage(Musician.Events.StreamStart, Musician.TrackEditor.UpdateSyncButton)
 	Musician.TrackEditor:RegisterMessage(Musician.Events.StreamStop, Musician.TrackEditor.UpdateSyncButton)
-	Musician.TrackEditor:RegisterMessage(Musician.Events.SourceSongLoaded, Musician.TrackEditor.UpdateSyncButton)
 	Musician.TrackEditor.UpdateSyncButton()
 end
 
@@ -86,6 +85,9 @@ Musician.TrackEditor.OnLoad = function()
 		_G['MusicianTrackEditorTrack' .. trackIndex]:Hide()
 		trackIndex = trackIndex + 1
 	end
+
+	-- Update synchronize button
+	Musician.TrackEditor.UpdateSyncButton()
 end
 
 --- Update buttons when the song starts or stops playing
