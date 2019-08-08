@@ -160,7 +160,56 @@ msg.FIXED_KEY_NAMES = {
 	[KEY.ControlRight] = "Ctrl",
 }
 
-msg.KEYBOARD_LAYOUTS = {}
+msg.KEYBOARD_LAYOUTS = {
+	["Piano"] = "钢琴",
+	["Chromatic"] = "半音阶",
+
+	["Modes"] = "调式",
+	["Ionian"] = "伊奥尼亚调式",
+	["Dorian"] = "多利亚调式",
+	["Phrygian"] = "弗利几亚调式",
+	["Lydian"] = "利底亚调式",
+	["Mixolydian"] = "混合利底亚调式",
+	["Aeolian"] = "爱奥利亚调式",
+	["Locrian"] = "洛克利亚调式",
+	["minor Harmonic"] = "和声小调",
+	["minor Melodic"] = "旋律小调",
+
+	["Blues scales"] = "布鲁斯音阶",
+	["Major Blues"] = "大调布鲁斯",
+	["minor Blues"] = "小调布鲁斯",
+
+	["Diminished scales"] = "减音阶",
+	["Diminished"] = "减弱",
+	["Complement Diminished"] = "补充减弱",
+
+	["Pentatonic scales"] = "五声音阶",
+	["Major Pentatonic"] = "大五声",
+	["minor Pentatonic"] = "小五声",
+
+	["World scales"] = "世界音阶",
+	["Raga 1"] = "Raga 1",
+	["Raga 2"] = "Raga 2",
+	["Raga 3"] = "Raga 3",
+	["Arabic"] = "阿拉伯",
+	["Spanish"] = "西班牙",
+	["Gypsy"] = "吉普赛",
+	["Egyptian"] = "埃及",
+	["Hawaiian"] = "夏威夷",
+	["Bali Pelog"] = "巴厘岛",
+	["Japanese"] = "日本",
+	["Ryukyu"] = "琉球",
+	["Chinese"] = "中国",
+
+	["Miscellaneous scales"] = "其他音阶",
+	["Bass Line"] = "贝斯弦",
+	["Wholetone"] = "全音",
+	["minor 3rd"] = "小三度",
+	["Major 3rd"] = "大三度",
+	["4th"] = "纯四度",
+	["5th"] = "纯五度",
+	["Octave"] = "八度",
+}
 msg.HORIZONTAL_LAYOUT = "水平"
 msg.VERTICAL_LAYOUT = "垂直"
 
