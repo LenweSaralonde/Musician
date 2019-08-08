@@ -36,7 +36,7 @@ msg.COMMAND_SONG_EDITOR = "打开音乐编辑器"
 msg.COMMAND_LIVE_KEYBOARD = "打开演奏键盘"
 msg.COMMAND_CONFIGURE_KEYBOARD = "设置键盘"
 msg.COMMAND_LIVE_DEMO = "键盘演示模式"
-msg.COMMAND_LIVE_DEMO_PARAMS = "{ **<upper track #>** **<lower track #>** || **off** }"
+msg.COMMAND_LIVE_DEMO_PARAMS = "{ **<上音轨编号>** **<下音轨编号>** || **关闭** }"
 msg.COMMAND_HELP = "显示这条帮助信息"
 msg.ERR_COMMAND_UNKNOWN = "未知的 \"{command}\" 指令。输入 {help} 来获得指令表。"
 
