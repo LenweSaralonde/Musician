@@ -284,7 +284,7 @@ function Musician.NamePlates.UpdateNamePlate(namePlate)
 	local unitToken = namePlate.namePlateUnitToken
 	local isPlayerOrFriendly = unitToken and (UnitIsFriend(unitToken, "player") or UnitIsPlayer(unitToken))
 
-	if not(IsInInstance()) and not(UnitIsUnit(unitToken, "player")) and isPlayerOrFriendly then
+	if not(namePlate:IsForbidden()) and not(UnitIsUnit(unitToken, "player")) and isPlayerOrFriendly then
 
 		local healthBarIsVisible, classificationFrameIsVisible
 
@@ -330,7 +330,7 @@ end
 --- OnUnitFrameUpdate
 -- @param frame (Frame)
 function Musician.NamePlates.OnUnitFrameUpdate(frame)
-	if IsInInstance() then return end
+	if frame:IsForbidden() then return end
 	local namePlate = frame:GetParent()
 	if namePlate and namePlate.namePlateUnitToken then
 		Musician.NamePlates.UpdateNamePlate(namePlate)
