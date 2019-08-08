@@ -188,9 +188,9 @@ msg.KEYBOARD_LAYOUTS = {
 	["minor Pentatonic"] = "小五声",
 
 	["World scales"] = "世界音阶",
-	["Raga 1"] = "Raga 1",
-	["Raga 2"] = "Raga 2",
-	["Raga 3"] = "Raga 3",
+	["Raga 1"] = "印度拉加 1",
+	["Raga 2"] = "印度拉加 2",
+	["Raga 3"] = "印度拉加 3",
 	["Arabic"] = "阿拉伯",
 	["Spanish"] = "西班牙",
 	["Gypsy"] = "吉普赛",
