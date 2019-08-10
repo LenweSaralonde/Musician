@@ -99,17 +99,17 @@
 				<FontString name="$parentTrackId" parentKey="idText" inherits="GameFontHighlightLarge" justifyh="" justifyv="" text="00">
 					<Size x="32" y="32" />
 					<Anchors>
-						<Anchor point="TOPLEFT" x="0" y="2" relativePoint="TOPLEFT" relativeTo="$parent" />
+						<Anchor point="LEFT" y="2" relativePoint="LEFT" relativeTo="$parent" />
 					</Anchors>
 				</FontString>
 				<FontString name="$parentTrackName" parentKey="nameText" inherits="GameFontNormalSmall" text="[TrackName]">
 					<Anchors>
-						<Anchor point="TOPLEFT" x="68" y="-4" relativePoint="TOPLEFT" relativeTo="$parent" />
+						<Anchor point="TOPLEFT" x="68" y="-2" relativePoint="TOPLEFT" relativeTo="$parent" />
 					</Anchors>
 				</FontString>
 				<FontString name="$parentTrackInfo" parentKey="infoText" inherits="GameFontNormalSmall" text="[TrackInfo]">
 					<Anchors>
-						<Anchor point="TOPLEFT" x="68" y="-16" relativePoint="TOPLEFT" relativeTo="$parent" />
+						<Anchor point="TOPLEFT" x="68" y="-14" relativePoint="TOPLEFT" relativeTo="$parent" />
 					</Anchors>
 					<OnHyperlinkClick>
 						ChatFrame_OnHyperlinkShow(DEFAULT_CHAT_FRAME, link, text, button)
@@ -118,7 +118,7 @@
 				<Texture name="$parentMeter" parentKey="meterTexture" alphaMode="ADD">
 					<Size x="32" y="5"/>
 					<Anchors>
-						<Anchor point="CENTER" x="48" y="-22" relativePoint="TOPLEFT" relativeTo="$parent" />
+						<Anchor point="CENTER" x="48" y="-20" relativePoint="TOPLEFT" relativeTo="$parent" />
 					</Anchors>
 					<Color a="1" r="0" g="1" b="0" />
 				</Texture>
@@ -175,7 +175,7 @@
 		<Frames>
 			<CheckButton name="$parentMute" parentKey="muteCheckbox" inherits="OptionsSmallCheckButtonTemplate" >
 				<Anchors>
-					<Anchor point="TOPLEFT" x="32" y="-2" relativeTo="$parent" relativePoint="TOPLEFT" />
+					<Anchor point="TOPLEFT" x="32" y="0" relativeTo="$parent" relativePoint="TOPLEFT" />
 				</Anchors>
 				<Size>
 					<AbsDimension x="16" y="16"/>
@@ -186,7 +186,7 @@
 			</CheckButton>
 			<CheckButton name="$parentSolo" parentKey="soloCheckbox" inherits="OptionsSmallCheckButtonTemplate" >
 				<Anchors>
-					<Anchor point="TOPLEFT" x="48" y="-2" relativeTo="$parent" relativePoint="TOPLEFT" />
+					<Anchor point="TOPLEFT" x="48" y="0" relativeTo="$parent" relativePoint="TOPLEFT" />
 				</Anchors>
 				<Size>
 					<AbsDimension x="16" y="16"/>
