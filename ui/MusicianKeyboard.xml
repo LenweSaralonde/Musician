@@ -190,7 +190,7 @@
 				</Anchors>
 			</Button>
 
-			<CheckButton name="$parentPowerChords" inherits="OptionsSmallCheckButtonTemplate" >
+			<CheckButton name="$parentPowerChords" parentKey="powerChordsCheckbox" inherits="OptionsSmallCheckButtonTemplate" >
 				<Anchors>
 					<Anchor point="TOPLEFT" x="16" y="0" relativeTo="$parentInstrument" relativePoint="BOTTOMLEFT" />
 				</Anchors>
@@ -238,6 +238,8 @@
 				self.powerChordsBolt:SetText(Musician.Icons.Bolt)
 				self.powerChordsLabel:SetText(Musician.Msg.POWER_CHORDS)
 				self.powerChordsHorns:SetText(Musician.Icons.SignOfHorns)
+				local powerChordsLabelWidth = 12 + self.powerChordsBolt:GetWidth() + self.powerChordsLabel:GetWidth() + self.powerChordsHorns:GetWidth()
+				self.powerChordsCheckbox:SetHitRectInsets(0, -powerChordsLabelWidth, 0, 0)
 			</OnLoad>
 		</Scripts>
 
