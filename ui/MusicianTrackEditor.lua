@@ -154,48 +154,47 @@ end
 -- @param trackIndex (number)
 Musician.TrackEditor.CreateTrackWidget = function(trackIndex)
 	local trackFrameName = 'MusicianTrackEditorTrack' .. trackIndex
-	local transposeDropdownName = trackFrameName .. 'TransposeDropdown'
-	local instrumentDropdownName = trackFrameName .. 'InstrumentDropdown'
+	local trackFrame = _G[trackFrameName]
+	local track = Musician.sourceSong.tracks[trackIndex]
 
 	-- Create frame, init dropdowns, labels and checkboxes
-	if _G[trackFrameName] == nil then
+	if trackFrame == nil then
 		_G[trackFrameName] = CreateFrame("Frame", trackFrameName, MusicianTrackEditorTrackContainer, "MusicianTrackTemplate")
-		_G[trackFrameName]:SetPoint("TOPLEFT", 0, -_G[trackFrameName]:GetHeight() * (trackIndex - 1))
-		Musician.TrackEditor.InitTransposeDropdown(_G[transposeDropdownName], trackIndex)
-		Musician.TrackEditor.InitInstrumentDropdown(_G[instrumentDropdownName], trackIndex)
+		trackFrame = _G[trackFrameName]
+		trackFrame:SetPoint("TOPLEFT", 0, -trackFrame:GetHeight() * (trackIndex - 1))
+		Musician.TrackEditor.InitTransposeDropdown(trackFrame.transposeDropdown, trackIndex)
+		Musician.TrackEditor.InitInstrumentDropdown(trackFrame.instrumentDropdown, trackIndex)
 
 		-- Track index
-		_G[trackFrameName .. 'TrackId']:SetText(trackIndex)
+		trackFrame.idText:SetText(trackIndex)
 
 		-- Mute
-		_G[trackFrameName .. 'Mute'].tooltipText = Musician.Msg.MUTE_TRACK
-		_G[trackFrameName .. 'Mute'].SetValue = function(self, setting)
+		trackFrame.muteCheckbox.tooltipText = Musician.Msg.MUTE_TRACK
+		trackFrame.muteCheckbox.SetValue = function(self, setting)
 			Musician.sourceSong:SetTrackMuted(Musician.sourceSong.tracks[trackIndex], setting == "1")
 		end
 
 		-- Solo
-		_G[trackFrameName .. 'Solo'].tooltipText = Musician.Msg.SOLO_TRACK
-		_G[trackFrameName .. 'Solo'].SetValue = function(self, setting)
+		trackFrame.soloCheckbox.tooltipText = Musician.Msg.SOLO_TRACK
+		trackFrame.soloCheckbox.SetValue = function(self, setting)
 			Musician.sourceSong:SetTrackSolo(Musician.sourceSong.tracks[trackIndex], setting == "1")
 		end
 
 		-- Meter
-		_G[trackFrameName .. 'Meter'].maxWidth = _G[trackFrameName .. 'Meter']:GetWidth()
-		_G[trackFrameName .. 'Meter'].volumeMeter = Musician.VolumeMeter.create()
+		trackFrame.meterTexture.maxWidth = trackFrame.meterTexture:GetWidth()
+		trackFrame.meterTexture.volumeMeter = Musician.VolumeMeter.create()
 	end
 
-	local track = Musician.sourceSong.tracks[trackIndex]
-
 	-- Muted
-	_G[trackFrameName .. 'Mute']:SetChecked(track.muted)
+	trackFrame.muteCheckbox:SetChecked(track.muted)
 
 	-- Solo
-	_G[trackFrameName .. 'Solo']:SetChecked(track.solo)
+	trackFrame.soloCheckbox:SetChecked(track.solo)
 
 	-- Meter
-	_G[trackFrameName .. 'Meter']:SetWidth(0)
-	_G[trackFrameName .. 'Meter']:Hide()
-	_G[trackFrameName .. 'Meter'].volumeMeter:Reset()
+	trackFrame.meterTexture:SetWidth(0)
+	trackFrame.meterTexture:Hide()
+	trackFrame.meterTexture.volumeMeter:Reset()
 
 	-- Track name
 	local trackName = ""
@@ -204,8 +203,7 @@ Musician.TrackEditor.CreateTrackWidget = function(trackIndex)
 	else
 		trackName = string.gsub(Musician.Msg.TRACK_NUMBER, '{track}', trackIndex)
 	end
-
-	_G[trackFrameName .. 'TrackName']:SetText(trackName)
+	trackFrame.nameText:SetText(trackName)
 
 	-- Track info (channel, instrument, duration and number of notes)
 	local trackInfo = ''
@@ -225,15 +223,15 @@ Musician.TrackEditor.CreateTrackWidget = function(trackIndex)
 	end
 	trackInfo = trackInfo .. " (" .. noteCount .. ")"
 
-	_G[trackFrameName .. 'TrackInfo']:SetText(trackInfo)
+	trackFrame.infoText:SetText(trackInfo)
 
 	-- Transposition
-	_G[transposeDropdownName].SetValue(track.transpose)
+	trackFrame.transposeDropdown.SetValue(track.transpose)
 
 	-- Instrument
-	_G[instrumentDropdownName].SetValue(track.instrument)
+	trackFrame.instrumentDropdown.SetValue(track.instrument)
 
-	_G[trackFrameName]:Show()
+	trackFrame:Show()
 end
 
 --- Init track transpose dropdown
@@ -290,10 +288,10 @@ Musician.TrackEditor.InitInstrumentDropdown = function(dropdown, trackIndex)
 
 		if Musician.INSTRUMENTS[instrumentId].color ~= nil then
 			local r, g, b = unpack(Musician.INSTRUMENTS[instrumentId].color)
-			local trackFrameName = 'MusicianTrackEditorTrack' .. trackIndex
-			_G[trackFrameName .. 'TrackName']:SetTextColor(r, g, b)
-			_G[trackFrameName .. 'TrackInfo']:SetTextColor(r, g, b)
-			_G[trackFrameName .. 'TrackId']:SetTextColor(r, g, b)
+			local trackFrame = _G['MusicianTrackEditorTrack' .. trackIndex]
+			trackFrame.nameText:SetTextColor(r, g, b)
+			trackFrame.infoText:SetTextColor(r, g, b)
+			trackFrame.idText:SetTextColor(r, g, b)
 		end
 
 		Musician.TrackEditor:SendMessage(Musician.Events.SongInstrumentChange, Musician.sourceSong, Musician.sourceSong.tracks[dropdown.trackIndex], midiId)
@@ -352,22 +350,22 @@ Musician.TrackEditor.OnUpdate = function(event, elapsed)
 		local track
 		-- Update track activity meters
 		for _, track in pairs(Musician.sourceSong.tracks) do
-			local meter = _G['MusicianTrackEditorTrack' .. track.index .. 'Meter']
-			meter.volumeMeter:AddElapsed(elapsed)
+			local meterTexture = _G['MusicianTrackEditorTrack' .. track.index].meterTexture
+			meterTexture.volumeMeter:AddElapsed(elapsed)
 
-			local width = meter.volumeMeter:GetLevel() * meter.maxWidth
-			meter:SetWidth(width)
+			local width = meterTexture.volumeMeter:GetLevel() * meterTexture.maxWidth
+			meterTexture:SetWidth(width)
 
 			if Musician.sourceSong:TrackIsMuted(track) then
-				meter:SetAlpha(.25)
+				meterTexture:SetAlpha(.25)
 			else
-				meter:SetAlpha(1)
+				meterTexture:SetAlpha(1)
 			end
 
 			if width > 0 then
-				meter:Show()
+				meterTexture:Show()
 			else
-				meter:Hide()
+				meterTexture:Hide()
 			end
 
 		end
@@ -381,10 +379,10 @@ end
 -- @param key (number)
 Musician.TrackEditor.NoteOn = function(event, song, track, key)
 	if song == Musician.sourceSong then
-		local meter = _G['MusicianTrackEditorTrack' .. track.index .. 'Meter']
+		local meterTexture = _G['MusicianTrackEditorTrack' .. track.index].meterTexture
 		local _, instrumentData = Musician.Utils.GetSoundFile(track.instrument, key)
-		meter.volumeMeter:NoteOn(instrumentData)
-		meter:Show()
+		meterTexture.volumeMeter:NoteOn(instrumentData)
+		meterTexture:Show()
 	end
 end
 
@@ -397,8 +395,8 @@ Musician.TrackEditor.NoteOff = function(event, song, track, key)
 	if song == Musician.sourceSong then
 		-- Stop if all notes of the track are off
 		if track.polyphony == 0 then
-			local meter = _G['MusicianTrackEditorTrack' .. track.index .. 'Meter']
-			meter.volumeMeter:NoteOff()
+			local meterTexture = _G['MusicianTrackEditorTrack' .. track.index].meterTexture
+			meterTexture.volumeMeter:NoteOff()
 		end
 	end
 end

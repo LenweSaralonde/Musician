@@ -96,18 +96,18 @@
 
 		<Layers>
 			<Layer level="OVERLAY">
-				<FontString name="$parentTrackId" inherits="GameFontHighlightLarge" justifyh="" justifyv="" text="00">
+				<FontString name="$parentTrackId" parentKey="idText" inherits="GameFontHighlightLarge" justifyh="" justifyv="" text="00">
 					<Size x="32" y="32" />
 					<Anchors>
 						<Anchor point="TOPLEFT" x="0" y="2" relativePoint="TOPLEFT" relativeTo="$parent" />
 					</Anchors>
 				</FontString>
-				<FontString name="$parentTrackName" inherits="GameFontNormalSmall" text="[TrackName]">
+				<FontString name="$parentTrackName" parentKey="nameText" inherits="GameFontNormalSmall" text="[TrackName]">
 					<Anchors>
 						<Anchor point="TOPLEFT" x="68" y="-4" relativePoint="TOPLEFT" relativeTo="$parent" />
 					</Anchors>
 				</FontString>
-				<FontString name="$parentTrackInfo" inherits="GameFontNormalSmall" text="[TrackInfo]">
+				<FontString name="$parentTrackInfo" parentKey="infoText" inherits="GameFontNormalSmall" text="[TrackInfo]">
 					<Anchors>
 						<Anchor point="TOPLEFT" x="68" y="-16" relativePoint="TOPLEFT" relativeTo="$parent" />
 					</Anchors>
@@ -115,7 +115,7 @@
 						ChatFrame_OnHyperlinkShow(DEFAULT_CHAT_FRAME, link, text, button)
 					</OnHyperlinkClick>
 				</FontString>
-				<Texture name="$parentMeter" alphaMode="ADD">
+				<Texture name="$parentMeter" parentKey="meterTexture" alphaMode="ADD">
 					<Size x="32" y="5"/>
 					<Anchors>
 						<Anchor point="CENTER" x="48" y="-22" relativePoint="TOPLEFT" relativeTo="$parent" />
@@ -173,7 +173,7 @@
 		</Layers>
 
 		<Frames>
-			<CheckButton name="$parentMute" inherits="OptionsSmallCheckButtonTemplate" >
+			<CheckButton name="$parentMute" parentKey="muteCheckbox" inherits="OptionsSmallCheckButtonTemplate" >
 				<Anchors>
 					<Anchor point="TOPLEFT" x="32" y="-2" relativeTo="$parent" relativePoint="TOPLEFT" />
 				</Anchors>
@@ -184,7 +184,7 @@
 					<AbsInset left="0" right="0" top="0" bottom="0"/>
 				</HitRectInsets>
 			</CheckButton>
-			<CheckButton name="$parentSolo" inherits="OptionsSmallCheckButtonTemplate" >
+			<CheckButton name="$parentSolo" parentKey="soloCheckbox" inherits="OptionsSmallCheckButtonTemplate" >
 				<Anchors>
 					<Anchor point="TOPLEFT" x="48" y="-2" relativeTo="$parent" relativePoint="TOPLEFT" />
 				</Anchors>
@@ -196,13 +196,13 @@
 				</HitRectInsets>
 			</CheckButton>
 
-			<Frame name="$parentInstrumentDropdown" inherits="MusicianInstrumentDropdownTemplate">
+			<Frame name="$parentInstrumentDropdown" parentKey="instrumentDropdown" inherits="MusicianInstrumentDropdownTemplate">
 				<Anchors>
 					<Anchor point="RIGHT" relativePoint="RIGHT" relativeTo="$parent" x="14" />
 				</Anchors>
 			</Frame>
 
-			<Frame name="$parentTransposeDropdown" inherits="MusicianDropDownMenuTooltipTemplate">
+			<Frame name="$parentTransposeDropdown" parentKey="transposeDropdown" inherits="MusicianDropDownMenuTooltipTemplate">
 				<Anchors>
 					<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentInstrumentDropdown" x="32" />
 				</Anchors>
