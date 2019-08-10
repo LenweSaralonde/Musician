@@ -198,7 +198,7 @@ Musician.TrackEditor.CreateTrackWidget = function(trackIndex)
 
 	-- Track name
 	local trackName = ""
-	if track.name ~= nil then
+	if track.name ~= nil and track.name ~= "" then
 		trackName = track.name
 	else
 		trackName = string.gsub(Musician.Msg.TRACK_NUMBER, '{track}', trackIndex)
