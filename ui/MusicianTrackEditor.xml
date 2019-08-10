@@ -104,12 +104,12 @@
 				</FontString>
 				<FontString name="$parentTrackName" parentKey="nameText" inherits="GameFontNormalSmall" text="[TrackName]">
 					<Anchors>
-						<Anchor point="TOPLEFT" x="68" y="-2" relativePoint="TOPLEFT" relativeTo="$parent" />
+						<Anchor point="LEFT" x="68" y="9" />
 					</Anchors>
 				</FontString>
 				<FontString name="$parentTrackInfo" parentKey="infoText" inherits="GameFontNormalSmall" text="[TrackInfo]">
 					<Anchors>
-						<Anchor point="TOPLEFT" x="68" y="-14" relativePoint="TOPLEFT" relativeTo="$parent" />
+						<Anchor point="LEFT" x="68" y="-4" />
 					</Anchors>
 					<OnHyperlinkClick>
 						ChatFrame_OnHyperlinkShow(DEFAULT_CHAT_FRAME, link, text, button)
@@ -118,7 +118,7 @@
 				<Texture name="$parentMeter" parentKey="meterTexture" alphaMode="ADD">
 					<Size x="32" y="5"/>
 					<Anchors>
-						<Anchor point="CENTER" x="48" y="-20" relativePoint="TOPLEFT" relativeTo="$parent" />
+						<Anchor point="CENTER" x="48" y="-4" relativePoint="LEFT" relativeTo="$parent" />
 					</Anchors>
 					<Color a="1" r="0" g="1" b="0" />
 				</Texture>
@@ -175,7 +175,7 @@
 		<Frames>
 			<CheckButton name="$parentMute" parentKey="muteCheckbox" inherits="OptionsSmallCheckButtonTemplate" >
 				<Anchors>
-					<Anchor point="TOPLEFT" x="32" y="0" relativeTo="$parent" relativePoint="TOPLEFT" />
+					<Anchor point="LEFT" x="32" y="9" />
 				</Anchors>
 				<Size>
 					<AbsDimension x="16" y="16"/>
@@ -186,7 +186,7 @@
 			</CheckButton>
 			<CheckButton name="$parentSolo" parentKey="soloCheckbox" inherits="OptionsSmallCheckButtonTemplate" >
 				<Anchors>
-					<Anchor point="TOPLEFT" x="48" y="0" relativeTo="$parent" relativePoint="TOPLEFT" />
+					<Anchor point="LEFT" x="48" y="9" />
 				</Anchors>
 				<Size>
 					<AbsDimension x="16" y="16"/>
@@ -493,9 +493,9 @@
 				</FontString>
 
 				<FontString name="$parentHeaderTranspose" inherits="GameFontNormal" text="Octave">
-					<Size x="54" />
+					<Size x="74" />
 					<Anchors>
-						<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentHeaderInstrument" />
+						<Anchor point="RIGHT" relativePoint="LEFT" x="10" relativeTo="$parentHeaderInstrument" />
 					</Anchors>
 				</FontString>
 

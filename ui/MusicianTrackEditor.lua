@@ -203,7 +203,7 @@ Musician.TrackEditor.CreateTrackWidget = function(trackIndex)
 	else
 		trackName = string.gsub(Musician.Msg.TRACK_NUMBER, '{track}', trackIndex)
 	end
-	trackFrame.nameText:SetText(trackName)
+	Musician.Utils.SetFontStringTextFixedSize(trackFrame.nameText, trackName)
 
 	-- Track info (channel, instrument, duration and number of notes)
 	local trackInfo = ''
@@ -223,7 +223,7 @@ Musician.TrackEditor.CreateTrackWidget = function(trackIndex)
 	end
 	trackInfo = trackInfo .. " (" .. noteCount .. ")"
 
-	trackFrame.infoText:SetText(trackInfo)
+	Musician.Utils.SetFontStringTextFixedSize(trackFrame.infoText, trackInfo)
 
 	-- Transposition
 	trackFrame.transposeDropdown.SetValue(track.transpose)

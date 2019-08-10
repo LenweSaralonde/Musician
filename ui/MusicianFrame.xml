@@ -102,6 +102,15 @@
 								MusicianFrameSource:HighlightText(0)
 							</OnEditFocusGained>
 							<OnEscapePressed>MusicianFrameSource:ClearFocus()</OnEscapePressed>
+							<OnLoad>
+								-- Reduce source text size in Chinese
+								if Musician.Msg == Musician.Locale.zh then
+									local w, h = self:GetSize()
+									local scale = .75
+									self:SetScale(scale)
+									self:SetSize(w / scale, h / scale)
+								end
+							</OnLoad>
 						</Scripts>
 						<FontString inherits="GameFontHighlightSmall"/>
 					</EditBox>

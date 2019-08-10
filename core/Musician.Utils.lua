@@ -870,3 +870,42 @@ function Musician.Utils.EasyMenu_Initialize( frame, level, menuList )
 	end
 end
 
+--- Set text to a FontString element ensuring the visual text size is respected
+-- @param fontString (FontString)
+-- @param text (string)
+function Musician.Utils.SetFontStringTextFixedSize(fontString, text)
+
+	-- Get expected scale and points with roman text
+	if fontString.unscaledPoints == nil then
+		-- Measure expected font height
+		fontString:SetScale(1)
+		fontString:SetText('0')
+		_, fontString.expectedFontHeight = fontString:GetFont()
+
+		-- Store points at 1:1 scale
+		fontString.unscaledPoints = {}
+		local numPoints, i = fontString:GetNumPoints()
+		for i = 1, numPoints do
+			fontString.unscaledPoints[i] = { fontString:GetPoint(i) }
+		end
+	end
+
+	-- Set text content
+	fontString:SetText(text)
+
+	-- Adjust scale
+
+	local _, fontHeight = fontString:GetFont()
+	local scale = 1
+	if fontString.expectedFontHeight ~= fontHeight then
+		scale = fontString.expectedFontHeight / fontHeight
+	end
+
+	fontString:SetScale(scale)
+
+	local i, pointArgs
+	for i, pointArgs in pairs(fontString.unscaledPoints) do
+		local point, relativeTo, relativePoint, xOfs, yOfs = unpack(pointArgs)
+		fontString:SetPoint(point, relativeTo, relativePoint, xOfs / scale, yOfs / scale)
+	end
+end
