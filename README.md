@@ -114,6 +114,8 @@ Some basic modifications can be made to the imported song in the song editor, wh
 
 The song editor also shows some information about the tracks (MIDI instrument, start and end points, number of notes...) and the activity while the song is playing.
 
+You can still change the track settings of the song currently playing by clicking the **Synchronize track settings** button, as long as you have the same song loaded in the editor.
+
 ![Song editor](./img/song-editor.png)
 
 Cross-faction play
