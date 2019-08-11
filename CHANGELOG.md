@@ -1,6 +1,12 @@
 Changelog
 =========
 
+v1.5.5.1
+--------
+* Chinese localization by @Kalevalar
+* Added track settings synchronization button in song editor
+* Minor bugfixes and improvements
+
 v1.5.5.0
 --------
 *"Rock Band"*
