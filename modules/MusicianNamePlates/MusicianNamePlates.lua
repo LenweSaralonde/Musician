@@ -438,28 +438,55 @@ end
 function Musician.NamePlates.AddNoteIcon(namePlate, textElement, append)
 	local player = UnitIsPlayer(namePlate.namePlateUnitToken) and Musician.Utils.NormalizePlayerName(GetUnitName(namePlate.namePlateUnitToken, true))
 	if player and not(Musician.Utils.PlayerIsMyself(player)) and Musician.Registry.PlayerIsRegistered(player) then
-		local iconString = Musician.Utils.GetChatIcon(Musician.IconImages.Note)
 		local nameString = textElement:GetText()
-
 		if nameString == nil then return end
 
-		local from, to = string.find(nameString, iconString, 1, true)
+		local iconPlaceholder = Musician.Utils.GetChatIcon("")
 
-		-- Note icon is present but not at the right position: remove it
+		-- Icon placeholder is present but not at the right position: remove it
+		local from, to = string.find(nameString, iconPlaceholder, 1, true)
 		if append and to and to ~= nameString or not(append) and from and from ~= 1 then
 			nameString = string.sub(nameString, 1, from - 1) .. string.sub(nameString, to + 1, #nameString)
 			nameString = strtrim(string.gsub(nameString, '%s+', ' '))
 			from, to = nil, nil
 		end
 
-		-- Add icon string if not found or previously removed
+		-- Add icon placeholder if not found or previously removed
 		if from == nil then
 			if append then
-				textElement:SetText(nameString .. " " .. iconString)
+				textElement:SetText(nameString .. " " .. iconPlaceholder)
 			else
-				textElement:SetText(iconString .. " " .. nameString)
+				textElement:SetText(iconPlaceholder .. " " .. nameString)
 			end
 		end
+
+		local parent = textElement:GetParent()
+		-- Create note icon
+		if textElement.noteIcon == nil then
+			textElement.noteIcon = parent:CreateTexture(nil, "ARTWORK")
+			textElement.noteIcon:SetTexture(Musician.IconImages.Note)
+			textElement.noteIcon.updateSize = function(self)
+				textElement.noteIcon:SetWidth(textElement:GetHeight())
+				textElement.noteIcon:SetHeight(textElement:GetHeight())
+				textElement.noteIcon:SetScale(textElement:GetScale())
+			end
+			parent:HookScript("OnSizeChanged", textElement.noteIcon.updateSize)
+		end
+
+		-- Update note icon
+		textElement.noteIcon:SetParent(parent)
+
+		textElement.noteIcon:ClearAllPoints()
+		if append then
+			textElement.noteIcon:SetPoint("RIGHT", textElement, "RIGHT")
+		else
+			textElement.noteIcon:SetPoint("LEFT", textElement, "LEFT")
+		end
+
+		textElement.noteIcon.updateSize()
+		textElement.noteIcon:Show()
+	elseif textElement.noteIcon then
+		textElement.noteIcon:Hide()
 	end
 end
 
