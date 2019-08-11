@@ -262,19 +262,27 @@ function MusicianButton.UpdateTooltipText(alwaysShowLoadingProgression)
 	end
 	rightClickLine = string.gsub(rightClickLine, "{action}", rightAction)
 
-	GameTooltip:ClearLines()
-	GameTooltip:AddLine(mainLine, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
-	GameTooltip:AddLine(Musician.Utils.FormatText(leftClickLine), NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
-	GameTooltip:AddLine(Musician.Utils.FormatText(rightClickLine), NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
-	GameTooltip:AddLine(Musician.Utils.FormatText(Musician.Msg.TOOLTIP_DRAG_AND_DROP), NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
-
 	local preloadingProgression = Musician.Preloader.GetProgress()
 	local loadingLine = ''
 	if alwaysShowLoadingProgression or preloadingProgression < 1 then
 		local strPreloadingProgression = floor(preloadingProgression * 100) .. "%%"
 		loadingLine = string.gsub(Musician.Msg.PLAYER_TOOLTIP_PRELOADING, "{progress}", strPreloadingProgression)
 	end
-	GameTooltip:AddLine(Musician.Utils.FormatText(loadingLine), LIGHTBLUE_FONT_COLOR.r, LIGHTBLUE_FONT_COLOR.g, LIGHTBLUE_FONT_COLOR.b)
+
+	local tooltipText = Musician.Utils.Highlight(mainLine, NORMAL_FONT_COLOR)
+	tooltipText = tooltipText .. "\n" .. Musician.Utils.FormatText(leftClickLine)
+	tooltipText = tooltipText .. "\n" .. Musician.Utils.FormatText(rightClickLine)
+	tooltipText = tooltipText .. "\n" .. Musician.Utils.FormatText(Musician.Msg.TOOLTIP_DRAG_AND_DROP)
+
+	if loadingLine ~= "" then
+		tooltipText = tooltipText .. "\n" .. Musician.Utils.Highlight(Musician.Utils.FormatText(loadingLine), LIGHTBLUE_FONT_COLOR)
+	end
+
+	if (GameTooltipTextLeft1 == nil) or (tooltipText ~= GameTooltipTextLeft1:GetText()) then
+		GameTooltip:SetText("0") -- Workaround for colored text issues with chinese client
+		GameTooltip:SetText(tooltipText, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
+	end
+
 end
 
 --- HideTooltip
