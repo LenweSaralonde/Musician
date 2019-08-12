@@ -1,6 +1,0 @@
-<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
-	<Script file="CrossRP.lua"/>
-	<Include file="CrossRP_Options.xml"/>
-	<Script file="CrossRP_Options.lua"/>
-	<Include file="CrossRP_TipsAndTricks.xml"/>
-</Ui>
