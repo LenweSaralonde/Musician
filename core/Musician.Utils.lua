@@ -473,7 +473,7 @@ end
 --- Return the short locale code of the realm the player belongs to
 -- @return (string)
 function Musician.Utils.GetRealmLocale()
-	local locale = select(5, LibRealmInfo:GetRealmInfoByUnit("player"))
+	local locale = select(5, LibRealmInfo:GetRealmInfoByUnit("player")) or GetLocale()
 	return string.gsub(locale, "[A-Z]+", "")
 end
 
