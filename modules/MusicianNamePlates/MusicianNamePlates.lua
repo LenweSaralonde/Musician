@@ -10,10 +10,7 @@ local C_CVar = _G["C_CVar"] or {
 
 local playerNamePlates = {}
 local namePlatePlayers = {}
-local NOTES_TEXTURE = 167069 -- "spells\\t_vfx_note.blp"
-local NOTES_TEXTURE_RACE = {
-	VoidElf = 1664883, -- "spells\\t_vfx_note_void.blp",
-}
+local NOTES_TEXTURE = "Interface\\AddOns\\Musician\\ui\\textures\\classic\\t_vfx_note.blp"
 local NOTES_TEXTURE_COORDS = {
 	{0, 0.5, 0, 0.5},
 	{0.5, 1, 0, 0.5},
@@ -225,7 +222,7 @@ local function addNote(animatedNotesFrame, song, track, key)
 	-- Reset frame
 	noteFrame:SetParent(animatedNotesFrame)
 	noteFrame:SetFrameLevel(0)
-	noteFrame.texture:SetTexture(NOTES_TEXTURE_RACE[animatedNotesFrame.race] or NOTES_TEXTURE)
+	noteFrame.texture:SetTexture(NOTES_TEXTURE)
 	noteFrame.texture:SetTexCoord(unpack(NOTES_TEXTURE_COORDS[noteSymbold]))
 	noteFrame:SetWidth(32)
 	noteFrame:SetHeight(32)
