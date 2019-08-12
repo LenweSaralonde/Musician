@@ -3,6 +3,11 @@ Musician.NamePlates.Options = {}
 local MODULE_NAME = "NamePlates.Options"
 Musician.AddModule(MODULE_NAME)
 
+-- WoW Classic polyfills
+local C_CVar = _G["C_CVar"] or {
+	GetCVarBool = GetCVarBool
+}
+
 local oldSettings = {}
 
 --- Set a boolean CVar

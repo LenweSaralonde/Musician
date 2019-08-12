@@ -3,6 +3,11 @@ Musician.NamePlates = LibStub("AceAddon-3.0"):NewAddon("Musician.NamePlates", "A
 local MODULE_NAME = "NamePlates"
 Musician.AddModule(MODULE_NAME)
 
+-- WoW Classic polyfills
+local C_CVar = _G["C_CVar"] or {
+	GetCVarBool = GetCVarBool
+}
+
 local playerNamePlates = {}
 local namePlatePlayers = {}
 local NOTES_TEXTURE = 167069 -- "spells\\t_vfx_note.blp"
@@ -286,7 +291,7 @@ function Musician.NamePlates.UpdateNamePlate(namePlate)
 
 	if not(namePlate:IsForbidden()) and not(UnitIsUnit(unitToken, "player")) and isPlayerOrFriendly then
 
-		local healthBarIsVisible, classificationFrameIsVisible
+		local healthBarIsVisible, classificationFrameIsVisible, levelFrameIsVisible
 
 		local isInCombat = UnitAffectingCombat(namePlate.namePlateUnitToken)
 		local health = UnitHealth(namePlate.namePlateUnitToken)
@@ -296,21 +301,27 @@ function Musician.NamePlates.UpdateNamePlate(namePlate)
 		if isInCombat or (health < healthMax) or not(Musician_Settings.hideNamePlateBars) then
 			healthBarIsVisible = true
 			classificationFrameIsVisible = true
+			levelFrameIsVisible = true
 		else
 			healthBarIsVisible = false
 			classificationFrameIsVisible = false
+			levelFrameIsVisible = false
 		end
 
 		if GetCVarBool("nameplateShowOnlyNames") then
 			healthBarIsVisible = false
 			classificationFrameIsVisible = false
+			levelFrameIsVisible = false
 		end
 
 		if healthBarIsVisible ~= namePlate.UnitFrame.healthBar:IsVisible() then
 			namePlate.UnitFrame.healthBar:SetShown(healthBarIsVisible)
 		end
-		if classificationFrameIsVisible ~= namePlate.UnitFrame.ClassificationFrame:IsVisible() then
+		if namePlate.UnitFrame.ClassificationFrame and classificationFrameIsVisible ~= namePlate.UnitFrame.ClassificationFrame:IsVisible() then
 			namePlate.UnitFrame.ClassificationFrame:SetShown(classificationFrameIsVisible)
+		end
+		if namePlate.UnitFrame.LevelFrame and levelFrameIsVisible ~= namePlate.UnitFrame.LevelFrame:IsVisible() then
+			namePlate.UnitFrame.LevelFrame:SetShown(classificationFrameIsVisible)
 		end
 	end
 
