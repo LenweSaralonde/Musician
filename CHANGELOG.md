@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.5.5.2
+--------
+* Fixed notes dropping when previewing a song with muted tracks
+* Fixed LUA error when playing a song on an unknown realm (PTR, Classic...)
+
 v1.5.5.1
 --------
 * Chinese localization by @Kalevalar
