@@ -402,15 +402,15 @@ function Musician.Song:NoteOn(track, noteIndex, noRetry)
 	local play, handle
 	if shouldPlay then
 		play, handle = Musician.Utils.PlayNote(track.instrument, key)
-	end
 
-	-- Note dropped: interrupt the oldest one and retry
-	if not(play) and not(noRetry) then
-		self:StopOldestNote()
-		C_Timer.After(0, function()
-			self:NoteOn(track, noteIndex, true)
-		end)
-		return
+		-- Note dropped: interrupt the oldest one and retry
+		if not(play) and not(noRetry) then
+			self:StopOldestNote()
+			C_Timer.After(0, function()
+				self:NoteOn(track, noteIndex, true)
+			end)
+			return
+		end
 	end
 
 	-- Add note to notesOn with sound handle and note off time
