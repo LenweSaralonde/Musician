@@ -118,18 +118,6 @@ You can still change the track settings of the song currently playing by clickin
 
 ![Song editor](./img/song-editor.png)
 
-Cross-faction play
-------------------
-Cross-faction (and cross-realm) music can be achieved through the [Cross RP add-on](https://www.curseforge.com/wow/addons/cross-rp) by Tammya-MoonGuard.
-
-This add-on is very straightforward, just install it and it works!
-
-Cross RP relies on a peer to peer network established by the players who run it so the faction/realm you want to play with may not be always reachable. Feel free to encourage other players to install Cross RP and expand the network!
-
-You can see what realms and factions you're connected to in Musician's options or by mousing over the Cross RP minimap button.
-
-![Cross-faction play with Cross RP](./img/cross-rp.png)
-
 Integration with role-playing add-ons
 -------------------------------------
 Musician integrates with role-playing add-ons [Total RP](https://www.curseforge.com/wow/addons/total-rp-3) and [MyRolePlay](https://www.curseforge.com/wow/addons/my-role-play) to benefit from some of their features, such as roleplay character names and tooltips.
