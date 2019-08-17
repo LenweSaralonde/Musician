@@ -583,12 +583,19 @@ function Musician.SetupHooks()
 		local fullPlayerName = Musician.Utils.NormalizePlayerName(player)
 
 		local isPromoEmote = false
+		local isFullPromoEmote = false
 		local isPromoEmoteSuccessful = false
 
 		-- "Player is playing music."
-		if Musician.Utils.HasPromoEmote(msg) and event == "CHAT_MSG_EMOTE" then
+		if event == "CHAT_MSG_EMOTE" then
+			isPromoEmote, isFullPromoEmote = Musician.Utils.HasPromoEmote(msg)
+			if isFullPromoEmote then
+				Musician.Utils.ResetFullPromoEmoteCooldown()
+			end
+		end
 
-			isPromoEmote = true
+		-- Process promo emote
+		if isPromoEmote then
 
 			-- Music is loaded and actually playing
 			if Musician.songs[fullPlayerName] ~= nil and Musician.songs[fullPlayerName]:IsPlaying() then
