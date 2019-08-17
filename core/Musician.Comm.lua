@@ -656,6 +656,11 @@ function Musician.Comm.OnBandPlay(prefix, message, distribution, sender)
 	local songCrc32 = tonumber(message)
 	if currentSongCrc32 ~= songCrc32 then return end
 
+	-- Override next full promo emote if I'm not the initiator of band play to avoid spamming it
+	if not(Musician.Utils.PlayerIsMyself(sender)) then
+		Musician.Utils.OverrideNextFullPromoEmote()
+	end
+
 	Musician.Comm.PlaySong()
 
 	Musician.Comm:SendMessage(Musician.Events.BandPlay, sender, songCrc32)

@@ -5,7 +5,11 @@ Musician.AddModule(MODULE_NAME)
 
 local LibRealmInfo = LibStub:GetLibrary("LibRealmInfo")
 
+local FULL_PROMO_EMOTE_COOLDOWN = 10 * 60 -- Cooldown in seconds for the full promo emote
+
 local isGameMusicMuted = false
+local fullPromoEmoteLastSeen
+local overrideNextFullPromoEmote = false
 
 --- Display a message in the console
 -- @param msg (string)
@@ -569,7 +573,16 @@ function Musician.Utils.GetPromoEmote()
 	local locale = Musician.Utils.GetRealmLocale()
 	local EMOTE_PLAYING_MUSIC = Musician.Locale[locale] and Musician.Locale[locale].EMOTE_PLAYING_MUSIC or Musician.Msg.EMOTE_PLAYING_MUSIC
 	local EMOTE_PROMO = Musician.Locale[locale] and Musician.Locale[locale].EMOTE_PROMO or Musician.Msg.EMOTE_PROMO
-	if Musician_Settings.enableEmotePromo then
+
+	local sendPromoPart = Musician_Settings.enableEmotePromo
+
+	-- Do not send the promo part too often
+	if sendPromoPart and (overrideNextFullPromoEmote or fullPromoEmoteLastSeen ~= nil and (fullPromoEmoteLastSeen + FULL_PROMO_EMOTE_COOLDOWN) > GetTime()) then
+		sendPromoPart = false
+	end
+
+	-- Append promo part
+	if sendPromoPart then
 		local promo = string.gsub(EMOTE_PROMO, "{url}", Musician.URL)
 		return EMOTE_PLAYING_MUSIC .. " " .. promo
 	else
@@ -579,16 +592,29 @@ end
 
 --- Return true if the message contains the promo emote, in any language
 -- @param message (string)
--- @return (boolean)
+-- @return (boolean), (boolean)
 function Musician.Utils.HasPromoEmote(message)
 	local lang
 	for lang, locale in pairs(Musician.Locale) do
 		if string.find(message, locale.EMOTE_PLAYING_MUSIC, 1, true) == 1 then
-			return true
+			local isFullPromoEmote = string.find(message, locale.EMOTE_PROMO, 1, true) ~= nil
+			return true, isFullPromoEmote
 		end
 	end
 
-	return false
+	return false, false
+end
+
+--- Mark the full promo emote as recently seen
+--
+function Musician.Utils.ResetFullPromoEmoteCooldown()
+	fullPromoEmoteLastSeen = GetTime()
+end
+
+--- Override the next full promo emote
+--
+function Musician.Utils.OverrideNextFullPromoEmote()
+	overrideNextFullPromoEmote = true
 end
 
 --- Send the "Player is playing music" emote with promo message
@@ -596,6 +622,7 @@ end
 function Musician.Utils.SendPromoEmote()
 	if Musician_Settings.enableEmote then
 		SendChatMessage(Musician.Utils.GetPromoEmote(), "EMOTE")
+		overrideNextFullPromoEmote = false
 
 		-- Show a hint to the user that an emote is also being sent by default
 		if not(Musician_Settings.emoteHintShown) then
