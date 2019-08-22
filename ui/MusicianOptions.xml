@@ -1,82 +1,97 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 
-	<Frame name="MusicianOptionsPanel">
-		<Layers>
-			<Layer level="ARTWORK">
-				<FontString name="$parentTitle" inherits="GameFontNormalLarge" justifyH="LEFT" justifyV="TOP">
-					<Anchors>
-						<Anchor point="TOPLEFT" x="16" y="-16"/>
-					</Anchors>
-				</FontString>
-				<FontString name="$parentSubText" inherits="GameFontHighlight" nonspacewrap="true" maxLines="3" justifyH="LEFT" justifyV="TOP">
-					<Size>
-						<AbsDimension y="32" x="0"/>
-					</Size>
-					<Anchors>
-						<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-8"/>
-						<Anchor point="RIGHT" x="-32" y="0"/>
-					</Anchors>
-				</FontString>
-			</Layer>
-		</Layers>
+	<Frame name="MusicianOptionsPanelContainer">
 		<Frames>
-			<Frame name="$parentUnitEmote">
-				<Size>
-					<AbsDimension x="580" y="75"/>
-				</Size>
+			<ScrollFrame name="MusicianOptionsPanelScrollFrame" inherits="UIPanelScrollFrameTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentSubText" relativePoint="BOTTOMLEFT" />
+					<Anchor point="TOPLEFT"  y="-4" />
+					<Anchor point="BOTTOMRIGHT" x="-27" y="4" />
 				</Anchors>
-				<Layers>
-					<Layer level="ARTWORK">
-						<FontString name="$parentTitle" inherits="GameFontNormal" justifyH="LEFT" justifyV="TOP">
-							<Anchors>
-								<Anchor point="TOPLEFT" />
-							</Anchors>
-						</FontString>
-					</Layer>
-				</Layers>
-				<Frames>
-                    <CheckButton name="$parentEnable" inherits="InterfaceOptionsCheckButtonTemplate">
+				<ScrollChild>
+					<Frame name="MusicianOptionsPanel">
 						<Anchors>
-							<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-10"/>
+							<Anchor point="TOPLEFT"/>
 						</Anchors>
+						<Layers>
+							<Layer level="ARTWORK">
+								<FontString name="$parentTitle" inherits="GameFontNormalLarge" justifyH="LEFT" justifyV="TOP">
+									<Anchors>
+										<Anchor point="TOPLEFT" x="16" y="-16"/>
+									</Anchors>
+								</FontString>
+								<FontString name="$parentSubText" inherits="GameFontHighlight" nonspacewrap="true" maxLines="3" justifyH="LEFT" justifyV="TOP">
+									<Size>
+										<AbsDimension y="32" x="0"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-8"/>
+										<Anchor point="RIGHT" x="-32" y="0"/>
+									</Anchors>
+								</FontString>
+							</Layer>
+						</Layers>
+						<Frames>
+							<Frame name="$parentUnitEmote">
+								<Size>
+									<AbsDimension x="580" y="75"/>
+								</Size>
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="$parentSubText" relativePoint="BOTTOMLEFT" />
+								</Anchors>
+								<Layers>
+									<Layer level="ARTWORK">
+										<FontString name="$parentTitle" inherits="GameFontNormal" justifyH="LEFT" justifyV="TOP">
+											<Anchors>
+												<Anchor point="TOPLEFT" />
+											</Anchors>
+										</FontString>
+									</Layer>
+								</Layers>
+								<Frames>
+									<CheckButton name="$parentEnable" inherits="InterfaceOptionsCheckButtonTemplate">
+										<Anchors>
+											<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-10"/>
+										</Anchors>
+										<Scripts>
+											<OnLoad>
+												_G[self:GetName().."Text"]:SetText(Musician.Msg.OPTIONS_ENABLE_EMOTE_LABEL)
+												self:SetHitRectInsets(0, -_G[self:GetName().."Text"]:GetWidth(), 0, 0)
+												self.type = CONTROLTYPE_CHECKBOX
+												BlizzardOptionsPanel_RegisterControl(self, self:GetParent():GetParent())
+												BlizzardOptionsPanel_SetupControl(self)
+											</OnLoad>
+										</Scripts>
+									</CheckButton>
+									<CheckButton name="$parentEnablePromo" inherits="InterfaceOptionsSmallCheckButtonTemplate">
+										<Anchors>
+											<Anchor point="TOPLEFT" relativeTo="$parentEnable" relativePoint="BOTTOMLEFT" x="10" y="4"/>
+										</Anchors>
+										<Scripts>
+											<OnLoad>
+												_G[self:GetName().."Text"]:SetText(Musician.Msg.OPTIONS_ENABLE_EMOTE_PROMO_LABEL)
+												self:SetHitRectInsets(0, -_G[self:GetName().."Text"]:GetWidth(), 0, 0)
+												self.type = CONTROLTYPE_CHECKBOX
+												BlizzardOptionsPanel_RegisterControl(self, self:GetParent():GetParent())
+												BlizzardOptionsPanel_SetupDependentControl(_G[self:GetParent():GetName().."Enable"], self)
+											</OnLoad>
+										</Scripts>
+									</CheckButton>
+								</Frames>
+							</Frame>
+						</Frames>
 						<Scripts>
 							<OnLoad>
-								_G[self:GetName().."Text"]:SetText(Musician.Msg.OPTIONS_ENABLE_EMOTE_LABEL)
-								self:SetHitRectInsets(0, -_G[self:GetName().."Text"]:GetWidth(), 0, 0)
-								self.type = CONTROLTYPE_CHECKBOX
-								BlizzardOptionsPanel_RegisterControl(self, self:GetParent():GetParent())
-								BlizzardOptionsPanel_SetupControl(self)
+								MusicianOptionsPanelTitle:SetText(Musician.Msg.OPTIONS_TITLE)
+
+								local subText = string.gsub(Musician.Msg.OPTIONS_SUB_TEXT, "{url}", Musician.Utils.Highlight(Musician.DISCORD_URL, "00FFFF"))
+								MusicianOptionsPanelSubText:SetText(subText)
+
+								MusicianOptionsPanelUnitEmoteTitle:SetText(Musician.Msg.OPTIONS_CATEGORY_EMOTE)
 							</OnLoad>
 						</Scripts>
-					</CheckButton>
-					<CheckButton name="$parentEnablePromo" inherits="InterfaceOptionsSmallCheckButtonTemplate">
-						<Anchors>
-							<Anchor point="TOPLEFT" relativeTo="$parentEnable" relativePoint="BOTTOMLEFT" x="10" y="4"/>
-						</Anchors>
-						<Scripts>
-							<OnLoad>
-								_G[self:GetName().."Text"]:SetText(Musician.Msg.OPTIONS_ENABLE_EMOTE_PROMO_LABEL)
-								self:SetHitRectInsets(0, -_G[self:GetName().."Text"]:GetWidth(), 0, 0)
-								self.type = CONTROLTYPE_CHECKBOX
-								BlizzardOptionsPanel_RegisterControl(self, self:GetParent():GetParent())
-								BlizzardOptionsPanel_SetupDependentControl(_G[self:GetParent():GetName().."Enable"], self)
-							</OnLoad>
-						</Scripts>
-					</CheckButton>
-				</Frames>
-			</Frame>
+					</Frame>
+				</ScrollChild>
+			</ScrollFrame>
 		</Frames>
-		<Scripts>
-			<OnLoad>
-				MusicianOptionsPanelTitle:SetText(Musician.Msg.OPTIONS_TITLE)
-
-				local subText = string.gsub(Musician.Msg.OPTIONS_SUB_TEXT, "{url}", Musician.Utils.Highlight(Musician.DISCORD_URL, "00FFFF"))
-				MusicianOptionsPanelSubText:SetText(subText)
-
-				MusicianOptionsPanelUnitEmoteTitle:SetText(Musician.Msg.OPTIONS_CATEGORY_EMOTE)
-			</OnLoad>
-		</Scripts>
 	</Frame>
 </Ui>
