@@ -23,6 +23,7 @@ Musician.NamePlates.Options.SetCVarBool = setCVarBool
 -- @return (table)
 Musician.NamePlates.Options.GetDefaults = function()
 	return {
+		showNamePlateIcon = true,
 		hideNamePlateBars = true,
 		cinematicMode = true,
 		cinematicModeNamePlates = false,
@@ -43,18 +44,22 @@ hooksecurefunc(Musician.Options, "Defaults", Musician.NamePlates.Options.Default
 --
 Musician.NamePlates.Options.RefreshCheckboxes = function()
 	local enable = C_CVar.GetCVarBool("nameplateShowAll") and C_CVar.GetCVarBool("nameplateShowFriends")
+	local showIcon = Musician_Settings.showNamePlateIcon
 	local hideNamePlateBars = Musician_Settings.hideNamePlateBars
 	local hideNPCs = not(C_CVar.GetCVarBool("nameplateShowFriendlyNPCs"))
 
 	MusicianOptionsPanelUnitNamePlatesEnable:SetChecked(enable)
+	MusicianOptionsPanelUnitNamePlatesShowIcon:SetChecked(showIcon)
 	MusicianOptionsPanelUnitNamePlatesHideNamePlateBars:SetChecked(hideNamePlateBars)
 	MusicianOptionsPanelUnitNamePlatesHideNPCs:SetChecked(hideNPCs)
 
 	if enable then -- SetEnabled() can't be used here since Enable and Disable are extended
+		MusicianOptionsPanelUnitNamePlatesShowIcon:Enable()
 		MusicianOptionsPanelUnitNamePlatesHideNamePlateBars:Enable()
 		MusicianOptionsPanelUnitNamePlatesHideNPCs:Enable()
 		MusicianOptionsPanelUnitNamePlatesCinematicMode:Enable()
 	else
+		MusicianOptionsPanelUnitNamePlatesShowIcon:Disable()
 		MusicianOptionsPanelUnitNamePlatesHideNamePlateBars:Disable()
 		MusicianOptionsPanelUnitNamePlatesHideNPCs:Disable()
 		MusicianOptionsPanelUnitNamePlatesCinematicMode:Disable()
@@ -81,6 +86,7 @@ Musician.NamePlates.Options.Refresh = function()
 
 	oldSettings = {
 		nameplateShowFriendlyNPCs = C_CVar.GetCVarBool("nameplateShowFriendlyNPCs"),
+		showNamePlateIcon = Musician_Settings.showNamePlateIcon,
 		hideNamePlateBars = Musician_Settings.hideNamePlateBars,
 		cinematicMode = Musician_Settings.cinematicMode,
 		cinematicModeNamePlates = Musician_Settings.cinematicModeNamePlates,
@@ -101,6 +107,7 @@ end)
 --
 hooksecurefunc(Musician.Options, "Cancel", function()
 	setCVarBool("nameplateShowFriendlyNPCs", oldSettings.nameplateShowFriendlyNPCs)
+	Musician_Settings.showNamePlateIcon = oldSettings.showNamePlateIcon
 	Musician_Settings.hideNamePlateBars = oldSettings.hideNamePlateBars
 	Musician_Settings.cinematicMode = oldSettings.cinematicMode
 	Musician_Settings.cinematicModeNamePlates = oldSettings.cinematicModeNamePlates
@@ -112,6 +119,7 @@ end)
 --
 Musician.NamePlates.Options.Save = function(fromButton)
 	setCVarBool("nameplateShowFriendlyNPCs", not(MusicianOptionsPanelUnitNamePlatesHideNPCs:GetChecked()))
+	Musician_Settings.showNamePlateIcon = MusicianOptionsPanelUnitNamePlatesShowIcon:GetChecked()
 	Musician_Settings.hideNamePlateBars = MusicianOptionsPanelUnitNamePlatesHideNamePlateBars:GetChecked()
 	Musician_Settings.cinematicMode = MusicianOptionsPanelUnitNamePlatesCinematicMode:GetChecked()
 	Musician_Settings.cinematicModeNamePlates = MusicianOptionsPanelUnitNamePlatesCinematicModeNamePlates:GetChecked()

@@ -49,6 +49,7 @@ msg.OPTIONS_EMOTE_HINT = "A text emote is shown to the players who don't have Mu
 msg.OPTIONS_CATEGORY_NAMEPLATES = "Nameplates and animations"
 msg.OPTIONS_CATEGORY_NAMEPLATES_SUB_TEXT = "Enable nameplates to see the animations on characters playing music and find out\nwho can hear you at a glance."
 msg.OPTIONS_ENABLE_NAMEPLATES = "Enable nameplates and animations."
+msg.OPTIONS_SHOW_NAMEPLATE_ICON = "Show a {icon} icon next to the name of the players who also have Musician."
 msg.OPTIONS_HIDE_HEALTH_BARS = "Hide player and friendly unit health bars when not in combat."
 msg.OPTIONS_HIDE_NPC_NAMEPLATES = "Hide NPC nameplates."
 msg.OPTIONS_CINEMATIC_MODE = "Show animations when the UI is hidden with {binding}."
