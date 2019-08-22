@@ -20,7 +20,7 @@ end
 function Musician.Options.Show()
 	InterfaceOptionsFrame_Show() -- This one has to be opened first
 	InterfaceOptionsFrame_OpenToCategory(MusicianOptionsPanelContainer)
-	Musician.Options.UpdateSize()
+	C_Timer.After(.0001, Musician.Options.UpdateSize)
 end
 
 function Musician.Options.Refresh()
