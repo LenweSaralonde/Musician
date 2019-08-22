@@ -6,20 +6,21 @@ Musician.AddModule(MODULE_NAME)
 --- Options panel initialization
 --
 function Musician.Options.Init()
-	local panel = MusicianOptionsPanel
+	local panel = MusicianOptionsPanelContainer
 	panel.name = Musician.Msg.OPTIONS_TITLE
 	panel.refresh = Musician.Options.Refresh
 	panel.okay = Musician.Options.Save
 	panel.cancel = Musician.Options.Cancel
 	panel.default = Musician.Options.Defaults
-	InterfaceOptions_AddCategory(panel)
+	InterfaceOptions_AddCategory(MusicianOptionsPanelContainer)
 end
 
 --- Show Musician's option panel
 --
 function Musician.Options.Show()
 	InterfaceOptionsFrame_Show() -- This one has to be opened first
-	InterfaceOptionsFrame_OpenToCategory(MusicianOptionsPanel)
+	InterfaceOptionsFrame_OpenToCategory(MusicianOptionsPanelContainer)
+	Musician.Options.UpdateSize()
 end
 
 function Musician.Options.Refresh()
@@ -45,4 +46,28 @@ function Musician.Options.Save()
 	Musician_Settings.enableEmote = MusicianOptionsPanelUnitEmoteEnable:GetChecked()
 	Musician_Settings.enableEmotePromo = MusicianOptionsPanelUnitEmoteEnablePromo:GetChecked()
 	Musician_Settings.emoteHintShown = true
+end
+
+--- Update the size of the Musician option panel
+--
+function Musician.Options.UpdateSize()
+	local panel = MusicianOptionsPanel
+	panel:SetWidth(panel:GetParent():GetWidth())
+	local height = 0
+	local child
+	for _, child in ipairs({ panel:GetChildren() }) do
+		height = height + child:GetHeight()
+	end
+
+	panel:SetHeight(height)
+end
+
+--- Append options frame to the Musician option panel
+-- @param frame (Frame)
+function Musician.Options.Append(frame)
+	local panel = MusicianOptionsPanel
+	local lastChild = select(-2, panel:GetChildren())
+	frame:ClearAllPoints()
+	frame:SetPoint("TOPLEFT", lastChild, "BOTTOMLEFT", 0, -10)
+	Musician.Options.UpdateSize()
 end
