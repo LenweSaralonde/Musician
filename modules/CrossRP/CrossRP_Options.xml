@@ -3,10 +3,6 @@
 		<Size>
 			<AbsDimension x="580" y="200"/>
 		</Size>
-		<Anchors>
-			<Anchor point="TOPLEFT" relativeTo="MusicianOptionsPanelUnitNamePlates" relativePoint="BOTTOMLEFT"  x="0" y="-10" />
-			<Anchor point="BOTTOM" relativeTo="$parent"/>
-		</Anchors>
 		<Layers>
 			<Layer level="ARTWORK">
 				<FontString name="$parentTitle" inherits="GameFontNormal" justifyH="LEFT" justifyV="TOP">
@@ -44,6 +40,7 @@
 			<OnLoad>
 				MusicianOptionsPanelCrossRPTitle:SetText(Musician.Msg.OPTIONS_CROSS_RP_TITLE)
 				MusicianOptionsPanelCrossRPSubText:SetText(Musician.Msg.OPTIONS_CROSS_RP_SUB_TEXT)
+				Musician.Options.Append(self)
 			</OnLoad>
 		</Scripts>
 	</Frame>
