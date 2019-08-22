@@ -49,6 +49,7 @@ msg.OPTIONS_EMOTE_HINT = "当你播放音乐的时候，没有Musician插件的�
 msg.OPTIONS_CATEGORY_NAMEPLATES = "姓名版和动作"
 msg.OPTIONS_CATEGORY_NAMEPLATES_SUB_TEXT = "打开姓名版选项以便看到正在演奏音乐的玩家的动画并确认附近有谁可以听到你。"
 msg.OPTIONS_ENABLE_NAMEPLATES = "启用姓名版和动画。"
+-- msg.OPTIONS_SHOW_NAMEPLATE_ICON = "Show a {icon} icon next to the name of the players who also have Musician."
 msg.OPTIONS_HIDE_HEALTH_BARS = "在未进入战斗时，隐藏玩家和友善单位的姓名版。"
 msg.OPTIONS_HIDE_NPC_NAMEPLATES = "隐藏NPC姓名版。"
 msg.OPTIONS_CINEMATIC_MODE = "当使用{binding}关闭UI姓名版时也显示动画。"

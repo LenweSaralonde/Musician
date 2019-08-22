@@ -445,17 +445,18 @@ end
 -- @param append (boolean) Add note icon at the end of the string
 function Musician.NamePlates.AddNoteIcon(namePlate, textElement, append)
 	local player = UnitIsPlayer(namePlate.namePlateUnitToken) and Musician.Utils.NormalizePlayerName(GetUnitName(namePlate.namePlateUnitToken, true))
-	if player and not(Musician.Utils.PlayerIsMyself(player)) and Musician.Registry.PlayerIsRegistered(player) then
+	local iconPlaceholder = Musician.Utils.GetChatIcon("")
+
+	if player and not(Musician.Utils.PlayerIsMyself(player)) and Musician_Settings.showNamePlateIcon and Musician.Registry.PlayerIsRegistered(player) then
 		local nameString = textElement:GetText()
 		if nameString == nil then return end
-
-		local iconPlaceholder = Musician.Utils.GetChatIcon("")
 
 		-- Icon placeholder is present but not at the right position: remove it
 		local from, to = string.find(nameString, iconPlaceholder, 1, true)
 		if append and to and to ~= nameString or not(append) and from and from ~= 1 then
 			nameString = string.sub(nameString, 1, from - 1) .. string.sub(nameString, to + 1, #nameString)
-			nameString = strtrim(string.gsub(nameString, '%s+', ' '))
+			nameString = string.gsub(nameString, '%s+', ' ')
+			nameString = strtrim(nameString)
 			from, to = nil, nil
 		end
 
@@ -493,8 +494,23 @@ function Musician.NamePlates.AddNoteIcon(namePlate, textElement, append)
 
 		textElement.noteIcon.updateSize()
 		textElement.noteIcon:Show()
-	elseif textElement.noteIcon then
-		textElement.noteIcon:Hide()
+	else
+		-- Hide icon
+		if textElement.noteIcon then
+			textElement.noteIcon:Hide()
+		end
+
+		-- Remove note icon placeholder
+		local nameString = textElement:GetText()
+		if nameString ~= nil then
+			local from, to = string.find(nameString, iconPlaceholder, 1, true)
+			if to and from ~= nil then
+				nameString = string.sub(nameString, 1, from - 1) .. string.sub(nameString, to + 1, #nameString)
+				nameString = string.gsub(nameString, '%s+', ' ')
+				nameString = strtrim(nameString)
+				textElement:SetText(nameString)
+			end
+		end
 	end
 end
 
