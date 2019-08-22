@@ -12,7 +12,7 @@ end
 --
 function Musician.KuiNamePlates:OnEnable()
 
-	if KuiNameplates then
+	if Musician.NamePlates and KuiNameplates then
 
 		Musician.Utils.Debug(MODULE_NAME, "Kui Nameplates detected.")
 
