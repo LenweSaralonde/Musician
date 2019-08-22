@@ -57,6 +57,7 @@ end
 --- Hook TRP player nameplates (standard)
 --
 function Musician.TRP3.HookNamePlates()
+	if not(Musician.NamePlates) then return end
 	if AddOn_TotalRP3 and AddOn_TotalRP3.NamePlates and AddOn_TotalRP3.NamePlates.BlizzardDecoratorMixin then
 		Musician.Utils.Debug(MODULE_NAME, "Adding nameplate support.")
 		hooksecurefunc(AddOn_TotalRP3.NamePlates.BlizzardDecoratorMixin, "UpdateNamePlateName", function(self, namePlate)
