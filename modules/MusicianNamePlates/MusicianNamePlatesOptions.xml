@@ -1,7 +1,7 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Frame name="MusicianOptionsPanelUnitNamePlates" parent="MusicianOptionsPanel">
 		<Size>
-			<AbsDimension x="580" y="198"/>
+			<AbsDimension x="580" y="194"/>
 		</Size>
 		<Layers>
 			<Layer level="ARTWORK">
@@ -177,7 +177,6 @@
 			<OnLoad>
 				MusicianOptionsPanelUnitNamePlatesTitle:SetText(Musician.Msg.OPTIONS_CATEGORY_NAMEPLATES)
 				MusicianOptionsPanelUnitNamePlatesSubText:SetText(Musician.Msg.OPTIONS_CATEGORY_NAMEPLATES_SUB_TEXT)
-				Musician.Options.Append(self)
 			</OnLoad>
 		</Scripts>
 	</Frame>
