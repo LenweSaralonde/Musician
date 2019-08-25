@@ -20,9 +20,6 @@
 									</Anchors>
 								</FontString>
 								<FontString name="$parentSubText" inherits="GameFontHighlight" nonspacewrap="true" maxLines="3" justifyH="LEFT" justifyV="TOP">
-									<Size>
-										<AbsDimension y="32" x="0"/>
-									</Size>
 									<Anchors>
 										<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-8"/>
 										<Anchor point="RIGHT" x="-32" y="0"/>
@@ -33,7 +30,7 @@
 						<Frames>
 							<Frame name="$parentUnitEmote">
 								<Size>
-									<AbsDimension x="580" y="75"/>
+									<AbsDimension x="580" y="70"/>
 								</Size>
 								<Anchors>
 									<Anchor point="TOPLEFT" relativeTo="$parentSubText" relativePoint="BOTTOMLEFT" />

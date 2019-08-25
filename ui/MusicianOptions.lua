@@ -53,21 +53,18 @@ end
 function Musician.Options.UpdateSize()
 	local panel = MusicianOptionsPanel
 	panel:SetWidth(panel:GetParent():GetWidth())
+
+	local relativeFrame = MusicianOptionsPanelSubText
 	local height = 0
 	local child
 	for _, child in ipairs({ panel:GetChildren() }) do
-		height = height + child:GetHeight()
+		if child:IsVisible() then
+			child:ClearAllPoints()
+			child:SetPoint("TOPLEFT", relativeFrame, "BOTTOMLEFT", 0, -10)
+			height = height + child:GetHeight()
+			relativeFrame = child
+		end
 	end
 
 	panel:SetHeight(height)
-end
-
---- Append options frame to the Musician option panel
--- @param frame (Frame)
-function Musician.Options.Append(frame)
-	local panel = MusicianOptionsPanel
-	local lastChild = select(-2, panel:GetChildren())
-	frame:ClearAllPoints()
-	frame:SetPoint("TOPLEFT", lastChild, "BOTTOMLEFT", 0, -10)
-	Musician.Options.UpdateSize()
 end
