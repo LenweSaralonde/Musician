@@ -9,6 +9,10 @@ local IS_PLAYING_TIMEOUT = 3
 function Musician.TRP3:OnEnable()
 	if TRP3_API then
 		Musician.Utils.Debug(MODULE_NAME, "Total RP3 module started.")
+
+		-- Init settings
+		Musician_Settings = Mixin(Musician.TRP3.Options.GetDefaults(), Musician_Settings)
+
 		Musician.TRP3.HookPlayerNames()
 		Musician.TRP3.HookNamePlates()
 		Musician.TRP3.HookPlayerMap()
@@ -125,6 +129,8 @@ function Musician.TRP3.HookPlayerMap()
 			TRP3_PlayerMapPinMixin.GetDisplayDataFromPoiInfo = function(self, poiInfo, ...)
 				local displayData = TRP3_PlayerMapPinMixin_GetDisplayDataFromPoiInfo(self, poiInfo, ...)
 
+				if not(Musician_Settings.trp3MapScan) then return displayData end
+
 				local sender = poiInfo.sender
 				displayData.musicianIsRegistered = Musician.Registry.PlayerIsRegistered(sender)
 				displayData.musicianPlayer = sender
@@ -162,7 +168,7 @@ function Musician.TRP3.HookPlayerMap()
 				local isPlayingMusic = false
 
 				-- Append note icon to player name and replace pin texture by a musical note
-				if displayData.musicianIsRegistered then
+				if Musician_Settings.trp3MapScan and displayData.musicianIsRegistered then
 					local icon
 
 					isPlayingMusic = Musician.TRP3.IsPlayingMusic(displayData.musicianPlayer)
@@ -181,7 +187,7 @@ function Musician.TRP3.HookPlayerMap()
 				TRP3_PlayerMapPinMixin_Decorate(self, newDisplayData, ...)
 
 				-- Attach OnUpdate script if registered
-				if displayData.musicianIsRegistered then
+				if Musician_Settings.trp3MapScan and displayData.musicianIsRegistered then
 					self.musicianBlinkTime = 0
 					self.musicianColor = { self.Texture:GetVertexColor() }
 					self.musicianPlayer = displayData.musicianPlayer

@@ -1,0 +1,41 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+	<Frame name="MusicianOptionsPanelTRP3" parent="MusicianOptionsPanel">
+		<Size>
+			<AbsDimension x="580" y="48"/>
+		</Size>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentTitle" inherits="GameFontNormal" justifyH="LEFT" justifyV="TOP">
+					<Anchors>
+						<Anchor point="TOPLEFT" />
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<CheckButton name="$parentMapScan" inherits="InterfaceOptionsCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-10"/>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						local label = string.gsub(Musician.Msg.OPTIONS_TRP3_MAP_SCAN, "{icon}", Musician.Utils.GetChatIcon(Musician.IconImages.Note))
+						_G[self:GetName().."Text"]:SetText(label)
+						self:SetHitRectInsets(0, -_G[self:GetName().."Text"]:GetWidth(), 0, 0)
+						self.type = CONTROLTYPE_CHECKBOX
+						BlizzardOptionsPanel_RegisterControl(self, self:GetParent():GetParent())
+						BlizzardOptionsPanel_SetupControl(self)
+						self:HookScript("OnClick", function()
+							Musician.TRP3.Options.Save(true)
+						end)
+					</OnLoad>
+				</Scripts>
+			</CheckButton>
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				MusicianOptionsPanelTRP3Title:SetText(Musician.Msg.OPTIONS_TRP3)
+			</OnLoad>
+		</Scripts>
+	</Frame>
+</Ui>
