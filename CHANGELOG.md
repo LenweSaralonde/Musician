@@ -1,6 +1,12 @@
 Changelog
 =========
 
+v1.5.5.3
+--------
+* Added cooldown for the promo message emote (Issue #29)
+* Added option to disable the note icon in nameplates (Issue #30)
+* Added option to disable the musician pin on the TRP3 map scan (Issue #31)
+
 v1.5.5.2
 --------
 * Fixed notes dropping when previewing a song with muted tracks
