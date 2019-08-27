@@ -552,7 +552,7 @@ function Musician.Registry.NotifyNewVersion(otherVersion)
 		msg = string.gsub(msg, '{version}', Musician.Utils.Highlight(theirVersion))
 
 		-- Display message with fanfare sound
-		local _, handle = PlaySound(67788, 'Master')
+		PlaySoundFile("Interface\\AddOns\\Musician\\ui\\sound\\fx_flute_mylunesmelody_short.ogg")
 		Musician.Utils.Print(msg)
 	end
 

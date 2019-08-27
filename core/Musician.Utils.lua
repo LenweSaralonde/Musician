@@ -46,14 +46,14 @@ end
 -- @param msg (string)
 function Musician.Utils.PrintError(msg)
 	DEFAULT_CHAT_FRAME:AddMessage(msg, RED_FONT_COLOR.r, RED_FONT_COLOR.g, RED_FONT_COLOR.b)
-	PlaySound(32051)
+	PlaySoundFile("sound\\interface\\error.ogg")
 end
 
 --- Display an error message in a popup
 -- @param msg (string)
 function Musician.Utils.Error(msg)
 	message(msg)
-	PlaySound(32051)
+	PlaySoundFile("sound\\interface\\error.ogg")
 end
 
 --- Display an message in a popup

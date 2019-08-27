@@ -237,7 +237,7 @@ Musician.KeyboardConfig.Button_OnKeyDown = function(self, keyValue, arg)
 				Musician.KeyboardConfig.UpdateCompletion()
 				Musician.KeyboardConfig.SelectNextKeyBinding()
 			else
-				PlaySound(32051)
+				PlaySoundFile("sound\\interface\\error.ogg")
 			end
 		end
 	else
