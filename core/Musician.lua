@@ -11,6 +11,21 @@ function Musician:OnInitialize()
 
 	-- Check WoW project type
 	if WOW_PROJECT_ID ~= Musician.WOW_PROJECT_ID then
+
+		-- Disable modules
+		local module
+		for _, module in pairs(Musician) do
+			if type(module) == 'table' then
+				if module.OnInitialize then
+					module.OnInitialize = function() end
+				end
+				if module.OnEnable then
+					module.OnEnable = function() end
+				end
+			end
+		end
+
+		-- Display error messages
 		local msg
 		if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
 			msg = Musician.Msg.ERR_CLASSIC_ON_RETAIL
