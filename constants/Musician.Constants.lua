@@ -1,3 +1,5 @@
+Musician.WOW_PROJECT_ID = WOW_PROJECT_MAINLINE -- WoW Retail
+
 Musician.CHANNEL  = "MusicianComm"
 Musician.PASSWORD = "TrustMeIMAMusician"
 
