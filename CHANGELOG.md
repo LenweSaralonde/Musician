@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.5.5.4
+--------
+* Added NeatPlates support
+* Added WoW client version check
+
 v1.5.5.3
 --------
 * Added cooldown for the promo message emote (Issue #29)
