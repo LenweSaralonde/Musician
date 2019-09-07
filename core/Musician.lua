@@ -19,7 +19,7 @@ function Musician:OnInitialize()
 		end
 
 		msg = Musician.Utils.FormatText(msg)
-		Musician.Utils.PrintError(msg)
+		DEFAULT_CHAT_FRAME:AddMessage(msg, RED_FONT_COLOR.r, RED_FONT_COLOR.g, RED_FONT_COLOR.b)
 
 		C_Timer.After(6, function()
 			message(msg)
