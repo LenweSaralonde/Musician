@@ -8,7 +8,26 @@ local tipsAndTricks = {}
 --- OnInitialize
 --
 function Musician:OnInitialize()
-	Musician.Utils.Print(string.gsub(Musician.Msg.STARTUP, "{version}", Musician.Utils.Highlight(GetAddOnMetadata("Musician", "Version"))))
+
+	-- Check WoW project type
+	if WOW_PROJECT_ID ~= Musician.WOW_PROJECT_ID then
+		local msg
+		if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+			msg = Musician.Msg.ERR_CLASSIC_ON_RETAIL
+		else
+			msg = Musician.Msg.ERR_RETAIL_ON_CLASSIC
+		end
+
+		msg = Musician.Utils.FormatText(msg)
+		Musician.Utils.PrintError(msg)
+
+		C_Timer.After(6, function()
+			message(msg)
+			PlaySound(846)
+		end)
+
+		return
+	end
 
 	-- Init settings
 	local defaultSettings = {
@@ -68,6 +87,9 @@ function Musician:OnInitialize()
 	SLASH_MUSICIAN1 = "/musician"
 	SLASH_MUSICIAN2 = "/music"
 	SLASH_MUSICIAN3 = "/mus"
+
+	-- Show startup message
+	Musician.Utils.Print(string.gsub(Musician.Msg.STARTUP, "{version}", Musician.Utils.Highlight(GetAddOnMetadata("Musician", "Version"))))
 end
 
 --- Add a module
