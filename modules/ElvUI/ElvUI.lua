@@ -3,20 +3,6 @@ Musician.ElvUI = LibStub("AceAddon-3.0"):NewAddon("Musician.ElvUI", "AceEvent-3.
 local MODULE_NAME = "ElvUI"
 Musician.AddModule(MODULE_NAME)
 
---- Add note icon to the ElvUI nameplate
--- @param namePlate (Frame)
-local function addNote(namePlate)
-	if namePlate.isPlayer then
-		local player = Musician.Utils.NormalizePlayerName(namePlate.unitName)
-		local nameText = namePlate.Name:GetText()
-		if player and nameText and not(Musician.Utils.PlayerIsMyself(player)) and Musician.Registry.PlayerIsRegistered(player) then
-			if string.find(nameText, Musician.IconImages.Note) == nil then
-				namePlate.Name:SetText(Musician.Utils.GetChatIcon(Musician.IconImages.Note) .. " " .. nameText)
-			end
-		end
-	end
-end
-
 --- OnEnable
 --
 function Musician.ElvUI:OnEnable()
