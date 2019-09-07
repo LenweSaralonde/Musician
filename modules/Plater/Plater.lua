@@ -14,9 +14,5 @@ function Musician.Plater:OnEnable()
 		hooksecurefunc(Musician.NamePlates, "UpdateNoteIcon", function(namePlate, player)
 			Musician.NamePlates.AddNoteIcon(namePlate, namePlate.CurrentUnitNameString)
 		end)
-
-		hooksecurefunc(Plater, "UpdatePlateText", function(namePlate, player)
-			Musician.NamePlates.UpdateNoteIcon(namePlate)
-		end)
 	end
 end

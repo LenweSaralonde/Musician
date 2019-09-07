@@ -436,6 +436,20 @@ end
 -- @param textElement (FontString)
 -- @param append (boolean) Add note icon at the end of the string
 function Musician.NamePlates.AddNoteIcon(namePlate, textElement, append)
+
+	-- Avoid recursion when called with hooked SetText()
+	if textElement.musicianUpdatingNote then return end
+	textElement.musicianUpdatingNote = true
+
+	-- Hook the SetText() function to ensure the icon is always added, even when modified by a third party
+	if textElement.musicianSetText == nil then
+		textElement.musicianSetText = textElement.SetText
+		textElement.SetText = function(self, text)
+			textElement.musicianSetText(self, text)
+			Musician.NamePlates.AddNoteIcon(namePlate, self, append)
+		end
+	end
+
 	local player = UnitIsPlayer(namePlate.namePlateUnitToken) and Musician.Utils.NormalizePlayerName(GetUnitName(namePlate.namePlateUnitToken, true))
 	local iconPlaceholder = Musician.Utils.GetChatIcon("")
 
@@ -477,11 +491,17 @@ function Musician.NamePlates.AddNoteIcon(namePlate, textElement, append)
 		-- Update note icon
 		textElement.noteIcon:SetParent(parent)
 
+		local offset = 0
+		if textElement:GetJustifyH() == "CENTER" then
+			local textWidth = textElement:GetStringWidth()
+			offset = (textElement:GetWidth() - textWidth) / 2
+		end
+
 		textElement.noteIcon:ClearAllPoints()
 		if append then
-			textElement.noteIcon:SetPoint("RIGHT", textElement, "RIGHT")
+			textElement.noteIcon:SetPoint("RIGHT", textElement, "RIGHT", -offset, 0)
 		else
-			textElement.noteIcon:SetPoint("LEFT", textElement, "LEFT")
+			textElement.noteIcon:SetPoint("LEFT", textElement, "LEFT", offset, 0)
 		end
 
 		textElement.noteIcon.updateSize()
@@ -504,6 +524,8 @@ function Musician.NamePlates.AddNoteIcon(namePlate, textElement, append)
 			end
 		end
 	end
+
+	textElement.musicianUpdatingNote = false
 end
 
 --- Attach Musician nameplate
