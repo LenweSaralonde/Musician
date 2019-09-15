@@ -32,6 +32,9 @@ MusicianFrame.Init = function()
 	Musician.Frame:RegisterMessage(Musician.Events.BandPlayReady, MusicianFrame.OnBandPlayReady)
 	Musician.Frame:RegisterMessage(Musician.Events.BandReadyPlayersUpdated, MusicianFrame.UpdateBandPlayButton)
 	Musician.Frame:RegisterEvent("GROUP_ROSTER_UPDATE", MusicianFrame.OnRosterUpdate)
+	Musician.Frame:RegisterEvent("PLAYER_DEAD", MusicianFrame.OnCommChannelUpdate)
+	Musician.Frame:RegisterEvent("PLAYER_ALIVE", MusicianFrame.OnCommChannelUpdate)
+	Musician.Frame:RegisterEvent("PLAYER_UNGHOST", MusicianFrame.OnCommChannelUpdate)
 
 	MusicianFrameTrackEditorButton:Disable()
 	MusicianFrameTestButton:SetText(Musician.Msg.TEST_SONG)
@@ -147,7 +150,7 @@ end
 -- @param isEnabled (boolean)
 -- @param isPlaying (boolean)
 MusicianFrame.UpdatePlayButton = function()
-	isEnabled = Musician.sourceSong and Musician.Comm.ChannelIsReady() and not(isCommActionPending)
+	isEnabled = Musician.sourceSong and Musician.Comm.CanPlay() and not(isCommActionPending)
 
 	-- This may happen on trial accounts in raid mode
 	if IsInGroup() and (Musician.Comm.GetGroupChatType() == nil) then

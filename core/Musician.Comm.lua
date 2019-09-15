@@ -93,6 +93,7 @@ function Musician.Comm.Init()
 	Musician.Comm:RegisterComm(Musician.Comm.event.bandNotReady, Musician.Comm.OnBandPlayReady)
 	Musician.Comm:RegisterComm(Musician.Comm.event.bandPlay, Musician.Comm.OnBandPlay)
 	Musician.Comm:RegisterComm(Musician.Comm.event.bandStop, Musician.Comm.OnBandStop)
+	Musician.Comm:RegisterEvent("PLAYER_DEAD", Musician.Comm.OnDead)
 end
 
 --- Join the communication channel and keep it joined
@@ -244,11 +245,18 @@ function Musician.Comm.CanBroadcast()
 	return Musician.Comm.ChannelIsReady() or Musician.Comm.GetGroupChatType() ~= nil
 end
 
+--- Returns true if the player can play music
+-- @return (boolean)
+function Musician.Comm.CanPlay()
+	local playerIsAliveOrGhost = not(UnitIsDead("player")) or UnitIsGhost("player")
+	return Musician.Comm.CanBroadcast() and playerIsAliveOrGhost
+end
+
 --- Play song
 -- @return (boolean)
 function Musician.Comm.PlaySong()
 	if isStopPending or isPlayPending then return false end
-	if not(Musician.Comm.CanBroadcast()) or not(Musician.sourceSong) then return false end
+	if not(Musician.Comm.CanPlay()) or not(Musician.sourceSong) then return false end
 
 	isPlayPending = true
 	Musician.Comm:SendMessage(Musician.Events.CommSendAction, Musician.Comm.action.play)
@@ -286,7 +294,7 @@ end
 --- Stream a packed song chunk
 -- @param packedChunk (string)
 function Musician.Comm.StreamSongChunk(packedChunk)
-	if not(Musician.Comm.CanBroadcast()) then return false end
+	if not(Musician.Comm.CanPlay()) then return false end
 	Musician.Comm.StreamCompressedSongChunk(LibDeflate:CompressDeflate(packedChunk, { level = 9 }))
 end
 
@@ -294,7 +302,7 @@ end
 -- @param packedChunk (string)
 -- @return (boolean)
 function Musician.Comm.StreamCompressedSongChunk(compressedChunk)
-	if not(Musician.Comm.CanBroadcast()) then return false end
+	if not(Musician.Comm.CanPlay()) then return false end
 	local serializedChunk = LibDeflate:EncodeForWoWAddonChannel(compressedChunk)
 
 	-- Calculate used bandwidth
@@ -621,7 +629,7 @@ end
 -- @return (boolean)
 function Musician.Comm.PlaySongBand()
 	if isBandActionPending then return false end
-	if not(Musician.Comm.CanBroadcast()) then return false end
+	if not(Musician.Comm.CanPlay()) then return false end
 	if not(currentSongCrc32) then return false end
 
 	local groupChatType = Musician.Comm.GetGroupChatType()
@@ -743,4 +751,12 @@ function Musician.Comm.OnSongStop(event, song)
 	readyBandPlayers[player] = nil
 
 	Musician.Comm:SendMessage(Musician.Events.BandReadyPlayersUpdated)
+end
+
+--- OnDead
+-- Stop music when dead
+function Musician.Comm.OnDead()
+	isStopPending = false
+	isPlayPending = false
+	Musician.Comm.StopSong()
 end
