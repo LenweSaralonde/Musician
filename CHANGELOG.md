@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.5.5.5
+--------
+* Stop playing song when dead (Issue #33)
+* Fixed note icon sometimes not showing up in nameplates (Issue #32)
+
 v1.5.5.4
 --------
 * Added NeatPlates support
