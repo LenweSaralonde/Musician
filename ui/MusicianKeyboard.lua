@@ -587,6 +587,9 @@ local function initLiveModeButton()
 	Musician.Keyboard:RegisterMessage(Musician.Events.CommChannelUpdate, updateLiveModeButton)
 	Musician.Keyboard:RegisterMessage(Musician.Events.StreamStart, updateLiveModeButton)
 	Musician.Keyboard:RegisterMessage(Musician.Events.StreamStop, updateLiveModeButton)
+	Musician.Keyboard:RegisterEvent("PLAYER_DEAD", updateLiveModeButton)
+	Musician.Keyboard:RegisterEvent("PLAYER_ALIVE", updateLiveModeButton)
+	Musician.Keyboard:RegisterEvent("PLAYER_UNGHOST", updateLiveModeButton)
 end
 
 --- Enable or disable layer controls
