@@ -450,12 +450,11 @@ function Musician.NamePlates.AddNoteIcon(namePlate, textElement, append)
 	textElement.musicianUpdatingNote = true
 
 	-- Hook the SetText() function to ensure the icon is always added, even when modified by a third party
-	if textElement.musicianSetText == nil then
-		textElement.musicianSetText = textElement.SetText
-		textElement.SetText = function(self, text)
-			textElement.musicianSetText(self, text)
+	if textElement.musicianSetTextIsHooked == nil then
+		textElement.musicianSetTextIsHooked = true
+		hooksecurefunc(textElement, "SetText", function(self)
 			Musician.NamePlates.AddNoteIcon(namePlate, self, append)
-		end
+		end)
 	end
 
 	local player = UnitIsPlayer(namePlate.namePlateUnitToken) and Musician.Utils.NormalizePlayerName(GetUnitName(namePlate.namePlateUnitToken, true))
@@ -463,7 +462,10 @@ function Musician.NamePlates.AddNoteIcon(namePlate, textElement, append)
 
 	if player and not(Musician.Utils.PlayerIsMyself(player)) and Musician_Settings.showNamePlateIcon and Musician.Registry.PlayerIsRegistered(player) then
 		local nameString = textElement:GetText()
-		if nameString == nil then return end
+		if nameString == nil then
+			textElement.musicianUpdatingNote = false
+			return
+		end
 
 		-- Icon placeholder is present but not at the right position: remove it
 		local from, to = string.find(nameString, iconPlaceholder, 1, true)
