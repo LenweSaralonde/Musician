@@ -3,6 +3,13 @@ Musician.ElvUI = LibStub("AceAddon-3.0"):NewAddon("Musician.ElvUI", "AceEvent-3.
 local MODULE_NAME = "ElvUI"
 Musician.AddModule(MODULE_NAME)
 
+local function updateEvlUI_Nameplate(self, ElvNamePlate)
+	if ElvNamePlate then
+		local namePlate = ElvNamePlate:GetParent()
+		C_Timer.After(0, function() Musician.NamePlates.AddNoteIcon(namePlate, ElvNamePlate.Name) end)
+	end
+end
+
 --- OnEnable
 --
 function Musician.ElvUI:OnEnable()
@@ -14,11 +21,8 @@ function Musician.ElvUI:OnEnable()
 		local NP = E:GetModule("NamePlates")
 
 		-- Add musical note icon next to player name
-		hooksecurefunc(NP, "StyleFilterNameChanged", function(self)
-			local ElvNamePlate = self:GetParent():GetParent()
-			local namePlate = ElvNamePlate:GetParent()
-			Musician.NamePlates.AddNoteIcon(namePlate, ElvNamePlate.Name)
-		end)
+		hooksecurefunc(NP, "Update_Name", updateEvlUI_Nameplate)
+		hooksecurefunc(NP, "SetupTarget", updateEvlUI_Nameplate)
 
 		-- Update nameplate when player is registered
 		Musician.ElvUI:RegisterMessage(Musician.Registry.event.playerRegistered, function(event, player)
