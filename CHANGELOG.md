@@ -1,6 +1,12 @@
 Changelog
 =========
 
+v1.5.5.6
+--------
+* Update for WoW 8.2.5
+* HD borders!
+* Fixed live keyboard UI dropdowns go off screen #35
+
 v1.5.5.5
 --------
 * Stop playing song when dead (Issue #33)
