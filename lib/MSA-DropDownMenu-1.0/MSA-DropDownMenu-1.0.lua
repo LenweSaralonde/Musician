@@ -1,10 +1,10 @@
 --- MSA-DropDownMenu-1.0 - DropDown menu for non-Blizzard addons
---- Copyright (c) 2016-2018, Marouan Sabbagh <mar.sabbagh@gmail.com>
+--- Copyright (c) 2016-2019, Marouan Sabbagh <mar.sabbagh@gmail.com>
 --- All Rights Reserved.
 ---
 --- https://www.curseforge.com/wow/addons/msa-dropdownmenu-10
 
-local name, version = "MSA-DropDownMenu-1.0", 7
+local name, version = "MSA-DropDownMenu-1.0", 8
 
 local lib = LibStub:NewLibrary(name, version)
 if not lib then return end
@@ -729,9 +729,17 @@ function MSA_DropDownMenu_AddButton(info, level)
         -- Set icon
         if ( info.icon ) then
             icon:SetSize(16,16);
-            icon:SetTexture(info.icon);
+            if ( info.iconAtlas ) then
+                icon:SetAtlas(info.icon, true);
+                info.tCoordLeft = nil
+                info.tCoordRight = nil
+                info.tCoordTop = nil
+                info.tCoordBottom = nil
+            else
+                icon:SetTexture(info.icon);
+            end
             icon:ClearAllPoints();
-            icon:SetPoint("RIGHT");
+            icon:SetPoint("RIGHT", -1, 0);
 
             if ( info.tCoordLeft ) then
                 icon:SetTexCoord(info.tCoordLeft, info.tCoordRight, info.tCoordTop, info.tCoordBottom);
