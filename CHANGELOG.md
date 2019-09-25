@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.5.5.6
+--------
+* Fixed ElvUI Classic nameplates hook #34
+* Fixed live keyboard UI dropdowns go off screen #35
+
 v1.5.5.5
 --------
 * Stop playing song when dead (Issue #33)
