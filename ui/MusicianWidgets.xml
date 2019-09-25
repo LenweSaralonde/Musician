@@ -18,7 +18,7 @@
 
 	<!-- Dialog Window -->
 
-	<Frame name="MusicianDialogTemplate" parent="UIParent" toplevel="true" enableMouse="true" setAllPoints="true" movable="true" hidden="true" clampedtoscreen="true" frameStrata="DIALOG" virtual="true">
+	<Frame name="MusicianDialogTemplate" inherits="SecureDialogBorderTemplate" parent="UIParent" toplevel="true" enableMouse="true" setAllPoints="true" movable="true" hidden="true" clampedtoscreen="true" frameStrata="DIALOG" virtual="true">
 
 		<Scripts>
 			<OnLoad>self:RegisterForDrag("LeftButton")</OnLoad>
@@ -43,18 +43,6 @@
 		<Anchors>
 			<Anchor point="CENTER" x="0" y="0" />
 		</Anchors>
-
-		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
-			<BackgroundInsets>
-				<AbsInset left="11" right="12" top="12" bottom="11" />
-			</BackgroundInsets>
-			<TileSize>
-				<AbsValue val="32" />
-			</TileSize>
-			<EdgeSize>
-				<AbsValue val="32" />
-			</EdgeSize>
-		</Backdrop>
 
 		<Frames>
 			<Button name="$parentCloseButton" parentKey="close" inherits="UIPanelCloseButton">
