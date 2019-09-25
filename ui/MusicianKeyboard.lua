@@ -459,8 +459,8 @@ local function initLayoutDropdown()
 		MSA_CloseDropDownMenus()
 	end
 
-	DropDownList1:SetClampedToScreen(true)
-	DropDownList2:SetClampedToScreen(true)
+	MSA_DropDownList1:SetClampedToScreen(true)
+	MSA_DropDownList2:SetClampedToScreen(true)
 
 	local layout = layouts[Musician.Keyboard.config.layout]
 	MSA_DropDownMenu_SetText(dropdown, Musician.Msg.KEYBOARD_LAYOUTS[layout.name] or layout.name)
@@ -490,7 +490,7 @@ local function initBaseKeyDropdown()
 		MSA_CloseDropDownMenus()
 	end
 
-	DropDownList1:SetClampedToScreen(true)
+	MSA_DropDownList1:SetClampedToScreen(true)
 	MSA_DropDownMenu_SetText(dropdown, Musician.NOTE_NAMES[Musician.Keyboard.config.baseKey])
 end
 
