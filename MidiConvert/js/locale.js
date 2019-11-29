@@ -23,9 +23,11 @@ window.onload = function() {
 	document.getElementById("main").style = 'opacity: 1';
 	document.getElementById("MusicianWindow").src = 'img/' + MUSICIAN_MSG.windowBackgroundImage;
 	document.querySelector("#Discord a").title = MUSICIAN_MSG.joinDiscord;
-	document.querySelector("#Discord img").alt = MUSICIAN_MSG.joinDiscord;
 	document.querySelector("#BattleNet a").title = MUSICIAN_MSG.joinBattleNet;
-	document.querySelector("#BattleNet img").alt = MUSICIAN_MSG.joinBattleNet;
+	document.querySelector("#Patreon a").title = MUSICIAN_MSG.becomeAPatron;
+	document.querySelector("#PayPal a").title = MUSICIAN_MSG.donatePayPal;
+	document.querySelector('#PatreonLink').innerHTML = MUSICIAN_MSG.patreonLink;
+	document.querySelector('#DonateLink').innerHTML = MUSICIAN_MSG.donateLink;
 
 	var localeScriptTag = document.createElement('script');
 	localeScriptTag.src = 'https://musician.lenwe.io/version/';
