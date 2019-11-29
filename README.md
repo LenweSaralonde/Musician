@@ -199,3 +199,7 @@ Here is a summary of the problems you may encounter:
 * Songs having an overly high note rate may stutter.
 * Clipping may occur for some songs if you have all your volume settings maxed out. Just reduce in-game volume to avoid this.
 * Play as a band features do not work with trial accounts in raid mode.
+
+Support
+-------
+If you like Musician and want to support its development, you can [become a patron](https://musician.lenwe.io/patreon) or just [make a donation](https://musician.lenwe.io/paypal).
