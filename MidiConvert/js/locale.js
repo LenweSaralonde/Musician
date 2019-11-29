@@ -6,11 +6,11 @@ var MUSICIAN_VERSION = null;
 
 switch (userLang) {
 	case 'fr':
-		localeFile = userLang + '.js';
+		localeFile = userLang + '.js?v=3';
 		break;
 
 	default:
-		localeFile = 'default.js';
+		localeFile = 'default.js?v=3';
 }
 
 // Set localized strings
