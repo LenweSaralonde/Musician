@@ -95,7 +95,37 @@
 			width: 100%;
 			height: 40px;
 			font-size: 20px;
-			bottom: 0px;
+			bottom: 70px;
+		}
+
+		#Description a:hover {
+			transform: scale(1.05);
+		}
+
+		#Description a, #Description a:link, #Description a:visited {
+			background-color: #006600;
+			color: #ffffff;
+			padding: 15px;
+			border-radius: 5px;
+			display: inline-block;
+			transition: transform .2s ease;
+		}
+
+		#Links {
+			position: fixed;
+			width: 100%;
+			height: 20px;
+			font-size: 16px;
+			bottom: 10px;
+		}
+
+		#Links a {
+			transition: transform .2s ease;
+			display: inline-block;
+		}
+
+		#Links a:hover {
+			transform: scale(1.1);
 		}
 
 		#CopyResult {
@@ -175,6 +205,16 @@
 			top: 75px;
 		}
 
+		#Patreon {
+			left: 0;
+			top: 150px;
+		}
+
+		#PayPal {
+			left: 0;
+			top: 225px;
+		}
+
 		.community img {
 			border: 0;
 			margin: 10px;
@@ -207,9 +247,12 @@
 		</div>
 	</div>
 
-	<div id="Description"><a href="https://musician.lenwe.io/" id="DowloadLink">Download Musician addon for World of Warcraft</a> / <a href="https://discord.gg/ypfpGxK" target="_blank">Discord</a></div>
-	<div id="Discord" class="community"><a href="https://discord.gg/ypfpGxK" title="Join our Discord community!" target="_blank"><img src="img/discord-icon.png" alt="Join our Discord community!"></a></div>
-	<div id="BattleNet" class="community"><a href="https://blizzard.com/invite/X2Gy7ztwX7" title="Join our Battle.net group!" target="_blank"><img src="img/battlenet-icon.png" alt="Join our Battle.net group!"></a></div>
+	<div id="Description"><a href="https://musician.lenwe.io/" id="DowloadLink">Download Musician add-on for World of Warcraft and WoW Classic</a></div>
+	<div id="Links"><a href="https://discord.gg/ypfpGxK" target="_blank">Discord</a> / <a href="https://musician.lenwe.io/patreon" target="_blank" id="PatreonLink">Become a Patron</a> / <a href="https://musician.lenwe.io/paypal" target="_blank" id="DonateLink">Donate</a></div>
+	<div id="Discord" class="community"><a href="https://discord.gg/ypfpGxK" title="Join our Discord community" target="_blank"><img src="img/discord-icon.png" alt="Discord logo"></a></div>
+	<div id="BattleNet" class="community"><a href="https://blizzard.com/invite/X2Gy7ztwX7" title="Join our Battle.net group" target="_blank"><img src="img/battlenet-icon.png" alt="Battle.net logo"></a></div>
+	<div id="Patreon" class="community"><a href="https://musician.lenwe.io/patreon" title="Become a patron to support the project" target="_blank"><img src="img/patreon-icon.png" alt="Patreon logo"></a></div>
+	<div id="PayPal" class="community"><a href="https://musician.lenwe.io/paypal" title="Donate to support the project" target="_blank"><img src="img/paypal-icon.png" alt="PayPal logo"></a></div>
 
 	<script type="text/javascript">
 
