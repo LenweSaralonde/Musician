@@ -12,6 +12,7 @@ function Musician.Options.Init()
 	panel.okay = Musician.Options.Save
 	panel.cancel = Musician.Options.Cancel
 	panel.default = Musician.Options.Defaults
+	MusicianOptionsPanelContainer:SetScript("OnShow", Musician.Options.UpdateSize)
 	InterfaceOptions_AddCategory(MusicianOptionsPanelContainer)
 end
 
@@ -20,7 +21,6 @@ end
 function Musician.Options.Show()
 	InterfaceOptionsFrame_Show() -- This one has to be opened first
 	InterfaceOptionsFrame_OpenToCategory(MusicianOptionsPanelContainer)
-	C_Timer.After(.0001, Musician.Options.UpdateSize)
 end
 
 function Musician.Options.Refresh()
