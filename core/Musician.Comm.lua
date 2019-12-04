@@ -183,14 +183,13 @@ function Musician.Comm.GetGroupChatType()
 	local inRaid = IsInRaid()
 	local inLFG = IsInGroup(LE_PARTY_CATEGORY_INSTANCE)
 	local inLFR = IsInRaid(LE_PARTY_CATEGORY_INSTANCE)
+	local inBattleground = inRaid and inInstance and instanceType == "pvp"
 	local chatType
 	local channel
 
 	if isF2P and inRaid then
 		return nil -- Disable raid broadcasting for trial accounts
-	elseif inRaid and inInstance and instanceType == "pvp" then
-		return "BATTLEGROUND"
-	elseif inLFG or inLFR then
+	elseif inLFG or inLFR or inBattleground then
 		return "INSTANCE_CHAT"
 	elseif inRaid then
 		return "RAID"
