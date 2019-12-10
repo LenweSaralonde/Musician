@@ -201,7 +201,7 @@ function MusicianButton.GetMenu()
 
 	table.insert(menu, {
 		notCheckable = true,
-		text = Musician.Msg.MENU_SETTINGS,
+		text = Musician.Msg.MENU_OPTIONS,
 		isTitle = true
 	})
 
@@ -209,9 +209,19 @@ function MusicianButton.GetMenu()
 
 	table.insert(menu, {
 		notCheckable = true,
-		text = Musician.Msg.MENU_OPTIONS,
+		text = Musician.Msg.MENU_SETTINGS,
 		func = function()
 			Musician.Options.Show()
+		end
+	})
+
+	-- About
+
+	table.insert(menu, {
+		notCheckable = true,
+		text = Musician.Msg.MENU_ABOUT,
+		func = function()
+			MusicianAbout:Show()
 		end
 	})
 

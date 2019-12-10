@@ -83,6 +83,7 @@ function Musician:OnInitialize()
 	Musician.Live.Init()
 	Musician.Keyboard.Init()
 	Musician.Options.Init()
+	Musician.About.Init()
 
 	Musician:RegisterMessage(Musician.Events.SongPlay, Musician.OnSongPlayed)
 	Musician:RegisterMessage(Musician.Events.SongImportSucessful, Musician.OnSourceImportSuccessful)
@@ -104,7 +105,7 @@ function Musician:OnInitialize()
 	SLASH_MUSICIAN3 = "/mus"
 
 	-- Show startup message
-	Musician.Utils.Print(string.gsub(Musician.Msg.STARTUP, "{version}", Musician.Utils.Highlight(GetAddOnMetadata("Musician", "Version"))))
+	Musician.Utils.Print(string.gsub(Musician.Msg.STARTUP, "{version}", Musician.Utils.Highlight(Musician.Utils.GetVersionText())))
 end
 
 --- Add a module

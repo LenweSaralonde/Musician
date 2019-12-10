@@ -25,6 +25,7 @@ msg.MENU_LIVE_PLAY = "Jouer en direct"
 msg.MENU_SHOW_KEYBOARD = "Ouvrir le clavier"
 msg.MENU_SETTINGS = "Paramètres"
 msg.MENU_OPTIONS = "Options"
+msg.MENU_ABOUT = "À propos"
 
 msg.COMMAND_LIST_TITLE = "Commandes de Musician :"
 msg.COMMAND_SHOW = "Ouvrir la fenêtre d'import"
@@ -147,6 +148,17 @@ msg.KEY_CAN_BE_MERGED = "si c'est le cas, appuyez simplement sur la touche {key}
 msg.KEY_CANNOT_BE_MERGED = "si c'est le cas, passez à la touche suivante."
 msg.NEXT_KEY = "Touche suivante"
 msg.CLEAR_KEY = "Effacer"
+
+msg.ABOUT_TITLE = "Musician"
+msg.ABOUT_VERSION = "version {version}"
+msg.ABOUT_AUTHOR = "Par LenweSaralonde – {url}"
+msg.ABOUT_AUTHOR_EXTRA = "Traduction en chinois par Kalevalar"
+msg.ABOUT_LICENSE = "Distribué sous licence GNU GPL v3.0"
+msg.ABOUT_DISCORD = "Discord : {url}"
+msg.ABOUT_SUPPORT = "Vous aimez Musician ? Partagez-le avec tout le monde !"
+msg.ABOUT_PATREON = "Devenir soutien : {url}"
+msg.ABOUT_PAYPAL = "Faire un don : {url}"
+msg.ABOUT_SUPPORTERS = "Remerciements spéciaux à tous les soutiens du projet <3"
 
 local KEY = Musician.KEYBOARD_KEY
 msg.FIXED_KEY_NAMES = {
