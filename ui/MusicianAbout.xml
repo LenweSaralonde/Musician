@@ -4,7 +4,7 @@
 		<Size x="480" y="180" />
 
 		<Layers>
-			<Layer level="BACKGROUND">
+			<Layer level="ARTWORK">
 				<Texture name="$parentLogo" file="Interface\AddOns\Musician\ui\textures\about-logo.blp">
 					<Size x="128" y="128"/>
 					<Anchors>
