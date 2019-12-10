@@ -6,6 +6,8 @@ Musician.PASSWORD = "TrustMeIMAMusician"
 Musician.URL = "https://musician.lenwe.io"
 Musician.CONVERTER_URL = "https://musician.lenwe.io/import"
 Musician.DISCORD_URL = "https://musician.lenwe.io/discord"
+Musician.PATREON_URL = "https://musician.lenwe.io/patreon"
+Musician.PAYPAL_URL = "https://musician.lenwe.io/paypal"
 
 Musician.FILE_HEADER = "MUS5"
 Musician.PROTOCOL_VERSION = 4
