@@ -205,4 +205,5 @@ Support
 If you like Musician and want to support its development, you can [become a patron](https://musician.lenwe.io/patreon) or just [make a donation](https://musician.lenwe.io/paypal).
 
 Special thanks to the supporters of the project:
-Grayson Mountbatten / ChanceTheCheetah / Selena - WRA / Crisellianna
+
+Grayson Blackclaw / ChanceTheCheetah / Selena - WRA / Crisellianna

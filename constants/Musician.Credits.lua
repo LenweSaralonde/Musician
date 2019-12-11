@@ -1,5 +1,5 @@
 Musician.SUPPORTERS = {
-	"Grayson Mountbatten",
+	"Grayson Blackclaw",
 	"ChanceTheCheetah",
 	"Selena - WRA",
 	"Crisellianna",

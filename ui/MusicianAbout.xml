@@ -27,7 +27,7 @@
 				<FontString name="$parentAuthor" inherits="GameFontNormal" justifyH="LEFT">
 					<Color r="1" g="1" b="1"/>
 					<Anchors>
-						<Anchor point="TOPLEFT" y="-15" relativePoint="BOTTOMLEFT" relativeTo="$parentVersion" />
+						<Anchor point="TOPLEFT" y="-5" relativePoint="BOTTOMLEFT" relativeTo="$parentVersion" />
 					</Anchors>
 				</FontString>
 

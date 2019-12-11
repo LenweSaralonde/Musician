@@ -49,6 +49,11 @@ Musician.About.OnShow = function()
 	-- Resize window to fit content
 	MusicianAbout:SetHeight(MusicianAboutSupportersList:GetBottom() - 40 - MusicianAbout:GetTop())
 
+	-- Slightly enlarge window in Chinese
+	if Musician.Msg == Musician.Locale.zh then
+		MusicianAbout:SetWidth(480 * 1.2)
+	end
+
 	-- Center window
 	MusicianAbout:ClearAllPoints()
 	MusicianAbout:SetPoint("CENTER")
