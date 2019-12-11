@@ -7,8 +7,8 @@ local LibDeflate = LibStub:GetLibrary("LibDeflate")
 
 Musician.Comm.event = {}
 Musician.Comm.event.stop = "MusicianStop"
-Musician.Comm.event.stream = "MusicianStreamD"
-Musician.Comm.event.streamGroup = "MusicianGStreamD"
+Musician.Comm.event.stream = "MusicianChunk64"
+Musician.Comm.event.streamGroup = "MusicianGChunk64"
 Musician.Comm.event.bandPlay = "MusicianBPlay"
 Musician.Comm.event.bandStop = "MusicianBStop"
 Musician.Comm.event.bandReady = "MusicianBOK"
@@ -214,10 +214,8 @@ function Musician.Comm.BroadcastCommMessage(message, type, groupType)
 		debug(true, groupType, groupChatType, message)
 		Musician.Comm:SendCommMessage(groupType, message, groupChatType, nil, "ALERT")
 	end
-	if Musician.Comm.ChannelIsReady() then
-		debug(true, type, "CHANNEL " .. Musician.Comm.getChannel(), message)
-		Musician.Comm:SendCommMessage(type, message, "CHANNEL", Musician.Comm.getChannel(), "ALERT")
-	end
+	debug(true, type, "YELL", message)
+	Musician.Comm:SendCommMessage(type, message, "YELL", nil, "ALERT")
 end
 
 --- Return the communication channel ID
@@ -232,23 +230,11 @@ function Musician.Comm.getChannel()
 	end
 end
 
---- Return true if the communication channel is ready
--- @return (boolean)
-function Musician.Comm.ChannelIsReady()
-	return channelIsJoined
-end
-
---- Return true if the player can broadcast via the channel or the group chat
--- @return (boolean)
-function Musician.Comm.CanBroadcast()
-	return Musician.Comm.ChannelIsReady() or Musician.Comm.GetGroupChatType() ~= nil
-end
-
 --- Returns true if the player can play music
 -- @return (boolean)
 function Musician.Comm.CanPlay()
 	local playerIsAliveOrGhost = not(UnitIsDead("player")) or UnitIsGhost("player")
-	return Musician.Comm.CanBroadcast() and playerIsAliveOrGhost
+	return playerIsAliveOrGhost
 end
 
 --- Play song
@@ -302,7 +288,7 @@ end
 -- @return (boolean)
 function Musician.Comm.StreamCompressedSongChunk(compressedChunk)
 	if not(Musician.Comm.CanPlay()) then return false end
-	local serializedChunk = LibDeflate:EncodeForWoWAddonChannel(compressedChunk)
+	local serializedChunk = Musician.Utils.Base64Encode(compressedChunk) -- LibDeflate:EncodeForWoWAddonChannel fails over YELL
 
 	-- Calculate used bandwidth
 	local bwMin = Musician.BANDWIDTH_LIMIT_MIN
@@ -382,13 +368,13 @@ function Musician.Comm.OnChunk(prefix, message, distribution, sender)
 	Musician.Registry.RegisterPlayer(sender)
 
 	-- Rejecting channel chunks if the sender is also sending group chunks
-	local isGroup = distribution ~= 'CHANNEL'
+	local isGroup = distribution == 'PARTY' or distribution == 'RAID' or distribution == 'INSTANCE_CHAT'
 	local senderIsInGroup = Musician.Utils.PlayerIsInGroup(sender)
 	if not(isGroup) and senderIsInGroup then
 		return
 	end
 
-	local packedChunk = LibDeflate:DecompressDeflate(LibDeflate:DecodeForWoWAddonChannel(message))
+	local packedChunk = LibDeflate:DecompressDeflate(Musician.Utils.Base64Decode(message)) -- LibDeflate:DecodeForWoWAddonChannel fails over YELL
 	Musician.Comm.ProcessChunk(packedChunk, sender, isGroup)
 end
 
@@ -396,7 +382,6 @@ end
 -- @return (boolean)
 function Musician.Comm.StopSong()
 	if isStopPending or isPlayPending then return false end
-	if not(Musician.Comm.CanBroadcast()) then return false end
 	if Musician.streamingSong and Musician.streamingSong.streaming then
 		Musician.streamingSong:StopStreaming()
 		Musician.streamingSong = nil
@@ -576,7 +561,6 @@ end
 -- @return (boolean)
 function Musician.Comm.SetBandPlayReady(isReady)
 	if isBandActionPending then return false end
-	if not(Musician.Comm.CanBroadcast()) then return false end
 	if not(currentSongCrc32) then return false end
 
 	local groupChatType = Musician.Comm.GetGroupChatType()
@@ -677,7 +661,6 @@ end
 -- @return (boolean)
 function Musician.Comm.StopSongBand()
 	if isBandActionPending then return false end
-	if not(Musician.Comm.CanBroadcast()) then return false end
 	if not(currentSongCrc32) then return false end
 
 	local groupChatType = Musician.Comm.GetGroupChatType()

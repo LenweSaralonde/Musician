@@ -10,7 +10,7 @@ Musician.PATREON_URL = "https://musician.lenwe.io/patreon"
 Musician.PAYPAL_URL = "https://musician.lenwe.io/paypal"
 
 Musician.FILE_HEADER = "MUS5"
-Musician.PROTOCOL_VERSION = 4
+Musician.PROTOCOL_VERSION = 5 -- Specific to WoW Classic, sending addon messages over YELL instead of CHANNEL
 Musician.MAX_NOTE_DURATION = 6
 Musician.NOTE_DURATION_FPS = 255 / Musician.MAX_NOTE_DURATION -- 8-bit
 Musician.CHUNK_DURATION = 2

@@ -393,10 +393,8 @@ end
 --- Send a Hello to the channel
 --
 function Musician.Registry.SendHello()
-	if Musician.Comm.getChannel() ~= nil then
-		debug(true, Musician.Registry.event.hello, Musician.Comm.getChannel())
-		Musician.Registry:SendCommMessage(Musician.Registry.event.hello, Musician.Registry.GetVersionString(), 'CHANNEL', Musician.Comm.getChannel(), "ALERT")
-	end
+	debug(true, Musician.Registry.event.hello, 'YELL')
+	Musician.Registry:SendCommMessage(Musician.Registry.event.hello, Musician.Registry.GetVersionString(), 'YELL', nil, "ALERT")
 end
 
 --- Set player version
@@ -488,7 +486,7 @@ end
 -- @return (string)
 function Musician.Registry.GetVersionString()
 	local versionParts = { string.split('.', GetAddOnMetadata("Musician", "Version")) }
-	local protocolParts = { 0, 0, 0, 0 } -- Add Musician.PROTOCOL_VERSION at 5th position when a new version of the protocol is available
+	local protocolParts = { 0, 0, 0, 0, Musician.PROTOCOL_VERSION }
 	return table.concat(Musician.Utils.DeepMerge(protocolParts, versionParts), '.')
 end
 
