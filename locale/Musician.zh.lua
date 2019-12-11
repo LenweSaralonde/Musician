@@ -25,6 +25,7 @@ msg.MENU_LIVE_PLAY = "现场演奏"
 msg.MENU_SHOW_KEYBOARD = "打开键盘"
 msg.MENU_SETTINGS = "设定"
 msg.MENU_OPTIONS = "选项"
+msg.MENU_ABOUT = "关于"
 
 msg.COMMAND_LIST_TITLE = "Musician指令："
 msg.COMMAND_SHOW = "显示音乐导入窗口"
@@ -147,6 +148,17 @@ msg.KEY_CAN_BE_MERGED = "此时，请直接按下{key}键。"
 msg.KEY_CANNOT_BE_MERGED = "此时，请忽略并设置下一个键。"
 msg.NEXT_KEY = "下一个按键"
 msg.CLEAR_KEY = "清除按键"
+
+msg.ABOUT_TITLE = "Musician"
+msg.ABOUT_VERSION = "版本 {version}"
+msg.ABOUT_AUTHOR = "By LenweSaralonde – {url}"
+msg.ABOUT_AUTHOR_EXTRA = "中文汉化 by 格雷森·黑爪"
+msg.ABOUT_LICENSE = "本插件遵循GNU通用公共授权v3.0"
+msg.ABOUT_DISCORD = "Discord频道: {url}"
+msg.ABOUT_SUPPORT = "你喜欢Musician吗？把它分享给大家吧！"
+msg.ABOUT_PATREON = "成为Patreon捐助者：{url}"
+msg.ABOUT_PAYPAL = "成为PayPal捐助者：{url}"
+msg.ABOUT_SUPPORTERS = "特别鸣谢本插件的捐助者们！ <3"
 
 local KEY = Musician.KEYBOARD_KEY
 msg.FIXED_KEY_NAMES = {
