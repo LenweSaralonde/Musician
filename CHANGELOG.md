@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v1.5.5.7
+--------
+* Added "About" box with the list of supporters list #37
+* Added donation and Patreon links on the MIDI converter web app
+* Fixed add-on options sometimes not showing up #36
+* Fixed music not playing in battlegrounds #38
+
 v1.5.5.6
 --------
 * Update for WoW 8.2.5
