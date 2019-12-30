@@ -339,7 +339,8 @@ Musician.TrackEditor.Synchronize = function()
 		local streamingTrack = Musician.streamingSong.tracks[trackIndex]
 		streamingTrack.instrument = sourceTrack.instrument
 		streamingTrack.transpose = sourceTrack.transpose
-		streamingTrack.muted = Musician.sourceSong:TrackIsMuted(sourceTrack)
+		Musician.streamingSong:SetTrackMuted(streamingTrack, sourceTrack.muted)
+		Musician.streamingSong:SetTrackSolo(streamingTrack, sourceTrack.solo)
 	end
 end
 
