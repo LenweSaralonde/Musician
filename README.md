@@ -206,4 +206,4 @@ If you like Musician and want to support its development, you can [become a patr
 
 Special thanks to the supporters of the project:
 
-Grayson Blackclaw / ChanceTheCheetah / Selena - WRA / Crisellianna
+Grayson Blackclaw / ChanceTheCheetah / Selena - WRA / Crisellianna / Naelyel
