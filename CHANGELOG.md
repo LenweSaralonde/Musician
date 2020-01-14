@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.5.5.8
+--------
+* Fixed "Solo" track status not synchronizing with song actually being played #40
+
 v1.5.5.7
 --------
 * Updated communication protocol for WoW Classic 1.13.3 #39
