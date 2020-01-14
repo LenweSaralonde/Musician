@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.5.5.8
+--------
+* Update for WoW 8.3
+* Fixed "Solo" track status not synchronizing with song actually being played #40
+
 v1.5.5.7
 --------
 * Added "About" box with the list of supporters list #37
