@@ -1,3 +1,6 @@
+--- Main module
+-- @module Musician
+
 Musician = LibStub("AceAddon-3.0"):NewAddon("Musician", "AceEvent-3.0")
 
 local MODULE_NAME = "Main"

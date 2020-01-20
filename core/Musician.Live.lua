@@ -1,3 +1,6 @@
+--- Live play module
+-- @module Musician.Live
+
 Musician.Live = LibStub("AceAddon-3.0"):NewAddon("Musician.Live", "AceComm-3.0", "AceEvent-3.0")
 
 local MODULE_NAME = "Live"
@@ -31,6 +34,7 @@ local bandNotesOn = {}
 -- @param out (boolean) Outgoing message
 -- @param event (string)
 -- @param source (string)
+-- @param message (string)
 -- @param ... (string)
 local function debug(out, event, source, message, ...)
 	local prefix
@@ -163,7 +167,7 @@ function Musician.Live.Init()
 end
 
 --- Enable or disable live mode
--- @param enable (boolean)
+-- @param enabled (boolean)
 function Musician.Live.Enable(enabled)
 	isLiveEnabled = enabled
 end
@@ -365,7 +369,6 @@ end
 -- @param key (int) MIDI key index
 -- @param layer (int)
 -- @param instrument (int)
--- @param isChordNote (boolean)
 function Musician.Live.BandNote(noteOn, key, layer, instrument)
 	if not(Musician.Live.IsBandSyncMode() and Musician.Live.IsEnabled()) then return end
 

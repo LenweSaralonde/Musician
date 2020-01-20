@@ -1,3 +1,6 @@
+--- Options for Total RP 3 integration
+-- @module Musician.TRP3.Options
+
 Musician.TRP3.Options = {}
 
 local MODULE_NAME = "TRP3.Options"

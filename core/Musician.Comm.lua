@@ -1,3 +1,6 @@
+--- Communication module
+-- @module Musician.Comm
+
 Musician.Comm = LibStub("AceAddon-3.0"):NewAddon("Musician.Comm", "AceComm-3.0", "AceEvent-3.0")
 
 local MODULE_NAME = "Comm"
@@ -42,6 +45,7 @@ local currentSongCrc32
 -- @param out (boolean) Outgoing message
 -- @param event (string)
 -- @param source (string)
+-- @param message (string)
 -- @param ... (string)
 local function debug(out, event, source, message, ...)
 	local prefix
@@ -284,7 +288,7 @@ function Musician.Comm.StreamSongChunk(packedChunk)
 end
 
 --- Stream a compressed song chunk
--- @param packedChunk (string)
+-- @param compressedChunk (string)
 -- @return (boolean)
 function Musician.Comm.StreamCompressedSongChunk(compressedChunk)
 	if not(Musician.Comm.CanPlay()) then return false end

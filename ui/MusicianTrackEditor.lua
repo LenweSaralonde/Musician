@@ -1,3 +1,6 @@
+--- Song editor window
+-- @module Musician.TrackEditor
+
 Musician.TrackEditor = LibStub("AceAddon-3.0"):NewAddon("Musician.TrackEditor", "AceEvent-3.0")
 
 local MODULE_NAME = "TrackEditor"

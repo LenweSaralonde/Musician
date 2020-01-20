@@ -1,3 +1,6 @@
+--- Adds animated notes and music icon in player nameplates.
+-- @module Musician.NamePlates
+
 Musician.NamePlates = LibStub("AceAddon-3.0"):NewAddon("Musician.NamePlates", "AceEvent-3.0")
 
 local MODULE_NAME = "NamePlates"

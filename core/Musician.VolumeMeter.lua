@@ -1,3 +1,6 @@
+--- Simulates a volume meter for visual feedback
+-- @module Musician.VolumeMeter
+
 Musician.VolumeMeter = {}
 
 local MODULE_NAME = "VolumeMeter"
@@ -5,8 +8,8 @@ Musician.AddModule(MODULE_NAME)
 
 Musician.VolumeMeter.__index = Musician.VolumeMeter
 
---- Constructor
---
+--- Volume meter
+-- @type Musician.VolumeMeter
 function Musician.VolumeMeter.create()
 	local self = {}
 	setmetatable(self, Musician.VolumeMeter)

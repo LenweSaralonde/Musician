@@ -1,3 +1,6 @@
+--- Total RP 3 integration including RP player names, nameplates, tooltips and map scan.
+-- @module Musician.TRP3
+
 Musician.TRP3 = LibStub("AceAddon-3.0"):NewAddon("Musician.TRP3", "AceEvent-3.0")
 
 local MODULE_NAME = "TRP3"

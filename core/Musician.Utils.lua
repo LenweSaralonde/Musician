@@ -1,3 +1,6 @@
+--- Utility functions
+-- @module Musician.Utils
+
 Musician.Utils = LibStub("AceAddon-3.0"):NewAddon("Musician.Utils")
 
 local MODULE_NAME = "Utils"
@@ -539,29 +542,29 @@ function Musician.Utils.SimplePlayerName(name)
 end
 
 --- Return the player realm slug
--- @param name (string)
+-- @param player (string)
 -- @return (string)
-function Musician.Utils.PlayerRealm(name)
-	return select(2, getPlayerNameParts(name))
+function Musician.Utils.PlayerRealm(player)
+	return select(2, getPlayerNameParts(player))
 end
 
 --- Returns true if the player is in my party or raid
--- @param name (string)
+-- @param player (string)
 -- @return (boolean)
-function Musician.Utils.PlayerIsInGroup(name)
-	local simpleName = Musician.Utils.SimplePlayerName(name)
+function Musician.Utils.PlayerIsInGroup(player)
+	local simpleName = Musician.Utils.SimplePlayerName(player)
 	return UnitInParty(simpleName) and UnitIsConnected(simpleName)
 end
 
 --- Return true if the provided player name is myself
--- @param name (string)
+-- @param player (string)
 -- @return (boolean)
 function Musician.Utils.PlayerIsMyself(player)
 	return player ~= nil and Musician.Utils.NormalizePlayerName(player) == Musician.Utils.NormalizePlayerName(UnitName("player"))
 end
 
 --- Return true if the provided player name is on the same realm or connected realm as me
--- @param name (string)
+-- @param player (string)
 -- @return (boolean)
 function Musician.Utils.PlayerIsOnSameRealm(player)
 	local playerRealm = Musician.Utils.PlayerRealm(player)

@@ -1,3 +1,6 @@
+--- Minimap button
+-- @module MusicianButton
+
 MusicianButton = LibStub("AceAddon-3.0"):NewAddon("MusicianButton", "AceEvent-3.0")
 
 local icon = LibStub("LibDBIcon-1.0")

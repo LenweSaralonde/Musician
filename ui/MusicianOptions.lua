@@ -1,3 +1,6 @@
+--- Musician options panel
+-- @module Musician.Options
+
 Musician.Options = {}
 
 local MODULE_NAME = "Options"
