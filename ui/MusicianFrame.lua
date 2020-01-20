@@ -1,3 +1,6 @@
+--- Main window with song import and controls
+-- @module Musician.Frame
+
 Musician.Frame = LibStub("AceAddon-3.0"):NewAddon("Musician.Frame", "AceEvent-3.0")
 
 local MODULE_NAME = "MusicianFrame"

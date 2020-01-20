@@ -1,3 +1,6 @@
+--- MyRolePlay integration, including RP player names and tooltips.
+-- @module Musician.MyRolePlay
+
 Musician.MyRolePlay = LibStub("AceAddon-3.0"):NewAddon("Musician.MyRolePlay", "AceEvent-3.0")
 
 local MODULE_NAME = "MyRolePlay"

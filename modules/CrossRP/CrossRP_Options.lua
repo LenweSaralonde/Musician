@@ -1,3 +1,6 @@
+--- Options for CrossRP
+-- @module Musician.CrossRP.Options
+
 Musician.CrossRP.Options = {}
 
 local MODULE_NAME = "CrossRP.Options"

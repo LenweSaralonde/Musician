@@ -1,3 +1,6 @@
+--- About window
+-- @module Musician.About
+
 Musician.About = LibStub("AceAddon-3.0"):NewAddon("Musician.About")
 
 local MODULE_NAME = "MusicianAbout"

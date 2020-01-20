@@ -1,3 +1,6 @@
+--- Keyboard utility functions
+-- @module Musician.KeyboardUtils
+
 Musician.KeyboardUtils = LibStub("AceAddon-3.0"):NewAddon("Musician.KeyboardUtils")
 
 local MODULE_NAME = "KeyboardUtils"

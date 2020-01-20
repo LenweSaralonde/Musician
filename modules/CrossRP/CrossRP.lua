@@ -1,3 +1,6 @@
+--- Enables cross realm and cross faction communication through the CrossRP add-on.
+-- @module Musician.CrossRP
+
 Musician.CrossRP = LibStub("AceAddon-3.0"):NewAddon("Musician.CrossRP", "AceEvent-3.0")
 
 local MODULE_NAME = "CrossRP"

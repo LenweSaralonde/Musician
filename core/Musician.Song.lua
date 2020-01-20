@@ -1,3 +1,6 @@
+--- Song class
+-- @module Musician.Song
+
 Musician.Song = LibStub("AceAddon-3.0"):NewAddon("Musician.Song", "AceEvent-3.0")
 
 local MODULE_NAME = "Song"
@@ -37,8 +40,8 @@ Musician.Song.MODE_LIVE = 0x20 -- No duration in chunk notes
 
 local CHUNK_VERSION = 0x01 -- Max: 0x0F (15)
 
---- Constructor
---
+--- Song class
+-- @type Musician.Song
 function Musician.Song.create()
 	local self = {}
 	setmetatable(self, Musician.Song)
@@ -118,7 +121,7 @@ function Musician.Song:IsPlaying()
 end
 
 --- Returns playing progression
--- @eturn (number)
+-- @return (number)
 function Musician.Song:GetProgression()
 	if not(self.playing) then
 		return nil
@@ -148,7 +151,7 @@ end
 
 --- Set/unset track solo
 -- @param track (object)
--- @param isMuted (boolean)
+-- @param isSolo (boolean)
 function Musician.Song:SetTrackSolo(track, isSolo)
 	if track.solo and not(isSolo) then
 		track.solo = false
@@ -1115,7 +1118,7 @@ Musician.Song.UnpackChunkHeader = function(str)
 end
 
 --- Unpack song chunk data
--- @param chunk (table)
+-- @param str (table)
 -- @return (table)
 Musician.Song.UnpackChunkData = function(str)
 
@@ -1210,7 +1213,7 @@ Musician.Song.UnpackChunkData = function(str)
 	return chunk
 end
 
---- Convert song to live mode
+--- Convert song to live mode.
 -- For testing only
 function Musician.Song:ConvertToLive()
 

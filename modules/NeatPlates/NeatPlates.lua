@@ -1,3 +1,6 @@
+--- NeatPlates integration
+-- @module Musician.NeatPlates
+
 Musician.NeatPlates = LibStub("AceAddon-3.0"):NewAddon("Musician.NeatPlates", "AceEvent-3.0")
 
 local MODULE_NAME = "NeatPlates"

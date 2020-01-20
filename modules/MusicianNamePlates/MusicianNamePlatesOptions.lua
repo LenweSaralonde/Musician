@@ -1,3 +1,6 @@
+--- Nameplate and animation options
+-- @module Musician.NamePlates.Options
+
 Musician.NamePlates.Options = {}
 
 local MODULE_NAME = "NamePlates.Options"

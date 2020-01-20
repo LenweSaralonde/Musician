@@ -1,3 +1,6 @@
+--- Keyboard configuration window
+-- @module Musician.KeyboardConfig
+
 Musician.KeyboardConfig = LibStub("AceAddon-3.0"):NewAddon("Musician.KeyboardConfig", "AceEvent-3.0")
 
 local MODULE_NAME = "KeyboardConfig"

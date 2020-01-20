@@ -1,3 +1,7 @@
+--- Simulates a volume meter for visual feedback
+--- ElvUI integration
+-- @module Musician.ElvUI
+
 Musician.ElvUI = LibStub("AceAddon-3.0"):NewAddon("Musician.ElvUI", "AceEvent-3.0")
 
 local MODULE_NAME = "ElvUI"

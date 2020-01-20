@@ -1,3 +1,6 @@
+--- Tips and tricks and easter eggs
+-- @module Musician.Extras
+
 Musician.Extras = LibStub("AceAddon-3.0"):NewAddon("Musician.Extras")
 
 local MODULE_NAME = "Extras"

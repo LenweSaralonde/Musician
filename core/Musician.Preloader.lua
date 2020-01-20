@@ -1,3 +1,6 @@
+--- Preloads sample files into the disk cache in background
+-- @module Musician.Preloader
+
 Musician.Preloader = LibStub("AceAddon-3.0"):NewAddon("Musician.Preloader", "AceEvent-3.0")
 
 local MODULE_NAME = "Preloader"
