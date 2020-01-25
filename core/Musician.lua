@@ -700,7 +700,7 @@ function Musician.SetupHooks()
 
 		-- Send promo emote event
 		if isPromoEmote then
-			Musician:SendMessage(Musician.Events.PromoEmote, isPromoEmoteSuccessful, msg, fullPlayerName, ...)
+			Musician:SendMessage(Musician.Events.PromoEmote, isPromoEmoteSuccessful, msg, fullPlayerName, languageName, channelName, playerName2, pflag, ...)
 		end
 
 		return false, msg, player, languageName, channelName, playerName2, pflag, ...
