@@ -34,7 +34,7 @@ Musician.CrossRP.event = {}
 Musician.CrossRP.event.stop = "MusicianS"
 Musician.CrossRP.event.chunk = "MusicianC"
 
---- Prints debug message
+--- Print debug message
 -- @param out (boolean) Outgoing message
 -- @param event (string)
 -- @param source (string)

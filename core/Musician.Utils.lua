@@ -20,7 +20,7 @@ function Musician.Utils.Print(msg)
 	DEFAULT_CHAT_FRAME:AddMessage(msg, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
 end
 
---- Prints debug stuff in the console
+--- Print debug stuff in the console
 -- @param module (string)
 -- @param ... (string)
 function Musician.Utils.Debug(module, ...)
@@ -36,7 +36,8 @@ end
 --- Safely play a sound file, even if the sound file does not exist.
 -- @param soundFile (string)
 -- @param channel (string)
--- @return willPlay, soundHandle (boolean), (number)
+-- @return willPlay (boolean)
+-- @return soundHandle (int)
 function Musician.Utils.PlaySoundFile(soundFile, channel)
 	local willPlay, soundHandle
 	pcall(function()
@@ -59,7 +60,7 @@ function Musician.Utils.Error(msg)
 	PlaySound(32051)
 end
 
---- Display an message in a popup
+--- Display a message in a popup
 -- @param msg (string)
 -- @param callback (function)
 -- @param force (boolean)
@@ -74,7 +75,7 @@ end
 --- Highlight text
 -- @param text (string)
 -- @param color (string|Color)
--- @return (string)
+-- @return highlightedText (string)
 function Musician.Utils.Highlight(text, color)
 
 	if color == nil then
@@ -87,10 +88,10 @@ function Musician.Utils.Highlight(text, color)
 end
 
 --- Get color code from RGB values
--- @param r (number)
--- @param g (number)
--- @param b (number)
--- @return (string)
+-- @param r (number) 0-1
+-- @param g (number) 0-1
+-- @param b (number) 0-1
+-- @return colorCode (string)
 function Musician.Utils.GetColorCode(r, g, b)
 	local rh = string.format('%02X', floor(r * 255))
 	local gh = string.format('%02X', floor(g * 255))
@@ -100,7 +101,7 @@ end
 
 --- Format text, adding highlights etc.
 -- @param text (string)
--- @return (string)
+-- @return formattedText (string)
 function Musician.Utils.FormatText(text)
 
 	-- Highlight **text**
@@ -117,14 +118,14 @@ end
 -- @param command (string)
 -- @param text (string)
 -- @param ... (string)
--- @return (string)
+-- @return link (string)
 function Musician.Utils.GetLink(command, text, ...)
 	return "|H" .. strjoin(':', command, ... ) .. "|h" .. text .. "|h"
 end
 
 --- Get player hyperlink
 -- @param player (string)
--- @return (string)
+-- @return playerLink (string)
 function Musician.Utils.GetPlayerLink(player)
 	local player, realm = strsplit('-', Musician.Utils.NormalizePlayerName(player), 2)
 	local _, myRealm = strsplit('-', Musician.Utils.NormalizePlayerName(UnitName("player")), 2)
@@ -138,17 +139,17 @@ end
 
 --- Get player name for display
 -- @param player (string)
--- @return (string)
+-- @return formattedPlayerName (string)
 function Musician.Utils.FormatPlayerName(player)
 	return Musician.Utils.SimplePlayerName(player)
 end
 
 --- Return the code to insert an icon in a chat message or a text string
 -- @param path (string)
--- @param [r (number)]
--- @param [g (number)]
--- @param [b (number)]
--- @return (string)
+-- @param [r (number)] 0-1
+-- @param [g (number)] 0-1
+-- @param [b (number)] 0-1
+-- @return chatIcon (string)
 function Musician.Utils.GetChatIcon(path, r, g, b)
 	if r ~= nil and g ~= nil and b ~= nil then
 		r = floor(r * 255)
@@ -164,7 +165,6 @@ end
 -- @param player (string)
 -- @param playerGUID (string)
 -- @param message (string)
--- @return (string)
 function Musician.Utils.DisplayEmote(player, playerGUID, message)
 	local player, realm = strsplit('-', Musician.Utils.NormalizePlayerName(player), 2)
 	local _, myRealm = strsplit('-', Musician.Utils.NormalizePlayerName(UnitName("player")), 2)
@@ -182,7 +182,7 @@ function Musician.Utils.DisplayEmote(player, playerGUID, message)
 end
 
 --- Remove a chat message by its line ID
--- @param lineID (number)
+-- @param lineID (int)
 function Musician.Utils.RemoveChatMessage(lineID)
 	local i
 	for i = 1, NUM_CHAT_WINDOWS do
@@ -197,7 +197,7 @@ end
 
 --- Return the note name corresponding its MIDI key
 -- @param key (int) MIDI key index
--- @return (string)
+-- @return name (string) from Musician.NOTE_NAMES
 function Musician.Utils.NoteName(key)
 	local noteId = key - Musician.C0_INDEX
 	local octave = floor(noteId / 12)
@@ -206,8 +206,8 @@ function Musician.Utils.NoteName(key)
 end
 
 --- Return the MIDI key of the note name
--- @param noteName (string)
--- @return (int)
+-- @param noteName (string) from Musician.NOTE_NAMES
+-- @return key (int)
 function Musician.Utils.NoteKey(noteName)
 	local octave, note
 
@@ -220,18 +220,19 @@ function Musician.Utils.NoteKey(noteName)
 	return nil
 end
 
---- Reads some bytes from a string and remove them
+--- Read some bytes from a string and remove them
 -- @param str (string)
 -- @param bytes (int)
--- @return (string, string) Read bytes, new string
+-- @return data (string) read bytes
+-- @return str (string) new string
 function Musician.Utils.ReadBytes(str, bytes)
 	return string.sub(str, 1, bytes), string.sub(str, bytes + 1)
 end
 
 --- Pack an integer number into a string
--- @param num (int) Integer to pack
--- @param bytes (int) Number of bytes
--- @return (string)
+-- @param num (int) integer to pack
+-- @param bytes (int) number of bytes
+-- @return data (string)
 function Musician.Utils.PackNumber(num, bytes)
 	local m = num
 	local b
@@ -249,14 +250,14 @@ function Musician.Utils.PackNumber(num, bytes)
 end
 
 --- Unpack a string into an integer number
--- @param str (string)
--- @return (int)
-function Musician.Utils.UnpackNumber(str)
+-- @param data (string)
+-- @return num (int)
+function Musician.Utils.UnpackNumber(data)
 	local num = 0
 
-	while string.len(str) > 0 do
-		num = num * 256 + string.byte(string.sub(str, 1, 1))
-		str = string.sub(str, 2)
+	while string.len(data) > 0 do
+		num = num * 256 + string.byte(string.sub(data, 1, 1))
+		data = string.sub(data, 2)
 	end
 
 	return num
@@ -267,7 +268,7 @@ end
 -- licensed under the terms of the LGPL2
 -- http://lua-users.org/wiki/BaseSixtyFour
 -- @param data (string)
--- @return string
+-- @return str (string)
 function Musician.Utils.Base64Decode(data)
 	local b='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
 	data = string.gsub(data, '[^'..b..'=]', '')
@@ -288,29 +289,29 @@ end
 -- @param seconds (float)
 -- @param bytes (int) Number of bytes
 -- @param fps (float) Precision in frames par second
--- @return (string)
+-- @return data (string)
 function Musician.Utils.PackTime(seconds, bytes, fps)
 	return Musician.Utils.PackNumber(floor(seconds * fps + .5), bytes)
 end
 
 --- Unpack a string into a time or duration in seconds
--- @param str (string)
+-- @param data (string)
 -- @param fps (float) Precision in frames par second
--- @return (float)
-function Musician.Utils.UnpackTime(str, fps)
-	return Musician.Utils.UnpackNumber(str) / fps
+-- @return seconds (float)
+function Musician.Utils.UnpackTime(data, fps)
+	return Musician.Utils.UnpackNumber(data) / fps
 end
 
 --- Pack player GUID into a 6-byte string
--- @return (string)
+-- @return data (string)
 function Musician.Utils.PackPlayerGuid()
 	local _, serverId, playerHexId = string.split('-', UnitGUID("player"))
 	return Musician.Utils.PackNumber(tonumber(serverId), 2) .. Musician.Utils.FromHex(playerHexId)
 end
 
 --- Unpack player GUID from string
--- @param str (string)
--- @return (string)
+-- @param data (string)
+-- @return guid (string)
 function Musician.Utils.UnpackPlayerGuid(str)
 	local serverId = Musician.Utils.UnpackNumber(string.sub(str, 1, 2))
 	local playerHexId = Musician.Utils.ToHex(string.sub(str, 3, 6))
@@ -318,7 +319,7 @@ function Musician.Utils.UnpackPlayerGuid(str)
 end
 
 --- Pack player position into a 18-byte chunk string
--- @return (string)
+-- @return data (string)
 function Musician.Utils.PackPlayerPosition()
 	local posY, posX, posZ, instanceID = UnitPosition("player") -- posZ is always 0
 
@@ -332,7 +333,11 @@ end
 
 --- Unpack player position from chunk string
 -- @param str (string)
--- @return posY (number), posX (number), posZ (number), instanceID (number), guid (string)
+-- @return posY (number)
+-- @return posX (number)
+-- @return posZ (number)
+-- @return instanceID (int)
+-- @return guid (string)
 function Musician.Utils.UnpackPlayerPosition(str)
 	local posX = Musician.Utils.UnpackNumber(string.sub(str, 1, 4)) - 0x7fffffff
 	local posY = Musician.Utils.UnpackNumber(string.sub(str, 5, 8)) - 0x7fffffff
@@ -343,17 +348,17 @@ function Musician.Utils.UnpackPlayerPosition(str)
 end
 
 --- Convert hex string to string
--- @param str (string)
--- @return (string)
-function Musician.Utils.FromHex(str)
-	return (str:gsub('..', function (cc)
+-- @param hex (string)
+-- @return str (string)
+function Musician.Utils.FromHex(hex)
+	return (hex:gsub('..', function (cc)
 		return string.char(tonumber(cc, 16))
 	end))
 end
 
 --- Convert string to hex string
 -- @param str (string)
--- @return (string)
+-- @return hex (string)
 function Musician.Utils.ToHex(str)
 	return (str:gsub('.', function (c)
 		return string.format('%02X', string.byte(c))
@@ -361,9 +366,9 @@ function Musician.Utils.ToHex(str)
 end
 
 --- Return instrument name from its MIDI ID
--- @param instrument (number)
--- @param key (number)
--- @return (string)
+-- @param instrument (int)
+-- @param key (int)
+-- @return instrumentName (string) used as key in Musician.INSTRUMENTS
 function Musician.Utils.GetInstrumentName(instrument, key)
 	if instrument ~= 128 then -- Not a percussion
 		return Musician.MIDI_INSTRUMENT_MAPPING[instrument]
@@ -372,10 +377,14 @@ function Musician.Utils.GetInstrumentName(instrument, key)
 	end
 end
 
---- Returns the sound file for this instrument and key
+--- Get the path to a sound file for an instrument and a key.
+-- Also returns the instrument data from Musician.INSTRUMENTS
+-- and all other suitable sound file paths for randomization.
 -- @param instrument (int) MIDI instrument index
 -- @param key (int) MIDI key
--- @return (string, table, table)
+-- @return filePath (string) file path to be played
+-- @return instrumentData (table) from Musician.INSTRUMENTS
+-- @return soundFiles (table) all suitable file paths for this instrument and note
 function Musician.Utils.GetSoundFile(instrument, key)
 
 	local instrumentName = Musician.Utils.GetInstrumentName(instrument, key)
@@ -420,8 +429,8 @@ function Musician.Utils.GetSoundFile(instrument, key)
 	return soundFiles[floor(math.random() * #soundFiles) + 1], instrumentData, soundFiles
 end
 
---- Returns true if a song is actually playing and audible
--- @return (boolean)
+--- Return true if a song is actually playing and is audible
+-- @return isPlaying (boolean)
 function Musician.Utils.SongIsPlaying()
 	local isPlaying
 
@@ -468,7 +477,7 @@ local currentNormalizedRealmName
 
 --- Return the normalized realm name the player belongs to
 -- Safer than the standard GetNormalizedRealmName() that may return nil sometimes
--- @return (string)
+-- @return realmName (string)
 function Musician.Utils.GetNormalizedRealmName()
 	if currentNormalizedRealmName then
 		return currentNormalizedRealmName
@@ -478,39 +487,41 @@ function Musician.Utils.GetNormalizedRealmName()
 end
 
 --- Return the short locale code of the realm the player belongs to
--- @return (string)
+-- @return locale (string) 'en', 'fr' etc.
 function Musician.Utils.GetRealmLocale()
 	local locale = select(5, LibRealmInfo:GetRealmInfoByUnit("player")) or GetLocale()
 	return string.gsub(locale, "[A-Z]+", "")
 end
 
 --- Return the normalized player name, including realm slug
--- @param name (string)
--- @return (string)
-function Musician.Utils.NormalizePlayerName(name)
+-- @param playerName (string)
+-- @return normalizedPlayerName (string)
+function Musician.Utils.NormalizePlayerName(playerName)
 	-- Append missing realm name
-	if string.find(name, '-') == nil then
-		return name .. '-' .. Musician.Utils.GetNormalizedRealmName()
+	if string.find(playerName, '-') == nil then
+		return playerName .. '-' .. Musician.Utils.GetNormalizedRealmName()
 	end
 
-	return name
+	return playerName
 end
 
---- Return the simple player name, including realm slug if needed
--- @param name (string)
--- @return (string), (string), (string) Player name, realm name, full name
-local function getPlayerNameParts(name)
-	local fullName = Musician.Utils.NormalizePlayerName(name)
+--- Return the simple player name, including the realm slug if needed
+-- @param playerName (string)
+-- @return simpleName (string)
+-- @return realmName (string)
+-- @return fullName (string)
+local function getPlayerNameParts(playerName)
+	local fullName = Musician.Utils.NormalizePlayerName(playerName)
 	local simpleName, realmName = string.split('-', fullName)
 	return simpleName, realmName, fullName
 end
 
---- Return the simple player name, including realm slug if needed
--- @param name (string)
--- @return (string)
-function Musician.Utils.SimplePlayerName(name)
+--- Return the simple player name, including the realm slug if needed
+-- @param playerName (string)
+-- @return simpleName (string)
+function Musician.Utils.SimplePlayerName(playerName)
 	local _, myRealmName = getPlayerNameParts(UnitName("player"))
-	local simpleName, realmName, fullName = getPlayerNameParts(name)
+	local simpleName, realmName, fullName = getPlayerNameParts(playerName)
 
 	if realmName == myRealmName then
 		return simpleName
@@ -520,32 +531,32 @@ function Musician.Utils.SimplePlayerName(name)
 end
 
 --- Return the player realm slug
--- @param player (string)
--- @return (string)
-function Musician.Utils.PlayerRealm(player)
-	return select(2, getPlayerNameParts(player))
+-- @param playerName (string)
+-- @return realmSlug (string)
+function Musician.Utils.PlayerRealm(playerName)
+	return select(2, getPlayerNameParts(playerName))
 end
 
---- Returns true if the player is in my party or raid
--- @param player (string)
--- @return (boolean)
-function Musician.Utils.PlayerIsInGroup(player)
-	local simpleName = Musician.Utils.SimplePlayerName(player)
+--- Return true if the player is in my party or raid
+-- @param playerName (string)
+-- @return isInMyGroup (boolean)
+function Musician.Utils.PlayerIsInGroup(playerName)
+	local simpleName = Musician.Utils.SimplePlayerName(playerName)
 	return UnitInParty(simpleName) and UnitIsConnected(simpleName)
 end
 
 --- Return true if the provided player name is myself
--- @param player (string)
--- @return (boolean)
-function Musician.Utils.PlayerIsMyself(player)
-	return player ~= nil and Musician.Utils.NormalizePlayerName(player) == Musician.Utils.NormalizePlayerName(UnitName("player"))
+-- @param playerName (string)
+-- @return isMyself (boolean)
+function Musician.Utils.PlayerIsMyself(playerName)
+	return playerName ~= nil and Musician.Utils.NormalizePlayerName(playerName) == Musician.Utils.NormalizePlayerName(UnitName("player"))
 end
 
 --- Return true if the provided player name is on the same realm or connected realm as me
--- @param player (string)
--- @return (boolean)
-function Musician.Utils.PlayerIsOnSameRealm(player)
-	local playerRealm = Musician.Utils.PlayerRealm(player)
+-- @param playerName (string)
+-- @return isOnSameRealm (boolean)
+function Musician.Utils.PlayerIsOnSameRealm(playerName)
+	local playerRealm = Musician.Utils.PlayerRealm(playerName)
 
 	-- Is on the same realm
 	if playerRealm == Musician.Utils.PlayerRealm(UnitName("player")) then
@@ -565,13 +576,13 @@ end
 
 --- Return true if the player whose GUID is provided is visible (loaded) by the game client
 -- @param guid (string)
--- @return (boolean)
+-- @return isVisible (boolean)
 function Musician.Utils.PlayerGuidIsVisible(guid)
 	return guid and C_PlayerInfo.IsConnected(PlayerLocation:CreateFromGUID(guid))
 end
 
 --- Return the "Player is playing music" emote with promo message
--- @return (string)
+-- @return promoEmote (string)
 function Musician.Utils.GetPromoEmote()
 	local locale = Musician.Utils.GetRealmLocale()
 	local EMOTE_PLAYING_MUSIC = Musician.Locale[locale] and Musician.Locale[locale].EMOTE_PLAYING_MUSIC or Musician.Msg.EMOTE_PLAYING_MUSIC
@@ -595,7 +606,8 @@ end
 
 --- Return true if the message contains the promo emote, in any language
 -- @param message (string)
--- @return (boolean), (boolean)
+-- @return hasPromoEmote (boolean)
+-- @return isFullPromoEmote (boolean) true if the emote contains the part invinting other players to install Musician
 function Musician.Utils.HasPromoEmote(message)
 	local lang
 	for lang, locale in pairs(Musician.Locale) do
@@ -621,7 +633,7 @@ function Musician.Utils.OverrideNextFullPromoEmote()
 end
 
 --- Send the "Player is playing music" emote with promo message
--- @return (string)
+--
 function Musician.Utils.SendPromoEmote()
 	if Musician_Settings.enableEmote then
 		SendChatMessage(Musician.Utils.GetPromoEmote(), "EMOTE")
@@ -641,7 +653,7 @@ function Musician.Utils.SendPromoEmote()
 end
 
 --- Return the current version as text for the end user
--- @return (string)
+-- @return version (string)
 function Musician.Utils.GetVersionText()
 	local version = GetAddOnMetadata("Musician", "Version")
 	if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then
@@ -653,7 +665,7 @@ end
 --- Compare two version numbers
 -- @param versionA (string)
 -- @param versionB (string)
--- @return (number)
+-- @return difference (number) 0 if A = B, 1 if A > B, -1 if A < B
 function Musician.Utils.VersionCompare(versionA, versionB)
 
 	if versionA == versionB then
@@ -687,9 +699,9 @@ function Musician.Utils.VersionCompare(versionA, versionB)
 end
 
 --- Add padding zeros
--- @param number (number)
--- @param zeros (number)
--- @return (string)
+-- @param number (int)
+-- @param zeros (int)
+-- @return formattedNumber (string)
 function Musician.Utils.PaddingZeros(number, zeros)
 	local str = number .. ""
 
@@ -703,7 +715,7 @@ end
 --- Format time to mm:ss.ss format
 -- @param time (number)
 -- @param simple (boolean)
--- @return (string)
+-- @return formattedTime (string)
 function Musician.Utils.FormatTime(time, simple)
 	time = floor(time * 100 + .5)
 	local cs = time % 100
@@ -719,9 +731,9 @@ function Musician.Utils.FormatTime(time, simple)
 	return Musician.Utils.PaddingZeros(m, 2) .. ":" .. Musician.Utils.PaddingZeros(s, 2) .. "." .. Musician.Utils.PaddingZeros(cs, 2)
 end
 
---- Parse time from mm:ss.ss format
+--- Parse time in seconds from mm:ss.ss format
 -- @param timestamp (string)
--- @return (number)
+-- @return seconds (number)
 function Musician.Utils.ParseTime(timestamp)
 	local parts = {string.split(':', timestamp)}
 	local m, s, cs
@@ -748,10 +760,10 @@ function Musician.Utils.ParseTime(timestamp)
 	return max(0, time)
 end
 
---- Return instrument data
+--- Return instrument data for given MIDI key number
 -- @param instrumentName (string)
--- @param key (number)
--- @return (table)
+-- @param key (int) MIDI key number
+-- @return instrumentData (table) from Musician.INSTRUMENTS
 function Musician.Utils.GetInstrumentData(instrumentName, key)
 	local instrumentData = Musician.INSTRUMENTS[instrumentName]
 	if instrumentData == nil then
@@ -773,10 +785,10 @@ function Musician.Utils.GetInstrumentData(instrumentName, key)
 	return instrumentData
 end
 
---- Returns sample ID for note and instrument
+--- Return sample ID for note and instrument data
 -- @param instrumentData (table) as returned by Musician.Utils.GetSoundFile()
--- @param key (number)
--- @return (string)
+-- @param key (int) MIDI key number
+-- @return sampleId (string)
 function Musician.Utils.GetSampleId(instrumentData, key)
 	if instrumentData == nil or instrumentData.name == nil or instrumentData.name == "none" then
 		return nil
@@ -789,10 +801,13 @@ function Musician.Utils.GetSampleId(instrumentData, key)
 	end
 end
 
---- Play Note
--- @param instrument (number)
--- @param key (number)
--- @return (boolean), (number), (table) willPlay, soundHandle, instrumentData
+--- Start playing a note
+-- Returns true if sound will actually be played, sound handle and instrument data
+-- @param instrument (int) MIDI instrument
+-- @param key (int)
+-- @return willPlay (boolean)
+-- @return soundHandle (int)
+-- @return instrumentData (table) from Musician.INSTRUMENTS
 function Musician.Utils.PlayNote(instrument, key)
 	local soundFile, instrumentData = Musician.Utils.GetSoundFile(instrument, key)
 	local sampleId = Musician.Utils.GetSampleId(instrumentData, key)
@@ -807,10 +822,11 @@ function Musician.Utils.PlayNote(instrument, key)
 	return play, handle, instrumentData
 end
 
---- Preload Note
--- @param instrument (number)
--- @param key (number)
--- @return (boolean), (number) hasSample, preloadTime
+--- Preload note
+-- @param instrument (int)
+-- @param key (int)
+-- @return hasSample (boolean)
+-- @return preloadTime (number) in seconds
 function Musician.Utils.PreloadNote(instrument, key)
 	local soundFile, instrumentData, soundFiles = Musician.Utils.GetSoundFile(instrument, key)
 	local sampleId = Musician.Utils.GetSampleId(instrumentData, key)
@@ -833,7 +849,7 @@ end
 --- Deep copy a table
 -- http://lua-users.org/wiki/CopyTable
 -- @param orig (table)
--- @return (table)
+-- @return copy (table)
 function Musician.Utils.DeepCopy(orig)
 	local orig_type = type(orig)
 	local copy
@@ -853,7 +869,7 @@ end
 --- Deep merge two tables
 -- @param merged (table)
 -- @param orig (table)
--- @return (table)
+-- @return merged (table)
 function Musician.Utils.DeepMerge(merged, orig)
 	local orig_type = type(orig)
 	if orig_type == 'table' then
@@ -869,7 +885,7 @@ end
 
 --- Flip a table
 -- @param orig (table)
--- @return (table)
+-- @return flipped (table)
 function Musician.Utils.FlipTable(orig)
 	local flipped = {}
 	local key, value
@@ -880,7 +896,7 @@ function Musician.Utils.FlipTable(orig)
 end
 
 --- Return operating system name
--- @return (string)
+-- @return os (string)
 function Musician.Utils.GetOs()
 	return
 		IsWindowsClient() and Musician.OS_WINDOWS or

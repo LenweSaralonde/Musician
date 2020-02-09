@@ -41,7 +41,7 @@ local isBandPlayReady = false
 local readyBandPlayers = {}
 local currentSongCrc32
 
---- Prints debug message
+--- Print debug message
 -- @param out (boolean) Outgoing message
 -- @param event (string)
 -- @param source (string)
@@ -179,7 +179,7 @@ function Musician.Comm.JoinChannel()
 end
 
 --- Return communication chat type for group
--- @return (string)
+-- @return chatType (string)
 function Musician.Comm.GetGroupChatType()
 	local inInstance, instanceType = IsInInstance()
 	local isF2P = IsTrialAccount()
@@ -225,7 +225,7 @@ function Musician.Comm.BroadcastCommMessage(message, type, groupType)
 end
 
 --- Return the communication channel ID
--- @return (string)
+-- @return channelId (string)
 function Musician.Comm.getChannel()
 	local channelId, _ = GetChannelName(Musician.CHANNEL)
 
@@ -237,26 +237,26 @@ function Musician.Comm.getChannel()
 end
 
 --- Return true if the communication channel is ready
--- @return (boolean)
+-- @return isReady (boolean)
 function Musician.Comm.ChannelIsReady()
 	return channelIsJoined
 end
 
 --- Return true if the player can broadcast via the channel or the group chat
--- @return (boolean)
+-- @return canBroadcast (boolean)
 function Musician.Comm.CanBroadcast()
 	return Musician.Comm.ChannelIsReady() or Musician.Comm.GetGroupChatType() ~= nil
 end
 
---- Returns true if the player can play music
--- @return (boolean)
+--- Return true if the player can play music
+-- @return canPlay (boolean)
 function Musician.Comm.CanPlay()
 	local playerIsAliveOrGhost = not(UnitIsDead("player")) or UnitIsGhost("player")
 	return Musician.Comm.CanBroadcast() and playerIsAliveOrGhost
 end
 
 --- Play song
--- @return (boolean)
+-- @return success (boolean)
 function Musician.Comm.PlaySong()
 	if isStopPending or isPlayPending then return false end
 	if not(Musician.Comm.CanPlay()) or not(Musician.sourceSong) then return false end
@@ -303,7 +303,7 @@ end
 
 --- Stream a compressed song chunk
 -- @param compressedChunk (string)
--- @return (boolean)
+-- @return success (boolean)
 function Musician.Comm.StreamCompressedSongChunk(compressedChunk)
 	if not(Musician.Comm.CanPlay()) then return false end
 	local serializedChunk = LibDeflate:EncodeForWoWAddonChannel(compressedChunk)
@@ -397,7 +397,7 @@ function Musician.Comm.OnChunk(prefix, message, distribution, sender)
 end
 
 --- Stop song
--- @return (boolean)
+-- @return success (boolean)
 function Musician.Comm.StopSong()
 	if isStopPending or isPlayPending then return false end
 	if not(Musician.Comm.CanBroadcast()) then return false end
@@ -412,8 +412,8 @@ function Musician.Comm.StopSong()
 	return true
 end
 
---- Indicates if the player song is playing
--- @return (boolean)
+--- Indicate if the player song is playing
+-- @return isSongPlaying (boolean)
 function Musician.Comm.IsSongPlaying()
 	return isSongPlaying
 end
@@ -431,7 +431,7 @@ function Musician.Comm.OnStopSong(prefix, message, distribution, sender)
 end
 
 --- Return the list of ready band players for the current source song
--- @return (table)
+-- @return readyPlayers (table)
 function Musician.Comm.GetReadyBandPlayers()
 	if not(Musician.sourceSong) then return {} end
 	local readyPlayers = {}
@@ -519,8 +519,8 @@ function Musician.Comm.OnRosterUpdate(event)
 	end
 end
 
---- Returns current song CRC32
--- @return (number)
+--- Return current song CRC32
+-- @return songCrc32 (number)
 function Musician.Comm.GetCurrentSongCrc32()
 	return currentSongCrc32
 end
@@ -563,8 +563,8 @@ function Musician.Comm.OnSongLoaded()
 	Musician.Comm.UpdateCurrentSongCrc32(Musician.sourceSong and Musician.sourceSong.crc32)
 end
 
---- Indicates if the player is ready for band play
--- @return (boolean)
+--- Indicate if the player is ready for band play
+-- @return isBandPlayReady (boolean)
 function Musician.Comm.IsBandPlayReady()
 	return isBandPlayReady
 end
@@ -577,7 +577,7 @@ end
 
 --- Set band play ready
 -- @param isReady (boolean)
--- @return (boolean)
+-- @return success (boolean)
 function Musician.Comm.SetBandPlayReady(isReady)
 	if isBandActionPending then return false end
 	if not(Musician.Comm.CanBroadcast()) then return false end
@@ -629,7 +629,7 @@ function Musician.Comm.OnBandPlayReady(prefix, message, distribution, sender)
 end
 
 --- Play song as a band
--- @return (boolean)
+-- @return success (boolean)
 function Musician.Comm.PlaySongBand()
 	if isBandActionPending then return false end
 	if not(Musician.Comm.CanPlay()) then return false end
@@ -678,7 +678,7 @@ function Musician.Comm.OnBandPlay(prefix, message, distribution, sender)
 end
 
 --- Stop song as a band
--- @return (boolean)
+-- @return success (boolean)
 function Musician.Comm.StopSongBand()
 	if isBandActionPending then return false end
 	if not(Musician.Comm.CanBroadcast()) then return false end

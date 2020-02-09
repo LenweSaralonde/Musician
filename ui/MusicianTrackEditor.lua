@@ -108,7 +108,7 @@ Musician.TrackEditor.UpdateButtons = function(event, song)
 	end
 end
 
---- Returns true when the source song is currently streaming
+--- Return true when the source song is currently streaming
 -- @return (boolean)
 local function isSourceSongStreaming()
 	return Musician.streamingSong and Musician.streamingSong.streaming and Musician.sourceSong and Musician.sourceSong.crc32 == Musician.streamingSong.crc32

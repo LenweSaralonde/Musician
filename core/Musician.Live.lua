@@ -30,7 +30,7 @@ local syncedBandPlayers = {}
 local bandSongs = {}
 local bandNotesOn = {}
 
---- Prints debug message
+--- Print debug message
 -- @param out (boolean) Outgoing message
 -- @param event (string)
 -- @param source (string)
@@ -54,9 +54,9 @@ local function debug(out, event, source, message, ...)
 	Musician.Utils.Debug(MODULE_NAME, prefix, event, source, message, ...)
 end
 
---- Get a live song for a player
+--- Create a live song for a player
 -- @param player (string)
--- @return (Musician.Song)
+-- @return song (Musician.Song)
 local function createLiveSong(player)
 	-- Create song instance
 	local song = Musician.Song.create()
@@ -96,9 +96,9 @@ local function createLiveSong(player)
 	return song
 end
 
---- Get a live song for a player
+--- Get the live song for a player
 -- @param player (string)
--- @return (Musician.Song)
+-- @return song (Musician.Song)
 local function getLiveSongForPlayer(player)
 	if bandSongs[player] ~= nil then return bandSongs[player] end
 	local song = createLiveSong(player)
@@ -172,8 +172,8 @@ function Musician.Live.Enable(enabled)
 	isLiveEnabled = enabled
 end
 
---- Indicates whenever the live mode is enabled stream
--- @return (boolean)
+--- Indicate whenever the live mode is enabled stream
+-- @return isLiveEnabled (boolean)
 function Musician.Live.IsEnabled()
 	return isLiveEnabled
 end
@@ -201,14 +201,14 @@ local function unmuteGameMusic()
 	end)
 end
 
---- Indicates whenever the player is playing live, regardless if in solo or live mode
--- @return (boolean)
+--- Indicate whenever the player is playing live, regardless if in solo or live mode
+-- @return isPlayingLive (boolean)
 function Musician.Live.IsPlayingLive()
 	return isPlayingLive
 end
 
---- Indicates whenever the live mode can stream
--- @return (boolean)
+--- Indicate whenever the live mode can stream
+-- @return canStream (boolean)
 function Musician.Live.CanStream()
 	-- Communication not yet ready
 	if not(Musician.Comm.CanPlay()) then
@@ -395,21 +395,21 @@ function Musician.Live.AllNotesOff(onlyForLayer)
 	end
 end
 
---- Indicates if the player in band sync mode
--- @return (boolean)
+--- Indicate if the player in band sync mode
+-- @return isBandSyncMode (boolean)
 function Musician.Live.IsBandSyncMode()
 	return isBandSyncMode and Musician.Comm.GetGroupChatType() ~= nil
 end
 
---- Indicates if the provided player is in band sync mode
--- @param player (boolean)
--- @return (boolean)
+--- Indicate if the provided player is in band sync mode
+-- @param player (string)
+-- @return isPlayerSynced (boolean)
 function Musician.Live.IsPlayerSynced(player)
 	return syncedBandPlayers[player]
 end
 
 --- Return the list of synced band players
--- @return (table)
+-- @return readyPlayers (table)
 function Musician.Live.GetSyncedBandPlayers()
 	local readyPlayers = {}
 	local player
@@ -429,7 +429,7 @@ end
 
 --- Set band sync mode
 -- @param enabled (boolean)
--- @return (boolean)
+-- @return success (boolean)
 function Musician.Live.SetBandSyncMode(enabled)
 	local groupChatType = Musician.Comm.GetGroupChatType()
 	if groupChatType == nil then return false end

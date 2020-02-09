@@ -73,7 +73,7 @@ function Musician.TRP3.HookNamePlates()
 	end
 end
 
---- Returns true if the player is currently playing some music
+--- Return true if the player is currently playing some music
 -- @param player (string)
 -- @return (boolean)
 function Musician.TRP3.IsPlayingMusic(player)
