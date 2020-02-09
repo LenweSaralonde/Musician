@@ -25,7 +25,7 @@ local newProtocolNotified = false
 
 local pendingPlayerQueries = {} -- Query messages queue
 
---- Prints debug message
+--- Print debug message
 -- @param out (boolean) Outgoing message
 -- @param event (string)
 -- @param source (string)
@@ -233,8 +233,8 @@ end
 --- Update player's position and GUID
 -- @param player (string)
 -- @param posY (number)
--- @param posX (string)
--- @param posZ (string)
+-- @param posX (number)
+-- @param posZ (number)
 -- @param instanceID (string)
 -- @param guid (string)
 function Musician.Registry.UpdatePlayerPositionAndGUID(player, posY, posX, posZ, instanceID, guid)
@@ -247,9 +247,9 @@ function Musician.Registry.UpdatePlayerPositionAndGUID(player, posY, posX, posZ,
 	Musician.Registry.players[player].guid = guid
 end
 
---- Returns true if the player is in loading range
+--- Return true if the player is in loading range
 -- @param player (string)
--- @return (boolean)
+-- @return isInLoadingRange (boolean)
 function Musician.Registry.PlayerIsInLoadingRange(player)
 	player = Musician.Utils.NormalizePlayerName(player)
 
@@ -272,9 +272,9 @@ function Musician.Registry.PlayerIsInLoadingRange(player)
 	return true
 end
 
---- Returns true if the player is in listening range
+--- Return true if the player is in listening range
 -- @param player (string)
--- @return (boolean)
+-- @return isInRange (boolean)
 function Musician.Registry.PlayerIsInRange(player)
 	-- Already checks if the player is close enough to load the data and in the same phase/instance
 	if not(Musician.Registry.PlayerIsInLoadingRange(player)) then
@@ -296,7 +296,7 @@ end
 
 --- Return player GUID
 -- @param player (string)
--- @return (string)
+-- @return guid (string)
 function Musician.Registry.GetPlayerGUID(player)
 	if Musician.Registry.players[player] ~= nil then
 		return Musician.Registry.players[player].guid
@@ -307,7 +307,7 @@ end
 
 --- Return player tooltip text
 -- @param player (string)
--- @return (string)
+-- @return infoText (string)
 function Musician.Registry.GetPlayerTooltipText(player)
 	player = Musician.Utils.NormalizePlayerName(player)
 
@@ -465,28 +465,28 @@ end
 
 --- Return true if this player has Musician
 -- @param player (string)
--- @return (boolean)
+-- @return isRegistered (boolean)
 function Musician.Registry.PlayerIsRegistered(player)
 	return Musician.Registry.players[player] ~= nil
 end
 
 --- Return true if this player has Musician but with unknown version number
 -- @param player (string)
--- @return (boolean)
+-- @return isRegisteredWithNoVersion (boolean)
 function Musician.Registry.PlayerIsRegisteredWithNoVersion(player)
 	return Musician.Registry.PlayerIsRegistered(player) and Musician.Registry.players[player].version == nil
 end
 
 --- Return true if this player has Musician with version number
 -- @param player (string)
--- @return (boolean)
+-- @return isRegisteredWithVersion (boolean)
 function Musician.Registry.PlayerIsRegisteredWithVersion(player)
 	return Musician.Registry.PlayerIsRegistered(player) and Musician.Registry.players[player].version ~= nil
 end
 
 --- Get full version string
 -- Version string contains actual addon version and protocol version
--- @return (string)
+-- @return versionAndProtocol (string)
 function Musician.Registry.GetVersionString()
 	local versionParts = { string.split('.', GetAddOnMetadata("Musician", "Version")) }
 	local protocolParts = { 0, 0, 0, 0, Musician.PROTOCOL_VERSION }
@@ -494,11 +494,12 @@ function Musician.Registry.GetVersionString()
 end
 
 --- Extract version and protocol from received version string
--- @param version (string)
--- @return (string), (number)
-function Musician.Registry.ExtractVersionAndProtocol(version)
-	version = string.gsub(version, "%s.+", "")
-	local versionParts = { string.split('.', version) }
+-- @param versionAndProtocol (string)
+-- @return version (string)
+-- @return protocol (number)
+function Musician.Registry.ExtractVersionAndProtocol(versionAndProtocol)
+	versionAndProtocol = string.gsub(versionAndProtocol, "%s.+", "")
+	local versionParts = { string.split('.', versionAndProtocol) }
 	local protocol = Musician.PROTOCOL_VERSION
 
 	local majorVersion = tonumber(versionParts[1]) or 0
@@ -522,7 +523,8 @@ end
 
 --- Return version and protocol for player
 -- @param player (string)
--- @return (string), (number)
+-- @return version (string)
+-- @return protocol (number)
 function Musician.Registry.GetPlayerVersion(player)
 	player = Musician.Utils.NormalizePlayerName(player)
 	local entry = Musician.Registry.players[player]

@@ -782,7 +782,7 @@ Musician.Keyboard.OnPhysicalKey = function(keyValue, down)
 	end
 end
 
---- Returns true if the provided keypress' button down state differs from the provided one.
+--- Return true if the provided keypress' button down state differs from the provided one.
 -- @param keyValue (string)
 -- @param down (boolean)
 -- @return (boolean)
@@ -1269,14 +1269,14 @@ MusicianKeyboard.HasSavedProgram = function(program)
 	return Musician_Settings.keyboardPrograms and Musician_Settings.keyboardPrograms[program]
 end
 
---- Indicates if the provided program is the current one that has been loaded
+--- Indicate if the provided program is the current one that has been loaded
 -- @param program (number)
 -- @return (boolean)
 MusicianKeyboard.IsCurrentProgram = function(program)
 	return program == loadedProgram
 end
 
---- Returns true if a demo song is playing
+--- Return true if a demo song is playing
 -- @return (boolean)
 local function demoSongIsPlaying()
 	local song = Musician.sourceSong

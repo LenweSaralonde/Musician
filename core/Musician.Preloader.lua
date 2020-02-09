@@ -146,7 +146,7 @@ function Musician.Preloader.OnUpdate(elapsed)
 	end
 end
 
---- Returns the key to be preloaded by cursor.
+--- Return the key to be preloaded by cursor.
 --  Starts from the middle to the bounds to preload the most used keys in priority.
 -- @param cursor (number) cursor key
 -- @return (number) key to be preloaded
@@ -161,7 +161,7 @@ function Musician.Preloader.GetCursorKey(cursor)
 	end
 end
 
---- Returns the initial preloading progression
+--- Return the initial preloading progression
 -- @return (number)
 function Musician.Preloader.GetProgress()
 	if preloaded then

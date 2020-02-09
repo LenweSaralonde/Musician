@@ -454,7 +454,7 @@ function Musician.MutePlayer(playerName, isMuted)
 	Musician.Utils.Print(msg)
 end
 
---- Returns true if the player is muted
+--- Return true if the player is muted
 -- @param playerName (string)
 -- @return (boolean)
 function Musician.PlayerIsMuted(playerName)

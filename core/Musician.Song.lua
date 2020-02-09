@@ -103,7 +103,7 @@ function Musician.Song.create()
 	return self
 end
 
---- Returns song ID
+--- Return song ID
 -- @return (number)
 function Musician.Song:GetId()
 	if self.songId == nil then
@@ -114,13 +114,13 @@ function Musician.Song:GetId()
 	return self.songId
 end
 
---- Returns true if the song is playing or about to be played (preloading).
+--- Return true if the song is playing or about to be played (preloading).
 -- @return (boolean)
 function Musician.Song:IsPlaying()
 	return self.playing or self.willPlayTimer ~= nil
 end
 
---- Returns playing progression
+--- Return playing progression
 -- @return (number)
 function Musician.Song:GetProgression()
 	if not(self.playing) then
@@ -142,7 +142,7 @@ function Musician.Song:SetTrackMuted(track, isMuted)
 	track.muted = isMuted
 end
 
---- Returns true if the track is muted
+--- Return true if the track is muted
 -- @param track (object)
 -- @return (boolean)
 function Musician.Song:TrackIsMuted(track)
