@@ -1,4 +1,4 @@
---- Simulates a volume meter for visual feedback
+--- Simulate a volume meter for visual feedback
 -- @module Musician.VolumeMeter
 
 Musician.VolumeMeter = {}
@@ -23,7 +23,7 @@ function Musician.VolumeMeter.create()
 	-- @field cursor (number) Cursor envelope position
 	self.cursor = nil
 
-	-- @field envelope (number) Envelope points (time, level)
+	-- @field envelope (table) Envelope points (time, level)
 	self.envelope = {}
 
 	-- @field entropy (number) Vibration entropy
@@ -46,7 +46,7 @@ function Musician.VolumeMeter:Reset()
 end
 
 --- Note on
--- @param instrument (table)
+-- @param instrument (table) instrument data from Musician.INSTRUMENTS
 function Musician.VolumeMeter:NoteOn(instrument)
 
 	if instrument.isPlucked or instrument.isPercussion then
@@ -94,7 +94,7 @@ function Musician.VolumeMeter:NoteOff()
 end
 
 --- Get current level
--- @return (number)
+-- @return level (number)
 function Musician.VolumeMeter:GetLevel()
 	if self.cursor == nil then
 		return 0

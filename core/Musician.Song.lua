@@ -46,10 +46,10 @@ function Musician.Song.create()
 	local self = {}
 	setmetatable(self, Musician.Song)
 
-	-- @field id (number) Song ID, used for streaming
+	-- @field id (int) Song ID, used for streaming
 	self.id = nil
 
-	-- @field crc32 (number) CRC32 of imported song data
+	-- @field crc32 (int) CRC32 of imported song data
 	self.crc32 = nil
 
 	-- @field tracks (table) Song tracks, including instrument and notes
@@ -79,7 +79,7 @@ function Musician.Song.create()
 	-- @field chunkDuration (number) Duration of a streaming chunk, in seconds
 	self.chunkDuration = Musician.CHUNK_DURATION
 
-	-- @field mode (number) Song mode
+	-- @field mode (int) Song mode
 	self.mode = Musician.Song.MODE_DURATION
 
 	-- @field cropFrom (number) Play song from this position
@@ -91,20 +91,20 @@ function Musician.Song.create()
 	-- @field cursor (number) Cursor position, in seconds
 	self.cursor = 0
 
-	-- @field soloTracks (number) Number of tracks in solo
+	-- @field soloTracks (int) Number of tracks in solo
 	self.soloTracks = 0
 
-	-- @field polyphony (number) Current polyphony
+	-- @field polyphony (int) Current polyphony
 	self.polyphony = 0
 
-	-- @field drops (number) Dropped notes
+	-- @field drops (int) Dropped notes
 	self.drops = 0
 
 	return self
 end
 
 --- Return song ID
--- @return (number)
+-- @return songId (int)
 function Musician.Song:GetId()
 	if self.songId == nil then
 		self.songId = Musician_Settings.nextSongId
@@ -115,13 +115,13 @@ function Musician.Song:GetId()
 end
 
 --- Return true if the song is playing or about to be played (preloading).
--- @return (boolean)
+-- @return isPlaying (boolean)
 function Musician.Song:IsPlaying()
 	return self.playing or self.willPlayTimer ~= nil
 end
 
 --- Return playing progression
--- @return (number)
+-- @return progression (number)
 function Musician.Song:GetProgression()
 	if not(self.playing) then
 		return nil
@@ -132,7 +132,7 @@ function Musician.Song:GetProgression()
 end
 
 --- Mute or unmute track
--- @param track (object)
+-- @param track (table)
 -- @param isMuted (boolean)
 function Musician.Song:SetTrackMuted(track, isMuted)
 	if isMuted then
@@ -143,14 +143,14 @@ function Musician.Song:SetTrackMuted(track, isMuted)
 end
 
 --- Return true if the track is muted
--- @param track (object)
--- @return (boolean)
+-- @param track (table)
+-- @return isMuted (boolean)
 function Musician.Song:TrackIsMuted(track)
 	return track.muted or self.soloTracks > 0 and not(track.solo)
 end
 
 --- Set/unset track solo
--- @param track (object)
+-- @param track (table)
 -- @param isSolo (boolean)
 function Musician.Song:SetTrackSolo(track, isSolo)
 	if track.solo and not(isSolo) then
@@ -810,16 +810,16 @@ function Musician.Song:ImportStep(elapsed)
 end
 
 --- Clone song
--- @return (Musician.Song)
+-- @return song (Musician.Song)
 function Musician.Song:Clone()
 
-	local clone = Musician.Song.create()
+	local song = Musician.Song.create()
 	local key, value
 
 	for key, value in pairs(self) do
-		clone[key] = Musician.Utils.DeepCopy(value)
+		song[key] = Musician.Utils.DeepCopy(value)
 	end
-	return clone
+	return song
 end
 
 --- Stream song
@@ -996,7 +996,7 @@ end
 
 --- Pack a song chunk
 -- @param chunk (table)
--- @return (string)
+-- @return data (string)
 function Musician.Song:PackChunk(chunk)
 
 	-- Chunk version and mode (1)
@@ -1063,7 +1063,13 @@ end
 
 --- Unpack song chunk header
 -- @param str (string)
--- @return (number), (number), (number), (number), (table), (number), (number) mode, song ID, chunk duration, playtimeLeft, player position and GUID, track count and cursor position
+-- @return mode (int)
+-- @return songId (int)
+-- @return chunkDuration (number)
+-- @return playtimeLeft (number)
+-- @return position (table) player position and GUID
+-- @return trackCount (int)
+-- @return cursor (number)
 Musician.Song.UnpackChunkHeader = function(str)
 
 	local cursor = 1
@@ -1119,7 +1125,7 @@ end
 
 --- Unpack song chunk data
 -- @param str (table)
--- @return (table)
+-- @return chunk (table)
 Musician.Song.UnpackChunkData = function(str)
 
 	-- Get header data
