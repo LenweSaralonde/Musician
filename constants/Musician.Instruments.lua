@@ -99,7 +99,7 @@ Musician.INSTRUMENTS = {
 		isPlucked = true,
 		midi = 46,
 		color = Musician.COLORS.White,
-		source = "Celtic And Folks Sounds For Christmas"
+		source = "Etherealwinds Harp II CE"
 	},
 	["lute"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\lute",
