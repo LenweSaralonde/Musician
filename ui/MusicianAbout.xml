@@ -70,13 +70,22 @@
 					<Color r="1" g="1" b="1"/>
 					<Anchors>
 						<Anchor point="TOPLEFT" y="-15" relativePoint="BOTTOMLEFT" relativeTo="$parentSupport" />
+						<Anchor point="RIGHT" x="-15" relativeTo="$parent" />
+					</Anchors>
+				</FontString>
+
+				<FontString name="$parentInstrumentSources" inherits="GameFontWhiteTiny2" justifyH="LEFT">
+					<Color r="1" g="1" b="1"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" y="-15" relativePoint="BOTTOMLEFT" relativeTo="$parentAuthorExtra" />
+						<Anchor point="RIGHT" x="-15" relativeTo="$parent" />
 					</Anchors>
 				</FontString>
 
 				<FontString name="$parentSupportersTitle" inherits="GameFontNormalSmallLeft">
 					<Color r="1" g="1" b="1"/>
 					<Anchors>
-						<Anchor point="TOPLEFT" y="-15" relativePoint="BOTTOMLEFT" relativeTo="$parentAuthorExtra" />
+						<Anchor point="TOPLEFT" y="-15" relativePoint="BOTTOMLEFT" relativeTo="$parentInstrumentSources" />
 					</Anchors>
 				</FontString>
 

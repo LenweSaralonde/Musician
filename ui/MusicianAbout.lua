@@ -32,6 +32,7 @@ Musician.About.OnShow = function()
 
 	MusicianAboutAuthor:SetText(highlightUrl(Musician.Msg.ABOUT_AUTHOR, Musician.URL))
 
+	-- Extra credits
 	local extra = 1
 	local authorExtra = {}
 	while Musician.Msg['ABOUT_AUTHOR_EXTRA' .. extra] ~= nil do
@@ -39,6 +40,17 @@ Musician.About.OnShow = function()
 		extra = extra + 1
 	end
 	MusicianAboutAuthorExtra:SetText(strjoin("\n", unpack(authorExtra)))
+
+	-- Instrument sources
+	local sampleSources = {}
+	local instrument
+	for _, instrument in pairs(Musician.INSTRUMENTS) do
+		if instrument.source and sampleSources[instrument.source] == nil then
+			table.insert(sampleSources, instrument.source)
+			sampleSources[instrument.source] = true
+		end
+	end
+	MusicianAboutInstrumentSources:SetText(strjoin(" / ", unpack(sampleSources)))
 
 	MusicianAboutLicense:SetText(Musician.Msg.ABOUT_LICENSE)
 
