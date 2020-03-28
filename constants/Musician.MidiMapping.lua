@@ -15,7 +15,7 @@ Musician.MIDI_INSTRUMENT_MAPPING = {
 	-- Chromatic Percussion
 	[Instrument.Celesta] = "dulcimer",
 	[Instrument.Glockenspiel] = "dulcimer",
-	[Instrument.MusicBox] = "dulcimer",
+	[Instrument.MusicBox] = "harp",
 	[Instrument.Vibraphone] = "dulcimer",
 	[Instrument.Marimba] = "dulcimer",
 	[Instrument.Xylophone] = "dulcimer",
