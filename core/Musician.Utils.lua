@@ -310,7 +310,7 @@ function Musician.Utils.PackPlayerGuid()
 end
 
 --- Unpack player GUID from string
--- @param data (string)
+-- @param str (string)
 -- @return guid (string)
 function Musician.Utils.UnpackPlayerGuid(str)
 	local serverId = Musician.Utils.UnpackNumber(string.sub(str, 1, 2))
