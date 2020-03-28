@@ -32,28 +32,32 @@ Musician.INSTRUMENTS = {
 		decay = 100,
 		isPercussion = false,
 		midi = 109,
-		color = Musician.COLORS.LightGreen
+		color = Musician.COLORS.LightGreen,
+		source = "Merlin Vienna 2"
 	},
 	["bassoon"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\bassoon",
 		decay = 150,
 		isPercussion = false,
 		midi = 70,
-		color = Musician.COLORS.DarkGreen
+		color = Musician.COLORS.DarkGreen,
+		source = "Sinfonia 3"
 	},
 	["cello"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\cello",
 		decay = 100,
 		isPercussion = false,
 		midi = 42,
-		color = Musician.COLORS.DarkOrange
+		color = Musician.COLORS.DarkOrange,
+		source = "Sinfonia 3"
 	},
 	["clarinet"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\clarinet",
 		decay = 150,
 		isPercussion = false,
 		midi = 71,
-		color = Musician.COLORS.Green
+		color = Musician.COLORS.Green,
+		source = "Sinfonia 3"
 	},
 	["dulcimer"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\dulcimer",
@@ -61,28 +65,32 @@ Musician.INSTRUMENTS = {
 		isPercussion = false,
 		isPlucked = true,
 		midi = 15,
-		color = Musician.COLORS.DarkWhite
+		color = Musician.COLORS.DarkWhiten,
+		source = "sf2midi"
 	},
 	["female-voice"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\female-voice",
 		decay = 200,
 		isPercussion = false,
 		midi = 53,
-		color = Musician.COLORS.LightBlue
+		color = Musician.COLORS.LightBlue,
+		source = "Irina Brochin"
 	},
 	["male-voice"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\male-voice",
 		decay = 200,
 		isPercussion = false,
 		midi = 52,
-		color = Musician.COLORS.Blue
+		color = Musician.COLORS.Blue,
+		source = "Olympus Mike-Ro Solo Tenor"
 	},
 	["fiddle"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\fiddle",
 		decay = 100,
 		isPercussion = false,
 		midi = 110,
-		color = Musician.COLORS.Orange
+		color = Musician.COLORS.Orange,
+		source = "Celtic And Folks Sounds For Christmas"
 	},
 	["harp"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\harp",
@@ -90,7 +98,8 @@ Musician.INSTRUMENTS = {
 		isPercussion = false,
 		isPlucked = true,
 		midi = 46,
-		color = Musician.COLORS.White
+		color = Musician.COLORS.White,
+		source = "Celtic And Folks Sounds For Christmas"
 	},
 	["lute"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\lute",
@@ -98,28 +107,32 @@ Musician.INSTRUMENTS = {
 		isPercussion = false,
 		isPlucked = true,
 		midi = 24,
-		color = Musician.COLORS.LightOrange
+		color = Musician.COLORS.LightOrange,
+		source = "BOB Early Music Renaissance Lute"
 	},
 	["recorder"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\recorder",
 		decay = 150,
 		isPercussion = false,
 		midi = 74,
-		color = Musician.COLORS.SpringGreen
+		color = Musician.COLORS.SpringGreen,
+		source = "Feroyn's Flute"
 	},
 	["trombone"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\trombone",
 		decay = 150,
 		isPercussion = false,
 		midi = 57,
-		color = Musician.COLORS.DarkYellow
+		color = Musician.COLORS.DarkYellow,
+		source = "Sinfonia 3"
 	},
 	["trumpet"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\trumpet",
 		decay = 150,
 		isPercussion = false,
 		midi = 56,
-		color = Musician.COLORS.Yellow
+		color = Musician.COLORS.Yellow,
+		source = "Sinfonia 3"
 	},
 	["distorsion-guitar"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\distorsion-guitar",
@@ -127,7 +140,8 @@ Musician.INSTRUMENTS = {
 		isPercussion = false,
 		isPlucked = false,
 		midi = 29,
-		color = Musician.COLORS.DarkMagenta
+		color = Musician.COLORS.DarkMagenta,
+		source = "DirectGuitar 2.0"
 	},
 	["clean-guitar"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\clean-guitar",
@@ -135,7 +149,8 @@ Musician.INSTRUMENTS = {
 		isPercussion = false,
 		isPlucked = true,
 		midi = 27,
-		color = Musician.COLORS.Pink
+		color = Musician.COLORS.Pink,
+		source = "DirectGuitar 2.0"
 	},
 	["bass-guitar"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\bass-guitar",
@@ -143,7 +158,8 @@ Musician.INSTRUMENTS = {
 		isPercussion = false,
 		isPlucked = true,
 		midi = 33,
-		color = Musician.COLORS.Purple
+		color = Musician.COLORS.Purple,
+		source = "BooBass"
 	},
 	["percussions"] = {
 		midi = 128,
@@ -156,7 +172,8 @@ Musician.INSTRUMENTS = {
 		isPlucked = true,
 		midi = 129,
 		color = Musician.COLORS.Red,
-		transpose = 51 - 39
+		transpose = 12, -- Percussions' middle C is shifted
+		source = "E-mu Systems '96"
 	},
 
 	-- Percussion
@@ -171,94 +188,112 @@ Musician.INSTRUMENTS = {
 			"Interface\\AddOns\\Musician\\instruments\\claps\\clap7",
 		},
 		decay = 100,
-		isPercussion = true
+		isPercussion = true,
+		source = "LenweSaralonde"
 	},
 	["tambourine-crash-long1"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\tambourine\\crash-long1",
 		decay = 100,
-		isPercussion = true
+		isPercussion = true,
+		source = "ELPHNT SHAKE"
 	},
 	["tambourine-crash-long2"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\tambourine\\crash-long2",
 		decay = 100,
-		isPercussion = true
+		isPercussion = true,
+		source = "ELPHNT SHAKE"
 	},
 	["tambourine-crash-short1"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\tambourine\\crash-short1",
 		decay = 100,
-		isPercussion = true
+		isPercussion = true,
+		source = "ELPHNT SHAKE"
 	},
 	["tambourine-crash-short2"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\tambourine\\crash-short2",
 		decay = 100,
-		isPercussion = true
+		isPercussion = true,
+		source = "ELPHNT SHAKE"
 	},
 	["tambourine-crash-short-hi"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\tambourine\\crash-short-hi",
 		decay = 100,
-		isPercussion = true
+		isPercussion = true,
+		source = "ELPHNT SHAKE"
 	},
 	["tambourine-hit1"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\tambourine\\hit1",
 		decay = 100,
-		isPercussion = true
+		isPercussion = true,
+		source = "ELPHNT SHAKE"
 	},
 	["tambourine-hit2"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\tambourine\\hit2",
 		decay = 100,
-		isPercussion = true
+		isPercussion = true,
+		source = "ELPHNT SHAKE"
 	},
 	["tambourine-shake-long"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\tambourine\\shake-long",
 		decay = 100,
-		isPercussion = true
+		isPercussion = true,
+		source = "ELPHNT SHAKE"
 	},
 	["tambourine-shake-short"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\tambourine\\shake-short",
 		decay = 100,
-		isPercussion = true
+		isPercussion = true,
+		source = "ELPHNT SHAKE"
 	},
 	["rattle-egg"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\rattle-egg\\rattle-egg",
 		decay = 100,
-		isPercussion = true
+		isPercussion = true,
+		source = "qubodup"
 	},
 	["bodhran-bassdrum-hi"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\bodhran\\bassdrum-hi",
 		decay = 250,
-		isPercussion = true
+		isPercussion = true,
+		source = "FMJ-Soft Bodhran"
 	},
 	["bodhran-bassdrum-low"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\bodhran\\bassdrum-low",
 		decay = 250,
 		isPercussion = true,
 		midi = 47,
-		color = Musician.COLORS.DarkTan
+		color = Musician.COLORS.DarkTan,
+		source = "FMJ-Soft Bodhran"
 	},
 	["bodhran-guiro-hi"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\bodhran\\guiro-hi",
 		decay = 100,
-		isPercussion = true
+		isPercussion = true,
+		source = "FMJ-Soft Bodhran"
 	},
 	["bodhran-guiro-low"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\bodhran\\guiro-low",
 		decay = 100,
-		isPercussion = true
+		isPercussion = true,
+		source = "FMJ-Soft Bodhran"
 	},
 	["bodhran-roll-bassdrum"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\bodhran\\roll-bassdrum",
 		decay = 100,
-		isPercussion = true
+		isPercussion = true,
+		source = "FMJ-Soft Bodhran"
 	},
 	["bodhran-roll-hi"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\bodhran\\roll-hi",
 		decay = 100,
-		isPercussion = true
+		isPercussion = true,
+		source = "FMJ-Soft Bodhran"
 	},
 	["bodhran-roll-low"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\bodhran\\roll-low",
 		decay = 100,
-		isPercussion = true
+		isPercussion = true,
+		source = "FMJ-Soft Bodhran"
 	},
 	["bodhran-roll"] = {
 		pathList = {
@@ -267,81 +302,96 @@ Musician.INSTRUMENTS = {
 			"Interface\\AddOns\\Musician\\instruments\\bodhran\\roll3",
 		},
 		decay = 100,
-		isPercussion = true
+		isPercussion = true,
+		source = "FMJ-Soft Bodhran"
 	},
 	["bodhran-snare-long-hi"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\bodhran\\snare-long-hi",
 		decay = 100,
 		isPercussion = true,
 		midi = 117,
-		color = Musician.COLORS.DarkTan
+		color = Musician.COLORS.DarkTan,
+		source = "FMJ-Soft Bodhran"
 	},
 	["bodhran-snare-long-low"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\bodhran\\snare-long-low",
 		decay = 100,
 		isPercussion = true,
 		midi = 118,
-		color = Musician.COLORS.DarkTan
+		color = Musician.COLORS.DarkTan,
+		source = "FMJ-Soft Bodhran"
 	},
 	["bodhran-snare-long-med"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\bodhran\\snare-long-med",
 		decay = 100,
-		isPercussion = true
+		isPercussion = true,
+		source = "FMJ-Soft Bodhran"
 	},
 	["bodhran-snare-short-hi"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\bodhran\\snare-short-hi",
 		decay = 100,
-		isPercussion = true
+		isPercussion = true,
+		source = "FMJ-Soft Bodhran"
 	},
 	["bodhran-snare-short-low"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\bodhran\\snare-short-low",
 		decay = 100,
-		isPercussion = true
+		isPercussion = true,
+		source = "FMJ-Soft Bodhran"
 	},
 	["bodhran-stick-hi"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\bodhran\\stick-hi",
 		decay = 100,
-		isPercussion = true
+		isPercussion = true,
+		source = "FMJ-Soft Bodhran"
 	},
 	["bodhran-stick-low"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\bodhran\\stick-low",
 		decay = 100,
-		isPercussion = true
+		isPercussion = true,
+		source = "FMJ-Soft Bodhran"
 	},
 	["bodhran-stick-med"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\bodhran\\stick-med",
 		decay = 100,
-		isPercussion = true
+		isPercussion = true,
+		source = "FMJ-Soft Bodhran"
 	},
 	["bodhran-tom-long-hi"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\bodhran\\tom-long-hi",
 		decay = 100,
-		isPercussion = true
+		isPercussion = true,
+		source = "FMJ-Soft Bodhran"
 	},
 	["bodhran-tom-long-low"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\bodhran\\tom-long-low",
 		decay = 100,
-		isPercussion = true
+		isPercussion = true,
+		source = "FMJ-Soft Bodhran"
 	},
 	["bodhran-tom-long-med"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\bodhran\\tom-long-med",
 		decay = 100,
-		isPercussion = true
+		isPercussion = true,
+		source = "FMJ-Soft Bodhran"
 	},
 	["bodhran-tom-short-hi"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\bodhran\\tom-short-hi",
 		decay = 100,
-		isPercussion = true
+		isPercussion = true,
+		source = "FMJ-Soft Bodhran"
 	},
 	["bodhran-tom-short-low"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\bodhran\\tom-short-low",
 		decay = 100,
-		isPercussion = true
+		isPercussion = true,
+		source = "FMJ-Soft Bodhran"
 	},
 	["bodhran-tom-short-med"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\bodhran\\tom-short-med",
 		decay = 100,
-		isPercussion = true
+		isPercussion = true,
+		source = "FMJ-Soft Bodhran"
 	},
 }
 
