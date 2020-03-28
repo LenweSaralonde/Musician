@@ -1,0 +1,621 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Musician</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/Musician.html">Musician</a></li>
+  <li><a href="../modules/Musician.About.html">Musician.About</a></li>
+  <li><a href="../modules/Musician.Comm.html">Musician.Comm</a></li>
+  <li><a href="../modules/Musician.Constants.html">Musician.Constants</a></li>
+  <li><a href="../modules/Musician.CrossRP.html">Musician.CrossRP</a></li>
+  <li><a href="../modules/Musician.CrossRP.Options.html">Musician.CrossRP.Options</a></li>
+  <li><a href="../modules/Musician.ElvUI.html">Musician.ElvUI</a></li>
+  <li><a href="../modules/Musician.Extras.html">Musician.Extras</a></li>
+  <li><strong>Musician.Frame</strong></li>
+  <li><a href="../modules/Musician.Keyboard.html">Musician.Keyboard</a></li>
+  <li><a href="../modules/Musician.KeyboardConfig.html">Musician.KeyboardConfig</a></li>
+  <li><a href="../modules/Musician.KeyboardUtils.html">Musician.KeyboardUtils</a></li>
+  <li><a href="../modules/Musician.KuiNamePlates.html">Musician.KuiNamePlates</a></li>
+  <li><a href="../modules/Musician.Live.html">Musician.Live</a></li>
+  <li><a href="../modules/Musician.MyRolePlay.html">Musician.MyRolePlay</a></li>
+  <li><a href="../modules/Musician.NamePlates.html">Musician.NamePlates</a></li>
+  <li><a href="../modules/Musician.NamePlates.Options.html">Musician.NamePlates.Options</a></li>
+  <li><a href="../modules/Musician.NeatPlates.html">Musician.NeatPlates</a></li>
+  <li><a href="../modules/Musician.Options.html">Musician.Options</a></li>
+  <li><a href="../modules/Musician.Plater.html">Musician.Plater</a></li>
+  <li><a href="../modules/Musician.Preloader.html">Musician.Preloader</a></li>
+  <li><a href="../modules/Musician.Registry.html">Musician.Registry</a></li>
+  <li><a href="../modules/Musician.Song.html">Musician.Song</a></li>
+  <li><a href="../modules/Musician.TRP3.html">Musician.TRP3</a></li>
+  <li><a href="../modules/Musician.TRP3.Options.html">Musician.TRP3.Options</a></li>
+  <li><a href="../modules/Musician.TrackEditor.html">Musician.TrackEditor</a></li>
+  <li><a href="../modules/Musician.Utils.html">Musician.Utils</a></li>
+  <li><a href="../modules/Musician.VolumeMeter.html">Musician.VolumeMeter</a></li>
+  <li><a href="../modules/MusicianButton.html">MusicianButton</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>Musician.Frame</code></h1>
+<p>Main window with song import and controls</p>
+<p></p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#MusicianFrame.Clear">MusicianFrame.Clear (noFocus)</a></td>
+	<td class="summary">Clear import field</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicianFrame.Focus">MusicianFrame.Focus ()</a></td>
+	<td class="summary">Set focus to import field</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicianFrame.GetDefaultText">MusicianFrame.GetDefaultText ()</a></td>
+	<td class="summary">Return default text for import text field</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicianFrame.ImportSource">MusicianFrame.ImportSource ()</a></td>
+	<td class="summary">Import source song</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicianFrame.Init">MusicianFrame.Init ()</a></td>
+	<td class="summary">Init</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicianFrame.OnBandPlay">MusicianFrame.OnBandPlay (event, player, songCrc32)</a></td>
+	<td class="summary">OnBandPlay</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicianFrame.OnBandPlayReady">MusicianFrame.OnBandPlayReady (event, player, songCrc32, isReady)</a></td>
+	<td class="summary">OnBandPlayReady</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicianFrame.OnBandStop">MusicianFrame.OnBandStop (event, player, songCrc32)</a></td>
+	<td class="summary">OnBandStop</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicianFrame.OnCommChannelUpdate">MusicianFrame.OnCommChannelUpdate (event, isConnected)</a></td>
+	<td class="summary">OnCommChannelUpdate</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicianFrame.OnCommSendAction">MusicianFrame.OnCommSendAction (event, action)</a></td>
+	<td class="summary">OnCommSendAction</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicianFrame.OnRosterUpdate">MusicianFrame.OnRosterUpdate (event)</a></td>
+	<td class="summary">OnRosterUpdate</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicianFrame.OnSongPlayOrStop">MusicianFrame.OnSongPlayOrStop (event, song)</a></td>
+	<td class="summary">OnCommSendAction</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicianFrame.OnSourceChanged">MusicianFrame.OnSourceChanged (self, isUserInput)</a></td>
+	<td class="summary">OnSourceChanged</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicianFrame.OnSourceSongUpdated">MusicianFrame.OnSourceSongUpdated (event, ...)</a></td>
+	<td class="summary">OnSourceSongUpdated</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicianFrame.RefreshBandwidthIndicator">MusicianFrame.RefreshBandwidthIndicator (event, bandwidth)</a></td>
+	<td class="summary">Regresh bandwidth indicator</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicianFrame.RefreshLoadingProgressBar">MusicianFrame.RefreshLoadingProgressBar (event, song, progression)</a></td>
+	<td class="summary">Refresh loading progress bar</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicianFrame.RefreshPlayingProgressBar">MusicianFrame.RefreshPlayingProgressBar (event, song)</a></td>
+	<td class="summary">Regresh progress bar of the song</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicianFrame.TogglePreviewSong">MusicianFrame.TogglePreviewSong ()</a></td>
+	<td class="summary">Preview source song</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicianFrame.TrackEditor">MusicianFrame.TrackEditor ()</a></td>
+	<td class="summary">Open track editor</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicianFrame.UpdateBandPlayButton">MusicianFrame.UpdateBandPlayButton ()</a></td>
+	<td class="summary">Update band play button</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicianFrame.UpdatePlayButton">MusicianFrame.UpdatePlayButton (isEnabled, isPlaying)</a></td>
+	<td class="summary">Update Play button</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "MusicianFrame.Clear"></a>
+    <strong>MusicianFrame.Clear (noFocus)</strong>
+    </dt>
+    <dd>
+    Clear import field
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">noFocus</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicianFrame.Focus"></a>
+    <strong>MusicianFrame.Focus ()</strong>
+    </dt>
+    <dd>
+    Set focus to import field
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicianFrame.GetDefaultText"></a>
+    <strong>MusicianFrame.GetDefaultText ()</strong>
+    </dt>
+    <dd>
+    Return default text for import text field
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicianFrame.ImportSource"></a>
+    <strong>MusicianFrame.ImportSource ()</strong>
+    </dt>
+    <dd>
+    Import source song
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicianFrame.Init"></a>
+    <strong>MusicianFrame.Init ()</strong>
+    </dt>
+    <dd>
+    Init
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicianFrame.OnBandPlay"></a>
+    <strong>MusicianFrame.OnBandPlay (event, player, songCrc32)</strong>
+    </dt>
+    <dd>
+    OnBandPlay
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+
+        </li>
+        <li><span class="parameter">player</span>
+
+        </li>
+        <li><span class="parameter">songCrc32</span>
+        Display "Started band play" emote in the chat
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicianFrame.OnBandPlayReady"></a>
+    <strong>MusicianFrame.OnBandPlayReady (event, player, songCrc32, isReady)</strong>
+    </dt>
+    <dd>
+    OnBandPlayReady
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+
+        </li>
+        <li><span class="parameter">player</span>
+
+        </li>
+        <li><span class="parameter">songCrc32</span>
+
+        </li>
+        <li><span class="parameter">isReady</span>
+        Display "Is ready" emote in the chat
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicianFrame.OnBandStop"></a>
+    <strong>MusicianFrame.OnBandStop (event, player, songCrc32)</strong>
+    </dt>
+    <dd>
+    OnBandStop
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+
+        </li>
+        <li><span class="parameter">player</span>
+
+        </li>
+        <li><span class="parameter">songCrc32</span>
+        Display "Stopped band play" emote in the chat
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicianFrame.OnCommChannelUpdate"></a>
+    <strong>MusicianFrame.OnCommChannelUpdate (event, isConnected)</strong>
+    </dt>
+    <dd>
+    OnCommChannelUpdate
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+         (string)
+        </li>
+        <li><span class="parameter">isConnected</span>
+         (boolean)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicianFrame.OnCommSendAction"></a>
+    <strong>MusicianFrame.OnCommSendAction (event, action)</strong>
+    </dt>
+    <dd>
+    OnCommSendAction
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+         (string)
+        </li>
+        <li><span class="parameter">action</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicianFrame.OnRosterUpdate"></a>
+    <strong>MusicianFrame.OnRosterUpdate (event)</strong>
+    </dt>
+    <dd>
+    OnRosterUpdate
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicianFrame.OnSongPlayOrStop"></a>
+    <strong>MusicianFrame.OnSongPlayOrStop (event, song)</strong>
+    </dt>
+    <dd>
+    OnCommSendAction
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+         (string)
+        </li>
+        <li><span class="parameter">song</span>
+         (Musician.Song)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicianFrame.OnSourceChanged"></a>
+    <strong>MusicianFrame.OnSourceChanged (self, isUserInput)</strong>
+    </dt>
+    <dd>
+    OnSourceChanged
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+        </li>
+        <li><span class="parameter">isUserInput</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicianFrame.OnSourceSongUpdated"></a>
+    <strong>MusicianFrame.OnSourceSongUpdated (event, ...)</strong>
+    </dt>
+    <dd>
+    OnSourceSongUpdated
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+
+        </li>
+        <li><span class="parameter">...</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicianFrame.RefreshBandwidthIndicator"></a>
+    <strong>MusicianFrame.RefreshBandwidthIndicator (event, bandwidth)</strong>
+    </dt>
+    <dd>
+    Regresh bandwidth indicator
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+         (string)
+        </li>
+        <li><span class="parameter">bandwidth</span>
+         (number)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicianFrame.RefreshLoadingProgressBar"></a>
+    <strong>MusicianFrame.RefreshLoadingProgressBar (event, song, progression)</strong>
+    </dt>
+    <dd>
+    Refresh loading progress bar
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+         (string)
+        </li>
+        <li><span class="parameter">song</span>
+         (Musician.Song)
+        </li>
+        <li><span class="parameter">progression</span>
+         (number)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicianFrame.RefreshPlayingProgressBar"></a>
+    <strong>MusicianFrame.RefreshPlayingProgressBar (event, song)</strong>
+    </dt>
+    <dd>
+    Regresh progress bar of the song
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+         (string)
+        </li>
+        <li><span class="parameter">song</span>
+         (Musician.Song) Can be the source song or the song currently playing
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicianFrame.TogglePreviewSong"></a>
+    <strong>MusicianFrame.TogglePreviewSong ()</strong>
+    </dt>
+    <dd>
+    Preview source song
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicianFrame.TrackEditor"></a>
+    <strong>MusicianFrame.TrackEditor ()</strong>
+    </dt>
+    <dd>
+    Open track editor
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicianFrame.UpdateBandPlayButton"></a>
+    <strong>MusicianFrame.UpdateBandPlayButton ()</strong>
+    </dt>
+    <dd>
+    Update band play button
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicianFrame.UpdatePlayButton"></a>
+    <strong>MusicianFrame.UpdatePlayButton (isEnabled, isPlaying)</strong>
+    </dt>
+    <dd>
+    Update Play button
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">isEnabled</span>
+         (boolean)
+        </li>
+        <li><span class="parameter">isPlaying</span>
+         (boolean)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2020-03-28 17:38:12 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

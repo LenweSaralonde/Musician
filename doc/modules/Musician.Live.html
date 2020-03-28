@@ -1,0 +1,669 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Musician</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/Musician.html">Musician</a></li>
+  <li><a href="../modules/Musician.About.html">Musician.About</a></li>
+  <li><a href="../modules/Musician.Comm.html">Musician.Comm</a></li>
+  <li><a href="../modules/Musician.Constants.html">Musician.Constants</a></li>
+  <li><a href="../modules/Musician.CrossRP.html">Musician.CrossRP</a></li>
+  <li><a href="../modules/Musician.CrossRP.Options.html">Musician.CrossRP.Options</a></li>
+  <li><a href="../modules/Musician.ElvUI.html">Musician.ElvUI</a></li>
+  <li><a href="../modules/Musician.Extras.html">Musician.Extras</a></li>
+  <li><a href="../modules/Musician.Frame.html">Musician.Frame</a></li>
+  <li><a href="../modules/Musician.Keyboard.html">Musician.Keyboard</a></li>
+  <li><a href="../modules/Musician.KeyboardConfig.html">Musician.KeyboardConfig</a></li>
+  <li><a href="../modules/Musician.KeyboardUtils.html">Musician.KeyboardUtils</a></li>
+  <li><a href="../modules/Musician.KuiNamePlates.html">Musician.KuiNamePlates</a></li>
+  <li><strong>Musician.Live</strong></li>
+  <li><a href="../modules/Musician.MyRolePlay.html">Musician.MyRolePlay</a></li>
+  <li><a href="../modules/Musician.NamePlates.html">Musician.NamePlates</a></li>
+  <li><a href="../modules/Musician.NamePlates.Options.html">Musician.NamePlates.Options</a></li>
+  <li><a href="../modules/Musician.NeatPlates.html">Musician.NeatPlates</a></li>
+  <li><a href="../modules/Musician.Options.html">Musician.Options</a></li>
+  <li><a href="../modules/Musician.Plater.html">Musician.Plater</a></li>
+  <li><a href="../modules/Musician.Preloader.html">Musician.Preloader</a></li>
+  <li><a href="../modules/Musician.Registry.html">Musician.Registry</a></li>
+  <li><a href="../modules/Musician.Song.html">Musician.Song</a></li>
+  <li><a href="../modules/Musician.TRP3.html">Musician.TRP3</a></li>
+  <li><a href="../modules/Musician.TRP3.Options.html">Musician.TRP3.Options</a></li>
+  <li><a href="../modules/Musician.TrackEditor.html">Musician.TrackEditor</a></li>
+  <li><a href="../modules/Musician.Utils.html">Musician.Utils</a></li>
+  <li><a href="../modules/Musician.VolumeMeter.html">Musician.VolumeMeter</a></li>
+  <li><a href="../modules/MusicianButton.html">MusicianButton</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>Musician.Live</code></h1>
+<p>Live play module</p>
+<p></p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Live.AllNotesOff">Musician.Live.AllNotesOff (onlyForLayer)</a></td>
+	<td class="summary">Set all notes to off</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Live.BandNote">Musician.Live.BandNote (noteOn, key, layer, instrument)</a></td>
+	<td class="summary">Send note event in band mode</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Live.CanStream">Musician.Live.CanStream ()</a></td>
+	<td class="summary">Indicate whenever the live mode can stream</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Live.CreateLiveSong">Musician.Live.CreateLiveSong ()</a></td>
+	<td class="summary">Create the live song for streaming, if needed</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Live.Enable">Musician.Live.Enable (enabled)</a></td>
+	<td class="summary">Enable or disable live mode</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Live.GetSyncedBandPlayers">Musician.Live.GetSyncedBandPlayers ()</a></td>
+	<td class="summary">Return the list of synced band players</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Live.Init">Musician.Live.Init ()</a></td>
+	<td class="summary">Init live mode</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Live.InsertNote">Musician.Live.InsertNote (noteOn, key, layer, instrument)</a></td>
+	<td class="summary">Send note</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Live.IsBandSyncMode">Musician.Live.IsBandSyncMode ()</a></td>
+	<td class="summary">Indicate if the player in band sync mode</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Live.IsEnabled">Musician.Live.IsEnabled ()</a></td>
+	<td class="summary">Indicate whenever the live mode is enabled stream</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Live.IsPlayerSynced">Musician.Live.IsPlayerSynced (player)</a></td>
+	<td class="summary">Indicate if the provided player is in band sync mode</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Live.IsPlayingLive">Musician.Live.IsPlayingLive ()</a></td>
+	<td class="summary">Indicate whenever the player is playing live, regardless if in solo or live mode</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Live.NoteOff">Musician.Live.NoteOff (key, layer, instrument, isChordNote)</a></td>
+	<td class="summary">Send note off</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Live.NoteOn">Musician.Live.NoteOn (key, layer, instrument, isChordNote)</a></td>
+	<td class="summary">Send note on</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Live.OnBandSync">Musician.Live.OnBandSync (prefix, message, distribution, sender)</a></td>
+	<td class="summary">Receive band sync mode message</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Live.OnBandSyncQuery">Musician.Live.OnBandSyncQuery (prefix, message, distribution, sender)</a></td>
+	<td class="summary">OnBandSyncQuery</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Live.OnGroupJoined">Musician.Live.OnGroupJoined ()</a></td>
+	<td class="summary">OnGroupJoined</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Live.OnGroupLeft">Musician.Live.OnGroupLeft ()</a></td>
+	<td class="summary">OnGroupLeft</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Live.OnLiveNote">Musician.Live.OnLiveNote (prefix, message, distribution, sender)</a></td>
+	<td class="summary">OnLiveNote</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Live.OnRosterUpdate">Musician.Live.OnRosterUpdate ()</a></td>
+	<td class="summary">OnRosterUpdate</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Live.SetBandSyncMode">Musician.Live.SetBandSyncMode (enabled)</a></td>
+	<td class="summary">Set band sync mode</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Live.ToggleBandSyncMode">Musician.Live.ToggleBandSyncMode (enabled)</a></td>
+	<td class="summary">Set sync mode</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "Musician.Live.AllNotesOff"></a>
+    <strong>Musician.Live.AllNotesOff (onlyForLayer)</strong>
+    </dt>
+    <dd>
+    Set all notes to off
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">onlyForLayer</span>
+         (int)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Live.BandNote"></a>
+    <strong>Musician.Live.BandNote (noteOn, key, layer, instrument)</strong>
+    </dt>
+    <dd>
+    Send note event in band mode
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">noteOn</span>
+         (boolean)
+        </li>
+        <li><span class="parameter">key</span>
+         (int) MIDI key index
+        </li>
+        <li><span class="parameter">layer</span>
+         (int)
+        </li>
+        <li><span class="parameter">instrument</span>
+         (int)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Live.CanStream"></a>
+    <strong>Musician.Live.CanStream ()</strong>
+    </dt>
+    <dd>
+    Indicate whenever the live mode can stream
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        canStream (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Live.CreateLiveSong"></a>
+    <strong>Musician.Live.CreateLiveSong ()</strong>
+    </dt>
+    <dd>
+    Create the live song for streaming, if needed
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Live.Enable"></a>
+    <strong>Musician.Live.Enable (enabled)</strong>
+    </dt>
+    <dd>
+    Enable or disable live mode
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">enabled</span>
+         (boolean)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Live.GetSyncedBandPlayers"></a>
+    <strong>Musician.Live.GetSyncedBandPlayers ()</strong>
+    </dt>
+    <dd>
+    Return the list of synced band players
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        readyPlayers (table)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Live.Init"></a>
+    <strong>Musician.Live.Init ()</strong>
+    </dt>
+    <dd>
+    Init live mode
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Live.InsertNote"></a>
+    <strong>Musician.Live.InsertNote (noteOn, key, layer, instrument)</strong>
+    </dt>
+    <dd>
+    Send note
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">noteOn</span>
+         (boolean) Note on/off
+        </li>
+        <li><span class="parameter">key</span>
+         (int) MIDI key index
+        </li>
+        <li><span class="parameter">layer</span>
+         (int)
+        </li>
+        <li><span class="parameter">instrument</span>
+         (int)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Live.IsBandSyncMode"></a>
+    <strong>Musician.Live.IsBandSyncMode ()</strong>
+    </dt>
+    <dd>
+    Indicate if the player in band sync mode
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        isBandSyncMode (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Live.IsEnabled"></a>
+    <strong>Musician.Live.IsEnabled ()</strong>
+    </dt>
+    <dd>
+    Indicate whenever the live mode is enabled stream
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        isLiveEnabled (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Live.IsPlayerSynced"></a>
+    <strong>Musician.Live.IsPlayerSynced (player)</strong>
+    </dt>
+    <dd>
+    Indicate if the provided player is in band sync mode
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">player</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        isPlayerSynced (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Live.IsPlayingLive"></a>
+    <strong>Musician.Live.IsPlayingLive ()</strong>
+    </dt>
+    <dd>
+    Indicate whenever the player is playing live, regardless if in solo or live mode
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        isPlayingLive (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Live.NoteOff"></a>
+    <strong>Musician.Live.NoteOff (key, layer, instrument, isChordNote)</strong>
+    </dt>
+    <dd>
+    Send note off
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">key</span>
+         (int) MIDI key index
+        </li>
+        <li><span class="parameter">layer</span>
+         (int)
+        </li>
+        <li><span class="parameter">instrument</span>
+         (int)
+        </li>
+        <li><span class="parameter">isChordNote</span>
+         (boolean)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Live.NoteOn"></a>
+    <strong>Musician.Live.NoteOn (key, layer, instrument, isChordNote)</strong>
+    </dt>
+    <dd>
+    Send note on
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">key</span>
+         (int) MIDI key index
+        </li>
+        <li><span class="parameter">layer</span>
+         (int)
+        </li>
+        <li><span class="parameter">instrument</span>
+         (int)
+        </li>
+        <li><span class="parameter">isChordNote</span>
+         (boolean)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Live.OnBandSync"></a>
+    <strong>Musician.Live.OnBandSync (prefix, message, distribution, sender)</strong>
+    </dt>
+    <dd>
+    Receive band sync mode message
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">prefix</span>
+
+        </li>
+        <li><span class="parameter">message</span>
+
+        </li>
+        <li><span class="parameter">distribution</span>
+
+        </li>
+        <li><span class="parameter">sender</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Live.OnBandSyncQuery"></a>
+    <strong>Musician.Live.OnBandSyncQuery (prefix, message, distribution, sender)</strong>
+    </dt>
+    <dd>
+    OnBandSyncQuery
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">prefix</span>
+
+        </li>
+        <li><span class="parameter">message</span>
+
+        </li>
+        <li><span class="parameter">distribution</span>
+
+        </li>
+        <li><span class="parameter">sender</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Live.OnGroupJoined"></a>
+    <strong>Musician.Live.OnGroupJoined ()</strong>
+    </dt>
+    <dd>
+    OnGroupJoined
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Live.OnGroupLeft"></a>
+    <strong>Musician.Live.OnGroupLeft ()</strong>
+    </dt>
+    <dd>
+    OnGroupLeft
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Live.OnLiveNote"></a>
+    <strong>Musician.Live.OnLiveNote (prefix, message, distribution, sender)</strong>
+    </dt>
+    <dd>
+    OnLiveNote
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">prefix</span>
+
+        </li>
+        <li><span class="parameter">message</span>
+
+        </li>
+        <li><span class="parameter">distribution</span>
+
+        </li>
+        <li><span class="parameter">sender</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Live.OnRosterUpdate"></a>
+    <strong>Musician.Live.OnRosterUpdate ()</strong>
+    </dt>
+    <dd>
+    OnRosterUpdate
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Live.SetBandSyncMode"></a>
+    <strong>Musician.Live.SetBandSyncMode (enabled)</strong>
+    </dt>
+    <dd>
+    Set band sync mode
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">enabled</span>
+         (boolean)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        success (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Live.ToggleBandSyncMode"></a>
+    <strong>Musician.Live.ToggleBandSyncMode (enabled)</strong>
+    </dt>
+    <dd>
+    Set sync mode
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">enabled</span>
+         (boolean)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2020-03-28 17:38:12 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

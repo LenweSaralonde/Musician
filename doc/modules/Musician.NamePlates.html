@@ -1,0 +1,520 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Musician</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/Musician.html">Musician</a></li>
+  <li><a href="../modules/Musician.About.html">Musician.About</a></li>
+  <li><a href="../modules/Musician.Comm.html">Musician.Comm</a></li>
+  <li><a href="../modules/Musician.Constants.html">Musician.Constants</a></li>
+  <li><a href="../modules/Musician.CrossRP.html">Musician.CrossRP</a></li>
+  <li><a href="../modules/Musician.CrossRP.Options.html">Musician.CrossRP.Options</a></li>
+  <li><a href="../modules/Musician.ElvUI.html">Musician.ElvUI</a></li>
+  <li><a href="../modules/Musician.Extras.html">Musician.Extras</a></li>
+  <li><a href="../modules/Musician.Frame.html">Musician.Frame</a></li>
+  <li><a href="../modules/Musician.Keyboard.html">Musician.Keyboard</a></li>
+  <li><a href="../modules/Musician.KeyboardConfig.html">Musician.KeyboardConfig</a></li>
+  <li><a href="../modules/Musician.KeyboardUtils.html">Musician.KeyboardUtils</a></li>
+  <li><a href="../modules/Musician.KuiNamePlates.html">Musician.KuiNamePlates</a></li>
+  <li><a href="../modules/Musician.Live.html">Musician.Live</a></li>
+  <li><a href="../modules/Musician.MyRolePlay.html">Musician.MyRolePlay</a></li>
+  <li><strong>Musician.NamePlates</strong></li>
+  <li><a href="../modules/Musician.NamePlates.Options.html">Musician.NamePlates.Options</a></li>
+  <li><a href="../modules/Musician.NeatPlates.html">Musician.NeatPlates</a></li>
+  <li><a href="../modules/Musician.Options.html">Musician.Options</a></li>
+  <li><a href="../modules/Musician.Plater.html">Musician.Plater</a></li>
+  <li><a href="../modules/Musician.Preloader.html">Musician.Preloader</a></li>
+  <li><a href="../modules/Musician.Registry.html">Musician.Registry</a></li>
+  <li><a href="../modules/Musician.Song.html">Musician.Song</a></li>
+  <li><a href="../modules/Musician.TRP3.html">Musician.TRP3</a></li>
+  <li><a href="../modules/Musician.TRP3.Options.html">Musician.TRP3.Options</a></li>
+  <li><a href="../modules/Musician.TrackEditor.html">Musician.TrackEditor</a></li>
+  <li><a href="../modules/Musician.Utils.html">Musician.Utils</a></li>
+  <li><a href="../modules/Musician.VolumeMeter.html">Musician.VolumeMeter</a></li>
+  <li><a href="../modules/MusicianButton.html">MusicianButton</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>Musician.NamePlates</code></h1>
+<p>Adds animated notes and music icon in player nameplates.</p>
+<p></p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#Musician.NamePlates.AddNoteIcon">Musician.NamePlates.AddNoteIcon (namePlate, textElement, append)</a></td>
+	<td class="summary">Add note icon in nameplate's textElement, if needed</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.NamePlates.AttachNamePlate">Musician.NamePlates.AttachNamePlate (namePlate, player, event)</a></td>
+	<td class="summary">Attach Musician nameplate</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.NamePlates.CreatePlayerAnimatedNotesFrame">Musician.NamePlates.CreatePlayerAnimatedNotesFrame ()</a></td>
+	<td class="summary">Create fixed animated notes frame for the current player</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.NamePlates.DetachNamePlate">Musician.NamePlates.DetachNamePlate (namePlate)</a></td>
+	<td class="summary">Detach Musician nameplate</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.NamePlates.InitTipsAndTricks">Musician.NamePlates.InitTipsAndTricks ()</a></td>
+	<td class="summary">Initialize tips and tricks</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.NamePlates.OnNamePlateAdded">Musician.NamePlates.OnNamePlateAdded (event, unitToken)</a></td>
+	<td class="summary">OnNamePlateAdded</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.NamePlates.OnNamePlateNotesFrameUpdate">Musician.NamePlates.OnNamePlateNotesFrameUpdate (animatedNotesFrame, elapsed)</a></td>
+	<td class="summary">OnUpdate handler for the animated notes frame</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.NamePlates.OnNamePlateRemoved">Musician.NamePlates.OnNamePlateRemoved (event, unitToken)</a></td>
+	<td class="summary">OnNamePlateRemoved</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.NamePlates.OnNoteOn">Musician.NamePlates.OnNoteOn (event, song, track, key)</a></td>
+	<td class="summary">Add note to the appropriate animated notes frame</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.NamePlates.OnPlayerRegistered">Musician.NamePlates.OnPlayerRegistered (event, player)</a></td>
+	<td class="summary">Update nameplate for player when registered</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.NamePlates.OnSetUIVisibility">Musician.NamePlates.OnSetUIVisibility (isVisible)</a></td>
+	<td class="summary">OnSetUIVisibility</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.NamePlates.OnUnitFrameUpdate">Musician.NamePlates.OnUnitFrameUpdate (frame)</a></td>
+	<td class="summary">OnUnitFrameUpdate</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.NamePlates.UpdateAll">Musician.NamePlates.UpdateAll ()</a></td>
+	<td class="summary">Update all nameplates</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.NamePlates.UpdateNamePlate">Musician.NamePlates.UpdateNamePlate (namePlate)</a></td>
+	<td class="summary">UpdateNamePlate</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.NamePlates.UpdateNamePlateCinematicMode">Musician.NamePlates.UpdateNamePlateCinematicMode (namePlate)</a></td>
+	<td class="summary">Hide nameplates in cinematic mode if nameplates are not enabled in this mode</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.NamePlates.UpdateNoteIcon">Musician.NamePlates.UpdateNoteIcon (namePlate)</a></td>
+	<td class="summary">Update note icon next to player name</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.NamePlates:OnEnable">Musician.NamePlates:OnEnable ()</a></td>
+	<td class="summary">OnEnable</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "Musician.NamePlates.AddNoteIcon"></a>
+    <strong>Musician.NamePlates.AddNoteIcon (namePlate, textElement, append)</strong>
+    </dt>
+    <dd>
+    Add note icon in nameplate's textElement, if needed
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">namePlate</span>
+         (Frame)
+        </li>
+        <li><span class="parameter">textElement</span>
+         (FontString)
+        </li>
+        <li><span class="parameter">append</span>
+         (boolean) Add note icon at the end of the string
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.NamePlates.AttachNamePlate"></a>
+    <strong>Musician.NamePlates.AttachNamePlate (namePlate, player, event)</strong>
+    </dt>
+    <dd>
+    Attach Musician nameplate
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">namePlate</span>
+         (Frame)
+        </li>
+        <li><span class="parameter">player</span>
+         (string)
+        </li>
+        <li><span class="parameter">event</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.NamePlates.CreatePlayerAnimatedNotesFrame"></a>
+    <strong>Musician.NamePlates.CreatePlayerAnimatedNotesFrame ()</strong>
+    </dt>
+    <dd>
+    Create fixed animated notes frame for the current player
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.NamePlates.DetachNamePlate"></a>
+    <strong>Musician.NamePlates.DetachNamePlate (namePlate)</strong>
+    </dt>
+    <dd>
+    Detach Musician nameplate
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">namePlate</span>
+         (Frame)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.NamePlates.InitTipsAndTricks"></a>
+    <strong>Musician.NamePlates.InitTipsAndTricks ()</strong>
+    </dt>
+    <dd>
+    Initialize tips and tricks
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.NamePlates.OnNamePlateAdded"></a>
+    <strong>Musician.NamePlates.OnNamePlateAdded (event, unitToken)</strong>
+    </dt>
+    <dd>
+    OnNamePlateAdded
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+         (string)
+        </li>
+        <li><span class="parameter">unitToken</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.NamePlates.OnNamePlateNotesFrameUpdate"></a>
+    <strong>Musician.NamePlates.OnNamePlateNotesFrameUpdate (animatedNotesFrame, elapsed)</strong>
+    </dt>
+    <dd>
+    OnUpdate handler for the animated notes frame
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">animatedNotesFrame</span>
+         (Frame)
+        </li>
+        <li><span class="parameter">elapsed</span>
+         (number)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.NamePlates.OnNamePlateRemoved"></a>
+    <strong>Musician.NamePlates.OnNamePlateRemoved (event, unitToken)</strong>
+    </dt>
+    <dd>
+    OnNamePlateRemoved
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+         (string)
+        </li>
+        <li><span class="parameter">unitToken</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.NamePlates.OnNoteOn"></a>
+    <strong>Musician.NamePlates.OnNoteOn (event, song, track, key)</strong>
+    </dt>
+    <dd>
+    Add note to the appropriate animated notes frame
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+         (string)
+        </li>
+        <li><span class="parameter">song</span>
+         (Musician.Song)
+        </li>
+        <li><span class="parameter">track</span>
+         (table)
+        </li>
+        <li><span class="parameter">key</span>
+         (Number)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.NamePlates.OnPlayerRegistered"></a>
+    <strong>Musician.NamePlates.OnPlayerRegistered (event, player)</strong>
+    </dt>
+    <dd>
+    Update nameplate for player when registered
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+         (string)
+        </li>
+        <li><span class="parameter">player</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.NamePlates.OnSetUIVisibility"></a>
+    <strong>Musician.NamePlates.OnSetUIVisibility (isVisible)</strong>
+    </dt>
+    <dd>
+    OnSetUIVisibility
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">isVisible</span>
+         (boolean)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.NamePlates.OnUnitFrameUpdate"></a>
+    <strong>Musician.NamePlates.OnUnitFrameUpdate (frame)</strong>
+    </dt>
+    <dd>
+    OnUnitFrameUpdate
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">frame</span>
+         (Frame)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.NamePlates.UpdateAll"></a>
+    <strong>Musician.NamePlates.UpdateAll ()</strong>
+    </dt>
+    <dd>
+    Update all nameplates
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.NamePlates.UpdateNamePlate"></a>
+    <strong>Musician.NamePlates.UpdateNamePlate (namePlate)</strong>
+    </dt>
+    <dd>
+    UpdateNamePlate
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">namePlate</span>
+         (Frame)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.NamePlates.UpdateNamePlateCinematicMode"></a>
+    <strong>Musician.NamePlates.UpdateNamePlateCinematicMode (namePlate)</strong>
+    </dt>
+    <dd>
+    Hide nameplates in cinematic mode if nameplates are not enabled in this mode
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">namePlate</span>
+         (Frame)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.NamePlates.UpdateNoteIcon"></a>
+    <strong>Musician.NamePlates.UpdateNoteIcon (namePlate)</strong>
+    </dt>
+    <dd>
+    Update note icon next to player name
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">namePlate</span>
+         (Frame)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.NamePlates:OnEnable"></a>
+    <strong>Musician.NamePlates:OnEnable ()</strong>
+    </dt>
+    <dd>
+    OnEnable
+
+
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2020-03-28 17:38:12 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

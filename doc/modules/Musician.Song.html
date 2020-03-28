@@ -1,0 +1,852 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Musician</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Class_Musician_Song">Class Musician.Song </a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/Musician.html">Musician</a></li>
+  <li><a href="../modules/Musician.About.html">Musician.About</a></li>
+  <li><a href="../modules/Musician.Comm.html">Musician.Comm</a></li>
+  <li><a href="../modules/Musician.Constants.html">Musician.Constants</a></li>
+  <li><a href="../modules/Musician.CrossRP.html">Musician.CrossRP</a></li>
+  <li><a href="../modules/Musician.CrossRP.Options.html">Musician.CrossRP.Options</a></li>
+  <li><a href="../modules/Musician.ElvUI.html">Musician.ElvUI</a></li>
+  <li><a href="../modules/Musician.Extras.html">Musician.Extras</a></li>
+  <li><a href="../modules/Musician.Frame.html">Musician.Frame</a></li>
+  <li><a href="../modules/Musician.Keyboard.html">Musician.Keyboard</a></li>
+  <li><a href="../modules/Musician.KeyboardConfig.html">Musician.KeyboardConfig</a></li>
+  <li><a href="../modules/Musician.KeyboardUtils.html">Musician.KeyboardUtils</a></li>
+  <li><a href="../modules/Musician.KuiNamePlates.html">Musician.KuiNamePlates</a></li>
+  <li><a href="../modules/Musician.Live.html">Musician.Live</a></li>
+  <li><a href="../modules/Musician.MyRolePlay.html">Musician.MyRolePlay</a></li>
+  <li><a href="../modules/Musician.NamePlates.html">Musician.NamePlates</a></li>
+  <li><a href="../modules/Musician.NamePlates.Options.html">Musician.NamePlates.Options</a></li>
+  <li><a href="../modules/Musician.NeatPlates.html">Musician.NeatPlates</a></li>
+  <li><a href="../modules/Musician.Options.html">Musician.Options</a></li>
+  <li><a href="../modules/Musician.Plater.html">Musician.Plater</a></li>
+  <li><a href="../modules/Musician.Preloader.html">Musician.Preloader</a></li>
+  <li><a href="../modules/Musician.Registry.html">Musician.Registry</a></li>
+  <li><strong>Musician.Song</strong></li>
+  <li><a href="../modules/Musician.TRP3.html">Musician.TRP3</a></li>
+  <li><a href="../modules/Musician.TRP3.Options.html">Musician.TRP3.Options</a></li>
+  <li><a href="../modules/Musician.TrackEditor.html">Musician.TrackEditor</a></li>
+  <li><a href="../modules/Musician.Utils.html">Musician.Utils</a></li>
+  <li><a href="../modules/Musician.VolumeMeter.html">Musician.VolumeMeter</a></li>
+  <li><a href="../modules/MusicianButton.html">MusicianButton</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>Musician.Song</code></h1>
+<p>Song class</p>
+<p></p>
+
+
+<h2><a href="#Class_Musician_Song">Class Musician.Song </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song.UnpackChunkData">Musician.Song.UnpackChunkData (str)</a></td>
+	<td class="summary">Unpack song chunk data</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song.UnpackChunkHeader">Musician.Song.UnpackChunkHeader (str)</a></td>
+	<td class="summary">Unpack song chunk header</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:AppendChunk">Musician.Song:AppendChunk (chunk, mode, songId, chunkDuration, playtimeLeft, player)</a></td>
+	<td class="summary">Append chunk data to current song</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:Clone">Musician.Song:Clone ()</a></td>
+	<td class="summary">Clone song</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:ConvertToLive">Musician.Song:ConvertToLive ()</a></td>
+	<td class="summary">Convert song to live mode.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:GetId">Musician.Song:GetId ()</a></td>
+	<td class="summary">Return song ID</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:GetProgression">Musician.Song:GetProgression ()</a></td>
+	<td class="summary">Return playing progression</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:Import">Musician.Song:Import (str, crop)</a></td>
+	<td class="summary">Import song from a base 64 string</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:ImportOnFrame">Musician.Song:ImportOnFrame (elapsed)</a></td>
+	<td class="summary">Advance the song importing process on frame</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:ImportStep">Musician.Song:ImportStep (elapsed)</a></td>
+	<td class="summary">Run a step of importing process</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:IsPlaying">Musician.Song:IsPlaying ()</a></td>
+	<td class="summary">Return true if the song is playing or about to be played (preloading).</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:NoteOff">Musician.Song:NoteOff (track, key, keepVisual)</a></td>
+	<td class="summary">Stop a note of a track</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:NoteOn">Musician.Song:NoteOn (track, noteIndex, noRetry)</a></td>
+	<td class="summary">Play a note</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:OnUpdate">Musician.Song:OnUpdate (elapsed)</a></td>
+	<td class="summary">Main on frame update function</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:PackChunk">Musician.Song:PackChunk (chunk)</a></td>
+	<td class="summary">Pack a song chunk</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:Play">Musician.Song:Play (delay)</a></td>
+	<td class="summary">Play song</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:PlayOnFrame">Musician.Song:PlayOnFrame (elapsed)</a></td>
+	<td class="summary">Play notes accordingly to every frame.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:Reset">Musician.Song:Reset ()</a></td>
+	<td class="summary">Reset song to initial position</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:Resume">Musician.Song:Resume (eventSent)</a></td>
+	<td class="summary">Resume a song playing</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:Seek">Musician.Song:Seek (cursor)</a></td>
+	<td class="summary">Seek to position</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:SetTrackMuted">Musician.Song:SetTrackMuted (track, isMuted)</a></td>
+	<td class="summary">Mute or unmute track</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:SetTrackSolo">Musician.Song:SetTrackSolo (track, isSolo)</a></td>
+	<td class="summary">Set/unset track solo</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:SongNotesOff">Musician.Song:SongNotesOff ()</a></td>
+	<td class="summary">Stop all notes of the song</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:Stop">Musician.Song:Stop ()</a></td>
+	<td class="summary">Stop song</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:StopOldestNote">Musician.Song:StopOldestNote ()</a></td>
+	<td class="summary">Stop the oldest note still playing</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:StopStreaming">Musician.Song:StopStreaming ()</a></td>
+	<td class="summary">Stop streaming song</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:Stream">Musician.Song:Stream ()</a></td>
+	<td class="summary">Stream song</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:StreamOnFrame">Musician.Song:StreamOnFrame (elapsed)</a></td>
+	<td class="summary">Stream a chunk of the song on frame</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:TrackIsMuted">Musician.Song:TrackIsMuted (track)</a></td>
+	<td class="summary">Return true if the track is muted</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:TrackNotesOff">Musician.Song:TrackNotesOff (track, keepVisual)</a></td>
+	<td class="summary">Stop all notes of a track</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header has-description"><a name="Class_Musician_Song"></a>Class Musician.Song </h2>
+
+          <div class="section-description">
+          Song class
+          </div>
+    <dl class="function">
+    <dt>
+    <a name = "Musician.Song.UnpackChunkData"></a>
+    <strong>Musician.Song.UnpackChunkData (str)</strong>
+    </dt>
+    <dd>
+    Unpack song chunk data
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">str</span>
+         (table)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        chunk (table)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song.UnpackChunkHeader"></a>
+    <strong>Musician.Song.UnpackChunkHeader (str)</strong>
+    </dt>
+    <dd>
+    Unpack song chunk header
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">str</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+        mode (int)</li>
+        <li>
+        songId (int)</li>
+        <li>
+        chunkDuration (number)</li>
+        <li>
+        playtimeLeft (number)</li>
+        <li>
+        position (table) player position and GUID</li>
+        <li>
+        trackCount (int)</li>
+        <li>
+        cursor (number)</li>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song:AppendChunk"></a>
+    <strong>Musician.Song:AppendChunk (chunk, mode, songId, chunkDuration, playtimeLeft, player)</strong>
+    </dt>
+    <dd>
+    Append chunk data to current song
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">chunk</span>
+         (table)
+        </li>
+        <li><span class="parameter">mode</span>
+         (number)
+        </li>
+        <li><span class="parameter">songId</span>
+         (number)
+        </li>
+        <li><span class="parameter">chunkDuration</span>
+         (number)
+        </li>
+        <li><span class="parameter">playtimeLeft</span>
+         (number)
+        </li>
+        <li><span class="parameter">player</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song:Clone"></a>
+    <strong>Musician.Song:Clone ()</strong>
+    </dt>
+    <dd>
+    Clone song
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        song (Musician.Song)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song:ConvertToLive"></a>
+    <strong>Musician.Song:ConvertToLive ()</strong>
+    </dt>
+    <dd>
+    Convert song to live mode.
+ For testing only
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song:GetId"></a>
+    <strong>Musician.Song:GetId ()</strong>
+    </dt>
+    <dd>
+    Return song ID
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        songId (int)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song:GetProgression"></a>
+    <strong>Musician.Song:GetProgression ()</strong>
+    </dt>
+    <dd>
+    Return playing progression
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        progression (number)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song:Import"></a>
+    <strong>Musician.Song:Import (str, crop)</strong>
+    </dt>
+    <dd>
+    Import song from a base 64 string
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">str</span>
+         (string)
+        </li>
+        <li><span class="parameter">crop</span>
+         (boolean)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song:ImportOnFrame"></a>
+    <strong>Musician.Song:ImportOnFrame (elapsed)</strong>
+    </dt>
+    <dd>
+    Advance the song importing process on frame
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">elapsed</span>
+         (number)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song:ImportStep"></a>
+    <strong>Musician.Song:ImportStep (elapsed)</strong>
+    </dt>
+    <dd>
+    Run a step of importing process
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">elapsed</span>
+         (number)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song:IsPlaying"></a>
+    <strong>Musician.Song:IsPlaying ()</strong>
+    </dt>
+    <dd>
+    Return true if the song is playing or about to be played (preloading).
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        isPlaying (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song:NoteOff"></a>
+    <strong>Musician.Song:NoteOff (track, key, keepVisual)</strong>
+    </dt>
+    <dd>
+    Stop a note of a track
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">track</span>
+         (table) Reference to the track
+        </li>
+        <li><span class="parameter">key</span>
+         (int) Note key
+        </li>
+        <li><span class="parameter">keepVisual</span>
+         (boolean)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song:NoteOn"></a>
+    <strong>Musician.Song:NoteOn (track, noteIndex, noRetry)</strong>
+    </dt>
+    <dd>
+    Play a note
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">track</span>
+         (table) Reference to the track
+        </li>
+        <li><span class="parameter">noteIndex</span>
+         (int) Note index
+        </li>
+        <li><span class="parameter">noRetry</span>
+         (boolean) Do not attempt to recover dropped notes
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song:OnUpdate"></a>
+    <strong>Musician.Song:OnUpdate (elapsed)</strong>
+    </dt>
+    <dd>
+    Main on frame update function
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">elapsed</span>
+         (number)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song:PackChunk"></a>
+    <strong>Musician.Song:PackChunk (chunk)</strong>
+    </dt>
+    <dd>
+    Pack a song chunk
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">chunk</span>
+         (table)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        data (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song:Play"></a>
+    <strong>Musician.Song:Play (delay)</strong>
+    </dt>
+    <dd>
+    Play song
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">delay</span>
+         (number) Delay in seconds to wait before playing the song
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song:PlayOnFrame"></a>
+    <strong>Musician.Song:PlayOnFrame (elapsed)</strong>
+    </dt>
+    <dd>
+    Play notes accordingly to every frame.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">elapsed</span>
+         (number)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song:Reset"></a>
+    <strong>Musician.Song:Reset ()</strong>
+    </dt>
+    <dd>
+    Reset song to initial position
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song:Resume"></a>
+    <strong>Musician.Song:Resume (eventSent)</strong>
+    </dt>
+    <dd>
+    Resume a song playing
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">eventSent</span>
+         (boolean)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song:Seek"></a>
+    <strong>Musician.Song:Seek (cursor)</strong>
+    </dt>
+    <dd>
+    Seek to position
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">cursor</span>
+         (number)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song:SetTrackMuted"></a>
+    <strong>Musician.Song:SetTrackMuted (track, isMuted)</strong>
+    </dt>
+    <dd>
+    Mute or unmute track
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">track</span>
+         (table)
+        </li>
+        <li><span class="parameter">isMuted</span>
+         (boolean)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song:SetTrackSolo"></a>
+    <strong>Musician.Song:SetTrackSolo (track, isSolo)</strong>
+    </dt>
+    <dd>
+    Set/unset track solo
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">track</span>
+         (table)
+        </li>
+        <li><span class="parameter">isSolo</span>
+         (boolean)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song:SongNotesOff"></a>
+    <strong>Musician.Song:SongNotesOff ()</strong>
+    </dt>
+    <dd>
+    Stop all notes of the song
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song:Stop"></a>
+    <strong>Musician.Song:Stop ()</strong>
+    </dt>
+    <dd>
+    Stop song
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song:StopOldestNote"></a>
+    <strong>Musician.Song:StopOldestNote ()</strong>
+    </dt>
+    <dd>
+    Stop the oldest note still playing
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song:StopStreaming"></a>
+    <strong>Musician.Song:StopStreaming ()</strong>
+    </dt>
+    <dd>
+    Stop streaming song
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song:Stream"></a>
+    <strong>Musician.Song:Stream ()</strong>
+    </dt>
+    <dd>
+    Stream song
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song:StreamOnFrame"></a>
+    <strong>Musician.Song:StreamOnFrame (elapsed)</strong>
+    </dt>
+    <dd>
+    Stream a chunk of the song on frame
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">elapsed</span>
+         (number)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song:TrackIsMuted"></a>
+    <strong>Musician.Song:TrackIsMuted (track)</strong>
+    </dt>
+    <dd>
+    Return true if the track is muted
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">track</span>
+         (table)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        isMuted (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song:TrackNotesOff"></a>
+    <strong>Musician.Song:TrackNotesOff (track, keepVisual)</strong>
+    </dt>
+    <dd>
+    Stop all notes of a track
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">track</span>
+         (table) Reference to the track
+        </li>
+        <li><span class="parameter">keepVisual</span>
+         (boolean)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2020-03-28 17:38:12 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

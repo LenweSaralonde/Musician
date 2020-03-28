@@ -1,0 +1,705 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Musician</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/Musician.html">Musician</a></li>
+  <li><a href="../modules/Musician.About.html">Musician.About</a></li>
+  <li><a href="../modules/Musician.Comm.html">Musician.Comm</a></li>
+  <li><a href="../modules/Musician.Constants.html">Musician.Constants</a></li>
+  <li><a href="../modules/Musician.CrossRP.html">Musician.CrossRP</a></li>
+  <li><a href="../modules/Musician.CrossRP.Options.html">Musician.CrossRP.Options</a></li>
+  <li><a href="../modules/Musician.ElvUI.html">Musician.ElvUI</a></li>
+  <li><a href="../modules/Musician.Extras.html">Musician.Extras</a></li>
+  <li><a href="../modules/Musician.Frame.html">Musician.Frame</a></li>
+  <li><a href="../modules/Musician.Keyboard.html">Musician.Keyboard</a></li>
+  <li><a href="../modules/Musician.KeyboardConfig.html">Musician.KeyboardConfig</a></li>
+  <li><a href="../modules/Musician.KeyboardUtils.html">Musician.KeyboardUtils</a></li>
+  <li><a href="../modules/Musician.KuiNamePlates.html">Musician.KuiNamePlates</a></li>
+  <li><a href="../modules/Musician.Live.html">Musician.Live</a></li>
+  <li><a href="../modules/Musician.MyRolePlay.html">Musician.MyRolePlay</a></li>
+  <li><a href="../modules/Musician.NamePlates.html">Musician.NamePlates</a></li>
+  <li><a href="../modules/Musician.NamePlates.Options.html">Musician.NamePlates.Options</a></li>
+  <li><a href="../modules/Musician.NeatPlates.html">Musician.NeatPlates</a></li>
+  <li><a href="../modules/Musician.Options.html">Musician.Options</a></li>
+  <li><a href="../modules/Musician.Plater.html">Musician.Plater</a></li>
+  <li><a href="../modules/Musician.Preloader.html">Musician.Preloader</a></li>
+  <li><strong>Musician.Registry</strong></li>
+  <li><a href="../modules/Musician.Song.html">Musician.Song</a></li>
+  <li><a href="../modules/Musician.TRP3.html">Musician.TRP3</a></li>
+  <li><a href="../modules/Musician.TRP3.Options.html">Musician.TRP3.Options</a></li>
+  <li><a href="../modules/Musician.TrackEditor.html">Musician.TrackEditor</a></li>
+  <li><a href="../modules/Musician.Utils.html">Musician.Utils</a></li>
+  <li><a href="../modules/Musician.VolumeMeter.html">Musician.VolumeMeter</a></li>
+  <li><a href="../modules/MusicianButton.html">MusicianButton</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>Musician.Registry</code></h1>
+<p>Player registry</p>
+<p></p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Registry.ExtractVersionAndProtocol">Musician.Registry.ExtractVersionAndProtocol (versionAndProtocol)</a></td>
+	<td class="summary">Extract version and protocol from received version string</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Registry.FetchPlayers">Musician.Registry.FetchPlayers ()</a></td>
+	<td class="summary">Fetch the connected players</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Registry.GetPlayerGUID">Musician.Registry.GetPlayerGUID (player)</a></td>
+	<td class="summary">Return player GUID</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Registry.GetPlayerTooltipText">Musician.Registry.GetPlayerTooltipText (player)</a></td>
+	<td class="summary">Return player tooltip text</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Registry.GetPlayerVersion">Musician.Registry.GetPlayerVersion (player)</a></td>
+	<td class="summary">Return version and protocol for player</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Registry.GetVersionString">Musician.Registry.GetVersionString ()</a></td>
+	<td class="summary">Get full version string
+ Version string contains actual addon version and protocol version</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Registry.Init">Musician.Registry.Init ()</a></td>
+	<td class="summary">Initialize registry</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Registry.NotifyNewVersion">Musician.Registry.NotifyNewVersion (otherVersion)</a></td>
+	<td class="summary">Display a message if a new version of the addon is available</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Registry.OnHello">Musician.Registry.OnHello (prefix, version, distribution, player)</a></td>
+	<td class="summary">Receive Hello message</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Registry.OnQuery">Musician.Registry.OnQuery (prefix, version, distribution, player)</a></td>
+	<td class="summary">Receive Query message</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Registry.PlayerIsInLoadingRange">Musician.Registry.PlayerIsInLoadingRange (player)</a></td>
+	<td class="summary">Return true if the player is in loading range</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Registry.PlayerIsInRange">Musician.Registry.PlayerIsInRange (player)</a></td>
+	<td class="summary">Return true if the player is in listening range</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Registry.PlayerIsRegistered">Musician.Registry.PlayerIsRegistered (player)</a></td>
+	<td class="summary">Return true if this player has Musician</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Registry.PlayerIsRegisteredWithNoVersion">Musician.Registry.PlayerIsRegisteredWithNoVersion (player)</a></td>
+	<td class="summary">Return true if this player has Musician but with unknown version number</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Registry.PlayerIsRegisteredWithVersion">Musician.Registry.PlayerIsRegisteredWithVersion (player)</a></td>
+	<td class="summary">Return true if this player has Musician with version number</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Registry.RegisterPlayer">Musician.Registry.RegisterPlayer (player)</a></td>
+	<td class="summary">Add player to registry</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Registry.SendHello">Musician.Registry.SendHello ()</a></td>
+	<td class="summary">Send a Hello to the channel</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Registry.SetPlayerVersion">Musician.Registry.SetPlayerVersion (player, version)</a></td>
+	<td class="summary">Set player version</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Registry.UnregisterPlayer">Musician.Registry.UnregisterPlayer (player)</a></td>
+	<td class="summary">Remove player from registry</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Registry.UpdatePlayerPositionAndGUID">Musician.Registry.UpdatePlayerPositionAndGUID (player, posY, posX, posZ, instanceID, guid)</a></td>
+	<td class="summary">Update player's position and GUID</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Registry.UpdatePlayerTooltip">Musician.Registry.UpdatePlayerTooltip (player)</a></td>
+	<td class="summary">Update player tooltip to add missing Musician client version, if applicable.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Registry.UpdateTooltipInfo">Musician.Registry.UpdateTooltipInfo (tooltip, player, fontSize)</a></td>
+	<td class="summary">Update missing Musician client version in tooltip, if applicable.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "Musician.Registry.ExtractVersionAndProtocol"></a>
+    <strong>Musician.Registry.ExtractVersionAndProtocol (versionAndProtocol)</strong>
+    </dt>
+    <dd>
+    Extract version and protocol from received version string
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">versionAndProtocol</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+        version (string)</li>
+        <li>
+        protocol (number)</li>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Registry.FetchPlayers"></a>
+    <strong>Musician.Registry.FetchPlayers ()</strong>
+    </dt>
+    <dd>
+    Fetch the connected players
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Registry.GetPlayerGUID"></a>
+    <strong>Musician.Registry.GetPlayerGUID (player)</strong>
+    </dt>
+    <dd>
+    Return player GUID
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">player</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        guid (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Registry.GetPlayerTooltipText"></a>
+    <strong>Musician.Registry.GetPlayerTooltipText (player)</strong>
+    </dt>
+    <dd>
+    Return player tooltip text
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">player</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        infoText (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Registry.GetPlayerVersion"></a>
+    <strong>Musician.Registry.GetPlayerVersion (player)</strong>
+    </dt>
+    <dd>
+    Return version and protocol for player
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">player</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+        version (string)</li>
+        <li>
+        protocol (number)</li>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Registry.GetVersionString"></a>
+    <strong>Musician.Registry.GetVersionString ()</strong>
+    </dt>
+    <dd>
+    Get full version string
+ Version string contains actual addon version and protocol version
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        versionAndProtocol (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Registry.Init"></a>
+    <strong>Musician.Registry.Init ()</strong>
+    </dt>
+    <dd>
+    Initialize registry
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Registry.NotifyNewVersion"></a>
+    <strong>Musician.Registry.NotifyNewVersion (otherVersion)</strong>
+    </dt>
+    <dd>
+    Display a message if a new version of the addon is available
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">otherVersion</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Registry.OnHello"></a>
+    <strong>Musician.Registry.OnHello (prefix, version, distribution, player)</strong>
+    </dt>
+    <dd>
+    Receive Hello message
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">prefix</span>
+
+        </li>
+        <li><span class="parameter">version</span>
+
+        </li>
+        <li><span class="parameter">distribution</span>
+
+        </li>
+        <li><span class="parameter">player</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Registry.OnQuery"></a>
+    <strong>Musician.Registry.OnQuery (prefix, version, distribution, player)</strong>
+    </dt>
+    <dd>
+    Receive Query message
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">prefix</span>
+
+        </li>
+        <li><span class="parameter">version</span>
+
+        </li>
+        <li><span class="parameter">distribution</span>
+
+        </li>
+        <li><span class="parameter">player</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Registry.PlayerIsInLoadingRange"></a>
+    <strong>Musician.Registry.PlayerIsInLoadingRange (player)</strong>
+    </dt>
+    <dd>
+    Return true if the player is in loading range
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">player</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        isInLoadingRange (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Registry.PlayerIsInRange"></a>
+    <strong>Musician.Registry.PlayerIsInRange (player)</strong>
+    </dt>
+    <dd>
+    Return true if the player is in listening range
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">player</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        isInRange (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Registry.PlayerIsRegistered"></a>
+    <strong>Musician.Registry.PlayerIsRegistered (player)</strong>
+    </dt>
+    <dd>
+    Return true if this player has Musician
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">player</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        isRegistered (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Registry.PlayerIsRegisteredWithNoVersion"></a>
+    <strong>Musician.Registry.PlayerIsRegisteredWithNoVersion (player)</strong>
+    </dt>
+    <dd>
+    Return true if this player has Musician but with unknown version number
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">player</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        isRegisteredWithNoVersion (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Registry.PlayerIsRegisteredWithVersion"></a>
+    <strong>Musician.Registry.PlayerIsRegisteredWithVersion (player)</strong>
+    </dt>
+    <dd>
+    Return true if this player has Musician with version number
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">player</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        isRegisteredWithVersion (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Registry.RegisterPlayer"></a>
+    <strong>Musician.Registry.RegisterPlayer (player)</strong>
+    </dt>
+    <dd>
+    Add player to registry
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">player</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Registry.SendHello"></a>
+    <strong>Musician.Registry.SendHello ()</strong>
+    </dt>
+    <dd>
+    Send a Hello to the channel
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Registry.SetPlayerVersion"></a>
+    <strong>Musician.Registry.SetPlayerVersion (player, version)</strong>
+    </dt>
+    <dd>
+    Set player version
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">player</span>
+         (string)
+        </li>
+        <li><span class="parameter">version</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Registry.UnregisterPlayer"></a>
+    <strong>Musician.Registry.UnregisterPlayer (player)</strong>
+    </dt>
+    <dd>
+    Remove player from registry
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">player</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Registry.UpdatePlayerPositionAndGUID"></a>
+    <strong>Musician.Registry.UpdatePlayerPositionAndGUID (player, posY, posX, posZ, instanceID, guid)</strong>
+    </dt>
+    <dd>
+    Update player's position and GUID
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">player</span>
+         (string)
+        </li>
+        <li><span class="parameter">posY</span>
+         (number)
+        </li>
+        <li><span class="parameter">posX</span>
+         (number)
+        </li>
+        <li><span class="parameter">posZ</span>
+         (number)
+        </li>
+        <li><span class="parameter">instanceID</span>
+         (string)
+        </li>
+        <li><span class="parameter">guid</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Registry.UpdatePlayerTooltip"></a>
+    <strong>Musician.Registry.UpdatePlayerTooltip (player)</strong>
+    </dt>
+    <dd>
+    Update player tooltip to add missing Musician client version, if applicable.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">player</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Registry.UpdateTooltipInfo"></a>
+    <strong>Musician.Registry.UpdateTooltipInfo (tooltip, player, fontSize)</strong>
+    </dt>
+    <dd>
+    Update missing Musician client version in tooltip, if applicable.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">tooltip</span>
+         (table)
+        </li>
+        <li><span class="parameter">player</span>
+         (string)
+        </li>
+        <li><span class="parameter">fontSize</span>
+         (int)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2020-03-28 17:38:12 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

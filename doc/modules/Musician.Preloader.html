@@ -1,0 +1,318 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Musician</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/Musician.html">Musician</a></li>
+  <li><a href="../modules/Musician.About.html">Musician.About</a></li>
+  <li><a href="../modules/Musician.Comm.html">Musician.Comm</a></li>
+  <li><a href="../modules/Musician.Constants.html">Musician.Constants</a></li>
+  <li><a href="../modules/Musician.CrossRP.html">Musician.CrossRP</a></li>
+  <li><a href="../modules/Musician.CrossRP.Options.html">Musician.CrossRP.Options</a></li>
+  <li><a href="../modules/Musician.ElvUI.html">Musician.ElvUI</a></li>
+  <li><a href="../modules/Musician.Extras.html">Musician.Extras</a></li>
+  <li><a href="../modules/Musician.Frame.html">Musician.Frame</a></li>
+  <li><a href="../modules/Musician.Keyboard.html">Musician.Keyboard</a></li>
+  <li><a href="../modules/Musician.KeyboardConfig.html">Musician.KeyboardConfig</a></li>
+  <li><a href="../modules/Musician.KeyboardUtils.html">Musician.KeyboardUtils</a></li>
+  <li><a href="../modules/Musician.KuiNamePlates.html">Musician.KuiNamePlates</a></li>
+  <li><a href="../modules/Musician.Live.html">Musician.Live</a></li>
+  <li><a href="../modules/Musician.MyRolePlay.html">Musician.MyRolePlay</a></li>
+  <li><a href="../modules/Musician.NamePlates.html">Musician.NamePlates</a></li>
+  <li><a href="../modules/Musician.NamePlates.Options.html">Musician.NamePlates.Options</a></li>
+  <li><a href="../modules/Musician.NeatPlates.html">Musician.NeatPlates</a></li>
+  <li><a href="../modules/Musician.Options.html">Musician.Options</a></li>
+  <li><a href="../modules/Musician.Plater.html">Musician.Plater</a></li>
+  <li><strong>Musician.Preloader</strong></li>
+  <li><a href="../modules/Musician.Registry.html">Musician.Registry</a></li>
+  <li><a href="../modules/Musician.Song.html">Musician.Song</a></li>
+  <li><a href="../modules/Musician.TRP3.html">Musician.TRP3</a></li>
+  <li><a href="../modules/Musician.TRP3.Options.html">Musician.TRP3.Options</a></li>
+  <li><a href="../modules/Musician.TrackEditor.html">Musician.TrackEditor</a></li>
+  <li><a href="../modules/Musician.Utils.html">Musician.Utils</a></li>
+  <li><a href="../modules/Musician.VolumeMeter.html">Musician.VolumeMeter</a></li>
+  <li><a href="../modules/MusicianButton.html">MusicianButton</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>Musician.Preloader</code></h1>
+<p>Preloads sample files into the disk cache in background</p>
+<p></p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Preloader.AddPreloaded">Musician.Preloader.AddPreloaded (sampleId)</a></td>
+	<td class="summary">Flag a note sample as preloaded</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Preloader.GetCursorKey">Musician.Preloader.GetCursorKey (cursor)</a></td>
+	<td class="summary">Return the key to be preloaded by cursor.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Preloader.GetFrameWaitingTime">Musician.Preloader.GetFrameWaitingTime ()</a></td>
+	<td class="summary">Return frame waiting time in seconds</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Preloader.GetProgress">Musician.Preloader.GetProgress ()</a></td>
+	<td class="summary">Return the initial preloading progression</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Preloader.Init">Musician.Preloader.Init ()</a></td>
+	<td class="summary">Preloader initialization</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Preloader.IsComplete">Musician.Preloader.IsComplete ()</a></td>
+	<td class="summary">Return true if all the samples have been preloaded</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Preloader.IsPreloaded">Musician.Preloader.IsPreloaded (sampleId, currentCycle)</a></td>
+	<td class="summary">Return true if the note sample has been preloaded</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Preloader.OnUpdate">Musician.Preloader.OnUpdate (elapsed)</a></td>
+	<td class="summary">Main on update function, called on each frame</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Preloader.PreloadNext">Musician.Preloader.PreloadNext ()</a></td>
+	<td class="summary">Preload next sample</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "Musician.Preloader.AddPreloaded"></a>
+    <strong>Musician.Preloader.AddPreloaded (sampleId)</strong>
+    </dt>
+    <dd>
+    Flag a note sample as preloaded
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">sampleId</span>
+         (string) as returned by Musician.Utils.GetSampleId()
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Preloader.GetCursorKey"></a>
+    <strong>Musician.Preloader.GetCursorKey (cursor)</strong>
+    </dt>
+    <dd>
+    Return the key to be preloaded by cursor.
+  Starts from the middle to the bounds to preload the most used keys in priority.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">cursor</span>
+         (number) cursor key
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (number) key to be preloaded
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Preloader.GetFrameWaitingTime"></a>
+    <strong>Musician.Preloader.GetFrameWaitingTime ()</strong>
+    </dt>
+    <dd>
+    Return frame waiting time in seconds
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (number)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Preloader.GetProgress"></a>
+    <strong>Musician.Preloader.GetProgress ()</strong>
+    </dt>
+    <dd>
+    Return the initial preloading progression
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (number)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Preloader.Init"></a>
+    <strong>Musician.Preloader.Init ()</strong>
+    </dt>
+    <dd>
+    Preloader initialization
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Preloader.IsComplete"></a>
+    <strong>Musician.Preloader.IsComplete ()</strong>
+    </dt>
+    <dd>
+    Return true if all the samples have been preloaded
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Preloader.IsPreloaded"></a>
+    <strong>Musician.Preloader.IsPreloaded (sampleId, currentCycle)</strong>
+    </dt>
+    <dd>
+    Return true if the note sample has been preloaded
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">sampleId</span>
+         (string) as returned by Musician.Utils.GetSampleId()
+        </li>
+        <li><span class="parameter">currentCycle</span>
+         (boolean) for current preloading cycle only (even if the sample is already in cache)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Preloader.OnUpdate"></a>
+    <strong>Musician.Preloader.OnUpdate (elapsed)</strong>
+    </dt>
+    <dd>
+    Main on update function, called on each frame
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">elapsed</span>
+         (number)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Preloader.PreloadNext"></a>
+    <strong>Musician.Preloader.PreloadNext ()</strong>
+    </dt>
+    <dd>
+    Preload next sample
+
+
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2020-03-28 17:38:12 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

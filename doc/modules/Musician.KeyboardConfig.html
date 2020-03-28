@@ -1,0 +1,434 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Musician</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/Musician.html">Musician</a></li>
+  <li><a href="../modules/Musician.About.html">Musician.About</a></li>
+  <li><a href="../modules/Musician.Comm.html">Musician.Comm</a></li>
+  <li><a href="../modules/Musician.Constants.html">Musician.Constants</a></li>
+  <li><a href="../modules/Musician.CrossRP.html">Musician.CrossRP</a></li>
+  <li><a href="../modules/Musician.CrossRP.Options.html">Musician.CrossRP.Options</a></li>
+  <li><a href="../modules/Musician.ElvUI.html">Musician.ElvUI</a></li>
+  <li><a href="../modules/Musician.Extras.html">Musician.Extras</a></li>
+  <li><a href="../modules/Musician.Frame.html">Musician.Frame</a></li>
+  <li><a href="../modules/Musician.Keyboard.html">Musician.Keyboard</a></li>
+  <li><strong>Musician.KeyboardConfig</strong></li>
+  <li><a href="../modules/Musician.KeyboardUtils.html">Musician.KeyboardUtils</a></li>
+  <li><a href="../modules/Musician.KuiNamePlates.html">Musician.KuiNamePlates</a></li>
+  <li><a href="../modules/Musician.Live.html">Musician.Live</a></li>
+  <li><a href="../modules/Musician.MyRolePlay.html">Musician.MyRolePlay</a></li>
+  <li><a href="../modules/Musician.NamePlates.html">Musician.NamePlates</a></li>
+  <li><a href="../modules/Musician.NamePlates.Options.html">Musician.NamePlates.Options</a></li>
+  <li><a href="../modules/Musician.NeatPlates.html">Musician.NeatPlates</a></li>
+  <li><a href="../modules/Musician.Options.html">Musician.Options</a></li>
+  <li><a href="../modules/Musician.Plater.html">Musician.Plater</a></li>
+  <li><a href="../modules/Musician.Preloader.html">Musician.Preloader</a></li>
+  <li><a href="../modules/Musician.Registry.html">Musician.Registry</a></li>
+  <li><a href="../modules/Musician.Song.html">Musician.Song</a></li>
+  <li><a href="../modules/Musician.TRP3.html">Musician.TRP3</a></li>
+  <li><a href="../modules/Musician.TRP3.Options.html">Musician.TRP3.Options</a></li>
+  <li><a href="../modules/Musician.TrackEditor.html">Musician.TrackEditor</a></li>
+  <li><a href="../modules/Musician.Utils.html">Musician.Utils</a></li>
+  <li><a href="../modules/Musician.VolumeMeter.html">Musician.VolumeMeter</a></li>
+  <li><a href="../modules/MusicianButton.html">MusicianButton</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>Musician.KeyboardConfig</code></h1>
+<p>Keyboard configuration window</p>
+<p></p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#Musician.KeyboardConfig.Button_OnKeyDown">Musician.KeyboardConfig.Button_OnKeyDown (self, keyValue, arg)</a></td>
+	<td class="summary">OnKeyDown</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.KeyboardConfig.Cancel">Musician.KeyboardConfig.Cancel ()</a></td>
+	<td class="summary">Cancel changes and close.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.KeyboardConfig.Clear">Musician.KeyboardConfig.Clear ()</a></td>
+	<td class="summary">Clear keyboard configuration and start over.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.KeyboardConfig.ClearSelectedKeyBinding">Musician.KeyboardConfig.ClearSelectedKeyBinding ()</a></td>
+	<td class="summary">Clear selected binding</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.KeyboardConfig.Init">Musician.KeyboardConfig.Init ()</a></td>
+	<td class="summary">Initialize keyboard configurator.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.KeyboardConfig.IsComplete">Musician.KeyboardConfig.IsComplete ()</a></td>
+	<td class="summary">Return true if configuration is complete.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.KeyboardConfig.Key_OnClick">Musician.KeyboardConfig.Key_OnClick (self, button, down)</a></td>
+	<td class="summary">Key bindings OnClick</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.KeyboardConfig.OnHide">Musician.KeyboardConfig.OnHide (self)</a></td>
+	<td class="summary">OnHide</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.KeyboardConfig.OnShow">Musician.KeyboardConfig.OnShow (self)</a></td>
+	<td class="summary">OnShow</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.KeyboardConfig.Reset">Musician.KeyboardConfig.Reset ()</a></td>
+	<td class="summary">Reset configurator with actually saved values.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.KeyboardConfig.Save">Musician.KeyboardConfig.Save ()</a></td>
+	<td class="summary">Save configuration and close.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.KeyboardConfig.SelectKeyBinding">Musician.KeyboardConfig.SelectKeyBinding (key)</a></td>
+	<td class="summary">Select a key binding</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.KeyboardConfig.SelectNextKeyBinding">Musician.KeyboardConfig.SelectNextKeyBinding ()</a></td>
+	<td class="summary">Jump to the next binding</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.KeyboardConfig.UnselectKeyBinding">Musician.KeyboardConfig.UnselectKeyBinding ()</a></td>
+	<td class="summary">Unselect key binding</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.KeyboardConfig.UpdateCompletion">Musician.KeyboardConfig.UpdateCompletion ()</a></td>
+	<td class="summary">Update UI accordingly to configuration completion.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.KeyboardConfig.UpdateHint">Musician.KeyboardConfig.UpdateHint ()</a></td>
+	<td class="summary">Update hint text</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "Musician.KeyboardConfig.Button_OnKeyDown"></a>
+    <strong>Musician.KeyboardConfig.Button_OnKeyDown (self, keyValue, arg)</strong>
+    </dt>
+    <dd>
+    OnKeyDown
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+        </li>
+        <li><span class="parameter">keyValue</span>
+
+        </li>
+        <li><span class="parameter">arg</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.KeyboardConfig.Cancel"></a>
+    <strong>Musician.KeyboardConfig.Cancel ()</strong>
+    </dt>
+    <dd>
+    Cancel changes and close.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.KeyboardConfig.Clear"></a>
+    <strong>Musician.KeyboardConfig.Clear ()</strong>
+    </dt>
+    <dd>
+    Clear keyboard configuration and start over.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.KeyboardConfig.ClearSelectedKeyBinding"></a>
+    <strong>Musician.KeyboardConfig.ClearSelectedKeyBinding ()</strong>
+    </dt>
+    <dd>
+    Clear selected binding
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.KeyboardConfig.Init"></a>
+    <strong>Musician.KeyboardConfig.Init ()</strong>
+    </dt>
+    <dd>
+    Initialize keyboard configurator.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.KeyboardConfig.IsComplete"></a>
+    <strong>Musician.KeyboardConfig.IsComplete ()</strong>
+    </dt>
+    <dd>
+    Return true if configuration is complete.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.KeyboardConfig.Key_OnClick"></a>
+    <strong>Musician.KeyboardConfig.Key_OnClick (self, button, down)</strong>
+    </dt>
+    <dd>
+    Key bindings OnClick
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+        </li>
+        <li><span class="parameter">button</span>
+
+        </li>
+        <li><span class="parameter">down</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.KeyboardConfig.OnHide"></a>
+    <strong>Musician.KeyboardConfig.OnHide (self)</strong>
+    </dt>
+    <dd>
+    OnHide
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.KeyboardConfig.OnShow"></a>
+    <strong>Musician.KeyboardConfig.OnShow (self)</strong>
+    </dt>
+    <dd>
+    OnShow
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.KeyboardConfig.Reset"></a>
+    <strong>Musician.KeyboardConfig.Reset ()</strong>
+    </dt>
+    <dd>
+    Reset configurator with actually saved values.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.KeyboardConfig.Save"></a>
+    <strong>Musician.KeyboardConfig.Save ()</strong>
+    </dt>
+    <dd>
+    Save configuration and close.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.KeyboardConfig.SelectKeyBinding"></a>
+    <strong>Musician.KeyboardConfig.SelectKeyBinding (key)</strong>
+    </dt>
+    <dd>
+    Select a key binding
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">key</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.KeyboardConfig.SelectNextKeyBinding"></a>
+    <strong>Musician.KeyboardConfig.SelectNextKeyBinding ()</strong>
+    </dt>
+    <dd>
+    Jump to the next binding
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.KeyboardConfig.UnselectKeyBinding"></a>
+    <strong>Musician.KeyboardConfig.UnselectKeyBinding ()</strong>
+    </dt>
+    <dd>
+    Unselect key binding
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.KeyboardConfig.UpdateCompletion"></a>
+    <strong>Musician.KeyboardConfig.UpdateCompletion ()</strong>
+    </dt>
+    <dd>
+    Update UI accordingly to configuration completion.
+ Lock save button if configuration is incomplete.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.KeyboardConfig.UpdateHint"></a>
+    <strong>Musician.KeyboardConfig.UpdateHint ()</strong>
+    </dt>
+    <dd>
+    Update hint text
+
+
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2020-03-28 17:38:12 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
