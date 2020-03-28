@@ -31,17 +31,10 @@
 					</Anchors>
 				</FontString>
 
-				<FontString name="$parentAuthorExtra" inherits="GameFontNormalSmallLeft">
-					<Color r="1" g="1" b="1"/>
-					<Anchors>
-						<Anchor point="TOPLEFT" y="-15" relativePoint="BOTTOMLEFT" relativeTo="$parentAuthor" />
-					</Anchors>
-				</FontString>
-
 				<FontString name="$parentLicense" inherits="GameFontNormalSmallLeft">
 					<Color r="1" g="1" b="1"/>
 					<Anchors>
-						<Anchor point="TOPLEFT" y="-5" relativePoint="BOTTOMLEFT" relativeTo="$parentAuthorExtra" />
+						<Anchor point="TOPLEFT" y="-5" relativePoint="BOTTOMLEFT" relativeTo="$parentAuthor" />
 					</Anchors>
 				</FontString>
 
@@ -73,10 +66,17 @@
 					</Anchors>
 				</FontString>
 
-				<FontString name="$parentSupportersTitle" inherits="GameFontNormalSmallLeft">
+				<FontString name="$parentAuthorExtra" inherits="GameFontNormalSmallLeft">
 					<Color r="1" g="1" b="1"/>
 					<Anchors>
 						<Anchor point="TOPLEFT" y="-15" relativePoint="BOTTOMLEFT" relativeTo="$parentSupport" />
+					</Anchors>
+				</FontString>
+
+				<FontString name="$parentSupportersTitle" inherits="GameFontNormalSmallLeft">
+					<Color r="1" g="1" b="1"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" y="-15" relativePoint="BOTTOMLEFT" relativeTo="$parentAuthorExtra" />
 					</Anchors>
 				</FontString>
 

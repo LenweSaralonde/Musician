@@ -32,7 +32,13 @@ Musician.About.OnShow = function()
 
 	MusicianAboutAuthor:SetText(highlightUrl(Musician.Msg.ABOUT_AUTHOR, Musician.URL))
 
-	MusicianAboutAuthorExtra:SetText(Musician.Msg.ABOUT_AUTHOR_EXTRA)
+	local extra = 1
+	local authorExtra = {}
+	while Musician.Msg['ABOUT_AUTHOR_EXTRA' .. extra] ~= nil do
+		table.insert(authorExtra, Musician.Msg['ABOUT_AUTHOR_EXTRA' .. extra])
+		extra = extra + 1
+	end
+	MusicianAboutAuthorExtra:SetText(strjoin("\n", unpack(authorExtra)))
 
 	MusicianAboutLicense:SetText(Musician.Msg.ABOUT_LICENSE)
 
