@@ -1,0 +1,467 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Musician</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/Musician.html">Musician</a></li>
+  <li><a href="../modules/Musician.About.html">Musician.About</a></li>
+  <li><a href="../modules/Musician.Comm.html">Musician.Comm</a></li>
+  <li><a href="../modules/Musician.Constants.html">Musician.Constants</a></li>
+  <li><strong>Musician.CrossRP</strong></li>
+  <li><a href="../modules/Musician.CrossRP.Options.html">Musician.CrossRP.Options</a></li>
+  <li><a href="../modules/Musician.ElvUI.html">Musician.ElvUI</a></li>
+  <li><a href="../modules/Musician.Extras.html">Musician.Extras</a></li>
+  <li><a href="../modules/Musician.Frame.html">Musician.Frame</a></li>
+  <li><a href="../modules/Musician.Keyboard.html">Musician.Keyboard</a></li>
+  <li><a href="../modules/Musician.KeyboardConfig.html">Musician.KeyboardConfig</a></li>
+  <li><a href="../modules/Musician.KeyboardUtils.html">Musician.KeyboardUtils</a></li>
+  <li><a href="../modules/Musician.KuiNamePlates.html">Musician.KuiNamePlates</a></li>
+  <li><a href="../modules/Musician.Live.html">Musician.Live</a></li>
+  <li><a href="../modules/Musician.MyRolePlay.html">Musician.MyRolePlay</a></li>
+  <li><a href="../modules/Musician.NamePlates.html">Musician.NamePlates</a></li>
+  <li><a href="../modules/Musician.NamePlates.Options.html">Musician.NamePlates.Options</a></li>
+  <li><a href="../modules/Musician.NeatPlates.html">Musician.NeatPlates</a></li>
+  <li><a href="../modules/Musician.Options.html">Musician.Options</a></li>
+  <li><a href="../modules/Musician.Plater.html">Musician.Plater</a></li>
+  <li><a href="../modules/Musician.Preloader.html">Musician.Preloader</a></li>
+  <li><a href="../modules/Musician.Registry.html">Musician.Registry</a></li>
+  <li><a href="../modules/Musician.Song.html">Musician.Song</a></li>
+  <li><a href="../modules/Musician.TRP3.html">Musician.TRP3</a></li>
+  <li><a href="../modules/Musician.TRP3.Options.html">Musician.TRP3.Options</a></li>
+  <li><a href="../modules/Musician.TrackEditor.html">Musician.TrackEditor</a></li>
+  <li><a href="../modules/Musician.Utils.html">Musician.Utils</a></li>
+  <li><a href="../modules/Musician.VolumeMeter.html">Musician.VolumeMeter</a></li>
+  <li><a href="../modules/MusicianButton.html">MusicianButton</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>Musician.CrossRP</code></h1>
+<p>Enables cross realm and cross faction communication through the CrossRP add-on.</p>
+<p></p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#Musician.CrossRP.GetAdverseBand">Musician.CrossRP.GetAdverseBand ()</a></td>
+	<td class="summary">Return player's adverse band (ie 537H for EU-KirinTor Alliance)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.CrossRP.GetBroadcastDestination">Musician.CrossRP.GetBroadcastDestination ()</a></td>
+	<td class="summary">Return CrossRP destination for broadcast, based on the presence of nearby foreign players</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.CrossRP.GetFactionId">Musician.CrossRP.GetFactionId (faction)</a></td>
+	<td class="summary">Return faction ID from faction name</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.CrossRP.GetHelloString">Musician.CrossRP.GetHelloString ()</a></td>
+	<td class="summary">Return data string for CrossRP Hello/Query messages</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.CrossRP.GetUnitDestination">Musician.CrossRP.GetUnitDestination (unit)</a></td>
+	<td class="summary">Return destination string for targetted unit</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.CrossRP.Init">Musician.CrossRP.Init ()</a></td>
+	<td class="summary">Init</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.CrossRP.InitTipsAndTricks">Musician.CrossRP.InitTipsAndTricks ()</a></td>
+	<td class="summary">Initialize tips and tricks</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.CrossRP.OnHelloOrQuery">Musician.CrossRP.OnHelloOrQuery (source, message, complete)</a></td>
+	<td class="summary">Process a received version number from a Hello or a Query message</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.CrossRP.OnSongChunk">Musician.CrossRP.OnSongChunk (source, message, complete)</a></td>
+	<td class="summary">Process a received music chunk</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.CrossRP.OnSongStop">Musician.CrossRP.OnSongStop (source, message, complete)</a></td>
+	<td class="summary">Process a received music stop</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.CrossRP.RegisterPlayerFromSource">Musician.CrossRP.RegisterPlayerFromSource (source, guid)</a></td>
+	<td class="summary">Register player from its source string</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.CrossRP.SendHello">Musician.CrossRP.SendHello (destination)</a></td>
+	<td class="summary">Send a Hello message</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.CrossRP.StopSong">Musician.CrossRP.StopSong ()</a></td>
+	<td class="summary">Stop song</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.CrossRP.StreamCompressedSongChunk">Musician.CrossRP.StreamCompressedSongChunk (compressedChunk)</a></td>
+	<td class="summary">Send a compressed chunk</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.CrossRP:OnEnable">Musician.CrossRP:OnEnable ()</a></td>
+	<td class="summary">OnEnable</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "Musician.CrossRP.GetAdverseBand"></a>
+    <strong>Musician.CrossRP.GetAdverseBand ()</strong>
+    </dt>
+    <dd>
+    Return player's adverse band (ie 537H for EU-KirinTor Alliance)
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.CrossRP.GetBroadcastDestination"></a>
+    <strong>Musician.CrossRP.GetBroadcastDestination ()</strong>
+    </dt>
+    <dd>
+    Return CrossRP destination for broadcast, based on the presence of nearby foreign players
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (array)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.CrossRP.GetFactionId"></a>
+    <strong>Musician.CrossRP.GetFactionId (faction)</strong>
+    </dt>
+    <dd>
+    Return faction ID from faction name
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">faction</span>
+         (string) (Horde, Alliance or Neutral)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (string) (H, A or N)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.CrossRP.GetHelloString"></a>
+    <strong>Musician.CrossRP.GetHelloString ()</strong>
+    </dt>
+    <dd>
+    Return data string for CrossRP Hello/Query messages
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.CrossRP.GetUnitDestination"></a>
+    <strong>Musician.CrossRP.GetUnitDestination (unit)</strong>
+    </dt>
+    <dd>
+    Return destination string for targetted unit
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.CrossRP.Init"></a>
+    <strong>Musician.CrossRP.Init ()</strong>
+    </dt>
+    <dd>
+    Init
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.CrossRP.InitTipsAndTricks"></a>
+    <strong>Musician.CrossRP.InitTipsAndTricks ()</strong>
+    </dt>
+    <dd>
+    Initialize tips and tricks
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.CrossRP.OnHelloOrQuery"></a>
+    <strong>Musician.CrossRP.OnHelloOrQuery (source, message, complete)</strong>
+    </dt>
+    <dd>
+    Process a received version number from a Hello or a Query message
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">source</span>
+         (string)
+        </li>
+        <li><span class="parameter">message</span>
+         (string)
+        </li>
+        <li><span class="parameter">complete</span>
+         (boolean)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.CrossRP.OnSongChunk"></a>
+    <strong>Musician.CrossRP.OnSongChunk (source, message, complete)</strong>
+    </dt>
+    <dd>
+    Process a received music chunk
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">source</span>
+         (string)
+        </li>
+        <li><span class="parameter">message</span>
+         (string)
+        </li>
+        <li><span class="parameter">complete</span>
+         (boolean)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.CrossRP.OnSongStop"></a>
+    <strong>Musician.CrossRP.OnSongStop (source, message, complete)</strong>
+    </dt>
+    <dd>
+    Process a received music stop
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">source</span>
+         (string)
+        </li>
+        <li><span class="parameter">message</span>
+         (string)
+        </li>
+        <li><span class="parameter">complete</span>
+         (boolean)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.CrossRP.RegisterPlayerFromSource"></a>
+    <strong>Musician.CrossRP.RegisterPlayerFromSource (source, guid)</strong>
+    </dt>
+    <dd>
+    Register player from its source string
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">source</span>
+         (string)
+        </li>
+        <li><span class="parameter">guid</span>
+        ] (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.CrossRP.SendHello"></a>
+    <strong>Musician.CrossRP.SendHello (destination)</strong>
+    </dt>
+    <dd>
+    Send a Hello message
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">destination</span>
+         (string)] By default, "all"
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.CrossRP.StopSong"></a>
+    <strong>Musician.CrossRP.StopSong ()</strong>
+    </dt>
+    <dd>
+    Stop song
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.CrossRP.StreamCompressedSongChunk"></a>
+    <strong>Musician.CrossRP.StreamCompressedSongChunk (compressedChunk)</strong>
+    </dt>
+    <dd>
+    Send a compressed chunk
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">compressedChunk</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.CrossRP:OnEnable"></a>
+    <strong>Musician.CrossRP:OnEnable ()</strong>
+    </dt>
+    <dd>
+    OnEnable
+
+
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2020-03-28 17:38:12 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

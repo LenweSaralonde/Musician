@@ -1,0 +1,476 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Musician</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><strong>Musician</strong></li>
+  <li><a href="../modules/Musician.About.html">Musician.About</a></li>
+  <li><a href="../modules/Musician.Comm.html">Musician.Comm</a></li>
+  <li><a href="../modules/Musician.Constants.html">Musician.Constants</a></li>
+  <li><a href="../modules/Musician.CrossRP.html">Musician.CrossRP</a></li>
+  <li><a href="../modules/Musician.CrossRP.Options.html">Musician.CrossRP.Options</a></li>
+  <li><a href="../modules/Musician.ElvUI.html">Musician.ElvUI</a></li>
+  <li><a href="../modules/Musician.Extras.html">Musician.Extras</a></li>
+  <li><a href="../modules/Musician.Frame.html">Musician.Frame</a></li>
+  <li><a href="../modules/Musician.Keyboard.html">Musician.Keyboard</a></li>
+  <li><a href="../modules/Musician.KeyboardConfig.html">Musician.KeyboardConfig</a></li>
+  <li><a href="../modules/Musician.KeyboardUtils.html">Musician.KeyboardUtils</a></li>
+  <li><a href="../modules/Musician.KuiNamePlates.html">Musician.KuiNamePlates</a></li>
+  <li><a href="../modules/Musician.Live.html">Musician.Live</a></li>
+  <li><a href="../modules/Musician.MyRolePlay.html">Musician.MyRolePlay</a></li>
+  <li><a href="../modules/Musician.NamePlates.html">Musician.NamePlates</a></li>
+  <li><a href="../modules/Musician.NamePlates.Options.html">Musician.NamePlates.Options</a></li>
+  <li><a href="../modules/Musician.NeatPlates.html">Musician.NeatPlates</a></li>
+  <li><a href="../modules/Musician.Options.html">Musician.Options</a></li>
+  <li><a href="../modules/Musician.Plater.html">Musician.Plater</a></li>
+  <li><a href="../modules/Musician.Preloader.html">Musician.Preloader</a></li>
+  <li><a href="../modules/Musician.Registry.html">Musician.Registry</a></li>
+  <li><a href="../modules/Musician.Song.html">Musician.Song</a></li>
+  <li><a href="../modules/Musician.TRP3.html">Musician.TRP3</a></li>
+  <li><a href="../modules/Musician.TRP3.Options.html">Musician.TRP3.Options</a></li>
+  <li><a href="../modules/Musician.TrackEditor.html">Musician.TrackEditor</a></li>
+  <li><a href="../modules/Musician.Utils.html">Musician.Utils</a></li>
+  <li><a href="../modules/Musician.VolumeMeter.html">Musician.VolumeMeter</a></li>
+  <li><a href="../modules/MusicianButton.html">MusicianButton</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>Musician</code></h1>
+<p>Main module</p>
+<p></p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#AddModule">AddModule (moduleName)</a></td>
+	<td class="summary">Add a module</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#AddTipsAndTricks">AddTipsAndTricks (callback, priority)</a></td>
+	<td class="summary">Add a tips and tricks callback</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#GetCommands">GetCommands ()</a></td>
+	<td class="summary">Get command definitions</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Help">Help ()</a></td>
+	<td class="summary">Display command-line help</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ImportSource">ImportSource (str)</a></td>
+	<td class="summary">Import song from encoded string</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MutePlayer">MutePlayer (playerName, isMuted)</a></td>
+	<td class="summary">Mute or unmute a player</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#OnInitialize">OnInitialize ()</a></td>
+	<td class="summary">OnInitialize</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#OnSongPlayed">OnSongPlayed (event, song)</a></td>
+	<td class="summary">Handle playing song</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#OnSourceImportFailed">OnSourceImportFailed ()</a></td>
+	<td class="summary">Handle failed source import</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#OnSourceImportSuccessful">OnSourceImportSuccessful ()</a></td>
+	<td class="summary">Handle successful source import</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#OnUpdate">OnUpdate (frame, elapsed)</a></td>
+	<td class="summary">Perform all on-frame actions</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#PlayerIsMuted">PlayerIsMuted (playerName)</a></td>
+	<td class="summary">Return true if the player is muted</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#RunCommandLine">RunCommandLine (commandLine)</a></td>
+	<td class="summary">Run command line</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#SetupHooks">SetupHooks ()</a></td>
+	<td class="summary">Setup hooks</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ShowTipsAndTricks">ShowTipsAndTricks (callback)</a></td>
+	<td class="summary">Show the first</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#StopPlayerSong">StopPlayerSong (playerName, remove)</a></td>
+	<td class="summary">Stop a song playing by a player</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "AddModule"></a>
+    <strong>AddModule (moduleName)</strong>
+    </dt>
+    <dd>
+    Add a module
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">moduleName</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "AddTipsAndTricks"></a>
+    <strong>AddTipsAndTricks (callback, priority)</strong>
+    </dt>
+    <dd>
+    Add a tips and tricks callback
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">callback</span>
+         {function}
+        </li>
+        <li><span class="parameter">priority</span>
+         {boolean} If true, add the tip to the top of the list
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "GetCommands"></a>
+    <strong>GetCommands ()</strong>
+    </dt>
+    <dd>
+    Get command definitions
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (table)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Help"></a>
+    <strong>Help ()</strong>
+    </dt>
+    <dd>
+    Display command-line help
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ImportSource"></a>
+    <strong>ImportSource (str)</strong>
+    </dt>
+    <dd>
+    Import song from encoded string
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">str</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MutePlayer"></a>
+    <strong>MutePlayer (playerName, isMuted)</strong>
+    </dt>
+    <dd>
+    Mute or unmute a player
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">playerName</span>
+         (string)
+        </li>
+        <li><span class="parameter">isMuted</span>
+         (boolean)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "OnInitialize"></a>
+    <strong>OnInitialize ()</strong>
+    </dt>
+    <dd>
+    OnInitialize
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "OnSongPlayed"></a>
+    <strong>OnSongPlayed (event, song)</strong>
+    </dt>
+    <dd>
+    Handle playing song
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+         (table)
+        </li>
+        <li><span class="parameter">song</span>
+         (Musician.Song)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "OnSourceImportFailed"></a>
+    <strong>OnSourceImportFailed ()</strong>
+    </dt>
+    <dd>
+    Handle failed source import
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "OnSourceImportSuccessful"></a>
+    <strong>OnSourceImportSuccessful ()</strong>
+    </dt>
+    <dd>
+    Handle successful source import
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "OnUpdate"></a>
+    <strong>OnUpdate (frame, elapsed)</strong>
+    </dt>
+    <dd>
+    Perform all on-frame actions
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">frame</span>
+         (Frame)
+        </li>
+        <li><span class="parameter">elapsed</span>
+         (number)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "PlayerIsMuted"></a>
+    <strong>PlayerIsMuted (playerName)</strong>
+    </dt>
+    <dd>
+    Return true if the player is muted
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">playerName</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "RunCommandLine"></a>
+    <strong>RunCommandLine (commandLine)</strong>
+    </dt>
+    <dd>
+    Run command line
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">commandLine</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "SetupHooks"></a>
+    <strong>SetupHooks ()</strong>
+    </dt>
+    <dd>
+    Setup hooks
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ShowTipsAndTricks"></a>
+    <strong>ShowTipsAndTricks (callback)</strong>
+    </dt>
+    <dd>
+    Show the first
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">callback</span>
+         {function}
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "StopPlayerSong"></a>
+    <strong>StopPlayerSong (playerName, remove)</strong>
+    </dt>
+    <dd>
+    Stop a song playing by a player
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">playerName</span>
+         (string)
+        </li>
+        <li><span class="parameter">remove</span>
+         (boolean)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2020-03-28 17:38:12 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

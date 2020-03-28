@@ -5,3 +5,7 @@ manual-changelog:
     markup-type: markdown
 
 license-output: LICENSE
+
+ignore:
+    - config.ld
+    - doc

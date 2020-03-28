@@ -1,0 +1,287 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Musician</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/Musician.html">Musician</a></li>
+  <li><a href="../modules/Musician.About.html">Musician.About</a></li>
+  <li><a href="../modules/Musician.Comm.html">Musician.Comm</a></li>
+  <li><a href="../modules/Musician.Constants.html">Musician.Constants</a></li>
+  <li><a href="../modules/Musician.CrossRP.html">Musician.CrossRP</a></li>
+  <li><a href="../modules/Musician.CrossRP.Options.html">Musician.CrossRP.Options</a></li>
+  <li><a href="../modules/Musician.ElvUI.html">Musician.ElvUI</a></li>
+  <li><a href="../modules/Musician.Extras.html">Musician.Extras</a></li>
+  <li><a href="../modules/Musician.Frame.html">Musician.Frame</a></li>
+  <li><a href="../modules/Musician.Keyboard.html">Musician.Keyboard</a></li>
+  <li><a href="../modules/Musician.KeyboardConfig.html">Musician.KeyboardConfig</a></li>
+  <li><a href="../modules/Musician.KeyboardUtils.html">Musician.KeyboardUtils</a></li>
+  <li><a href="../modules/Musician.KuiNamePlates.html">Musician.KuiNamePlates</a></li>
+  <li><a href="../modules/Musician.Live.html">Musician.Live</a></li>
+  <li><a href="../modules/Musician.MyRolePlay.html">Musician.MyRolePlay</a></li>
+  <li><a href="../modules/Musician.NamePlates.html">Musician.NamePlates</a></li>
+  <li><a href="../modules/Musician.NamePlates.Options.html">Musician.NamePlates.Options</a></li>
+  <li><a href="../modules/Musician.NeatPlates.html">Musician.NeatPlates</a></li>
+  <li><a href="../modules/Musician.Options.html">Musician.Options</a></li>
+  <li><a href="../modules/Musician.Plater.html">Musician.Plater</a></li>
+  <li><a href="../modules/Musician.Preloader.html">Musician.Preloader</a></li>
+  <li><a href="../modules/Musician.Registry.html">Musician.Registry</a></li>
+  <li><a href="../modules/Musician.Song.html">Musician.Song</a></li>
+  <li><strong>Musician.TRP3</strong></li>
+  <li><a href="../modules/Musician.TRP3.Options.html">Musician.TRP3.Options</a></li>
+  <li><a href="../modules/Musician.TrackEditor.html">Musician.TrackEditor</a></li>
+  <li><a href="../modules/Musician.Utils.html">Musician.Utils</a></li>
+  <li><a href="../modules/Musician.VolumeMeter.html">Musician.VolumeMeter</a></li>
+  <li><a href="../modules/MusicianButton.html">MusicianButton</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>Musician.TRP3</code></h1>
+<p>Total RP 3 integration including RP player names, nameplates, tooltips and map scan.</p>
+<p></p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#Musician.TRP3.GetRpName">Musician.TRP3.GetRpName (player)</a></td>
+	<td class="summary">Return RP display name for player</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.TRP3.HookNamePlates">Musician.TRP3.HookNamePlates ()</a></td>
+	<td class="summary">Hook TRP player nameplates (standard)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.TRP3.HookPlayerMap">Musician.TRP3.HookPlayerMap ()</a></td>
+	<td class="summary">Hook TRP player map</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.TRP3.HookPlayerNames">Musician.TRP3.HookPlayerNames ()</a></td>
+	<td class="summary">Hook player name formatting</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.TRP3.HookTooltip">Musician.TRP3.HookTooltip ()</a></td>
+	<td class="summary">Hook TRP player tooltip</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.TRP3.IsPlayingMusic">Musician.TRP3.IsPlayingMusic (player)</a></td>
+	<td class="summary">Return true if the player is currently playing some music</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.TRP3.OnSongChunk">Musician.TRP3.OnSongChunk (event, sender, mode, songId, chunkDuration, playtimeLeft, posY, posX, posZ, instanceID, guid)</a></td>
+	<td class="summary">OnSongChunk</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "Musician.TRP3.GetRpName"></a>
+    <strong>Musician.TRP3.GetRpName (player)</strong>
+    </dt>
+    <dd>
+    Return RP display name for player
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">player</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.TRP3.HookNamePlates"></a>
+    <strong>Musician.TRP3.HookNamePlates ()</strong>
+    </dt>
+    <dd>
+    Hook TRP player nameplates (standard)
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.TRP3.HookPlayerMap"></a>
+    <strong>Musician.TRP3.HookPlayerMap ()</strong>
+    </dt>
+    <dd>
+    Hook TRP player map
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.TRP3.HookPlayerNames"></a>
+    <strong>Musician.TRP3.HookPlayerNames ()</strong>
+    </dt>
+    <dd>
+    Hook player name formatting
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.TRP3.HookTooltip"></a>
+    <strong>Musician.TRP3.HookTooltip ()</strong>
+    </dt>
+    <dd>
+    Hook TRP player tooltip
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.TRP3.IsPlayingMusic"></a>
+    <strong>Musician.TRP3.IsPlayingMusic (player)</strong>
+    </dt>
+    <dd>
+    Return true if the player is currently playing some music
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">player</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.TRP3.OnSongChunk"></a>
+    <strong>Musician.TRP3.OnSongChunk (event, sender, mode, songId, chunkDuration, playtimeLeft, posY, posX, posZ, instanceID, guid)</strong>
+    </dt>
+    <dd>
+    OnSongChunk
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+
+        </li>
+        <li><span class="parameter">sender</span>
+
+        </li>
+        <li><span class="parameter">mode</span>
+
+        </li>
+        <li><span class="parameter">songId</span>
+
+        </li>
+        <li><span class="parameter">chunkDuration</span>
+
+        </li>
+        <li><span class="parameter">playtimeLeft</span>
+
+        </li>
+        <li><span class="parameter">posY</span>
+
+        </li>
+        <li><span class="parameter">posX</span>
+
+        </li>
+        <li><span class="parameter">posZ</span>
+
+        </li>
+        <li><span class="parameter">instanceID</span>
+
+        </li>
+        <li><span class="parameter">guid</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2020-03-28 17:38:12 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

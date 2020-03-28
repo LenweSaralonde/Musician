@@ -1,0 +1,1008 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Musician</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/Musician.html">Musician</a></li>
+  <li><a href="../modules/Musician.About.html">Musician.About</a></li>
+  <li><strong>Musician.Comm</strong></li>
+  <li><a href="../modules/Musician.Constants.html">Musician.Constants</a></li>
+  <li><a href="../modules/Musician.CrossRP.html">Musician.CrossRP</a></li>
+  <li><a href="../modules/Musician.CrossRP.Options.html">Musician.CrossRP.Options</a></li>
+  <li><a href="../modules/Musician.ElvUI.html">Musician.ElvUI</a></li>
+  <li><a href="../modules/Musician.Extras.html">Musician.Extras</a></li>
+  <li><a href="../modules/Musician.Frame.html">Musician.Frame</a></li>
+  <li><a href="../modules/Musician.Keyboard.html">Musician.Keyboard</a></li>
+  <li><a href="../modules/Musician.KeyboardConfig.html">Musician.KeyboardConfig</a></li>
+  <li><a href="../modules/Musician.KeyboardUtils.html">Musician.KeyboardUtils</a></li>
+  <li><a href="../modules/Musician.KuiNamePlates.html">Musician.KuiNamePlates</a></li>
+  <li><a href="../modules/Musician.Live.html">Musician.Live</a></li>
+  <li><a href="../modules/Musician.MyRolePlay.html">Musician.MyRolePlay</a></li>
+  <li><a href="../modules/Musician.NamePlates.html">Musician.NamePlates</a></li>
+  <li><a href="../modules/Musician.NamePlates.Options.html">Musician.NamePlates.Options</a></li>
+  <li><a href="../modules/Musician.NeatPlates.html">Musician.NeatPlates</a></li>
+  <li><a href="../modules/Musician.Options.html">Musician.Options</a></li>
+  <li><a href="../modules/Musician.Plater.html">Musician.Plater</a></li>
+  <li><a href="../modules/Musician.Preloader.html">Musician.Preloader</a></li>
+  <li><a href="../modules/Musician.Registry.html">Musician.Registry</a></li>
+  <li><a href="../modules/Musician.Song.html">Musician.Song</a></li>
+  <li><a href="../modules/Musician.TRP3.html">Musician.TRP3</a></li>
+  <li><a href="../modules/Musician.TRP3.Options.html">Musician.TRP3.Options</a></li>
+  <li><a href="../modules/Musician.TrackEditor.html">Musician.TrackEditor</a></li>
+  <li><a href="../modules/Musician.Utils.html">Musician.Utils</a></li>
+  <li><a href="../modules/Musician.VolumeMeter.html">Musician.VolumeMeter</a></li>
+  <li><a href="../modules/MusicianButton.html">MusicianButton</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>Musician.Comm</code></h1>
+<p>Communication module</p>
+<p></p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Comm.BroadcastCommMessage">Musician.Comm.BroadcastCommMessage (message, type, groupType)</a></td>
+	<td class="summary">Broadcast communication message using appropriate channels</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Comm.CanBroadcast">Musician.Comm.CanBroadcast ()</a></td>
+	<td class="summary">Return true if the player can broadcast via the channel or the group chat</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Comm.CanPlay">Musician.Comm.CanPlay ()</a></td>
+	<td class="summary">Return true if the player can play music</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Comm.ChannelIsReady">Musician.Comm.ChannelIsReady ()</a></td>
+	<td class="summary">Return true if the communication channel is ready</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Comm.GetCurrentSongCrc32">Musician.Comm.GetCurrentSongCrc32 ()</a></td>
+	<td class="summary">Return current song CRC32</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Comm.GetGroupChatType">Musician.Comm.GetGroupChatType ()</a></td>
+	<td class="summary">Return communication chat type for group</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Comm.GetReadyBandPlayers">Musician.Comm.GetReadyBandPlayers ()</a></td>
+	<td class="summary">Return the list of ready band players for the current source song</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Comm.Init">Musician.Comm.Init ()</a></td>
+	<td class="summary">Initialize communication</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Comm.IsBandPlayReady">Musician.Comm.IsBandPlayReady ()</a></td>
+	<td class="summary">Indicate if the player is ready for band play</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Comm.IsSongPlaying">Musician.Comm.IsSongPlaying ()</a></td>
+	<td class="summary">Indicate if the player song is playing</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Comm.JoinChannel">Musician.Comm.JoinChannel ()</a></td>
+	<td class="summary">Join the communication channel and keep it joined</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Comm.OnBandPlay">Musician.Comm.OnBandPlay (prefix, message, distribution, sender)</a></td>
+	<td class="summary">OnBandPlay</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Comm.OnBandPlayReady">Musician.Comm.OnBandPlayReady (prefix, message, distribution, sender)</a></td>
+	<td class="summary">Receive band ready or not ready message</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Comm.OnBandReadyQuery">Musician.Comm.OnBandReadyQuery (prefix, message, distribution, sender)</a></td>
+	<td class="summary">OnBandReadyQuery</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Comm.OnBandStop">Musician.Comm.OnBandStop (prefix, message, distribution, sender)</a></td>
+	<td class="summary">OnBandStop</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Comm.OnChunk">Musician.Comm.OnChunk (prefix, message, distribution, sender)</a></td>
+	<td class="summary">Receive compressed chunk</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Comm.OnDead">Musician.Comm.OnDead ()</a></td>
+	<td class="summary">OnDead
+ Stop music when dead</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Comm.OnGroupJoined">Musician.Comm.OnGroupJoined ()</a></td>
+	<td class="summary">OnGroupJoined</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Comm.OnGroupLeft">Musician.Comm.OnGroupLeft ()</a></td>
+	<td class="summary">OnGroupLeft</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Comm.OnRosterUpdate">Musician.Comm.OnRosterUpdate (event)</a></td>
+	<td class="summary">OnRosterUpdate</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Comm.OnSongLoaded">Musician.Comm.OnSongLoaded ()</a></td>
+	<td class="summary">OnSongLoaded</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Comm.OnSongPlay">Musician.Comm.OnSongPlay (event, song)</a></td>
+	<td class="summary">OnSongPlay</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Comm.OnSongStop">Musician.Comm.OnSongStop (event, song)</a></td>
+	<td class="summary">OnSongStop</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Comm.OnStopSong">Musician.Comm.OnStopSong (prefix, message, distribution, sender)</a></td>
+	<td class="summary">Stop a song</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Comm.PlaySong">Musician.Comm.PlaySong ()</a></td>
+	<td class="summary">Play song</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Comm.PlaySongBand">Musician.Comm.PlaySongBand ()</a></td>
+	<td class="summary">Play song as a band</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Comm.ProcessChunk">Musician.Comm.ProcessChunk (packedChunk, sender, forcePlay)</a></td>
+	<td class="summary">Process a packed chunk</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Comm.QueryBandReady">Musician.Comm.QueryBandReady ()</a></td>
+	<td class="summary">QueryBandReady</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Comm.SetBandPlayReady">Musician.Comm.SetBandPlayReady (isReady)</a></td>
+	<td class="summary">Set band play ready</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Comm.StopSong">Musician.Comm.StopSong ()</a></td>
+	<td class="summary">Stop song</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Comm.StopSongBand">Musician.Comm.StopSongBand ()</a></td>
+	<td class="summary">Stop song as a band</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Comm.StreamCompressedSongChunk">Musician.Comm.StreamCompressedSongChunk (compressedChunk)</a></td>
+	<td class="summary">Stream a compressed song chunk</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Comm.StreamSongChunk">Musician.Comm.StreamSongChunk (packedChunk)</a></td>
+	<td class="summary">Stream a packed song chunk</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Comm.ToggleBandPlayReady">Musician.Comm.ToggleBandPlayReady ()</a></td>
+	<td class="summary">Toggle band play ready</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Comm.TogglePlaySong">Musician.Comm.TogglePlaySong ()</a></td>
+	<td class="summary">Toggle play song</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Comm.UpdateCurrentSongCrc32">Musician.Comm.UpdateCurrentSongCrc32 (songCrc32)</a></td>
+	<td class="summary">Update current song CRC32</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Comm.getChannel">Musician.Comm.getChannel ()</a></td>
+	<td class="summary">Return the communication channel ID</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "Musician.Comm.BroadcastCommMessage"></a>
+    <strong>Musician.Comm.BroadcastCommMessage (message, type, groupType)</strong>
+    </dt>
+    <dd>
+    Broadcast communication message using appropriate channels
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">message</span>
+         (string)
+        </li>
+        <li><span class="parameter">type</span>
+         (string)
+        </li>
+        <li><span class="parameter">groupType</span>
+         (string)]
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Comm.CanBroadcast"></a>
+    <strong>Musician.Comm.CanBroadcast ()</strong>
+    </dt>
+    <dd>
+    Return true if the player can broadcast via the channel or the group chat
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        canBroadcast (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Comm.CanPlay"></a>
+    <strong>Musician.Comm.CanPlay ()</strong>
+    </dt>
+    <dd>
+    Return true if the player can play music
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        canPlay (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Comm.ChannelIsReady"></a>
+    <strong>Musician.Comm.ChannelIsReady ()</strong>
+    </dt>
+    <dd>
+    Return true if the communication channel is ready
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        isReady (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Comm.GetCurrentSongCrc32"></a>
+    <strong>Musician.Comm.GetCurrentSongCrc32 ()</strong>
+    </dt>
+    <dd>
+    Return current song CRC32
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        songCrc32 (number)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Comm.GetGroupChatType"></a>
+    <strong>Musician.Comm.GetGroupChatType ()</strong>
+    </dt>
+    <dd>
+    Return communication chat type for group
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        chatType (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Comm.GetReadyBandPlayers"></a>
+    <strong>Musician.Comm.GetReadyBandPlayers ()</strong>
+    </dt>
+    <dd>
+    Return the list of ready band players for the current source song
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        readyPlayers (table)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Comm.Init"></a>
+    <strong>Musician.Comm.Init ()</strong>
+    </dt>
+    <dd>
+    Initialize communication
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Comm.IsBandPlayReady"></a>
+    <strong>Musician.Comm.IsBandPlayReady ()</strong>
+    </dt>
+    <dd>
+    Indicate if the player is ready for band play
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        isBandPlayReady (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Comm.IsSongPlaying"></a>
+    <strong>Musician.Comm.IsSongPlaying ()</strong>
+    </dt>
+    <dd>
+    Indicate if the player song is playing
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        isSongPlaying (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Comm.JoinChannel"></a>
+    <strong>Musician.Comm.JoinChannel ()</strong>
+    </dt>
+    <dd>
+    Join the communication channel and keep it joined
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Comm.OnBandPlay"></a>
+    <strong>Musician.Comm.OnBandPlay (prefix, message, distribution, sender)</strong>
+    </dt>
+    <dd>
+    OnBandPlay
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">prefix</span>
+
+        </li>
+        <li><span class="parameter">message</span>
+
+        </li>
+        <li><span class="parameter">distribution</span>
+
+        </li>
+        <li><span class="parameter">sender</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Comm.OnBandPlayReady"></a>
+    <strong>Musician.Comm.OnBandPlayReady (prefix, message, distribution, sender)</strong>
+    </dt>
+    <dd>
+    Receive band ready or not ready message
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">prefix</span>
+
+        </li>
+        <li><span class="parameter">message</span>
+
+        </li>
+        <li><span class="parameter">distribution</span>
+
+        </li>
+        <li><span class="parameter">sender</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Comm.OnBandReadyQuery"></a>
+    <strong>Musician.Comm.OnBandReadyQuery (prefix, message, distribution, sender)</strong>
+    </dt>
+    <dd>
+    OnBandReadyQuery
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">prefix</span>
+
+        </li>
+        <li><span class="parameter">message</span>
+
+        </li>
+        <li><span class="parameter">distribution</span>
+
+        </li>
+        <li><span class="parameter">sender</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Comm.OnBandStop"></a>
+    <strong>Musician.Comm.OnBandStop (prefix, message, distribution, sender)</strong>
+    </dt>
+    <dd>
+    OnBandStop
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">prefix</span>
+
+        </li>
+        <li><span class="parameter">message</span>
+
+        </li>
+        <li><span class="parameter">distribution</span>
+
+        </li>
+        <li><span class="parameter">sender</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Comm.OnChunk"></a>
+    <strong>Musician.Comm.OnChunk (prefix, message, distribution, sender)</strong>
+    </dt>
+    <dd>
+    Receive compressed chunk
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">prefix</span>
+
+        </li>
+        <li><span class="parameter">message</span>
+
+        </li>
+        <li><span class="parameter">distribution</span>
+
+        </li>
+        <li><span class="parameter">sender</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Comm.OnDead"></a>
+    <strong>Musician.Comm.OnDead ()</strong>
+    </dt>
+    <dd>
+    OnDead
+ Stop music when dead
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Comm.OnGroupJoined"></a>
+    <strong>Musician.Comm.OnGroupJoined ()</strong>
+    </dt>
+    <dd>
+    OnGroupJoined
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Comm.OnGroupLeft"></a>
+    <strong>Musician.Comm.OnGroupLeft ()</strong>
+    </dt>
+    <dd>
+    OnGroupLeft
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Comm.OnRosterUpdate"></a>
+    <strong>Musician.Comm.OnRosterUpdate (event)</strong>
+    </dt>
+    <dd>
+    OnRosterUpdate
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+        Remove players from readyBandPlayers who are no longer in the group
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Comm.OnSongLoaded"></a>
+    <strong>Musician.Comm.OnSongLoaded ()</strong>
+    </dt>
+    <dd>
+    OnSongLoaded
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Comm.OnSongPlay"></a>
+    <strong>Musician.Comm.OnSongPlay (event, song)</strong>
+    </dt>
+    <dd>
+    OnSongPlay
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+
+        </li>
+        <li><span class="parameter">song</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Comm.OnSongStop"></a>
+    <strong>Musician.Comm.OnSongStop (event, song)</strong>
+    </dt>
+    <dd>
+    OnSongStop
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+
+        </li>
+        <li><span class="parameter">song</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Comm.OnStopSong"></a>
+    <strong>Musician.Comm.OnStopSong (prefix, message, distribution, sender)</strong>
+    </dt>
+    <dd>
+    Stop a song
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">prefix</span>
+
+        </li>
+        <li><span class="parameter">message</span>
+
+        </li>
+        <li><span class="parameter">distribution</span>
+
+        </li>
+        <li><span class="parameter">sender</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Comm.PlaySong"></a>
+    <strong>Musician.Comm.PlaySong ()</strong>
+    </dt>
+    <dd>
+    Play song
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        success (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Comm.PlaySongBand"></a>
+    <strong>Musician.Comm.PlaySongBand ()</strong>
+    </dt>
+    <dd>
+    Play song as a band
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        success (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Comm.ProcessChunk"></a>
+    <strong>Musician.Comm.ProcessChunk (packedChunk, sender, forcePlay)</strong>
+    </dt>
+    <dd>
+    Process a packed chunk
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">packedChunk</span>
+         (string)
+        </li>
+        <li><span class="parameter">sender</span>
+         (string)
+        </li>
+        <li><span class="parameter">forcePlay</span>
+         (boolean)] Force the chunk to be played, even if the player is not in range (groups)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Comm.QueryBandReady"></a>
+    <strong>Musician.Comm.QueryBandReady ()</strong>
+    </dt>
+    <dd>
+    QueryBandReady
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Comm.SetBandPlayReady"></a>
+    <strong>Musician.Comm.SetBandPlayReady (isReady)</strong>
+    </dt>
+    <dd>
+    Set band play ready
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">isReady</span>
+         (boolean)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        success (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Comm.StopSong"></a>
+    <strong>Musician.Comm.StopSong ()</strong>
+    </dt>
+    <dd>
+    Stop song
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        success (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Comm.StopSongBand"></a>
+    <strong>Musician.Comm.StopSongBand ()</strong>
+    </dt>
+    <dd>
+    Stop song as a band
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        success (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Comm.StreamCompressedSongChunk"></a>
+    <strong>Musician.Comm.StreamCompressedSongChunk (compressedChunk)</strong>
+    </dt>
+    <dd>
+    Stream a compressed song chunk
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">compressedChunk</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        success (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Comm.StreamSongChunk"></a>
+    <strong>Musician.Comm.StreamSongChunk (packedChunk)</strong>
+    </dt>
+    <dd>
+    Stream a packed song chunk
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">packedChunk</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Comm.ToggleBandPlayReady"></a>
+    <strong>Musician.Comm.ToggleBandPlayReady ()</strong>
+    </dt>
+    <dd>
+    Toggle band play ready
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Comm.TogglePlaySong"></a>
+    <strong>Musician.Comm.TogglePlaySong ()</strong>
+    </dt>
+    <dd>
+    Toggle play song
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Comm.UpdateCurrentSongCrc32"></a>
+    <strong>Musician.Comm.UpdateCurrentSongCrc32 (songCrc32)</strong>
+    </dt>
+    <dd>
+    Update current song CRC32
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">songCrc32</span>
+         (number)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Comm.getChannel"></a>
+    <strong>Musician.Comm.getChannel ()</strong>
+    </dt>
+    <dd>
+    Return the communication channel ID
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        channelId (string)
+    </ol>
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2020-03-28 17:38:12 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

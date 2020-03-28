@@ -1,0 +1,353 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Musician</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/Musician.html">Musician</a></li>
+  <li><a href="../modules/Musician.About.html">Musician.About</a></li>
+  <li><a href="../modules/Musician.Comm.html">Musician.Comm</a></li>
+  <li><a href="../modules/Musician.Constants.html">Musician.Constants</a></li>
+  <li><a href="../modules/Musician.CrossRP.html">Musician.CrossRP</a></li>
+  <li><a href="../modules/Musician.CrossRP.Options.html">Musician.CrossRP.Options</a></li>
+  <li><a href="../modules/Musician.ElvUI.html">Musician.ElvUI</a></li>
+  <li><a href="../modules/Musician.Extras.html">Musician.Extras</a></li>
+  <li><a href="../modules/Musician.Frame.html">Musician.Frame</a></li>
+  <li><a href="../modules/Musician.Keyboard.html">Musician.Keyboard</a></li>
+  <li><a href="../modules/Musician.KeyboardConfig.html">Musician.KeyboardConfig</a></li>
+  <li><strong>Musician.KeyboardUtils</strong></li>
+  <li><a href="../modules/Musician.KuiNamePlates.html">Musician.KuiNamePlates</a></li>
+  <li><a href="../modules/Musician.Live.html">Musician.Live</a></li>
+  <li><a href="../modules/Musician.MyRolePlay.html">Musician.MyRolePlay</a></li>
+  <li><a href="../modules/Musician.NamePlates.html">Musician.NamePlates</a></li>
+  <li><a href="../modules/Musician.NamePlates.Options.html">Musician.NamePlates.Options</a></li>
+  <li><a href="../modules/Musician.NeatPlates.html">Musician.NeatPlates</a></li>
+  <li><a href="../modules/Musician.Options.html">Musician.Options</a></li>
+  <li><a href="../modules/Musician.Plater.html">Musician.Plater</a></li>
+  <li><a href="../modules/Musician.Preloader.html">Musician.Preloader</a></li>
+  <li><a href="../modules/Musician.Registry.html">Musician.Registry</a></li>
+  <li><a href="../modules/Musician.Song.html">Musician.Song</a></li>
+  <li><a href="../modules/Musician.TRP3.html">Musician.TRP3</a></li>
+  <li><a href="../modules/Musician.TRP3.Options.html">Musician.TRP3.Options</a></li>
+  <li><a href="../modules/Musician.TrackEditor.html">Musician.TrackEditor</a></li>
+  <li><a href="../modules/Musician.Utils.html">Musician.Utils</a></li>
+  <li><a href="../modules/Musician.VolumeMeter.html">Musician.VolumeMeter</a></li>
+  <li><a href="../modules/MusicianButton.html">MusicianButton</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>Musician.KeyboardUtils</code></h1>
+<p>Keyboard utility functions</p>
+<p></p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#Musician.KeyboardUtils.GetEmptyMapping">Musician.KeyboardUtils.GetEmptyMapping ()</a></td>
+	<td class="summary">Return a brand new empty mapping</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.KeyboardUtils.GetKey">Musician.KeyboardUtils.GetKey (keyValue)</a></td>
+	<td class="summary">Return the physical key mapped to the actual key value.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.KeyboardUtils.GetKeyName">Musician.KeyboardUtils.GetKeyName (key)</a></td>
+	<td class="summary">Return the localized name of the physical key, base on the current mapping</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.KeyboardUtils.GetKeyValue">Musician.KeyboardUtils.GetKeyValue (key)</a></td>
+	<td class="summary">Return the actual key value mapped to the physical key.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.KeyboardUtils.GetKeyValueName">Musician.KeyboardUtils.GetKeyValueName (keyValue)</a></td>
+	<td class="summary">Return the localized name of the key value</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.KeyboardUtils.GetMapping">Musician.KeyboardUtils.GetMapping ()</a></td>
+	<td class="summary">Return the current keyboard mapping</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.KeyboardUtils.GetReverseMapping">Musician.KeyboardUtils.GetReverseMapping ()</a></td>
+	<td class="summary">Return the current reverse mapping</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.KeyboardUtils.Init">Musician.KeyboardUtils.Init ()</a></td>
+	<td class="summary">Init</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.KeyboardUtils.KeyboardIsConfigured">Musician.KeyboardUtils.KeyboardIsConfigured ()</a></td>
+	<td class="summary">Return true if the keyboard has been configured</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.KeyboardUtils.SetMapping">Musician.KeyboardUtils.SetMapping (mapping)</a></td>
+	<td class="summary">Set the keyboard mapping</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "Musician.KeyboardUtils.GetEmptyMapping"></a>
+    <strong>Musician.KeyboardUtils.GetEmptyMapping ()</strong>
+    </dt>
+    <dd>
+    Return a brand new empty mapping
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (table) key value => physical key
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.KeyboardUtils.GetKey"></a>
+    <strong>Musician.KeyboardUtils.GetKey (keyValue)</strong>
+    </dt>
+    <dd>
+    Return the physical key mapped to the actual key value.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">keyValue</span>
+         (string) key value
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (string) physical key
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.KeyboardUtils.GetKeyName"></a>
+    <strong>Musician.KeyboardUtils.GetKeyName (key)</strong>
+    </dt>
+    <dd>
+    Return the localized name of the physical key, base on the current mapping
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">key</span>
+         (string) physical key
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.KeyboardUtils.GetKeyValue"></a>
+    <strong>Musician.KeyboardUtils.GetKeyValue (key)</strong>
+    </dt>
+    <dd>
+    Return the actual key value mapped to the physical key.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">key</span>
+         (string) physical key
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (string) key value
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.KeyboardUtils.GetKeyValueName"></a>
+    <strong>Musician.KeyboardUtils.GetKeyValueName (keyValue)</strong>
+    </dt>
+    <dd>
+    Return the localized name of the key value
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">keyValue</span>
+         (string) key value
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.KeyboardUtils.GetMapping"></a>
+    <strong>Musician.KeyboardUtils.GetMapping ()</strong>
+    </dt>
+    <dd>
+    Return the current keyboard mapping
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (table) key value => physical key
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.KeyboardUtils.GetReverseMapping"></a>
+    <strong>Musician.KeyboardUtils.GetReverseMapping ()</strong>
+    </dt>
+    <dd>
+    Return the current reverse mapping
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (table) physical key => key value
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.KeyboardUtils.Init"></a>
+    <strong>Musician.KeyboardUtils.Init ()</strong>
+    </dt>
+    <dd>
+    Init
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.KeyboardUtils.KeyboardIsConfigured"></a>
+    <strong>Musician.KeyboardUtils.KeyboardIsConfigured ()</strong>
+    </dt>
+    <dd>
+    Return true if the keyboard has been configured
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.KeyboardUtils.SetMapping"></a>
+    <strong>Musician.KeyboardUtils.SetMapping (mapping)</strong>
+    </dt>
+    <dd>
+    Set the keyboard mapping
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">mapping</span>
+         (table) key value => physical key
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2020-03-28 17:38:12 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

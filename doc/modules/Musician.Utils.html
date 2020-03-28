@@ -1,0 +1,1946 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Musician</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/Musician.html">Musician</a></li>
+  <li><a href="../modules/Musician.About.html">Musician.About</a></li>
+  <li><a href="../modules/Musician.Comm.html">Musician.Comm</a></li>
+  <li><a href="../modules/Musician.Constants.html">Musician.Constants</a></li>
+  <li><a href="../modules/Musician.CrossRP.html">Musician.CrossRP</a></li>
+  <li><a href="../modules/Musician.CrossRP.Options.html">Musician.CrossRP.Options</a></li>
+  <li><a href="../modules/Musician.ElvUI.html">Musician.ElvUI</a></li>
+  <li><a href="../modules/Musician.Extras.html">Musician.Extras</a></li>
+  <li><a href="../modules/Musician.Frame.html">Musician.Frame</a></li>
+  <li><a href="../modules/Musician.Keyboard.html">Musician.Keyboard</a></li>
+  <li><a href="../modules/Musician.KeyboardConfig.html">Musician.KeyboardConfig</a></li>
+  <li><a href="../modules/Musician.KeyboardUtils.html">Musician.KeyboardUtils</a></li>
+  <li><a href="../modules/Musician.KuiNamePlates.html">Musician.KuiNamePlates</a></li>
+  <li><a href="../modules/Musician.Live.html">Musician.Live</a></li>
+  <li><a href="../modules/Musician.MyRolePlay.html">Musician.MyRolePlay</a></li>
+  <li><a href="../modules/Musician.NamePlates.html">Musician.NamePlates</a></li>
+  <li><a href="../modules/Musician.NamePlates.Options.html">Musician.NamePlates.Options</a></li>
+  <li><a href="../modules/Musician.NeatPlates.html">Musician.NeatPlates</a></li>
+  <li><a href="../modules/Musician.Options.html">Musician.Options</a></li>
+  <li><a href="../modules/Musician.Plater.html">Musician.Plater</a></li>
+  <li><a href="../modules/Musician.Preloader.html">Musician.Preloader</a></li>
+  <li><a href="../modules/Musician.Registry.html">Musician.Registry</a></li>
+  <li><a href="../modules/Musician.Song.html">Musician.Song</a></li>
+  <li><a href="../modules/Musician.TRP3.html">Musician.TRP3</a></li>
+  <li><a href="../modules/Musician.TRP3.Options.html">Musician.TRP3.Options</a></li>
+  <li><a href="../modules/Musician.TrackEditor.html">Musician.TrackEditor</a></li>
+  <li><strong>Musician.Utils</strong></li>
+  <li><a href="../modules/Musician.VolumeMeter.html">Musician.VolumeMeter</a></li>
+  <li><a href="../modules/MusicianButton.html">MusicianButton</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>Musician.Utils</code></h1>
+<p>Utility functions</p>
+<p></p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.Base64Decode">Musician.Utils.Base64Decode (data)</a></td>
+	<td class="summary">Decode base 64 string
+ Lua 5.1+ base64 v3.0 (c) 2009 by Alex Kloss <alexthkloss@web.de>
+ licensed under the terms of the LGPL2
+ http://lua-users.org/wiki/BaseSixtyFour</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.Debug">Musician.Utils.Debug (module, ...)</a></td>
+	<td class="summary">Print debug stuff in the console</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.DeepCopy">Musician.Utils.DeepCopy (orig)</a></td>
+	<td class="summary">Deep copy a table
+ http://lua-users.org/wiki/CopyTable</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.DeepMerge">Musician.Utils.DeepMerge (merged, orig)</a></td>
+	<td class="summary">Deep merge two tables</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.DisplayEmote">Musician.Utils.DisplayEmote (player, playerGUID, message)</a></td>
+	<td class="summary">Display a faked emote</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.EasyMenu">Musician.Utils.EasyMenu (menuList, menuFrame, anchor, x, y, displayMode, autoHideDelay)</a></td>
+	<td class="summary">Blizzard's EasyMenu using MSA_DropDownMenu</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.EasyMenu_Initialize">Musician.Utils.EasyMenu_Initialize (frame, level, menuList)</a></td>
+	<td class="summary">Blizzard's EasyMenu_Initialize using MSA_DropDownMenu</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.Error">Musician.Utils.Error (msg)</a></td>
+	<td class="summary">Display an error message in a popup</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.FlipTable">Musician.Utils.FlipTable (orig)</a></td>
+	<td class="summary">Flip a table</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.FormatPlayerName">Musician.Utils.FormatPlayerName (player)</a></td>
+	<td class="summary">Get player name for display</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.FormatText">Musician.Utils.FormatText (text)</a></td>
+	<td class="summary">Format text, adding highlights etc.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.FormatTime">Musician.Utils.FormatTime (time, simple)</a></td>
+	<td class="summary">Format time to mm:ss.ss format</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.FromHex">Musician.Utils.FromHex (hex)</a></td>
+	<td class="summary">Convert hex string to string</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.GetChatIcon">Musician.Utils.GetChatIcon (path, r, g, b)</a></td>
+	<td class="summary">Return the code to insert an icon in a chat message or a text string</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.GetColorCode">Musician.Utils.GetColorCode (r, g, b)</a></td>
+	<td class="summary">Get color code from RGB values</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.GetInstrumentData">Musician.Utils.GetInstrumentData (instrumentName, key)</a></td>
+	<td class="summary">Return instrument data for given MIDI key number</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.GetInstrumentName">Musician.Utils.GetInstrumentName (instrument, key)</a></td>
+	<td class="summary">Return instrument name from its MIDI ID</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.GetLink">Musician.Utils.GetLink (command, text, ...)</a></td>
+	<td class="summary">Get hyperlink</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.GetNormalizedRealmName">Musician.Utils.GetNormalizedRealmName ()</a></td>
+	<td class="summary">Return the normalized realm name the player belongs to
+ Safer than the standard GetNormalizedRealmName() that may return nil sometimes</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.GetOs">Musician.Utils.GetOs ()</a></td>
+	<td class="summary">Return operating system name</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.GetPlayerLink">Musician.Utils.GetPlayerLink (player)</a></td>
+	<td class="summary">Get player hyperlink</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.GetPromoEmote">Musician.Utils.GetPromoEmote ()</a></td>
+	<td class="summary">Return the "Player is playing music" emote with promo message</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.GetRealmLocale">Musician.Utils.GetRealmLocale ()</a></td>
+	<td class="summary">Return the short locale code of the realm the player belongs to</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.GetSampleId">Musician.Utils.GetSampleId (instrumentData, key)</a></td>
+	<td class="summary">Return sample ID for note and instrument data</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.GetSoundFile">Musician.Utils.GetSoundFile (instrument, key)</a></td>
+	<td class="summary">Get the path to a sound file for an instrument and a key.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.GetVersionText">Musician.Utils.GetVersionText ()</a></td>
+	<td class="summary">Return the current version as text for the end user</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.HasPromoEmote">Musician.Utils.HasPromoEmote (message)</a></td>
+	<td class="summary">Return true if the message contains the promo emote, in any language</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.Highlight">Musician.Utils.Highlight (text, color)</a></td>
+	<td class="summary">Highlight text</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.MuteGameMusic">Musician.Utils.MuteGameMusic (force)</a></td>
+	<td class="summary">Start or stop the actual game music if a song can actually be heard</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.NormalizePlayerName">Musician.Utils.NormalizePlayerName (playerName)</a></td>
+	<td class="summary">Return the normalized player name, including realm slug</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.NoteKey">Musician.Utils.NoteKey (noteName)</a></td>
+	<td class="summary">Return the MIDI key of the note name</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.NoteName">Musician.Utils.NoteName (key)</a></td>
+	<td class="summary">Return the note name corresponding its MIDI key</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.OverrideNextFullPromoEmote">Musician.Utils.OverrideNextFullPromoEmote ()</a></td>
+	<td class="summary">Override the next full promo emote</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.PackNumber">Musician.Utils.PackNumber (num, bytes)</a></td>
+	<td class="summary">Pack an integer number into a string</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.PackPlayerGuid">Musician.Utils.PackPlayerGuid ()</a></td>
+	<td class="summary">Pack player GUID into a 6-byte string</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.PackPlayerPosition">Musician.Utils.PackPlayerPosition ()</a></td>
+	<td class="summary">Pack player position into a 18-byte chunk string</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.PackTime">Musician.Utils.PackTime (seconds, bytes, fps)</a></td>
+	<td class="summary">Pack a time or duration in seconds into a string</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.PaddingZeros">Musician.Utils.PaddingZeros (number, zeros)</a></td>
+	<td class="summary">Add padding zeros</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.ParseTime">Musician.Utils.ParseTime (timestamp)</a></td>
+	<td class="summary">Parse time in seconds from mm:ss.ss format</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.PlayNote">Musician.Utils.PlayNote (instrument, key)</a></td>
+	<td class="summary">Start playing a note
+ Returns true if sound will actually be played, sound handle and instrument data</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.PlaySoundFile">Musician.Utils.PlaySoundFile (soundFile, channel)</a></td>
+	<td class="summary">Safely play a sound file, even if the sound file does not exist.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.PlayerGuidIsVisible">Musician.Utils.PlayerGuidIsVisible (guid)</a></td>
+	<td class="summary">Return true if the player whose GUID is provided is visible (loaded) by the game client</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.PlayerIsInGroup">Musician.Utils.PlayerIsInGroup (playerName)</a></td>
+	<td class="summary">Return true if the player is in my party or raid</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.PlayerIsMyself">Musician.Utils.PlayerIsMyself (playerName)</a></td>
+	<td class="summary">Return true if the provided player name is myself</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.PlayerIsOnSameRealm">Musician.Utils.PlayerIsOnSameRealm (playerName)</a></td>
+	<td class="summary">Return true if the provided player name is on the same realm or connected realm as me</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.PlayerRealm">Musician.Utils.PlayerRealm (playerName)</a></td>
+	<td class="summary">Return the player realm slug</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.Popup">Musician.Utils.Popup (msg, callback, force)</a></td>
+	<td class="summary">Display a message in a popup</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.PreloadNote">Musician.Utils.PreloadNote (instrument, key)</a></td>
+	<td class="summary">Preload note</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.Print">Musician.Utils.Print (msg)</a></td>
+	<td class="summary">Display a message in the console</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.PrintError">Musician.Utils.PrintError (msg)</a></td>
+	<td class="summary">Display an error message in the console</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.ReadBytes">Musician.Utils.ReadBytes (str, bytes)</a></td>
+	<td class="summary">Read some bytes from a string and remove them</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.RemoveChatMessage">Musician.Utils.RemoveChatMessage (lineID)</a></td>
+	<td class="summary">Remove a chat message by its line ID</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.ResetFullPromoEmoteCooldown">Musician.Utils.ResetFullPromoEmoteCooldown ()</a></td>
+	<td class="summary">Mark the full promo emote as recently seen</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.SendPromoEmote">Musician.Utils.SendPromoEmote ()</a></td>
+	<td class="summary">Send the "Player is playing music" emote with promo message</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.SetFontStringTextFixedSize">Musician.Utils.SetFontStringTextFixedSize (fontString, text)</a></td>
+	<td class="summary">Set text to a FontString element ensuring the visual text size is respected</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.SimplePlayerName">Musician.Utils.SimplePlayerName (playerName)</a></td>
+	<td class="summary">Return the simple player name, including the realm slug if needed</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.SongIsPlaying">Musician.Utils.SongIsPlaying ()</a></td>
+	<td class="summary">Return true if a song is actually playing and is audible</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.ToHex">Musician.Utils.ToHex (str)</a></td>
+	<td class="summary">Convert string to hex string</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.UnpackNumber">Musician.Utils.UnpackNumber (data)</a></td>
+	<td class="summary">Unpack a string into an integer number</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.UnpackPlayerGuid">Musician.Utils.UnpackPlayerGuid (str)</a></td>
+	<td class="summary">Unpack player GUID from string</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.UnpackPlayerPosition">Musician.Utils.UnpackPlayerPosition (str)</a></td>
+	<td class="summary">Unpack player position from chunk string</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.UnpackTime">Musician.Utils.UnpackTime (data, fps)</a></td>
+	<td class="summary">Unpack a string into a time or duration in seconds</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.VersionCompare">Musician.Utils.VersionCompare (versionA, versionB)</a></td>
+	<td class="summary">Compare two version numbers</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "Musician.Utils.Base64Decode"></a>
+    <strong>Musician.Utils.Base64Decode (data)</strong>
+    </dt>
+    <dd>
+    Decode base 64 string
+ Lua 5.1+ base64 v3.0 (c) 2009 by Alex Kloss <alexthkloss@web.de>
+ licensed under the terms of the LGPL2
+ http://lua-users.org/wiki/BaseSixtyFour
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">data</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        str (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.Debug"></a>
+    <strong>Musician.Utils.Debug (module, ...)</strong>
+    </dt>
+    <dd>
+    Print debug stuff in the console
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">module</span>
+         (string)
+        </li>
+        <li><span class="parameter">...</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.DeepCopy"></a>
+    <strong>Musician.Utils.DeepCopy (orig)</strong>
+    </dt>
+    <dd>
+    Deep copy a table
+ http://lua-users.org/wiki/CopyTable
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">orig</span>
+         (table)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        copy (table)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.DeepMerge"></a>
+    <strong>Musician.Utils.DeepMerge (merged, orig)</strong>
+    </dt>
+    <dd>
+    Deep merge two tables
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">merged</span>
+         (table)
+        </li>
+        <li><span class="parameter">orig</span>
+         (table)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        merged (table)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.DisplayEmote"></a>
+    <strong>Musician.Utils.DisplayEmote (player, playerGUID, message)</strong>
+    </dt>
+    <dd>
+    Display a faked emote
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">player</span>
+         (string)
+        </li>
+        <li><span class="parameter">playerGUID</span>
+         (string)
+        </li>
+        <li><span class="parameter">message</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.EasyMenu"></a>
+    <strong>Musician.Utils.EasyMenu (menuList, menuFrame, anchor, x, y, displayMode, autoHideDelay)</strong>
+    </dt>
+    <dd>
+    Blizzard's EasyMenu using MSA_DropDownMenu
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">menuList</span>
+
+        </li>
+        <li><span class="parameter">menuFrame</span>
+
+        </li>
+        <li><span class="parameter">anchor</span>
+
+        </li>
+        <li><span class="parameter">x</span>
+
+        </li>
+        <li><span class="parameter">y</span>
+
+        </li>
+        <li><span class="parameter">displayMode</span>
+
+        </li>
+        <li><span class="parameter">autoHideDelay</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.EasyMenu_Initialize"></a>
+    <strong>Musician.Utils.EasyMenu_Initialize (frame, level, menuList)</strong>
+    </dt>
+    <dd>
+    Blizzard's EasyMenu_Initialize using MSA_DropDownMenu
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">frame</span>
+
+        </li>
+        <li><span class="parameter">level</span>
+
+        </li>
+        <li><span class="parameter">menuList</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.Error"></a>
+    <strong>Musician.Utils.Error (msg)</strong>
+    </dt>
+    <dd>
+    Display an error message in a popup
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">msg</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.FlipTable"></a>
+    <strong>Musician.Utils.FlipTable (orig)</strong>
+    </dt>
+    <dd>
+    Flip a table
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">orig</span>
+         (table)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        flipped (table)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.FormatPlayerName"></a>
+    <strong>Musician.Utils.FormatPlayerName (player)</strong>
+    </dt>
+    <dd>
+    Get player name for display
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">player</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        formattedPlayerName (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.FormatText"></a>
+    <strong>Musician.Utils.FormatText (text)</strong>
+    </dt>
+    <dd>
+    Format text, adding highlights etc.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">text</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        formattedText (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.FormatTime"></a>
+    <strong>Musician.Utils.FormatTime (time, simple)</strong>
+    </dt>
+    <dd>
+    Format time to mm:ss.ss format
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">time</span>
+         (number)
+        </li>
+        <li><span class="parameter">simple</span>
+         (boolean)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        formattedTime (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.FromHex"></a>
+    <strong>Musician.Utils.FromHex (hex)</strong>
+    </dt>
+    <dd>
+    Convert hex string to string
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">hex</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        str (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.GetChatIcon"></a>
+    <strong>Musician.Utils.GetChatIcon (path, r, g, b)</strong>
+    </dt>
+    <dd>
+    Return the code to insert an icon in a chat message or a text string
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">path</span>
+         (string)
+        </li>
+        <li><span class="parameter">r</span>
+         (number)] 0-1
+        </li>
+        <li><span class="parameter">g</span>
+         (number)] 0-1
+        </li>
+        <li><span class="parameter">b</span>
+         (number)] 0-1
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        chatIcon (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.GetColorCode"></a>
+    <strong>Musician.Utils.GetColorCode (r, g, b)</strong>
+    </dt>
+    <dd>
+    Get color code from RGB values
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">r</span>
+         (number) 0-1
+        </li>
+        <li><span class="parameter">g</span>
+         (number) 0-1
+        </li>
+        <li><span class="parameter">b</span>
+         (number) 0-1
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        colorCode (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.GetInstrumentData"></a>
+    <strong>Musician.Utils.GetInstrumentData (instrumentName, key)</strong>
+    </dt>
+    <dd>
+    Return instrument data for given MIDI key number
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">instrumentName</span>
+         (string)
+        </li>
+        <li><span class="parameter">key</span>
+         (int) MIDI key number
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        instrumentData (table) from Musician.INSTRUMENTS
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.GetInstrumentName"></a>
+    <strong>Musician.Utils.GetInstrumentName (instrument, key)</strong>
+    </dt>
+    <dd>
+    Return instrument name from its MIDI ID
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">instrument</span>
+         (int)
+        </li>
+        <li><span class="parameter">key</span>
+         (int)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        instrumentName (string) used as key in Musician.INSTRUMENTS
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.GetLink"></a>
+    <strong>Musician.Utils.GetLink (command, text, ...)</strong>
+    </dt>
+    <dd>
+    Get hyperlink
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">command</span>
+         (string)
+        </li>
+        <li><span class="parameter">text</span>
+         (string)
+        </li>
+        <li><span class="parameter">...</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        link (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.GetNormalizedRealmName"></a>
+    <strong>Musician.Utils.GetNormalizedRealmName ()</strong>
+    </dt>
+    <dd>
+    Return the normalized realm name the player belongs to
+ Safer than the standard GetNormalizedRealmName() that may return nil sometimes
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        realmName (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.GetOs"></a>
+    <strong>Musician.Utils.GetOs ()</strong>
+    </dt>
+    <dd>
+    Return operating system name
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        os (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.GetPlayerLink"></a>
+    <strong>Musician.Utils.GetPlayerLink (player)</strong>
+    </dt>
+    <dd>
+    Get player hyperlink
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">player</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        playerLink (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.GetPromoEmote"></a>
+    <strong>Musician.Utils.GetPromoEmote ()</strong>
+    </dt>
+    <dd>
+    Return the "Player is playing music" emote with promo message
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        promoEmote (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.GetRealmLocale"></a>
+    <strong>Musician.Utils.GetRealmLocale ()</strong>
+    </dt>
+    <dd>
+    Return the short locale code of the realm the player belongs to
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        locale (string) 'en', 'fr' etc.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.GetSampleId"></a>
+    <strong>Musician.Utils.GetSampleId (instrumentData, key)</strong>
+    </dt>
+    <dd>
+    Return sample ID for note and instrument data
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">instrumentData</span>
+         (table) as returned by Musician.Utils.GetSoundFile()
+        </li>
+        <li><span class="parameter">key</span>
+         (int) MIDI key number
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        sampleId (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.GetSoundFile"></a>
+    <strong>Musician.Utils.GetSoundFile (instrument, key)</strong>
+    </dt>
+    <dd>
+    Get the path to a sound file for an instrument and a key.
+ Also returns the instrument data from Musician.INSTRUMENTS
+ and all other suitable sound file paths for randomization.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">instrument</span>
+         (int) MIDI instrument index
+        </li>
+        <li><span class="parameter">key</span>
+         (int) MIDI key
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+        filePath (string) file path to be played</li>
+        <li>
+        instrumentData (table) from Musician.INSTRUMENTS</li>
+        <li>
+        soundFiles (table) all suitable file paths for this instrument and note</li>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.GetVersionText"></a>
+    <strong>Musician.Utils.GetVersionText ()</strong>
+    </dt>
+    <dd>
+    Return the current version as text for the end user
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        version (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.HasPromoEmote"></a>
+    <strong>Musician.Utils.HasPromoEmote (message)</strong>
+    </dt>
+    <dd>
+    Return true if the message contains the promo emote, in any language
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">message</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+        hasPromoEmote (boolean)</li>
+        <li>
+        isFullPromoEmote (boolean) true if the emote contains the part invinting other players to install Musician</li>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.Highlight"></a>
+    <strong>Musician.Utils.Highlight (text, color)</strong>
+    </dt>
+    <dd>
+    Highlight text
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">text</span>
+         (string)
+        </li>
+        <li><span class="parameter">color</span>
+         (string|Color)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        highlightedText (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.MuteGameMusic"></a>
+    <strong>Musician.Utils.MuteGameMusic (force)</strong>
+    </dt>
+    <dd>
+    Start or stop the actual game music if a song can actually be heard
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">force</span>
+         (boolean)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.NormalizePlayerName"></a>
+    <strong>Musician.Utils.NormalizePlayerName (playerName)</strong>
+    </dt>
+    <dd>
+    Return the normalized player name, including realm slug
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">playerName</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        normalizedPlayerName (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.NoteKey"></a>
+    <strong>Musician.Utils.NoteKey (noteName)</strong>
+    </dt>
+    <dd>
+    Return the MIDI key of the note name
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">noteName</span>
+         (string) from Musician.NOTE_NAMES
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        key (int)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.NoteName"></a>
+    <strong>Musician.Utils.NoteName (key)</strong>
+    </dt>
+    <dd>
+    Return the note name corresponding its MIDI key
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">key</span>
+         (int) MIDI key index
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        name (string) from Musician.NOTE_NAMES
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.OverrideNextFullPromoEmote"></a>
+    <strong>Musician.Utils.OverrideNextFullPromoEmote ()</strong>
+    </dt>
+    <dd>
+    Override the next full promo emote
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.PackNumber"></a>
+    <strong>Musician.Utils.PackNumber (num, bytes)</strong>
+    </dt>
+    <dd>
+    Pack an integer number into a string
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">num</span>
+         (int) integer to pack
+        </li>
+        <li><span class="parameter">bytes</span>
+         (int) number of bytes
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        data (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.PackPlayerGuid"></a>
+    <strong>Musician.Utils.PackPlayerGuid ()</strong>
+    </dt>
+    <dd>
+    Pack player GUID into a 6-byte string
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        data (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.PackPlayerPosition"></a>
+    <strong>Musician.Utils.PackPlayerPosition ()</strong>
+    </dt>
+    <dd>
+    Pack player position into a 18-byte chunk string
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        data (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.PackTime"></a>
+    <strong>Musician.Utils.PackTime (seconds, bytes, fps)</strong>
+    </dt>
+    <dd>
+    Pack a time or duration in seconds into a string
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">seconds</span>
+         (float)
+        </li>
+        <li><span class="parameter">bytes</span>
+         (int) Number of bytes
+        </li>
+        <li><span class="parameter">fps</span>
+         (float) Precision in frames par second
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        data (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.PaddingZeros"></a>
+    <strong>Musician.Utils.PaddingZeros (number, zeros)</strong>
+    </dt>
+    <dd>
+    Add padding zeros
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">number</span>
+         (int)
+        </li>
+        <li><span class="parameter">zeros</span>
+         (int)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        formattedNumber (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.ParseTime"></a>
+    <strong>Musician.Utils.ParseTime (timestamp)</strong>
+    </dt>
+    <dd>
+    Parse time in seconds from mm:ss.ss format
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">timestamp</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        seconds (number)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.PlayNote"></a>
+    <strong>Musician.Utils.PlayNote (instrument, key)</strong>
+    </dt>
+    <dd>
+    Start playing a note
+ Returns true if sound will actually be played, sound handle and instrument data
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">instrument</span>
+         (int) MIDI instrument
+        </li>
+        <li><span class="parameter">key</span>
+         (int)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+        willPlay (boolean)</li>
+        <li>
+        soundHandle (int)</li>
+        <li>
+        instrumentData (table) from Musician.INSTRUMENTS</li>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.PlaySoundFile"></a>
+    <strong>Musician.Utils.PlaySoundFile (soundFile, channel)</strong>
+    </dt>
+    <dd>
+    Safely play a sound file, even if the sound file does not exist.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">soundFile</span>
+         (string)
+        </li>
+        <li><span class="parameter">channel</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+        willPlay (boolean)</li>
+        <li>
+        soundHandle (int)</li>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.PlayerGuidIsVisible"></a>
+    <strong>Musician.Utils.PlayerGuidIsVisible (guid)</strong>
+    </dt>
+    <dd>
+    Return true if the player whose GUID is provided is visible (loaded) by the game client
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">guid</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        isVisible (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.PlayerIsInGroup"></a>
+    <strong>Musician.Utils.PlayerIsInGroup (playerName)</strong>
+    </dt>
+    <dd>
+    Return true if the player is in my party or raid
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">playerName</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        isInMyGroup (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.PlayerIsMyself"></a>
+    <strong>Musician.Utils.PlayerIsMyself (playerName)</strong>
+    </dt>
+    <dd>
+    Return true if the provided player name is myself
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">playerName</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        isMyself (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.PlayerIsOnSameRealm"></a>
+    <strong>Musician.Utils.PlayerIsOnSameRealm (playerName)</strong>
+    </dt>
+    <dd>
+    Return true if the provided player name is on the same realm or connected realm as me
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">playerName</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        isOnSameRealm (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.PlayerRealm"></a>
+    <strong>Musician.Utils.PlayerRealm (playerName)</strong>
+    </dt>
+    <dd>
+    Return the player realm slug
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">playerName</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        realmSlug (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.Popup"></a>
+    <strong>Musician.Utils.Popup (msg, callback, force)</strong>
+    </dt>
+    <dd>
+    Display a message in a popup
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">msg</span>
+         (string)
+        </li>
+        <li><span class="parameter">callback</span>
+         (function)
+        </li>
+        <li><span class="parameter">force</span>
+         (boolean)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.PreloadNote"></a>
+    <strong>Musician.Utils.PreloadNote (instrument, key)</strong>
+    </dt>
+    <dd>
+    Preload note
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">instrument</span>
+         (int)
+        </li>
+        <li><span class="parameter">key</span>
+         (int)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+        hasSample (boolean)</li>
+        <li>
+        preloadTime (number) in seconds</li>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.Print"></a>
+    <strong>Musician.Utils.Print (msg)</strong>
+    </dt>
+    <dd>
+    Display a message in the console
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">msg</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.PrintError"></a>
+    <strong>Musician.Utils.PrintError (msg)</strong>
+    </dt>
+    <dd>
+    Display an error message in the console
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">msg</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.ReadBytes"></a>
+    <strong>Musician.Utils.ReadBytes (str, bytes)</strong>
+    </dt>
+    <dd>
+    Read some bytes from a string and remove them
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">str</span>
+         (string)
+        </li>
+        <li><span class="parameter">bytes</span>
+         (int)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+        data (string) read bytes</li>
+        <li>
+        str (string) new string</li>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.RemoveChatMessage"></a>
+    <strong>Musician.Utils.RemoveChatMessage (lineID)</strong>
+    </dt>
+    <dd>
+    Remove a chat message by its line ID
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">lineID</span>
+         (int)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.ResetFullPromoEmoteCooldown"></a>
+    <strong>Musician.Utils.ResetFullPromoEmoteCooldown ()</strong>
+    </dt>
+    <dd>
+    Mark the full promo emote as recently seen
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.SendPromoEmote"></a>
+    <strong>Musician.Utils.SendPromoEmote ()</strong>
+    </dt>
+    <dd>
+    Send the "Player is playing music" emote with promo message
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.SetFontStringTextFixedSize"></a>
+    <strong>Musician.Utils.SetFontStringTextFixedSize (fontString, text)</strong>
+    </dt>
+    <dd>
+    Set text to a FontString element ensuring the visual text size is respected
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">fontString</span>
+         (FontString)
+        </li>
+        <li><span class="parameter">text</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.SimplePlayerName"></a>
+    <strong>Musician.Utils.SimplePlayerName (playerName)</strong>
+    </dt>
+    <dd>
+    Return the simple player name, including the realm slug if needed
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">playerName</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        simpleName (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.SongIsPlaying"></a>
+    <strong>Musician.Utils.SongIsPlaying ()</strong>
+    </dt>
+    <dd>
+    Return true if a song is actually playing and is audible
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        isPlaying (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.ToHex"></a>
+    <strong>Musician.Utils.ToHex (str)</strong>
+    </dt>
+    <dd>
+    Convert string to hex string
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">str</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        hex (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.UnpackNumber"></a>
+    <strong>Musician.Utils.UnpackNumber (data)</strong>
+    </dt>
+    <dd>
+    Unpack a string into an integer number
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">data</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        num (int)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.UnpackPlayerGuid"></a>
+    <strong>Musician.Utils.UnpackPlayerGuid (str)</strong>
+    </dt>
+    <dd>
+    Unpack player GUID from string
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">str</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        guid (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.UnpackPlayerPosition"></a>
+    <strong>Musician.Utils.UnpackPlayerPosition (str)</strong>
+    </dt>
+    <dd>
+    Unpack player position from chunk string
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">str</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+        posY (number)</li>
+        <li>
+        posX (number)</li>
+        <li>
+        posZ (number)</li>
+        <li>
+        instanceID (int)</li>
+        <li>
+        guid (string)</li>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.UnpackTime"></a>
+    <strong>Musician.Utils.UnpackTime (data, fps)</strong>
+    </dt>
+    <dd>
+    Unpack a string into a time or duration in seconds
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">data</span>
+         (string)
+        </li>
+        <li><span class="parameter">fps</span>
+         (float) Precision in frames par second
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        seconds (float)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.VersionCompare"></a>
+    <strong>Musician.Utils.VersionCompare (versionA, versionB)</strong>
+    </dt>
+    <dd>
+    Compare two version numbers
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">versionA</span>
+         (string)
+        </li>
+        <li><span class="parameter">versionB</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        difference (number) 0 if A = B, 1 if A > B, -1 if A < B
+    </ol>
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2020-03-28 17:38:12 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

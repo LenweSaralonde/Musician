@@ -1,0 +1,1206 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Musician</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/Musician.html">Musician</a></li>
+  <li><a href="../modules/Musician.About.html">Musician.About</a></li>
+  <li><a href="../modules/Musician.Comm.html">Musician.Comm</a></li>
+  <li><a href="../modules/Musician.Constants.html">Musician.Constants</a></li>
+  <li><a href="../modules/Musician.CrossRP.html">Musician.CrossRP</a></li>
+  <li><a href="../modules/Musician.CrossRP.Options.html">Musician.CrossRP.Options</a></li>
+  <li><a href="../modules/Musician.ElvUI.html">Musician.ElvUI</a></li>
+  <li><a href="../modules/Musician.Extras.html">Musician.Extras</a></li>
+  <li><a href="../modules/Musician.Frame.html">Musician.Frame</a></li>
+  <li><strong>Musician.Keyboard</strong></li>
+  <li><a href="../modules/Musician.KeyboardConfig.html">Musician.KeyboardConfig</a></li>
+  <li><a href="../modules/Musician.KeyboardUtils.html">Musician.KeyboardUtils</a></li>
+  <li><a href="../modules/Musician.KuiNamePlates.html">Musician.KuiNamePlates</a></li>
+  <li><a href="../modules/Musician.Live.html">Musician.Live</a></li>
+  <li><a href="../modules/Musician.MyRolePlay.html">Musician.MyRolePlay</a></li>
+  <li><a href="../modules/Musician.NamePlates.html">Musician.NamePlates</a></li>
+  <li><a href="../modules/Musician.NamePlates.Options.html">Musician.NamePlates.Options</a></li>
+  <li><a href="../modules/Musician.NeatPlates.html">Musician.NeatPlates</a></li>
+  <li><a href="../modules/Musician.Options.html">Musician.Options</a></li>
+  <li><a href="../modules/Musician.Plater.html">Musician.Plater</a></li>
+  <li><a href="../modules/Musician.Preloader.html">Musician.Preloader</a></li>
+  <li><a href="../modules/Musician.Registry.html">Musician.Registry</a></li>
+  <li><a href="../modules/Musician.Song.html">Musician.Song</a></li>
+  <li><a href="../modules/Musician.TRP3.html">Musician.TRP3</a></li>
+  <li><a href="../modules/Musician.TRP3.Options.html">Musician.TRP3.Options</a></li>
+  <li><a href="../modules/Musician.TrackEditor.html">Musician.TrackEditor</a></li>
+  <li><a href="../modules/Musician.Utils.html">Musician.Utils</a></li>
+  <li><a href="../modules/Musician.VolumeMeter.html">Musician.VolumeMeter</a></li>
+  <li><a href="../modules/MusicianButton.html">MusicianButton</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>Musician.Keyboard</code></h1>
+<p>Live keyboard window</p>
+<p></p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.BuildMapping">Musician.Keyboard.BuildMapping ()</a></td>
+	<td class="summary">Build keyboard mapping from actual configuration</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.ConfigureDemo">Musician.Keyboard.ConfigureDemo (doKeyboardRefresh)</a></td>
+	<td class="summary">Configure demo mode relatively to the source song</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.DisableDemoMode">Musician.Keyboard.DisableDemoMode (doKeyboardRefresh)</a></td>
+	<td class="summary">Disable demo mode</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.EnableDemoMode">Musician.Keyboard.EnableDemoMode (upperTrackIndex, lowerTrackIndex, doKeyboardRefresh)</a></td>
+	<td class="summary">Enable demo mode with provided track indexes</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.Init">Musician.Keyboard.Init ()</a></td>
+	<td class="summary">Initialize keyboard</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.KeyButtonStateDiffers">Musician.Keyboard.KeyButtonStateDiffers (keyValue, down)</a></td>
+	<td class="summary">Return true if the provided keypress' button down state differs from the provided one.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.OnFrame">Musician.Keyboard.OnFrame (event, elapsed)</a></td>
+	<td class="summary">OnFrame</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.OnKey">Musician.Keyboard.OnKey (keyValue, down)</a></td>
+	<td class="summary">Key up/down handler, from physical or on-screen keyboard</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.OnLiveBandSync">Musician.Keyboard.OnLiveBandSync (event, player, isSynced)</a></td>
+	<td class="summary">OnLiveBandSync</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.OnLiveNoteOff">Musician.Keyboard.OnLiveNoteOff (event, key, layer)</a></td>
+	<td class="summary">OnLiveNoteOff</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.OnLiveNoteOn">Musician.Keyboard.OnLiveNoteOn (event, key, layer, instrumentData, isChordNote)</a></td>
+	<td class="summary">OnLiveNoteOn</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.OnNoteOff">Musician.Keyboard.OnNoteOff (event, song, track, key)</a></td>
+	<td class="summary">Demo mode OnNoteOff</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.OnNoteOn">Musician.Keyboard.OnNoteOn (event, song, track, key)</a></td>
+	<td class="summary">Demo mode OnNoteOn</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.OnPhysicalKey">Musician.Keyboard.OnPhysicalKey (keyValue, down)</a></td>
+	<td class="summary">Key up/down handler, from physical keyboard</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.OnPhysicalKeyDown">Musician.Keyboard.OnPhysicalKeyDown (event, keyValue)</a></td>
+	<td class="summary">OnPhysicalKeyDown</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.OnPhysicalKeyUp">Musician.Keyboard.OnPhysicalKeyUp (event, keyValue)</a></td>
+	<td class="summary">OnPhysicalKeyUp</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.OnSongPlay">Musician.Keyboard.OnSongPlay (event, song)</a></td>
+	<td class="summary">Demo mode OnSongPlay</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.SetBaseKey">Musician.Keyboard.SetBaseKey (key, doKeyboardRefresh)</a></td>
+	<td class="summary">Change base key</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.SetButtonState">Musician.Keyboard.SetButtonState (button, down)</a></td>
+	<td class="summary">Set on-screen keyboard button up/down state, without triggering its action.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.SetButtonsUp">Musician.Keyboard.SetButtonsUp (onlyForLayer)</a></td>
+	<td class="summary">Set all buttons up</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.SetInstrument">Musician.Keyboard.SetInstrument (layer, instrument, doKeyboardRefresh)</a></td>
+	<td class="summary">Change Instrument</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.SetKeyShift">Musician.Keyboard.SetKeyShift (layer, shift, doKeyboardRefresh)</a></td>
+	<td class="summary">Set key shift amount</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.SetLayout">Musician.Keyboard.SetLayout (layoutIndex, doKeyboardRefresh)</a></td>
+	<td class="summary">Change keyboard layout</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.SetPowerChords">Musician.Keyboard.SetPowerChords (layer, enable, doKeyboardRefresh)</a></td>
+	<td class="summary">Set power chords \m/</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.ShiftKeys">Musician.Keyboard.ShiftKeys (layer, amount, doKeyboardRefresh)</a></td>
+	<td class="summary">Shift keys</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.Show">Musician.Keyboard.Show ()</a></td>
+	<td class="summary">Show</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.ToggleUI">Musician.Keyboard.ToggleUI ()</a></td>
+	<td class="summary">Toggle UI, keeping the keyboard visible</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.UpdateBandSyncButton">Musician.Keyboard.UpdateBandSyncButton ()</a></td>
+	<td class="summary">Update band sync button</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicianKeyboard.DeleteProgram">MusicianKeyboard.DeleteProgram (program)</a></td>
+	<td class="summary">Delete a program</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicianKeyboard.FunctionKey">MusicianKeyboard.FunctionKey (down, keyValue)</a></td>
+	<td class="summary">Function key pressed</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicianKeyboard.HasSavedProgram">MusicianKeyboard.HasSavedProgram (program)</a></td>
+	<td class="summary">Has saved program</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicianKeyboard.IsCurrentProgram">MusicianKeyboard.IsCurrentProgram (program)</a></td>
+	<td class="summary">Indicate if the provided program is the current one that has been loaded</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicianKeyboard.IsDeletingProgram">MusicianKeyboard.IsDeletingProgram ()</a></td>
+	<td class="summary">Get program deleting mode</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicianKeyboard.IsSavingProgram">MusicianKeyboard.IsSavingProgram ()</a></td>
+	<td class="summary">Get program saving mode</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicianKeyboard.LoadConfig">MusicianKeyboard.LoadConfig (config)</a></td>
+	<td class="summary">Load configuration</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicianKeyboard.LoadProgram">MusicianKeyboard.LoadProgram (program)</a></td>
+	<td class="summary">Load saved program</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicianKeyboard.NoteKey">MusicianKeyboard.NoteKey (down, keyValue)</a></td>
+	<td class="summary">Note key pressed</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicianKeyboard.ProgramActionKey">MusicianKeyboard.ProgramActionKey (down, keyValue)</a></td>
+	<td class="summary">Program action key pressed</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicianKeyboard.SaveProgram">MusicianKeyboard.SaveProgram (program)</a></td>
+	<td class="summary">Save program</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicianKeyboard.SetDeletingProgram">MusicianKeyboard.SetDeletingProgram (value)</a></td>
+	<td class="summary">Set program deleting mode</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicianKeyboard.SetSavingProgram">MusicianKeyboard.SetSavingProgram (value)</a></td>
+	<td class="summary">Set program saving mode</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "Musician.Keyboard.BuildMapping"></a>
+    <strong>Musician.Keyboard.BuildMapping ()</strong>
+    </dt>
+    <dd>
+    Build keyboard mapping from actual configuration
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.ConfigureDemo"></a>
+    <strong>Musician.Keyboard.ConfigureDemo (doKeyboardRefresh)</strong>
+    </dt>
+    <dd>
+    Configure demo mode relatively to the source song
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">doKeyboardRefresh</span>
+         (boolean)] Rebuild keys mapping when true (default)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.DisableDemoMode"></a>
+    <strong>Musician.Keyboard.DisableDemoMode (doKeyboardRefresh)</strong>
+    </dt>
+    <dd>
+    Disable demo mode
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">doKeyboardRefresh</span>
+         (boolean)] Rebuild keys mapping when true (default)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.EnableDemoMode"></a>
+    <strong>Musician.Keyboard.EnableDemoMode (upperTrackIndex, lowerTrackIndex, doKeyboardRefresh)</strong>
+    </dt>
+    <dd>
+    Enable demo mode with provided track indexes
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">upperTrackIndex</span>
+         (number)
+        </li>
+        <li><span class="parameter">lowerTrackIndex</span>
+         (number)
+        </li>
+        <li><span class="parameter">doKeyboardRefresh</span>
+         (boolean)] Rebuild keys mapping when true (default)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.Init"></a>
+    <strong>Musician.Keyboard.Init ()</strong>
+    </dt>
+    <dd>
+    Initialize keyboard
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.KeyButtonStateDiffers"></a>
+    <strong>Musician.Keyboard.KeyButtonStateDiffers (keyValue, down)</strong>
+    </dt>
+    <dd>
+    Return true if the provided keypress' button down state differs from the provided one.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">keyValue</span>
+         (string)
+        </li>
+        <li><span class="parameter">down</span>
+         (boolean)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.OnFrame"></a>
+    <strong>Musician.Keyboard.OnFrame (event, elapsed)</strong>
+    </dt>
+    <dd>
+    OnFrame
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+         (string)
+        </li>
+        <li><span class="parameter">elapsed</span>
+         (boolean)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.OnKey"></a>
+    <strong>Musician.Keyboard.OnKey (keyValue, down)</strong>
+    </dt>
+    <dd>
+    Key up/down handler, from physical or on-screen keyboard
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">keyValue</span>
+         (string)
+        </li>
+        <li><span class="parameter">down</span>
+         (boolean)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (boolean) True if the keypress was consumed
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.OnLiveBandSync"></a>
+    <strong>Musician.Keyboard.OnLiveBandSync (event, player, isSynced)</strong>
+    </dt>
+    <dd>
+    OnLiveBandSync
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+
+        </li>
+        <li><span class="parameter">player</span>
+
+        </li>
+        <li><span class="parameter">isSynced</span>
+        Display "Is synced" emote in the chat
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.OnLiveNoteOff"></a>
+    <strong>Musician.Keyboard.OnLiveNoteOff (event, key, layer)</strong>
+    </dt>
+    <dd>
+    OnLiveNoteOff
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+         (string)
+        </li>
+        <li><span class="parameter">key</span>
+         (number)
+        </li>
+        <li><span class="parameter">layer</span>
+         (number)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.OnLiveNoteOn"></a>
+    <strong>Musician.Keyboard.OnLiveNoteOn (event, key, layer, instrumentData, isChordNote)</strong>
+    </dt>
+    <dd>
+    OnLiveNoteOn
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+         (string)
+        </li>
+        <li><span class="parameter">key</span>
+         (number)
+        </li>
+        <li><span class="parameter">layer</span>
+         (number)
+        </li>
+        <li><span class="parameter">instrumentData</span>
+         (table)
+        </li>
+        <li><span class="parameter">isChordNote</span>
+         (boolean)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.OnNoteOff"></a>
+    <strong>Musician.Keyboard.OnNoteOff (event, song, track, key)</strong>
+    </dt>
+    <dd>
+    Demo mode OnNoteOff
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+         (string)
+        </li>
+        <li><span class="parameter">song</span>
+         (Musician.Song)
+        </li>
+        <li><span class="parameter">track</span>
+         (number)
+        </li>
+        <li><span class="parameter">key</span>
+         (number)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.OnNoteOn"></a>
+    <strong>Musician.Keyboard.OnNoteOn (event, song, track, key)</strong>
+    </dt>
+    <dd>
+    Demo mode OnNoteOn
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+         (string)
+        </li>
+        <li><span class="parameter">song</span>
+         (Musician.Song)
+        </li>
+        <li><span class="parameter">track</span>
+         (table)
+        </li>
+        <li><span class="parameter">key</span>
+         (number)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.OnPhysicalKey"></a>
+    <strong>Musician.Keyboard.OnPhysicalKey (keyValue, down)</strong>
+    </dt>
+    <dd>
+    Key up/down handler, from physical keyboard
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">keyValue</span>
+         (string)
+        </li>
+        <li><span class="parameter">down</span>
+         (boolean)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.OnPhysicalKeyDown"></a>
+    <strong>Musician.Keyboard.OnPhysicalKeyDown (event, keyValue)</strong>
+    </dt>
+    <dd>
+    OnPhysicalKeyDown
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+         (string)
+        </li>
+        <li><span class="parameter">keyValue</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.OnPhysicalKeyUp"></a>
+    <strong>Musician.Keyboard.OnPhysicalKeyUp (event, keyValue)</strong>
+    </dt>
+    <dd>
+    OnPhysicalKeyUp
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+         (string)
+        </li>
+        <li><span class="parameter">keyValue</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.OnSongPlay"></a>
+    <strong>Musician.Keyboard.OnSongPlay (event, song)</strong>
+    </dt>
+    <dd>
+    Demo mode OnSongPlay
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+         (string)
+        </li>
+        <li><span class="parameter">song</span>
+         (Musician.Song)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.SetBaseKey"></a>
+    <strong>Musician.Keyboard.SetBaseKey (key, doKeyboardRefresh)</strong>
+    </dt>
+    <dd>
+    Change base key
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">key</span>
+         (number)
+        </li>
+        <li><span class="parameter">doKeyboardRefresh</span>
+         (boolean)] Rebuild keys mapping when true (default)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.SetButtonState"></a>
+    <strong>Musician.Keyboard.SetButtonState (button, down)</strong>
+    </dt>
+    <dd>
+    Set on-screen keyboard button up/down state, without triggering its action.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">button</span>
+         (Button)
+        </li>
+        <li><span class="parameter">down</span>
+         (boolean)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.SetButtonsUp"></a>
+    <strong>Musician.Keyboard.SetButtonsUp (onlyForLayer)</strong>
+    </dt>
+    <dd>
+    Set all buttons up
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">onlyForLayer</span>
+         (number)]
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.SetInstrument"></a>
+    <strong>Musician.Keyboard.SetInstrument (layer, instrument, doKeyboardRefresh)</strong>
+    </dt>
+    <dd>
+    Change Instrument
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layer</span>
+         (number)
+        </li>
+        <li><span class="parameter">instrument</span>
+         (number)
+        </li>
+        <li><span class="parameter">doKeyboardRefresh</span>
+         (boolean)] Rebuild keys mapping when true (default)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.SetKeyShift"></a>
+    <strong>Musician.Keyboard.SetKeyShift (layer, shift, doKeyboardRefresh)</strong>
+    </dt>
+    <dd>
+    Set key shift amount
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layer</span>
+         (number)
+        </li>
+        <li><span class="parameter">shift</span>
+         (number) Shift amount
+        </li>
+        <li><span class="parameter">doKeyboardRefresh</span>
+         (boolean)] Rebuild keys mapping when true (default)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.SetLayout"></a>
+    <strong>Musician.Keyboard.SetLayout (layoutIndex, doKeyboardRefresh)</strong>
+    </dt>
+    <dd>
+    Change keyboard layout
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layoutIndex</span>
+         (number)
+        </li>
+        <li><span class="parameter">doKeyboardRefresh</span>
+         (boolean)] Rebuild keys mapping when true (default)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.SetPowerChords"></a>
+    <strong>Musician.Keyboard.SetPowerChords (layer, enable, doKeyboardRefresh)</strong>
+    </dt>
+    <dd>
+    Set power chords \m/
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layer</span>
+         (number)
+        </li>
+        <li><span class="parameter">enable</span>
+         (boolean)
+        </li>
+        <li><span class="parameter">doKeyboardRefresh</span>
+         (boolean)] Rebuild keys mapping when true (default)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.ShiftKeys"></a>
+    <strong>Musician.Keyboard.ShiftKeys (layer, amount, doKeyboardRefresh)</strong>
+    </dt>
+    <dd>
+    Shift keys
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layer</span>
+         (number)
+        </li>
+        <li><span class="parameter">amount</span>
+         (number)
+        </li>
+        <li><span class="parameter">doKeyboardRefresh</span>
+         (boolean)] Rebuild keys mapping when true (default)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.Show"></a>
+    <strong>Musician.Keyboard.Show ()</strong>
+    </dt>
+    <dd>
+    Show
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.ToggleUI"></a>
+    <strong>Musician.Keyboard.ToggleUI ()</strong>
+    </dt>
+    <dd>
+    Toggle UI, keeping the keyboard visible
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.UpdateBandSyncButton"></a>
+    <strong>Musician.Keyboard.UpdateBandSyncButton ()</strong>
+    </dt>
+    <dd>
+    Update band sync button
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicianKeyboard.DeleteProgram"></a>
+    <strong>MusicianKeyboard.DeleteProgram (program)</strong>
+    </dt>
+    <dd>
+    Delete a program
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">program</span>
+         (number)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicianKeyboard.FunctionKey"></a>
+    <strong>MusicianKeyboard.FunctionKey (down, keyValue)</strong>
+    </dt>
+    <dd>
+    Function key pressed
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">down</span>
+         (boolean)
+        </li>
+        <li><span class="parameter">keyValue</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (boolean) True if the keypress was consumed
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicianKeyboard.HasSavedProgram"></a>
+    <strong>MusicianKeyboard.HasSavedProgram (program)</strong>
+    </dt>
+    <dd>
+    Has saved program
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">program</span>
+         (number)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicianKeyboard.IsCurrentProgram"></a>
+    <strong>MusicianKeyboard.IsCurrentProgram (program)</strong>
+    </dt>
+    <dd>
+    Indicate if the provided program is the current one that has been loaded
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">program</span>
+         (number)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicianKeyboard.IsDeletingProgram"></a>
+    <strong>MusicianKeyboard.IsDeletingProgram ()</strong>
+    </dt>
+    <dd>
+    Get program deleting mode
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicianKeyboard.IsSavingProgram"></a>
+    <strong>MusicianKeyboard.IsSavingProgram ()</strong>
+    </dt>
+    <dd>
+    Get program saving mode
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicianKeyboard.LoadConfig"></a>
+    <strong>MusicianKeyboard.LoadConfig (config)</strong>
+    </dt>
+    <dd>
+    Load configuration
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">config</span>
+         (table)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicianKeyboard.LoadProgram"></a>
+    <strong>MusicianKeyboard.LoadProgram (program)</strong>
+    </dt>
+    <dd>
+    Load saved program
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">program</span>
+         (number)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicianKeyboard.NoteKey"></a>
+    <strong>MusicianKeyboard.NoteKey (down, keyValue)</strong>
+    </dt>
+    <dd>
+    Note key pressed
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">down</span>
+         (boolean)
+        </li>
+        <li><span class="parameter">keyValue</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (boolean) True if the keypress was consumed
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicianKeyboard.ProgramActionKey"></a>
+    <strong>MusicianKeyboard.ProgramActionKey (down, keyValue)</strong>
+    </dt>
+    <dd>
+    Program action key pressed
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">down</span>
+         (boolean)
+        </li>
+        <li><span class="parameter">keyValue</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (boolean) True if the keypress was consumed
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicianKeyboard.SaveProgram"></a>
+    <strong>MusicianKeyboard.SaveProgram (program)</strong>
+    </dt>
+    <dd>
+    Save program
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">program</span>
+         (number)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicianKeyboard.SetDeletingProgram"></a>
+    <strong>MusicianKeyboard.SetDeletingProgram (value)</strong>
+    </dt>
+    <dd>
+    Set program deleting mode
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+         (boolean)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicianKeyboard.SetSavingProgram"></a>
+    <strong>MusicianKeyboard.SetSavingProgram (value)</strong>
+    </dt>
+    <dd>
+    Set program saving mode
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+         (boolean)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2020-03-28 17:38:12 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
