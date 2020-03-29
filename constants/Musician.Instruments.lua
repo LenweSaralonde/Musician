@@ -65,8 +65,8 @@ Musician.INSTRUMENTS = {
 		isPercussion = false,
 		isPlucked = true,
 		midi = 15,
-		color = Musician.COLORS.DarkWhiten,
-		source = "sf2midi"
+		color = Musician.COLORS.DarkWhite,
+		source = "LABS Dulcimer"
 	},
 	["female-voice"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\female-voice",
