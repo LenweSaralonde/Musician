@@ -466,7 +466,7 @@ function Musician.Utils.MuteGameMusic(force)
 
 	if mute then
 		-- Play a silent music track to mute and fade actual game music
-		PlayMusic("Interface\\AddOns\\Musician\\instruments\\silent.mp3")
+		PlayMusic("Interface\\AddOns\\Musician\\instruments\\silent\\silent.mp3")
 	else
 		-- Stop custom silent music, resume game music
 		StopMusic()
