@@ -241,6 +241,7 @@ msg.PLAYER_IS_UNMUTED = "{icon}{player} is now unmuted."
 
 msg.INSTRUMENT_NAMES = {
 	["none"] = "(None)",
+	["accordion"] = "Accordion",
 	["bagpipe"] = "Bagpipe",
 	["dulcimer"] = "Dulcimer (hammered)",
 	["lute"] = "Lute",

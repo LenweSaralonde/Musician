@@ -278,6 +278,7 @@ msg.PLAYER_IS_MUTED = "{icon}{player} est maintenant en mode silencieux."
 msg.PLAYER_IS_UNMUTED = "{icon}{player} n'est plus en mode silencieux."
 
 msg.INSTRUMENT_NAMES['none'] = "(Aucun)"
+msg.INSTRUMENT_NAMES['accordion'] = "Accordéon"
 msg.INSTRUMENT_NAMES['bagpipe'] = "Cornemuse"
 msg.INSTRUMENT_NAMES['dulcimer'] = "Dulcimer à marteaux"
 msg.INSTRUMENT_NAMES['lute'] = "Luth"

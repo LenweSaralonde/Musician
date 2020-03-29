@@ -27,6 +27,14 @@ Musician.INSTRUMENTS = {
 		midi = -1,
 		color = Musician.COLORS.Gray
 	},
+	["accordion"] = {
+		path = "Interface\\AddOns\\Musician\\instruments\\accordion",
+		decay = 100,
+		isPercussion = false,
+		midi = 22,
+		color = Musician.COLORS.DarkSpringGreen,
+		source = "Safwan Matni Accordion"
+	},
 	["bagpipe"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\bagpipe",
 		decay = 100,
@@ -402,6 +410,7 @@ Musician.INSTRUMENTS_AVAILABLE = {
 	"harp",
 	"dulcimer",
 	"bagpipe",
+	"accordion",
 	"fiddle",
 	"cello",
 	"female-voice",

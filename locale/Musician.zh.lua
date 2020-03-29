@@ -278,6 +278,7 @@ msg.PLAYER_IS_MUTED = "{icon}{player}已静音。"
 msg.PLAYER_IS_UNMUTED = "{icon}{player}已关闭静音。"
 
 msg.INSTRUMENT_NAMES["none"] = "(无)"
+msg.INSTRUMENT_NAMES["accordion"] = "手风琴"
 msg.INSTRUMENT_NAMES["bagpipe"] = "风笛"
 msg.INSTRUMENT_NAMES["dulcimer"] = "击锤扬琴"
 msg.INSTRUMENT_NAMES["lute"] = "鲁特琴"
