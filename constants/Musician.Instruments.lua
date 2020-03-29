@@ -33,7 +33,7 @@ Musician.INSTRUMENTS = {
 		isPercussion = false,
 		midi = 109,
 		color = Musician.COLORS.LightGreen,
-		source = "Merlin Vienna 2"
+		source = "ERA II Medieval Legends"
 	},
 	["bassoon"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\bassoon",
