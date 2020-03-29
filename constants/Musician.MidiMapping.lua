@@ -23,14 +23,14 @@ Musician.MIDI_INSTRUMENT_MAPPING = {
 	[Instrument.Dulcimer] = "dulcimer",
 
 	-- Organ
-	[Instrument.DrawbarOrgan] = "lute",
-	[Instrument.PercussiveOrgan] = "lute",
-	[Instrument.RockOrgan] = "lute",
-	[Instrument.ChurchOrgan] = "lute",
-	[Instrument.ReedOrgan] = "lute",
-	[Instrument.Accordion] = "lute",
-	[Instrument.Harmonica] = "lute",
-	[Instrument.TangoAccordion] = "lute",
+	[Instrument.DrawbarOrgan] = "accordion",
+	[Instrument.PercussiveOrgan] = "accordion",
+	[Instrument.RockOrgan] = "accordion",
+	[Instrument.ChurchOrgan] = "accordion",
+	[Instrument.ReedOrgan] = "accordion",
+	[Instrument.Accordion] = "accordion",
+	[Instrument.Harmonica] = "accordion",
+	[Instrument.TangoAccordion] = "accordion",
 
 	-- Guitar
 	[Instrument.AcousticGuitarNylon] = "lute",
