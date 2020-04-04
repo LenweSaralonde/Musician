@@ -98,7 +98,7 @@ Musician.INSTRUMENTS = {
 		isPercussion = false,
 		midi = 110,
 		color = Musician.COLORS.Orange,
-		source = "Celtic And Folks Sounds For Christmas"
+		source = "Lewis E. Pyle Violin"
 	},
 	["harp"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\harp",
