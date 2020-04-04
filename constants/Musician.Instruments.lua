@@ -124,7 +124,7 @@ Musician.INSTRUMENTS = {
 		isPercussion = false,
 		midi = 74,
 		color = Musician.COLORS.SpringGreen,
-		source = "Feroyn's Flute"
+		source = "ERA II Medieval Legends"
 	},
 	["trombone"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\trombone",
