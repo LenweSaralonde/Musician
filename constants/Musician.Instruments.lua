@@ -116,7 +116,7 @@ Musician.INSTRUMENTS = {
 		isPlucked = true,
 		midi = 24,
 		color = Musician.COLORS.LightOrange,
-		source = "BOB Early Music Renaissance Lute"
+		source = "ERA II Medieval Legends"
 	},
 	["recorder"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\recorder",
