@@ -78,7 +78,7 @@ Musician.INSTRUMENTS = {
 	},
 	["female-voice"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\female-voice",
-		decay = 200,
+		decay = 100,
 		isPercussion = false,
 		midi = 53,
 		color = Musician.COLORS.LightBlue,
@@ -86,11 +86,11 @@ Musician.INSTRUMENTS = {
 	},
 	["male-voice"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\male-voice",
-		decay = 200,
+		decay = 100,
 		isPercussion = false,
 		midi = 52,
 		color = Musician.COLORS.Blue,
-		source = "Olympus Mike-Ro Solo Tenor"
+		source = "ERA II Vocal Codex"
 	},
 	["fiddle"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\fiddle",
