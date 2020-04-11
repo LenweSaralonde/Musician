@@ -19,6 +19,7 @@ local totalLoadingTime
 local averageLoadingTime
 local totalSamples
 local preloadedSamples
+local quickPreloading = true
 
 --- Preloader initialization
 --
@@ -55,6 +56,33 @@ function Musician.Preloader.Init()
 			end
 		end
 	end
+	Musician.Utils.Debug(MODULE_NAME, totalSamples .. " samples to preload")
+
+	-- Initiate quick preloading
+	Musician.Preloader.QuickPreload()
+end
+
+--- Attempt to preload all samples at startup
+--
+function Musician.Preloader.QuickPreload()
+	Musician.Utils.Debug(MODULE_NAME, "quick preloading started.")
+
+	local quickPreloadingTime = 0
+	local startTime = debugprofilestop()
+	while not(preloaded) do
+		Musician.Preloader.PreloadNext()
+		quickPreloadingTime = debugprofilestop() - startTime
+		-- Quick preloading takes longer than 15 seconds: abort it
+		if quickPreloadingTime > 15000 then
+			quickPreloading = false
+			Musician.Utils.Debug(MODULE_NAME, "quick preloading aborted at " .. floor(100 * Musician.Preloader.GetProgress()) .. "% (timeout).")
+			return
+		end
+	end
+	quickPreloading = false
+	Musician.Utils.Debug(MODULE_NAME, "quick preloading complete!")
+
+	-- Measured preloading time: ~12s from SSD, ~0.2s from RAM
 end
 
 --- Preload next sample
@@ -106,6 +134,7 @@ function Musician.Preloader.PreloadNext()
 			else
 				-- No more note to preload
 				if not(preloaded) then
+					Musician.Utils.Debug(MODULE_NAME, "preloading complete in " .. floor(totalLoadingTime) .. " ms (average ".. floor(averageLoadingTime) .. " ms).")
 					preloaded = true
 					Musician.Preloader:SendMessage(Musician.Events.PreloadingProgress, Musician.Preloader.GetProgress())
 					Musician.Preloader:SendMessage(Musician.Events.PreloadingComplete)
@@ -139,6 +168,11 @@ end
 --- Main on update function, called on each frame
 -- @param elapsed (number)
 function Musician.Preloader.OnUpdate(elapsed)
+	-- Quick preloading in progress
+	if quickPreloading and not(preloaded) then
+		return
+	end
+
 	frameWaitedTime = frameWaitedTime + elapsed
 	if frameWaitedTime >= Musician.Preloader.GetFrameWaitingTime() then
 		frameWaitedTime = 0
