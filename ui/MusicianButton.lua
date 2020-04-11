@@ -56,6 +56,7 @@ function MusicianButton.Init()
 
 	-- Update icons when preloading is complete
 	MusicianButton:RegisterMessage(Musician.Events.PreloadingComplete, MusicianButton.UpdateIcons)
+	MusicianButton.UpdateIcons()
 end
 
 --- Update icons
