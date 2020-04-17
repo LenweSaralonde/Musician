@@ -51,13 +51,13 @@ Musician.INSTRUMENTS = {
 		color = Musician.COLORS.DarkGreen,
 		source = "Sinfonia 3"
 	},
-	["cello"] = {
-		path = "Interface\\AddOns\\Musician\\instruments\\cello",
-		decay = 100,
+	["viola-da-gamba"] = {
+		path = "Interface\\AddOns\\Musician\\instruments\\viola-da-gamba",
+		decay = 150,
 		isPercussion = false,
 		midi = 42,
 		color = Musician.COLORS.DarkOrange,
-		source = "Sinfonia 3"
+		source = "ERA II Medieval Legends"
 	},
 	["clarinet"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\clarinet",
@@ -412,7 +412,7 @@ Musician.INSTRUMENTS_AVAILABLE = {
 	"bagpipe",
 	"accordion",
 	"fiddle",
-	"cello",
+	"viola-da-gamba",
 	"female-voice",
 	"male-voice",
 	"trumpet",
