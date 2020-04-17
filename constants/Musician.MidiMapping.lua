@@ -55,8 +55,8 @@ Musician.MIDI_INSTRUMENT_MAPPING = {
 	-- Strings
 	[Instrument.Violin] = "fiddle",
 	[Instrument.Viola] = "fiddle",
-	[Instrument.Cello] = "cello",
-	[Instrument.Contrabass] = "cello",
+	[Instrument.Cello] = "viola-da-gamba",
+	[Instrument.Contrabass] = "viola-da-gamba",
 	[Instrument.TremoloStrings] = "fiddle",
 	[Instrument.PizzicatoStrings] = "lute",
 	[Instrument.OrchestralHarp] = "harp",
