@@ -126,21 +126,43 @@ Musician.INSTRUMENTS = {
 		color = Musician.COLORS.SpringGreen,
 		source = "ERA II Medieval Legends"
 	},
-	["trombone"] = {
-		path = "Interface\\AddOns\\Musician\\instruments\\trombone",
+	["sackbut"] = {
+		regions = {
+			{
+				path = "Interface\\AddOns\\Musician\\instruments\\sackbut",
+				loKey = 12, -- C0
+				hiKey = 72, -- C5
+			},
+			{
+				path = "Interface\\AddOns\\Musician\\instruments\\trumpet",
+				loKey = 73, -- C#5
+				hiKey = 108, -- C8
+			}
+		},
 		decay = 150,
 		isPercussion = false,
 		midi = 57,
 		color = Musician.COLORS.DarkYellow,
-		source = "Sinfonia 3"
+		source = "ERA II Medieval Legends"
 	},
 	["trumpet"] = {
-		path = "Interface\\AddOns\\Musician\\instruments\\trumpet",
-		decay = 150,
+		regions = {
+			{
+				path = "Interface\\AddOns\\Musician\\instruments\\sackbut",
+				loKey = 12, -- C0
+				hiKey = 54, -- F#3
+			},
+			{
+				path = "Interface\\AddOns\\Musician\\instruments\\trumpet",
+				loKey = 55, -- G3
+				hiKey = 108, -- C8
+			}
+		},
+		decay = 75,
 		isPercussion = false,
 		midi = 56,
 		color = Musician.COLORS.Yellow,
-		source = "Sinfonia 3"
+		source = "ERA II Medieval Legends"
 	},
 	["distorsion-guitar"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\distorsion-guitar",
@@ -416,7 +438,7 @@ Musician.INSTRUMENTS_AVAILABLE = {
 	"female-voice",
 	"male-voice",
 	"trumpet",
-	"trombone",
+	"sackbut",
 	"clarinet",
 	"bassoon",
 	"percussions",
