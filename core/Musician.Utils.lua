@@ -420,12 +420,27 @@ function Musician.Utils.GetSoundFile(instrument, key)
 	end
 
 	local soundPaths, soundPath
-	if instrumentData.pathList ~= nil then
+	-- Use regions
+	if instrumentData.regions ~= nil then
+		local region
+		soundPaths = {}
+		for _, region in pairs(instrumentData.regions) do
+			local hiKey = region.hiKey - 12 + Musician.C0_INDEX
+			local loKey = region.loKey - 12 + Musician.C0_INDEX
+			if key >= loKey and key <= hiKey then
+				table.insert(soundPaths, region.path)
+			end
+		end
+
+	-- Use path list with randomization
+	elseif instrumentData.pathList ~= nil then
 		soundPaths = instrumentData.pathList
+	-- Use single path
 	else
 		soundPaths = { instrumentData.path }
 	end
 
+	-- Apply transposition
 	if instrumentData["transpose"] then
 		key = key + instrumentData["transpose"]
 	end
