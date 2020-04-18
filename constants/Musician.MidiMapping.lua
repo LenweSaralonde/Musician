@@ -74,8 +74,8 @@ Musician.MIDI_INSTRUMENT_MAPPING = {
 
 	-- Brass
 	[Instrument.Trumpet] = "trumpet",
-	[Instrument.Trombone] = "trombone",
-	[Instrument.Tuba] = "trombone",
+	[Instrument.Trombone] = "sackbut",
+	[Instrument.Tuba] = "sackbut",
 	[Instrument.MutedTrumpet] = "trumpet",
 	[Instrument.FrenchHorn] = "trumpet",
 	[Instrument.BrassSection] = "trumpet",
