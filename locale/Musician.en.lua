@@ -252,6 +252,7 @@ msg.INSTRUMENT_NAMES = {
 	["female-voice"] = "Female voice (soprano)",
 	["trumpet"] = "Trumpet",
 	["sackbut"] = "Sackbut",
+	["war-horn"] = "War horn",
 	["bassoon"] = "Bassoon",
 	["clarinet"] = "Clarinet",
 	["recorder"] = "Recorder",

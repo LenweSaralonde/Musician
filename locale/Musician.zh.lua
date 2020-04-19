@@ -289,6 +289,7 @@ msg.INSTRUMENT_NAMES["male-voice"] = "男高音"
 msg.INSTRUMENT_NAMES["female-voice"] = "女高音"
 msg.INSTRUMENT_NAMES["trumpet"] = "小号"
 msg.INSTRUMENT_NAMES["sackbut"] = "长号" -- TODO: check proper translation
+msg.INSTRUMENT_NAMES["war-horn"] = "战争号角" -- TODO: check proper translation ("War horn")
 msg.INSTRUMENT_NAMES["bassoon"] = "大管"
 msg.INSTRUMENT_NAMES["clarinet"] = "单簧管"
 msg.INSTRUMENT_NAMES["recorder"] = "竖笛"

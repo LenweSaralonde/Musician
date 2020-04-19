@@ -15,6 +15,7 @@ Musician.COLORS = {
 	DarkWhite = {0.8, 0.8, 0.8},
 	Yellow = {1.00, 0.96, 0.41},
 	DarkYellow = {1.00/1.5, 0.96/1.5, 0.41/1.5},
+	Brown = {1.00/1.5, 0.96/3, 0.41/3},
 	Blue = {0.00, 0.44, 0.87},
 	Purple = {0.58, 0.51, 0.79},
 	Tan = {0.78, 0.61, 0.43},
@@ -162,6 +163,14 @@ Musician.INSTRUMENTS = {
 		isPercussion = false,
 		midi = 56,
 		color = Musician.COLORS.Yellow,
+		source = "ERA II Medieval Legends"
+	},
+	["war-horn"] = {
+		path = "Interface\\AddOns\\Musician\\instruments\\war-horn",
+		decay = 150,
+		isPercussion = false,
+		midi = 60,
+		color = Musician.COLORS.Brown,
 		source = "ERA II Medieval Legends"
 	},
 	["distorsion-guitar"] = {
@@ -439,6 +448,7 @@ Musician.INSTRUMENTS_AVAILABLE = {
 	"male-voice",
 	"trumpet",
 	"sackbut",
+	"war-horn",
 	"clarinet",
 	"bassoon",
 	"percussions",
