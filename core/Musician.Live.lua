@@ -318,7 +318,7 @@ function Musician.Live.NoteOn(key, layer, instrument, isChordNote)
 	-- Play note
 	local handle = 0
 	if not(Musician.Live.IsBandSyncMode() and Musician.Live.IsEnabled()) and not(Musician.globalMute) and Musician.Preloader.IsPreloaded(sampleId) then
-		_, handle = Musician.Utils.PlaySoundFile(soundFile, 'SFX')
+		_, handle = Musician.Utils.PlayNote(instrumentData, key)
 	end
 
 	-- Insert note on and trigger event
@@ -588,7 +588,7 @@ function Musician.Live.OnLiveNote(prefix, message, distribution, sender)
 		-- Play note
 		local sampleId = Musician.Utils.GetSampleId(instrumentData, key)
 		if not(Musician.globalMute) and Musician.Preloader.IsPreloaded(sampleId) and not(Musician.PlayerIsMuted(sender)) and Musician.Registry.PlayerIsInRange(sender) then
-			play, handle = Musician.Utils.PlaySoundFile(soundFile, 'SFX')
+			play, handle = Musician.Utils.PlayNote(instrumentData, key)
 		end
 
 		-- Insert note on
