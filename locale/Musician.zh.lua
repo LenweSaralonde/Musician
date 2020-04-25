@@ -298,6 +298,7 @@ msg.INSTRUMENT_NAMES["distorsion-guitar"] = "变音电吉他"
 msg.INSTRUMENT_NAMES["clean-guitar"] = "清音吉他"
 msg.INSTRUMENT_NAMES["bass-guitar"] = "贝斯吉他"
 msg.INSTRUMENT_NAMES["drumkit"] = "鼓组"
+msg.INSTRUMENT_NAMES['war-drum'] = "战鼓" -- TODO: check proper translation
 
 msg.MIDI_INSTRUMENT_NAMES[Instrument.AcousticGrandPiano] = "大钢琴"
 msg.MIDI_INSTRUMENT_NAMES[Instrument.BrightAcousticPiano] = "亮音立式钢琴"

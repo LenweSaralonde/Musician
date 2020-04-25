@@ -261,6 +261,7 @@ msg.INSTRUMENT_NAMES = {
 	["clean-guitar"] = "Clean guitar",
 	["bass-guitar"] = "Bass guitar",
 	["drumkit"] = "Drum kit",
+	["war-drum"] = "War drum",
 }
 
 msg.MIDI_INSTRUMENT_NAMES = {
