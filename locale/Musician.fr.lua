@@ -298,6 +298,7 @@ msg.INSTRUMENT_NAMES['distorsion-guitar'] = "Guitare metal"
 msg.INSTRUMENT_NAMES['clean-guitar'] = "Guitare son clair"
 msg.INSTRUMENT_NAMES['bass-guitar'] = "Guitare basse"
 msg.INSTRUMENT_NAMES['drumkit'] = "Batterie"
+msg.INSTRUMENT_NAMES['war-drum'] = "Tambour de guerre"
 
 msg.MIDI_INSTRUMENT_NAMES[Instrument.AcousticGrandPiano] = "Grand piano"
 msg.MIDI_INSTRUMENT_NAMES[Instrument.BrightAcousticPiano] = "Piano droit"
