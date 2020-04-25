@@ -33,6 +33,27 @@ function Musician.Utils.Debug(module, ...)
 	end
 end
 
+--- Init utility module
+--
+function Musician.Utils.Init()
+	-- Augment instrument data
+	local instrumentName, instrumentData
+	for instrumentName, instrumentData in pairs(Musician.INSTRUMENTS) do
+		-- Set instrument name
+		instrumentData.name = instrumentName
+
+		-- Assign percussion MIDI id
+		if instrumentData.midi == nil and instrumentData.isPercussion then
+			instrumentData.midi = 128
+		end
+
+		-- Initialize round robin
+		if instrumentData.pathList ~= nil then
+			instrumentData.rr = 1
+		end
+	end
+end
+
 --- Safely play a sound file, even if the sound file does not exist.
 -- @param soundFile (string)
 -- @param channel (string)
@@ -402,20 +423,32 @@ end
 --- Get the path to a sound file for an instrument and a key.
 -- Also returns the instrument data from Musician.INSTRUMENTS
 -- and all other suitable sound file paths for randomization.
--- @param instrument (int) MIDI instrument index
+-- @param instrument (int|string|table) MIDI instrument index, instrument name or instrument data
 -- @param key (int) MIDI key
 -- @return filePath (string) file path to be played
 -- @return instrumentData (table) from Musician.INSTRUMENTS
 -- @return soundFiles (table) all suitable file paths for this instrument and note
 function Musician.Utils.GetSoundFile(instrument, key)
 
-	local instrumentName = Musician.Utils.GetInstrumentName(instrument, key)
-	if instrumentName == nil or instrumentName == "none" then
-		return nil
+	local instrumentNumber = type(instrument) == 'number' and instrument
+	local instrumentName = type(instrument) == 'string' and instrument
+	local instrumentData = type(instrument) == 'table' and instrument
+
+	if instrumentNumber then
+		instrumentName = Musician.Utils.GetInstrumentName(instrumentNumber, key)
+		if instrumentName == nil then
+			return nil
+		end
 	end
 
-	local instrumentData = Musician.Utils.GetInstrumentData(instrumentName, key)
-	if instrumentData == nil then
+	if instrumentName then
+		instrumentData = Musician.Utils.GetInstrumentData(instrumentName, key)
+		if instrumentData == nil then
+			return nil
+		end
+	end
+
+	if instrumentData.name == 'none' then
 		return nil
 	end
 
@@ -432,7 +465,7 @@ function Musician.Utils.GetSoundFile(instrument, key)
 			end
 		end
 
-	-- Use path list with randomization
+	-- Use path list with round robin
 	elseif instrumentData.pathList ~= nil then
 		soundPaths = instrumentData.pathList
 	-- Use single path
@@ -457,13 +490,18 @@ function Musician.Utils.GetSoundFile(instrument, key)
 		soundFiles[i] = soundFile .. ".ogg"
 	end
 
-	instrumentData.name = instrumentName
-
 	if #soundFiles == 1 then
 		return soundFiles[1], instrumentData, soundFiles
 	end
 
-	return soundFiles[floor(math.random() * #soundFiles) + 1], instrumentData, soundFiles
+	local soundFile
+	if instrumentData.keyMod ~= nil then
+		soundFile = soundFiles[(key - instrumentData.keyMod) % #soundFiles + 1]
+	else
+		soundFile = soundFiles[instrumentData.rr]
+	end
+
+	return soundFile, instrumentData, soundFiles
 end
 
 --- Return true if a song is actually playing and is audible
@@ -807,23 +845,16 @@ function Musician.Utils.GetInstrumentData(instrumentName, key)
 		return nil
 	end
 
-	instrumentData.name = instrumentName
-
 	-- Handle specific percussion mapping
 	if instrumentData.midi == 128 and not(instrumentData.isPercussion) then
 		return Musician.Utils.GetInstrumentData(Musician.MIDI_PERCUSSION_MAPPING[key], key)
-	end
-
-	-- Assign percussion MIDI id
-	if instrumentData.midi == nil and instrumentData.isPercussion then
-		instrumentData.midi = 128
 	end
 
 	return instrumentData
 end
 
 --- Return sample ID for note and instrument data
--- @param instrumentData (table) as returned by Musician.Utils.GetSoundFile()
+-- @param instrumentData (table) as returned by Musician.Utils.GetInstrumentData()
 -- @param key (int) MIDI key number
 -- @return sampleId (string)
 function Musician.Utils.GetSampleId(instrumentData, key)
@@ -840,7 +871,7 @@ end
 
 --- Start playing a note
 -- Returns true if sound will actually be played, sound handle and instrument data
--- @param instrument (int) MIDI instrument
+-- @param instrument (int|string|table) MIDI instrument index, instrument name or instrument data
 -- @param key (int)
 -- @return willPlay (boolean)
 -- @return soundHandle (int)
@@ -854,6 +885,15 @@ function Musician.Utils.PlayNote(instrument, key)
 		play, handle = true, 0 -- Silent note
 	elseif soundFile then
 		play, handle = Musician.Utils.PlaySoundFile(soundFile, 'SFX')
+
+		-- Increment instrument round robin
+		if play and instrumentData.pathList ~= nil then
+			if instrumentData.rr >= #instrumentData.pathList then
+				instrumentData.rr = 1
+			else
+				instrumentData.rr = instrumentData.rr + 1
+			end
+		end
 	end
 
 	return play, handle, instrumentData
