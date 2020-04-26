@@ -83,7 +83,7 @@ Musician.INSTRUMENTS = {
 		isPercussion = false,
 		midi = 53,
 		color = Musician.COLORS.LightBlue,
-		source = "Irina Brochin"
+		source = "ERA II Vocal Codex"
 	},
 	["male-voice"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\male-voice",
