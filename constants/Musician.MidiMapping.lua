@@ -116,7 +116,7 @@ Musician.MIDI_INSTRUMENT_MAPPING = {
 	[Instrument.Pad1Newage] = "lute",
 	[Instrument.Pad2Warm] = "fiddle",
 	[Instrument.Pad3Polysynth] = "fiddle",
-	[Instrument.Pad4Choir] = "fiddle",
+	[Instrument.Pad4Choir] = "female-voice",
 	[Instrument.Pad5Bowed] = "fiddle",
 	[Instrument.Pad6Metallic] = "fiddle",
 	[Instrument.Pad7Halo] = "fiddle",
@@ -144,7 +144,7 @@ Musician.MIDI_INSTRUMENT_MAPPING = {
 
 	-- Percussive
 	[Instrument.TinkleBell] = "lute",
-	[Instrument.Agogo] = "none",
+	[Instrument.Agogo] = "dulcimer",
 	[Instrument.SteelDrums] = "dulcimer",
 	[Instrument.Woodblock] = "none",
 	[Instrument.TaikoDrum] = "war-drum",
