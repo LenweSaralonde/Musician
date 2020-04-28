@@ -66,7 +66,7 @@ Musician.INSTRUMENTS = {
 		isPercussion = false,
 		midi = 71,
 		color = Musician.COLORS.Green,
-		source = "Sinfonia 3"
+		source = "Mats Helgesson Maestro Clarinet"
 	},
 	["dulcimer"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\dulcimer",
