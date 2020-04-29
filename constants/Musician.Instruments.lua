@@ -46,11 +46,11 @@ Musician.INSTRUMENTS = {
 	},
 	["bassoon"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\bassoon",
-		decay = 150,
+		decay = 75,
 		isPercussion = false,
 		midi = 70,
 		color = Musician.COLORS.DarkGreen,
-		source = "Sinfonia 3"
+		source = "Ethan Winer Bassoon"
 	},
 	["viola-da-gamba"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\viola-da-gamba",
