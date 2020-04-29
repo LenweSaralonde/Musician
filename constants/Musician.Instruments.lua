@@ -236,7 +236,7 @@ Musician.INSTRUMENTS = {
 		keyMod = -3,
 		midi = 47,
 		color = Musician.COLORS.DarkTan,
-		source = "kstnbass"
+		source = "Kstnbass Frame Drum"
 	},
 	["frame-drum-kick-1"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\frame-drum-kick-1",
@@ -316,7 +316,7 @@ Musician.INSTRUMENTS = {
 		},
 		decay = 100,
 		isPercussion = true,
-		source = "LenweSaralonde"
+		source = "LenweSaralonde Claps"
 	},
 	["tambourine-short"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\tambourine\\tambourine-short",
@@ -390,37 +390,37 @@ Musician.INSTRUMENTS = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\bodhran-1",
 		decay = 300,
 		isPercussion = true,
-		source = "bosone"
+		source = "Bosone Bodhran"
 	},
 	["bodhran-2"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\bodhran-2",
 		decay = 300,
 		isPercussion = true,
-		source = "bosone"
+		source = "Bosone Bodhran"
 	},
 	["bodhran-3"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\bodhran-3",
 		decay = 300,
 		isPercussion = true,
-		source = "bosone"
+		source = "Bosone Bodhran"
 	},
 	["bodhran-4"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\bodhran-4",
 		decay = 300,
 		isPercussion = true,
-		source = "bosone"
+		source = "Bosone Bodhran"
 	},
 	["bodhran-5"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\bodhran-5",
 		decay = 300,
 		isPercussion = true,
-		source = "bosone"
+		source = "Bosone Bodhran"
 	},
 	["bodhran-6"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\bodhran-6",
 		decay = 300,
 		isPercussion = true,
-		source = "bosone"
+		source = "Bosone Bodhran"
 	},
 	["barbarian-frame-drum-dead-stroke"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\barbarian-frame-drum-dead-stroke",
