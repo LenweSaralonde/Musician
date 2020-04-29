@@ -1,0 +1,551 @@
+/*
+// **********************************************************************
+// Percussions
+// Soundfont from Musician, the music add-on for World of Warcraft
+// https://musician.lenwe.io
+// MIDI program: Percussion set
+// Samples from ERA II Medieval Legends, Michael Picher Auxiliary Percussion, Loopmasters Frame Drums, Sonic Bloom Frame Drum, LenweSaralonde Claps, Bosone Bodhran, Samplephonics Gambian Percussion
+// **********************************************************************
+*/
+
+<global>
+global_label=Musician instruments
+
+<group>
+group_label=Percussions
+amp_velcurve_1=1 // All notes play max velocity
+
+<region>
+	region_label=F1 - Frame drum roll 1
+	key=f1
+	sample=../instruments/frame-drum/frame-drum-roll-1.ogg
+	ampeg_release=0.4
+
+<region>
+	region_label=F#1 - Frame drum roll 2
+	key=f#1
+	sample=../instruments/frame-drum/frame-drum-roll-2.ogg
+	ampeg_release=0.4
+
+<region>
+	region_label=G1 - Sticks
+	key=g1
+	sample=../instruments/misc-percussions/sticks.ogg
+	ampeg_release=0.4
+
+<region>
+	region_label=G#1 - Misc hit
+	key=g#1
+	sample=../instruments/misc-percussions/misc-hit.ogg
+	ampeg_release=0.4
+
+<region>
+	region_label=A1 - Woodblock low
+	key=a1
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+
+<region>
+	region_label=Bb1 - Woodblock hi
+	key=a#1
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+
+<region>
+	region_label=B1 - Frame drum kick 1
+	key=b1
+	sample=../instruments/frame-drum/frame-drum-kick-1.ogg
+	ampeg_release=0.4
+
+<region>
+	region_label=C2 - Frame drum kick 2
+	key=c2
+	sample=../instruments/frame-drum/frame-drum-kick-2.ogg
+	ampeg_release=0.4
+
+<region>
+	region_label=C#2 - Cajon hit
+	key=c#2
+	sample=../instruments/misc-percussions/cajon-hit.ogg
+	ampeg_release=0.4
+
+<region>
+	region_label=D2 - Frame drum snare 1
+	key=d2
+	sample=../instruments/frame-drum/frame-drum-snare-1.ogg
+	ampeg_release=0.4
+
+<region>
+	region_label=D#2 - Clap
+	key=d#2
+	sample=../instruments/claps/clap-1.ogg
+	ampeg_release=0.4
+	seq_length=7 seq_position=1
+
+<region>
+	region_label=D#2 - Clap
+	key=d#2
+	sample=../instruments/claps/clap-2.ogg
+	ampeg_release=0.4
+	seq_length=7 seq_position=2
+
+<region>
+	region_label=D#2 - Clap
+	key=d#2
+	sample=../instruments/claps/clap-3.ogg
+	ampeg_release=0.4
+	seq_length=7 seq_position=3
+
+<region>
+	region_label=D#2 - Clap
+	key=d#2
+	sample=../instruments/claps/clap-4.ogg
+	ampeg_release=0.4
+	seq_length=7 seq_position=4
+
+<region>
+	region_label=D#2 - Clap
+	key=d#2
+	sample=../instruments/claps/clap-5.ogg
+	ampeg_release=0.4
+	seq_length=7 seq_position=5
+
+<region>
+	region_label=D#2 - Clap
+	key=d#2
+	sample=../instruments/claps/clap-6.ogg
+	ampeg_release=0.4
+	seq_length=7 seq_position=6
+
+<region>
+	region_label=D#2 - Clap
+	key=d#2
+	sample=../instruments/claps/clap-7.ogg
+	ampeg_release=0.4
+	seq_length=7 seq_position=7
+
+<region>
+	region_label=E2 - Frame drum snare 2
+	key=e2
+	sample=../instruments/frame-drum/frame-drum-snare-2.ogg
+	ampeg_release=0.4
+
+<region>
+	region_label=F2 - Bodhran 6
+	key=f2
+	sample=../instruments/frame-drum/bodhran-6.ogg
+	ampeg_release=1.2
+
+<region>
+	region_label=F#2 - Tambourine short
+	key=f#2
+	sample=../instruments/tambourine/tambourine-short.ogg
+	ampeg_release=0.4
+
+<region>
+	region_label=G2 - Bodhran 5
+	key=g2
+	sample=../instruments/frame-drum/bodhran-5.ogg
+	ampeg_release=1.2
+
+<region>
+	region_label=G#2 - Tambourine long
+	key=g#2
+	sample=../instruments/tambourine/tambourine-long-1.ogg
+	ampeg_release=1
+	seq_length=4 seq_position=1
+
+<region>
+	region_label=G#2 - Tambourine long
+	key=g#2
+	sample=../instruments/tambourine/tambourine-long-2.ogg
+	ampeg_release=1
+	seq_length=4 seq_position=2
+
+<region>
+	region_label=G#2 - Tambourine long
+	key=g#2
+	sample=../instruments/tambourine/tambourine-long-3.ogg
+	ampeg_release=1
+	seq_length=4 seq_position=3
+
+<region>
+	region_label=G#2 - Tambourine long
+	key=g#2
+	sample=../instruments/tambourine/tambourine-long-4.ogg
+	ampeg_release=1
+	seq_length=4 seq_position=4
+
+<region>
+	region_label=A2 - Bodhran 4
+	key=a2
+	sample=../instruments/frame-drum/bodhran-4.ogg
+	ampeg_release=1.2
+
+<region>
+	region_label=Bb2 - Tambourine shake
+	key=a#2
+	sample=../instruments/tambourine/tambourine-shake-1.ogg
+	ampeg_release=1.2
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=Bb2 - Tambourine shake
+	key=a#2
+	sample=../instruments/tambourine/tambourine-shake-2.ogg
+	ampeg_release=1.2
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=B2 - Bodhran 3
+	key=b2
+	sample=../instruments/frame-drum/bodhran-3.ogg
+	ampeg_release=1.2
+
+<region>
+	region_label=C3 - Bodhran 2
+	key=c3
+	sample=../instruments/frame-drum/bodhran-2.ogg
+	ampeg_release=1.2
+
+<region>
+	region_label=C#3 - Riq hit 1
+	key=c#3
+	sample=../instruments/tambourine/riq-hit-1.ogg
+	ampeg_release=0.4
+
+<region>
+	region_label=D3 - Bodhran 1
+	key=d3
+	sample=../instruments/frame-drum/bodhran-1.ogg
+	ampeg_release=1.2
+
+<region>
+	region_label=D#3 - Riq shake 1
+	key=d#3
+	sample=../instruments/tambourine/riq-shake-1.ogg
+	ampeg_release=0.4
+
+<region>
+	region_label=E3 - Riq hit 3
+	key=e3
+	sample=../instruments/tambourine/riq-hit-3.ogg
+	ampeg_release=0.4
+
+<region>
+	region_label=F3 - Riq hit 4
+	key=f3
+	sample=../instruments/tambourine/riq-hit-4.ogg
+	ampeg_release=0.4
+
+<region>
+	region_label=F#3 - Tambourine long
+	key=f#3
+	sample=../instruments/tambourine/tambourine-long-1.ogg
+	ampeg_release=1
+	seq_length=4 seq_position=1
+
+<region>
+	region_label=F#3 - Tambourine long
+	key=f#3
+	sample=../instruments/tambourine/tambourine-long-2.ogg
+	ampeg_release=1
+	seq_length=4 seq_position=2
+
+<region>
+	region_label=F#3 - Tambourine long
+	key=f#3
+	sample=../instruments/tambourine/tambourine-long-3.ogg
+	ampeg_release=1
+	seq_length=4 seq_position=3
+
+<region>
+	region_label=F#3 - Tambourine long
+	key=f#3
+	sample=../instruments/tambourine/tambourine-long-4.ogg
+	ampeg_release=1
+	seq_length=4 seq_position=4
+
+<region>
+	region_label=G3 - Riq hit 5
+	key=g3
+	sample=../instruments/tambourine/riq-hit-5.ogg
+	ampeg_release=0.4
+
+<region>
+	region_label=G#3 - Woodblock low
+	key=g#3
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+
+<region>
+	region_label=A3 - Riq hit 2
+	key=a3
+	sample=../instruments/tambourine/riq-hit-2.ogg
+	ampeg_release=0.4
+
+<region>
+	region_label=Bb3 - Frame drum roll 3
+	key=a#3
+	sample=../instruments/frame-drum/frame-drum-roll-3.ogg
+	ampeg_release=0.4
+
+<region>
+	region_label=B3 - Riq shake 2
+	key=b3
+	sample=../instruments/tambourine/riq-shake-2.ogg
+	ampeg_release=0.4
+
+<region>
+	region_label=C4 - Djembe hi 1
+	key=c4
+	sample=../instruments/djembe/djembe-hi-1.ogg
+	ampeg_release=0.4
+
+<region>
+	region_label=C#4 - Djembe hi 2
+	key=c#4
+	sample=../instruments/djembe/djembe-hi-2.ogg
+	ampeg_release=0.4
+
+<region>
+	region_label=D4 - Djembe muted
+	key=d4
+	sample=../instruments/djembe/djembe-muted.ogg
+	ampeg_release=0.4
+
+<region>
+	region_label=D#4 - Djembe hi 3
+	key=d#4
+	sample=../instruments/djembe/djembe-hi-3.ogg
+	ampeg_release=0.4
+
+<region>
+	region_label=E4 - Djembe bass
+	key=e4
+	sample=../instruments/djembe/djembe-bass.ogg
+	ampeg_release=0.4
+
+<region>
+	region_label=F4 - Frame drum timbale 1
+	key=f4
+	sample=../instruments/frame-drum/frame-drum-timbale-1.ogg
+	ampeg_release=0.4
+
+<region>
+	region_label=F#4 - Frame drum timbale 2
+	key=f#4
+	sample=../instruments/frame-drum/frame-drum-timbale-2.ogg
+	ampeg_release=0.4
+
+<region>
+	region_label=G4 - Woodblock hi
+	key=g4
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+
+<region>
+	region_label=G#4 - Woodblock low
+	key=g#4
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+
+<region>
+	region_label=A4 - Shaker
+	key=a4
+	sample=../instruments/misc-percussions/shaker-1.ogg
+	ampeg_release=0.4
+	seq_length=4 seq_position=1
+
+<region>
+	region_label=A4 - Shaker
+	key=a4
+	sample=../instruments/misc-percussions/shaker-2.ogg
+	ampeg_release=0.4
+	seq_length=4 seq_position=2
+
+<region>
+	region_label=A4 - Shaker
+	key=a4
+	sample=../instruments/misc-percussions/shaker-3.ogg
+	ampeg_release=0.4
+	seq_length=4 seq_position=3
+
+<region>
+	region_label=A4 - Shaker
+	key=a4
+	sample=../instruments/misc-percussions/shaker-4.ogg
+	ampeg_release=0.4
+	seq_length=4 seq_position=4
+
+<region>
+	region_label=Bb4 - Shaker
+	key=a#4
+	sample=../instruments/misc-percussions/shaker-1.ogg
+	ampeg_release=0.4
+	seq_length=4 seq_position=1
+
+<region>
+	region_label=Bb4 - Shaker
+	key=a#4
+	sample=../instruments/misc-percussions/shaker-2.ogg
+	ampeg_release=0.4
+	seq_length=4 seq_position=2
+
+<region>
+	region_label=Bb4 - Shaker
+	key=a#4
+	sample=../instruments/misc-percussions/shaker-3.ogg
+	ampeg_release=0.4
+	seq_length=4 seq_position=3
+
+<region>
+	region_label=Bb4 - Shaker
+	key=a#4
+	sample=../instruments/misc-percussions/shaker-4.ogg
+	ampeg_release=0.4
+	seq_length=4 seq_position=4
+
+<region>
+	region_label=C#5 - Frame drum hit
+	key=c#5
+	sample=../instruments/frame-drum/frame-drum-hit.ogg
+	ampeg_release=0.4
+
+<region>
+	region_label=D5 - Frame drum roll 3
+	key=d5
+	sample=../instruments/frame-drum/frame-drum-roll-3.ogg
+	ampeg_release=0.4
+
+<region>
+	region_label=D#5 - Claves
+	key=d#5
+	sample=../instruments/misc-percussions/claves.ogg
+	ampeg_release=0.4
+
+<region>
+	region_label=E5 - Woodblock hi
+	key=e5
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+
+<region>
+	region_label=F5 - Woodblock low
+	key=f5
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+
+<region>
+	region_label=F#5 - Metallic 1
+	key=f#5
+	sample=../instruments/misc-percussions/metallic-1.ogg
+	ampeg_release=0.8
+
+<region>
+	region_label=G5 - Metallic 2
+	key=g5
+	sample=../instruments/misc-percussions/metallic-2.ogg
+	ampeg_release=0.8
+
+<region>
+	region_label=Bb5 - Shaker
+	key=a#5
+	sample=../instruments/misc-percussions/shaker-1.ogg
+	ampeg_release=0.4
+	seq_length=4 seq_position=1
+
+<region>
+	region_label=Bb5 - Shaker
+	key=a#5
+	sample=../instruments/misc-percussions/shaker-2.ogg
+	ampeg_release=0.4
+	seq_length=4 seq_position=2
+
+<region>
+	region_label=Bb5 - Shaker
+	key=a#5
+	sample=../instruments/misc-percussions/shaker-3.ogg
+	ampeg_release=0.4
+	seq_length=4 seq_position=3
+
+<region>
+	region_label=Bb5 - Shaker
+	key=a#5
+	sample=../instruments/misc-percussions/shaker-4.ogg
+	ampeg_release=0.4
+	seq_length=4 seq_position=4
+
+<region>
+	region_label=B5 - Sleigh bells
+	key=b5
+	sample=../instruments/misc-percussions/sleigh-bells.ogg
+	ampeg_release=0.8
+
+<region>
+	region_label=C6 - Sleigh bells shake
+	key=c6
+	sample=../instruments/misc-percussions/sleigh-bells-shake.ogg
+	ampeg_release=1.2
+
+<region>
+	region_label=C#6 - Clap
+	key=c#6
+	sample=../instruments/claps/clap-1.ogg
+	ampeg_release=0.4
+	seq_length=7 seq_position=1
+
+<region>
+	region_label=C#6 - Clap
+	key=c#6
+	sample=../instruments/claps/clap-2.ogg
+	ampeg_release=0.4
+	seq_length=7 seq_position=2
+
+<region>
+	region_label=C#6 - Clap
+	key=c#6
+	sample=../instruments/claps/clap-3.ogg
+	ampeg_release=0.4
+	seq_length=7 seq_position=3
+
+<region>
+	region_label=C#6 - Clap
+	key=c#6
+	sample=../instruments/claps/clap-4.ogg
+	ampeg_release=0.4
+	seq_length=7 seq_position=4
+
+<region>
+	region_label=C#6 - Clap
+	key=c#6
+	sample=../instruments/claps/clap-5.ogg
+	ampeg_release=0.4
+	seq_length=7 seq_position=5
+
+<region>
+	region_label=C#6 - Clap
+	key=c#6
+	sample=../instruments/claps/clap-6.ogg
+	ampeg_release=0.4
+	seq_length=7 seq_position=6
+
+<region>
+	region_label=C#6 - Clap
+	key=c#6
+	sample=../instruments/claps/clap-7.ogg
+	ampeg_release=0.4
+	seq_length=7 seq_position=7
+
+<region>
+	region_label=D6 - Barbarian frame drum dead stroke
+	key=d6
+	sample=../instruments/frame-drum/barbarian-frame-drum-dead-stroke.ogg
+	ampeg_release=0.4
+
+<region>
+	region_label=D#6 - Barbarian frame drum
+	key=d#6
+	sample=../instruments/frame-drum/barbarian-frame-drum.ogg
+	ampeg_release=1.2
+
