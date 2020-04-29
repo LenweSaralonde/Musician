@@ -1,0 +1,599 @@
+/*
+// **********************************************************************
+// Harp
+// Soundfont from Musician, the music add-on for World of Warcraft
+// https://musician.lenwe.io
+// MIDI program: 46
+// Samples from Etherealwinds Harp II CE
+// **********************************************************************
+*/
+
+<global>
+global_label=Musician instruments
+
+<group>
+group_label=46. Harp
+amp_velcurve_1=1 // All notes play max velocity
+
+<region>
+	region_label=C0
+	key=c0
+	sample=../instruments/harp/C0.ogg
+	ampeg_release=2
+
+<region>
+	region_label=C#0
+	key=c#0
+	sample=../instruments/harp/C#0.ogg
+	ampeg_release=2
+
+<region>
+	region_label=D0
+	key=d0
+	sample=../instruments/harp/D0.ogg
+	ampeg_release=2
+
+<region>
+	region_label=D#0
+	key=d#0
+	sample=../instruments/harp/D#0.ogg
+	ampeg_release=2
+
+<region>
+	region_label=E0
+	key=e0
+	sample=../instruments/harp/E0.ogg
+	ampeg_release=2
+
+<region>
+	region_label=F0
+	key=f0
+	sample=../instruments/harp/F0.ogg
+	ampeg_release=2
+
+<region>
+	region_label=F#0
+	key=f#0
+	sample=../instruments/harp/F#0.ogg
+	ampeg_release=2
+
+<region>
+	region_label=G0
+	key=g0
+	sample=../instruments/harp/G0.ogg
+	ampeg_release=2
+
+<region>
+	region_label=G#0
+	key=g#0
+	sample=../instruments/harp/G#0.ogg
+	ampeg_release=2
+
+<region>
+	region_label=A0
+	key=a0
+	sample=../instruments/harp/A0.ogg
+	ampeg_release=2
+
+<region>
+	region_label=Bb0
+	key=a#0
+	sample=../instruments/harp/Bb0.ogg
+	ampeg_release=2
+
+<region>
+	region_label=B0
+	key=b0
+	sample=../instruments/harp/B0.ogg
+	ampeg_release=2
+
+<region>
+	region_label=C1
+	key=c1
+	sample=../instruments/harp/C1.ogg
+	ampeg_release=2
+
+<region>
+	region_label=C#1
+	key=c#1
+	sample=../instruments/harp/C#1.ogg
+	ampeg_release=2
+
+<region>
+	region_label=D1
+	key=d1
+	sample=../instruments/harp/D1.ogg
+	ampeg_release=2
+
+<region>
+	region_label=D#1
+	key=d#1
+	sample=../instruments/harp/D#1.ogg
+	ampeg_release=2
+
+<region>
+	region_label=E1
+	key=e1
+	sample=../instruments/harp/E1.ogg
+	ampeg_release=2
+
+<region>
+	region_label=F1
+	key=f1
+	sample=../instruments/harp/F1.ogg
+	ampeg_release=2
+
+<region>
+	region_label=F#1
+	key=f#1
+	sample=../instruments/harp/F#1.ogg
+	ampeg_release=2
+
+<region>
+	region_label=G1
+	key=g1
+	sample=../instruments/harp/G1.ogg
+	ampeg_release=2
+
+<region>
+	region_label=G#1
+	key=g#1
+	sample=../instruments/harp/G#1.ogg
+	ampeg_release=2
+
+<region>
+	region_label=A1
+	key=a1
+	sample=../instruments/harp/A1.ogg
+	ampeg_release=2
+
+<region>
+	region_label=Bb1
+	key=a#1
+	sample=../instruments/harp/Bb1.ogg
+	ampeg_release=2
+
+<region>
+	region_label=B1
+	key=b1
+	sample=../instruments/harp/B1.ogg
+	ampeg_release=2
+
+<region>
+	region_label=C2
+	key=c2
+	sample=../instruments/harp/C2.ogg
+	ampeg_release=2
+
+<region>
+	region_label=C#2
+	key=c#2
+	sample=../instruments/harp/C#2.ogg
+	ampeg_release=2
+
+<region>
+	region_label=D2
+	key=d2
+	sample=../instruments/harp/D2.ogg
+	ampeg_release=2
+
+<region>
+	region_label=D#2
+	key=d#2
+	sample=../instruments/harp/D#2.ogg
+	ampeg_release=2
+
+<region>
+	region_label=E2
+	key=e2
+	sample=../instruments/harp/E2.ogg
+	ampeg_release=2
+
+<region>
+	region_label=F2
+	key=f2
+	sample=../instruments/harp/F2.ogg
+	ampeg_release=2
+
+<region>
+	region_label=F#2
+	key=f#2
+	sample=../instruments/harp/F#2.ogg
+	ampeg_release=2
+
+<region>
+	region_label=G2
+	key=g2
+	sample=../instruments/harp/G2.ogg
+	ampeg_release=2
+
+<region>
+	region_label=G#2
+	key=g#2
+	sample=../instruments/harp/G#2.ogg
+	ampeg_release=2
+
+<region>
+	region_label=A2
+	key=a2
+	sample=../instruments/harp/A2.ogg
+	ampeg_release=2
+
+<region>
+	region_label=Bb2
+	key=a#2
+	sample=../instruments/harp/Bb2.ogg
+	ampeg_release=2
+
+<region>
+	region_label=B2
+	key=b2
+	sample=../instruments/harp/B2.ogg
+	ampeg_release=2
+
+<region>
+	region_label=C3
+	key=c3
+	sample=../instruments/harp/C3.ogg
+	ampeg_release=2
+
+<region>
+	region_label=C#3
+	key=c#3
+	sample=../instruments/harp/C#3.ogg
+	ampeg_release=2
+
+<region>
+	region_label=D3
+	key=d3
+	sample=../instruments/harp/D3.ogg
+	ampeg_release=2
+
+<region>
+	region_label=D#3
+	key=d#3
+	sample=../instruments/harp/D#3.ogg
+	ampeg_release=2
+
+<region>
+	region_label=E3
+	key=e3
+	sample=../instruments/harp/E3.ogg
+	ampeg_release=2
+
+<region>
+	region_label=F3
+	key=f3
+	sample=../instruments/harp/F3.ogg
+	ampeg_release=2
+
+<region>
+	region_label=F#3
+	key=f#3
+	sample=../instruments/harp/F#3.ogg
+	ampeg_release=2
+
+<region>
+	region_label=G3
+	key=g3
+	sample=../instruments/harp/G3.ogg
+	ampeg_release=2
+
+<region>
+	region_label=G#3
+	key=g#3
+	sample=../instruments/harp/G#3.ogg
+	ampeg_release=2
+
+<region>
+	region_label=A3
+	key=a3
+	sample=../instruments/harp/A3.ogg
+	ampeg_release=2
+
+<region>
+	region_label=Bb3
+	key=a#3
+	sample=../instruments/harp/Bb3.ogg
+	ampeg_release=2
+
+<region>
+	region_label=B3
+	key=b3
+	sample=../instruments/harp/B3.ogg
+	ampeg_release=2
+
+<region>
+	region_label=C4
+	key=c4
+	sample=../instruments/harp/C4.ogg
+	ampeg_release=2
+
+<region>
+	region_label=C#4
+	key=c#4
+	sample=../instruments/harp/C#4.ogg
+	ampeg_release=2
+
+<region>
+	region_label=D4
+	key=d4
+	sample=../instruments/harp/D4.ogg
+	ampeg_release=2
+
+<region>
+	region_label=D#4
+	key=d#4
+	sample=../instruments/harp/D#4.ogg
+	ampeg_release=2
+
+<region>
+	region_label=E4
+	key=e4
+	sample=../instruments/harp/E4.ogg
+	ampeg_release=2
+
+<region>
+	region_label=F4
+	key=f4
+	sample=../instruments/harp/F4.ogg
+	ampeg_release=2
+
+<region>
+	region_label=F#4
+	key=f#4
+	sample=../instruments/harp/F#4.ogg
+	ampeg_release=2
+
+<region>
+	region_label=G4
+	key=g4
+	sample=../instruments/harp/G4.ogg
+	ampeg_release=2
+
+<region>
+	region_label=G#4
+	key=g#4
+	sample=../instruments/harp/G#4.ogg
+	ampeg_release=2
+
+<region>
+	region_label=A4
+	key=a4
+	sample=../instruments/harp/A4.ogg
+	ampeg_release=2
+
+<region>
+	region_label=Bb4
+	key=a#4
+	sample=../instruments/harp/Bb4.ogg
+	ampeg_release=2
+
+<region>
+	region_label=B4
+	key=b4
+	sample=../instruments/harp/B4.ogg
+	ampeg_release=2
+
+<region>
+	region_label=C5
+	key=c5
+	sample=../instruments/harp/C5.ogg
+	ampeg_release=2
+
+<region>
+	region_label=C#5
+	key=c#5
+	sample=../instruments/harp/C#5.ogg
+	ampeg_release=2
+
+<region>
+	region_label=D5
+	key=d5
+	sample=../instruments/harp/D5.ogg
+	ampeg_release=2
+
+<region>
+	region_label=D#5
+	key=d#5
+	sample=../instruments/harp/D#5.ogg
+	ampeg_release=2
+
+<region>
+	region_label=E5
+	key=e5
+	sample=../instruments/harp/E5.ogg
+	ampeg_release=2
+
+<region>
+	region_label=F5
+	key=f5
+	sample=../instruments/harp/F5.ogg
+	ampeg_release=2
+
+<region>
+	region_label=F#5
+	key=f#5
+	sample=../instruments/harp/F#5.ogg
+	ampeg_release=2
+
+<region>
+	region_label=G5
+	key=g5
+	sample=../instruments/harp/G5.ogg
+	ampeg_release=2
+
+<region>
+	region_label=G#5
+	key=g#5
+	sample=../instruments/harp/G#5.ogg
+	ampeg_release=2
+
+<region>
+	region_label=A5
+	key=a5
+	sample=../instruments/harp/A5.ogg
+	ampeg_release=2
+
+<region>
+	region_label=Bb5
+	key=a#5
+	sample=../instruments/harp/Bb5.ogg
+	ampeg_release=2
+
+<region>
+	region_label=B5
+	key=b5
+	sample=../instruments/harp/B5.ogg
+	ampeg_release=2
+
+<region>
+	region_label=C6
+	key=c6
+	sample=../instruments/harp/C6.ogg
+	ampeg_release=2
+
+<region>
+	region_label=C#6
+	key=c#6
+	sample=../instruments/harp/C#6.ogg
+	ampeg_release=2
+
+<region>
+	region_label=D6
+	key=d6
+	sample=../instruments/harp/D6.ogg
+	ampeg_release=2
+
+<region>
+	region_label=D#6
+	key=d#6
+	sample=../instruments/harp/D#6.ogg
+	ampeg_release=2
+
+<region>
+	region_label=E6
+	key=e6
+	sample=../instruments/harp/E6.ogg
+	ampeg_release=2
+
+<region>
+	region_label=F6
+	key=f6
+	sample=../instruments/harp/F6.ogg
+	ampeg_release=2
+
+<region>
+	region_label=F#6
+	key=f#6
+	sample=../instruments/harp/F#6.ogg
+	ampeg_release=2
+
+<region>
+	region_label=G6
+	key=g6
+	sample=../instruments/harp/G6.ogg
+	ampeg_release=2
+
+<region>
+	region_label=G#6
+	key=g#6
+	sample=../instruments/harp/G#6.ogg
+	ampeg_release=2
+
+<region>
+	region_label=A6
+	key=a6
+	sample=../instruments/harp/A6.ogg
+	ampeg_release=2
+
+<region>
+	region_label=Bb6
+	key=a#6
+	sample=../instruments/harp/Bb6.ogg
+	ampeg_release=2
+
+<region>
+	region_label=B6
+	key=b6
+	sample=../instruments/harp/B6.ogg
+	ampeg_release=2
+
+<region>
+	region_label=C7
+	key=c7
+	sample=../instruments/harp/C7.ogg
+	ampeg_release=2
+
+<region>
+	region_label=C#7
+	key=c#7
+	sample=../instruments/harp/C#7.ogg
+	ampeg_release=2
+
+<region>
+	region_label=D7
+	key=d7
+	sample=../instruments/harp/D7.ogg
+	ampeg_release=2
+
+<region>
+	region_label=D#7
+	key=d#7
+	sample=../instruments/harp/D#7.ogg
+	ampeg_release=2
+
+<region>
+	region_label=E7
+	key=e7
+	sample=../instruments/harp/E7.ogg
+	ampeg_release=2
+
+<region>
+	region_label=F7
+	key=f7
+	sample=../instruments/harp/F7.ogg
+	ampeg_release=2
+
+<region>
+	region_label=F#7
+	key=f#7
+	sample=../instruments/harp/F#7.ogg
+	ampeg_release=2
+
+<region>
+	region_label=G7
+	key=g7
+	sample=../instruments/harp/G7.ogg
+	ampeg_release=2
+
+<region>
+	region_label=G#7
+	key=g#7
+	sample=../instruments/harp/G#7.ogg
+	ampeg_release=2
+
+<region>
+	region_label=A7
+	key=a7
+	sample=../instruments/harp/A7.ogg
+	ampeg_release=2
+
+<region>
+	region_label=Bb7
+	key=a#7
+	sample=../instruments/harp/Bb7.ogg
+	ampeg_release=2
+
+<region>
+	region_label=B7
+	key=b7
+	sample=../instruments/harp/B7.ogg
+	ampeg_release=2
+
+<region>
+	region_label=C8
+	key=c8
+	sample=../instruments/harp/C8.ogg
+	ampeg_release=2
+

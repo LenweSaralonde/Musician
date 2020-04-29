@@ -1,0 +1,599 @@
+/*
+// **********************************************************************
+// Dulcimer
+// Soundfont from Musician, the music add-on for World of Warcraft
+// https://musician.lenwe.io
+// MIDI program: 15
+// Samples from LABS Dulcimer
+// **********************************************************************
+*/
+
+<global>
+global_label=Musician instruments
+
+<group>
+group_label=15. Dulcimer
+amp_velcurve_1=1 // All notes play max velocity
+
+<region>
+	region_label=C0
+	key=c0
+	sample=../instruments/dulcimer/C0.ogg
+	ampeg_release=2
+
+<region>
+	region_label=C#0
+	key=c#0
+	sample=../instruments/dulcimer/C#0.ogg
+	ampeg_release=2
+
+<region>
+	region_label=D0
+	key=d0
+	sample=../instruments/dulcimer/D0.ogg
+	ampeg_release=2
+
+<region>
+	region_label=D#0
+	key=d#0
+	sample=../instruments/dulcimer/D#0.ogg
+	ampeg_release=2
+
+<region>
+	region_label=E0
+	key=e0
+	sample=../instruments/dulcimer/E0.ogg
+	ampeg_release=2
+
+<region>
+	region_label=F0
+	key=f0
+	sample=../instruments/dulcimer/F0.ogg
+	ampeg_release=2
+
+<region>
+	region_label=F#0
+	key=f#0
+	sample=../instruments/dulcimer/F#0.ogg
+	ampeg_release=2
+
+<region>
+	region_label=G0
+	key=g0
+	sample=../instruments/dulcimer/G0.ogg
+	ampeg_release=2
+
+<region>
+	region_label=G#0
+	key=g#0
+	sample=../instruments/dulcimer/G#0.ogg
+	ampeg_release=2
+
+<region>
+	region_label=A0
+	key=a0
+	sample=../instruments/dulcimer/A0.ogg
+	ampeg_release=2
+
+<region>
+	region_label=Bb0
+	key=a#0
+	sample=../instruments/dulcimer/Bb0.ogg
+	ampeg_release=2
+
+<region>
+	region_label=B0
+	key=b0
+	sample=../instruments/dulcimer/B0.ogg
+	ampeg_release=2
+
+<region>
+	region_label=C1
+	key=c1
+	sample=../instruments/dulcimer/C1.ogg
+	ampeg_release=2
+
+<region>
+	region_label=C#1
+	key=c#1
+	sample=../instruments/dulcimer/C#1.ogg
+	ampeg_release=2
+
+<region>
+	region_label=D1
+	key=d1
+	sample=../instruments/dulcimer/D1.ogg
+	ampeg_release=2
+
+<region>
+	region_label=D#1
+	key=d#1
+	sample=../instruments/dulcimer/D#1.ogg
+	ampeg_release=2
+
+<region>
+	region_label=E1
+	key=e1
+	sample=../instruments/dulcimer/E1.ogg
+	ampeg_release=2
+
+<region>
+	region_label=F1
+	key=f1
+	sample=../instruments/dulcimer/F1.ogg
+	ampeg_release=2
+
+<region>
+	region_label=F#1
+	key=f#1
+	sample=../instruments/dulcimer/F#1.ogg
+	ampeg_release=2
+
+<region>
+	region_label=G1
+	key=g1
+	sample=../instruments/dulcimer/G1.ogg
+	ampeg_release=2
+
+<region>
+	region_label=G#1
+	key=g#1
+	sample=../instruments/dulcimer/G#1.ogg
+	ampeg_release=2
+
+<region>
+	region_label=A1
+	key=a1
+	sample=../instruments/dulcimer/A1.ogg
+	ampeg_release=2
+
+<region>
+	region_label=Bb1
+	key=a#1
+	sample=../instruments/dulcimer/Bb1.ogg
+	ampeg_release=2
+
+<region>
+	region_label=B1
+	key=b1
+	sample=../instruments/dulcimer/B1.ogg
+	ampeg_release=2
+
+<region>
+	region_label=C2
+	key=c2
+	sample=../instruments/dulcimer/C2.ogg
+	ampeg_release=2
+
+<region>
+	region_label=C#2
+	key=c#2
+	sample=../instruments/dulcimer/C#2.ogg
+	ampeg_release=2
+
+<region>
+	region_label=D2
+	key=d2
+	sample=../instruments/dulcimer/D2.ogg
+	ampeg_release=2
+
+<region>
+	region_label=D#2
+	key=d#2
+	sample=../instruments/dulcimer/D#2.ogg
+	ampeg_release=2
+
+<region>
+	region_label=E2
+	key=e2
+	sample=../instruments/dulcimer/E2.ogg
+	ampeg_release=2
+
+<region>
+	region_label=F2
+	key=f2
+	sample=../instruments/dulcimer/F2.ogg
+	ampeg_release=2
+
+<region>
+	region_label=F#2
+	key=f#2
+	sample=../instruments/dulcimer/F#2.ogg
+	ampeg_release=2
+
+<region>
+	region_label=G2
+	key=g2
+	sample=../instruments/dulcimer/G2.ogg
+	ampeg_release=2
+
+<region>
+	region_label=G#2
+	key=g#2
+	sample=../instruments/dulcimer/G#2.ogg
+	ampeg_release=2
+
+<region>
+	region_label=A2
+	key=a2
+	sample=../instruments/dulcimer/A2.ogg
+	ampeg_release=2
+
+<region>
+	region_label=Bb2
+	key=a#2
+	sample=../instruments/dulcimer/Bb2.ogg
+	ampeg_release=2
+
+<region>
+	region_label=B2
+	key=b2
+	sample=../instruments/dulcimer/B2.ogg
+	ampeg_release=2
+
+<region>
+	region_label=C3
+	key=c3
+	sample=../instruments/dulcimer/C3.ogg
+	ampeg_release=2
+
+<region>
+	region_label=C#3
+	key=c#3
+	sample=../instruments/dulcimer/C#3.ogg
+	ampeg_release=2
+
+<region>
+	region_label=D3
+	key=d3
+	sample=../instruments/dulcimer/D3.ogg
+	ampeg_release=2
+
+<region>
+	region_label=D#3
+	key=d#3
+	sample=../instruments/dulcimer/D#3.ogg
+	ampeg_release=2
+
+<region>
+	region_label=E3
+	key=e3
+	sample=../instruments/dulcimer/E3.ogg
+	ampeg_release=2
+
+<region>
+	region_label=F3
+	key=f3
+	sample=../instruments/dulcimer/F3.ogg
+	ampeg_release=2
+
+<region>
+	region_label=F#3
+	key=f#3
+	sample=../instruments/dulcimer/F#3.ogg
+	ampeg_release=2
+
+<region>
+	region_label=G3
+	key=g3
+	sample=../instruments/dulcimer/G3.ogg
+	ampeg_release=2
+
+<region>
+	region_label=G#3
+	key=g#3
+	sample=../instruments/dulcimer/G#3.ogg
+	ampeg_release=2
+
+<region>
+	region_label=A3
+	key=a3
+	sample=../instruments/dulcimer/A3.ogg
+	ampeg_release=2
+
+<region>
+	region_label=Bb3
+	key=a#3
+	sample=../instruments/dulcimer/Bb3.ogg
+	ampeg_release=2
+
+<region>
+	region_label=B3
+	key=b3
+	sample=../instruments/dulcimer/B3.ogg
+	ampeg_release=2
+
+<region>
+	region_label=C4
+	key=c4
+	sample=../instruments/dulcimer/C4.ogg
+	ampeg_release=2
+
+<region>
+	region_label=C#4
+	key=c#4
+	sample=../instruments/dulcimer/C#4.ogg
+	ampeg_release=2
+
+<region>
+	region_label=D4
+	key=d4
+	sample=../instruments/dulcimer/D4.ogg
+	ampeg_release=2
+
+<region>
+	region_label=D#4
+	key=d#4
+	sample=../instruments/dulcimer/D#4.ogg
+	ampeg_release=2
+
+<region>
+	region_label=E4
+	key=e4
+	sample=../instruments/dulcimer/E4.ogg
+	ampeg_release=2
+
+<region>
+	region_label=F4
+	key=f4
+	sample=../instruments/dulcimer/F4.ogg
+	ampeg_release=2
+
+<region>
+	region_label=F#4
+	key=f#4
+	sample=../instruments/dulcimer/F#4.ogg
+	ampeg_release=2
+
+<region>
+	region_label=G4
+	key=g4
+	sample=../instruments/dulcimer/G4.ogg
+	ampeg_release=2
+
+<region>
+	region_label=G#4
+	key=g#4
+	sample=../instruments/dulcimer/G#4.ogg
+	ampeg_release=2
+
+<region>
+	region_label=A4
+	key=a4
+	sample=../instruments/dulcimer/A4.ogg
+	ampeg_release=2
+
+<region>
+	region_label=Bb4
+	key=a#4
+	sample=../instruments/dulcimer/Bb4.ogg
+	ampeg_release=2
+
+<region>
+	region_label=B4
+	key=b4
+	sample=../instruments/dulcimer/B4.ogg
+	ampeg_release=2
+
+<region>
+	region_label=C5
+	key=c5
+	sample=../instruments/dulcimer/C5.ogg
+	ampeg_release=2
+
+<region>
+	region_label=C#5
+	key=c#5
+	sample=../instruments/dulcimer/C#5.ogg
+	ampeg_release=2
+
+<region>
+	region_label=D5
+	key=d5
+	sample=../instruments/dulcimer/D5.ogg
+	ampeg_release=2
+
+<region>
+	region_label=D#5
+	key=d#5
+	sample=../instruments/dulcimer/D#5.ogg
+	ampeg_release=2
+
+<region>
+	region_label=E5
+	key=e5
+	sample=../instruments/dulcimer/E5.ogg
+	ampeg_release=2
+
+<region>
+	region_label=F5
+	key=f5
+	sample=../instruments/dulcimer/F5.ogg
+	ampeg_release=2
+
+<region>
+	region_label=F#5
+	key=f#5
+	sample=../instruments/dulcimer/F#5.ogg
+	ampeg_release=2
+
+<region>
+	region_label=G5
+	key=g5
+	sample=../instruments/dulcimer/G5.ogg
+	ampeg_release=2
+
+<region>
+	region_label=G#5
+	key=g#5
+	sample=../instruments/dulcimer/G#5.ogg
+	ampeg_release=2
+
+<region>
+	region_label=A5
+	key=a5
+	sample=../instruments/dulcimer/A5.ogg
+	ampeg_release=2
+
+<region>
+	region_label=Bb5
+	key=a#5
+	sample=../instruments/dulcimer/Bb5.ogg
+	ampeg_release=2
+
+<region>
+	region_label=B5
+	key=b5
+	sample=../instruments/dulcimer/B5.ogg
+	ampeg_release=2
+
+<region>
+	region_label=C6
+	key=c6
+	sample=../instruments/dulcimer/C6.ogg
+	ampeg_release=2
+
+<region>
+	region_label=C#6
+	key=c#6
+	sample=../instruments/dulcimer/C#6.ogg
+	ampeg_release=2
+
+<region>
+	region_label=D6
+	key=d6
+	sample=../instruments/dulcimer/D6.ogg
+	ampeg_release=2
+
+<region>
+	region_label=D#6
+	key=d#6
+	sample=../instruments/dulcimer/D#6.ogg
+	ampeg_release=2
+
+<region>
+	region_label=E6
+	key=e6
+	sample=../instruments/dulcimer/E6.ogg
+	ampeg_release=2
+
+<region>
+	region_label=F6
+	key=f6
+	sample=../instruments/dulcimer/F6.ogg
+	ampeg_release=2
+
+<region>
+	region_label=F#6
+	key=f#6
+	sample=../instruments/dulcimer/F#6.ogg
+	ampeg_release=2
+
+<region>
+	region_label=G6
+	key=g6
+	sample=../instruments/dulcimer/G6.ogg
+	ampeg_release=2
+
+<region>
+	region_label=G#6
+	key=g#6
+	sample=../instruments/dulcimer/G#6.ogg
+	ampeg_release=2
+
+<region>
+	region_label=A6
+	key=a6
+	sample=../instruments/dulcimer/A6.ogg
+	ampeg_release=2
+
+<region>
+	region_label=Bb6
+	key=a#6
+	sample=../instruments/dulcimer/Bb6.ogg
+	ampeg_release=2
+
+<region>
+	region_label=B6
+	key=b6
+	sample=../instruments/dulcimer/B6.ogg
+	ampeg_release=2
+
+<region>
+	region_label=C7
+	key=c7
+	sample=../instruments/dulcimer/C7.ogg
+	ampeg_release=2
+
+<region>
+	region_label=C#7
+	key=c#7
+	sample=../instruments/dulcimer/C#7.ogg
+	ampeg_release=2
+
+<region>
+	region_label=D7
+	key=d7
+	sample=../instruments/dulcimer/D7.ogg
+	ampeg_release=2
+
+<region>
+	region_label=D#7
+	key=d#7
+	sample=../instruments/dulcimer/D#7.ogg
+	ampeg_release=2
+
+<region>
+	region_label=E7
+	key=e7
+	sample=../instruments/dulcimer/E7.ogg
+	ampeg_release=2
+
+<region>
+	region_label=F7
+	key=f7
+	sample=../instruments/dulcimer/F7.ogg
+	ampeg_release=2
+
+<region>
+	region_label=F#7
+	key=f#7
+	sample=../instruments/dulcimer/F#7.ogg
+	ampeg_release=2
+
+<region>
+	region_label=G7
+	key=g7
+	sample=../instruments/dulcimer/G7.ogg
+	ampeg_release=2
+
+<region>
+	region_label=G#7
+	key=g#7
+	sample=../instruments/dulcimer/G#7.ogg
+	ampeg_release=2
+
+<region>
+	region_label=A7
+	key=a7
+	sample=../instruments/dulcimer/A7.ogg
+	ampeg_release=2
+
+<region>
+	region_label=Bb7
+	key=a#7
+	sample=../instruments/dulcimer/Bb7.ogg
+	ampeg_release=2
+
+<region>
+	region_label=B7
+	key=b7
+	sample=../instruments/dulcimer/B7.ogg
+	ampeg_release=2
+
+<region>
+	region_label=C8
+	key=c8
+	sample=../instruments/dulcimer/C8.ogg
+	ampeg_release=2
+

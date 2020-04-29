@@ -1,0 +1,383 @@
+/*
+// **********************************************************************
+// Drumkit
+// Soundfont from Musician, the music add-on for World of Warcraft
+// https://musician.lenwe.io
+// MIDI program: Percussion set
+// Samples from E-mu Systems '96
+// **********************************************************************
+*/
+
+<global>
+global_label=Musician instruments
+
+<group>
+group_label=Drumkit
+amp_velcurve_1=1 // All notes play max velocity
+
+<region>
+	region_label=D#1 - Laser
+	key=d#1
+	sample=../instruments/drumkit/D#1.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=E1 - Whip
+	key=e1
+	sample=../instruments/drumkit/E1.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=F1 - Scratch push
+	key=f1
+	sample=../instruments/drumkit/F1.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=F#1 - Scratch pull
+	key=f#1
+	sample=../instruments/drumkit/F#1.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=G1 - Stick click
+	key=g1
+	sample=../instruments/drumkit/G1.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=G#1 - Square click
+	key=g#1
+	sample=../instruments/drumkit/G#1.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=A1 - Metronome click
+	key=a1
+	sample=../instruments/drumkit/A1.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=Bb1 - Metronome bell
+	key=a#1
+	sample=../instruments/drumkit/Bb1.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=B1 - Acoustic bass drum
+	key=b1
+	sample=../instruments/drumkit/B1.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=C2 - Bass drum1
+	key=c2
+	sample=../instruments/drumkit/C2.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=C#2 - Side stick
+	key=c#2
+	sample=../instruments/drumkit/C#2.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=D2 - Acoustic snare
+	key=d2
+	sample=../instruments/drumkit/D2.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=D#2 - Hand clap
+	key=d#2
+	sample=../instruments/drumkit/D#2.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=E2 - Electric snare
+	key=e2
+	sample=../instruments/drumkit/E2.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=F2 - Low floor tom
+	key=f2
+	sample=../instruments/drumkit/F2.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=F#2 - Closed hi hat
+	key=f#2
+	sample=../instruments/drumkit/F#2.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=G2 - High floor tom
+	key=g2
+	sample=../instruments/drumkit/G2.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=G#2 - Pedal hi hat
+	key=g#2
+	sample=../instruments/drumkit/G#2.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=A2 - Low tom
+	key=a2
+	sample=../instruments/drumkit/A2.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=Bb2 - Open hi hat
+	key=a#2
+	sample=../instruments/drumkit/Bb2.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=B2 - Low mid tom
+	key=b2
+	sample=../instruments/drumkit/B2.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=C3 - Hi mid tom
+	key=c3
+	sample=../instruments/drumkit/C3.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=C#3 - Crash cymbal1
+	key=c#3
+	sample=../instruments/drumkit/C#3.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=D3 - High tom
+	key=d3
+	sample=../instruments/drumkit/D3.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=D#3 - Ride cymbal1
+	key=d#3
+	sample=../instruments/drumkit/D#3.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=E3 - Chinese cymbal
+	key=e3
+	sample=../instruments/drumkit/E3.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=F3 - Ride bell
+	key=f3
+	sample=../instruments/drumkit/F3.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=F#3 - Tambourine
+	key=f#3
+	sample=../instruments/drumkit/F#3.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=G3 - Splash cymbal
+	key=g3
+	sample=../instruments/drumkit/G3.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=G#3 - Cowbell
+	key=g#3
+	sample=../instruments/drumkit/G#3.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=A3 - Crash cymbal2
+	key=a3
+	sample=../instruments/drumkit/A3.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=Bb3 - Vibraslap
+	key=a#3
+	sample=../instruments/drumkit/Bb3.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=B3 - Ride cymbal2
+	key=b3
+	sample=../instruments/drumkit/B3.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=C4 - Hi bongo
+	key=c4
+	sample=../instruments/drumkit/C4.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=C#4 - Low bongo
+	key=c#4
+	sample=../instruments/drumkit/C#4.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=D4 - Mute hi conga
+	key=d4
+	sample=../instruments/drumkit/D4.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=D#4 - Open hi conga
+	key=d#4
+	sample=../instruments/drumkit/D#4.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=E4 - Low conga
+	key=e4
+	sample=../instruments/drumkit/E4.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=F4 - High timbale
+	key=f4
+	sample=../instruments/drumkit/F4.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=F#4 - Low timbale
+	key=f#4
+	sample=../instruments/drumkit/F#4.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=G4 - High agogo
+	key=g4
+	sample=../instruments/drumkit/G4.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=G#4 - Low agogo
+	key=g#4
+	sample=../instruments/drumkit/G#4.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=A4 - Cabasa
+	key=a4
+	sample=../instruments/drumkit/A4.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=Bb4 - Maracas
+	key=a#4
+	sample=../instruments/drumkit/Bb4.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=B4 - Short whistle
+	key=b4
+	sample=../instruments/drumkit/B4.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=C5 - Long whistle
+	key=c5
+	sample=../instruments/drumkit/C5.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=C#5 - Short guiro
+	key=c#5
+	sample=../instruments/drumkit/C#5.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=D5 - Long guiro
+	key=d5
+	sample=../instruments/drumkit/D5.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=D#5 - Claves
+	key=d#5
+	sample=../instruments/drumkit/D#5.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=E5 - Hi wood block
+	key=e5
+	sample=../instruments/drumkit/E5.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=F5 - Low wood block
+	key=f5
+	sample=../instruments/drumkit/F5.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=F#5 - Mute cuica
+	key=f#5
+	sample=../instruments/drumkit/F#5.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=G5 - Open cuica
+	key=g5
+	sample=../instruments/drumkit/G5.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=G#5 - Mute triangle
+	key=g#5
+	sample=../instruments/drumkit/G#5.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=A5 - Open triangle
+	key=a5
+	sample=../instruments/drumkit/A5.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=Bb5 - Shaker
+	key=a#5
+	sample=../instruments/drumkit/Bb5.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=B5 - Sleigh bell
+	key=b5
+	sample=../instruments/drumkit/B5.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=C6 - Bell tree
+	key=c6
+	sample=../instruments/drumkit/C6.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=C#6 - Castanets
+	key=c#6
+	sample=../instruments/drumkit/C#6.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=D6 - Surdu dead stroke
+	key=d6
+	sample=../instruments/drumkit/D6.ogg
+	ampeg_release=0.6
+
+<region>
+	region_label=D#6 - Surdu
+	key=d#6
+	sample=../instruments/drumkit/D#6.ogg
+	ampeg_release=0.6
+
