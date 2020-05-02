@@ -60,6 +60,7 @@
   <li><a href="../modules/Musician.Plater.html">Musician.Plater</a></li>
   <li><a href="../modules/Musician.Preloader.html">Musician.Preloader</a></li>
   <li><a href="../modules/Musician.Registry.html">Musician.Registry</a></li>
+  <li><a href="../modules/Musician.Sampler.html">Musician.Sampler</a></li>
   <li><a href="../modules/Musician.Song.html">Musician.Song</a></li>
   <li><a href="../modules/Musician.TRP3.html">Musician.TRP3</a></li>
   <li><a href="../modules/Musician.TRP3.Options.html">Musician.TRP3.Options</a></li>
@@ -145,14 +146,6 @@
 	<td class="summary">Get color code from RGB values</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Musician.Utils.GetInstrumentData">Musician.Utils.GetInstrumentData (instrumentName, key)</a></td>
-	<td class="summary">Return instrument data for given MIDI key number</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Musician.Utils.GetInstrumentName">Musician.Utils.GetInstrumentName (instrument, key)</a></td>
-	<td class="summary">Return instrument name from its MIDI ID</td>
-	</tr>
-	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.GetLink">Musician.Utils.GetLink (command, text, ...)</a></td>
 	<td class="summary">Get hyperlink</td>
 	</tr>
@@ -178,14 +171,6 @@
 	<td class="summary">Return the short locale code of the realm the player belongs to</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Musician.Utils.GetSampleId">Musician.Utils.GetSampleId (instrumentData, key)</a></td>
-	<td class="summary">Return sample ID for note and instrument data</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Musician.Utils.GetSoundFile">Musician.Utils.GetSoundFile (instrument, key)</a></td>
-	<td class="summary">Get the path to a sound file for an instrument and a key.</td>
-	</tr>
-	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.GetVersionText">Musician.Utils.GetVersionText ()</a></td>
 	<td class="summary">Return the current version as text for the end user</td>
 	</tr>
@@ -204,14 +189,6 @@
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.NormalizePlayerName">Musician.Utils.NormalizePlayerName (playerName)</a></td>
 	<td class="summary">Return the normalized player name, including realm slug</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Musician.Utils.NoteKey">Musician.Utils.NoteKey (noteName)</a></td>
-	<td class="summary">Return the MIDI key of the note name</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Musician.Utils.NoteName">Musician.Utils.NoteName (key)</a></td>
-	<td class="summary">Return the note name corresponding its MIDI key</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.OverrideNextFullPromoEmote">Musician.Utils.OverrideNextFullPromoEmote ()</a></td>
@@ -242,15 +219,6 @@
 	<td class="summary">Parse time in seconds from mm:ss.ss format</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Musician.Utils.PlayNote">Musician.Utils.PlayNote (instrument, key)</a></td>
-	<td class="summary">Start playing a note
- Returns true if sound will actually be played, sound handle and instrument data</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Musician.Utils.PlaySoundFile">Musician.Utils.PlaySoundFile (soundFile, channel)</a></td>
-	<td class="summary">Safely play a sound file, even if the sound file does not exist.</td>
-	</tr>
-	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.PlayerGuidIsVisible">Musician.Utils.PlayerGuidIsVisible (guid)</a></td>
 	<td class="summary">Return true if the player whose GUID is provided is visible (loaded) by the game client</td>
 	</tr>
@@ -273,10 +241,6 @@
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.Popup">Musician.Utils.Popup (msg, callback, force)</a></td>
 	<td class="summary">Display a message in a popup</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Musician.Utils.PreloadNote">Musician.Utils.PreloadNote (instrument, key)</a></td>
-	<td class="summary">Preload note</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.Print">Musician.Utils.Print (msg)</a></td>
@@ -756,62 +720,6 @@
 
 </dd>
     <dt>
-    <a name = "Musician.Utils.GetInstrumentData"></a>
-    <strong>Musician.Utils.GetInstrumentData (instrumentName, key)</strong>
-    </dt>
-    <dd>
-    Return instrument data for given MIDI key number
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">instrumentName</span>
-         (string)
-        </li>
-        <li><span class="parameter">key</span>
-         (int) MIDI key number
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        instrumentData (table) from Musician.INSTRUMENTS
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Musician.Utils.GetInstrumentName"></a>
-    <strong>Musician.Utils.GetInstrumentName (instrument, key)</strong>
-    </dt>
-    <dd>
-    Return instrument name from its MIDI ID
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">instrument</span>
-         (int)
-        </li>
-        <li><span class="parameter">key</span>
-         (int)
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        instrumentName (string) used as key in Musician.INSTRUMENTS
-    </ol>
-
-
-
-
-</dd>
-    <dt>
     <a name = "Musician.Utils.GetLink"></a>
     <strong>Musician.Utils.GetLink (command, text, ...)</strong>
     </dt>
@@ -945,68 +853,6 @@
 
 </dd>
     <dt>
-    <a name = "Musician.Utils.GetSampleId"></a>
-    <strong>Musician.Utils.GetSampleId (instrumentData, key)</strong>
-    </dt>
-    <dd>
-    Return sample ID for note and instrument data
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">instrumentData</span>
-         (table) as returned by Musician.Utils.GetSoundFile()
-        </li>
-        <li><span class="parameter">key</span>
-         (int) MIDI key number
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        sampleId (string)
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Musician.Utils.GetSoundFile"></a>
-    <strong>Musician.Utils.GetSoundFile (instrument, key)</strong>
-    </dt>
-    <dd>
-    Get the path to a sound file for an instrument and a key.
- Also returns the instrument data from Musician.INSTRUMENTS
- and all other suitable sound file paths for randomization.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">instrument</span>
-         (int) MIDI instrument index
-        </li>
-        <li><span class="parameter">key</span>
-         (int) MIDI key
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-        <li>
-        filePath (string) file path to be played</li>
-        <li>
-        instrumentData (table) from Musician.INSTRUMENTS</li>
-        <li>
-        soundFiles (table) all suitable file paths for this instrument and note</li>
-    </ol>
-
-
-
-
-</dd>
-    <dt>
     <a name = "Musician.Utils.GetVersionText"></a>
     <strong>Musician.Utils.GetVersionText ()</strong>
     </dt>
@@ -1119,56 +965,6 @@
     <ol>
 
         normalizedPlayerName (string)
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Musician.Utils.NoteKey"></a>
-    <strong>Musician.Utils.NoteKey (noteName)</strong>
-    </dt>
-    <dd>
-    Return the MIDI key of the note name
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">noteName</span>
-         (string) from Musician.NOTE_NAMES
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        key (int)
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Musician.Utils.NoteName"></a>
-    <strong>Musician.Utils.NoteName (key)</strong>
-    </dt>
-    <dd>
-    Return the note name corresponding its MIDI key
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">key</span>
-         (int) MIDI key index
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        name (string) from Musician.NOTE_NAMES
     </ol>
 
 
@@ -1340,69 +1136,6 @@
 
 </dd>
     <dt>
-    <a name = "Musician.Utils.PlayNote"></a>
-    <strong>Musician.Utils.PlayNote (instrument, key)</strong>
-    </dt>
-    <dd>
-    Start playing a note
- Returns true if sound will actually be played, sound handle and instrument data
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">instrument</span>
-         (int) MIDI instrument
-        </li>
-        <li><span class="parameter">key</span>
-         (int)
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-        <li>
-        willPlay (boolean)</li>
-        <li>
-        soundHandle (int)</li>
-        <li>
-        instrumentData (table) from Musician.INSTRUMENTS</li>
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Musician.Utils.PlaySoundFile"></a>
-    <strong>Musician.Utils.PlaySoundFile (soundFile, channel)</strong>
-    </dt>
-    <dd>
-    Safely play a sound file, even if the sound file does not exist.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">soundFile</span>
-         (string)
-        </li>
-        <li><span class="parameter">channel</span>
-         (string)
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-        <li>
-        willPlay (boolean)</li>
-        <li>
-        soundHandle (int)</li>
-    </ol>
-
-
-
-
-</dd>
-    <dt>
     <a name = "Musician.Utils.PlayerGuidIsVisible"></a>
     <strong>Musician.Utils.PlayerGuidIsVisible (guid)</strong>
     </dt>
@@ -1548,36 +1281,6 @@
         </li>
     </ul>
 
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Musician.Utils.PreloadNote"></a>
-    <strong>Musician.Utils.PreloadNote (instrument, key)</strong>
-    </dt>
-    <dd>
-    Preload note
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">instrument</span>
-         (int)
-        </li>
-        <li><span class="parameter">key</span>
-         (int)
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-        <li>
-        hasSample (boolean)</li>
-        <li>
-        preloadTime (number) in seconds</li>
-    </ol>
 
 
 
@@ -1939,7 +1642,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-03-28 17:38:12 </i>
+<i style="float:right;">Last updated 2020-05-02 20:12:53 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
