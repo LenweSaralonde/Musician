@@ -10,6 +10,7 @@ embeds.xml
 core\Musician.lua
 core\Musician.Song.lua
 core\Musician.Utils.lua
+core\Musician.Sampler.lua
 core\Musician.Comm.lua
 core\Musician.Registry.lua
 core\Musician.Preloader.lua

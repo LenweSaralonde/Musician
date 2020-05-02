@@ -172,7 +172,7 @@ local function addNote(animatedNotesFrame, song, track, key)
 	end
 
 	-- Set initial data
-	local _, instrument = Musician.Utils.GetSoundFile(track.instrument, key)
+	local _, instrument = Musician.Sampler.GetSoundFile(track.instrument, key)
 	local orientation = GetRandomArgument(1, -1)
 	local x, y, isPercussion
 

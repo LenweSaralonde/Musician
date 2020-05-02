@@ -299,12 +299,12 @@ end
 -- @param isChordNote (boolean)
 function Musician.Live.NoteOn(key, layer, instrument, isChordNote)
 
-	local soundFile, instrumentData = Musician.Utils.GetSoundFile(instrument, key)
+	local soundFile, instrumentData = Musician.Sampler.GetSoundFile(instrument, key)
 	if soundFile == nil then
 		return
 	end
 
-	local sampleId = Musician.Utils.GetSampleId(instrumentData, key)
+	local sampleId = Musician.Sampler.GetSampleId(instrumentData, key)
 	local noteOnKey = key .. '-' .. layer .. '-' .. instrument
 
 	-- This is an auto-chord note but a higher priority note actually exists: do nothing
@@ -318,7 +318,7 @@ function Musician.Live.NoteOn(key, layer, instrument, isChordNote)
 	-- Play note
 	local handle = 0
 	if not(Musician.Live.IsBandSyncMode() and Musician.Live.IsEnabled()) and not(Musician.globalMute) and Musician.Preloader.IsPreloaded(sampleId) then
-		_, handle = Musician.Utils.PlayNote(instrumentData, key)
+		_, handle = Musician.Sampler.PlayNote(instrumentData, key)
 	end
 
 	-- Insert note on and trigger event
@@ -568,7 +568,7 @@ function Musician.Live.OnLiveNote(prefix, message, distribution, sender)
 	-- Note on
 	if noteOn then
 		local play, handle
-		local soundFile, instrumentData = Musician.Utils.GetSoundFile(instrument, key)
+		local soundFile, instrumentData = Musician.Sampler.GetSoundFile(instrument, key)
 		if soundFile == nil then return end
 
 		-- Mute game music
@@ -586,9 +586,9 @@ function Musician.Live.OnLiveNote(prefix, message, distribution, sender)
 		end
 
 		-- Play note
-		local sampleId = Musician.Utils.GetSampleId(instrumentData, key)
+		local sampleId = Musician.Sampler.GetSampleId(instrumentData, key)
 		if not(Musician.globalMute) and Musician.Preloader.IsPreloaded(sampleId) and not(Musician.PlayerIsMuted(sender)) and Musician.Registry.PlayerIsInRange(sender) then
-			play, handle = Musician.Utils.PlayNote(instrumentData, key)
+			play, handle = Musician.Sampler.PlayNote(instrumentData, key)
 		end
 
 		-- Insert note on

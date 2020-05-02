@@ -368,7 +368,7 @@ function Musician.Song:NoteOn(track, noteIndex, noRetry)
 	local key = track.notes[noteIndex][NOTE.KEY] + track.transpose
 	local time = track.notes[noteIndex][NOTE.TIME]
 	local duration = track.notes[noteIndex][NOTE.DURATION]
-	local soundFile, instrumentData = Musician.Utils.GetSoundFile(track.instrument, key)
+	local soundFile, instrumentData = Musician.Sampler.GetSoundFile(track.instrument, key)
 	local playerIsInRange = self.player ~= nil and Musician.Registry.PlayerIsInRange(self.player)
 	if soundFile == nil then
 		return
@@ -404,7 +404,7 @@ function Musician.Song:NoteOn(track, noteIndex, noRetry)
 	-- Play note sound file
 	local play, handle
 	if shouldPlay then
-		play, handle = Musician.Utils.PlayNote(track.instrument, key)
+		play, handle = Musician.Sampler.PlayNote(track.instrument, key)
 
 		-- Note dropped: interrupt the oldest one and retry
 		if not(play) and not(noRetry) then

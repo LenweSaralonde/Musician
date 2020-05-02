@@ -249,7 +249,7 @@ local function setKeys()
 					isPercussion = config.instrument[keyData[1]] >= 128
 
 					if not(isPercussion) then
-						noteName = Musician.Utils.NoteName(keyData[2])
+						noteName = Musician.Sampler.NoteName(keyData[2])
 
 						-- Black or white key
 						if string.match(noteName, "[%#b]") then
@@ -1061,7 +1061,7 @@ Musician.Keyboard.BuildMapping = function()
 			LAYER.UPPER,
 			percussionLayout.scale,
 			percussionLayout.upper.keyboardMapping,
-			Musician.Utils.NoteKey(percussionLayout.upper.baseKey),
+			Musician.Sampler.NoteKey(percussionLayout.upper.baseKey),
 			percussionLayout.upper.baseKeyIndex
 		)
 	elseif config.instrument[LAYER.UPPER] >= 0 then
@@ -1069,7 +1069,7 @@ Musician.Keyboard.BuildMapping = function()
 			LAYER.UPPER,
 			layout.scale,
 			layout.upper.keyboardMapping,
-			Musician.Utils.NoteKey(layout.upper.baseKey),
+			Musician.Sampler.NoteKey(layout.upper.baseKey),
 			layout.upper.baseKeyIndex + config.shift[LAYER.UPPER]
 		)
 	end
@@ -1079,7 +1079,7 @@ Musician.Keyboard.BuildMapping = function()
 			LAYER.LOWER,
 			percussionLayout.scale,
 			percussionLayout.lower.keyboardMapping,
-			Musician.Utils.NoteKey(percussionLayout.lower.baseKey),
+			Musician.Sampler.NoteKey(percussionLayout.lower.baseKey),
 			percussionLayout.lower.baseKeyIndex
 		)
 	elseif config.instrument[LAYER.LOWER] >= 0 then
@@ -1087,7 +1087,7 @@ Musician.Keyboard.BuildMapping = function()
 			LAYER.LOWER,
 			layout.scale,
 			layout.lower.keyboardMapping,
-			Musician.Utils.NoteKey(layout.lower.baseKey),
+			Musician.Sampler.NoteKey(layout.lower.baseKey),
 			layout.lower.baseKeyIndex + config.shift[LAYER.LOWER]
 		)
 	end
@@ -1464,7 +1464,7 @@ Musician.Keyboard.OnNoteOn = function(event, song, track, key)
 	end
 	Musician.Keyboard.ConfigureDemo()
 
-	local _, instrument = Musician.Utils.GetSoundFile(track.instrument, key)
+	local _, instrument = Musician.Sampler.GetSoundFile(track.instrument, key)
 	local layer, trackIndex
 	for layer, trackIndex in pairs(config.demoTrackMapping) do
 		if trackIndex == track.index then

@@ -48,8 +48,8 @@ function Musician.Preloader.Init()
 	local sampleIds = {}
 	for key = Musician.MIN_KEY, Musician.MAX_KEY do
 		for _, instrumentName in pairs(Musician.INSTRUMENTS_AVAILABLE) do
-			local instrumentData = Musician.Utils.GetInstrumentData(instrumentName, key)
-			local sampleId = Musician.Utils.GetSampleId(instrumentData, key)
+			local instrumentData = Musician.Sampler.GetInstrumentData(instrumentName, key)
+			local sampleId = Musician.Sampler.GetSampleId(instrumentData, key)
 			if sampleId and sampleIds[sampleId] == nil then
 				sampleIds[sampleId] = true
 				totalSamples = totalSamples + 1
@@ -99,15 +99,15 @@ function Musician.Preloader.PreloadNext()
 	while not(sampleIsPreloaded) do
 		local key = Musician.Preloader.GetCursorKey(keyCursor)
 		local instrumentName = Musician.INSTRUMENTS_AVAILABLE[instrumentCursor]
-		local instrumentData = Musician.Utils.GetInstrumentData(instrumentName, key)
+		local instrumentData = Musician.Sampler.GetInstrumentData(instrumentName, key)
 
 		if instrumentData ~= nil then
-			local sampleId = Musician.Utils.GetSampleId(instrumentData, key)
+			local sampleId = Musician.Sampler.GetSampleId(instrumentData, key)
 
 			-- Sample not preloaded
 			if sampleId and not(Musician.Preloader.IsPreloaded(sampleId, true)) then
 				-- Preload note samples
-				local hasSample, preloadTime = Musician.Utils.PreloadNote(instrumentData.midi, key)
+				local hasSample, preloadTime = Musician.Preloader.PreloadNote(instrumentData.midi, key)
 				if hasSample then
 					-- Calculate average loading time during first preloading cycle
 					if not(preloaded) then
@@ -148,6 +148,30 @@ function Musician.Preloader.PreloadNext()
 			end
 		end
 	end
+end
+
+--- Preload note
+-- @param instrument (int)
+-- @param key (int)
+-- @return hasSample (boolean)
+-- @return preloadTime (number) in seconds
+function Musician.Preloader.PreloadNote(instrument, key)
+	local soundFile, instrumentData, soundFiles = Musician.Sampler.GetSoundFile(instrument, key)
+	local sampleId = Musician.Sampler.GetSampleId(instrumentData, key)
+	local hasSample = false
+	local count = 0
+	local startTime = debugprofilestop()
+	for i, soundFile in pairs(soundFiles) do
+		local play, handle
+		play, handle = Musician.Sampler.PlaySoundFile(soundFile, 'SFX')
+		if play then
+			hasSample = true
+			count = count + 1
+			StopSound(handle, 0)
+		end
+	end
+	Musician.Preloader.AddPreloaded(sampleId)
+	return hasSample, (debugprofilestop() - startTime) / count
 end
 
 function Musician.Preloader.GetLoadedSamples()
@@ -205,7 +229,7 @@ function Musician.Preloader.GetProgress()
 end
 
 --- Flag a note sample as preloaded
--- @param sampleId (string) as returned by Musician.Utils.GetSampleId()
+-- @param sampleId (string) as returned by Musician.Sampler.GetSampleId()
 function Musician.Preloader.AddPreloaded(sampleId)
 	if not(Musician.Preloader.IsPreloaded(sampleId, true)) then
 		Musician.Preloader.preloadedSamples[sampleId] = true
@@ -217,7 +241,7 @@ function Musician.Preloader.AddPreloaded(sampleId)
 end
 
 --- Return true if the note sample has been preloaded
--- @param sampleId (string) as returned by Musician.Utils.GetSampleId()
+-- @param sampleId (string) as returned by Musician.Sampler.GetSampleId()
 -- @param currentCycle (boolean) for current preloading cycle only (even if the sample is already in cache)
 -- @return (boolean)
 function Musician.Preloader.IsPreloaded(sampleId, currentCycle)

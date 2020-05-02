@@ -384,7 +384,7 @@ end
 Musician.TrackEditor.NoteOn = function(event, song, track, key)
 	if song == Musician.sourceSong then
 		local meterTexture = _G['MusicianTrackEditorTrack' .. track.index].meterTexture
-		local _, instrumentData = Musician.Utils.GetSoundFile(track.instrument, key)
+		local _, instrumentData = Musician.Sampler.GetSoundFile(track.instrument, key)
 		meterTexture.volumeMeter:NoteOn(instrumentData)
 		meterTexture:Show()
 	end
