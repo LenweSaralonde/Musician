@@ -1,0 +1,386 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Musician</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/Musician.html">Musician</a></li>
+  <li><a href="../modules/Musician.About.html">Musician.About</a></li>
+  <li><a href="../modules/Musician.Comm.html">Musician.Comm</a></li>
+  <li><a href="../modules/Musician.Constants.html">Musician.Constants</a></li>
+  <li><a href="../modules/Musician.CrossRP.html">Musician.CrossRP</a></li>
+  <li><a href="../modules/Musician.CrossRP.Options.html">Musician.CrossRP.Options</a></li>
+  <li><a href="../modules/Musician.ElvUI.html">Musician.ElvUI</a></li>
+  <li><a href="../modules/Musician.Extras.html">Musician.Extras</a></li>
+  <li><a href="../modules/Musician.Frame.html">Musician.Frame</a></li>
+  <li><a href="../modules/Musician.Keyboard.html">Musician.Keyboard</a></li>
+  <li><a href="../modules/Musician.KeyboardConfig.html">Musician.KeyboardConfig</a></li>
+  <li><a href="../modules/Musician.KeyboardUtils.html">Musician.KeyboardUtils</a></li>
+  <li><a href="../modules/Musician.KuiNamePlates.html">Musician.KuiNamePlates</a></li>
+  <li><a href="../modules/Musician.Live.html">Musician.Live</a></li>
+  <li><a href="../modules/Musician.MyRolePlay.html">Musician.MyRolePlay</a></li>
+  <li><a href="../modules/Musician.NamePlates.html">Musician.NamePlates</a></li>
+  <li><a href="../modules/Musician.NamePlates.Options.html">Musician.NamePlates.Options</a></li>
+  <li><a href="../modules/Musician.NeatPlates.html">Musician.NeatPlates</a></li>
+  <li><a href="../modules/Musician.Options.html">Musician.Options</a></li>
+  <li><a href="../modules/Musician.Plater.html">Musician.Plater</a></li>
+  <li><a href="../modules/Musician.Preloader.html">Musician.Preloader</a></li>
+  <li><a href="../modules/Musician.Registry.html">Musician.Registry</a></li>
+  <li><strong>Musician.Sampler</strong></li>
+  <li><a href="../modules/Musician.Song.html">Musician.Song</a></li>
+  <li><a href="../modules/Musician.TRP3.html">Musician.TRP3</a></li>
+  <li><a href="../modules/Musician.TRP3.Options.html">Musician.TRP3.Options</a></li>
+  <li><a href="../modules/Musician.TrackEditor.html">Musician.TrackEditor</a></li>
+  <li><a href="../modules/Musician.Utils.html">Musician.Utils</a></li>
+  <li><a href="../modules/Musician.VolumeMeter.html">Musician.VolumeMeter</a></li>
+  <li><a href="../modules/MusicianButton.html">MusicianButton</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>Musician.Sampler</code></h1>
+<p>Sampler engine</p>
+<p></p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Sampler.GetInstrumentData">Musician.Sampler.GetInstrumentData (instrumentName, key)</a></td>
+	<td class="summary">Return instrument data for given MIDI key number</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Sampler.GetInstrumentName">Musician.Sampler.GetInstrumentName (instrument, key)</a></td>
+	<td class="summary">Return instrument name from its MIDI ID and key number</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Sampler.GetSampleId">Musician.Sampler.GetSampleId (instrumentData, key)</a></td>
+	<td class="summary">Return sample ID for note and instrument data</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Sampler.GetSoundFile">Musician.Sampler.GetSoundFile (instrument, key)</a></td>
+	<td class="summary">Get the path to a sound file for an instrument and a key.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Sampler.Init">Musician.Sampler.Init ()</a></td>
+	<td class="summary">Init sampler engine</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Sampler.NoteKey">Musician.Sampler.NoteKey (noteName)</a></td>
+	<td class="summary">Return the MIDI key of the note name</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Sampler.NoteName">Musician.Sampler.NoteName (key)</a></td>
+	<td class="summary">Return the note name corresponding its MIDI key</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Sampler.PlayNote">Musician.Sampler.PlayNote (instrument, key)</a></td>
+	<td class="summary">Start playing a note
+ Returns true if sound will actually be played, sound handle and instrument data</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Sampler.PlaySoundFile">Musician.Sampler.PlaySoundFile (soundFile, channel)</a></td>
+	<td class="summary">Safely play a sound file, even if the sound file does not exist.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "Musician.Sampler.GetInstrumentData"></a>
+    <strong>Musician.Sampler.GetInstrumentData (instrumentName, key)</strong>
+    </dt>
+    <dd>
+    Return instrument data for given MIDI key number
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">instrumentName</span>
+         (string)
+        </li>
+        <li><span class="parameter">key</span>
+         (int) MIDI key number
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        instrumentData (table) from Musician.INSTRUMENTS
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Sampler.GetInstrumentName"></a>
+    <strong>Musician.Sampler.GetInstrumentName (instrument, key)</strong>
+    </dt>
+    <dd>
+    Return instrument name from its MIDI ID and key number
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">instrument</span>
+         (int)
+        </li>
+        <li><span class="parameter">key</span>
+         (int)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        instrumentName (string) used as key in Musician.INSTRUMENTS
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Sampler.GetSampleId"></a>
+    <strong>Musician.Sampler.GetSampleId (instrumentData, key)</strong>
+    </dt>
+    <dd>
+    Return sample ID for note and instrument data
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">instrumentData</span>
+         (table) as returned by Musician.Sampler.GetInstrumentData()
+        </li>
+        <li><span class="parameter">key</span>
+         (int) MIDI key number
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        sampleId (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Sampler.GetSoundFile"></a>
+    <strong>Musician.Sampler.GetSoundFile (instrument, key)</strong>
+    </dt>
+    <dd>
+    Get the path to a sound file for an instrument and a key.
+ Also returns the instrument data from Musician.INSTRUMENTS
+ and all other suitable sound file paths for randomization.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">instrument</span>
+         (int|string|table) MIDI instrument index, instrument name or instrument data
+        </li>
+        <li><span class="parameter">key</span>
+         (int) MIDI key
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+        filePath (string) file path to be played</li>
+        <li>
+        instrumentData (table) from Musician.INSTRUMENTS</li>
+        <li>
+        soundFiles (table) all suitable file paths for this instrument and note</li>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Sampler.Init"></a>
+    <strong>Musician.Sampler.Init ()</strong>
+    </dt>
+    <dd>
+    Init sampler engine
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Sampler.NoteKey"></a>
+    <strong>Musician.Sampler.NoteKey (noteName)</strong>
+    </dt>
+    <dd>
+    Return the MIDI key of the note name
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">noteName</span>
+         (string) from Musician.NOTE_NAMES
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        key (int)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Sampler.NoteName"></a>
+    <strong>Musician.Sampler.NoteName (key)</strong>
+    </dt>
+    <dd>
+    Return the note name corresponding its MIDI key
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">key</span>
+         (int) MIDI key index
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        name (string) from Musician.NOTE_NAMES
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Sampler.PlayNote"></a>
+    <strong>Musician.Sampler.PlayNote (instrument, key)</strong>
+    </dt>
+    <dd>
+    Start playing a note
+ Returns true if sound will actually be played, sound handle and instrument data
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">instrument</span>
+         (int|string|table) MIDI instrument index, instrument name or instrument data
+        </li>
+        <li><span class="parameter">key</span>
+         (int)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+        willPlay (boolean)</li>
+        <li>
+        soundHandle (int)</li>
+        <li>
+        instrumentData (table) from Musician.INSTRUMENTS</li>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Sampler.PlaySoundFile"></a>
+    <strong>Musician.Sampler.PlaySoundFile (soundFile, channel)</strong>
+    </dt>
+    <dd>
+    Safely play a sound file, even if the sound file does not exist.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">soundFile</span>
+         (string)
+        </li>
+        <li><span class="parameter">channel</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+        willPlay (boolean)</li>
+        <li>
+        soundHandle (int)</li>
+    </ol>
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2020-05-02 20:12:53 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
