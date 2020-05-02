@@ -331,6 +331,8 @@ Musician.INSTRUMENTS = {
 		},
 		decay = 300,
 		isPercussion = true,
+		midi = 119,
+		color = Musician.COLORS.DarkTan,
 		source = "Michael Picher Auxiliary Percussion"
 	},
 	["tambourine-long"] = {
@@ -494,6 +496,17 @@ Musician.INSTRUMENTS = {
 		isPercussion = true,
 		source = "Michael Picher Auxiliary Percussion"
 	},
+	["woodblock"] = {
+		pathList = {
+			"Interface\\AddOns\\Musician\\instruments\\misc-percussions\\woodblock-hi",
+			"Interface\\AddOns\\Musician\\instruments\\misc-percussions\\woodblock-low",
+		},
+		midi = 115,
+		decay = 100,
+		isPercussion = true,
+		color = Musician.COLORS.DarkTan,
+		source = "Michael Picher Auxiliary Percussion"
+	},
 	["shaker"] = {
 		pathList = {
 			"Interface\\AddOns\\Musician\\instruments\\misc-percussions\\shaker-1",
@@ -554,8 +567,10 @@ Musician.INSTRUMENTS_AVAILABLE = {
 	"bass-guitar",
 
 	"percussions",
-	"war-drum",
 	"drumkit",
+	"war-drum",
+	"woodblock",
+	"tambourine-shake",
 
 	"none",
 }

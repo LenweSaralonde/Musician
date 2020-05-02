@@ -146,11 +146,11 @@ Musician.MIDI_INSTRUMENT_MAPPING = {
 	[Instrument.TinkleBell] = "lute",
 	[Instrument.Agogo] = "dulcimer",
 	[Instrument.SteelDrums] = "dulcimer",
-	[Instrument.Woodblock] = "none",
+	[Instrument.Woodblock] = "woodblock",
 	[Instrument.TaikoDrum] = "war-drum",
 	[Instrument.MelodicTom] = "war-drum",
 	[Instrument.SynthDrum] = "war-drum",
-	[Instrument.ReverseCymbal] = "none",
+	[Instrument.ReverseCymbal] = "tambourine-shake",
 
 	-- Sound Effects
 	[Instrument.GuitarFretNoise] = "none",
