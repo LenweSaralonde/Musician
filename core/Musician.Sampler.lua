@@ -6,6 +6,7 @@ Musician.Sampler = LibStub("AceAddon-3.0"):NewAddon("Musician.Sampler")
 local MODULE_NAME = "Sampler"
 Musician.AddModule(MODULE_NAME)
 
+local notesOn = {}
 
 --- Init sampler engine
 --
@@ -192,9 +193,30 @@ function Musician.Sampler.PlayNote(instrument, key)
 				instrumentData.rr = instrumentData.rr + 1
 			end
 		end
+
+		if play and handle then
+			notesOn[handle] = { instrumentData.decay }
+		end
 	end
 
 	return play, handle, instrumentData
+end
+
+--- Stop playing note
+-- @param handle (int) The note handle returned by PlayNote()
+-- @param [decay (number)] Override instrument decay
+function Musician.Sampler.StopNote(handle, decay)
+	if not(notesOn[handle]) then
+		return
+	end
+
+	if decay == nil then
+		decay = unpack(notesOn[handle])
+	end
+
+	StopSound(handle, decay)
+
+	notesOn[handle] = nil
 end
 
 --- Return sample ID for note and instrument data
