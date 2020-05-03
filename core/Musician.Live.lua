@@ -323,7 +323,7 @@ function Musician.Live.NoteOn(key, layer, instrument, isChordNote)
 
 	-- Insert note on and trigger event
 	Musician.Live.InsertNote(true, key, layer, instrument)
-	notesOn[noteOnKey] = { handle, instrumentData.decay, layer, key, instrumentData.midi, isChordNote }
+	notesOn[noteOnKey] = { handle, layer, key, instrumentData.midi, isChordNote }
 	Musician.Live:SendMessage(Musician.Events.LiveNoteOn, key, layer, instrumentData, isChordNote)
 
 	-- Send band note message if synchronization is enabled
@@ -340,7 +340,7 @@ function Musician.Live.NoteOff(key, layer, instrument, isChordNote)
 	local noteOnKey = key .. '-' .. layer .. '-' .. instrument
 	if not(notesOn[noteOnKey]) then return end
 
-	local handle, decay, _, _, _, noteOnIsChordNote = unpack(notesOn[noteOnKey])
+	local handle, _, _, _, noteOnIsChordNote = unpack(notesOn[noteOnKey])
 
 	-- If current note off is from an auto-chord but actual note is not: do nothing
 	if isChordNote and not(noteOnIsChordNote) then
@@ -352,7 +352,7 @@ function Musician.Live.NoteOff(key, layer, instrument, isChordNote)
 
 	-- Stop playing note
 	if handle then
-		StopSound(handle, decay)
+		Musician.Sampler.StopNote(handle)
 	end
 
 	-- Insert note off and trigger event
@@ -387,7 +387,7 @@ end
 function Musician.Live.AllNotesOff(onlyForLayer)
 	local noteOnKey, note
 	for noteOnKey, note in pairs(notesOn) do
-		local _, _, layer, key, instrument = unpack(note)
+		local _, layer, key, instrument = unpack(note)
 
 		if onlyForLayer == nil or onlyForLayer == layer then
 			Musician.Live.NoteOff(key, layer, instrument)
@@ -525,9 +525,9 @@ function Musician.Live.OnRosterUpdate()
 			if bandNotesOn[player] then
 				local noteOnKey, noteData
 				for noteOnKey, noteData in pairs(bandNotesOn[player]) do
-					local handle, decay, layer, key, instrument = unpack(noteData)
+					local handle, layer, key, instrument = unpack(noteData)
 					if handle then
-						StopSound(handle, 0)
+						Musician.Sampler.StopNote(handle, 0)
 						sendVisualNoteEvent(false, key, layer, instrument, player)
 					end
 				end
@@ -578,9 +578,9 @@ function Musician.Live.OnLiveNote(prefix, message, distribution, sender)
 
 		-- Interrupt previous note
 		if bandNotesOn[sender][noteOnKey] then
-			local prevHandle, prevDecay, prevLayer, prevKey, prevInstrument = unpack(bandNotesOn[sender][noteOnKey])
+			local prevHandle, prevLayer, prevKey, prevInstrument = unpack(bandNotesOn[sender][noteOnKey])
 			if prevHandle then
-				StopSound(prevHandle, prevDecay)
+				Musician.Sampler.StopNote(prevHandle)
 				sendVisualNoteEvent(false, prevKey, prevLayer, prevInstrument, sender)
 			end
 		end
@@ -593,7 +593,7 @@ function Musician.Live.OnLiveNote(prefix, message, distribution, sender)
 
 		-- Insert note on
 		if play then
-			bandNotesOn[sender][noteOnKey] = { handle, instrumentData.decay, layer, key, instrumentData.midi }
+			bandNotesOn[sender][noteOnKey] = { handle, layer, key, instrumentData.midi }
 		end
 
 		-- Trigger event
@@ -601,11 +601,11 @@ function Musician.Live.OnLiveNote(prefix, message, distribution, sender)
 
 	-- Note off
 	elseif bandNotesOn[sender] and bandNotesOn[sender][noteOnKey] then
-		local handle, decay = unpack(bandNotesOn[sender][noteOnKey])
+		local handle = unpack(bandNotesOn[sender][noteOnKey])
 
 		-- Stop playing note
 		if handle then
-			C_Timer.After(1/60, function() StopSound(handle, decay) end)
+			C_Timer.After(1/60, function() Musician.Sampler.StopNote(handle) end)
 			bandNotesOn[sender][noteOnKey] = nil
 		end
 

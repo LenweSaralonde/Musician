@@ -22,7 +22,6 @@ Musician.Song.Indexes.NOTEON = {}
 Musician.Song.Indexes.NOTEON.TIME = 1
 Musician.Song.Indexes.NOTEON.ENDTIME = 2
 Musician.Song.Indexes.NOTEON.HANDLE = 3
-Musician.Song.Indexes.NOTEON.DECAY = 4
 
 Musician.Song.Indexes.CHUNK = {}
 Musician.Song.Indexes.CHUNK.SONG_ID = 1
@@ -425,8 +424,7 @@ function Musician.Song:NoteOn(track, noteIndex, noRetry)
 	track.notesOn[key] = {
 		[NOTEON.TIME] = time,
 		[NOTEON.ENDTIME] = endTime,
-		[NOTEON.HANDLE] = play and handle or 0,
-		[NOTEON.DECAY] = instrumentData.decay
+		[NOTEON.HANDLE] = play and handle or 0
 	}
 
 	if play then
@@ -442,11 +440,12 @@ end
 -- @param track (table) Reference to the track
 -- @param key (int) Note key
 -- @param keepVisual (boolean)
-function Musician.Song:NoteOff(track, key, keepVisual)
+-- @param [decay (number)] Override instrument decay
+function Musician.Song:NoteOff(track, key, keepVisual, decay)
 	if track.notesOn[key] ~= nil then
 		local handle = track.notesOn[key][NOTEON.HANDLE]
 		if handle ~= 0 then
-			StopSound(handle, track.notesOn[key][NOTEON.DECAY])
+			Musician.Sampler.StopNote(handle, decay)
 			track.polyphony = track.polyphony - 1
 			self.polyphony = self.polyphony - 1
 		end
@@ -494,8 +493,7 @@ function Musician.Song:StopOldestNote()
 	end
 
 	if foundNoteKey ~= nil then
-		foundTrack.notesOn[foundNoteKey][NOTEON.DECAY] = 0 -- Remove decay
-		self:NoteOff(foundTrack, foundNoteKey)
+		self:NoteOff(foundTrack, foundNoteKey, false, 0) -- Remove decay
 	end
 end
 
