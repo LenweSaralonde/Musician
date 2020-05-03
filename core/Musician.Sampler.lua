@@ -174,7 +174,6 @@ end
 -- @param key (int)
 -- @return willPlay (boolean)
 -- @return soundHandle (int)
--- @return instrumentData (table) from Musician.INSTRUMENTS
 function Musician.Sampler.PlayNote(instrument, key)
 	local soundFile, instrumentData = Musician.Sampler.GetSoundFile(instrument, key)
 	local sampleId = Musician.Sampler.GetSampleId(instrumentData, key)
@@ -199,7 +198,7 @@ function Musician.Sampler.PlayNote(instrument, key)
 		end
 	end
 
-	return play, handle, instrumentData
+	return play, handle
 end
 
 --- Stop playing note
