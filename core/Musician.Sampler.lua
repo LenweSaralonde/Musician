@@ -24,7 +24,7 @@ function Musician.Sampler.Init()
 
 		-- Initialize round robin
 		if instrumentData.pathList ~= nil then
-			instrumentData.rr = 1
+			instrumentData.roundRobin = 1
 		end
 	end
 end
@@ -162,7 +162,7 @@ function Musician.Sampler.GetSoundFile(instrument, key)
 	if instrumentData.keyMod ~= nil then
 		soundFile = soundFiles[(key - instrumentData.keyMod) % #soundFiles + 1]
 	else
-		soundFile = soundFiles[instrumentData.rr]
+		soundFile = soundFiles[instrumentData.roundRobin]
 	end
 
 	return soundFile, instrumentData, soundFiles
@@ -186,10 +186,10 @@ function Musician.Sampler.PlayNote(instrument, key)
 
 		-- Increment instrument round robin
 		if play and instrumentData.pathList ~= nil then
-			if instrumentData.rr >= #instrumentData.pathList then
-				instrumentData.rr = 1
+			if instrumentData.roundRobin >= #instrumentData.pathList then
+				instrumentData.roundRobin = 1
 			else
-				instrumentData.rr = instrumentData.rr + 1
+				instrumentData.roundRobin = instrumentData.roundRobin + 1
 			end
 		end
 
