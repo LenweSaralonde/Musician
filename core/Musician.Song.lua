@@ -362,8 +362,8 @@ end
 --- Play a note
 -- @param track (table) Reference to the track
 -- @param noteIndex (int) Note index
--- @param noRetry (boolean) Do not attempt to recover dropped notes
-function Musician.Song:NoteOn(track, noteIndex, noRetry)
+-- @param retries (int) Number of attempts to recover dropped notes
+function Musician.Song:NoteOn(track, noteIndex, retries)
 	local key = track.notes[noteIndex][NOTE.KEY] + track.transpose
 	local time = track.notes[noteIndex][NOTE.TIME]
 	local duration = track.notes[noteIndex][NOTE.DURATION]
@@ -406,10 +406,11 @@ function Musician.Song:NoteOn(track, noteIndex, noRetry)
 		play, handle = Musician.Sampler.PlayNote(track.instrument, key)
 
 		-- Note dropped: interrupt the oldest one and retry
-		if not(play) and not(noRetry) then
+		retries = retries or 0
+		if not(play) and retries < 2 then
 			self:StopOldestNote()
 			C_Timer.After(0, function()
-				self:NoteOn(track, noteIndex, true)
+				self:NoteOn(track, noteIndex, retries + 1)
 			end)
 			return
 		end
