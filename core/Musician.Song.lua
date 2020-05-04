@@ -93,7 +93,7 @@ function Musician.Song.create()
 	-- @field soloTracks (int) Number of tracks in solo
 	self.soloTracks = 0
 
-	-- @field polyphony (int) Current polyphony
+	-- @field polyphony (int) Current theoretical polyphony
 	self.polyphony = 0
 
 	-- @field drops (int) Dropped notes
@@ -397,23 +397,28 @@ function Musician.Song:NoteOn(track, noteIndex, retries)
 		shouldPlay = false
 	end
 
-	-- The note cannot be already playing on the same track
+	-- The same note cannot be already playing on the same track
 	self:NoteOff(track, key)
 
 	-- Play note sound file
-	local play, handle
+	local handle
 	if shouldPlay then
-		play, handle = Musician.Sampler.PlayNote(track.instrument, key)
-
-		-- Note dropped: interrupt the oldest one and retry
-		retries = retries or 0
-		if not(play) and retries < 2 then
-			self:StopOldestNote()
-			C_Timer.After(0, function()
-				self:NoteOn(track, noteIndex, retries + 1)
-			end)
-			return
-		end
+		local song = self
+		handle = Musician.Sampler.PlayNote(
+			track.instrument,
+			key,
+			-- onPlay
+			function(handle)
+				Musician.Song:SendMessage(Musician.Events.NoteOn, song, track, key)
+			end,
+			-- onStop
+			function(handle, decay)
+				-- Send event only if the sound file actually played
+				if Musician.Sampler.GetNoteData(handle).soundHandle then
+					Musician.Song:SendMessage(Musician.Events.NoteOff, song, track, key)
+				end
+			end
+		)
 	end
 
 	-- Add note to notesOn with sound handle and note off time
@@ -425,37 +430,32 @@ function Musician.Song:NoteOn(track, noteIndex, retries)
 	track.notesOn[key] = {
 		[NOTEON.TIME] = time,
 		[NOTEON.ENDTIME] = endTime,
-		[NOTEON.HANDLE] = play and handle or 0
+		[NOTEON.HANDLE] = handle or 0
 	}
+	track.polyphony = track.polyphony + 1
+	self.polyphony = self.polyphony + 1
 
-	if play then
-		track.polyphony = track.polyphony + 1
-		self.polyphony = self.polyphony + 1
-		Musician.Song:SendMessage(Musician.Events.NoteOn, self, track, key)
-	end
-
-	Musician.Song:SendMessage(Musician.Events.VisualNoteOn, self, track, key, play)
+	Musician.Song:SendMessage(Musician.Events.VisualNoteOn, self, track, key)
 end
 
 --- Stop a note of a track
 -- @param track (table) Reference to the track
 -- @param key (int) Note key
--- @param keepVisual (boolean)
+-- @param audioOnly (boolean) Stop note audio only
 -- @param [decay (number)] Override instrument decay
-function Musician.Song:NoteOff(track, key, keepVisual, decay)
+function Musician.Song:NoteOff(track, key, audioOnly, decay)
 	if track.notesOn[key] ~= nil then
 		local handle = track.notesOn[key][NOTEON.HANDLE]
 		if handle ~= 0 then
 			Musician.Sampler.StopNote(handle, decay)
-			track.polyphony = track.polyphony - 1
-			self.polyphony = self.polyphony - 1
 		end
-		Musician.Song:SendMessage(Musician.Events.NoteOff, self, track, key)
 
-		if keepVisual then
+		if audioOnly then
 			track.notesOn[key][NOTEON.HANDLE] = 0
 		else
 			track.notesOn[key] = nil
+			track.polyphony = track.polyphony - 1
+			self.polyphony = self.polyphony - 1
 			Musician.Song:SendMessage(Musician.Events.VisualNoteOff, self, track, key)
 		end
 	end
@@ -463,11 +463,11 @@ end
 
 --- Stop all notes of a track
 -- @param track (table) Reference to the track
--- @param keepVisual (boolean)
-function Musician.Song:TrackNotesOff(track, keepVisual)
+-- @param audioOnly (boolean)
+function Musician.Song:TrackNotesOff(track, audioOnly)
 	local noteKey, noteOn
 	for noteKey, noteOn in pairs(track.notesOn) do
-		self:NoteOff(track, noteKey, keepVisual)
+		self:NoteOff(track, noteKey, audioOnly)
 	end
 end
 
@@ -476,25 +476,6 @@ function Musician.Song:SongNotesOff()
 	local track
 	for _, track in pairs(self.tracks) do
 		self:TrackNotesOff(track)
-	end
-end
-
---- Stop the oldest note still playing
-function Musician.Song:StopOldestNote()
-	local foundTrack, foundNoteKey
-	local track
-	for _, track in pairs(self.tracks) do
-		local noteKey, noteOn
-		for noteKey, noteOn in pairs(track.notesOn) do
-			if foundNoteKey == nil or track.notesOn[noteKey][NOTE.TIME] < foundTrack.notesOn[foundNoteKey][NOTE.TIME] then
-				foundTrack = track
-				foundNoteKey = noteKey
-			end
-		end
-	end
-
-	if foundNoteKey ~= nil then
-		self:NoteOff(foundTrack, foundNoteKey, false, 0) -- Remove decay
 	end
 end
 

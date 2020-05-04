@@ -7,6 +7,14 @@ local MODULE_NAME = "Sampler"
 Musician.AddModule(MODULE_NAME)
 
 local notesOn = {}
+local lastHandleId = 0
+
+local NOTEON = {}
+NOTEON.TIME = 1
+NOTEON.KEY = 2
+NOTEON.INSTRUMENT_DATA = 3
+NOTEON.SOUND_HANDLE = 4
+NOTEON.ON_STOP = 5
 
 --- Init sampler engine
 --
@@ -168,24 +176,26 @@ function Musician.Sampler.GetSoundFile(instrument, key)
 	return soundFile, instrumentData, soundFiles
 end
 
---- Start playing a note
--- Returns true if sound will actually be played, sound handle and instrument data
--- @param instrument (int|string|table) MIDI instrument index, instrument name or instrument data
--- @param key (int)
--- @return willPlay (boolean)
--- @return soundHandle (int)
-function Musician.Sampler.PlayNote(instrument, key)
-	local soundFile, instrumentData = Musician.Sampler.GetSoundFile(instrument, key)
-	local sampleId = Musician.Sampler.GetSampleId(instrumentData, key)
-	local play, handle = false
+--- Play a note file
+-- Can perform multiple attempts if the sound file could not play
+-- @param handle (int) Sampler note handle
+-- @param instrumentData (table)
+-- @param soundFile (string) Sample file path
+-- @param tries (int) Number of attempts in case of failures due to limited polyphony
+-- @param [onPlay (function)] Called when the sound file starts playing
+local function playNoteFile(handle, instrumentData, soundFile, tries, onPlay)
+	if not(notesOn[handle]) then
+		return
+	end
 
-	if not(Musician.Preloader.IsPreloaded(sampleId)) then
-		play, handle = true, 0 -- Silent note
-	elseif soundFile then
-		play, handle = Musician.Sampler.PlaySoundFile(soundFile, 'SFX')
+	local willPlay, soundHandle = Musician.Sampler.PlaySoundFile(soundFile, 'SFX')
+
+	if willPlay then -- Note sound file plays
+		-- Keep internal handle
+		notesOn[handle][NOTEON.SOUND_HANDLE] = soundHandle
 
 		-- Increment instrument round robin
-		if play and instrumentData.pathList ~= nil then
+		if instrumentData.pathList ~= nil then
 			if instrumentData.roundRobin >= #instrumentData.pathList then
 				instrumentData.roundRobin = 1
 			else
@@ -193,12 +203,48 @@ function Musician.Sampler.PlayNote(instrument, key)
 			end
 		end
 
-		if play and handle then
-			notesOn[handle] = { instrumentData.decay }
+		-- Run callback
+		if onPlay then
+			onPlay(handle)
+		end
+	else -- Note failed to play due to lack of available polyphony
+		Musician.Utils.Debug(MODULE_NAME, 'Dropped note', handle, "(tries: " .. tries .. ")")
+		if tries < 2 then
+			-- Stop oldest note to release a polyphony slot
+			Musician.Sampler.StopOldestNote()
+			-- Try again on the next frame
+			C_Timer.After(0, function()
+				playNoteFile(handle, instrumentData, soundFile, tries + 1, onPlay)
+			end)
 		end
 	end
+end
 
-	return play, handle
+--- Start playing a note
+-- @param instrument (int|string|table) MIDI instrument index, instrument name or instrument data
+-- @param key (int) Note MIDI key
+-- @param [onPlay (function)] Called when the note actually starts playing. Args: noteHandle (int)
+-- @param [onStop (function)] Called when the note is stopped, regardless if it played or not. Args: noteHandle (int), decay (number)
+-- @return noteHandle (int)
+function Musician.Sampler.PlayNote(instrument, key, onPlay, onStop)
+	local soundFile, instrumentData = Musician.Sampler.GetSoundFile(instrument, key)
+	local sampleId = Musician.Sampler.GetSampleId(instrumentData, key)
+
+	lastHandleId = lastHandleId + 1
+	notesOn[lastHandleId] = {
+		[NOTEON.TIME] = debugprofilestop(),
+		[NOTEON.INSTRUMENT_DATA] = instrumentData,
+		[NOTEON.KEY] = key,
+		[NOTEON.ON_STOP] = onStop,
+	}
+	Musician.Utils.Debug(MODULE_NAME, 'PlayNote', lastHandleId, instrumentData.name, key)
+
+	-- Play the note file only if it has already been preloaded in the file cache
+	if soundFile and Musician.Preloader.IsPreloaded(sampleId) then
+		playNoteFile(lastHandleId, instrumentData, soundFile, 0, onPlay)
+	end
+
+	return lastHandleId
 end
 
 --- Stop playing note
@@ -209,13 +255,63 @@ function Musician.Sampler.StopNote(handle, decay)
 		return
 	end
 
+	local noteOn = notesOn[handle]
+	local soundHandle = noteOn[NOTEON.SOUND_HANDLE]
+	local instrumentData = noteOn[NOTEON.INSTRUMENT_DATA]
+	local onStop = noteOn[NOTEON.ON_STOP]
+	local key = noteOn[NOTEON.KEY]
+
 	if decay == nil then
-		decay = unpack(notesOn[handle])
+		decay = instrumentData.decay
 	end
 
-	StopSound(handle, decay)
+	Musician.Utils.Debug(MODULE_NAME, 'StopNote', handle, soundHandle, decay)
+
+	if soundHandle then
+		StopSound(soundHandle, decay)
+	end
+
+	if onStop then
+		onStop(handle, decay)
+	end
 
 	notesOn[handle] = nil
+end
+
+--- Stop playing the oldest note to release a polyphony slot
+--
+function Musician.Sampler.StopOldestNote()
+
+	Musician.Utils.Debug(MODULE_NAME, 'StopOldestNote')
+
+	local handle, noteOn, minHandle
+	for handle, noteOn in pairs(notesOn) do
+		if noteOn[NOTEON.SOUND_HANDLE] and (minHandle == nil or handle < minHandle) then
+			minHandle = handle
+		end
+	end
+	if minHandle then
+		Musician.Sampler.StopNote(minHandle, 0) -- No decay
+	end
+end
+
+--- Return note data
+-- @param handle (int) The note handle returned by PlayNote()
+-- @return noteOnData (table) Empty table if not valid
+function Musician.Sampler.GetNoteData(handle)
+	if not(notesOn[handle]) then
+		return {}
+	end
+
+	local noteOn = notesOn[handle]
+	return {
+		time = noteOn[NOTEON.TIME],
+		key = noteOn[NOTEON.KEY],
+		instrumentData = noteOn[NOTEON.INSTRUMENT_DATA],
+		soundFile = noteOn[NOTEON.SOUND_FILE],
+		soundHandle = noteOn[NOTEON.SOUND_HANDLE],
+		onStop = noteOn[NOTEON.ON_STOP],
+	}
 end
 
 --- Return sample ID for note and instrument data
