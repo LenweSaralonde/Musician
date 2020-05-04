@@ -223,8 +223,8 @@ end
 --- Start playing a note
 -- @param instrument (int|string|table) MIDI instrument index, instrument name or instrument data
 -- @param key (int) Note MIDI key
--- @param [onPlay (function)] Called when the note actually starts playing. Args: noteHandle (int)
--- @param [onStop (function)] Called when the note is stopped, regardless if it played or not. Args: noteHandle (int), decay (number)
+-- @param [onPlay (function)] Called when the note audio starts playing. Args: noteHandle (int)
+-- @param [onStop (function)] Called when the note audio is stopped. Args: noteHandle (int), decay (number)
 -- @return noteHandle (int)
 function Musician.Sampler.PlayNote(instrument, key, onPlay, onStop)
 	local soundFile, instrumentData = Musician.Sampler.GetSoundFile(instrument, key)
@@ -269,10 +269,9 @@ function Musician.Sampler.StopNote(handle, decay)
 
 	if soundHandle then
 		StopSound(soundHandle, decay)
-	end
-
-	if onStop then
-		onStop(handle, decay)
+		if onStop then
+			onStop(handle, decay)
+		end
 	end
 
 	notesOn[handle] = nil
