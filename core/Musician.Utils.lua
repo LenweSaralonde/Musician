@@ -352,15 +352,12 @@ end
 --- Return true if a song is actually playing and is audible
 -- @return isPlaying (boolean)
 function Musician.Utils.SongIsPlaying()
-	local isPlaying
-
-	local sourceSongIsPlaying = Musician.sourceSong ~= nil and Musician.sourceSong:IsPlaying()
-	isPlaying = sourceSongIsPlaying and not(Musician.globalMute)
+	local isPlaying = Musician.sourceSong ~= nil and Musician.sourceSong:IsPlaying()
 
 	if not(isPlaying) then
 		local song, player
 		for player, song in pairs(Musician.songs) do
-			if song:IsPlaying() and Musician.Registry.PlayerIsInRange(player) and not(Musician.globalMute) and not(Musician.PlayerIsMuted(player)) then
+			if song:IsPlaying() and Musician.Registry.PlayerIsInRange(player) and not(Musician.PlayerIsMuted(player)) then
 				return true
 			end
 		end
@@ -375,7 +372,7 @@ function Musician.Utils.MuteGameMusic(force)
 	local mute
 
 	if GetCVar("Sound_EnableMusic") ~= "0" then
-		mute = Musician.Utils.SongIsPlaying() or Musician.Live.IsPlayingLive()
+		mute = (Musician.Utils.SongIsPlaying() or Musician.Live.IsPlayingLive()) and not(Musician.Sampler.GetMuted())
 	else
 		mute = false
 	end

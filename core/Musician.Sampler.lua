@@ -8,6 +8,7 @@ Musician.AddModule(MODULE_NAME)
 
 local notesOn = {}
 local lastHandleId = 0
+local globalMute = false
 
 local NOTEON = {}
 NOTEON.TIME = 1
@@ -335,9 +336,29 @@ end
 -- @return willPlay (boolean)
 -- @return soundHandle (int)
 function Musician.Sampler.PlaySoundFile(soundFile, channel)
+	if globalMute then
+		return true, 0 -- Silent note
+	end
+
 	local willPlay, soundHandle
 	pcall(function()
 		willPlay, soundHandle = PlaySoundFile(soundFile, channel)
 	end)
 	return willPlay, soundHandle
+end
+
+--- Set global mute state
+-- @param isMuted (boolean)
+function Musician.Sampler.SetMuted(isMuted)
+	globalMute = isMuted
+	local handle
+	for handle in pairs(notesOn) do
+		Musician.Sampler.StopNote(handle, 0)
+	end
+end
+
+--- Return global mute state
+-- @return isMuted (boolean)
+function Musician.Sampler.GetMuted()
+	return globalMute
 end

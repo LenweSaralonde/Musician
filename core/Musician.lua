@@ -66,7 +66,6 @@ function Musician:OnInitialize()
 
 	Musician.songs = {}
 	Musician.sourceSong = nil
-	Musician.globalMute = false
 
 	Musician.Sampler.Init()
 	Musician.Comm.Init()

@@ -311,7 +311,6 @@ function Musician.Live.NoteOn(key, layer, instrument, isChordNote)
 		return
 	end
 
-	local sampleId = Musician.Sampler.GetSampleId(instrumentData, key)
 	local noteOnKey = key .. '-' .. layer .. '-' .. instrument
 
 	-- This is an auto-chord note but a higher priority note actually exists: do nothing
@@ -324,7 +323,7 @@ function Musician.Live.NoteOn(key, layer, instrument, isChordNote)
 
 	-- Play note
 	local handle = 0
-	if not(Musician.Live.IsBandSyncMode() and Musician.Live.IsEnabled()) and not(Musician.globalMute) and Musician.Preloader.IsPreloaded(sampleId) then
+	if not(Musician.Live.IsBandSyncMode() and Musician.Live.IsEnabled()) then
 		handle = Musician.Sampler.PlayNote(instrumentData, key)
 	end
 
@@ -603,7 +602,7 @@ function Musician.Live.OnLiveNote(prefix, message, distribution, sender)
 
 		-- Play note
 		local sampleId = Musician.Sampler.GetSampleId(instrumentData, key)
-		if not(Musician.globalMute) and Musician.Preloader.IsPreloaded(sampleId) and not(Musician.PlayerIsMuted(sender)) and Musician.Registry.PlayerIsInRange(sender) then
+		if not(Musician.PlayerIsMuted(sender)) and Musician.Registry.PlayerIsInRange(sender) then
 			handle = Musician.Sampler.PlayNote(instrumentData, key)
 		end
 

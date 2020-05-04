@@ -63,7 +63,7 @@ end
 --
 function MusicianButton.UpdateIcons()
 	local button = icon:GetMinimapButton("Musician")
-	if Musician.globalMute then
+	if Musician.Sampler.GetMuted() then
 		button.icon:SetTexture(MUSICIAN_ICON_MUTED)
 	elseif Musician.Preloader.IsComplete() then
 		button.icon:SetTexture(MUSICIAN_ICON)
@@ -87,8 +87,8 @@ function MusicianButton.OnClick(event, button)
 		MusicianButton.HideTooltip()
 		MusicianButton.OpenMenu()
 	elseif button == "RightButton" then
-		Musician.globalMute = not(Musician.globalMute)
-		if Musician.globalMute then
+		Musician.Sampler.SetMuted(not(Musician.Sampler.GetMuted()))
+		if Musician.Sampler.GetMuted() then
 			PlaySound(SOUNDKIT.IG_MINIMAP_ZOOM_OUT)
 		else
 			PlaySound(SOUNDKIT.IG_MINIMAP_ZOOM_IN)
@@ -268,7 +268,7 @@ function MusicianButton.UpdateTooltipText(alwaysShowLoadingProgression)
 
 	local rightClickLine = Musician.Msg.TOOLTIP_RIGHT_CLICK
 	local rightAction
-	if Musician.globalMute then
+	if Musician.Sampler.GetMuted() then
 		mainLine = mainLine .. " " .. Musician.Msg.TOOLTIP_ISMUTED
 		rightAction = Musician.Msg.TOOLTIP_ACTION_UNMUTE
 	else

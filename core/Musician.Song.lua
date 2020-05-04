@@ -393,7 +393,7 @@ function Musician.Song:NoteOn(track, noteIndex, retries)
 
 	-- Do not play note if the source song is playing or if the player is out of range
 	local sourceSongIsPlaying = Musician.sourceSong ~= nil and Musician.sourceSong:IsPlaying()
-	if self.player ~= nil and (sourceSongIsPlaying or not(playerIsInRange)) or self:TrackIsMuted(track) or Musician.globalMute or Musician.PlayerIsMuted(self.player) then
+	if self.player ~= nil and (sourceSongIsPlaying or not(playerIsInRange)) or self:TrackIsMuted(track) or Musician.PlayerIsMuted(self.player) then
 		shouldPlay = false
 	end
 
