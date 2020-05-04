@@ -90,6 +90,14 @@
 	<td class="summary">Return instrument name from its MIDI ID and key number</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#Musician.Sampler.GetMuted">Musician.Sampler.GetMuted ()</a></td>
+	<td class="summary">Return global mute state</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Sampler.GetNoteData">Musician.Sampler.GetNoteData (handle)</a></td>
+	<td class="summary">Return note data</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#Musician.Sampler.GetSampleId">Musician.Sampler.GetSampleId (instrumentData, key)</a></td>
 	<td class="summary">Return sample ID for note and instrument data</td>
 	</tr>
@@ -110,13 +118,24 @@
 	<td class="summary">Return the note name corresponding its MIDI key</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Musician.Sampler.PlayNote">Musician.Sampler.PlayNote (instrument, key)</a></td>
-	<td class="summary">Start playing a note
- Returns true if sound will actually be played, sound handle and instrument data</td>
+	<td class="name" nowrap><a href="#Musician.Sampler.PlayNote">Musician.Sampler.PlayNote (instrument, key, onPlay, onStop)</a></td>
+	<td class="summary">Start playing a note</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Sampler.PlaySoundFile">Musician.Sampler.PlaySoundFile (soundFile, channel)</a></td>
 	<td class="summary">Safely play a sound file, even if the sound file does not exist.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Sampler.SetMuted">Musician.Sampler.SetMuted (isMuted)</a></td>
+	<td class="summary">Set global mute state</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Sampler.StopNote">Musician.Sampler.StopNote (handle, decay)</a></td>
+	<td class="summary">Stop playing note</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Sampler.StopOldestNote">Musician.Sampler.StopOldestNote ()</a></td>
+	<td class="summary">Stop playing the oldest note to release a polyphony slot</td>
 	</tr>
 </table>
 
@@ -177,6 +196,50 @@
     <ol>
 
         instrumentName (string) used as key in Musician.INSTRUMENTS
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Sampler.GetMuted"></a>
+    <strong>Musician.Sampler.GetMuted ()</strong>
+    </dt>
+    <dd>
+    Return global mute state
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        isMuted (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Sampler.GetNoteData"></a>
+    <strong>Musician.Sampler.GetNoteData (handle)</strong>
+    </dt>
+    <dd>
+    Return note data
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">handle</span>
+         (int) The note handle returned by PlayNote()
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        noteOnData (table) Empty table if not valid
     </ol>
 
 
@@ -311,11 +374,10 @@
 </dd>
     <dt>
     <a name = "Musician.Sampler.PlayNote"></a>
-    <strong>Musician.Sampler.PlayNote (instrument, key)</strong>
+    <strong>Musician.Sampler.PlayNote (instrument, key, onPlay, onStop)</strong>
     </dt>
     <dd>
     Start playing a note
- Returns true if sound will actually be played, sound handle and instrument data
 
 
     <h3>Parameters:</h3>
@@ -324,18 +386,20 @@
          (int|string|table) MIDI instrument index, instrument name or instrument data
         </li>
         <li><span class="parameter">key</span>
-         (int)
+         (int) Note MIDI key
+        </li>
+        <li><span class="parameter">onPlay</span>
+         (function)] Called when the note audio starts playing. Args: noteHandle (int)
+        </li>
+        <li><span class="parameter">onStop</span>
+         (function)] Called when the note audio is stopped. Args: noteHandle (int), decay (number)
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
-        <li>
-        willPlay (boolean)</li>
-        <li>
-        soundHandle (int)</li>
-        <li>
-        instrumentData (table) from Musician.INSTRUMENTS</li>
+
+        noteHandle (int)
     </ol>
 
 
@@ -372,6 +436,63 @@
 
 
 </dd>
+    <dt>
+    <a name = "Musician.Sampler.SetMuted"></a>
+    <strong>Musician.Sampler.SetMuted (isMuted)</strong>
+    </dt>
+    <dd>
+    Set global mute state
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">isMuted</span>
+         (boolean)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Sampler.StopNote"></a>
+    <strong>Musician.Sampler.StopNote (handle, decay)</strong>
+    </dt>
+    <dd>
+    Stop playing note
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">handle</span>
+         (int) The note handle returned by PlayNote()
+        </li>
+        <li><span class="parameter">decay</span>
+         (number)] Override instrument decay
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Sampler.StopOldestNote"></a>
+    <strong>Musician.Sampler.StopOldestNote ()</strong>
+    </dt>
+    <dd>
+    Stop playing the oldest note to release a polyphony slot
+
+
+
+
+
+
+
+</dd>
 </dl>
 
 
@@ -379,7 +500,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-05-02 20:12:53 </i>
+<i style="float:right;">Last updated 2020-05-04 23:38:18 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
