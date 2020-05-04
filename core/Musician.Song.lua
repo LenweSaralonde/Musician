@@ -403,22 +403,8 @@ function Musician.Song:NoteOn(track, noteIndex, retries)
 	-- Play note sound file
 	local handle
 	if shouldPlay then
-		local song = self
-		handle = Musician.Sampler.PlayNote(
-			track.instrument,
-			key,
-			-- onPlay
-			function(handle)
-				Musician.Song:SendMessage(Musician.Events.NoteOn, song, track, key)
-			end,
-			-- onStop
-			function(handle, decay)
-				-- Send event only if the sound file actually played
-				if Musician.Sampler.GetNoteData(handle).soundHandle then
-					Musician.Song:SendMessage(Musician.Events.NoteOff, song, track, key)
-				end
-			end
-		)
+		Musician.Song:SendMessage(Musician.Events.NoteOn, self, track, key)
+		handle = Musician.Sampler.PlayNote(track.instrument, key)
 	end
 
 	-- Add note to notesOn with sound handle and note off time
@@ -448,6 +434,7 @@ function Musician.Song:NoteOff(track, key, audioOnly, decay)
 		local handle = track.notesOn[key][NOTEON.HANDLE]
 		if handle ~= 0 then
 			Musician.Sampler.StopNote(handle, decay)
+			Musician.Song:SendMessage(Musician.Events.NoteOff, self, track, key)
 		end
 
 		if audioOnly then
