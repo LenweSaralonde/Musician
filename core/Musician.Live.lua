@@ -8,6 +8,13 @@ Musician.AddModule(MODULE_NAME)
 
 local STREAM_PADDING = 10 -- Number of seconds to wait before ending streaming without activity
 
+local NOTEON = {}
+NOTEON.HANDLE = 1
+NOTEON.LAYER = 2
+NOTEON.KEY = 3
+NOTEON.INSTRUMENT = 4
+NOTEON.IS_CHORD_NOTE = 5
+
 local notesOn = {}
 local songStartTime = nil
 local instrumentTrackMapping = {}
@@ -308,7 +315,7 @@ function Musician.Live.NoteOn(key, layer, instrument, isChordNote)
 	local noteOnKey = key .. '-' .. layer .. '-' .. instrument
 
 	-- This is an auto-chord note but a higher priority note actually exists: do nothing
-	if isChordNote and notesOn[noteOnKey] and not(notesOn[noteOnKey].isChordNote) then
+	if isChordNote and notesOn[noteOnKey] and not(notesOn[noteOnKey][NOTEON.IS_CHORD_NOTE]) then
 		return
 	end
 
@@ -318,12 +325,18 @@ function Musician.Live.NoteOn(key, layer, instrument, isChordNote)
 	-- Play note
 	local handle = 0
 	if not(Musician.Live.IsBandSyncMode() and Musician.Live.IsEnabled()) and not(Musician.globalMute) and Musician.Preloader.IsPreloaded(sampleId) then
-		_, handle = Musician.Sampler.PlayNote(instrumentData, key)
+		handle = Musician.Sampler.PlayNote(instrumentData, key)
 	end
 
 	-- Insert note on and trigger event
 	Musician.Live.InsertNote(true, key, layer, instrument)
-	notesOn[noteOnKey] = { handle, layer, key, instrumentData.midi, isChordNote }
+	notesOn[noteOnKey] = {
+		[NOTEON.HANDLE] = handle,
+		[NOTEON.LAYER] = layer,
+		[NOTEON.KEY] = key,
+		[NOTEON.INSTRUMENT] = instrumentData.midi,
+		[NOTEON.IS_CHORD_NOTE] = isChordNote
+	}
 	Musician.Live:SendMessage(Musician.Events.LiveNoteOn, key, layer, instrumentData, isChordNote)
 
 	-- Send band note message if synchronization is enabled
@@ -340,7 +353,8 @@ function Musician.Live.NoteOff(key, layer, instrument, isChordNote)
 	local noteOnKey = key .. '-' .. layer .. '-' .. instrument
 	if not(notesOn[noteOnKey]) then return end
 
-	local handle, _, _, _, noteOnIsChordNote = unpack(notesOn[noteOnKey])
+	local handle = notesOn[noteOnKey][NOTEON.HANDLE]
+	local noteOnIsChordNote = notesOn[noteOnKey][NOTEON.IS_CHORD_NOTE]
 
 	-- If current note off is from an auto-chord but actual note is not: do nothing
 	if isChordNote and not(noteOnIsChordNote) then
@@ -387,7 +401,9 @@ end
 function Musician.Live.AllNotesOff(onlyForLayer)
 	local noteOnKey, note
 	for noteOnKey, note in pairs(notesOn) do
-		local _, layer, key, instrument = unpack(note)
+		local layer = note[NOTEON.LAYER]
+		local key = note[NOTEON.KEY]
+		local instrument = note[NOTEON.INSTRUMENT]
 
 		if onlyForLayer == nil or onlyForLayer == layer then
 			Musician.Live.NoteOff(key, layer, instrument)
@@ -567,7 +583,7 @@ function Musician.Live.OnLiveNote(prefix, message, distribution, sender)
 
 	-- Note on
 	if noteOn then
-		local play, handle
+		local handle
 		local soundFile, instrumentData = Musician.Sampler.GetSoundFile(instrument, key)
 		if soundFile == nil then return end
 
@@ -588,11 +604,11 @@ function Musician.Live.OnLiveNote(prefix, message, distribution, sender)
 		-- Play note
 		local sampleId = Musician.Sampler.GetSampleId(instrumentData, key)
 		if not(Musician.globalMute) and Musician.Preloader.IsPreloaded(sampleId) and not(Musician.PlayerIsMuted(sender)) and Musician.Registry.PlayerIsInRange(sender) then
-			play, handle = Musician.Sampler.PlayNote(instrumentData, key)
+			handle = Musician.Sampler.PlayNote(instrumentData, key)
 		end
 
 		-- Insert note on
-		if play then
+		if handle then
 			bandNotesOn[sender][noteOnKey] = { handle, layer, key, instrumentData.midi }
 		end
 
