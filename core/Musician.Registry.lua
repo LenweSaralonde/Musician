@@ -219,7 +219,7 @@ function Musician.Registry.FetchPlayers()
 	end
 
 	-- Send fetch players request to the server
-	if Musician.Comm.getChannel() ~= nil then
+	if Musician.Comm.GetChannel() ~= nil then
 		Musician.Registry.fetchingPlayers = true
 		ListChannelByName(Musician.CHANNEL)
 
@@ -396,9 +396,9 @@ end
 --- Send a Hello to the channel
 --
 function Musician.Registry.SendHello()
-	if Musician.Comm.getChannel() ~= nil then
-		debug(true, Musician.Registry.event.hello, Musician.Comm.getChannel())
-		Musician.Registry:SendCommMessage(Musician.Registry.event.hello, Musician.Registry.GetVersionString(), 'CHANNEL', Musician.Comm.getChannel(), "ALERT")
+	if Musician.Comm.GetChannel() ~= nil then
+		debug(true, Musician.Registry.event.hello, Musician.Comm.GetChannel())
+		Musician.Registry:SendCommMessage(Musician.Registry.event.hello, Musician.Registry.GetVersionString(), 'CHANNEL', Musician.Comm.GetChannel(), "ALERT")
 	end
 end
 

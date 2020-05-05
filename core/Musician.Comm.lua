@@ -165,7 +165,7 @@ function Musician.Comm.JoinChannel()
 	end)
 
 	-- Channel is already joined
-	if Musician.Comm.getChannel() ~= nil then
+	if Musician.Comm.GetChannel() ~= nil then
 		onChannelJoined()
 		reorderChannels()
 	else
@@ -174,7 +174,7 @@ function Musician.Comm.JoinChannel()
 
 	-- Keep the channel joined
 	Musician.Comm.channelJoiner = C_Timer.NewTicker(1, function()
-		if Musician.Comm.getChannel() == nil then
+		if Musician.Comm.GetChannel() == nil then
 			if joinChannelAfter == nil or joinChannelAfter <= GetTime() then
 				joinChannelAfter = nil
 				JoinTemporaryChannel(Musician.CHANNEL, Musician.PASSWORD)
@@ -224,14 +224,14 @@ function Musician.Comm.BroadcastCommMessage(message, type, groupType)
 		Musician.Comm:SendCommMessage(groupType, message, groupChatType, nil, "ALERT")
 	end
 	if Musician.Comm.ChannelIsReady() then
-		debug(true, type, "CHANNEL " .. Musician.Comm.getChannel(), message)
-		Musician.Comm:SendCommMessage(type, message, "CHANNEL", Musician.Comm.getChannel(), "ALERT")
+		debug(true, type, "CHANNEL " .. Musician.Comm.GetChannel(), message)
+		Musician.Comm:SendCommMessage(type, message, "CHANNEL", Musician.Comm.GetChannel(), "ALERT")
 	end
 end
 
 --- Return the communication channel ID
 -- @return channelId (string)
-function Musician.Comm.getChannel()
+function Musician.Comm.GetChannel()
 	local channelId = GetChannelName(Musician.CHANNEL)
 
 	if channelId ~= 0 then
@@ -244,7 +244,7 @@ end
 --- Return true if the communication channel is ready
 -- @return isReady (boolean)
 function Musician.Comm.ChannelIsReady()
-	return Musician.Comm.getChannel() ~= nil
+	return Musician.Comm.GetChannel() ~= nil
 end
 
 --- Return true if the player can broadcast via the channel or the group chat
