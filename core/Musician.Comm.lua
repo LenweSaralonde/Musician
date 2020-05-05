@@ -165,7 +165,7 @@ function Musician.Comm.JoinChannel()
 	end)
 
 	-- Channel is already joined
-	if Musician.Comm.getChannel() ~= nil then
+	if Musician.Comm.GetChannel() ~= nil then
 		onChannelJoined()
 		reorderChannels()
 	else
@@ -174,7 +174,7 @@ function Musician.Comm.JoinChannel()
 
 	-- Keep the channel joined
 	Musician.Comm.channelJoiner = C_Timer.NewTicker(1, function()
-		if Musician.Comm.getChannel() == nil then
+		if Musician.Comm.GetChannel() == nil then
 			if joinChannelAfter == nil or joinChannelAfter <= GetTime() then
 				joinChannelAfter = nil
 				JoinTemporaryChannel(Musician.CHANNEL, Musician.PASSWORD)
@@ -229,7 +229,7 @@ end
 
 --- Return the communication channel ID
 -- @return channelId (string)
-function Musician.Comm.getChannel()
+function Musician.Comm.GetChannel()
 	local channelId = GetChannelName(Musician.CHANNEL)
 
 	if channelId ~= 0 then

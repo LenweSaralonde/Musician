@@ -219,7 +219,7 @@ function Musician.Registry.FetchPlayers()
 	end
 
 	-- Send fetch players request to the server
-	if Musician.Comm.getChannel() ~= nil then
+	if Musician.Comm.GetChannel() ~= nil then
 		Musician.Registry.fetchingPlayers = true
 		ListChannelByName(Musician.CHANNEL)
 
