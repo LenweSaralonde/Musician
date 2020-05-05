@@ -32,9 +32,6 @@ local isPlayPending = false
 local isStopPending = false
 local isBandActionPending = false
 
-local canJoinChannel = true
-local channelIsJoined = false
-local channelWasAlreadyJoined = false
 local joinChannelAfter
 
 local isBandPlayReady = false
@@ -100,77 +97,85 @@ function Musician.Comm.Init()
 	Musician.Comm:RegisterEvent("PLAYER_DEAD", Musician.Comm.OnDead)
 end
 
+--- Function executed when the communication channel has been successfullly joined
+--
+local function onChannelJoined()
+	Musician.Registry.playersFetched = false
+	Musician.Registry.SendHello()
+	Musician.Registry.FetchPlayers()
+	Musician.Comm:SendMessage(Musician.Events.CommChannelUpdate, true)
+end
+
+--- Function executed when failed to join the channel
+-- @param reason (string)
+local function onChannelFailed(reason)
+	Musician.Comm:SendMessage(Musician.Events.CommChannelUpdate, false)
+	if reason == WRONG_PASSWORD then
+		joinChannelAfter = GetTime() + 300 -- Try again in 5 minutes
+	else
+		joinChannelAfter = GetTime() + 10 -- Try again in 10 seconds
+	end
+end
+
+--- Function executed when leaving the channel
+--
+local function onChannelLeft()
+	Musician.Comm:SendMessage(Musician.Events.CommChannelUpdate, false)
+	joinChannelAfter = nil -- Rejoin ASAP
+end
+
+--- Reorder channels the keep the communication channel at the end of the list
+--
+local function reorderChannels()
+	local index
+	for index = 1, MAX_WOW_CHAT_CHANNELS - 1 do
+		local _, channelName = GetChannelName(index)
+		if channelName == Musician.CHANNEL then
+			(SwapChatChannelByLocalID or C_ChatInfo.SwapChatChannelsByChannelIndex)(index, index + 1)
+		end
+	end
+end
+
 --- Join the communication channel and keep it joined
 --
 function Musician.Comm.JoinChannel()
 	-- Channel joiner already active
 	if Musician.Comm.channelJoiner ~= nil then return end
 
-	--- Function executed when the channel has been successfullly joined
-	local function OnChannelJoined(reason)
-		channelIsJoined = true
-		channelWasAlreadyJoined = true
-		canJoinChannel = true
-		Musician.Registry.playersFetched = false
-		Musician.Registry.SendHello()
-		Musician.Registry.FetchPlayers()
-		Musician.Comm:SendMessage(Musician.Events.CommChannelUpdate, true)
-	end
-
-	--- Function executed when failed to join the channel
-	local function OnChannelFailed(reason)
-		canJoinChannel = false
-		channelIsJoined = false
-		Musician.Comm:SendMessage(Musician.Events.CommChannelUpdate, false)
-		if reason == WRONG_PASSWORD then
-			joinChannelAfter = GetTime() + 300 -- Try again in 5 minutes
-		else
-			joinChannelAfter = GetTime() + 10 -- Try again in 10 seconds
-		end
-	end
-
-	--- Function executed when leaving the channel
-	local function OnChannelLeft(reason)
-		canJoinChannel = true
-		channelIsJoined = false
-		Musician.Comm:SendMessage(Musician.Events.CommChannelUpdate, false)
-		joinChannelAfter = GetTime() -- Rejoin ASAP
-	end
-
 	-- Channel status changed
-	Musician.Comm:RegisterEvent("CHAT_MSG_CHANNEL_NOTICE", function(event, text, _, _, _, _, _, _, _, channelName)
+	Musician.Comm:RegisterEvent("CHAT_MSG_CHANNEL_NOTICE", function(event, ...)
+		local text, _, _, _, _, _, _, _, channelName = ...
 		if channelName == Musician.CHANNEL then
 			-- Successfully joined channed
 			if text == 'YOU_CHANGED' or text == 'YOU_JOINED' then
-				OnChannelJoined(text)
+				onChannelJoined(text)
 			-- Something went wrong
 			elseif text == 'WRONG_PASSWORD' or text == 'BANNED' then
-				OnChannelFailed(text)
+				onChannelFailed(text)
 			-- Left channel
 			elseif text == 'YOU_LEFT' then
-				OnChannelLeft(text)
+				onChannelLeft(text)
 			end
+		end
+
+		-- Reorder channels when a new channel has been joined
+		if text == 'YOU_CHANGED' or text == 'YOU_JOINED' then
+			reorderChannels()
 		end
 	end)
 
 	-- Channel is already joined
 	if Musician.Comm.getChannel() ~= nil then
-		OnChannelJoined()
+		onChannelJoined()
+		reorderChannels()
+	else
+		JoinTemporaryChannel(Musician.CHANNEL, Musician.PASSWORD)
 	end
 
-	-- Join channel with keepalive
-	local joinedChannelCount
+	-- Keep the channel joined
 	Musician.Comm.channelJoiner = C_Timer.NewTicker(1, function()
-		if not(channelIsJoined) then
-			local newJoinedChannelCount = #{GetChannelList()}
-
-			-- Channel has not been joined yet and the number of joined channels is still changing
-			if not(channelWasAlreadyJoined) and newJoinedChannelCount ~= joinedChannelCount then
-				joinedChannelCount = newJoinedChannelCount
-				joinChannelAfter = GetTime() + 4 -- Wait 4 seconds
-			end
-
-			if joinChannelAfter and joinChannelAfter < GetTime() then
+		if Musician.Comm.getChannel() == nil then
+			if joinChannelAfter == nil or joinChannelAfter <= GetTime() then
 				joinChannelAfter = nil
 				JoinTemporaryChannel(Musician.CHANNEL, Musician.PASSWORD)
 			end
@@ -225,7 +230,7 @@ end
 --- Return the communication channel ID
 -- @return channelId (string)
 function Musician.Comm.getChannel()
-	local channelId, _ = GetChannelName(Musician.CHANNEL)
+	local channelId = GetChannelName(Musician.CHANNEL)
 
 	if channelId ~= 0 then
 		return channelId
