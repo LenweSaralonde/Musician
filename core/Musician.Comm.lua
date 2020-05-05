@@ -395,11 +395,12 @@ function Musician.Comm.StopSong()
 		Musician.streamingSong:StopStreaming()
 		Musician.streamingSong = nil
 		collectgarbage()
+		isStopPending = true
+		Musician.Comm:SendMessage(Musician.Events.CommSendAction, Musician.Comm.action.stop)
+		Musician.Comm.BroadcastCommMessage(Musician.Comm.event.stop, Musician.Comm.event.stop)
+		return true
 	end
-	isStopPending = true
-	Musician.Comm:SendMessage(Musician.Events.CommSendAction, Musician.Comm.action.stop)
-	Musician.Comm.BroadcastCommMessage(Musician.Comm.event.stop, Musician.Comm.event.stop)
-	return true
+	return false
 end
 
 --- Indicate if the player song is playing
