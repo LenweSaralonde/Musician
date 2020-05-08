@@ -409,6 +409,7 @@ end
 -- @param elapsed (number)
 function Musician.OnUpdate(frame, elapsed)
 	Musician.Preloader.OnUpdate(elapsed)
+	Musician.Worker.OnUpdate(elapsed)
 
 	if Musician.sourceSong then
 		Musician.sourceSong:OnUpdate(elapsed)
