@@ -472,8 +472,9 @@ end
 
 --- Import song from a base 64 encoded string
 -- @param base64data (string)
--- @param crop (boolean)
-function Musician.Song:ImportFromBase64(base64data, crop)
+-- @param crop (boolean) Automatically crop song to first and last note
+-- @param [onComplete (function)] Called when the whole import process is complete. Argument is true when successful
+function Musician.Song:ImportFromBase64(base64data, crop, onComplete)
 	if self.importing then
 		error("The song is already importing.")
 	end
@@ -508,18 +509,24 @@ function Musician.Song:ImportFromBase64(base64data, crop)
 			Musician.Song:SendMessage(Musician.Events.SongImportProgress, self, BASE64DECODE_PROGRESSION_RATIO)
 			self.importing = false
 			Musician.Worker.Remove(base64DecodingWorker)
-			self:Import(decodedData, crop, BASE64DECODE_PROGRESSION_RATIO)
+			self:Import(decodedData, crop, BASE64DECODE_PROGRESSION_RATIO, onComplete)
 			return
 		end
 	end
-	Musician.Worker.Set(base64DecodingWorker, function() self:OnImportError() end)
+	Musician.Worker.Set(base64DecodingWorker, function()
+		self:OnImportError()
+		if onComplete then
+			onComplete(false)
+		end
+	end)
 end
 
 --- Import song from string
 -- @param data (string)
--- @param crop (boolean)
--- @param [previousProgression (number)]
-function Musician.Song:Import(data, crop, previousProgression)
+-- @param crop (boolean) Automatically crop song to first and last note
+-- @param [previousProgression (number)] Add previous progression (0-1)
+-- @param [onComplete (function)] Called when the whole import process is complete. Argument is true when successful
+function Musician.Song:Import(data, crop, previousProgression, onComplete)
 	if self.importing then
 		error("The song is already importing.")
 	end
@@ -727,10 +734,18 @@ function Musician.Song:Import(data, crop, previousProgression)
 			self.importing = false
 			Musician.Song:SendMessage(Musician.Events.SongImportComplete, self)
 			Musician.Song:SendMessage(Musician.Events.SongImportSucessful, self)
+			if onComplete then
+				onComplete(true)
+			end
 		end
 	end
 
-	Musician.Worker.Set(noteImportingWorker, function() self:OnImportError() end)
+	Musician.Worker.Set(noteImportingWorker, function()
+		self:OnImportError()
+		if onComplete then
+			onComplete(false)
+		end
+	end)
 end
 
 --- Cancel current import
