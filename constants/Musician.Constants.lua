@@ -29,9 +29,6 @@ Musician.MAX_KEY = 120 -- C8
 
 Musician.LISTENING_RADIUS = 40
 
-Musician.IMPORT_CONVERT_RATE = 210 / 3 -- Number of base64 bytes to be converted in 1 ms
-Musician.IMPORT_NOTE_RATE = 110 / 3 -- Number of notes to be imported in 1 ms
-
 Musician.BANDWIDTH_LIMIT_MIN = 255 -- Sending up to 255 characters in 1 message
 Musician.BANDWIDTH_LIMIT_MAX = 508 -- Sending up to 508 characters in 2 messages
 

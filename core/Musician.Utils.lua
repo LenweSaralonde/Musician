@@ -796,3 +796,20 @@ function Musician.Utils.SetFontStringTextFixedSize(fontString, text)
 		fontString:SetPoint(point, relativeTo, relativePoint, xOfs / scale, yOfs / scale)
 	end
 end
+
+--- Return a byte reader function for provided data string
+-- @param data (string)
+-- @param err (string) Error to be returned in case of reading error
+-- @return readBytes (function)
+function Musician.Utils.GetByteReader(data, err)
+	local cursor = 1
+	return function(length)
+		if length == nil then length = 1 end
+		local bytes = string.sub(data, cursor, cursor + length - 1)
+		cursor = cursor + length
+		if cursor > #data + 1 and err then
+			error(err)
+		end
+		return bytes
+	end
+end
