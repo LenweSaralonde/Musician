@@ -373,13 +373,13 @@ end
 function Musician.ImportSource(str)
 	-- Remove previously importing song
 	if Musician.importingSong ~= nil then
-		Musician.importingSong.importing = false
+		Musician.importingSong:CancelImport()
 		Musician.importingSong = nil
 	end
 
 	Musician.importingSong = Musician.Song.create()
 	collectgarbage()
-	Musician.importingSong:Import(str, true)
+	Musician.importingSong:ImportFromBase64(str, true)
 end
 
 --- Handle successful source import
