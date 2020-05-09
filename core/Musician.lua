@@ -383,18 +383,22 @@ function Musician.ImportSource(str)
 end
 
 --- Handle successful source import
---
-function Musician.OnSourceImportSuccessful()
+-- @param event (string)
+-- @param song (Musician.Song)
+-- @param data (string)
+function Musician.OnSourceImportSuccessful(event, song, data)
+	if song ~= Musician.importingSong then return end
+
 	-- Stop previous source song being played
-	if Musician.sourceSong and  Musician.sourceSong:IsPlaying() then
+	if Musician.sourceSong and Musician.sourceSong:IsPlaying() then
 		Musician.sourceSong:Stop()
 	end
 
-	Musician.sourceSong = Musician.importingSong
+	Musician.sourceSong = song
 	Musician.importingSong = nil
 	collectgarbage()
 
-	Musician:SendMessage(Musician.Events.SourceSongLoaded)
+	Musician:SendMessage(Musician.Events.SourceSongLoaded, song, data)
 end
 
 --- Handle failed source import
