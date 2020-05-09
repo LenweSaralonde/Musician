@@ -69,15 +69,15 @@ MusicianFrame.Focus = function()
 end
 
 --- Clear import field
---
-MusicianFrame.Clear = function(noFocus)
+-- @param focus (boolean)
+MusicianFrame.Clear = function(focus)
 	sourceBuffer = {}
 	sourceBufferCharIndex = 1
 
 	MusicianFrameSource:SetText(MusicianFrame.GetDefaultText())
 	MusicianFrameSource:HighlightText(0)
 
-	if not(noFocus) then
+	if focus then
 		MusicianFrameSource:SetFocus()
 	end
 end
@@ -233,7 +233,7 @@ end
 MusicianFrame.RefreshLoadingProgressBar = function(event, song, progression)
 	if not(song.importing) then
 		MusicianFrameTextBackgroundLoadingProgressBar:Hide()
-		MusicianFrame.Clear(true)
+		MusicianFrame.Clear()
 	else
 		MusicianFrameTextBackgroundLoadingProgressBar:Show()
 

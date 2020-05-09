@@ -169,7 +169,7 @@
 						self.tooltipText = Musician.Msg.SELECT_ALL
 					</OnLoad>
 					<OnClick>
-						MusicianFrame.Clear()
+						MusicianFrame.Clear(true)
 					</OnClick>
 				</Scripts>
 			</Button>
