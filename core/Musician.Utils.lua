@@ -330,18 +330,14 @@ end
 --- Return true if a song is actually playing and is audible
 -- @return isPlaying (boolean)
 function Musician.Utils.SongIsPlaying()
-	local isPlaying = Musician.sourceSong ~= nil and Musician.sourceSong:IsPlaying()
-
-	if not(isPlaying) then
-		local song, player
-		for player, song in pairs(Musician.songs) do
-			if song:IsPlaying() and Musician.Registry.PlayerIsInRange(player) and not(Musician.PlayerIsMuted(player)) then
-				return true
-			end
+	local playingSongs = Musician.Song.GetPlayingSongs()
+	local song
+	for _, song in pairs(playingSongs) do
+		if song:IsAudible() then
+			return true
 		end
 	end
-
-	return isPlaying
+	return false
 end
 
 --- Start or stop the actual game music if a song can actually be heard
@@ -655,6 +651,24 @@ function Musician.Utils.ParseTime(timestamp)
 	return max(0, time)
 end
 
+--- Shallow copy a table
+-- http://lua-users.org/wiki/CopyTable
+-- @param orig (table)
+-- @return copy (table)
+function Musician.Utils.ShallowCopy(orig)
+    local orig_type = type(orig)
+    local copy
+    if orig_type == 'table' then
+        copy = {}
+        for orig_key, orig_value in pairs(orig) do
+            copy[orig_key] = orig_value
+        end
+    else -- number, string, boolean, etc
+        copy = orig
+    end
+    return copy
+end
+
 --- Deep copy a table
 -- http://lua-users.org/wiki/CopyTable
 -- @param orig (table)
@@ -789,5 +803,17 @@ function Musician.Utils.GetByteReader(data, err)
 			error(err)
 		end
 		return bytes
+	end
+end
+
+--- Call function for each item of the provided table
+-- @param list (table)
+-- @param func (function) Takes 3 arguments: value, key and the provided table.
+function Musician.Utils.ForEach(list, func)
+	-- Make a shallow copy of the table to avoid issues if an element is removed in the process
+	local listCopy = Musician.Utils.ShallowCopy(list)
+	local key, value
+	for key, value in pairs(listCopy) do
+		func(value, key, list)
 	end
 end

@@ -44,6 +44,48 @@ local BASE64DECODE_PROGRESSION_RATIO = .75
 local IMPORT_CONVERT_RATE = 70 -- Number of base64 chunks to be converted in 1 ms
 local IMPORT_NOTE_RATE = 36 -- Number of notes to be imported in 1 ms
 
+local playingSongs = {}
+local playingSongCount = 0
+
+local streamingSongs = {}
+local streamingSongCount = 0
+
+--- Add playing song to the list
+-- @param song (Musician.Song)
+local function addPlayingSong(song)
+	if playingSongs[song] == nil then
+		playingSongs[song] = song
+		playingSongCount = playingSongCount + 1
+	end
+end
+
+--- Remove playing song from the list
+-- @param song (Musician.Song)
+local function removePlayingSong(song)
+	if playingSongs[song] ~= nil then
+		playingSongs[song] = nil
+		playingSongCount = playingSongCount - 1
+	end
+end
+
+--- Add streaming song to the list
+-- @param song (Musician.Song)
+local function addStreamingSong(song)
+	if streamingSongs[song] == nil then
+		streamingSongs[song] = song
+		streamingSongCount = streamingSongCount + 1
+	end
+end
+
+--- Remove streaming song from the list
+-- @param song (Musician.Song)
+local function removeStreamingSong(song)
+	if streamingSongs[song] ~= nil then
+		streamingSongs[song] = nil
+		streamingSongCount = streamingSongCount - 1
+	end
+end
+
 --- Song class
 -- @type Musician.Song
 function Musician.Song.create()
@@ -280,6 +322,7 @@ end
 --- Resume a song playing
 -- @param eventSent (boolean)
 function Musician.Song:Resume(eventSent)
+	addPlayingSong(self)
 	self.playing = true
 	if not(eventSent) then
 		Musician.Song:SendMessage(Musician.Events.SongPlay, self)
@@ -294,6 +337,7 @@ function Musician.Song:Stop()
 		self.willPlayTimer = nil
 	end
 	if self.playing then
+		removePlayingSong(self)
 		self.playing = false
 		Musician.Utils.MuteGameMusic()
 		Musician.Song:SendMessage(Musician.Events.SongStop, self)
@@ -302,9 +346,13 @@ end
 
 --- Main on frame update function
 -- @param elapsed (number)
-function Musician.Song:OnUpdate(elapsed)
-	self:StreamOnFrame(elapsed)
-	self:PlayOnFrame(elapsed)
+function Musician.Song.OnUpdate(elapsed)
+	Musician.Utils.ForEach(playingSongs, function(song)
+		song:PlayOnFrame(elapsed)
+	end)
+	Musician.Utils.ForEach(streamingSongs, function(song)
+		song:StreamOnFrame(elapsed)
+	end)
 end
 
 --- Play notes accordingly to every frame.
@@ -361,6 +409,19 @@ function Musician.Song:PlayOnFrame(elapsed)
 	if to >= self.cropTo then
 		self:Stop()
 	end
+end
+
+--- Returns true when the song is being played and can be heard
+-- @return isAudible (boolean)
+function Musician.Song:IsAudible()
+	-- Song is not playing
+	if not(self:IsPlaying()) then return false end
+
+	-- Not played by another player: always audible
+	if not(self.player) then return true end
+
+	-- Played by another player who is in range and not muted
+	return Musician.Registry.PlayerIsInRange(self.player) and not(Musician.PlayerIsMuted(player))
 end
 
 --- Play a note
@@ -773,13 +834,20 @@ function Musician.Song:Clone()
 	for key, value in pairs(self) do
 		song[key] = Musician.Utils.DeepCopy(value)
 	end
+
+	-- Stop playing and streaming to avoid unexpected behavior
+	song.playing = false
+	song.streaming = false
+
 	return song
 end
 
 --- Stream song
 function Musician.Song:Stream()
+	removePlayingSong(self)
 	self.playing = false
 	self:StopStreaming() -- Stop and reset streaming
+	addStreamingSong(self)
 	self.streaming = true
 	self.timeSinceLastStreamChunk = self.chunkDuration
 	Musician.Song:SendMessage(Musician.Events.StreamStart, self)
@@ -789,6 +857,7 @@ end
 function Musician.Song:StopStreaming()
 	local wasStreaming = self.streaming
 
+	removeStreamingSong(self)
 	self.streaming = false
 	self.timeSinceLastStreamChunk = 0
 
@@ -1147,6 +1216,18 @@ Musician.Song.UnpackChunkData = function(data)
 	end
 
 	return chunk
+end
+
+--- Return songs currently playing
+-- @return playingSongCount (int)
+function Musician.Song.GetPlayingSongs()
+	return Musician.Utils.ShallowCopy(playingSongs)
+end
+
+--- Return the number of songs currently playing
+-- @return playingSongCount (int)
+function Musician.Song.GetPlayingSongCount()
+	return playingSongCount
 end
 
 --- Convert song to live mode.
