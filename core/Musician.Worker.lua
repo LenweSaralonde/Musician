@@ -36,24 +36,20 @@ function Musician.Worker.OnUpdate(elapsed)
 	if workerCount == 0 then return end
 
 	local maxTime = debugprofilestop() + MAX_EXECUTION_TIME
-	local worker, workerData
 	repeat
-		local currentWorkers = Musician.Utils.DeepCopy(workers) -- Use a copy in case some workers are removed during the process
-		for worker, workerData in pairs(currentWorkers) do
-			if not(workerData.isRemoved) then
-				if workerData.onError then
-					local status, err = pcall(function()
-						worker()
-					end)
-					if not(status) then
-						workerData.onError(err)
-						Musician.Worker.Remove(worker)
-					end
-				else
+		Musician.Utils.ForEach(workers, function(workerData, worker)
+			if workerData.onError then
+				local status, err = pcall(function()
 					worker()
+				end)
+				if not(status) then
+					workerData.onError(err)
+					Musician.Worker.Remove(worker)
 				end
+			else
+				worker()
 			end
-		end
+		end)
 
 		-- Run workers until max execution time has been reached
 	until workerCount == 0 or debugprofilestop() > maxTime
