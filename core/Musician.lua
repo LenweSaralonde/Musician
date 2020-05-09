@@ -412,25 +412,9 @@ end
 -- @param frame (Frame)
 -- @param elapsed (number)
 function Musician.OnUpdate(frame, elapsed)
+	Musician.Song.OnUpdate(elapsed)
 	Musician.Preloader.OnUpdate(elapsed)
 	Musician.Worker.OnUpdate(elapsed)
-
-	if Musician.sourceSong then
-		Musician.sourceSong:OnUpdate(elapsed)
-	end
-
-	if Musician.importingSong then
-		Musician.importingSong:OnUpdate(elapsed)
-	end
-
-	if Musician.streamingSong then
-		Musician.streamingSong:OnUpdate(elapsed)
-	end
-
-	local song, player
-	for player, playerSong in pairs(Musician.songs) do
-		playerSong:OnUpdate(elapsed)
-	end
 
 	Musician:SendMessage(Musician.Events.Frame, elapsed)
 end
