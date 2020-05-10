@@ -62,12 +62,12 @@
   <li><a href="../modules/Musician.Registry.html">Musician.Registry</a></li>
   <li><a href="../modules/Musician.Sampler.html">Musician.Sampler</a></li>
   <li><a href="../modules/Musician.Song.html">Musician.Song</a></li>
-  <li><strong>Musician.TRP3</strong></li>
+  <li><a href="../modules/Musician.TRP3.html">Musician.TRP3</a></li>
   <li><a href="../modules/Musician.TRP3.Options.html">Musician.TRP3.Options</a></li>
   <li><a href="../modules/Musician.TrackEditor.html">Musician.TrackEditor</a></li>
   <li><a href="../modules/Musician.Utils.html">Musician.Utils</a></li>
   <li><a href="../modules/Musician.VolumeMeter.html">Musician.VolumeMeter</a></li>
-  <li><a href="../modules/Musician.Worker.html">Musician.Worker</a></li>
+  <li><strong>Musician.Worker</strong></li>
   <li><a href="../modules/MusicianButton.html">MusicianButton</a></li>
 </ul>
 
@@ -75,40 +75,24 @@
 
 <div id="content">
 
-<h1>Module <code>Musician.TRP3</code></h1>
-<p>Total RP 3 integration including RP player names, nameplates, tooltips and map scan.</p>
+<h1>Module <code>Musician.Worker</code></h1>
+<p>Worker manager</p>
 <p></p>
 
 
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#Musician.TRP3.GetRpName">Musician.TRP3.GetRpName (player)</a></td>
-	<td class="summary">Return RP display name for player</td>
+	<td class="name" nowrap><a href="#Musician.Worker.OnUpdate">Musician.Worker.OnUpdate (elapsed)</a></td>
+	<td class="summary">Run workers on each frame</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Musician.TRP3.HookNamePlates">Musician.TRP3.HookNamePlates ()</a></td>
-	<td class="summary">Hook TRP player nameplates (standard)</td>
+	<td class="name" nowrap><a href="#Musician.Worker.Remove">Musician.Worker.Remove (worker)</a></td>
+	<td class="summary">Remove worker function</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Musician.TRP3.HookPlayerMap">Musician.TRP3.HookPlayerMap ()</a></td>
-	<td class="summary">Hook TRP player map</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Musician.TRP3.HookPlayerNames">Musician.TRP3.HookPlayerNames ()</a></td>
-	<td class="summary">Hook player name formatting</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Musician.TRP3.HookTooltip">Musician.TRP3.HookTooltip ()</a></td>
-	<td class="summary">Hook TRP player tooltip</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Musician.TRP3.IsPlayingMusic">Musician.TRP3.IsPlayingMusic (player)</a></td>
-	<td class="summary">Return true if the player is currently playing some music</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Musician.TRP3.OnSongChunk">Musician.TRP3.OnSongChunk (event, sender, mode, songId, chunkDuration, playtimeLeft, posY, posX, posZ, instanceID, guid)</a></td>
-	<td class="summary">OnSongChunk</td>
+	<td class="name" nowrap><a href="#Musician.Worker.Set">Musician.Worker.Set (worker, onError)</a></td>
+	<td class="summary">Set worker function</td>
 	</tr>
 </table>
 
@@ -120,153 +104,60 @@
 
     <dl class="function">
     <dt>
-    <a name = "Musician.TRP3.GetRpName"></a>
-    <strong>Musician.TRP3.GetRpName (player)</strong>
+    <a name = "Musician.Worker.OnUpdate"></a>
+    <strong>Musician.Worker.OnUpdate (elapsed)</strong>
     </dt>
     <dd>
-    Return RP display name for player
+    Run workers on each frame
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">player</span>
-         (string)
+        <li><span class="parameter">elapsed</span>
+         (number)
         </li>
     </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        (string)
-    </ol>
 
 
 
 
 </dd>
     <dt>
-    <a name = "Musician.TRP3.HookNamePlates"></a>
-    <strong>Musician.TRP3.HookNamePlates ()</strong>
+    <a name = "Musician.Worker.Remove"></a>
+    <strong>Musician.Worker.Remove (worker)</strong>
     </dt>
     <dd>
-    Hook TRP player nameplates (standard)
-
-
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Musician.TRP3.HookPlayerMap"></a>
-    <strong>Musician.TRP3.HookPlayerMap ()</strong>
-    </dt>
-    <dd>
-    Hook TRP player map
-
-
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Musician.TRP3.HookPlayerNames"></a>
-    <strong>Musician.TRP3.HookPlayerNames ()</strong>
-    </dt>
-    <dd>
-    Hook player name formatting
-
-
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Musician.TRP3.HookTooltip"></a>
-    <strong>Musician.TRP3.HookTooltip ()</strong>
-    </dt>
-    <dd>
-    Hook TRP player tooltip
-
-
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Musician.TRP3.IsPlayingMusic"></a>
-    <strong>Musician.TRP3.IsPlayingMusic (player)</strong>
-    </dt>
-    <dd>
-    Return true if the player is currently playing some music
+    Remove worker function
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">player</span>
-         (string)
+        <li><span class="parameter">worker</span>
+         (function)
         </li>
     </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        (boolean)
-    </ol>
 
 
 
 
 </dd>
     <dt>
-    <a name = "Musician.TRP3.OnSongChunk"></a>
-    <strong>Musician.TRP3.OnSongChunk (event, sender, mode, songId, chunkDuration, playtimeLeft, posY, posX, posZ, instanceID, guid)</strong>
+    <a name = "Musician.Worker.Set"></a>
+    <strong>Musician.Worker.Set (worker, onError)</strong>
     </dt>
     <dd>
-    OnSongChunk
+    Set worker function
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">event</span>
-
+        <li><span class="parameter">worker</span>
+         (function)
         </li>
-        <li><span class="parameter">sender</span>
-
-        </li>
-        <li><span class="parameter">mode</span>
-
-        </li>
-        <li><span class="parameter">songId</span>
-
-        </li>
-        <li><span class="parameter">chunkDuration</span>
-
-        </li>
-        <li><span class="parameter">playtimeLeft</span>
-
-        </li>
-        <li><span class="parameter">posY</span>
-
-        </li>
-        <li><span class="parameter">posX</span>
-
-        </li>
-        <li><span class="parameter">posZ</span>
-
-        </li>
-        <li><span class="parameter">instanceID</span>
-
-        </li>
-        <li><span class="parameter">guid</span>
-
+        <li><span class="parameter">onError</span>
+         (function)]
         </li>
     </ul>
 
