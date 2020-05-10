@@ -16,6 +16,7 @@ NOTEON.INSTRUMENT = 4
 NOTEON.IS_CHORD_NOTE = 5
 
 local notesOn = {}
+local sustainedNotes = {}
 local songStartTime = nil
 local instrumentTrackMapping = {}
 local isLiveEnabled = true
@@ -299,6 +300,27 @@ function Musician.Live.InsertNote(noteOn, key, layer, instrument)
 	end
 end
 
+--- Set sustain state for the layer
+-- @param enable (boolean)
+-- @param layer (int)
+function Musician.Live.SetSustain(enable, layer)
+	if enable and sustainedNotes[layer] == nil then
+		-- Create sustained notes container for layer
+		sustainedNotes[layer] = {}
+	elseif not(enable) and sustainedNotes[layer] ~= nil then
+		-- Turn off all sustained notes
+		local noteOn
+		for _, noteOn in pairs(sustainedNotes[layer]) do
+			local key = noteOn[NOTEON.KEY]
+			local instrument = noteOn[NOTEON.INSTRUMENT]
+			local isChordNote = noteOn[NOTEON.IS_CHORD_NOTE]
+			Musician.Live.NoteOff(key, layer, instrument, isChordNote, true)
+		end
+		-- Remove sustained notes container
+		sustainedNotes[layer] = nil
+	end
+end
+
 --- Send note on
 -- @param key (int) MIDI key index
 -- @param layer (int)
@@ -316,6 +338,12 @@ function Musician.Live.NoteOn(key, layer, instrument, isChordNote)
 	-- This is an auto-chord note but a higher priority note actually exists: do nothing
 	if isChordNote and notesOn[noteOnKey] and not(notesOn[noteOnKey][NOTEON.IS_CHORD_NOTE]) then
 		return
+	end
+
+	-- Layer is sustained and note is already sustained: turn it off then start over
+	if sustainedNotes[layer] ~= nil and sustainedNotes[layer][noteOnKey] ~= nil then
+		local sustainedNote = sustainedNotes[layer][noteOnKey]
+		Musician.Live.NoteOff(key, layer, instrument, isChordNote, true)
 	end
 
 	-- Mute game music
@@ -347,7 +375,8 @@ end
 -- @param layer (int)
 -- @param instrument (int)
 -- @param isChordNote (boolean)
-function Musician.Live.NoteOff(key, layer, instrument, isChordNote)
+-- @param [ignoreSustain (boolean)] Force note off even is sustain is enabled for this layer
+function Musician.Live.NoteOff(key, layer, instrument, isChordNote, ignoreSustain)
 
 	local noteOnKey = key .. '-' .. layer .. '-' .. instrument
 	if not(notesOn[noteOnKey]) then return end
@@ -357,6 +386,12 @@ function Musician.Live.NoteOff(key, layer, instrument, isChordNote)
 
 	-- If current note off is from an auto-chord but actual note is not: do nothing
 	if isChordNote and not(noteOnIsChordNote) then
+		return
+	end
+
+	-- Layer is sustained
+	if not(ignoreSustain) and sustainedNotes[layer] ~= nil then
+		sustainedNotes[layer][noteOnKey] = notesOn[noteOnKey]
 		return
 	end
 
