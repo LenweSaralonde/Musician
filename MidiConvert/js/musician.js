@@ -1,14 +1,11 @@
 
 var Musician = {};
 
-Musician.C0_INDEX = 12;
-
-Musician.FILE_HEADER = 'MUS5';
+Musician.FILE_HEADER = 'MUS6';
 Musician.MAX_NOTE_DURATION = 6;
 Musician.NOTE_DURATION_FPS = 255 / Musician.MAX_NOTE_DURATION; // 8-bit
 Musician.NOTE_TIME_FPS = 240;
 Musician.MAX_NOTE_TIME = 65535 / Musician.NOTE_TIME_FPS; // 16-bit
-Musician.PERCUSSION_KEY_OFFSET = -12;
 
 Musician.PackNumber = function(num, bytes) {
 	var m = Math.max(0, num);
@@ -180,8 +177,10 @@ Musician.PackSong = function(song, fileName) {
 		var notes = [];
 		rawTrack.notes.forEach(function(rawNote) {
 			var noteTime = rawNote.time - offset;
-			var noteKey = Musician.C0_INDEX + rawNote.midi + (rawTrack.isPercussion ? Musician.PERCUSSION_KEY_OFFSET : 0);
+			var noteKey = rawNote.midi;
 			var noteDuration = Math.min(rawNote.duration, Musician.MAX_NOTE_DURATION);
+
+			// rawTrack.isPercussion
 
 			// Do not pack notes having zero duration
 			if (noteDuration === 0) {

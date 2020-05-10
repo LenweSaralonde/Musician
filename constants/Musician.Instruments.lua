@@ -211,7 +211,6 @@ Musician.INSTRUMENTS = {
 		isPlucked = true,
 		midi = 129,
 		color = Musician.COLORS.Red,
-		transpose = 12, -- Percussions' middle C is shifted
 		source = "E-mu Systems '96"
 	},
 
