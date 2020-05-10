@@ -1,0 +1,1375 @@
+/*
+// **********************************************************************
+// Woodblock
+// Soundfont from Musician, the music add-on for World of Warcraft
+// https://musician.lenwe.io
+// MIDI program: 115
+// Samples from Michael Picher Auxiliary Percussion
+// **********************************************************************
+*/
+
+<global>
+global_label=Musician instruments
+
+<group>
+group_label=115. Woodblock
+amp_velcurve_1=1 // All notes play max velocity
+
+<region>
+	region_label=C0 - N/A
+	key=c0
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=C0 - N/A
+	key=c0
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=C#0 - N/A
+	key=c#0
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=C#0 - N/A
+	key=c#0
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=D0 - N/A
+	key=d0
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=D0 - N/A
+	key=d0
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=D#0 - N/A
+	key=d#0
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=D#0 - N/A
+	key=d#0
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=E0 - N/A
+	key=e0
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=E0 - N/A
+	key=e0
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=F0 - N/A
+	key=f0
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=F0 - N/A
+	key=f0
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=F#0 - N/A
+	key=f#0
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=F#0 - N/A
+	key=f#0
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=G0 - N/A
+	key=g0
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=G0 - N/A
+	key=g0
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=G#0 - N/A
+	key=g#0
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=G#0 - N/A
+	key=g#0
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=A0 - N/A
+	key=a0
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=A0 - N/A
+	key=a0
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=Bb0 - N/A
+	key=a#0
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=Bb0 - N/A
+	key=a#0
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=B0 - N/A
+	key=b0
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=B0 - N/A
+	key=b0
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=C1 - N/A
+	key=c1
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=C1 - N/A
+	key=c1
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=C#1 - N/A
+	key=c#1
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=C#1 - N/A
+	key=c#1
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=D1 - N/A
+	key=d1
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=D1 - N/A
+	key=d1
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=D#1 - Laser
+	key=d#1
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=D#1 - Laser
+	key=d#1
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=E1 - Whip
+	key=e1
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=E1 - Whip
+	key=e1
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=F1 - Scratch push
+	key=f1
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=F1 - Scratch push
+	key=f1
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=F#1 - Scratch pull
+	key=f#1
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=F#1 - Scratch pull
+	key=f#1
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=G1 - Stick click
+	key=g1
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=G1 - Stick click
+	key=g1
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=G#1 - Square click
+	key=g#1
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=G#1 - Square click
+	key=g#1
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=A1 - Metronome click
+	key=a1
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=A1 - Metronome click
+	key=a1
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=Bb1 - Metronome bell
+	key=a#1
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=Bb1 - Metronome bell
+	key=a#1
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=B1 - Acoustic bass drum
+	key=b1
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=B1 - Acoustic bass drum
+	key=b1
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=C2 - Bass drum1
+	key=c2
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=C2 - Bass drum1
+	key=c2
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=C#2 - Side stick
+	key=c#2
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=C#2 - Side stick
+	key=c#2
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=D2 - Acoustic snare
+	key=d2
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=D2 - Acoustic snare
+	key=d2
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=D#2 - Hand clap
+	key=d#2
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=D#2 - Hand clap
+	key=d#2
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=E2 - Electric snare
+	key=e2
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=E2 - Electric snare
+	key=e2
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=F2 - Low floor tom
+	key=f2
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=F2 - Low floor tom
+	key=f2
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=F#2 - Closed hi hat
+	key=f#2
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=F#2 - Closed hi hat
+	key=f#2
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=G2 - High floor tom
+	key=g2
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=G2 - High floor tom
+	key=g2
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=G#2 - Pedal hi hat
+	key=g#2
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=G#2 - Pedal hi hat
+	key=g#2
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=A2 - Low tom
+	key=a2
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=A2 - Low tom
+	key=a2
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=Bb2 - Open hi hat
+	key=a#2
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=Bb2 - Open hi hat
+	key=a#2
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=B2 - Low mid tom
+	key=b2
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=B2 - Low mid tom
+	key=b2
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=C3 - Hi mid tom
+	key=c3
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=C3 - Hi mid tom
+	key=c3
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=C#3 - Crash cymbal1
+	key=c#3
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=C#3 - Crash cymbal1
+	key=c#3
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=D3 - High tom
+	key=d3
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=D3 - High tom
+	key=d3
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=D#3 - Ride cymbal1
+	key=d#3
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=D#3 - Ride cymbal1
+	key=d#3
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=E3 - Chinese cymbal
+	key=e3
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=E3 - Chinese cymbal
+	key=e3
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=F3 - Ride bell
+	key=f3
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=F3 - Ride bell
+	key=f3
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=F#3 - Tambourine
+	key=f#3
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=F#3 - Tambourine
+	key=f#3
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=G3 - Splash cymbal
+	key=g3
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=G3 - Splash cymbal
+	key=g3
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=G#3 - Cowbell
+	key=g#3
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=G#3 - Cowbell
+	key=g#3
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=A3 - Crash cymbal2
+	key=a3
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=A3 - Crash cymbal2
+	key=a3
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=Bb3 - Vibraslap
+	key=a#3
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=Bb3 - Vibraslap
+	key=a#3
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=B3 - Ride cymbal2
+	key=b3
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=B3 - Ride cymbal2
+	key=b3
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=C4 - Hi bongo
+	key=c4
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=C4 - Hi bongo
+	key=c4
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=C#4 - Low bongo
+	key=c#4
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=C#4 - Low bongo
+	key=c#4
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=D4 - Mute hi conga
+	key=d4
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=D4 - Mute hi conga
+	key=d4
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=D#4 - Open hi conga
+	key=d#4
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=D#4 - Open hi conga
+	key=d#4
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=E4 - Low conga
+	key=e4
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=E4 - Low conga
+	key=e4
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=F4 - High timbale
+	key=f4
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=F4 - High timbale
+	key=f4
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=F#4 - Low timbale
+	key=f#4
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=F#4 - Low timbale
+	key=f#4
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=G4 - High agogo
+	key=g4
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=G4 - High agogo
+	key=g4
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=G#4 - Low agogo
+	key=g#4
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=G#4 - Low agogo
+	key=g#4
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=A4 - Cabasa
+	key=a4
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=A4 - Cabasa
+	key=a4
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=Bb4 - Maracas
+	key=a#4
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=Bb4 - Maracas
+	key=a#4
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=B4 - Short whistle
+	key=b4
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=B4 - Short whistle
+	key=b4
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=C5 - Long whistle
+	key=c5
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=C5 - Long whistle
+	key=c5
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=C#5 - Short guiro
+	key=c#5
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=C#5 - Short guiro
+	key=c#5
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=D5 - Long guiro
+	key=d5
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=D5 - Long guiro
+	key=d5
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=D#5 - Claves
+	key=d#5
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=D#5 - Claves
+	key=d#5
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=E5 - Hi wood block
+	key=e5
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=E5 - Hi wood block
+	key=e5
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=F5 - Low wood block
+	key=f5
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=F5 - Low wood block
+	key=f5
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=F#5 - Mute cuica
+	key=f#5
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=F#5 - Mute cuica
+	key=f#5
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=G5 - Open cuica
+	key=g5
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=G5 - Open cuica
+	key=g5
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=G#5 - Mute triangle
+	key=g#5
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=G#5 - Mute triangle
+	key=g#5
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=A5 - Open triangle
+	key=a5
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=A5 - Open triangle
+	key=a5
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=Bb5 - Shaker
+	key=a#5
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=Bb5 - Shaker
+	key=a#5
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=B5 - Sleigh bell
+	key=b5
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=B5 - Sleigh bell
+	key=b5
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=C6 - Bell tree
+	key=c6
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=C6 - Bell tree
+	key=c6
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=C#6 - Castanets
+	key=c#6
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=C#6 - Castanets
+	key=c#6
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=D6 - Surdu dead stroke
+	key=d6
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=D6 - Surdu dead stroke
+	key=d6
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=D#6 - Surdu
+	key=d#6
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=D#6 - Surdu
+	key=d#6
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=E6 - N/A
+	key=e6
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=E6 - N/A
+	key=e6
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=F6 - N/A
+	key=f6
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=F6 - N/A
+	key=f6
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=F#6 - N/A
+	key=f#6
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=F#6 - N/A
+	key=f#6
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=G6 - Snare drum rod
+	key=g6
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=G6 - Snare drum rod
+	key=g6
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=G#6 - Ocean drum
+	key=g#6
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=G#6 - Ocean drum
+	key=g#6
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=A6 - Snare drum brush
+	key=a6
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=A6 - Snare drum brush
+	key=a6
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=Bb6 - N/A
+	key=a#6
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=Bb6 - N/A
+	key=a#6
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=B6 - N/A
+	key=b6
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=B6 - N/A
+	key=b6
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=C7 - N/A
+	key=c7
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=C7 - N/A
+	key=c7
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=C#7 - N/A
+	key=c#7
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=C#7 - N/A
+	key=c#7
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=D7 - N/A
+	key=d7
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=D7 - N/A
+	key=d7
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=D#7 - N/A
+	key=d#7
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=D#7 - N/A
+	key=d#7
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=E7 - N/A
+	key=e7
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=E7 - N/A
+	key=e7
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=F7 - N/A
+	key=f7
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=F7 - N/A
+	key=f7
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=F#7 - N/A
+	key=f#7
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=F#7 - N/A
+	key=f#7
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=G7 - N/A
+	key=g7
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=G7 - N/A
+	key=g7
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=G#7 - N/A
+	key=g#7
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=G#7 - N/A
+	key=g#7
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=A7 - N/A
+	key=a7
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=A7 - N/A
+	key=a7
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=Bb7 - N/A
+	key=a#7
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=Bb7 - N/A
+	key=a#7
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=B7 - N/A
+	key=b7
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=B7 - N/A
+	key=b7
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
+<region>
+	region_label=C8 - N/A
+	key=c8
+	sample=../instruments/misc-percussions/woodblock-hi.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=1
+
+<region>
+	region_label=C8 - N/A
+	key=c8
+	sample=../instruments/misc-percussions/woodblock-low.ogg
+	ampeg_release=0.4
+	seq_length=2 seq_position=2
+
