@@ -35,7 +35,10 @@ function Musician.Worker.OnUpdate(elapsed)
 	-- No worker to run
 	if workerCount == 0 then return end
 
-	local maxTime = debugprofilestop() + MAX_EXECUTION_TIME
+	local startTime = debugprofilestop()
+	local maxTime = startTime + MAX_EXECUTION_TIME
+	local cycles = 0
+	local now
 	repeat
 		Musician.Utils.ForEach(workers, function(workerData, worker)
 			if workerData.onError then
@@ -50,7 +53,11 @@ function Musician.Worker.OnUpdate(elapsed)
 				worker()
 			end
 		end)
+		cycles = cycles + 1
+		now = debugprofilestop()
 
 		-- Run workers until max execution time has been reached
-	until workerCount == 0 or debugprofilestop() > maxTime
+	until workerCount == 0 or now > maxTime
+
+	Musician.Utils.Debug(MODULE_NAME, "Workers:", workerCount, "Time:", now - startTime, "Overage:", now - maxTime , "Cycles:", cycles, "FPS:", floor(1 / elapsed))
 end
