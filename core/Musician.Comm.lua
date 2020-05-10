@@ -10,8 +10,8 @@ local LibDeflate = LibStub:GetLibrary("LibDeflate")
 
 Musician.Comm.event = {}
 Musician.Comm.event.stop = "MusicianStop"
-Musician.Comm.event.stream = "MusicianChunk64"
-Musician.Comm.event.streamGroup = "MusicianGChunk64"
+Musician.Comm.event.stream = "MusicianStream6"
+Musician.Comm.event.streamGroup = "MusicianGStream6"
 Musician.Comm.event.bandPlay = "MusicianBPlay"
 Musician.Comm.event.bandStop = "MusicianBStop"
 Musician.Comm.event.bandReady = "MusicianBOK"

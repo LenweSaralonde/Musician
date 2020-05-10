@@ -21,7 +21,7 @@ local instrumentTrackMapping = {}
 local isLiveEnabled = true
 
 Musician.Live.event = {}
-Musician.Live.event.note = "MusicianLNote"
+Musician.Live.event.note = "MusicianLNote6"
 Musician.Live.event.bandSync = "MusicianLSync"
 Musician.Live.event.bandSyncQuery = "MusicianLQuery"
 
