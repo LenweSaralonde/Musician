@@ -67,6 +67,7 @@
   <li><a href="../modules/Musician.TrackEditor.html">Musician.TrackEditor</a></li>
   <li><a href="../modules/Musician.Utils.html">Musician.Utils</a></li>
   <li><a href="../modules/Musician.VolumeMeter.html">Musician.VolumeMeter</a></li>
+  <li><a href="../modules/Musician.Worker.html">Musician.Worker</a></li>
   <li><a href="../modules/MusicianButton.html">MusicianButton</a></li>
 </ul>
 
@@ -82,16 +83,32 @@
 <h2><a href="#Class_Musician_Song">Class Musician.Song </a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#Musician.Song.UnpackChunkData">Musician.Song.UnpackChunkData (str)</a></td>
+	<td class="name" nowrap><a href="#Musician.Song.GetPlayingSongCount">Musician.Song.GetPlayingSongCount ()</a></td>
+	<td class="summary">Return the number of songs currently playing</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song.GetPlayingSongs">Musician.Song.GetPlayingSongs ()</a></td>
+	<td class="summary">Return songs currently playing</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song.OnUpdate">Musician.Song.OnUpdate (elapsed)</a></td>
+	<td class="summary">Main on frame update function</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song.UnpackChunkData">Musician.Song.UnpackChunkData (data)</a></td>
 	<td class="summary">Unpack song chunk data</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Musician.Song.UnpackChunkHeader">Musician.Song.UnpackChunkHeader (str)</a></td>
+	<td class="name" nowrap><a href="#Musician.Song.UnpackChunkHeader">Musician.Song.UnpackChunkHeader (data)</a></td>
 	<td class="summary">Unpack song chunk header</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Song:AppendChunk">Musician.Song:AppendChunk (chunk, mode, songId, chunkDuration, playtimeLeft, player)</a></td>
 	<td class="summary">Append chunk data to current song</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:CancelImport">Musician.Song:CancelImport ()</a></td>
+	<td class="summary">Cancel current import</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Song:Clone">Musician.Song:Clone ()</a></td>
@@ -110,16 +127,16 @@
 	<td class="summary">Return playing progression</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Musician.Song:Import">Musician.Song:Import (str, crop)</a></td>
-	<td class="summary">Import song from a base 64 string</td>
+	<td class="name" nowrap><a href="#Musician.Song:Import">Musician.Song:Import (data, crop, previousProgression, onComplete)</a></td>
+	<td class="summary">Import song from string</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Musician.Song:ImportOnFrame">Musician.Song:ImportOnFrame (elapsed)</a></td>
-	<td class="summary">Advance the song importing process on frame</td>
+	<td class="name" nowrap><a href="#Musician.Song:ImportFromBase64">Musician.Song:ImportFromBase64 (base64data, crop, onComplete)</a></td>
+	<td class="summary">Import song from a base 64 encoded string</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Musician.Song:ImportStep">Musician.Song:ImportStep (elapsed)</a></td>
-	<td class="summary">Run a step of importing process</td>
+	<td class="name" nowrap><a href="#Musician.Song:IsAudible">Musician.Song:IsAudible ()</a></td>
+	<td class="summary">Returns true when the song is being played and can be heard</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Song:IsPlaying">Musician.Song:IsPlaying ()</a></td>
@@ -134,8 +151,8 @@
 	<td class="summary">Play a note</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Musician.Song:OnUpdate">Musician.Song:OnUpdate (elapsed)</a></td>
-	<td class="summary">Main on frame update function</td>
+	<td class="name" nowrap><a href="#Musician.Song:OnImportError">Musician.Song:OnImportError ()</a></td>
+	<td class="summary">Handle importing error</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Song:PackChunk">Musician.Song:PackChunk (chunk)</a></td>
@@ -210,8 +227,66 @@
           </div>
     <dl class="function">
     <dt>
+    <a name = "Musician.Song.GetPlayingSongCount"></a>
+    <strong>Musician.Song.GetPlayingSongCount ()</strong>
+    </dt>
+    <dd>
+    Return the number of songs currently playing
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        playingSongCount (int)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song.GetPlayingSongs"></a>
+    <strong>Musician.Song.GetPlayingSongs ()</strong>
+    </dt>
+    <dd>
+    Return songs currently playing
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        playingSongCount (int)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song.OnUpdate"></a>
+    <strong>Musician.Song.OnUpdate (elapsed)</strong>
+    </dt>
+    <dd>
+    Main on frame update function
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">elapsed</span>
+         (number)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
     <a name = "Musician.Song.UnpackChunkData"></a>
-    <strong>Musician.Song.UnpackChunkData (str)</strong>
+    <strong>Musician.Song.UnpackChunkData (data)</strong>
     </dt>
     <dd>
     Unpack song chunk data
@@ -219,8 +294,8 @@
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">str</span>
-         (table)
+        <li><span class="parameter">data</span>
+         (string)
         </li>
     </ul>
 
@@ -236,7 +311,7 @@
 </dd>
     <dt>
     <a name = "Musician.Song.UnpackChunkHeader"></a>
-    <strong>Musician.Song.UnpackChunkHeader (str)</strong>
+    <strong>Musician.Song.UnpackChunkHeader (data)</strong>
     </dt>
     <dd>
     Unpack song chunk header
@@ -244,7 +319,7 @@
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">str</span>
+        <li><span class="parameter">data</span>
          (string)
         </li>
     </ul>
@@ -264,7 +339,7 @@
         <li>
         trackCount (int)</li>
         <li>
-        cursor (number)</li>
+        headerLength (number)</li>
     </ol>
 
 
@@ -300,6 +375,20 @@
          (string)
         </li>
     </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song:CancelImport"></a>
+    <strong>Musician.Song:CancelImport ()</strong>
+    </dt>
+    <dd>
+    Cancel current import
+
+
 
 
 
@@ -380,19 +469,25 @@
 </dd>
     <dt>
     <a name = "Musician.Song:Import"></a>
-    <strong>Musician.Song:Import (str, crop)</strong>
+    <strong>Musician.Song:Import (data, crop, previousProgression, onComplete)</strong>
     </dt>
     <dd>
-    Import song from a base 64 string
+    Import song from string
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">str</span>
+        <li><span class="parameter">data</span>
          (string)
         </li>
         <li><span class="parameter">crop</span>
-         (boolean)
+         (boolean) Automatically crop song to first and last note
+        </li>
+        <li><span class="parameter">previousProgression</span>
+         (number)] Add previous progression (0-1)
+        </li>
+        <li><span class="parameter">onComplete</span>
+         (function)] Called when the whole import process is complete. Argument is true when successful
         </li>
     </ul>
 
@@ -402,17 +497,23 @@
 
 </dd>
     <dt>
-    <a name = "Musician.Song:ImportOnFrame"></a>
-    <strong>Musician.Song:ImportOnFrame (elapsed)</strong>
+    <a name = "Musician.Song:ImportFromBase64"></a>
+    <strong>Musician.Song:ImportFromBase64 (base64data, crop, onComplete)</strong>
     </dt>
     <dd>
-    Advance the song importing process on frame
+    Import song from a base 64 encoded string
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">elapsed</span>
-         (number)
+        <li><span class="parameter">base64data</span>
+         (string)
+        </li>
+        <li><span class="parameter">crop</span>
+         (boolean) Automatically crop song to first and last note
+        </li>
+        <li><span class="parameter">onComplete</span>
+         (function)] Called when the whole import process is complete. Argument is true when successful
         </li>
     </ul>
 
@@ -422,20 +523,19 @@
 
 </dd>
     <dt>
-    <a name = "Musician.Song:ImportStep"></a>
-    <strong>Musician.Song:ImportStep (elapsed)</strong>
+    <a name = "Musician.Song:IsAudible"></a>
+    <strong>Musician.Song:IsAudible ()</strong>
     </dt>
     <dd>
-    Run a step of importing process
+    Returns true when the song is being played and can be heard
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">elapsed</span>
-         (number)
-        </li>
-    </ul>
 
+    <h3>Returns:</h3>
+    <ol>
+
+        isAudible (boolean)
+    </ol>
 
 
 
@@ -516,19 +616,13 @@
 
 </dd>
     <dt>
-    <a name = "Musician.Song:OnUpdate"></a>
-    <strong>Musician.Song:OnUpdate (elapsed)</strong>
+    <a name = "Musician.Song:OnImportError"></a>
+    <strong>Musician.Song:OnImportError ()</strong>
     </dt>
     <dd>
-    Main on frame update function
+    Handle importing error
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">elapsed</span>
-         (number)
-        </li>
-    </ul>
 
 
 
@@ -831,7 +925,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-05-04 23:38:18 </i>
+<i style="float:right;">Last updated 2020-05-11 00:57:17 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
