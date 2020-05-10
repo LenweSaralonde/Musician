@@ -163,8 +163,16 @@ Musician.MIDI_INSTRUMENT_MAPPING = {
 	[Instrument.Gunshot] = "none",
 
 	-- Percussions
-	[Instrument.Percussions] = "percussions",
-	[Instrument.Drumkit] = "drumkit",
+	[Instrument.StandardKit] = "percussions",
+	[Instrument.RoomKit] = "percussions",
+	[Instrument.PowerKit] = "drumkit",
+	[Instrument.ElectronicKit] = "drumkit",
+	[Instrument.TR808Kit] = "drumkit",
+	[Instrument.JazzKit] = "percussions",
+	[Instrument.BrushKit] = "percussions",
+	[Instrument.OrchestraKit] = "percussions",
+	[Instrument.SoundFXKit] = "none",
+	[Instrument.MT32Kit] = "percussions",
 
 	-- None
 	[Instrument.None] = "none",

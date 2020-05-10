@@ -10,6 +10,9 @@ local notesOn = {}
 local lastHandleId = 0
 local globalMute = false
 
+local PERCUSSION_MIDI = 128
+local FALLBACK_DRUMKIT_MIDI = 128
+
 local NOTEON = {}
 NOTEON.TIME = 1
 NOTEON.KEY = 2
@@ -28,7 +31,7 @@ function Musician.Sampler.Init()
 
 		-- Assign percussion MIDI id
 		if instrumentData.midi == nil and instrumentData.isPercussion then
-			instrumentData.midi = 128
+			instrumentData.midi = PERCUSSION_MIDI
 		end
 
 		-- Initialize round robin
@@ -64,15 +67,36 @@ function Musician.Sampler.NoteKey(noteName)
 end
 
 --- Return instrument name from its MIDI ID and key number
--- @param instrument (int)
--- @param key (int)
+-- @param instrument (int) MIDI instrument ID
+-- @param [key (int)] Only needed to get final instrument name for traditional percussions
 -- @return instrumentName (string) used as key in Musician.INSTRUMENTS
 function Musician.Sampler.GetInstrumentName(instrument, key)
-	if instrument ~= 128 then -- Not a percussion
-		return Musician.MIDI_INSTRUMENT_MAPPING[instrument]
-	else -- Percussion
-		return Musician.MIDI_PERCUSSION_MAPPING[key]
+	local instrumentName
+
+	-- Unknown drum kit: use fallback
+	if Musician.MIDI_INSTRUMENT_MAPPING[instrument] == nil and instrument >= 128 and instrument <= 255 then
+		instrumentName = Musician.MIDI_INSTRUMENT_MAPPING[FALLBACK_DRUMKIT_MIDI]
+	else
+		instrumentName = Musician.MIDI_INSTRUMENT_MAPPING[instrument] or 'none'
 	end
+
+	-- Return final instrument name for traditional percussions if a key number is provided
+	if key ~= nil and Musician.INSTRUMENTS[instrumentName].midi == PERCUSSION_MIDI then
+		instrumentName = Musician.MIDI_PERCUSSION_MAPPING[key] or "none"
+	end
+
+	return instrumentName
+end
+
+--- Return localized General MIDI instrument name
+-- @param instrument (int)
+-- @return localizedInstrumentName (string)
+function Musician.Sampler.GetLocalizedMIDIInstrumentName(instrument)
+	-- Unsupported drum kit
+	if Musician.MIDI_INSTRUMENT_MAPPING[instrument] == nil and instrument >= 128 and instrument <= 255 then
+		return string.gsub(Musician.Msg.UNKNOWN_DRUMKIT, '{midi}', instrument - 128)
+	end
+	return Musician.Msg.MIDI_INSTRUMENT_NAMES[instrument] or ""
 end
 
 --- Return instrument data for given MIDI key number
@@ -86,7 +110,7 @@ function Musician.Sampler.GetInstrumentData(instrumentName, key)
 	end
 
 	-- Handle specific percussion mapping
-	if instrumentData.midi == 128 and not(instrumentData.isPercussion) then
+	if instrumentData.midi == PERCUSSION_MIDI and not(instrumentData.isPercussion) then
 		return Musician.Sampler.GetInstrumentData(Musician.MIDI_PERCUSSION_MAPPING[key], key)
 	end
 

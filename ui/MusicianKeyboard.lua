@@ -244,7 +244,7 @@ local function setKeys()
 				end
 
 				if keyData ~= nil and keyData[2] >= Musician.MIN_KEY and keyData[2] <= Musician.MAX_KEY and not(Musician.DISABLED_KEYS[key]) and Musician.KeyboardUtils.GetKeyValue(key) then
-					local instrumentName = Musician.MIDI_INSTRUMENT_MAPPING[config.instrument[keyData[1]]]
+					local instrumentName = Musician.Sampler.GetInstrumentName(config.instrument[keyData[1]])
 					local r, g, b = unpack(Musician.INSTRUMENTS[instrumentName].color)
 					isPercussion = config.instrument[keyData[1]] >= 128
 
@@ -719,7 +719,7 @@ Musician.Keyboard.OnLiveNoteOn = function(event, key, layer, instrumentData, isC
 	end
 
 	-- Set glow color
-	local r, g, b = unpack(Musician.INSTRUMENTS[Musician.MIDI_INSTRUMENT_MAPPING[instrumentData.midi]].color)
+	local r, g, b = unpack(Musician.INSTRUMENTS[Musician.Sampler.GetInstrumentName(instrumentData.midi)].color)
 	local addedLuminance = .5
 	r = min(1, r + addedLuminance)
 	g = min(1, g + addedLuminance)

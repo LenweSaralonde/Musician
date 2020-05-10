@@ -160,8 +160,16 @@ Musician.MIDI_INSTRUMENTS = {
 	Gunshot = 127,
 
 	-- Percussions
-	Percussions = 128,
-	Drumkit = 129,
+	StandardKit = 128,
+	RoomKit = 136,
+	PowerKit = 144,
+	ElectronicKit = 152,
+	TR808Kit = 153,
+	JazzKit = 160,
+	BrushKit = 168,
+	OrchestraKit = 176,
+	SoundFXKit = 184,
+	MT32Kit = 255,
 
 	-- None
 	None = -1,

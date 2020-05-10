@@ -638,7 +638,7 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 
 		-- Instrument (1)
 		track.instrument = Musician.Utils.UnpackNumber(readBytes(1))
-		track.midiInstrument = min(128, track.instrument) -- Handle the metal drumkit that has Musician ID 129 but MIDI ID 128
+		track.midiInstrument = track.instrument
 
 		-- Channel (1)
 		track.channel = Musician.Utils.UnpackNumber(readBytes(1))
@@ -917,7 +917,7 @@ function Musician.Song:AppendChunk(chunk, mode, songId, chunkDuration, playtimeL
 
 		-- Track instrument
 		track.instrument = trackData[CHUNK.INSTRUMENT]
-		track.midiInstrument = min(128, track.instrument) -- Handle the metal drumkit that has Musician ID 129 but MIDI ID 128
+		track.midiInstrument = track.instrument
 
 		-- The chunk has been received too late, after the current cursor position
 		if self.cursor > self.chunkTime then
@@ -975,7 +975,7 @@ function Musician.Song:StreamOnFrame(elapsed)
 			if track.notes[track.streamIndex][NOTE.TIME] >= from then
 				local note = Musician.Utils.DeepCopy(track.notes[track.streamIndex])
 
-				if not(self:TrackIsMuted(track)) and Musician.MIDI_INSTRUMENT_MAPPING[track.instrument] ~= "none" then
+				if not(self:TrackIsMuted(track)) and track.instrument >= 0 and track.instrument <= 255 then
 					note[NOTE.KEY] = note[NOTE.KEY] + track.transpose
 
 					local noteTimeRelative = note[NOTE.TIME] - noteOffset

@@ -159,8 +159,8 @@ Musician.PackSong = function(song, fileName) {
 
 		// Track instrument
 		if (rawTrack.isPercussion) {
-			// Use modern drumkit (129) instead of the tradition one (128) if the song contains heavy metal instruments
-			track.instrument = isMetal ? 129 : 128;
+			// Shift instrument number by 128 for percussions
+			track.instrument = rawTrack.instrumentNumber + 128;
 		} else {
 			track.instrument = rawTrack.instrumentNumber;
 		}

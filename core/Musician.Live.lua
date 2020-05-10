@@ -81,7 +81,7 @@ local function createLiveSong(player)
 			if instrumentId >= 0 then
 				local track = {
 					['index'] = trackId,
-					['midiInstrument'] = min(128, instrumentId),
+					['midiInstrument'] = instrumentId,
 					['instrument'] = instrumentId,
 					['notes'] = {},
 					['playIndex'] = 1,

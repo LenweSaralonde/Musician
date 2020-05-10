@@ -259,7 +259,7 @@
 
 				dropdown.UpdateValue = function(value)
 					local originalMidiId = value
-					local instrumentId = Musician.MIDI_INSTRUMENT_MAPPING[originalMidiId]
+					local instrumentId = Musician.Sampler.GetInstrumentName(originalMidiId)
 					local midiId = Musician.INSTRUMENTS[instrumentId].midi
 					local instrumentName = Musician.Msg.INSTRUMENT_NAMES[instrumentId]
 					dropdown.value = midiId
