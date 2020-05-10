@@ -491,7 +491,7 @@ end
 -- @return versionAndProtocol (string)
 function Musician.Registry.GetVersionString()
 	local versionParts = { string.split('.', GetAddOnMetadata("Musician", "Version")) }
-	local protocolParts = { 0, 0, 0, 0 } -- Add Musician.PROTOCOL_VERSION at 5th position when a new version of the protocol is available
+	local protocolParts = { 0, 0, 0, 0, Musician.PROTOCOL_VERSION }
 	return table.concat(Musician.Utils.DeepMerge(protocolParts, versionParts), '.')
 end
 
