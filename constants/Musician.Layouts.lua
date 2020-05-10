@@ -126,7 +126,7 @@ local function getPercussionScale(scale)
 	local shiftedScale = {}
 	local k, v
 	for k, v in pairs(scale) do
-		table.insert(shiftedScale, v - 27)
+		table.insert(shiftedScale, v - 15)
 	end
 	return shiftedScale
 end

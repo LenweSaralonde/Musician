@@ -12,7 +12,7 @@ Musician.DISCORD_URL = "https://musician.lenwe.io/discord"
 Musician.PATREON_URL = "https://musician.lenwe.io/patreon"
 Musician.PAYPAL_URL = "https://musician.lenwe.io/paypal"
 
-Musician.FILE_HEADER = "MUS5"
+Musician.FILE_HEADER = "MUS6"
 Musician.PROTOCOL_VERSION = 4
 Musician.MAX_NOTE_DURATION = 6
 Musician.NOTE_DURATION_FPS = 255 / Musician.MAX_NOTE_DURATION -- 8-bit
@@ -22,10 +22,10 @@ Musician.MAX_CHUNK_NOTE_TIME = 255 / Musician.NOTE_TIME_FPS -- 8-bit
 
 Musician.NOTE_NAMES = {[0] = 'C', [1] = 'C#', [2] = 'D', [3] = 'D#', [4] = 'E', [5] = 'F', [6] = 'F#', [7] = 'G', [8] = 'G#', [9] = 'A', [10] = 'Bb', [11] = 'B'}
 Musician.NOTE_IDS   = {['C'] = 0, ['C#'] = 1, ['D'] = 2, ['D#'] = 3, ['E'] = 4, ['F'] = 5, ['F#'] = 6, ['G'] = 7, ['G#'] = 8, ['A'] = 9, ['Bb'] = 10, ['B'] = 11}
-Musician.C0_INDEX = 24
+Musician.C0_INDEX = 12
 
-Musician.MIN_KEY = 24 -- C0
-Musician.MAX_KEY = 120 -- C8
+Musician.MIN_KEY = 12 -- C0
+Musician.MAX_KEY = 108 -- C8
 
 Musician.LISTENING_RADIUS = 40
 

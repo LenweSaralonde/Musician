@@ -146,11 +146,6 @@ function Musician.Sampler.GetSoundFile(instrument, key)
 		soundPaths = { instrumentData.path }
 	end
 
-	-- Apply transposition
-	if instrumentData["transpose"] then
-		key = key + instrumentData["transpose"]
-	end
-
 	local noteName = Musician.Sampler.NoteName(key)
 
 	local soundFiles = {}
