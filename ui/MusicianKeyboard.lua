@@ -874,6 +874,12 @@ Musician.Keyboard.OnKey = function(keyValue, down)
 		return true
 	end
 
+	if keyValue == "SPACE" then
+		Musician.Live.SetSustain(down, LAYER.UPPER)
+		Musician.Live.SetSustain(down, LAYER.LOWER)
+		return true
+	end
+
 	return MusicianKeyboard.NoteKey(down, keyValue) or MusicianKeyboard.FunctionKey(down, keyValue) or MusicianKeyboard.ProgramActionKey(down, keyValue)
 end
 
