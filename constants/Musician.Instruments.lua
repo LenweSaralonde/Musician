@@ -209,7 +209,7 @@ Musician.INSTRUMENTS = {
 		decay = 150,
 		isPercussion = false,
 		isPlucked = true,
-		midi = 129,
+		midi = 144,
 		color = Musician.COLORS.Red,
 		source = "E-mu Systems '96"
 	},

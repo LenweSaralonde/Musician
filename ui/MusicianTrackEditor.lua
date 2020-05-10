@@ -215,7 +215,7 @@ Musician.TrackEditor.CreateTrackWidget = function(trackIndex)
 		trackInfo = string.gsub(Musician.Msg.CHANNEL_NUMBER_SHORT, '{channel}', track.channel) .. " "
 	end
 
-	trackInfo = trackInfo .. Musician.Msg.MIDI_INSTRUMENT_NAMES[track.midiInstrument]
+	trackInfo = trackInfo .. Musician.Sampler.GetLocalizedMIDIInstrumentName(track.midiInstrument)
 
 	local noteCount = #track.notes
 	if #track.notes > 0 then
