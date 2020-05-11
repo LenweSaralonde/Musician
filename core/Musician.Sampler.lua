@@ -68,7 +68,7 @@ end
 
 --- Return instrument name from its MIDI ID and key number
 -- @param instrument (int) MIDI instrument ID
--- @param [key (int)] Only needed to get final instrument name for traditional percussions
+-- @param[opt] key (int) Only needed to get the final instrument name for traditional percussions
 -- @return instrumentName (string) used as key in Musician.INSTRUMENTS
 function Musician.Sampler.GetInstrumentName(instrument, key)
 	local instrumentName
@@ -202,7 +202,7 @@ end
 -- @param instrumentData (table)
 -- @param soundFile (string) Sample file path
 -- @param tries (int) Number of attempts in case of failures due to limited polyphony
--- @param [onPlay (function)] Called when the sound file starts playing
+-- @param[opt] onPlay (function) Called when the sound file starts playing
 local function playNoteFile(handle, instrumentData, soundFile, tries, onPlay)
 	if not(notesOn[handle]) then
 		return
@@ -243,8 +243,8 @@ end
 --- Start playing a note
 -- @param instrument (int|string|table) MIDI instrument index, instrument name or instrument data
 -- @param key (int) Note MIDI key
--- @param [onPlay (function)] Called when the note audio starts playing. Args: noteHandle (int)
--- @param [onStop (function)] Called when the note audio is stopped. Args: noteHandle (int), decay (number)
+-- @param[opt] onPlay (function) Called when the note audio starts playing. Args: noteHandle (int)
+-- @param[opt] onStop (function) Called when the note audio is stopped. Args: noteHandle (int), decay (number)
 -- @return noteHandle (int)
 function Musician.Sampler.PlayNote(instrument, key, onPlay, onStop)
 	local soundFile, instrumentData = Musician.Sampler.GetSoundFile(instrument, key)
@@ -269,7 +269,7 @@ end
 
 --- Stop playing note
 -- @param handle (int) The note handle returned by PlayNote()
--- @param [decay (number)] Override instrument decay
+-- @param[opt] decay (number) Override instrument decay
 function Musician.Sampler.StopNote(handle, decay)
 	if not(notesOn[handle]) then
 		return

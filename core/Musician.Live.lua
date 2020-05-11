@@ -357,7 +357,7 @@ end
 -- @param layer (int)
 -- @param instrument (int)
 -- @param isChordNote (boolean)
--- @param [ignoreSustain (boolean)] Force note off even is sustain is enabled for this layer
+-- @param[opt=false] ignoreSustain (boolean) Force note off even is sustain is enabled for this layer
 function Musician.Live.NoteOff(key, layer, instrument, isChordNote, ignoreSustain)
 
 	local noteOnKey = key .. '-' .. layer .. '-' .. instrument

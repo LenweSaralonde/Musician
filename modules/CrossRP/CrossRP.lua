@@ -312,7 +312,7 @@ end
 
 --- Register player from its source string
 -- @param source (string)
--- @param [guid] (string)
+-- @param[opt] guid (string)
 function Musician.CrossRP.RegisterPlayerFromSource(source, guid)
 	local player = CrossRP.Proto.DestToFullname(source)
 	if player then
@@ -335,7 +335,7 @@ function Musician.CrossRP.RegisterPlayerFromSource(source, guid)
 end
 
 --- Send a Hello message
--- @param [destination (string)] By default, "all"
+-- @param[opt="all"] destination (string)
 function Musician.CrossRP.SendHello(destination)
 	local options
 	if destination == nil then
