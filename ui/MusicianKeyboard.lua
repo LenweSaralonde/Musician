@@ -548,7 +548,7 @@ end
 local function updateLiveModeButton()
 	local button = MusicianKeyboardLiveModeButton
 
-	if Musician.Live.IsEnabled() then
+	if Musician.Live.IsEnabled() and Musician.Live.CanStream() then
 		button.icon:SetText(ICON.SOLO_MODE)
 		button:SetText(Musician.Msg.SOLO_MODE)
 		button.tooltipText = Musician.Msg.ENABLE_SOLO_MODE
@@ -566,7 +566,7 @@ local function updateLiveModeButton()
 		MusicianKeyboardTitleIcon:SetText(ICON.SOLO_MODE)
 	end
 
-	if not(Musician.Live.IsEnabled()) and not(Musician.Live.CanStream()) then
+	if  not(Musician.Live.CanStream()) then
 		button:Disable()
 		button.tooltipText = Musician.Msg.LIVE_MODE_DISABLED
 	else
