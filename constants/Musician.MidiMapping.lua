@@ -1,3 +1,6 @@
+--- MIDI mappings for instruments and percussions
+-- @module Musician.MidiMapping
+
 local Percussion = Musician.MIDI_PERCUSSIONS
 local Instrument = Musician.MIDI_INSTRUMENTS
 

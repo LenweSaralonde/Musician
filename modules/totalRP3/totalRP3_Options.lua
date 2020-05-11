@@ -46,7 +46,7 @@ Musician.TRP3.Options.Refresh = function()
 end
 hooksecurefunc(Musician.Options, "Refresh", Musician.TRP3.Options.Refresh)
 
---- Restore previous values on cancel
+-- Restore previous values on cancel
 --
 hooksecurefunc(Musician.Options, "Cancel", function()
 	Musician_Settings.trp3MapScan = oldSettings.trp3MapScan

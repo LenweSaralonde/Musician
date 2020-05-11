@@ -1,4 +1,5 @@
--- Define constants
+--- Keyboard layouts
+-- @module Musician.Layouts
 
 local KEY = Musician.KEYBOARD_KEY
 local Percussion = Musician.MIDI_PERCUSSIONS

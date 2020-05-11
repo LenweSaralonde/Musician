@@ -1,3 +1,6 @@
+--- Keyboard constants
+-- @module Musician.KeyboardConstants
+
 -- https://www.w3.org/TR/uievents-code/#keyboard-key-codes
 
 local KEY = {

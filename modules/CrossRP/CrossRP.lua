@@ -75,15 +75,15 @@ function Musician.CrossRP.Init()
 		Musician.CrossRP.isReady = true
 	end)
 
-	--- Send Hello
+	-- Send Hello
 	-- A CrossRP Hello is sent to everyone every time a standard Hello is sent to the MusicianComm channel
 	hooksecurefunc(Musician.Registry, "SendHello", Musician.CrossRP.SendHello)
 
-	--- Receive CrossRP Hello
+	-- Receive CrossRP Hello
 	--
 	CrossRP.Proto.SetMessageHandler(Musician.Registry.event.hello, Musician.CrossRP.OnHelloOrQuery)
 
-	--- Send CrossRP Query to hovered player
+	-- Send CrossRP Query to hovered player
 	--
 	Musician.CrossRP:RegisterEvent("UPDATE_MOUSEOVER_UNIT", function()
 
@@ -146,27 +146,27 @@ function Musician.CrossRP.Init()
 		end
 	end)
 
-	--- Receive CrossRP Query message
+	-- Receive CrossRP Query message
 	--
 	CrossRP.Proto.SetMessageHandler(Musician.Registry.event.query, Musician.CrossRP.OnHelloOrQuery)
 
-	--- Send compressed chunk
+	-- Send compressed chunk
 	--
 	hooksecurefunc(Musician.Comm, "StreamCompressedSongChunk", Musician.CrossRP.StreamCompressedSongChunk)
 
-	--- Receive compressed chunk
+	-- Receive compressed chunk
 	--
 	CrossRP.Proto.SetMessageHandler(Musician.CrossRP.event.chunk, Musician.CrossRP.OnSongChunk)
 
-	--- Stop song
+	-- Stop song
 	--
 	hooksecurefunc(Musician.Comm, "StopSong", Musician.CrossRP.StopSong)
 
-	--- Receive song stop
+	-- Receive song stop
 	--
 	CrossRP.Proto.SetMessageHandler(Musician.CrossRP.event.stop, Musician.CrossRP.OnSongStop)
 
-	--- A player has been registered
+	-- A player has been registered
 	--
 	Musician.CrossRP:RegisterMessage(Musician.Registry.event.playerRegistered, function(event, player)
 		-- Add CrossRP player attributes if in my group
@@ -179,7 +179,7 @@ function Musician.CrossRP.Init()
 		end
 	end)
 
-	--- Handle cross realm promo emotes
+	-- Handle cross realm promo emotes
 	--
 	Musician.CrossRP:RegisterMessage(Musician.Events.PromoEmote, function(event, isPromoEmoteSuccessful, msg, fullPlayerName, ...)
 		local languageName, channelName, playerName2, pflag, zoneChannelID, channelIndex, channelBaseName, unused, lineID = ...
@@ -194,7 +194,7 @@ function Musician.CrossRP.Init()
 		end
 	end)
 
-	--- Scan nearby foreingers on each frame
+	-- Scan nearby foreingers on each frame
 	--
 	Musician.CrossRP:RegisterMessage(Musician.Events.Frame, function(event, elapsed)
 
