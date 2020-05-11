@@ -133,15 +133,15 @@ end
 
 --- Return the code to insert an icon in a chat message or a text string
 -- @param path (string)
--- @param [r (number)] 0-1
--- @param [g (number)] 0-1
--- @param [b (number)] 0-1
+-- @param[opt=0] r (number) 0-1
+-- @param[opt=0] g (number) 0-1
+-- @param[opt=0] b (number) 0-1
 -- @return chatIcon (string)
 function Musician.Utils.GetChatIcon(path, r, g, b)
 	if r ~= nil and g ~= nil and b ~= nil then
-		r = floor(r * 255)
-		g = floor(g * 255)
-		b = floor(b * 255)
+		r = floor(r * 255) or 0
+		g = floor(g * 255) or 0
+		b = floor(b * 255) or 0
 		return "|T" .. path .. ":0:aspectRatio:0:0:1:1:0:1:0:1:" .. r .. ":" .. g .. ":" .. b .. "|t"
 	end
 

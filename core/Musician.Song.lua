@@ -493,7 +493,7 @@ end
 -- @param track (table) Reference to the track
 -- @param key (int) Note key
 -- @param audioOnly (boolean) Stop note audio only
--- @param [decay (number)] Override instrument decay
+-- @param[opt] decay (number) Override instrument decay
 function Musician.Song:NoteOff(track, key, audioOnly, decay)
 	if track.notesOn[key] ~= nil then
 		local handle = track.notesOn[key][NOTEON.HANDLE]
@@ -534,7 +534,7 @@ end
 --- Import song from a base 64 encoded string
 -- @param base64data (string)
 -- @param crop (boolean) Automatically crop song to first and last note
--- @param [onComplete (function)] Called when the whole import process is complete. Argument is true when successful
+-- @param[opt] onComplete (function) Called when the whole import process is complete. Argument is true when successful
 function Musician.Song:ImportFromBase64(base64data, crop, onComplete)
 	if self.importing then
 		error("The song is already importing.")
@@ -585,8 +585,8 @@ end
 --- Import song from string
 -- @param data (string)
 -- @param crop (boolean) Automatically crop song to first and last note
--- @param [previousProgression (number)] Add previous progression (0-1)
--- @param [onComplete (function)] Called when the whole import process is complete. Argument is true when successful
+-- @param[opt=0] previousProgression (number) Add previous progression (0-1)
+-- @param[opt] onComplete (function) Called when the whole import process is complete. Argument is true when successful
 function Musician.Song:Import(data, crop, previousProgression, onComplete)
 	if self.importing then
 		error("The song is already importing.")

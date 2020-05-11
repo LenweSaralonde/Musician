@@ -212,7 +212,7 @@ end
 --- Broadcast communication message using appropriate channels
 -- @param message (string)
 -- @param type (string)
--- @param [groupType (string)]
+-- @param[opt] groupType (string)
 function Musician.Comm.BroadcastCommMessage(message, type, groupType)
 	if groupType == nil then
 		groupType = type
@@ -314,8 +314,7 @@ end
 --- Process a packed chunk
 -- @param packedChunk (string)
 -- @param sender (string)
--- @param [forcePlay (boolean)] Force the chunk to be played, even if the player is not in range (groups)
-function Musician.Comm.ProcessChunk(packedChunk, sender, forcePlay)
+function Musician.Comm.ProcessChunk(packedChunk, sender)
 
 	-- Decode chunk header
 	local mode, songId, chunkDuration, playtimeLeft, position = Musician.Song.UnpackChunkHeader(packedChunk)

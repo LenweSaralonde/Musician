@@ -107,8 +107,8 @@ local getFunctionKeyButton = function(key)
 end
 
 --- Update function key button LEDs
--- @param [blinkTime] (number)
--- @param [isDeleting] (boolean) True when deleting the program
+-- @param[opt] blinkTime (number)
+-- @param[opt=false] isDeleting (boolean) True when deleting the program
 local function updateFunctionKeysLEDs(blinkTime, isDeleting)
 	local key
 	for _, key in pairs(FunctionKeys) do
@@ -844,7 +844,7 @@ local function refreshKeyboard()
 end
 
 --- Set all buttons up
--- @param [onlyForLayer (number)]
+-- @param[opt] onlyForLayer (number)
 Musician.Keyboard.SetButtonsUp = function(onlyForLayer)
 	local layers = (onlyForLayer ~= nil) and { onlyForLayer } or { LAYER.LOWER, LAYER.UPPER }
 
@@ -885,7 +885,7 @@ end
 
 --- Change keyboard layout
 -- @param layoutIndex (number)
--- @param [doKeyboardRefresh (boolean)] Rebuild keys mapping when true (default)
+-- @param[opt=true] doKeyboardRefresh (boolean) Rebuild key mapping when true
 Musician.Keyboard.SetLayout = function(layoutIndex, doKeyboardRefresh)
 	if Musician.Keyboard.config.layout == layoutIndex then
 		return
@@ -912,7 +912,7 @@ end
 
 --- Change base key
 -- @param key (number)
--- @param [doKeyboardRefresh (boolean)] Rebuild keys mapping when true (default)
+-- @param[opt=true] doKeyboardRefresh (boolean) Rebuild key mapping when true
 Musician.Keyboard.SetBaseKey = function(key, doKeyboardRefresh)
 	if Musician.Keyboard.config.baseKey == key then
 		return
@@ -936,7 +936,7 @@ end
 --- Change Instrument
 -- @param layer (number)
 -- @param instrument (number)
--- @param [doKeyboardRefresh (boolean)] Rebuild keys mapping when true (default)
+-- @param[opt=true] doKeyboardRefresh (boolean) Rebuild key mapping when true
 Musician.Keyboard.SetInstrument = function(layer, instrument, doKeyboardRefresh)
 	if Musician.Keyboard.config.instrument[layer] == instrument then
 		return
@@ -964,7 +964,7 @@ end
 --- Shift keys
 -- @param layer (number)
 -- @param amount (number)
--- @param [doKeyboardRefresh (boolean)] Rebuild keys mapping when true (default)
+-- @param[opt=true] doKeyboardRefresh (boolean) Rebuild key mapping when true
 Musician.Keyboard.ShiftKeys = function(layer, amount, doKeyboardRefresh)
 	local shift = Musician.Keyboard.config.shift[layer] + amount
 	Musician.Keyboard.SetKeyShift(layer, shift, doKeyboardRefresh)
@@ -973,7 +973,7 @@ end
 --- Set key shift amount
 -- @param layer (number)
 -- @param shift (number) Shift amount
--- @param [doKeyboardRefresh (boolean)] Rebuild keys mapping when true (default)
+-- @param[opt=true] doKeyboardRefresh (boolean) Rebuild key mapping when true
 Musician.Keyboard.SetKeyShift = function(layer, shift, doKeyboardRefresh)
 	if Musician.Keyboard.config.shift[layer] == shift then
 		return
@@ -991,7 +991,7 @@ end
 --- Set power chords \m/
 -- @param layer (number)
 -- @param enable (boolean)
--- @param [doKeyboardRefresh (boolean)] Rebuild keys mapping when true (default)
+-- @param[opt=true] doKeyboardRefresh (boolean) Rebuild key mapping when true
 Musician.Keyboard.SetPowerChords = function(layer, enable, doKeyboardRefresh)
 	if Musician.Keyboard.config.powerChords[layer] == enable then
 		return
@@ -1360,7 +1360,7 @@ end
 --- Enable demo mode with provided track indexes
 -- @param upperTrackIndex (number)
 -- @param lowerTrackIndex (number)
--- @param [doKeyboardRefresh (boolean)] Rebuild keys mapping when true (default)
+-- @param[opt=true] doKeyboardRefresh (boolean) Rebuild key mapping when true
 Musician.Keyboard.EnableDemoMode = function(upperTrackIndex, lowerTrackIndex, doKeyboardRefresh)
 	local config = Musician.Keyboard.config
 
@@ -1410,7 +1410,7 @@ Musician.Keyboard.EnableDemoMode = function(upperTrackIndex, lowerTrackIndex, do
 end
 
 --- Disable demo mode
--- @param [doKeyboardRefresh (boolean)] Rebuild keys mapping when true (default)
+-- @param[opt=true] doKeyboardRefresh (boolean) Rebuild key mapping when true
 Musician.Keyboard.DisableDemoMode = function(doKeyboardRefresh)
 	Musician.Keyboard.EnableDemoMode(nil, nil, doKeyboardRefresh)
 end
@@ -1427,7 +1427,7 @@ Musician.Keyboard.OnSongPlay = function(event, song)
 end
 
 --- Configure demo mode relatively to the source song
--- @param [doKeyboardRefresh (boolean)] Rebuild keys mapping when true (default)
+-- @param[opt=true] doKeyboardRefresh (boolean) Rebuild key mapping when true
 Musician.Keyboard.ConfigureDemo = function(doKeyboardRefresh)
 	local song = Musician.sourceSong
 	local config = Musician.Keyboard.config

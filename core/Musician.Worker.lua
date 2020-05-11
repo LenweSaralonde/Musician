@@ -13,7 +13,7 @@ local workerCount = 0
 
 --- Set worker function
 -- @param worker (function)
--- @param [onError (function)]
+-- @param[opt] onError (function)
 function Musician.Worker.Set(worker, onError)
 	if workers[worker] == nil then
 		workerCount = workerCount + 1
