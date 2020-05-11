@@ -266,6 +266,8 @@ function Musician.Comm.PlaySong()
 	if isStopPending or isPlayPending then return false end
 	if not(Musician.Comm.CanPlay()) or not(Musician.sourceSong) then return false end
 
+	Musician.Utils.Debug(MODULE_NAME, "PlaySong")
+
 	isPlayPending = true
 	Musician.Comm:SendMessage(Musician.Events.CommSendAction, Musician.Comm.action.play)
 
@@ -282,7 +284,7 @@ end
 --- Toggle play song
 --
 function Musician.Comm.TogglePlaySong()
-	if Musician.streamingSong and Musician.streamingSong.streaming then
+	if Musician.streamingSong and Musician.streamingSong.streaming and Musician.streamingSong.mode ~= Musician.Song.MODE_LIVE then
 		-- Playing as band
 		if isBandPlayReady then
 			Musician.Comm.StopSongBand()
@@ -407,6 +409,7 @@ function Musician.Comm.StopSong()
 	if isStopPending or isPlayPending then return false end
 	if not(Musician.Comm.CanBroadcast()) then return false end
 	if Musician.streamingSong and Musician.streamingSong.streaming then
+		Musician.Utils.Debug(MODULE_NAME, "StopSong")
 		Musician.streamingSong:StopStreaming()
 		Musician.streamingSong = nil
 		collectgarbage()

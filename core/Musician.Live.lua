@@ -73,6 +73,7 @@ local function createLiveSong(player)
 	song.liveTrackIndexes = {}
 	song.cropTo = STREAM_PADDING
 	song.duration = STREAM_PADDING
+	song.isLiveSong = true
 	return song
 end
 
@@ -236,7 +237,9 @@ function Musician.Live.CreateLiveSong()
 	end
 
 	streamingStartTimer = C_Timer.NewTimer(CHUNK_DURATION * 1.05, function()
-		Musician.streamingSong:Stream()
+		if Musician.streamingSong and not(Musician.streamingSong.streaming) and Musician.streamingSong.isLiveSong then
+			Musician.streamingSong:Stream()
+		end
 		streamingStartTimer = nil
 	end)
 end
