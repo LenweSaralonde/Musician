@@ -32,7 +32,7 @@ local FOREIGNERS_SCAN_MAX_TIME = .5 -- Max time allowed per frame for foreigners
 
 Musician.CrossRP.event = {}
 Musician.CrossRP.event.stop = "MusicianS"
-Musician.CrossRP.event.chunk = "MusicianC"
+Musician.CrossRP.event.chunk = "MusicianC6"
 
 --- Print debug message
 -- @param out (boolean) Outgoing message
