@@ -18,7 +18,6 @@ NOTEON.IS_CHORD_NOTE = 5
 local notesOn = {}
 local sustainedNotes = {}
 local songStartTime = nil
-local instrumentTrackMapping = {}
 local isLiveEnabled = true
 
 Musician.Live.event = {}
@@ -66,41 +65,14 @@ end
 -- @param player (string)
 -- @return song (Musician.Song)
 local function createLiveSong(player)
-	-- Create song instance
 	local song = Musician.Song.create()
 	song.mode = Musician.Song.MODE_LIVE
 	song.chunkDuration = CHUNK_DURATION
 	song.name = Musician.Msg.LIVE_SONG_NAME
 	song.player = player
-
-	-- Create one track per instrument and per layer
-	local trackId, layerId, instrumentId
-	trackId = 1
-	for _, layerId in pairs(Musician.KEYBOARD_LAYER) do
-		for _, instrumentName in pairs(Musician.INSTRUMENTS_AVAILABLE) do
-			instrumentId = Musician.INSTRUMENTS[instrumentName].midi
-			if instrumentId >= 0 then
-				local track = {
-					['index'] = trackId,
-					['midiInstrument'] = instrumentId,
-					['instrument'] = instrumentId,
-					['notes'] = {},
-					['playIndex'] = 1,
-					['muted'] = false,
-					['solo'] = false,
-					['transpose'] = 0,
-					['notesOn'] = {},
-					['polyphony'] = 0
-				}
-				trackId = trackId + 1
-				table.insert(song.tracks, track)
-			end
-		end
-	end
-
+	song.liveTrackIndexes = {}
 	song.cropTo = STREAM_PADDING
 	song.duration = STREAM_PADDING
-
 	return song
 end
 
@@ -114,6 +86,42 @@ local function getLiveSongForPlayer(player)
 	return song
 end
 
+--- Get the live track for the given layer and instrument
+--- The track is created if it doesn't exist
+-- @param song (Musician.Song)
+-- @param layer (int)
+-- @param instrument (int)
+-- @return track (table)
+local function getLiveTrack(song, layer, instrument)
+	local trackId = layer .. '-' .. instrument
+	local trackIndex = song.liveTrackIndexes[trackId]
+
+	-- Existing track
+	if trackIndex ~= nil then
+		return song.tracks[trackIndex]
+	end
+
+	-- Create new track
+	trackIndex = #song.tracks + 1
+	local track = {
+		index = trackIndex,
+		midiInstrument = instrument,
+		instrument = instrument,
+		notes = {},
+		playIndex = 1,
+		muted = false,
+		solo = false,
+		transpose = 0,
+		notesOn = {},
+		polyphony = 0
+	}
+
+	table.insert(song.tracks, track)
+	song.liveTrackIndexes[trackId] = trackIndex
+
+	return track
+end
+
 --- Send visual note on event
 -- @param noteOn (boolean) Note on/off
 -- @param key (int) MIDI key index
@@ -123,15 +131,7 @@ end
 local function sendVisualNoteEvent(noteOn, key, layer, instrument, player)
 
 	local song = getLiveSongForPlayer(player)
-
-	-- Insert note in track
-	local trackId = instrumentTrackMapping[layer][instrument]
-
-	if trackId == nil then
-		return
-	end
-
-	local track = song.tracks[trackId]
+	local track = getLiveTrack(song, layer, instrument)
 
 	-- Send visual note event
 	if noteOn then
@@ -144,21 +144,6 @@ end
 --- Init live mode
 --
 function Musician.Live.Init()
-	-- Build instrument ID => track ID mapping table
-	local instrumentName, trackId, instrumentId
-
-	trackId = 1
-	for _, layerId in pairs(Musician.KEYBOARD_LAYER) do
-		instrumentTrackMapping[layerId] = {}
-		for _, instrumentName in pairs(Musician.INSTRUMENTS_AVAILABLE) do
-			instrumentId = Musician.INSTRUMENTS[instrumentName].midi
-			if instrumentId >= 0 then
-				instrumentTrackMapping[layerId][instrumentId] = trackId
-				trackId = trackId + 1
-			end
-		end
-	end
-
 	local initialized = false
 	Musician.Live:RegisterEvent("PLAYER_ENTERING_WORLD", function()
 		if initialized then return end
@@ -232,7 +217,7 @@ function Musician.Live.CanStream()
 end
 
 --- Create the live song for streaming, if needed
---
+-- and assign it to Musician.streamingSong
 function Musician.Live.CreateLiveSong()
 	-- Live song already created
 	if Musician.streamingSong and (Musician.streamingSong.streaming or streamingStartTimer) then
@@ -271,14 +256,8 @@ function Musician.Live.InsertNote(noteOn, key, layer, instrument)
 	Musician.Live.CreateLiveSong()
 
 	-- Insert note in track
-	local trackId = instrumentTrackMapping[layer][instrument]
+	local track = getLiveTrack(Musician.streamingSong, layer, instrument)
 	local noteTime = GetTime() - songStartTime
-
-	if trackId == nil then
-		return
-	end
-
-	local track = Musician.streamingSong.tracks[trackId]
 
 	table.insert(track.notes, {
 		[NOTE.ON] = noteOn,
