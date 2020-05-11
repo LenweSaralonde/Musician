@@ -844,9 +844,25 @@ end
 
 --- Stream song
 function Musician.Song:Stream()
+	Musician.Utils.Debug(MODULE_NAME, "Stream", self.name, self)
+
+	-- Stop song if playing
 	removePlayingSong(self)
 	self.playing = false
-	self:StopStreaming() -- Stop and reset streaming
+
+	-- Stop and reset streaming
+	self:StopStreaming()
+
+	local track
+	for _, track in pairs(self.tracks) do
+		track.streamIndex = nil
+	end
+
+	self.timeSinceLastStreamChunk = 0
+	self.streamPosition = self.cropFrom
+	self.songId = nil
+
+	-- Start streaming
 	addStreamingSong(self)
 	self.streaming = true
 	self.timeSinceLastStreamChunk = self.chunkDuration
@@ -855,23 +871,12 @@ end
 
 --- Stop streaming song
 function Musician.Song:StopStreaming()
-	local wasStreaming = self.streaming
-
+	if not(self.streaming) then return end
+	Musician.Utils.Debug(MODULE_NAME, "StopStreaming", wasStreaming, self.name, self)
 	removeStreamingSong(self)
 	self.streaming = false
-	self.timeSinceLastStreamChunk = 0
 
-	local track
-	for _, track in pairs(self.tracks) do
-		track.streamIndex = nil
-	end
-
-	self.streamPosition = self.cropFrom
-	self.songId = nil
-
-	if wasStreaming then
-		Musician.Song:SendMessage(Musician.Events.StreamStop, self)
-	end
+	Musician.Song:SendMessage(Musician.Events.StreamStop, self)
 end
 
 --- Append chunk data to current song
