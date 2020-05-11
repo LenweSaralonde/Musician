@@ -42,21 +42,29 @@
   <li><a href="../modules/Musician.About.html">Musician.About</a></li>
   <li><a href="../modules/Musician.Comm.html">Musician.Comm</a></li>
   <li><a href="../modules/Musician.Constants.html">Musician.Constants</a></li>
+  <li><a href="../modules/Musician.Credits.html">Musician.Credits</a></li>
   <li><a href="../modules/Musician.CrossRP.html">Musician.CrossRP</a></li>
   <li><a href="../modules/Musician.CrossRP.Options.html">Musician.CrossRP.Options</a></li>
   <li><a href="../modules/Musician.ElvUI.html">Musician.ElvUI</a></li>
   <li><a href="../modules/Musician.Extras.html">Musician.Extras</a></li>
   <li><a href="../modules/Musician.Frame.html">Musician.Frame</a></li>
+  <li><a href="../modules/Musician.Icons.html">Musician.Icons</a></li>
+  <li><a href="../modules/Musician.Instruments.html">Musician.Instruments</a></li>
   <li><a href="../modules/Musician.Keyboard.html">Musician.Keyboard</a></li>
   <li><a href="../modules/Musician.KeyboardConfig.html">Musician.KeyboardConfig</a></li>
+  <li><a href="../modules/Musician.KeyboardConstants.html">Musician.KeyboardConstants</a></li>
   <li><a href="../modules/Musician.KeyboardUtils.html">Musician.KeyboardUtils</a></li>
   <li><a href="../modules/Musician.KuiNamePlates.html">Musician.KuiNamePlates</a></li>
+  <li><a href="../modules/Musician.Layouts.html">Musician.Layouts</a></li>
   <li><a href="../modules/Musician.Live.html">Musician.Live</a></li>
+  <li><a href="../modules/Musician.Midi.html">Musician.Midi</a></li>
+  <li><a href="../modules/Musician.MidiMapping.html">Musician.MidiMapping</a></li>
   <li><a href="../modules/Musician.MyRolePlay.html">Musician.MyRolePlay</a></li>
   <li><a href="../modules/Musician.NamePlates.html">Musician.NamePlates</a></li>
   <li><a href="../modules/Musician.NamePlates.Options.html">Musician.NamePlates.Options</a></li>
   <li><a href="../modules/Musician.NeatPlates.html">Musician.NeatPlates</a></li>
   <li><a href="../modules/Musician.Options.html">Musician.Options</a></li>
+  <li><a href="../modules/Musician.PercussionIcons.html">Musician.PercussionIcons</a></li>
   <li><a href="../modules/Musician.Plater.html">Musician.Plater</a></li>
   <li><a href="../modules/Musician.Preloader.html">Musician.Preloader</a></li>
   <li><a href="../modules/Musician.Registry.html">Musician.Registry</a></li>
@@ -87,7 +95,7 @@
 	<td class="summary">Return instrument data for given MIDI key number</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Musician.Sampler.GetInstrumentName">Musician.Sampler.GetInstrumentName (instrument, key)</a></td>
+	<td class="name" nowrap><a href="#Musician.Sampler.GetInstrumentName">Musician.Sampler.GetInstrumentName (instrument[, key])</a></td>
 	<td class="summary">Return instrument name from its MIDI ID and key number</td>
 	</tr>
 	<tr>
@@ -123,7 +131,7 @@
 	<td class="summary">Return the note name corresponding its MIDI key</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Musician.Sampler.PlayNote">Musician.Sampler.PlayNote (instrument, key, onPlay, onStop)</a></td>
+	<td class="name" nowrap><a href="#Musician.Sampler.PlayNote">Musician.Sampler.PlayNote (instrument, key[, onPlay[, onStop]])</a></td>
 	<td class="summary">Start playing a note</td>
 	</tr>
 	<tr>
@@ -135,7 +143,7 @@
 	<td class="summary">Set global mute state</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Musician.Sampler.StopNote">Musician.Sampler.StopNote (handle, decay)</a></td>
+	<td class="name" nowrap><a href="#Musician.Sampler.StopNote">Musician.Sampler.StopNote (handle[, decay])</a></td>
 	<td class="summary">Stop playing note</td>
 	</tr>
 	<tr>
@@ -181,7 +189,7 @@
 </dd>
     <dt>
     <a name = "Musician.Sampler.GetInstrumentName"></a>
-    <strong>Musician.Sampler.GetInstrumentName (instrument, key)</strong>
+    <strong>Musician.Sampler.GetInstrumentName (instrument[, key])</strong>
     </dt>
     <dd>
     Return instrument name from its MIDI ID and key number
@@ -193,7 +201,8 @@
          (int) MIDI instrument ID
         </li>
         <li><span class="parameter">key</span>
-         (int)] Only needed to get final instrument name for traditional percussions
+         (int) Only needed to get the final instrument name for traditional percussions
+         (<em>optional</em>)
         </li>
     </ul>
 
@@ -404,7 +413,7 @@
 </dd>
     <dt>
     <a name = "Musician.Sampler.PlayNote"></a>
-    <strong>Musician.Sampler.PlayNote (instrument, key, onPlay, onStop)</strong>
+    <strong>Musician.Sampler.PlayNote (instrument, key[, onPlay[, onStop]])</strong>
     </dt>
     <dd>
     Start playing a note
@@ -419,10 +428,12 @@
          (int) Note MIDI key
         </li>
         <li><span class="parameter">onPlay</span>
-         (function)] Called when the note audio starts playing. Args: noteHandle (int)
+         (function) Called when the note audio starts playing. Args: noteHandle (int)
+         (<em>optional</em>)
         </li>
         <li><span class="parameter">onStop</span>
-         (function)] Called when the note audio is stopped. Args: noteHandle (int), decay (number)
+         (function) Called when the note audio is stopped. Args: noteHandle (int), decay (number)
+         (<em>optional</em>)
         </li>
     </ul>
 
@@ -488,7 +499,7 @@
 </dd>
     <dt>
     <a name = "Musician.Sampler.StopNote"></a>
-    <strong>Musician.Sampler.StopNote (handle, decay)</strong>
+    <strong>Musician.Sampler.StopNote (handle[, decay])</strong>
     </dt>
     <dd>
     Stop playing note
@@ -500,7 +511,8 @@
          (int) The note handle returned by PlayNote()
         </li>
         <li><span class="parameter">decay</span>
-         (number)] Override instrument decay
+         (number) Override instrument decay
+         (<em>optional</em>)
         </li>
     </ul>
 
@@ -530,7 +542,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-05-11 00:57:17 </i>
+<i style="float:right;">Last updated 2020-05-12 00:16:10 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

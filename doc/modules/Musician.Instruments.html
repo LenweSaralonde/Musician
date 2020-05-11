@@ -1,0 +1,275 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Musician</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Tables">Tables</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/Musician.html">Musician</a></li>
+  <li><a href="../modules/Musician.About.html">Musician.About</a></li>
+  <li><a href="../modules/Musician.Comm.html">Musician.Comm</a></li>
+  <li><a href="../modules/Musician.Constants.html">Musician.Constants</a></li>
+  <li><a href="../modules/Musician.Credits.html">Musician.Credits</a></li>
+  <li><a href="../modules/Musician.CrossRP.html">Musician.CrossRP</a></li>
+  <li><a href="../modules/Musician.CrossRP.Options.html">Musician.CrossRP.Options</a></li>
+  <li><a href="../modules/Musician.ElvUI.html">Musician.ElvUI</a></li>
+  <li><a href="../modules/Musician.Extras.html">Musician.Extras</a></li>
+  <li><a href="../modules/Musician.Frame.html">Musician.Frame</a></li>
+  <li><a href="../modules/Musician.Icons.html">Musician.Icons</a></li>
+  <li><strong>Musician.Instruments</strong></li>
+  <li><a href="../modules/Musician.Keyboard.html">Musician.Keyboard</a></li>
+  <li><a href="../modules/Musician.KeyboardConfig.html">Musician.KeyboardConfig</a></li>
+  <li><a href="../modules/Musician.KeyboardConstants.html">Musician.KeyboardConstants</a></li>
+  <li><a href="../modules/Musician.KeyboardUtils.html">Musician.KeyboardUtils</a></li>
+  <li><a href="../modules/Musician.KuiNamePlates.html">Musician.KuiNamePlates</a></li>
+  <li><a href="../modules/Musician.Layouts.html">Musician.Layouts</a></li>
+  <li><a href="../modules/Musician.Live.html">Musician.Live</a></li>
+  <li><a href="../modules/Musician.Midi.html">Musician.Midi</a></li>
+  <li><a href="../modules/Musician.MidiMapping.html">Musician.MidiMapping</a></li>
+  <li><a href="../modules/Musician.MyRolePlay.html">Musician.MyRolePlay</a></li>
+  <li><a href="../modules/Musician.NamePlates.html">Musician.NamePlates</a></li>
+  <li><a href="../modules/Musician.NamePlates.Options.html">Musician.NamePlates.Options</a></li>
+  <li><a href="../modules/Musician.NeatPlates.html">Musician.NeatPlates</a></li>
+  <li><a href="../modules/Musician.Options.html">Musician.Options</a></li>
+  <li><a href="../modules/Musician.PercussionIcons.html">Musician.PercussionIcons</a></li>
+  <li><a href="../modules/Musician.Plater.html">Musician.Plater</a></li>
+  <li><a href="../modules/Musician.Preloader.html">Musician.Preloader</a></li>
+  <li><a href="../modules/Musician.Registry.html">Musician.Registry</a></li>
+  <li><a href="../modules/Musician.Sampler.html">Musician.Sampler</a></li>
+  <li><a href="../modules/Musician.Song.html">Musician.Song</a></li>
+  <li><a href="../modules/Musician.TRP3.html">Musician.TRP3</a></li>
+  <li><a href="../modules/Musician.TRP3.Options.html">Musician.TRP3.Options</a></li>
+  <li><a href="../modules/Musician.TrackEditor.html">Musician.TrackEditor</a></li>
+  <li><a href="../modules/Musician.Utils.html">Musician.Utils</a></li>
+  <li><a href="../modules/Musician.VolumeMeter.html">Musician.VolumeMeter</a></li>
+  <li><a href="../modules/Musician.Worker.html">Musician.Worker</a></li>
+  <li><a href="../modules/MusicianButton.html">MusicianButton</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>Musician.Instruments</code></h1>
+<p>Instrument definitions</p>
+<p></p>
+
+
+<h2><a href="#Tables">Tables</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#Musician.INSTRUMENTS">Musician.INSTRUMENTS</a></td>
+	<td class="summary">Instruments table.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.INSTRUMENTS_AVAILABLE">Musician.INSTRUMENTS_AVAILABLE</a></td>
+	<td class="summary">Ordered list of internal instrument IDs available to the end user</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Tables"></a>Tables</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "Musician.INSTRUMENTS"></a>
+    <strong>Musician.INSTRUMENTS</strong>
+    </dt>
+    <dd>
+    Instruments table.  The key is the internal instrument ID (string) and each value is a table having the following attribues:
+
+
+    <h3>Fields:</h3>
+    <ul>
+        <li><span class="parameter">color</span>
+         (table) Color {r, g, b} from Musician.COLORS
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">name</span>
+         (string) Same as the instrument id (automatically generated)
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">midi</span>
+         (int) General MIDI instrument ID (0-127). For percussions, midi is its MIDI ID + 128
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">decay</span>
+         (number) Decay duration in seconds
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">isPlucked</span>
+         (boolean) True for plucked instruments such as guitar, piano etc. Used for visualization only.
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">path</span>
+         (string) Path to the instrument melodic samples directory.
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">regions</span>
+         (table) Tables of path, lokey and hikey (inclusive) in replacement of path allowing picking melodic samples from multiple directories according to the MIDI key range defined by lokey and hikey.
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">isPercussion</span>
+         (boolean) Act as a percussion instrument using the single sample file (without extension) from path or picked from pathList using keyMod or roundRobin methods
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">pathList</span>
+         (table) List of file paths to be chosen using keyMod or roundRobin (without extension)
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">keyMod</span>
+         (int) Plays nth sample file from pathList modulo the MIDI key number
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">roundRobin</span>
+         (boolean) Plays sample file from pathList using round robin
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">source</span>
+         (string) Credits to author, software, library etc used to create the instrument. Displayed in the "About" window.
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.INSTRUMENTS_AVAILABLE"></a>
+    <strong>Musician.INSTRUMENTS_AVAILABLE</strong>
+    </dt>
+    <dd>
+    Ordered list of internal instrument IDs available to the end user
+
+
+    <h3>Fields:</h3>
+    <ul>
+        <li><span class="parameter">lute</span>
+
+        </li>
+        <li><span class="parameter">recorder</span>
+
+        </li>
+        <li><span class="parameter">harp</span>
+
+        </li>
+        <li><span class="parameter">dulcimer</span>
+
+        </li>
+        <li><span class="parameter">bagpipe</span>
+
+        </li>
+        <li><span class="parameter">accordion</span>
+
+        </li>
+        <li><span class="parameter">fiddle</span>
+
+        </li>
+        <li><span class="parameter">viola-da-gamba</span>
+
+        </li>
+        <li><span class="parameter">female-voice</span>
+
+        </li>
+        <li><span class="parameter">male-voice</span>
+
+        </li>
+        <li><span class="parameter">trumpet</span>
+
+        </li>
+        <li><span class="parameter">sackbut</span>
+
+        </li>
+        <li><span class="parameter">war-horn</span>
+
+        </li>
+        <li><span class="parameter">clarinet</span>
+
+        </li>
+        <li><span class="parameter">bassoon</span>
+
+        </li>
+        <li><span class="parameter">distorsion-guitar</span>
+
+        </li>
+        <li><span class="parameter">clean-guitar</span>
+
+        </li>
+        <li><span class="parameter">bass-guitar</span>
+
+        </li>
+        <li><span class="parameter">percussions</span>
+
+        </li>
+        <li><span class="parameter">drumkit</span>
+
+        </li>
+        <li><span class="parameter">war-drum</span>
+
+        </li>
+        <li><span class="parameter">woodblock</span>
+
+        </li>
+        <li><span class="parameter">tambourine-shake</span>
+
+        </li>
+        <li><span class="parameter">none</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2020-05-12 00:16:10 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

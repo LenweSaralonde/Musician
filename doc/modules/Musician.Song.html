@@ -42,21 +42,29 @@
   <li><a href="../modules/Musician.About.html">Musician.About</a></li>
   <li><a href="../modules/Musician.Comm.html">Musician.Comm</a></li>
   <li><a href="../modules/Musician.Constants.html">Musician.Constants</a></li>
+  <li><a href="../modules/Musician.Credits.html">Musician.Credits</a></li>
   <li><a href="../modules/Musician.CrossRP.html">Musician.CrossRP</a></li>
   <li><a href="../modules/Musician.CrossRP.Options.html">Musician.CrossRP.Options</a></li>
   <li><a href="../modules/Musician.ElvUI.html">Musician.ElvUI</a></li>
   <li><a href="../modules/Musician.Extras.html">Musician.Extras</a></li>
   <li><a href="../modules/Musician.Frame.html">Musician.Frame</a></li>
+  <li><a href="../modules/Musician.Icons.html">Musician.Icons</a></li>
+  <li><a href="../modules/Musician.Instruments.html">Musician.Instruments</a></li>
   <li><a href="../modules/Musician.Keyboard.html">Musician.Keyboard</a></li>
   <li><a href="../modules/Musician.KeyboardConfig.html">Musician.KeyboardConfig</a></li>
+  <li><a href="../modules/Musician.KeyboardConstants.html">Musician.KeyboardConstants</a></li>
   <li><a href="../modules/Musician.KeyboardUtils.html">Musician.KeyboardUtils</a></li>
   <li><a href="../modules/Musician.KuiNamePlates.html">Musician.KuiNamePlates</a></li>
+  <li><a href="../modules/Musician.Layouts.html">Musician.Layouts</a></li>
   <li><a href="../modules/Musician.Live.html">Musician.Live</a></li>
+  <li><a href="../modules/Musician.Midi.html">Musician.Midi</a></li>
+  <li><a href="../modules/Musician.MidiMapping.html">Musician.MidiMapping</a></li>
   <li><a href="../modules/Musician.MyRolePlay.html">Musician.MyRolePlay</a></li>
   <li><a href="../modules/Musician.NamePlates.html">Musician.NamePlates</a></li>
   <li><a href="../modules/Musician.NamePlates.Options.html">Musician.NamePlates.Options</a></li>
   <li><a href="../modules/Musician.NeatPlates.html">Musician.NeatPlates</a></li>
   <li><a href="../modules/Musician.Options.html">Musician.Options</a></li>
+  <li><a href="../modules/Musician.PercussionIcons.html">Musician.PercussionIcons</a></li>
   <li><a href="../modules/Musician.Plater.html">Musician.Plater</a></li>
   <li><a href="../modules/Musician.Preloader.html">Musician.Preloader</a></li>
   <li><a href="../modules/Musician.Registry.html">Musician.Registry</a></li>
@@ -127,11 +135,11 @@
 	<td class="summary">Return playing progression</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Musician.Song:Import">Musician.Song:Import (data, crop, previousProgression, onComplete)</a></td>
+	<td class="name" nowrap><a href="#Musician.Song:Import">Musician.Song:Import (data, crop[, previousProgression=0[, onComplete]])</a></td>
 	<td class="summary">Import song from string</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Musician.Song:ImportFromBase64">Musician.Song:ImportFromBase64 (base64data, crop, onComplete)</a></td>
+	<td class="name" nowrap><a href="#Musician.Song:ImportFromBase64">Musician.Song:ImportFromBase64 (base64data, crop[, onComplete])</a></td>
 	<td class="summary">Import song from a base 64 encoded string</td>
 	</tr>
 	<tr>
@@ -143,7 +151,7 @@
 	<td class="summary">Return true if the song is playing or about to be played (preloading).</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Musician.Song:NoteOff">Musician.Song:NoteOff (track, key, audioOnly, decay)</a></td>
+	<td class="name" nowrap><a href="#Musician.Song:NoteOff">Musician.Song:NoteOff (track, key, audioOnly[, decay])</a></td>
 	<td class="summary">Stop a note of a track</td>
 	</tr>
 	<tr>
@@ -469,7 +477,7 @@
 </dd>
     <dt>
     <a name = "Musician.Song:Import"></a>
-    <strong>Musician.Song:Import (data, crop, previousProgression, onComplete)</strong>
+    <strong>Musician.Song:Import (data, crop[, previousProgression=0[, onComplete]])</strong>
     </dt>
     <dd>
     Import song from string
@@ -484,10 +492,12 @@
          (boolean) Automatically crop song to first and last note
         </li>
         <li><span class="parameter">previousProgression</span>
-         (number)] Add previous progression (0-1)
+         (number) Add previous progression (0-1)
+         (<em>default</em> 0)
         </li>
         <li><span class="parameter">onComplete</span>
-         (function)] Called when the whole import process is complete. Argument is true when successful
+         (function) Called when the whole import process is complete. Argument is true when successful
+         (<em>optional</em>)
         </li>
     </ul>
 
@@ -498,7 +508,7 @@
 </dd>
     <dt>
     <a name = "Musician.Song:ImportFromBase64"></a>
-    <strong>Musician.Song:ImportFromBase64 (base64data, crop, onComplete)</strong>
+    <strong>Musician.Song:ImportFromBase64 (base64data, crop[, onComplete])</strong>
     </dt>
     <dd>
     Import song from a base 64 encoded string
@@ -513,7 +523,8 @@
          (boolean) Automatically crop song to first and last note
         </li>
         <li><span class="parameter">onComplete</span>
-         (function)] Called when the whole import process is complete. Argument is true when successful
+         (function) Called when the whole import process is complete. Argument is true when successful
+         (<em>optional</em>)
         </li>
     </ul>
 
@@ -562,7 +573,7 @@
 </dd>
     <dt>
     <a name = "Musician.Song:NoteOff"></a>
-    <strong>Musician.Song:NoteOff (track, key, audioOnly, decay)</strong>
+    <strong>Musician.Song:NoteOff (track, key, audioOnly[, decay])</strong>
     </dt>
     <dd>
     Stop a note of a track
@@ -580,7 +591,8 @@
          (boolean) Stop note audio only
         </li>
         <li><span class="parameter">decay</span>
-         (number)] Override instrument decay
+         (number) Override instrument decay
+         (<em>optional</em>)
         </li>
     </ul>
 
@@ -925,7 +937,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-05-11 00:57:17 </i>
+<i style="float:right;">Last updated 2020-05-12 00:16:10 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
