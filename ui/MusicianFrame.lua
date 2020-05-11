@@ -193,13 +193,11 @@ end
 -- @param song (Musician.Song)
 MusicianFrame.OnSongPlayOrStop = function(event, song)
 	local isPlaying = event == Musician.Events.SongPlay
-	local isSourceSong = song == Musician.sourceSong
-	local isMySong = Musician.Utils.PlayerIsMyself(song.player) and Musician.songs[song.player]
 
-	if isSourceSong then
+	if song == Musician.sourceSong then
 		MusicianFrameTestButton:SetText(isPlaying and Musician.Msg.STOP_TEST or Musician.Msg.TEST_SONG)
 		MusicianFrame.RefreshPlayingProgressBar(event, song)
-	elseif isMySong then
+	elseif Musician.Utils.PlayerIsMyself(song.player) and Musician.songs[song.player] and Musician.songs[song.player].mode ~= Musician.Song.MODE_LIVE then
 		MusicianFramePlayButton:SetText(isPlaying and Musician.Msg.STOP or Musician.Msg.PLAY)
 		MusicianFrame.RefreshPlayingProgressBar(event, song)
 
@@ -248,12 +246,10 @@ end
 -- @param song (Musician.Song) Can be the source song or the song currently playing
 MusicianFrame.RefreshPlayingProgressBar = function(event, song)
 	local button
-	local isSourceSong = song == Musician.sourceSong
-	local isMySong = Musician.Utils.PlayerIsMyself(song.player) and Musician.songs[song.player]
 
-	if isSourceSong then
+	if song == Musician.sourceSong then
 		button = MusicianFrameTestButton
-	elseif isMySong then
+	elseif Musician.Utils.PlayerIsMyself(song.player) and Musician.songs[song.player] and Musician.songs[song.player].mode ~= Musician.Song.MODE_LIVE then
 		button = MusicianFramePlayButton
 	else
 		return
