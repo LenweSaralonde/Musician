@@ -4,6 +4,7 @@
 local KEY = Musician.KEYBOARD_KEY
 local Percussion = Musician.MIDI_PERCUSSIONS
 
+--- Live keyboard orientations
 Musician.LAYOUT_ORIENTATION = {
 	HORIZONTAL = 0,
 	VERTICAL = 1,
@@ -12,6 +13,7 @@ local ORIENTATION = Musician.LAYOUT_ORIENTATION
 
 Musician.DEFAULT_LAYOUT = 1 -- Piano
 
+-- Musical modes
 local MODES = {
 	{ "Modes" },
 	{ "Chromatic", { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 } },

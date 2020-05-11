@@ -3,6 +3,7 @@
 
 -- https://www.w3.org/TR/uievents-code/#keyboard-key-codes
 
+--- Keyboard keys
 local KEY = {
 	AltLeft = "AltLeft",
 	AltRight = "AltRight",
@@ -84,6 +85,7 @@ local KEY = {
 	F12 = "F12",
 }
 
+-- Universal keyboard layout
 Musician.KEYBOARD = {
 	{ KEY.Backquote, KEY.Digit1, KEY.Digit2, KEY.Digit3, KEY.Digit4, KEY.Digit5, KEY.Digit6, KEY.Digit7, KEY.Digit8, KEY.Digit9, KEY.Digit0, KEY.Minus, KEY.Equal, KEY.IntlYen, KEY.Backspace },
 	{ KEY.Tab, KEY.KeyQ, KEY.KeyW, KEY.KeyE, KEY.KeyR, KEY.KeyT, KEY.KeyY, KEY.KeyU, KEY.KeyI, KEY.KeyO, KEY.KeyP, KEY.BracketLeft, KEY.BracketRight, KEY.Backslash1 },
@@ -94,6 +96,7 @@ Musician.KEYBOARD = {
 
 Musician.KEYBOARD_KEY = KEY
 
+-- Universal keyboard key size definitions
 Musician.KEYBOARD_KEY_SIZE = {
 	{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
 	{ 1.5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1.5 },
@@ -102,6 +105,7 @@ Musician.KEYBOARD_KEY_SIZE = {
 	{ 1.5, 1, 1.333, 6.333, 1.333, 1, 1, 1.5 },
 }
 
+-- Keys that can be merged with others depending on the country layout
 Musician.KEYBOARD_MERGEABLE_KEYS = {
 	[KEY.IntlYen] = KEY.Backspace,
 	[KEY.Backslash1] = KEY.Enter,
@@ -110,6 +114,7 @@ Musician.KEYBOARD_MERGEABLE_KEYS = {
 	[KEY.IntlRo] = KEY.ShiftRight,
 }
 
+-- Disabled keys, depending on the OS
 if not(IsMacClient()) then
 	Musician.DISABLED_KEYS = {}
 	Musician.DISABLED_KEY_VALUES = {}
@@ -126,6 +131,7 @@ else
 	}
 end
 
+-- Keys that have same the position regardless to the country layout
 Musician.KEYBOARD_FIXED_MAPPING = {
 	BACKSPACE = KEY.Backspace,
 	TAB = KEY.Tab,
@@ -156,6 +162,7 @@ Musician.KEYBOARD_FIXED_MAPPING = {
 	F12 = KEY.F12,
 }
 
+--- Live keyboard layers
 Musician.KEYBOARD_LAYER = {
 	UPPER = 0,
 	LOWER = 1,

@@ -26,6 +26,19 @@ Musician.COLORS = {
 	Gray = {0.6, 0.6, 0.6},
 }
 
+--- Instruments table. The key is the internal instrument ID (string) and each value is a table having the following attribues:
+-- @field[opt] color (table) Color {r, g, b} from Musician.COLORS
+-- @field[opt] name (string) Same as the instrument id (automatically generated)
+-- @field[opt] midi (int) General MIDI instrument ID (0-127). For percussions, midi is its MIDI ID + 128
+-- @field[opt] decay (number) Decay duration in seconds
+-- @field[opt] isPlucked (boolean) True for plucked instruments such as guitar, piano etc. Used for visualization only.
+-- @field[opt] path (string) Path to the instrument melodic samples directory.
+-- @field[opt] regions (table) Tables of path, lokey and hikey (inclusive) in replacement of path allowing picking melodic samples from multiple directories according to the MIDI key range defined by lokey and hikey.
+-- @field[opt] isPercussion (boolean) Act as a percussion instrument using the single sample file (without extension) from path or picked from pathList using keyMod or roundRobin methods
+-- @field[opt] pathList (table) List of file paths to be chosen using keyMod or roundRobin (without extension)
+-- @field[opt] keyMod (int) Plays nth sample file from pathList modulo the MIDI key number
+-- @field[opt] roundRobin (boolean) Plays sample file from pathList using round robin
+-- @field[opt] source (string) Credits to author, software, library etc used to create the instrument. Displayed in the "About" window.
 Musician.INSTRUMENTS = {
 	["none"] = {
 		midi = -1,
@@ -546,7 +559,7 @@ Musician.INSTRUMENTS = {
 	},
 }
 
-
+--- Ordered list of internal instrument IDs available to the end user
 Musician.INSTRUMENTS_AVAILABLE = {
 	"lute",
 	"recorder",

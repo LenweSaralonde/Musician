@@ -4,6 +4,7 @@
 local Percussion = Musician.MIDI_PERCUSSIONS
 local Instrument = Musician.MIDI_INSTRUMENTS
 
+-- General MIDI instrument ID mapping to internal instrument ID
 Musician.MIDI_INSTRUMENT_MAPPING = {
 	-- Piano
 	[Instrument.AcousticGrandPiano] = "dulcimer",
@@ -181,6 +182,8 @@ Musician.MIDI_INSTRUMENT_MAPPING = {
 	[Instrument.None] = "none",
 }
 
+-- General MIDI percussion ID mapping to internal percussion instrument ID
+-- Used for the traditional percussions set
 Musician.MIDI_PERCUSSION_MAPPING = {
 	[Percussion.Laser] = "none",
 	[Percussion.Whip] = "none",

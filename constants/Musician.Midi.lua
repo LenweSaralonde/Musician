@@ -1,6 +1,7 @@
 --- MIDI constants
 -- @module Musician.Midi
 
+-- General MIDI instruments IDs
 Musician.MIDI_INSTRUMENTS = {
 	-- Piano
 	AcousticGrandPiano = 0,
@@ -178,6 +179,7 @@ Musician.MIDI_INSTRUMENTS = {
 	None = -1,
 }
 
+-- General MIDI percussion key IDs
 Musician.MIDI_PERCUSSIONS = {
 	Laser = 27,
 	Whip = 28,
