@@ -415,6 +415,14 @@ end
 --- Set all notes to off
 -- @param onlyForLayer (int)
 function Musician.Live.AllNotesOff(onlyForLayer)
+	-- Set sustain off for layers
+	Musician.Utils.ForEach(sustainedNotes, function(notes, layer)
+		if onlyForLayer == nil or onlyForLayer == layer then
+			Musician.Live.SetSustain(false, layer)
+		end
+	end)
+
+	-- Turn off notes
 	local noteOnKey, note
 	for noteOnKey, note in pairs(notesOn) do
 		local layer = note[NOTEON.LAYER]
