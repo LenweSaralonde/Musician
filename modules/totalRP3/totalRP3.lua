@@ -53,7 +53,7 @@ function Musician.TRP3.HookTooltip()
 		Musician.Registry.UpdateTooltipInfo(TRP3_CharacterTooltip, t.target, TRP3_API.ui.tooltip.getSmallLineFontSize())
 	end)
 
-	--- Update Total RP player tooltip to add missing Musician client version, if applicable.
+	-- Update Total RP player tooltip to add missing Musician client version, if applicable.
 	hooksecurefunc(Musician.Registry, "UpdatePlayerTooltip", function(player)
 		if TRP3_CharacterTooltip ~= nil and TRP3_CharacterTooltip.target == player then
 			Musician.Registry.UpdateTooltipInfo(TRP3_CharacterTooltip, player, TRP3_API.ui.tooltip.getSmallLineFontSize())
@@ -125,7 +125,7 @@ function Musician.TRP3.HookPlayerMap()
 
 	if TRP3_PlayerMapPinMixin then
 
-		--- TRP3_PlayerMapPinMixin.GetDisplayDataFromPoiInfo
+		-- TRP3_PlayerMapPinMixin.GetDisplayDataFromPoiInfo
 		--
 		if TRP3_PlayerMapPinMixin.GetDisplayDataFromPoiInfo then
 			local TRP3_PlayerMapPinMixin_GetDisplayDataFromPoiInfo = TRP3_PlayerMapPinMixin.GetDisplayDataFromPoiInfo
@@ -161,7 +161,7 @@ function Musician.TRP3.HookPlayerMap()
 			end
 		end
 
-		--- TRP3_PlayerMapPinMixin.Decorate
+		-- TRP3_PlayerMapPinMixin.Decorate
 		--
 		if TRP3_PlayerMapPinMixin.Decorate then
 			local TRP3_PlayerMapPinMixin_Decorate = TRP3_PlayerMapPinMixin.Decorate

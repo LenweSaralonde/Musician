@@ -1,3 +1,6 @@
+--- MIDI constants
+-- @module Musician.Midi
+
 Musician.MIDI_INSTRUMENTS = {
 	-- Piano
 	AcousticGrandPiano = 0,

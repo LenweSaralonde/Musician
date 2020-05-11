@@ -79,7 +79,7 @@ function Musician.NamePlates:OnEnable()
 	UIParent:HookScript("OnHide", Musician.NamePlates.UpdateAll)
 	hooksecurefunc("SetUIVisibility", Musician.NamePlates.OnSetUIVisibility)
 
-	--- Tips and tricks
+	-- Tips and tricks
 	Musician.NamePlates.InitTipsAndTricks()
 end
 

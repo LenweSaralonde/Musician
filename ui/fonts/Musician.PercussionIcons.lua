@@ -1,3 +1,6 @@
+--- Percussion icons
+-- @module Musician.PercussionIcons
+
 Musician.PercussionIcons = {
 	BassDrum = "A",
 	Snare = "B",

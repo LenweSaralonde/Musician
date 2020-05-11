@@ -1,3 +1,6 @@
+--- Instrument definitions
+-- @module Musician.Instruments
+
 Musician.COLORS = {
 	Red = {0.77, 0.12, 0.23},
 	DarkMagenta = {0.64, 0.19, 0.79},

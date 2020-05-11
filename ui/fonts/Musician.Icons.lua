@@ -1,3 +1,6 @@
+--- Global icons
+-- @module Musician.Icons
+
 Musician.Icons = {
 	Play = "P",
 	Stop = "S",

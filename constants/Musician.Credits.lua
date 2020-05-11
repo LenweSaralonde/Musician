@@ -1,3 +1,6 @@
+--- Credits for patreons and supporters
+-- @module Musician.Credits
+
 Musician.SUPPORTERS = {
 	"Grayson Blackclaw",
 	"ChanceTheCheetah",

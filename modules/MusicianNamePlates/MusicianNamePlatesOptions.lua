@@ -104,14 +104,14 @@ Musician.NamePlates.Options.Refresh = function()
 end
 hooksecurefunc(Musician.Options, "Refresh", Musician.NamePlates.Options.Refresh)
 
---- Refresh panel when CVar changed
+-- Refresh panel when CVar changed
 --
 MusicianOptionsPanelUnitNamePlates:RegisterEvent("CVAR_UPDATE")
 MusicianOptionsPanelUnitNamePlates:SetScript("OnEvent", function(event, ...)
 	Musician.NamePlates.Options.RefreshCheckboxes()
 end)
 
---- Restore previous values on cancel
+-- Restore previous values on cancel
 --
 hooksecurefunc(Musician.Options, "Cancel", function()
 	setCVarBool("nameplateShowFriendlyNPCs", oldSettings.nameplateShowFriendlyNPCs)
