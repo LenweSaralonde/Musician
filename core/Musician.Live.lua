@@ -142,6 +142,12 @@ local function sendVisualNoteEvent(noteOn, key, layer, instrument, player)
 	end
 end
 
+--- Trigger event LiveModeChange when live mode state has changed
+--
+local function liveModeStatusChanged()
+	Musician.Live:SendMessage(Musician.Events.LiveModeChange)
+end
+
 --- Init live mode
 --
 function Musician.Live.Init()
@@ -158,12 +164,20 @@ function Musician.Live.Init()
 	Musician.Live:RegisterEvent("GROUP_JOINED", Musician.Live.OnGroupJoined)
 	Musician.Live:RegisterEvent("GROUP_LEFT", Musician.Live.OnGroupLeft)
 	Musician.Live:RegisterEvent("GROUP_ROSTER_UPDATE", Musician.Live.OnRosterUpdate)
+
+	Musician.Live:RegisterMessage(Musician.Events.CommChannelUpdate, liveModeStatusChanged)
+	Musician.Live:RegisterMessage(Musician.Events.StreamStart, liveModeStatusChanged)
+	Musician.Live:RegisterMessage(Musician.Events.StreamStop, liveModeStatusChanged)
+	Musician.Live:RegisterEvent("PLAYER_DEAD", liveModeStatusChanged)
+	Musician.Live:RegisterEvent("PLAYER_ALIVE", liveModeStatusChanged)
+	Musician.Live:RegisterEvent("PLAYER_UNGHOST", liveModeStatusChanged)
 end
 
 --- Enable or disable live mode
 -- @param enabled (boolean)
 function Musician.Live.Enable(enabled)
 	isLiveEnabled = enabled
+	liveModeStatusChanged()
 end
 
 --- Indicate whenever the live mode is enabled stream

@@ -158,6 +158,10 @@ Musician.Events.LiveNoteOn = "MusicianLiveNoteOn"
 -- @param isChordNote (boolean) true when note is a power chord
 Musician.Events.LiveNoteOff = "MusicianLiveNoteOff"
 
+--- Fired when the live mode state is changed, by user's action or any other event that affects the live mode.
+-- @field Musician.Events.LiveModeChange
+Musician.Events.LiveModeChange = "MusicianLiveModeChange"
+
 --- Fired when one or more note have been dropped due to a lack of polyphony during one frame while playing
 -- @field Musician.Events.NoteDropped
 -- @param song (Musician.Song)
