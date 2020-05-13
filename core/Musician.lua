@@ -118,7 +118,7 @@ function Musician.AddModule(moduleName)
 end
 
 --- Get command definitions
--- @return (table)
+-- @return commands (table)
 function Musician.GetCommands()
 	local commands = {}
 
@@ -445,7 +445,7 @@ end
 
 --- Return true if the player is muted
 -- @param playerName (string)
--- @return (boolean)
+-- @return isMuted (boolean)
 function Musician.PlayerIsMuted(playerName)
 	return Musician_Settings.mutedPlayers[playerName] == true
 end
@@ -701,8 +701,8 @@ function Musician.SetupHooks()
 end
 
 --- Add a tips and tricks callback
--- @param callback {function}
--- @param priority {boolean} If true, add the tip to the top of the list
+-- @param callback (function)
+-- @param priority (boolean) If true, add the tip to the top of the list
 function Musician.AddTipsAndTricks(callback, priority)
 	if priority then
 		table.insert(tipsAndTricks, 1, callback)
@@ -712,7 +712,7 @@ function Musician.AddTipsAndTricks(callback, priority)
 end
 
 --- Show the first
--- @param callback {function}
+-- @param callback (function)
 function Musician.ShowTipsAndTricks()
 	if not(Musician_Settings.enableTipsAndTricks) then return end
 	if #tipsAndTricks > 0 then
