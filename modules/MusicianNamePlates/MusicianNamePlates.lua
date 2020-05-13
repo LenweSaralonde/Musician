@@ -298,7 +298,7 @@ function Musician.NamePlates.UpdateNamePlate(namePlate)
 		local healthMax = UnitHealthMax(namePlate.namePlateUnitToken)
 		local showHealthBar = not(Musician_Settings.hideNamePlateBars)
 
-		if isInCombat or (health < healthMax) or not(Musician_Settings.hideNamePlateBars) then
+		if isInCombat or (health < healthMax) or showHealthBar then
 			healthBarIsVisible = true
 			classificationFrameIsVisible = true
 			levelFrameIsVisible = true
