@@ -1,10 +1,20 @@
 Musician
 ========
-Hear and play music with nearby players. For the first time in World of Warcraft, your character can literally become a bard!
+For the first time in World of Warcraft, your character can literally become a bard!
 
-Join our [Discord server](https://discord.gg/ypfpGxK) (EN/FR) and our [Battle.net group](https://blizzard.com/invite/X2Gy7ztwX7) for help, bug reports, good music and more!
+Play music for you and the other players, from MIDI files or live, using 18 instruments and 2 percussion sets from various styles: medieval, celtic, folk, tribal and heavy metal. 🤘
 
-Download the optional module [MusicianList](https://musician.lenwe.io/musicianlist) to add in-game loading and saving features.
+Quick links
+-----------
+* [Discord server](https://discord.gg/ypfpGxK) (EN/FR) for help, good music and more!
+* Additional modules:
+  * [MusicianList](https://musician.lenwe.io/list) — Save and load your songs in-game.
+  * [MusicianMIDI](https://musician.lenwe.io/midi) — Play live music using your MIDI keyboard.
+* [Wiki](https://github.com/LenweSaralonde/Musician/wiki) — Tips and tricks, FAQ and detailed documentation for gamers, developers and music producers.
+* [Bug tracker](https://github.com/LenweSaralonde/Musician/issues) — Report issues
+* [GitHub repo](https://github.com/LenweSaralonde/Musician) — Contribute to the project
+
+Musician is also available for WoW Retail, be sure to install the right version of the add-on.
 
 Un [Guide en français](https://www.lenwe.info/guide-musician/) est également disponible. 🇫🇷🥖🍷
 
@@ -141,33 +151,39 @@ Compose your own music
 ----------------------
 You can compose music for Musician using any MIDI sequencer such as [MidiEditor](https://www.midieditor.org/) (free and cross-platform).
 
-The 16 instruments available are:
+The 18 melodic instruments available are:
 
-* Bagpipe (109)
-* Bassoon (70)
-* Cello (42)
-* Clarinet (71)
-* Dulcimer (15)
-* Male voice (52 Choir Aahs)
-* Female voice (53 Voice Oohs)
-* Fiddle (110)
-* Harp (46)
 * Lute (24 Acoustic guitar)
 * Recorder (74)
-* Trombone (57)
+* Celtic harp (46)
+* Hammered dulcimer (15)
+* Bagpipe (109)
+* Accordion (22)
+* Fiddle (110)
+* Viola da gamba (ancient cello) (42)
+* Female voice (53 Voice Oohs)
+* Male voice (52 Choir Aahs)
 * Trumpet (56)
-
-And also:
-
-* Distorsion guitar (29)
+* Sackbut (ancient trombone) (57)
+* War horn (shofar) (60 French horn)
+* Clarinet (71)
+* Bassoon (70)
+* Metal guitar (29)
 * Clean Guitar (27)
 * Bass guitar (33 Fingered bass)
 
-The other instruments are mapped to the closest-sounding instrument among the 16 available (violin → fiddle, piano → dulcimer, guitar → lute etc.).
+Percussions:
+* Traditional percussion set (drum kit 0)
+* Standard drum set (drumm kit 16)
+* War drums (47 Timpani)
+* Woodblock (115)
+* Tambourine shake (119)
+
+The other instruments are mapped to the closest-sounding instrument among the ones available (violin → fiddle, piano → dulcimer, guitar → lute etc.).
 
 The drum kits are replaced by traditional percussions such as a bodhrán (frame drum), a tambourine and a shaker. A standard drum kit is also available for heavy metal songs.
 
-Check the full mapping in [Musician.MidiMapping.lua](https://github.com/LenweSaralonde/Musician/blob/master/constants/Musician.MidiMapping.lua) for details.
+Check the full mapping in [Musician.MidiMapping.lua](https://github.com/LenweSaralonde/Musician/blob/classic/constants/Musician.MidiMapping.lua) for details.
 
 Unfortunately, due to limitations of the WoW UI, velocity and controls (volume, padding, pitch bend, modulation...) are not supported. The polypohony is roughly 12 notes.
 
