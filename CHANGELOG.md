@@ -1,6 +1,15 @@
 Changelog
 =========
 
+v1.6.0.0
+--------
+*"Renaissance"*
+
+* Almost all the instruments have been remade from professional high quality samples
+* Added 3 new instruments: accordion, war horn and war drum
+* Optimized sample caching during loading screen
+* Misc bugfixes and improvements
+
 v1.5.5.8
 --------
 * Fixed "Solo" track status not synchronizing with song actually being played #40
