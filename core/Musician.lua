@@ -64,6 +64,8 @@ function Musician:OnInitialize()
 
 	Musician_Settings = Mixin(defaultSettings, Musician_Settings or {})
 
+	Musician.Msg = Musician.Utils.DeepMerge(Mixin({}, Musician.Locale.en), Musician.Msg)
+
 	Musician.songs = {}
 	Musician.sourceSong = nil
 
