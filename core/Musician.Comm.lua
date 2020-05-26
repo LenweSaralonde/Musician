@@ -69,17 +69,6 @@ end
 --- Initialize communication
 --
 function Musician.Comm.Init()
-
-	local initialized = false
-
-	-- Register prefixes
-	Musician.Comm:RegisterEvent("PLAYER_ENTERING_WORLD", function()
-		if initialized then return end
-		initialized = true
-		Musician.Comm.JoinChannel()
-		Musician.Comm.OnGroupJoined()
-	end)
-
 	Musician.Comm:RegisterMessage(Musician.Events.SourceSongLoaded, Musician.Comm.OnSongLoaded)
 	Musician.Comm:RegisterMessage(Musician.Events.SongPlay, Musician.Comm.OnSongPlay)
 	Musician.Comm:RegisterMessage(Musician.Events.SongStop, Musician.Comm.OnSongStop)
@@ -95,6 +84,17 @@ function Musician.Comm.Init()
 	Musician.Comm:RegisterComm(Musician.Comm.event.bandPlay, Musician.Comm.OnBandPlay)
 	Musician.Comm:RegisterComm(Musician.Comm.event.bandStop, Musician.Comm.OnBandStop)
 	Musician.Comm:RegisterEvent("PLAYER_DEAD", Musician.Comm.OnDead)
+
+	local function finishInit()
+		Musician.Comm.JoinChannel()
+		Musician.Comm.OnGroupJoined()
+	end
+
+	if not(IsLoggedIn()) then
+		Musician.Comm:RegisterEvent("PLAYER_LOGIN", finishInit)
+	else
+		finishInit()
+	end
 end
 
 --- Function executed when the communication channel has been successfullly joined

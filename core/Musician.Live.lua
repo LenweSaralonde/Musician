@@ -151,13 +151,6 @@ end
 --- Init live mode
 --
 function Musician.Live.Init()
-	local initialized = false
-	Musician.Live:RegisterEvent("PLAYER_ENTERING_WORLD", function()
-		if initialized then return end
-		initialized = true
-		Musician.Live.OnGroupJoined()
-	end)
-
 	Musician.Live:RegisterComm(Musician.Live.event.bandSync, Musician.Live.OnBandSync)
 	Musician.Live:RegisterComm(Musician.Live.event.bandSyncQuery, Musician.Live.OnBandSyncQuery)
 	Musician.Live:RegisterComm(Musician.Live.event.note, Musician.Live.OnLiveNote)
@@ -171,6 +164,12 @@ function Musician.Live.Init()
 	Musician.Live:RegisterEvent("PLAYER_DEAD", liveModeStatusChanged)
 	Musician.Live:RegisterEvent("PLAYER_ALIVE", liveModeStatusChanged)
 	Musician.Live:RegisterEvent("PLAYER_UNGHOST", liveModeStatusChanged)
+
+	if not(IsLoggedIn()) then
+		Musician.Live:RegisterEvent("PLAYER_LOGIN", Musician.Live.OnGroupJoined)
+	else
+		Musician.Live.OnGroupJoined()
+	end
 end
 
 --- Enable or disable live mode
