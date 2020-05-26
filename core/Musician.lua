@@ -720,7 +720,7 @@ function Musician.AddTipsAndTricks(callback, priority)
 	end
 end
 
---- Show the first
+--- Show the first tips and tricks
 -- @param callback (function)
 function Musician.ShowTipsAndTricks()
 	if not(Musician_Settings.enableTipsAndTricks) then return end
