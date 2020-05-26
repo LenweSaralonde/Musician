@@ -69,11 +69,9 @@ function Musician:OnInitialize()
 	Musician.songs = {}
 	Musician.sourceSong = nil
 
-	Musician.Sampler.Init()
 	Musician.Comm.Init()
 	Musician.Registry.Init()
 	Musician.SetupHooks()
-	Musician.Preloader.Init()
 
 	C_Timer.NewTicker(0.5, function() Musician.Utils.MuteGameMusic() end)
 	Musician:RegisterEvent("PLAYER_ENTERING_WORLD", function()
@@ -108,6 +106,13 @@ function Musician:OnInitialize()
 	SLASH_MUSICIAN1 = "/musician"
 	SLASH_MUSICIAN2 = "/music"
 	SLASH_MUSICIAN3 = "/mus"
+end
+
+--- OnEnable
+--
+function Musician:OnEnable()
+	Musician.Sampler.Init()
+	Musician.Preloader.Init()
 
 	-- Show startup message
 	Musician.Utils.Print(string.gsub(Musician.Msg.STARTUP, "{version}", Musician.Utils.Highlight(Musician.Utils.GetVersionText())))

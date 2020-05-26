@@ -163,7 +163,7 @@ function Musician.Preloader.PreloadNote(instrument, key)
 	local startTime = debugprofilestop()
 	for i, soundFile in pairs(soundFiles) do
 		local play, handle
-		play, handle = Musician.Sampler.PlaySoundFile(soundFile, 'SFX')
+		play, handle = Musician.Sampler.PlaySoundFile(soundFile, 'Master')
 		if play then
 			hasSample = true
 			count = count + 1
