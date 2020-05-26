@@ -938,7 +938,11 @@ function Musician.Song:AppendChunk(chunk, mode, songId, chunkDuration, playtimeL
 			note[NOTE.TIME] = note[NOTE.TIME] + noteOffset
 			noteOffset = note[NOTE.TIME]
 			self.cropTo = max(self.cropTo, note[NOTE.TIME] + (note[NOTE.DURATION] or 0))
-			table.insert(track.notes, note)
+
+			-- Insert received note if the key is within allowed range
+			if note[NOTE.KEY] >= Musician.MIN_KEY and note[NOTE.KEY] <= Musician.MAX_KEY then
+				table.insert(track.notes, note)
+			end
 		end
 	end
 
@@ -978,20 +982,23 @@ function Musician.Song:StreamOnFrame(elapsed)
 		while track.notes[track.streamIndex] and (track.notes[track.streamIndex][NOTE.TIME] < to) and (track.notes[track.streamIndex][NOTE.TIME] <= self.cropTo) do
 
 			if track.notes[track.streamIndex][NOTE.TIME] >= from then
-				local note = Musician.Utils.DeepCopy(track.notes[track.streamIndex])
-
 				if not(self:TrackIsMuted(track)) and track.instrument >= 0 and track.instrument <= 255 then
-					note[NOTE.KEY] = note[NOTE.KEY] + track.transpose
+					local note = Musician.Utils.DeepCopy(track.notes[track.streamIndex])
+					local key = note[NOTE.KEY] + track.transpose
 
-					local noteTimeRelative = note[NOTE.TIME] - noteOffset
-					noteOffset = note[NOTE.TIME]
-					note[NOTE.TIME] = noteTimeRelative
+					-- Send note if key is within allowed range
+					if key >= Musician.MIN_KEY and key <= Musician.MAX_KEY then
+						note[NOTE.KEY] = key
+						local noteTimeRelative = note[NOTE.TIME] - noteOffset
+						noteOffset = note[NOTE.TIME]
+						note[NOTE.TIME] = noteTimeRelative
 
-					if note[NOTE.DURATION] ~= nil then
-						note[NOTE.DURATION] = note[NOTE.DURATION]
+						if note[NOTE.DURATION] ~= nil then
+							note[NOTE.DURATION] = note[NOTE.DURATION]
+						end
+
+						table.insert(notes, note)
 					end
-
-					table.insert(notes, note)
 				end
 			end
 
