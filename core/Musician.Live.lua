@@ -269,6 +269,9 @@ function Musician.Live.InsertNote(noteOn, key, layer, instrument)
 		return
 	end
 
+	-- Key is out of range
+	if key < Musician.MIN_KEY or key > Musician.MAX_KEY then return end
+
 	Musician.Live.CreateLiveSong()
 
 	-- Insert note in track
@@ -323,10 +326,10 @@ end
 -- @param isChordNote (boolean)
 function Musician.Live.NoteOn(key, layer, instrument, isChordNote)
 
+	-- Key is out of range
+	if key < Musician.MIN_KEY or key > Musician.MAX_KEY then return end
+
 	local soundFile, instrumentData = Musician.Sampler.GetSoundFile(instrument, key)
-	if soundFile == nil then
-		return
-	end
 
 	local noteOnKey = key .. '-' .. layer .. '-' .. instrument
 
@@ -356,7 +359,7 @@ function Musician.Live.NoteOn(key, layer, instrument, isChordNote)
 		[NOTEON.HANDLE] = handle,
 		[NOTEON.LAYER] = layer,
 		[NOTEON.KEY] = key,
-		[NOTEON.INSTRUMENT] = instrumentData.midi,
+		[NOTEON.INSTRUMENT] = instrument,
 		[NOTEON.IS_CHORD_NOTE] = isChordNote
 	}
 	Musician.Live:SendMessage(Musician.Events.LiveNoteOn, key, layer, instrumentData, isChordNote)
@@ -372,6 +375,9 @@ end
 -- @param isChordNote (boolean)
 -- @param[opt=false] ignoreSustain (boolean) Force note off even is sustain is enabled for this layer
 function Musician.Live.NoteOff(key, layer, instrument, isChordNote, ignoreSustain)
+
+	-- Key is out of range
+	if key < Musician.MIN_KEY or key > Musician.MAX_KEY then return end
 
 	local noteOnKey = key .. '-' .. layer .. '-' .. instrument
 	if not(notesOn[noteOnKey]) then return end
@@ -414,6 +420,9 @@ end
 -- @param instrument (int)
 function Musician.Live.BandNote(noteOn, key, layer, instrument)
 	if not(Musician.Live.IsBandSyncMode() and Musician.Live.IsEnabled()) then return end
+
+	-- Key is out of range
+	if key < Musician.MIN_KEY or key > Musician.MAX_KEY then return end
 
 	local noteOn = noteOn and "ON" or "OFF"
 	local posY, posX, posZ, instanceID = UnitPosition("player")
@@ -615,6 +624,9 @@ function Musician.Live.OnLiveNote(prefix, message, distribution, sender)
 
 	-- Update player position
 	Musician.Registry.UpdatePlayerPositionAndGUID(posY, posX, posZ, instanceID, guid)
+
+	-- Key is out of range
+	if key < Musician.MIN_KEY or key > Musician.MAX_KEY then return end
 
 	local noteOnKey = key .. '-' .. layer .. '-' .. instrument
 

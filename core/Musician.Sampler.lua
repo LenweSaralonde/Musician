@@ -127,6 +127,9 @@ end
 -- @return soundFiles (table) all suitable file paths for this instrument and note
 function Musician.Sampler.GetSoundFile(instrument, key)
 
+	-- Key is out of range
+	if key < Musician.MIN_KEY or key > Musician.MAX_KEY then return nil end
+
 	local instrumentNumber = type(instrument) == 'number' and instrument
 	local instrumentName = type(instrument) == 'string' and instrument
 	local instrumentData = type(instrument) == 'table' and instrument
@@ -257,7 +260,7 @@ function Musician.Sampler.PlayNote(instrument, key, onPlay, onStop)
 		[NOTEON.KEY] = key,
 		[NOTEON.ON_STOP] = onStop,
 	}
-	Musician.Utils.Debug(MODULE_NAME, 'PlayNote', lastHandleId, instrumentData.name, key)
+	Musician.Utils.Debug(MODULE_NAME, 'PlayNote', lastHandleId, instrumentData and instrumentData.name, key)
 
 	-- Play the note file only if it has already been preloaded in the file cache
 	if soundFile and Musician.Preloader.IsPreloaded(sampleId) then
@@ -281,11 +284,11 @@ function Musician.Sampler.StopNote(handle, decay)
 	local onStop = noteOn[NOTEON.ON_STOP]
 	local key = noteOn[NOTEON.KEY]
 
-	if decay == nil then
+	if decay == nil and instrumentData then
 		decay = instrumentData.decay
 	end
 
-	Musician.Utils.Debug(MODULE_NAME, 'StopNote', handle, soundHandle, decay)
+	Musician.Utils.Debug(MODULE_NAME, 'StopNote', handle, instrumentData and instrumentData.name, key, soundHandle, decay)
 
 	if soundHandle then
 		StopSound(soundHandle, decay)

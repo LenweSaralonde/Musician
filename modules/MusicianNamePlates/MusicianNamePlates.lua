@@ -180,7 +180,7 @@ local function addNote(animatedNotesFrame, song, track, key)
 	local x, y, isPercussion
 
 	-- Not a percussion
-	if track.instrument < 128 and not(instrument.isPercussion) then
+	if track.instrument < 128 and not(instrument and instrument.isPercussion) then
 		-- Avoid duplicates during the same frame
 		if animatedNotesFrame.notesAddedDuringFrame[key] then return end
 
