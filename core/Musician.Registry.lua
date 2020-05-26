@@ -47,16 +47,8 @@ end
 --- Initialize registry
 --
 function Musician.Registry.Init()
-
-	local initialized = false
-
-	-- Finish initialization when player enters world
-	Musician.Registry:RegisterEvent("PLAYER_ENTERING_WORLD", function()
-
-		if initialized then return end
-
-		initialized = true
-
+	-- Finish initialization when player is logged in
+	local function finishInit()
 		-- Standard player tooltip hook
 		GameTooltip:HookScript("OnTooltipSetUnit", function()
 			local _, unitType = GameTooltip:GetUnit()
@@ -71,7 +63,7 @@ function Musician.Registry.Init()
 			debug(true, Musician.Registry.event.query, Musician.Comm.GetGroupChatType())
 			Musician.Registry:SendCommMessage(Musician.Registry.event.query, Musician.Registry.GetVersionString(), Musician.Comm.GetGroupChatType(), nil, "ALERT")
 		end
-	end)
+	end
 
 	-- Init communication messages
 	Musician.Registry:RegisterComm(Musician.Registry.event.query, Musician.Registry.OnQuery)
@@ -208,6 +200,12 @@ function Musician.Registry.Init()
 		end
 	end)
 
+	-- Finish initialization on login
+	if not(IsLoggedIn()) then
+		Musician.Registry:RegisterEvent("PLAYER_LOGIN", finishInit)
+	else
+		finishInit()
+	end
 end
 
 --- Fetch the connected players
