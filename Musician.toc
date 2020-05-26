@@ -1,7 +1,7 @@
 ## Interface: 11304
 ## Title: Musician
 ## Author: LenweSaralonde
-## Version: 1.6.0.0
+## Version: 1.6.0.1
 ## Notes: Listen to and perform music with your character
 ## SavedVariables: Musician_Settings
 

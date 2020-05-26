@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.6.0.1
+--------
+* Fixed third party instruments do not preload #46
+
 v1.6.0.0
 --------
 *"Renaissance"*
