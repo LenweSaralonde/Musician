@@ -64,8 +64,6 @@ function Musician:OnInitialize()
 
 	Musician_Settings = Mixin(defaultSettings, Musician_Settings or {})
 
-	Musician.Msg = Musician.Utils.DeepMerge(Mixin({}, Musician.Locale.en), Musician.Msg)
-
 	Musician.songs = {}
 	Musician.sourceSong = nil
 
@@ -111,6 +109,10 @@ end
 --- OnEnable
 --
 function Musician:OnEnable()
+	-- Init localized strings
+	Musician.Msg = Musician.Utils.DeepMerge(Mixin({}, Musician.Locale.en), Musician.Msg)
+
+	-- Init audio samples
 	Musician.Sampler.Init()
 	Musician.Preloader.Init()
 
