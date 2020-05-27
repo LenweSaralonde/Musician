@@ -7,6 +7,41 @@ Musician.NOTE_DURATION_FPS = 255 / Musician.MAX_NOTE_DURATION; // 8-bit
 Musician.NOTE_TIME_FPS = 240;
 Musician.MAX_NOTE_TIME = 65535 / Musician.NOTE_TIME_FPS; // 16-bit
 
+Musician.CompareEvents = function(a, b) {
+	if (a.time < b.time) { // A before B
+		return -1;
+	} else if (a.time > b.time) { // A after B
+		return 1;
+	}
+
+	// A and B have the same time
+
+	if (a.cc && b.note) { // A is CC, B is note
+		return -1;
+	} else if (a.note && b.cc) { // A is note, B is CC
+		return 1;
+	} else if (a.cc && b.cc) { // A and B are both CC
+		return 0;
+	}
+
+	// A and B are notes
+
+	if (a.note === b.note) { // Notes are the same: could be a zero duration note
+		if (a.state && !b.state) { // Note on is before note off
+			return -1;
+		} else if (!a.state && b.state) { // Note off is after note on
+			return 1;
+		}
+	} else { // Not the same note
+		if (!a.state && b.state) { // Note off is before note on
+			return -1;
+		} else if (!a.state && b.state) { // Note on is after note off
+			return 1;
+		}
+	}
+	return 0;
+};
+
 Musician.PackNumber = function(num, bytes) {
 	var m = Math.max(0, num);
 	var b;
@@ -42,62 +77,150 @@ Musician.FilenameToTitle = function(fileName) {
 	});
 };
 
-Musician.ProcessPitchBend = function(song) {
-
-	var eventTypeOrder = {
-		'pitchBend': 1,
-		'noteOn': 2,
-		'noteOff': 3,
-	};
-
-	var eventSorter = function(a, b) {
-		if (a.time < b.time) {
-			return -1;
-		} else if (a.time > b.time) {
-			return 1;
-		} else if (eventTypeOrder[a.type] < eventTypeOrder[b.type]) {
-			return -1;
-		} else if (eventTypeOrder[a.type] > eventTypeOrder[b.type]) {
-			return 1;
-		} else {
-			return 0;
-		}
-	};
+Musician.ExtractCC = function(song) {
+	var cc = {};
 
 	song.tracks.forEach(function(track) {
+		var ccTypes = Object.keys(track.controlChanges);
+		ccTypes.forEach(function(ccType) {
+			track.controlChanges[ccType].forEach(function(ccEvent) {
+				if (cc[ccEvent.channel] === undefined) {
+					cc[ccEvent.channel] = [];
+				}
+				cc[ccEvent.channel].push(ccEvent);
+			});
+		});
+	});
+
+	Object.keys(cc).forEach(function(channel) {
+		cc[channel].sort(function(a, b) {
+			if (a.time < b.time) {
+				return -1;
+			} else if (a.time > b.time) {
+				return 1;
+			} else {
+				return 0;
+			}
+		});
+	});
+
+	song.controlChanges = cc;
+}
+
+Musician.ProcessSustainPedal = function(song) {
+
+	song.tracks.forEach(function(track) {
+
+		// Mix pedal events with notes
+		var events = [];
+
+		// Add notes as note on/note off events
+		track.notes.forEach(function(note) {
+			events.push({ time: note.time, state: true, note: note });
+			events.push({ time: note.time + note.duration, state: false, note: note });
+		});
+
+		// Add pedal events
+		song.controlChanges[track.channelNumber] && song.controlChanges[track.channelNumber].forEach(function(cc) {
+			if (cc.number === 64) { // pedal CC
+				events.push({ time: cc.time, cc: cc});
+			}
+		});
+
+		// Reorder events
+		events.sort(Musician.CompareEvents);
+
+		// Sustain notes
+		var sustainedNotes = {};
+		var isSustained = false;
+		var lastNoteTime;
+		events.forEach(function(event) {
+			if (event.cc) {
+				if (!isSustained && event.cc.value >= .5) { // Pedal down (sustain on)
+					isSustained = true;
+					sustainedTime = event.time;
+				} else if (isSustained && event.cc.value < .5) { // Pedal up (sustain off)
+					isSustained = false;
+
+					// Release all notes
+					var keys = Object.keys(sustainedNotes);
+					keys.forEach(function(key) {
+						sustainedNotes[key].duration = Math.max(sustainedNotes[key].duration, event.time - sustainedNotes[key].time);
+						delete sustainedNotes[key];
+					});
+				}
+			} else {
+				var isSustainedNote = isSustained;
+				if (!isSustainedNote) {
+					return;
+				}
+
+				// Note is already sustained
+				if (sustainedNotes[event.note.midi] === event.note) {
+					return;
+				}
+
+				// Another note is already sustained for the same key: stop it then remove it
+				if (event.state && sustainedNotes[event.note.midi]) {
+					sustainedNotes[event.note.midi].duration = Math.max(sustainedNotes[event.note.midi].duration, event.time - sustainedNotes[event.note.midi].time);
+					delete sustainedNotes[event.note.midi];
+				}
+
+				// Add sustained note
+				sustainedNotes[event.note.midi] = event.note;
+
+				lastNoteTime = event.time + event.note.duration;
+			}
+		});
+
+		// Release all leftover notes
+		var keys = Object.keys(sustainedNotes);
+		keys.forEach(function(key) {
+			sustainedNotes[key].duration = Math.max(sustainedNotes[key].duration, lastNoteTime - sustainedNotes[key].time);
+			delete sustainedNotes[key];
+		});
+	});
+}
+
+Musician.ProcessPitchBend = function(song) {
+	song.tracks.forEach(function(track) {
+
+		// Mix pitch bend events with notes
 		var events = [];
 		var noteId = 1;
 
 		// Add notes as note on/note off events
 		track.notes.forEach(function(note) {
-			events.push({ time: note.time, type: 'noteOn', id: noteId, duration: note.duration, note: note });
-			events.push({ time: note.time + note.duration, type: 'noteOff', id: noteId, note: note });
+			events.push({ time: note.time, state: true, id: noteId, duration: note.duration, note: note });
+			events.push({ time: note.time + note.duration, state: false, id: noteId, note: note });
 			noteId++;
 		});
 
 		// Add pitch bend events
-		track.controlChanges && track.controlChanges.pitchBend && track.controlChanges.pitchBend.forEach(function(cc) {
-			events.push({ time: cc.time, type: 'pitchBend', id: 0, cc: cc});
+		song.controlChanges[track.channelNumber] && song.controlChanges[track.channelNumber].forEach(function(cc) {
+			if (cc.number === 'pitchBend') {
+				events.push({ time: cc.time, id: 0, cc: cc});
+			}
 		});
 
 		// Reorder events
-		events.sort(eventSorter);
+		events.sort(Musician.CompareEvents);
 
 		// Process pitch bend
 		var noteEvents = [];
 		var notesOn = {};
 		var currentPitchBend = 0;
 		events.forEach(function(event) {
-			if (event.type === 'noteOn') {
+			if (event.note && event.state) {
 				// Insert note on
 				var midi = event.note.midi + currentPitchBend;
 				notesOn[event.id] = { time: event.time, midi: midi, velocity: event.note.velocity };
-			} else if (event.type === 'noteOff') {
+			} else if (event.note && !event.state) {
 				// Insert note event
 				notesOn[event.id].duration = event.time - notesOn[event.id].time;
 				noteEvents.push(notesOn[event.id]);
 				delete notesOn[event.id];
-			} else if (event.type === 'pitchBend') {
+			} else if (event.cc) {
 				var pitchBend = Math.round(event.cc.value);
 
 				// New pitch bend value step: split notes
@@ -120,7 +243,7 @@ Musician.ProcessPitchBend = function(song) {
 			}
 		});
 
-		noteEvents.sort(eventSorter);
+		noteEvents.sort(Musician.CompareEvents);
 
 		track.notes = noteEvents;
 	});
@@ -130,6 +253,9 @@ Musician.PackSong = function(song, fileName) {
 
 	var duration = Math.ceil(song.duration);
 
+	Musician.ExtractCC(song);
+
+	Musician.ProcessSustainPedal(song);
 	Musician.ProcessPitchBend(song);
 
 	var packedSong = '';

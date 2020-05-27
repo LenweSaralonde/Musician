@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<script type="text/javascript" src="./js/MidiConvert.js?v=5"></script>
 	<script type="text/javascript" src="./js/base64.js"></script>
-	<script type="text/javascript" src="./js/musician.js?v=10"></script>
+	<script type="text/javascript" src="./js/musician.js?v=11"></script>
 	<script type="text/javascript" src="./js/locale.js?v=3"></script>
 	<style type="text/css">
 		body {
@@ -300,6 +300,7 @@
 					document.querySelector("#CopyButton").className = "visible";
 				} catch(e) {
 					document.querySelector("#ResultsText").value = "";
+					console.error(e);
 					alert(e);
 				}
 			};
