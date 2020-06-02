@@ -11,17 +11,19 @@ local MUSICIAN_ICON_MUTED = "Interface\\AddOns\\Musician\\ui\\textures\\button-m
 local MUSICIAN_ICON_WAIT = "Interface\\AddOns\\Musician\\ui\\textures\\button-wait"
 local HOURGLASS = "Interface\\AddOns\\Musician\\ui\\textures\\hourglass"
 
+local ldbData = {}
+
 --- Init
 --
 function MusicianButton.Init()
-	local musicianLDB = LibStub("LibDataBroker-1.1"):NewDataObject("Musician", {
-		type = "data source",
-		text = "Musician",
-		icon = MUSICIAN_ICON_WAIT,
-		OnClick = MusicianButton.OnClick,
-		OnEnter = MusicianButton.ShowTooltip,
-		OnLeave = MusicianButton.HideTooltip
-	})
+	ldbData.type = "launcher"
+	ldbData.text = "Musician"
+	ldbData.icon = MUSICIAN_ICON
+	ldbData.OnClick = MusicianButton.OnClick
+	ldbData.OnEnter = MusicianButton.ShowTooltip
+	ldbData.OnLeave = MusicianButton.HideTooltip
+
+	local musicianLDB = LibStub("LibDataBroker-1.1"):NewDataObject("Musician", ldbData)
 
 	-- Convert old minimap position format
 	if tonumber(Musician_Settings.minimapPosition) ~= nil then
@@ -64,11 +66,11 @@ end
 function MusicianButton.UpdateIcons()
 	local button = icon:GetMinimapButton("Musician")
 	if Musician.Sampler.GetMuted() then
-		button.icon:SetTexture(MUSICIAN_ICON_MUTED)
+		ldbData.icon = MUSICIAN_ICON_MUTED
 	elseif Musician.Preloader.IsComplete() then
-		button.icon:SetTexture(MUSICIAN_ICON)
+		ldbData.icon = MUSICIAN_ICON
 	else
-		button.icon:SetTexture(MUSICIAN_ICON_WAIT)
+		ldbData.icon = MUSICIAN_ICON_WAIT
 	end
 
 	if Musician.Preloader.IsComplete() then
@@ -249,8 +251,10 @@ end
 
 --- ShowTooltip
 --
-function MusicianButton.ShowTooltip()
-	GameTooltip:SetOwner(icon:GetMinimapButton("Musician"), "ANCHOR_BOTTOMLEFT")
+function MusicianButton.ShowTooltip(self)
+	if self then
+		GameTooltip:SetOwner(self, "ANCHOR_BOTTOMLEFT")
+	end
 	MusicianButton.UpdateTooltipText(false)
 	GameTooltip:Show()
 	MusicianButton.tooltipIsVisible = true
