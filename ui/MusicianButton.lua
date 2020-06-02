@@ -37,7 +37,7 @@ function MusicianButton.Init()
 
 	-- Create menu frame
 	local buttonFrame = icon:GetMinimapButton("Musician")
-	menuFrame = CreateFrame("Frame", "MusicianButton_Menu", buttonFrame, "MusicianDropDownMenuTooltipTemplate")
+	menuFrame = CreateFrame("Frame", "MusicianButton_Menu", UIParent, "MusicianDropDownMenuTooltipTemplate")
 
 	-- Hourglass icon for preloading
 	local hourglass = buttonFrame:CreateTexture(nil, "OVERLAY", nil, 7)
