@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.6.0.2
+--------
+* Fixed minimap button issues with some 3rd party addons #47
+
 v1.6.0.1
 --------
 * Fixed third party instruments do not preload #46
