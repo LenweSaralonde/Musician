@@ -179,7 +179,7 @@ function Musician.Live.Enable(enabled)
 	liveModeStatusChanged()
 end
 
---- Indicate whenever the live mode is enabled stream
+--- Indicate whenever the live mode is enabled
 -- @return isLiveEnabled (boolean)
 function Musician.Live.IsEnabled()
 	return isLiveEnabled
