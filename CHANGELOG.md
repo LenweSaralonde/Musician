@@ -3,6 +3,7 @@ Changelog
 
 v1.6.0.2
 --------
+* Added MIDI sustain pedal control changes
 * Fixed minimap button issues with some 3rd party addons #47
 
 v1.6.0.1
