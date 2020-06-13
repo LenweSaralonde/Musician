@@ -127,6 +127,8 @@ end
 -- @return soundFiles (table) all suitable file paths for this instrument and note
 function Musician.Sampler.GetSoundFile(instrument, key)
 
+	if instrument == nil or key == nil then return nil end
+
 	-- Key is out of range
 	if key < Musician.MIN_KEY or key > Musician.MAX_KEY then return nil end
 
