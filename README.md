@@ -91,6 +91,8 @@ The live keyboard consists in two layers, **Upper** and **Lower**, respectively 
 
 Various keyboard layouts are available, including simplified ones with limited notes but a wider range of keys.
 
+The spacebar acts like the sustain pedal of a piano.
+
 In **Live Mode**, the other players hear you playing while in **Solo Mode**, you play for yourself. In Live Mode, keep in mind that if you hear the sound playing instantly at the press of the key, the other players will hear it after a slight delay of approximately 2 seconds.
 
 The keyboard settings can be saved in 12 program slots, accessible using the 12 Function keys:
@@ -111,7 +113,7 @@ Enable nameplates to see who is playing what.
 
 ### Play with a MIDI keyboard
 
-There is no support for MIDI keyboards in World of Warcraft. However, it's possible to emulate keystrokes with a MIDI keyboard using third party software. Check out [this tutorial](https://gist.github.com/LenweSaralonde/ea5d1312b264521e27734029d78df9f3) to learn how to do this.
+There is no support for MIDI keyboards in World of Warcraft. However, it's possible to emulate keystrokes with a MIDI keyboard using third party software. Check out the [Musician MIDI add-on](https://musician.lenwe.io/midi) to learn how to achieve this.
 
 Song editor
 -----------
