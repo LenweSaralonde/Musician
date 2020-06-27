@@ -11,7 +11,7 @@ Quick links
   * [Musician List](https://musician.lenwe.io/list) — Save and load your songs in-game.
   * [Musician MIDI](https://musician.lenwe.io/midi) — Play live music using your MIDI keyboard.
 * Extra instruments:
-  * [Musician Piano](https://musician.lenwe.io/piano) — Grand piano, based on the lengendary Yamaha C7.
+  * [Musician Piano](https://musician.lenwe.io/piano) — Grand piano, based on the legendary Yamaha C7.
 * [Wiki](https://github.com/LenweSaralonde/Musician/wiki) — Tips and tricks, FAQ and detailed documentation for gamers, developers and music producers.
 * [Bug tracker](https://github.com/LenweSaralonde/Musician/issues) — Report issues
 * [GitHub repo](https://github.com/LenweSaralonde/Musician) — Contribute to the project
