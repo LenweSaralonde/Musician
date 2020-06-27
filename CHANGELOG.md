@@ -1,6 +1,12 @@
 Changelog
 =========
 
+v1.6.0.3
+--------
+* Fine tuned clarinet, bassoon and dulcimer
+* Fixed LUA error when attempting to play a sample that does not exist
+* Re-encoded samples to 96 Kbits/s to reduce RAM and disk usage without altering quality
+
 v1.6.0.2
 --------
 * Added MIDI sustain pedal control changes
