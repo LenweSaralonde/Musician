@@ -27,18 +27,10 @@ Musician.CompareEvents = function(a, b) {
 
 	// A and B are notes
 
-	if (a.note === b.note) { // Notes are the same: could be a zero duration note
-		if (a.state && !b.state) { // Note on is before note off
-			return -1;
-		} else if (!a.state && b.state) { // Note off is after note on
-			return 1;
-		}
-	} else { // Not the same note
-		if (!a.state && b.state) { // Note off is before note on
-			return -1;
-		} else if (!a.state && b.state) { // Note on is after note off
-			return 1;
-		}
+	if (a.state && !b.state) { // Note on is before note off
+		return -1;
+	} else if (!a.state && b.state) { // Note off is after note on
+		return 1;
 	}
 	return 0;
 };
@@ -212,16 +204,15 @@ Musician.ProcessPitchBend = function(song) {
 		var notesOn = {};
 		var currentPitchBend = 0;
 		events.forEach(function(event) {
-			if (event.note && event.state) {
-				// Insert note on
+			if (event.note && event.state) { // Note on
 				var midi = event.note.midi + currentPitchBend;
 				notesOn[event.id] = { time: event.time, midi: midi, velocity: event.note.velocity };
-			} else if (event.note && !event.state) {
+			} else if (event.note && !event.state) { // Note off
 				// Insert note event
-				notesOn[event.id].duration = event.time - notesOn[event.id].time;
+				notesOn[event.id].duration = event.time - notesOn[event.id].time; // Update duration
 				noteEvents.push(notesOn[event.id]);
 				delete notesOn[event.id];
-			} else if (event.cc) {
+			} else if (event.cc) { // Pitch bend CC
 				var pitchBend = Math.round(event.cc.value);
 
 				// New pitch bend value step: split notes
@@ -306,13 +297,6 @@ Musician.PackSong = function(song, fileName) {
 			var noteTime = rawNote.time - offset;
 			var noteKey = rawNote.midi;
 			var noteDuration = Math.min(rawNote.duration, Musician.MAX_NOTE_DURATION);
-
-			// rawTrack.isPercussion
-
-			// Do not pack notes having zero duration
-			if (noteDuration === 0) {
-				return;
-			}
 
 			// Insert note spacers if needed
 			var noteSpacer = '';
