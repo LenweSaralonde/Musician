@@ -6,7 +6,7 @@ Musician.MAX_NOTE_DURATION = 6;
 Musician.NOTE_DURATION_FPS = 255 / Musician.MAX_NOTE_DURATION; // 8-bit
 Musician.NOTE_TIME_FPS = 240;
 Musician.MAX_NOTE_TIME = 65535 / Musician.NOTE_TIME_FPS; // 16-bit
-Musician.CONVERTER_VERSION = 11;
+Musician.CONVERTER_VERSION = 12;
 
 Musician.CompareEvents = function(a, b) {
 	if (a.time < b.time) { // A before B
