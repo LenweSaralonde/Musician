@@ -142,6 +142,9 @@ function Musician.Comm.JoinChannel()
 	-- Channel joiner already active
 	if Musician.Comm.channelJoiner ~= nil then return end
 
+	-- Keep communication channel on top every time a channel is joined or left
+	Musician.Comm:RegisterEvent("CHANNEL_UI_UPDATE", reorderChannels)
+
 	-- Channel status changed
 	Musician.Comm:RegisterEvent("CHAT_MSG_CHANNEL_NOTICE", function(event, ...)
 		local text, _, _, _, _, _, _, _, channelName = ...
