@@ -9,3 +9,4 @@ license-output: LICENSE
 ignore:
     - config.ld
     - doc
+    - .github
