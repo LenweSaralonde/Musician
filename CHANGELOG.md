@@ -1,6 +1,12 @@
 Changelog
 =========
 
+v1.6.0.4
+--------
+* Force MusicianComm channel in last position #41
+* Fixed overlapping notes duration in the MIDI converter
+* Fixed JS error with zero duration notes in the MIDI converter
+
 v1.6.0.3
 --------
 * Fine tuned clarinet, bassoon and dulcimer
