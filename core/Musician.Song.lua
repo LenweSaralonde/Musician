@@ -174,6 +174,7 @@ function Musician.Song:GetProgression()
 	end
 	local duration = self.cropTo - self.cropFrom
 	local position = self.cursor - self.cropFrom
+	if duration == 0 then return 0 end
 	return position / duration
 end
 
