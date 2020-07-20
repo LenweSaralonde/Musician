@@ -267,7 +267,12 @@ function Musician.NamePlates.OnNamePlateNotesFrameUpdate(animatedNotesFrame, ela
 			animatedNotesFrame.zoom = animatedNotesFrame.zoomFrom + progression * range
 
 			local cameraMaxZoom = 28.5
-			local y = -tan(atan(1 - cameraMaxZoom / min(9999999, animatedNotesFrame.zoom))) * 10 + 10
+			local y
+			if animatedNotesFrame.zoom ~= 0 then
+				y = -tan(atan(1 - cameraMaxZoom / min(9999999, animatedNotesFrame.zoom))) * 10 + 10
+			else
+				y = 9999999
+			end
 
 			playerAnimatedNotesFrame:SetPoint("BOTTOM", WorldFrame, "CENTER", 0, y)
 		end
