@@ -171,7 +171,13 @@ function Musician.Preloader.PreloadNote(instrument, key)
 		end
 	end
 	Musician.Preloader.AddPreloaded(sampleId)
-	return hasSample, (debugprofilestop() - startTime) / count
+
+	local preloadTime = 0
+	if count > 0 then
+		preloadTime = (debugprofilestop() - startTime) / count
+	end
+
+	return hasSample, preloadTime
 end
 
 function Musician.Preloader.GetLoadedSamples()
@@ -179,6 +185,7 @@ function Musician.Preloader.GetLoadedSamples()
 end
 
 function Musician.Preloader.GetAverageLoadingTime()
+	if totalLoadedSamples == 0 then return 0 end
 	return totalLoadingTime / totalLoadedSamples
 end
 
@@ -222,9 +229,8 @@ end
 --- Return the initial preloading progression
 -- @return (number)
 function Musician.Preloader.GetProgress()
-	if preloaded then
-		return 1
-	end
+	if preloaded then return 1 end
+	if totalSamples then return 0 end
 	return preloadedSamples / totalSamples
 end
 
