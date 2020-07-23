@@ -249,12 +249,14 @@ function Musician.NamePlates.OnNamePlateNotesFrameUpdate(animatedNotesFrame, ela
 
 		-- Get current zoom level
 		local cameraZoom = GetCameraZoom()
+		local cameraOffset = GetCVar("test_cameraOverShoulder")
 
 		-- Zoom level changed
-		if animatedNotesFrame.zoomTo ~= cameraZoom then
+		if animatedNotesFrame.zoomTo ~= cameraZoom or animatedNotesFrame.cameraOffset ~= cameraOffset then
 			animatedNotesFrame.zoomFrom = animatedNotesFrame.zoom
 			animatedNotesFrame.zoomTo = cameraZoom
 			animatedNotesFrame.zoomElapsed = 0
+			animatedNotesFrame.cameraOffset = cameraOffset
 		end
 
 		-- Zoom animation in progress
@@ -270,14 +272,17 @@ function Musician.NamePlates.OnNamePlateNotesFrameUpdate(animatedNotesFrame, ela
 			animatedNotesFrame.zoom = animatedNotesFrame.zoomFrom + progression * range
 
 			local cameraMaxZoom = 28.5
-			local y
+			local x, y
 			if animatedNotesFrame.zoom ~= 0 then
-				y = -tan(atan(1 - cameraMaxZoom / min(9999999, animatedNotesFrame.zoom))) * 10 + 10
+				local zoom = 1 - cameraMaxZoom / min(9999999, animatedNotesFrame.zoom)
+				y = -zoom * 10 + 10
+				x = ((zoom / 17) * 648 - 32) * cameraOffset / 1.5
 			else
 				y = 9999999
+				x = 0
 			end
 
-			playerAnimatedNotesFrame:SetPoint("BOTTOM", WorldFrame, "CENTER", 0, y)
+			playerAnimatedNotesFrame:SetPoint("BOTTOM", WorldFrame, "CENTER", x, y)
 		end
 	end
 
