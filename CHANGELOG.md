@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.6.0.5
+--------
+* Fixed notes position in over shoulder camera #48
+* Misc bugfixes and improvements
+
 v1.6.0.4
 --------
 * Force MusicianComm channel in last position #41
