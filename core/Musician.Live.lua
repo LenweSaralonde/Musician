@@ -14,6 +14,7 @@ NOTEON.LAYER = 2
 NOTEON.KEY = 3
 NOTEON.INSTRUMENT = 4
 NOTEON.IS_CHORD_NOTE = 5
+NOTEON.SOURCE = 6
 
 local notesOn = {}
 local sustainedNotes = {}
@@ -323,8 +324,9 @@ end
 -- @param key (int) MIDI key index
 -- @param layer (int)
 -- @param instrument (int)
--- @param isChordNote (boolean)
-function Musician.Live.NoteOn(key, layer, instrument, isChordNote)
+-- @param[opt=false] isChordNote (boolean)
+-- @param[opt] source (table) UI component triggering the note
+function Musician.Live.NoteOn(key, layer, instrument, isChordNote, source)
 
 	-- Key is out of range
 	if key < Musician.MIN_KEY or key > Musician.MAX_KEY then return end
@@ -360,9 +362,10 @@ function Musician.Live.NoteOn(key, layer, instrument, isChordNote)
 		[NOTEON.LAYER] = layer,
 		[NOTEON.KEY] = key,
 		[NOTEON.INSTRUMENT] = instrument,
-		[NOTEON.IS_CHORD_NOTE] = isChordNote
+		[NOTEON.IS_CHORD_NOTE] = isChordNote,
+		[NOTEON.SOURCE] = source
 	}
-	Musician.Live:SendMessage(Musician.Events.LiveNoteOn, key, layer, instrumentData, isChordNote)
+	Musician.Live:SendMessage(Musician.Events.LiveNoteOn, key, layer, instrumentData, isChordNote, source)
 
 	-- Send band note message if synchronization is enabled
 	Musician.Live.BandNote(true, key, layer, instrument)
@@ -372,7 +375,7 @@ end
 -- @param key (int) MIDI key index
 -- @param layer (int)
 -- @param instrument (int)
--- @param isChordNote (boolean)
+-- @param[opt=false] isChordNote (boolean)
 -- @param[opt=false] ignoreSustain (boolean) Force note off even is sustain is enabled for this layer
 function Musician.Live.NoteOff(key, layer, instrument, isChordNote, ignoreSustain)
 
@@ -405,9 +408,10 @@ function Musician.Live.NoteOff(key, layer, instrument, isChordNote, ignoreSustai
 	end
 
 	-- Insert note off and trigger event
+	local source = notesOn[noteOnKey][NOTEON.SOURCE]
 	Musician.Live.InsertNote(false, key, layer, instrument)
 	notesOn[noteOnKey] = nil
-	Musician.Live:SendMessage(Musician.Events.LiveNoteOff, key, layer, isChordNote)
+	Musician.Live:SendMessage(Musician.Events.LiveNoteOff, key, layer, isChordNote, source)
 
 	-- Send band note message if synchronization is enabled
 	Musician.Live.BandNote(false, key, layer, instrument)
