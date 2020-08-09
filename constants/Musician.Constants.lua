@@ -149,6 +149,7 @@ Musician.Events.VisualNoteOff = "MusicianVisualNoteOff"
 -- @param layer (number) Keyboard layer from Musician.KEYBOARD_LAYER
 -- @param instrumentData (table) Instrument data from Musician.INSTRUMENTS
 -- @param isChordNote (boolean) true when note is a power chord
+-- @param source (table) UI component triggering the note
 Musician.Events.LiveNoteOn = "MusicianLiveNoteOn"
 
 --- Fired when a note off event is being sent in live mode
@@ -156,6 +157,7 @@ Musician.Events.LiveNoteOn = "MusicianLiveNoteOn"
 -- @param key (number) MIDI key of the note
 -- @param layer (number) Keyboard layer from Musician.KEYBOARD_LAYER
 -- @param isChordNote (boolean) true when note is a power chord
+-- @param source (table) UI component triggering the note
 Musician.Events.LiveNoteOff = "MusicianLiveNoteOff"
 
 --- Fired when the live mode state is changed, by user's action or any other event that affects the live mode.

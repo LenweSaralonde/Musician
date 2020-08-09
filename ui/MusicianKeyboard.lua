@@ -705,7 +705,10 @@ end
 -- @param layer (number)
 -- @param instrumentData (table)
 -- @param isChordNote (boolean)
-Musician.Keyboard.OnLiveNoteOn = function(event, key, layer, instrumentData, isChordNote)
+-- @param source (table)
+Musician.Keyboard.OnLiveNoteOn = function(event, key, layer, instrumentData, isChordNote, source)
+	if source ~= MusicianKeyboard then return end
+
 	local button = noteButtons[layer] and noteButtons[layer][key]
 
 	if not(button) then
@@ -729,7 +732,11 @@ end
 -- @param event (string)
 -- @param key (number)
 -- @param layer (number)
-Musician.Keyboard.OnLiveNoteOff = function(event, key, layer)
+-- @param isChordNote (boolean)
+-- @param source (table)
+Musician.Keyboard.OnLiveNoteOff = function(event, key, layer, isChordNote, source)
+	if source ~= MusicianKeyboard then return end
+
 	local button = noteButtons[layer] and noteButtons[layer][key]
 
 	if not(button) then
@@ -1143,10 +1150,10 @@ MusicianKeyboard.NoteKey = function(down, keyValue)
 
 	if down then
 		if powerChords then
-			Musician.Live.NoteOn(noteKey - 12, layer, instrument, true)
-			Musician.Live.NoteOn(noteKey - 5, layer, instrument, true)
+			Musician.Live.NoteOn(noteKey - 12, layer, instrument, true, MusicianKeyboard)
+			Musician.Live.NoteOn(noteKey - 5, layer, instrument, true, MusicianKeyboard)
 		end
-		Musician.Live.NoteOn(noteKey, layer, instrument)
+		Musician.Live.NoteOn(noteKey, layer, instrument, false, MusicianKeyboard)
 	end
 
 	return true
@@ -1471,7 +1478,7 @@ Musician.Keyboard.OnNoteOn = function(event, song, track, key)
 			local button = noteButtons[layer] and noteButtons[layer][key]
 			if button then
 				Musician.Keyboard.SetButtonState(button, true)
-				Musician.Keyboard.OnLiveNoteOn(event, key, layer, instrument)
+				Musician.Keyboard.OnLiveNoteOn(event, key, layer, instrument, false, MusicianKeyboard)
 			end
 		end
 	end
@@ -1494,7 +1501,7 @@ Musician.Keyboard.OnNoteOff = function(event, song, track, key)
 			local button = noteButtons[layer] and noteButtons[layer][key]
 			if button then
 				Musician.Keyboard.SetButtonState(button, false)
-				Musician.Keyboard.OnLiveNoteOff(event, key, layer)
+				Musician.Keyboard.OnLiveNoteOff(event, key, layer, false, MusicianKeyboard)
 			end
 		end
 	end
