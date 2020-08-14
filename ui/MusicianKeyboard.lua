@@ -537,10 +537,10 @@ local function initLayerControls(layer)
 	end)
 
 	-- Power chords
-	_G[varNamePrefix .. "PowerChords"].SetValue = function(self, value)
-		Musician.Keyboard.SetPowerChords(layer, value == "1")
-	end
-	_G[varNamePrefix .. "PowerChords"].SetValue(Musician.Keyboard.config.powerChords[layer])
+	_G[varNamePrefix .. "PowerChords"]:HookScript('OnClick', function(checkButton)
+		Musician.Keyboard.SetPowerChords(layer, checkButton:GetChecked())
+	end)
+	_G[varNamePrefix .. "PowerChords"]:SetChecked(Musician.Keyboard.config.powerChords[layer])
 end
 
 --- Update texts and icons for live and solo modes

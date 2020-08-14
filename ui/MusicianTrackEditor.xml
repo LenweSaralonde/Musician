@@ -173,27 +173,15 @@
 		</Layers>
 
 		<Frames>
-			<CheckButton name="$parentMute" parentKey="muteCheckbox" inherits="OptionsSmallCheckButtonTemplate" >
+			<CheckButton name="$parentMute" parentKey="muteCheckbox" inherits="MusicianOptionsSmallCheckButtonTemplate" >
 				<Anchors>
 					<Anchor point="LEFT" x="32" y="9" />
 				</Anchors>
-				<Size>
-					<AbsDimension x="16" y="16"/>
-				</Size>
-				<HitRectInsets>
-					<AbsInset left="0" right="0" top="0" bottom="0"/>
-				</HitRectInsets>
 			</CheckButton>
-			<CheckButton name="$parentSolo" parentKey="soloCheckbox" inherits="OptionsSmallCheckButtonTemplate" >
+			<CheckButton name="$parentSolo" parentKey="soloCheckbox" inherits="MusicianOptionsSmallCheckButtonTemplate" >
 				<Anchors>
 					<Anchor point="LEFT" x="48" y="9" />
 				</Anchors>
-				<Size>
-					<AbsDimension x="16" y="16"/>
-				</Size>
-				<HitRectInsets>
-					<AbsInset left="0" right="0" top="0" bottom="0"/>
-				</HitRectInsets>
 			</CheckButton>
 
 			<Frame name="$parentInstrumentDropdown" parentKey="instrumentDropdown" inherits="MusicianInstrumentDropdownTemplate">
