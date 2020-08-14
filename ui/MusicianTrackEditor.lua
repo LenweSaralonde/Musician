@@ -173,15 +173,15 @@ Musician.TrackEditor.CreateTrackWidget = function(trackIndex)
 
 		-- Mute
 		trackFrame.muteCheckbox.tooltipText = Musician.Msg.MUTE_TRACK
-		trackFrame.muteCheckbox.SetValue = function(self, setting)
-			Musician.sourceSong:SetTrackMuted(Musician.sourceSong.tracks[trackIndex], setting == "1")
-		end
+		trackFrame.muteCheckbox:HookScript('OnClick', function(checkButton)
+			Musician.sourceSong:SetTrackMuted(Musician.sourceSong.tracks[trackIndex], checkButton:GetChecked())
+		end)
 
 		-- Solo
 		trackFrame.soloCheckbox.tooltipText = Musician.Msg.SOLO_TRACK
-		trackFrame.soloCheckbox.SetValue = function(self, setting)
-			Musician.sourceSong:SetTrackSolo(Musician.sourceSong.tracks[trackIndex], setting == "1")
-		end
+		trackFrame.soloCheckbox:HookScript('OnClick', function(checkButton)
+			Musician.sourceSong:SetTrackSolo(Musician.sourceSong.tracks[trackIndex], checkButton:GetChecked())
+		end)
 
 		-- Meter
 		trackFrame.meterTexture.maxWidth = trackFrame.meterTexture:GetWidth()
