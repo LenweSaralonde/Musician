@@ -190,7 +190,7 @@
 				</Anchors>
 			</Button>
 
-			<CheckButton name="$parentPowerChords" parentKey="powerChordsCheckbox" inherits="OptionsSmallCheckButtonTemplate" >
+			<CheckButton name="$parentPowerChords" parentKey="powerChordsCheckbox" inherits="MusicianOptionsSmallCheckButtonTemplate" >
 				<Anchors>
 					<Anchor point="TOPLEFT" x="16" y="0" relativeTo="$parentInstrument" relativePoint="BOTTOMLEFT" />
 				</Anchors>
@@ -199,12 +199,6 @@
 						self.tooltipText = Musician.Msg.POWER_CHORDS
 					</OnLoad>
 				</Scripts>
-				<Size>
-					<AbsDimension x="16" y="16"/>
-				</Size>
-				<HitRectInsets>
-					<AbsInset left="0" right="0" top="0" bottom="0"/>
-				</HitRectInsets>
 			</CheckButton>
 		</Frames>
 
