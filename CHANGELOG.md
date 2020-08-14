@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.6.0.6
+--------
+* Fixed checkboxes in WoW Classic #49
+
 v1.6.0.5
 --------
 * Fixed notes position in over shoulder camera #48
