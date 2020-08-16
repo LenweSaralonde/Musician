@@ -26,14 +26,15 @@ function Musician.ElvUI:OnEnable()
 		local E, L, V, P, G = unpack(ElvUI) --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 		local NP = E:GetModule("NamePlates")
 
-		if NP.StyleFilterUpdate == nil or NP.SetupTarget == ni then
+		if NP.Update_Tags == nil or NP.SetupTarget == nil or NP.StyleFilterUpdate == nil then
 			Musician.Utils.Debug(MODULE_NAME, "Could not hook ElvUI functions.")
 			return
 		end
 
 		-- Add musical note icon next to player name
-		hooksecurefunc(NP, "Update_Name", updateEvlUI_Nameplate)
+		hooksecurefunc(NP, "Update_Tags", updateEvlUI_Nameplate)
 		hooksecurefunc(NP, "SetupTarget", updateEvlUI_Nameplate)
+		hooksecurefunc(NP, "StyleFilterUpdate", updateEvlUI_Nameplate)
 
 		-- Update nameplate when player is registered
 		Musician.ElvUI:RegisterMessage(Musician.Registry.event.playerRegistered, function(event, player)
@@ -45,6 +46,8 @@ function Musician.ElvUI:OnEnable()
 			if not(ElvNamePlate) then return end
 			Musician.NamePlates.AddNoteIcon(namePlate, ElvNamePlate.Name)
 		end)
+
+		Musician.Utils.Debug(MODULE_NAME, "ElvUI module initialized.")
 	end
 end
 
