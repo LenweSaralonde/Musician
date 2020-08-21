@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.6.0.7
+--------
+* Fixed nameplate icons with ElvUI #51
+
 v1.6.0.6
 --------
 * Fixed checkboxes in WoW Classic #49
