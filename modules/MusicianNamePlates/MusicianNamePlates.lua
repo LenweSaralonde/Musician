@@ -71,6 +71,9 @@ function Musician.NamePlates:OnEnable()
 	-- Name updated
 	hooksecurefunc("CompactUnitFrame_UpdateName", Musician.NamePlates.OnUnitFrameUpdate)
 
+	-- Player target changed
+	hooksecurefunc("CompactUnitFrame_UpdateWidgetsOnlyMode", Musician.NamePlates.OnUnitFrameUpdate)
+
 	-- Player registered
 	Musician.NamePlates:RegisterMessage(Musician.Registry.event.playerRegistered, Musician.NamePlates.OnPlayerRegistered)
 
