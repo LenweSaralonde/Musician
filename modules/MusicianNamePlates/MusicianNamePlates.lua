@@ -176,7 +176,7 @@ local function addNote(animatedNotesFrame, song, track, key)
 
 	-- Set initial data
 	local _, instrument = Musician.Sampler.GetSoundFile(track.instrument, key)
-	local orientation = GetRandomArgument(1, -1)
+	local orientation = Musician.Utils.GetRandomArgument(1, -1)
 	local x, y, isPercussion
 
 	-- Not a percussion
@@ -196,13 +196,13 @@ local function addNote(animatedNotesFrame, song, track, key)
 		x = (key - minKey) / (maxKey - minKey) - .5
 		y = 0
 		isPercussion = false
-		noteSymbold = GetRandomArgument(2, 3)
+		noteSymbold = Musician.Utils.GetRandomArgument(2, 3)
 	else
 		-- Position is random for percussions
 		x = random() - .5
 		y = random() * .66
 		isPercussion = true
-		noteSymbold = GetRandomArgument(1, 4)
+		noteSymbold = Musician.Utils.GetRandomArgument(1, 4)
 	end
 
 	-- Get a released note frame or create a new one

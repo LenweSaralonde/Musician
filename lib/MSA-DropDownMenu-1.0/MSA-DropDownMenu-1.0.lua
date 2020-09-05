@@ -142,8 +142,6 @@ local function CreateDropDownMenuButton(name, parent)
                 GameTooltip:AddLine(parent.tooltipTitle, 1.0, 1.0, 1.0);
                 GameTooltip:AddLine(parent.tooltipText, nil, nil, nil, true);
                 GameTooltip:Show();
-            else
-                GameTooltip_AddNewbieTip(parent, parent.tooltipTitle, 1.0, 1.0, 1.0, parent.tooltipText, 1);
             end
         end
     end)
@@ -173,8 +171,6 @@ local function CreateDropDownMenuButton(name, parent)
                 GameTooltip:AddLine(self.tooltipTitle, 1.0, 1.0, 1.0);
                 GameTooltip:AddLine(self.tooltipText, nil, nil, nil, true);
                 GameTooltip:Show();
-            else
-                GameTooltip_AddNewbieTip(self, self.tooltipTitle, 1.0, 1.0, 1.0, self.tooltipText, 1);
             end
         end
     end)

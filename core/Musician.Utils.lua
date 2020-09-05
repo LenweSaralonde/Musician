@@ -817,3 +817,9 @@ function Musician.Utils.ForEach(list, func)
 		func(value, key, list)
 	end
 end
+
+--- Randomly returns one of the provided arguments
+--
+function Musician.Utils.GetRandomArgument(...)
+	return (select(random(select("#", ...)), ...));
+end
