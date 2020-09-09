@@ -1,7 +1,7 @@
 ## Interface: 80300
 ## Title: Musician
 ## Author: LenweSaralonde
-## Version: 1.6.0.7
+## Version: 1.6.0.8
 ## Notes: Listen to and perform music with your character
 ## SavedVariables: Musician_Settings
 

@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.6.0.8
+--------
+* Fixed preloading progression in tooltip #54
+
 v1.6.0.7
 --------
 * Fixed nameplate icons with ElvUI #51
