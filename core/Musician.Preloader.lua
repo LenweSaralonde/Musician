@@ -230,7 +230,7 @@ end
 -- @return (number)
 function Musician.Preloader.GetProgress()
 	if preloaded then return 1 end
-	if totalSamples then return 0 end
+	if totalSamples == 0 then return 0 end
 	return preloadedSamples / totalSamples
 end
 
