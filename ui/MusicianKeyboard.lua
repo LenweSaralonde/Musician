@@ -548,7 +548,7 @@ end
 local function updateLiveModeButton()
 	local button = MusicianKeyboardLiveModeButton
 
-	if Musician.Live.IsEnabled() and Musician.Live.CanStream() then
+	if Musician.Live.IsLiveEnabled() and Musician.Live.CanStream() then
 		button.icon:SetText(ICON.SOLO_MODE)
 		button:SetText(Musician.Msg.SOLO_MODE)
 		button.tooltipText = Musician.Msg.ENABLE_SOLO_MODE
@@ -558,7 +558,7 @@ local function updateLiveModeButton()
 		button.tooltipText = Musician.Msg.ENABLE_LIVE_MODE
 	end
 
-	if Musician.Live.IsEnabled() and Musician.Live.CanStream() then
+	if Musician.Live.IsLiveEnabled() and Musician.Live.CanStream() then
 		MusicianKeyboardTitle:SetText(Musician.Msg.PLAY_LIVE)
 		MusicianKeyboardTitleIcon:SetText(ICON.LIVE_MODE)
 	else
@@ -580,7 +580,7 @@ local function initLiveModeButton()
 	local button = MusicianKeyboardLiveModeButton
 
 	button:SetScript("OnClick", function()
-		Musician.Live.Enable(not(Musician.Live.IsEnabled()))
+		Musician.Live.EnableLive(not(Musician.Live.IsLiveEnabled()))
 		PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
 	end)
 
