@@ -1,9 +1,13 @@
 Changelog
 =========
 
+v1.6.0.9
+--------
+* Fixed API conflicts with AceAddon #53
+
 v1.6.0.8
 --------
-* Fixed preloading progression in tooltip #54
+* Fixed preloading progression in tooltip #52
 
 v1.6.0.7
 --------
