@@ -175,14 +175,14 @@ end
 
 --- Enable or disable live mode
 -- @param enabled (boolean)
-function Musician.Live.Enable(enabled)
+function Musician.Live.EnableLive(enabled)
 	isLiveEnabled = enabled
 	liveModeStatusChanged()
 end
 
 --- Indicate whenever the live mode is enabled
 -- @return isLiveEnabled (boolean)
-function Musician.Live.IsEnabled()
+function Musician.Live.IsLiveEnabled()
 	return isLiveEnabled
 end
 
@@ -266,7 +266,7 @@ end
 function Musician.Live.InsertNote(noteOn, key, layer, instrument)
 
 	-- Do nothing if live mode is not enabled or can't stream
-	if not(Musician.Live.CanStream()) or not(Musician.Live.IsEnabled()) then
+	if not(Musician.Live.CanStream()) or not(Musician.Live.IsLiveEnabled()) then
 		return
 	end
 
@@ -290,7 +290,7 @@ function Musician.Live.InsertNote(noteOn, key, layer, instrument)
 	Musician.streamingSong.duration = noteTime + STREAM_PADDING
 
 	-- Send visual note event
-	if not(Musician.Live.IsBandSyncMode() and Musician.Live.IsEnabled()) then
+	if not(Musician.Live.IsBandSyncMode() and Musician.Live.IsLiveEnabled()) then
 		if noteOn then
 			Musician.Live:SendMessage(Musician.Events.VisualNoteOn, Musician.streamingSong, track, key)
 		else
@@ -351,7 +351,7 @@ function Musician.Live.NoteOn(key, layer, instrument, isChordNote, source)
 
 	-- Play note
 	local handle = 0
-	if not(Musician.Live.IsBandSyncMode() and Musician.Live.IsEnabled()) then
+	if not(Musician.Live.IsBandSyncMode() and Musician.Live.IsLiveEnabled()) then
 		handle = Musician.Sampler.PlayNote(instrumentData, key)
 	end
 
@@ -423,7 +423,7 @@ end
 -- @param layer (int)
 -- @param instrument (int)
 function Musician.Live.BandNote(noteOn, key, layer, instrument)
-	if not(Musician.Live.IsBandSyncMode() and Musician.Live.IsEnabled()) then return end
+	if not(Musician.Live.IsBandSyncMode() and Musician.Live.IsLiveEnabled()) then return end
 
 	-- Key is out of range
 	if key < Musician.MIN_KEY or key > Musician.MAX_KEY then return end
