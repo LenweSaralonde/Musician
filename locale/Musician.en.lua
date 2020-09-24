@@ -93,7 +93,7 @@ msg.PLAYER_TOOLTIP_PRELOADING = "Preloading sounds… ({progress})"
 
 msg.PLAYER_COUNT_ONLINE = "There are {count} other music fans around!"
 msg.PLAYER_COUNT_ONLINE_ONE = "There is another music fan around!"
-msg.PLAYER_COUNT_ONLINE_NONE = "There is no other music fan around yet."
+msg.PLAYER_COUNT_ONLINE_NONE = "There are no other music fans around yet."
 
 msg.INVALID_MUSIC_CODE = "Invalid music code."
 
