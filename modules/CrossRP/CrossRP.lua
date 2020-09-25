@@ -173,6 +173,7 @@ function Musician.CrossRP.Init()
 		if Musician.Utils.PlayerIsInGroup(player) then
 			local simplePlayerName = Musician.Utils.SimplePlayerName(player)
 			local faction = Musician.CrossRP.GetFactionId(UnitFactionGroup(simplePlayerName))
+			if not(faction) then return end
 			local source = CrossRP.Proto.DestFromFullname(player, faction)
 			local guid = UnitGUID(simplePlayerName)
 			Musician.CrossRP.RegisterPlayerFromSource(source, guid)
@@ -259,6 +260,7 @@ end
 -- @param faction (string) (Horde, Alliance or Neutral)
 -- @return (string) (H, A or N)
 function Musician.CrossRP.GetFactionId(faction)
+	if not(faction) then return nil end
 	return string.sub(faction, 1, 1)
 end
 
@@ -281,12 +283,10 @@ end
 -- @param unit (string)
 -- @return (string)
 function Musician.CrossRP.GetUnitDestination(unit)
-	if not(UnitIsPlayer(unit)) then
-		return nil
-	end
-
+	if not(UnitIsPlayer(unit)) then return nil end
 	local player = GetUnitName(unit, true)
 	local faction = Musician.CrossRP.GetFactionId(UnitFactionGroup(unit))
+	if not(faction) then return nil end
 	return CrossRP.Proto.DestFromFullname(player, faction)
 end
 
