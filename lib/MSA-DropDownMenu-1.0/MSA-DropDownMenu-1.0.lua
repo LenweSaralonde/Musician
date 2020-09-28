@@ -1225,8 +1225,8 @@ function MSA_ToggleDropDownMenu(level, value, dropDownFrame, anchorName, xOffset
         -- Set the dropdownframe scale
         local uiScale;
         local uiParentScale = UIParent:GetScale();
-        if ( GetCVar("useUIScale") == "1" ) then
-            uiScale = tonumber(GetCVar("uiscale"));
+        if ( C_CVar.GetCVar("useUIScale") == "1" ) then
+            uiScale = tonumber(C_CVar.GetCVar("uiscale"));
             if ( uiParentScale < uiScale ) then
                 uiScale = uiParentScale;
             end

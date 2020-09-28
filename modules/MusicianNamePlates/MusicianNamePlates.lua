@@ -252,7 +252,7 @@ function Musician.NamePlates.OnNamePlateNotesFrameUpdate(animatedNotesFrame, ela
 
 		-- Get current zoom level
 		local cameraZoom = GetCameraZoom()
-		local cameraOffset = GetCVar("test_cameraOverShoulder")
+		local cameraOffset = C_CVar.GetCVar("test_cameraOverShoulder")
 
 		-- Zoom level changed
 		if animatedNotesFrame.zoomTo ~= cameraZoom or animatedNotesFrame.cameraOffset ~= cameraOffset then
