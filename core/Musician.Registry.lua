@@ -54,7 +54,7 @@ function Musician.Registry.Init()
 			local _, unitType = GameTooltip:GetUnit()
 			if UnitIsPlayer(unitType) then
 				local player = Musician.Utils.NormalizePlayerName(GetUnitName(unitType, true))
-				Musician.Registry.UpdateTooltipInfo(GameTooltip, player, 10)
+				Musician.Registry.UpdateTooltipInfo(GameTooltip, player)
 			end
 		end)
 
@@ -332,7 +332,7 @@ end
 --- Update missing Musician client version in tooltip, if applicable.
 -- @param tooltip (table)
 -- @param player (string)
--- @param fontSize (int)
+-- @param[opt=nil] fontSize (int)
 function Musician.Registry.UpdateTooltipInfo(tooltip, player, fontSize)
 
 	-- Reposition line if it's not in the last position
@@ -373,9 +373,11 @@ function Musician.Registry.UpdateTooltipInfo(tooltip, player, fontSize)
 
 	-- No existing text was not found: add it
 	tooltip:AddDoubleLine(" ", infoText, 1, 1, 1, 1, 1, 1)
-	local line = _G[strconcat(tooltip:GetName(), "TextRight", tooltip:NumLines())]
-	local font, _ , flag = line:GetFont()
-	line:SetFont(font, fontSize, flag)
+	if fontSize ~= nil then
+		local line = _G[strconcat(tooltip:GetName(), "TextRight", tooltip:NumLines())]
+		local font, _ , flag = line:GetFont()
+		line:SetFont(font, fontSize, flag)
+	end
 	tooltip:Show()
 	tooltip:GetTop()
 end
@@ -387,7 +389,7 @@ function Musician.Registry.UpdatePlayerTooltip(player)
 	if not(UnitIsPlayer(unitType)) then return end
 	local tooltipPlayer = Musician.Utils.NormalizePlayerName(GetUnitName(unitType, true))
 	if tooltipPlayer == player then
-		Musician.Registry.UpdateTooltipInfo(GameTooltip, player, 10)
+		Musician.Registry.UpdateTooltipInfo(GameTooltip, player)
 	end
 end
 
