@@ -1,10 +1,10 @@
 --- MSA-DropDownMenu-1.0 - DropDown menu for non-Blizzard addons
---- Copyright (c) 2016-2019, Marouan Sabbagh <mar.sabbagh@gmail.com>
+--- Copyright (c) 2016-2020, Marouan Sabbagh <mar.sabbagh@gmail.com>
 --- All Rights Reserved.
 ---
 --- https://www.curseforge.com/wow/addons/msa-dropdownmenu-10
 
-local name, version = "MSA-DropDownMenu-1.0", 8.5 -- Workaround until the official 1.0.9 is released by the author
+local name, version = "MSA-DropDownMenu-1.0", 9
 
 local lib = LibStub:NewLibrary(name, version)
 if not lib then return end
@@ -142,6 +142,8 @@ local function CreateDropDownMenuButton(name, parent)
                 GameTooltip:AddLine(parent.tooltipTitle, 1.0, 1.0, 1.0);
                 GameTooltip:AddLine(parent.tooltipText, nil, nil, nil, true);
                 GameTooltip:Show();
+            else
+                GameTooltip_AddNewbieTip(parent, parent.tooltipTitle, 1.0, 1.0, 1.0, parent.tooltipText, 1);
             end
         end
     end)
@@ -171,6 +173,8 @@ local function CreateDropDownMenuButton(name, parent)
                 GameTooltip:AddLine(self.tooltipTitle, 1.0, 1.0, 1.0);
                 GameTooltip:AddLine(self.tooltipText, nil, nil, nil, true);
                 GameTooltip:Show();
+            else
+                GameTooltip_AddNewbieTip(self, self.tooltipTitle, 1.0, 1.0, 1.0, self.tooltipText, 1);
             end
         end
     end)
@@ -1225,8 +1229,8 @@ function MSA_ToggleDropDownMenu(level, value, dropDownFrame, anchorName, xOffset
         -- Set the dropdownframe scale
         local uiScale;
         local uiParentScale = UIParent:GetScale();
-        if ( C_CVar.GetCVar("useUIScale") == "1" ) then
-            uiScale = tonumber(C_CVar.GetCVar("uiscale"));
+        if ( GetCVar("useUIScale") == "1" ) then
+            uiScale = tonumber(GetCVar("uiscale"));
             if ( uiParentScale < uiScale ) then
                 uiScale = uiParentScale;
             end
