@@ -612,10 +612,25 @@ function Musician.SetupHooks()
 	end)
 
 	-- Add muted/unmuted status to player messages when playing
-	-- Add stop button to "Player plays music" emote
+	local HookedGetPlayerLink = GetPlayerLink
+	GetPlayerLink = function(...)
+		local link = HookedGetPlayerLink(...)
 
-	CHAT_FLAG_MUSICIAN_MUTED = Musician.Utils.GetChatIcon(Musician.IconImages.NoteDisabled)
-	CHAT_FLAG_MUSICIAN_UNMUTED = Musician.Utils.GetChatIcon(Musician.IconImages.Note)
+		local playerName = ...
+		local fullPlayerName = Musician.Utils.NormalizePlayerName(playerName)
+
+		if Musician.songs[fullPlayerName] ~= nil and Musician.songs[fullPlayerName]:IsPlaying() then
+			if Musician.PlayerIsMuted(fullPlayerName) then
+				link = Musician.Utils.GetChatIcon(Musician.IconImages.NoteDisabled) .. link
+			else
+				link = Musician.Utils.GetChatIcon(Musician.IconImages.Note) .. link
+			end
+		end
+
+		return link
+	end
+
+	-- Add stop button to "Player plays music" emote
 
 	local messageEventFilter = function(self, event, msg, player, languageName, channelName, playerName2, pflag, ...)
 
@@ -674,25 +689,6 @@ function Musician.SetupHooks()
 				end
 
 				isPromoEmoteSuccessful = false
-			end
-		end
-
-		-- Add muted/unmuted flag if currently playing music
-		if Musician.songs[fullPlayerName] ~= nil and Musician.songs[fullPlayerName]:IsPlaying() then
-			if pflag and _G["CHAT_FLAG_" .. pflag] then
-				if Musician.PlayerIsMuted(fullPlayerName) then
-					_G["CHAT_FLAG_" .. pflag .. "_MUSICIAN_MUTED"] = _G["CHAT_FLAG_" .. pflag] .. CHAT_FLAG_MUSICIAN_MUTED
-					pflag = pflag .. "_MUSICIAN_MUTED"
-				else
-					_G["CHAT_FLAG_" .. pflag .. "_MUSICIAN_UNMUTED"] = _G["CHAT_FLAG_" .. pflag] .. CHAT_FLAG_MUSICIAN_UNMUTED
-					pflag = pflag .. "_MUSICIAN_UNMUTED"
-				end
-			else
-				if Musician.PlayerIsMuted(fullPlayerName) then
-					pflag = "MUSICIAN_MUTED"
-				else
-					pflag = "MUSICIAN_UNMUTED"
-				end
 			end
 		end
 

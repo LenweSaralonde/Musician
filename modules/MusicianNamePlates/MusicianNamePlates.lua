@@ -71,6 +71,9 @@ function Musician.NamePlates:OnEnable()
 	-- Name updated
 	hooksecurefunc("CompactUnitFrame_UpdateName", Musician.NamePlates.OnUnitFrameUpdate)
 
+	-- Player target changed
+	hooksecurefunc("CompactUnitFrame_UpdateWidgetsOnlyMode", Musician.NamePlates.OnUnitFrameUpdate)
+
 	-- Player registered
 	Musician.NamePlates:RegisterMessage(Musician.Registry.event.playerRegistered, Musician.NamePlates.OnPlayerRegistered)
 
@@ -176,7 +179,7 @@ local function addNote(animatedNotesFrame, song, track, key)
 
 	-- Set initial data
 	local _, instrument = Musician.Sampler.GetSoundFile(track.instrument, key)
-	local orientation = GetRandomArgument(1, -1)
+	local orientation = Musician.Utils.GetRandomArgument(1, -1)
 	local x, y, isPercussion
 
 	-- Not a percussion
@@ -196,13 +199,13 @@ local function addNote(animatedNotesFrame, song, track, key)
 		x = (key - minKey) / (maxKey - minKey) - .5
 		y = 0
 		isPercussion = false
-		noteSymbold = GetRandomArgument(2, 3)
+		noteSymbold = Musician.Utils.GetRandomArgument(2, 3)
 	else
 		-- Position is random for percussions
 		x = random() - .5
 		y = random() * .66
 		isPercussion = true
-		noteSymbold = GetRandomArgument(1, 4)
+		noteSymbold = Musician.Utils.GetRandomArgument(1, 4)
 	end
 
 	-- Get a released note frame or create a new one
@@ -249,7 +252,7 @@ function Musician.NamePlates.OnNamePlateNotesFrameUpdate(animatedNotesFrame, ela
 
 		-- Get current zoom level
 		local cameraZoom = GetCameraZoom()
-		local cameraOffset = GetCVar("test_cameraOverShoulder")
+		local cameraOffset = C_CVar.GetCVar("test_cameraOverShoulder")
 
 		-- Zoom level changed
 		if animatedNotesFrame.zoomTo ~= cameraZoom or animatedNotesFrame.cameraOffset ~= cameraOffset then

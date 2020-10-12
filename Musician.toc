@@ -1,4 +1,4 @@
-## Interface: 80300
+## Interface: 90001
 ## Title: Musician
 ## Author: LenweSaralonde
 ## Version: 1.6.0.9

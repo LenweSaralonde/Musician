@@ -345,7 +345,7 @@ end
 function Musician.Utils.MuteGameMusic(force)
 	local mute
 
-	if GetCVar("Sound_EnableMusic") ~= "0" then
+	if C_CVar.GetCVar("Sound_EnableMusic") ~= "0" then
 		mute = (Musician.Utils.SongIsPlaying() or Musician.Live.IsPlayingLive()) and not(Musician.Sampler.GetMuted())
 	else
 		mute = false
@@ -816,4 +816,10 @@ function Musician.Utils.ForEach(list, func)
 	for key, value in pairs(listCopy) do
 		func(value, key, list)
 	end
+end
+
+--- Randomly returns one of the provided arguments
+--
+function Musician.Utils.GetRandomArgument(...)
+	return (select(random(select("#", ...)), ...));
 end
