@@ -18,7 +18,7 @@
 
 	<!-- Dialog Window -->
 
-	<Frame name="MusicianDialogTemplate" parent="UIParent" toplevel="true" enableMouse="true" setAllPoints="true" movable="true" hidden="true" clampedtoscreen="true" frameStrata="DIALOG" virtual="true">
+	<Frame name="MusicianDialogTemplateNoAnchor" parent="UIParent" toplevel="true" enableMouse="true" movable="true" hidden="true" clampedtoscreen="true" frameStrata="DIALOG" virtual="true">
 
 		<Scripts>
 			<OnLoad>self:RegisterForDrag("LeftButton")</OnLoad>
@@ -39,10 +39,6 @@
 				PlaySound(SOUNDKIT.IG_QUEST_LIST_CLOSE)
 			</OnHide>
 		</Scripts>
-
-		<Anchors>
-			<Anchor point="CENTER" x="0" y="0" />
-		</Anchors>
 
 		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
 			<BackgroundInsets>
@@ -65,6 +61,12 @@
 				</Anchors>
 			</Button>
 		</Frames>
+	</Frame>
+
+	<Frame name="MusicianDialogTemplate" inherits="MusicianDialogTemplateNoAnchor" virtual="true">
+		<Anchors>
+			<Anchor point="CENTER" x="0" y="0" />
+		</Anchors>
 	</Frame>
 
 	<!-- Basic message dialog -->
