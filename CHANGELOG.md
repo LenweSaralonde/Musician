@@ -1,6 +1,14 @@
 Changelog
 =========
 
+v1.6.1.0
+--------
+* Updated for WoW Shadowlands 9.0.1 prepatch
+* Set default window position to the right
+* Fixed altered GameTooltip font size
+* Fixed rare LUA error in CrossRP module #55
+* Misc improvements
+
 v1.6.0.9
 --------
 * Fixed API conflicts with AceAddon #53
