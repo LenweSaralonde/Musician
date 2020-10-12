@@ -1,6 +1,12 @@
 Changelog
 =========
 
+v1.6.1.0
+--------
+* Set default window position to the right
+* Fixed altered GameTooltip font size
+* Misc improvements
+
 v1.6.0.9
 --------
 * Fixed API conflicts with AceAddon #53
