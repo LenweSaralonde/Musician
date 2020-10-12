@@ -1,7 +1,11 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
-	<Frame name="MusicianFrame" inherits="MusicianDialogTemplate">
+	<Frame name="MusicianFrame" inherits="MusicianDialogTemplateNoAnchor">
 
 		<Size x="320" y="160" />
+
+		<Anchors>
+			<Anchor point="RIGHT" x="0" y="93" />
+		</Anchors>
 
 		<Layers>
 			<Layer level="BACKGROUND">

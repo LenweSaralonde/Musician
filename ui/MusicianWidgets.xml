@@ -18,7 +18,7 @@
 
 	<!-- Dialog Window -->
 
-	<Frame name="MusicianDialogTemplate" parent="UIParent" toplevel="true" enableMouse="true" movable="true" hidden="true" clampedtoscreen="true" frameStrata="DIALOG" virtual="true">
+	<Frame name="MusicianDialogTemplateNoAnchor" parent="UIParent" toplevel="true" enableMouse="true" movable="true" hidden="true" clampedtoscreen="true" frameStrata="DIALOG" virtual="true">
 		<Layers>
 			<Layer level="BACKGROUND">
 				<Texture parentKey="TopLeftCorner" atlas="UI-Frame-DiamondMetal-CornerTopLeft" useAtlasSize="true">
@@ -97,10 +97,6 @@
 			</OnHide>
 		</Scripts>
 
-		<Anchors>
-			<Anchor point="CENTER" x="0" y="0" />
-		</Anchors>
-
 		<Frames>
 			<Button name="$parentCloseButton" parentKey="close" inherits="UIPanelCloseButton">
 				<Anchors>
@@ -110,6 +106,12 @@
 				</Anchors>
 			</Button>
 		</Frames>
+	</Frame>
+
+	<Frame name="MusicianDialogTemplate" inherits="MusicianDialogTemplateNoAnchor" virtual="true">
+		<Anchors>
+			<Anchor point="CENTER" x="0" y="0" />
+		</Anchors>
 	</Frame>
 
 	<!-- Basic message dialog -->
