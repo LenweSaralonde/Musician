@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.6.1.1
+--------
+* Fixed minor menu glitch that may occur with outdated add-ons
+
 v1.6.1.0
 --------
 * Updated for WoW Shadowlands 9.0.1 prepatch
