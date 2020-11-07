@@ -43,6 +43,7 @@ local BASE64DECODE_PROGRESSION_RATIO = .75
 
 local IMPORT_CONVERT_RATE = 70 -- Number of base64 chunks to be converted in 1 ms
 local IMPORT_NOTE_RATE = 36 -- Number of notes to be imported in 1 ms
+local EXPORT_NOTE_RATE = 36 -- Number of notes to be exported in 1 ms
 
 local playingSongs = {}
 local playingSongCount = 0
@@ -101,7 +102,7 @@ function Musician.Song.create()
 	-- @field tracks (table) Song tracks, including instrument and notes
 	self.tracks = {}
 
-	-- @field duration (float) Song duration in seconds
+	-- @field duration (int) Song duration in seconds
 	self.duration = 0
 
 	-- @field name (string) Song title
@@ -121,6 +122,9 @@ function Musician.Song.create()
 
 	-- @field importing (boolean) True when the song is being imported
 	self.importing = false
+
+	-- @field exporting (boolean) True when the song is being exported
+	self.exporting = false
 
 	-- @field chunkDuration (number) Duration of a streaming chunk, in seconds
 	self.chunkDuration = Musician.CHUNK_DURATION
@@ -808,6 +812,126 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 			onComplete(false)
 		end
 	end)
+end
+
+--- Export song to string
+-- @param onComplete (function) Called when the whole export process is complete. Data is provided when successful
+function Musician.Song:Export(onComplete)
+
+	if self.exporting then
+		error("The song is already exporting.")
+	end
+	self.exporting = true
+
+	local data = ''
+
+	-- Song header
+	-- ===========
+
+	-- Header (4)
+	data = data .. Musician.FILE_HEADER
+
+	-- Duration (3)
+	data = data .. Musician.Utils.PackNumber(self.duration, 3)
+
+	-- Number of tracks (1)
+	data = data .. Musician.Utils.PackNumber(#Musician.sourceSong.tracks, 1)
+
+	-- Tracks
+	-- ======
+
+	local track
+	local noteCount = 0
+	for _, track in pairs(self.tracks) do
+		-- Instrument (1)
+		data = data .. Musician.Utils.PackNumber(track.instrument, 1)
+
+		-- Channel (1)
+		data = data .. Musician.Utils.PackNumber(track.channel, 1)
+
+		-- Note count (2)
+		data = data .. Musician.Utils.PackNumber(#track.notes, 2)
+		noteCount = noteCount + #track.notes
+	end
+
+	-- Notes
+	-- =====
+
+	local exportedNotes = 0
+	local trackOffset = 0
+	local trackIndex = 1
+	local noteIndex = 1
+	local offset = 0
+	local noteExportingWorker
+
+	-- Export notes in a worker
+	noteExportingWorker = function()
+		-- Exporting process has been canceled
+		if not(self.exporting) then
+			Musician.Worker.Remove(noteExportingWorker)
+			return
+		end
+
+		-- Export some notes
+		local stopOnNoteCount = min(exportedNotes + EXPORT_NOTE_RATE, noteCount)
+		while exportedNotes < stopOnNoteCount do
+			local track = self.tracks[trackIndex]
+			local note = track.notes[noteIndex]
+
+			-- No more note in this track: skip to next track
+			if note == nil then
+				trackIndex = trackIndex + 1
+				noteIndex = 1
+				offset = 0
+			else
+				local noteTime = note[NOTE.TIME] - offset
+
+				-- Insert note spacers if needed
+				local noteSpacer = ''
+				while noteTime > Musician.MAX_NOTE_TIME do
+					noteSpacer = noteSpacer .. Musician.Utils.PackNumber(0xFF, 1)
+					noteTime = noteTime - Musician.MAX_NOTE_TIME
+					offset = offset + Musician.MAX_NOTE_TIME
+				end
+				data = data .. noteSpacer
+
+				-- Key (1)
+				data = data .. Musician.Utils.PackNumber(note[NOTE.KEY], 1)
+
+				-- Time (2)
+				data = data .. Musician.Utils.PackTime(noteTime, 2, Musician.NOTE_TIME_FPS)
+
+				-- Duration (1)
+				data = data .. Musician.Utils.PackTime(note[NOTE.DURATION], 1, Musician.NOTE_DURATION_FPS)
+
+				-- Proceed with next note
+				exportedNotes = exportedNotes + 1
+				noteIndex = noteIndex + 1
+			end
+		end
+
+		-- All notes have been exported
+		if exportedNotes == noteCount then
+			Musician.Worker.Remove(noteExportingWorker)
+
+			-- Metadata
+			-- ========
+
+			-- Song title (2) + (title length in bytes)
+			data = data .. Musician.Utils.PackNumber(#self.name, 2) .. self.name
+
+			-- Track names (2) + (title length in bytes)
+			for _, track in pairs(self.tracks) do
+				data = data .. Musician.Utils.PackNumber(#track.name, 2) .. track.name
+			end
+
+			self.exporting = false
+
+			onComplete(data)
+		end
+	end
+
+	Musician.Worker.Set(noteExportingWorker)
 end
 
 --- Cancel current import
