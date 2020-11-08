@@ -39,14 +39,8 @@ local CHUNK = Musician.Song.Indexes.CHUNK
 Musician.Song.MODE_DURATION = 0x10 -- Duration are set in chunk notes
 Musician.Song.MODE_LIVE = 0x20 -- No duration in chunk notes
 
--- Track options
-Musician.Song.TRACK_OPTION_HAS_INSTRUMENT = 0x1
-Musician.Song.TRACK_OPTION_MUTED = 0x2
-Musician.Song.TRACK_OPTION_SOLO = 0x4
-
 local CHUNK_VERSION = 0x01 -- Max: 0x0F (15)
 local BASE64DECODE_PROGRESSION_RATIO = .75
-local COMPRESS_PROGRESSION_RATIO = .5
 local UNCOMPRESS_PROGRESSION_RATIO = .33
 local DEFLATE_CHUNK_SIZE = 2048
 
@@ -921,8 +915,8 @@ end
 -- @param onComplete (function) Called when the whole export process is complete. Data is provided when successful
 function Musician.Song:Export(onComplete)
 
-	if self.exporting then
-		error("The song is already exporting.")
+	if self.importing or self.exporting then
+		error("The song is already importing or exporting.")
 	end
 	self.exporting = true
 
@@ -1035,6 +1029,43 @@ function Musician.Song:Export(onComplete)
 	end
 
 	Musician.Worker.Set(noteExportingWorker)
+end
+
+--- Export song to compressed string
+-- @param onComplete (function) Called when the whole export process is complete. Data is provided when successful
+function Musician.Song:ExportCompressed(onComplete)
+	self:Export(function(data)
+		self.exporting = true
+		local readBytes = Musician.Utils.GetByteReader(data)
+		local bytesToRead = #data
+		local compressedData = ''
+
+		-- Compress exported data using worker
+		local compressChunkWorker
+		compressChunkWorker = function()
+			-- Exporting process has been cancelled
+			if not(self.exporting) then
+				Musician.Worker.Remove(compressChunkWorker)
+				return
+			end
+
+			-- Exporting process is complete
+			if bytesToRead == 0 then
+				Musician.Worker.Remove(compressChunkWorker)
+				self.exporting = false
+				onComplete(compressedData)
+				return
+			end
+
+			-- Compress chunk
+			local chunkSize = min(DEFLATE_CHUNK_SIZE, bytesToRead)
+			local chunk = readBytes(chunkSize)
+			local compressedChunk = LibDeflate:CompressDeflate(chunk, { level = 9 })
+			bytesToRead = bytesToRead - chunkSize
+			compressedData = compressedData .. Musician.Utils.PackNumber(#compressedChunk, 2) .. compressedChunk
+		end
+		Musician.Worker.Set(compressChunkWorker)
+	end)
 end
 
 --- Cancel current import
