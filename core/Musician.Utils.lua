@@ -199,13 +199,12 @@ function Musician.Utils.PackNumber(num, bytes)
 	local m = num
 	local b
 	local packed = ''
-	local i = 0
+	local i
 
-	while m > 0 or i < bytes do
+	for i = 1, bytes do
 		b = m % 256
 		m = (m - b) / 256
 		packed = string.char(b) .. packed
-		i = i + 1
 	end
 
 	return string.sub(packed, -bytes)
@@ -217,9 +216,9 @@ end
 function Musician.Utils.UnpackNumber(data)
 	local num = 0
 
-	while string.len(data) > 0 do
-		num = num * 256 + string.byte(string.sub(data, 1, 1))
-		data = string.sub(data, 2)
+	local i
+	for i = 1, #data do
+		num = num * 256 + string.byte(data:sub(i, i))
 	end
 
 	return num

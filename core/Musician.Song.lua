@@ -933,14 +933,16 @@ function Musician.Song:Export(onComplete)
 		end
 
 		-- Export some notes
+		local track = self.tracks[trackIndex]
+		local notesData = ''
 		local stopOnNoteCount = min(exportedNotes + EXPORT_NOTE_RATE, noteCount)
 		while exportedNotes < stopOnNoteCount do
-			local track = self.tracks[trackIndex]
 			local note = track.notes[noteIndex]
 
 			-- No more note in this track: skip to next track
 			if note == nil then
 				trackIndex = trackIndex + 1
+				track = self.tracks[trackIndex]
 				noteIndex = 1
 				offset = 0
 			else
@@ -953,22 +955,23 @@ function Musician.Song:Export(onComplete)
 					noteTime = noteTime - Musician.MAX_NOTE_TIME
 					offset = offset + Musician.MAX_NOTE_TIME
 				end
-				data = data .. noteSpacer
+				notesData = notesData .. noteSpacer
 
 				-- Key (1)
-				data = data .. Musician.Utils.PackNumber(note[NOTE.KEY], 1)
+				notesData = notesData .. Musician.Utils.PackNumber(note[NOTE.KEY], 1)
 
 				-- Time (2)
-				data = data .. Musician.Utils.PackTime(noteTime, 2, Musician.NOTE_TIME_FPS)
+				notesData = notesData .. Musician.Utils.PackTime(noteTime, 2, Musician.NOTE_TIME_FPS)
 
 				-- Duration (1)
-				data = data .. Musician.Utils.PackTime(note[NOTE.DURATION], 1, Musician.NOTE_DURATION_FPS)
+				notesData = notesData .. Musician.Utils.PackTime(note[NOTE.DURATION], 1, Musician.NOTE_DURATION_FPS)
 
 				-- Proceed with next note
 				exportedNotes = exportedNotes + 1
 				noteIndex = noteIndex + 1
 			end
 		end
+		data = data .. notesData
 
 		-- All notes have been exported
 		if exportedNotes == noteCount then
