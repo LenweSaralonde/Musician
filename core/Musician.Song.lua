@@ -6,7 +6,8 @@ Musician.Song = LibStub("AceAddon-3.0"):NewAddon("Musician.Song", "AceEvent-3.0"
 local MODULE_NAME = "Song"
 Musician.AddModule(MODULE_NAME)
 
-LibCRC32 = LibStub:GetLibrary("LibCRC32")
+local LibCRC32 = LibStub:GetLibrary("LibCRC32")
+local LibDeflate = LibStub:GetLibrary("LibDeflate")
 
 Musician.Song.__index = Musician.Song
 
@@ -38,8 +39,9 @@ Musician.Song.MODE_DURATION = 0x10 -- Duration are set in chunk notes
 Musician.Song.MODE_LIVE = 0x20 -- No duration in chunk notes
 
 local CHUNK_VERSION = 0x01 -- Max: 0x0F (15)
-
 local BASE64DECODE_PROGRESSION_RATIO = .75
+local UNCOMPRESS_PROGRESSION_RATIO = .33
+local DEFLATE_CHUNK_SIZE = 2048
 
 local IMPORT_CONVERT_RATE = 70 -- Number of base64 chunks to be converted in 1 ms
 local IMPORT_NOTE_RATE = 36 -- Number of notes to be imported in 1 ms
@@ -541,8 +543,8 @@ end
 -- @param crop (boolean) Automatically crop song to first and last note
 -- @param[opt] onComplete (function) Called when the whole import process is complete. Argument is true when successful
 function Musician.Song:ImportFromBase64(base64data, crop, onComplete)
-	if self.importing then
-		error("The song is already importing.")
+	if self.importing or self.exporting then
+		error("The song is already importing or exporting.")
 	end
 	self.importing = true
 
@@ -558,6 +560,8 @@ function Musician.Song:ImportFromBase64(base64data, crop, onComplete)
 		-- Importing process has been canceled
 		if not(self.importing) then
 			Musician.Worker.Remove(base64DecodingWorker)
+			Musician.Song:SendMessage(Musician.Events.SongImportComplete, self)
+			Musician.Song:SendMessage(Musician.Events.SongImportFailed, self)
 			return
 		end
 
@@ -587,14 +591,68 @@ function Musician.Song:ImportFromBase64(base64data, crop, onComplete)
 	end)
 end
 
+--- Import song from a compressed string
+-- @param compressedData (string)
+-- @param crop (boolean) Automatically crop song to first and last note
+-- @param[opt] onComplete (function) Called when the whole import process is complete. Argument is true when successful
+function Musician.Song:ImportCompressed(compressedData, crop, onComplete)
+	if self.importing or self.exporting then
+		error("The song is already importing or exporting.")
+	end
+	self.importing = true
+
+	local cursor = 1
+	local uncompressedData = ''
+	local uncompressWorker
+
+	-- Uncompress string in a worker
+	uncompressWorker = function()
+		-- Importing process has been canceled
+		if not(self.importing) then
+			Musician.Worker.Remove(uncompressWorker)
+			Musician.Song:SendMessage(Musician.Events.SongImportComplete, self)
+			Musician.Song:SendMessage(Musician.Events.SongImportFailed, self)
+			return
+		end
+
+		-- Notify progression
+		local progression = min(1, cursor / #compressedData)
+		Musician.Song:SendMessage(Musician.Events.SongImportProgress, self, progression * UNCOMPRESS_PROGRESSION_RATIO)
+
+		-- Compressed chunk size (2)
+		local compressedChunkSize = Musician.Utils.UnpackNumber(string.sub(compressedData, cursor, cursor + 1))
+		cursor = cursor + 2
+
+		-- Uncompress chunk
+		local compressedChunk = string.sub(compressedData, cursor, cursor + compressedChunkSize - 1)
+		cursor = cursor + compressedChunkSize
+		uncompressedData = uncompressedData .. LibDeflate:DecompressDeflate(compressedChunk)
+
+		-- Uncompressing is complete: import data
+		if cursor >= #compressedData then
+			Musician.Song:SendMessage(Musician.Events.SongImportProgress, self, UNCOMPRESS_PROGRESSION_RATIO)
+			self.importing = false
+			Musician.Worker.Remove(uncompressWorker)
+			self:Import(uncompressedData, crop, UNCOMPRESS_PROGRESSION_RATIO, onComplete)
+			return
+		end
+	end
+	Musician.Worker.Set(uncompressWorker, function()
+		self:OnImportError()
+		if onComplete then
+			onComplete(false)
+		end
+	end)
+end
+
 --- Import song from string
 -- @param data (string)
 -- @param crop (boolean) Automatically crop song to first and last note
 -- @param[opt=0] previousProgression (number) Add previous progression (0-1)
 -- @param[opt] onComplete (function) Called when the whole import process is complete. Argument is true when successful
 function Musician.Song:Import(data, crop, previousProgression, onComplete)
-	if self.importing then
-		error("The song is already importing.")
+	if self.importing or self.exporting then
+		error("The song is already importing or exporting.")
 	end
 	self.importing = true
 
@@ -701,6 +759,8 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 		-- Importing process has been canceled
 		if not(self.importing) then
 			Musician.Worker.Remove(noteImportingWorker)
+			Musician.Song:SendMessage(Musician.Events.SongImportComplete, self)
+			Musician.Song:SendMessage(Musician.Events.SongImportFailed, self)
 			return
 		end
 
@@ -818,8 +878,8 @@ end
 -- @param onComplete (function) Called when the whole export process is complete. Data is provided when successful
 function Musician.Song:Export(onComplete)
 
-	if self.exporting then
-		error("The song is already exporting.")
+	if self.importing or self.exporting then
+		error("The song is already importing or exporting.")
 	end
 	self.exporting = true
 
@@ -934,10 +994,53 @@ function Musician.Song:Export(onComplete)
 	Musician.Worker.Set(noteExportingWorker)
 end
 
+--- Export song to compressed string
+-- @param onComplete (function) Called when the whole export process is complete. Data is provided when successful
+function Musician.Song:ExportCompressed(onComplete)
+	self:Export(function(data)
+		self.exporting = true
+		local readBytes = Musician.Utils.GetByteReader(data)
+		local bytesToRead = #data
+		local compressedData = ''
+
+		-- Compress exported data using worker
+		local compressChunkWorker
+		compressChunkWorker = function()
+			-- Exporting process has been cancelled
+			if not(self.exporting) then
+				Musician.Worker.Remove(compressChunkWorker)
+				return
+			end
+
+			-- Exporting process is complete
+			if bytesToRead == 0 then
+				Musician.Worker.Remove(compressChunkWorker)
+				self.exporting = false
+				onComplete(compressedData)
+				return
+			end
+
+			-- Compress chunk
+			local chunkSize = min(DEFLATE_CHUNK_SIZE, bytesToRead)
+			local chunk = readBytes(chunkSize)
+			local compressedChunk = LibDeflate:CompressDeflate(chunk, { level = 9 })
+			bytesToRead = bytesToRead - chunkSize
+			compressedData = compressedData .. Musician.Utils.PackNumber(#compressedChunk, 2) .. compressedChunk
+		end
+		Musician.Worker.Set(compressChunkWorker)
+	end)
+end
+
 --- Cancel current import
 --
 function Musician.Song:CancelImport()
 	self.importing = false
+end
+
+--- Cancel current export
+--
+function Musician.Song:CancelExport()
+	self.exporting = false
 end
 
 --- Handle importing error
