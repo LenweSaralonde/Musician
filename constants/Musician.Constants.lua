@@ -208,6 +208,22 @@ Musician.Events.SongImportSucessful = "MusicianSongImportSucessful"
 -- @param song (Musician.Song)
 Musician.Events.SongImportFailed = "MusicianSongImportFailed"
 
+--- Fired when the song exporting process is starting
+-- @field Musician.Events.SongExportStart
+-- @param song (Musician.Song)
+Musician.Events.SongExportStart = "MusicianSongExportStart"
+
+--- Fired when the song exporting process is making progress
+-- @field Musician.Events.SongExportProgress
+-- @param song (Musician.Song)
+-- @param progress (number) Progression between 0 and 1
+Musician.Events.SongExportProgress = "MusicianSongExportProgress"
+
+--- Fired when the song exporting process is complete, regardless if it failed or not
+-- @field Musician.Events.SongExportComplete
+-- @param song (Musician.Song)
+Musician.Events.SongExportComplete = "MusicianSongExportComplete"
+
 --- Fired when the source song Musician.sourceSong has been successfully loaded
 -- @field Musician.Events.SourceSongLoaded
 -- @param song (Musician.Song)
