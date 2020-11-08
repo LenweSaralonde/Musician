@@ -41,6 +41,7 @@ Musician.Song.MODE_LIVE = 0x20 -- No duration in chunk notes
 
 local CHUNK_VERSION = 0x01 -- Max: 0x0F (15)
 local BASE64DECODE_PROGRESSION_RATIO = .75
+local COMPRESS_PROGRESSION_RATIO = .5
 local UNCOMPRESS_PROGRESSION_RATIO = .33
 local DEFLATE_CHUNK_SIZE = 2048
 
@@ -913,12 +914,20 @@ end
 
 --- Export song to string
 -- @param onComplete (function) Called when the whole export process is complete. Data is provided when successful
-function Musician.Song:Export(onComplete)
+-- @param[opt=1] progressionFactor (number) (0-1)
+function Musician.Song:Export(onComplete, progressionFactor)
 
 	if self.importing or self.exporting then
 		error("The song is already importing or exporting.")
 	end
 	self.exporting = true
+
+	if progressionFactor == nil then
+		progressionFactor = 1
+	end
+
+	Musician.Song:SendMessage(Musician.Events.SongExportStart, self)
+	Musician.Song:SendMessage(Musician.Events.SongExportProgress, self, 0)
 
 	local data = ''
 
@@ -941,7 +950,7 @@ function Musician.Song:Export(onComplete)
 	local noteCount = 0
 	for _, track in pairs(self.tracks) do
 		-- Instrument (1)
-		data = data .. Musician.Utils.PackNumber(track.instrument, 1)
+		data = data .. Musician.Utils.PackNumber(track.instrument, 1) -- TODO: use midiInstrument instead
 
 		-- Channel (1)
 		data = data .. Musician.Utils.PackNumber(track.channel, 1)
@@ -1009,6 +1018,9 @@ function Musician.Song:Export(onComplete)
 			end
 		end
 		data = data .. notesData
+		if noteCount > 0 then
+			Musician.Song:SendMessage(Musician.Events.SongExportProgress, self, progressionFactor * exportedNotes / noteCount)
+		end
 
 		-- All notes have been exported
 		if exportedNotes == noteCount then
@@ -1026,6 +1038,10 @@ function Musician.Song:Export(onComplete)
 			end
 
 			self.exporting = false
+
+			if progressionFactor == 1 then
+				Musician.Song:SendMessage(Musician.Events.SongExportComplete, self)
+			end
 
 			onComplete(data)
 		end
@@ -1056,6 +1072,7 @@ function Musician.Song:ExportCompressed(onComplete)
 			if bytesToRead == 0 then
 				Musician.Worker.Remove(compressChunkWorker)
 				self.exporting = false
+				Musician.Song:SendMessage(Musician.Events.SongExportComplete, self)
 				onComplete(compressedData)
 				return
 			end
@@ -1066,9 +1083,12 @@ function Musician.Song:ExportCompressed(onComplete)
 			local compressedChunk = LibDeflate:CompressDeflate(chunk, { level = 9 })
 			bytesToRead = bytesToRead - chunkSize
 			compressedData = compressedData .. Musician.Utils.PackNumber(#compressedChunk, 2) .. compressedChunk
+
+			local progression = 1 - COMPRESS_PROGRESSION_RATIO + COMPRESS_PROGRESSION_RATIO * (1 - bytesToRead / #data)
+			Musician.Song:SendMessage(Musician.Events.SongExportProgress, self, progression)
 		end
 		Musician.Worker.Set(compressChunkWorker)
-	end)
+	end, 1 - COMPRESS_PROGRESSION_RATIO)
 end
 
 --- Cancel current import
