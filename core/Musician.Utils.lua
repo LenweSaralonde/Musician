@@ -788,10 +788,10 @@ function Musician.Utils.SetFontStringTextFixedSize(fontString, text)
 	end
 end
 
---- Return a byte reader function for provided data string
+--- Return byte reader functions for provided data string
 -- @param data (string)
 -- @param err (string) Error to be returned in case of reading error
--- @return readBytes (function)
+-- @return readBytes (function), getCursor (function)
 function Musician.Utils.GetByteReader(data, err)
 	local cursor = 1
 	return function(length)
@@ -802,6 +802,9 @@ function Musician.Utils.GetByteReader(data, err)
 			error(err)
 		end
 		return bytes
+	end,
+	function()
+		return cursor
 	end
 end
 
