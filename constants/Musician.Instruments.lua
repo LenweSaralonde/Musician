@@ -48,7 +48,7 @@ Musician.INSTRUMENTS = {
 		path = "Interface\\AddOns\\Musician\\instruments\\accordion",
 		decay = 100,
 		isPercussion = false,
-		midi = 22,
+		midi = 21,
 		color = Musician.COLORS.DarkSpringGreen,
 		source = "Safwan Matni Accordion"
 	},
