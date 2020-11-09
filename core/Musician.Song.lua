@@ -35,8 +35,14 @@ local NOTE = Musician.Song.Indexes.NOTE
 local NOTEON = Musician.Song.Indexes.NOTEON
 local CHUNK = Musician.Song.Indexes.CHUNK
 
+-- Song modes
 Musician.Song.MODE_DURATION = 0x10 -- Duration are set in chunk notes
 Musician.Song.MODE_LIVE = 0x20 -- No duration in chunk notes
+
+-- Track options
+Musician.Song.TRACK_OPTION_HAS_INSTRUMENT = 0x1
+Musician.Song.TRACK_OPTION_MUTED = 0x2
+Musician.Song.TRACK_OPTION_SOLO = 0x4
 
 local CHUNK_VERSION = 0x01 -- Max: 0x0F (15)
 local BASE64DECODE_PROGRESSION_RATIO = .75
@@ -664,7 +670,7 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 	Musician.Song:SendMessage(Musician.Events.SongImportProgress, self, previousProgression)
 
 	local chunksCrc32
-	local readBytesInternal = Musician.Utils.GetByteReader(data, Musician.Msg.INVALID_MUSIC_CODE)
+	local readBytesInternal, getCursor = Musician.Utils.GetByteReader(data, Musician.Msg.INVALID_MUSIC_CODE)
 
 	local readBytes = function(length, updateCrc32)
 		local bytes = readBytesInternal(length)
@@ -837,6 +843,40 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 				track.name = readBytes(trackNameLength)
 			end
 
+			-- Optional metadata
+			if getCursor() < #data then
+
+				-- Song settings (optional)
+				-- ========================
+				crop = false
+
+				-- cropFrom (4)
+				self.cropFrom = Musician.Utils.UnpackNumber(readBytes(4)) / 100
+
+				-- cropTo (4)
+				self.cropTo = Musician.Utils.UnpackNumber(readBytes(4)) / 100
+
+				-- Track settings (optional)
+				-- =========================
+
+				for trackIndex, track in pairs(self.tracks) do
+					-- Track options (1)
+					local trackOptions = Musician.Utils.UnpackNumber(readBytes(1))
+					local hasInstrument = bit.band(trackOptions, Musician.Song.TRACK_OPTION_HAS_INSTRUMENT) ~= 0
+					local muted = bit.band(trackOptions, Musician.Song.TRACK_OPTION_MUTED) ~= 0
+					local solo = bit.band(trackOptions, Musician.Song.TRACK_OPTION_SOLO) ~= 0
+					self:SetTrackSolo(track, solo)
+					self:SetTrackMuted(track, muted)
+
+					-- Instrument (1)
+					local instrument = Musician.Utils.UnpackNumber(readBytes(1))
+					track.instrument = hasInstrument and instrument or -1
+
+					-- Transpose (1)
+					track.transpose = Musician.Utils.UnpackNumber(readBytes(1)) - 127
+				end
+			end
+
 			-- Crop song
 			if crop then
 				self.cropFrom = self.duration
@@ -847,6 +887,8 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 						self.cropTo = max(self.cropTo, track.notes[#track.notes][NOTE.TIME] + track.notes[#track.notes][NOTE.DURATION])
 					end
 				end
+				self.cropFrom = floor(self.cropFrom * 100) / 100
+				self.cropTo = ceil(self.cropTo * 100) / 100
 			end
 			self.cursor = self.cropFrom
 
@@ -913,7 +955,7 @@ function Musician.Song:Export(onComplete, progressionFactor)
 	local noteCount = 0
 	for _, track in pairs(self.tracks) do
 		-- Instrument (1)
-		data = data .. Musician.Utils.PackNumber(track.instrument, 1) -- TODO: use midiInstrument instead
+		data = data .. Musician.Utils.PackNumber(track.midiInstrument, 1)
 
 		-- Channel (1)
 		data = data .. Musician.Utils.PackNumber(track.channel, 1)
@@ -992,13 +1034,50 @@ function Musician.Song:Export(onComplete, progressionFactor)
 			-- Metadata
 			-- ========
 
+			local metadata = ''
+
 			-- Song title (2) + (title length in bytes)
-			data = data .. Musician.Utils.PackNumber(#self.name, 2) .. self.name
+			metadata = metadata .. Musician.Utils.PackNumber(#self.name, 2) .. self.name
 
 			-- Track names (2) + (title length in bytes)
 			for _, track in pairs(self.tracks) do
-				data = data .. Musician.Utils.PackNumber(#track.name, 2) .. track.name
+				metadata = metadata .. Musician.Utils.PackNumber(#track.name, 2) .. track.name
 			end
+
+			-- Song settings
+			-- =============
+
+			-- cropFrom (4)
+			metadata = metadata .. Musician.Utils.PackNumber(floor(self.cropFrom * 100), 4)
+
+			-- cropTo (4)
+			metadata = metadata .. Musician.Utils.PackNumber(ceil(self.cropTo * 100), 4)
+
+			-- Track settings
+			-- ==============
+
+			local track
+			for _, track in pairs(self.tracks) do
+
+				-- Track options (1)
+				local hasInstrument = (track.instrument ~= -1) and Musician.Song.TRACK_OPTION_HAS_INSTRUMENT or 0
+				local muted = track.muted and Musician.Song.TRACK_OPTION_MUTED or 0
+				local solo = track.solo and Musician.Song.TRACK_OPTION_SOLO or 0
+				local trackOptions = bit.bor(hasInstrument, muted, solo)
+				metadata = metadata .. Musician.Utils.PackNumber(trackOptions, 1)
+
+				-- Instrument (1)
+				local instrument = hasInstrument and track.instrument or 0
+				metadata = metadata .. Musician.Utils.PackNumber(instrument, 1)
+
+				-- Transpose (1)
+				metadata = metadata .. Musician.Utils.PackNumber(track.transpose + 127, 1)
+			end
+
+			-- Append metadata
+			data = data .. metadata
+
+			-- Export complete!
 
 			self.exporting = false
 
