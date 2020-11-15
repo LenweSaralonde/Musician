@@ -22,8 +22,9 @@ MusicianFrame.Init = function()
 	Musician.Frame:RegisterMessage(Musician.Events.CommChannelUpdate, MusicianFrame.OnCommChannelUpdate)
 	Musician.Frame:RegisterMessage(Musician.Events.CommSendAction, MusicianFrame.OnCommSendAction)
 	Musician.Frame:RegisterMessage(Musician.Events.CommSendActionComplete, MusicianFrame.OnCommSendAction)
+	Musician.Frame:RegisterMessage(Musician.Events.SongImportStart, MusicianFrame.RefreshButtons)
+	Musician.Frame:RegisterMessage(Musician.Events.SongImportComplete, MusicianFrame.RefreshButtons)
 	Musician.Frame:RegisterMessage(Musician.Events.SongImportProgress, MusicianFrame.RefreshLoadingProgressBar)
-	Musician.Frame:RegisterMessage(Musician.Events.SongImportComplete, MusicianFrame.RefreshLoadingProgressBar)
 	Musician.Frame:RegisterMessage(Musician.Events.SongPlay, MusicianFrame.OnSongPlayOrStop)
 	Musician.Frame:RegisterMessage(Musician.Events.SongStop, MusicianFrame.OnSongPlayOrStop)
 	Musician.Frame:RegisterMessage(Musician.Events.SongCursor, MusicianFrame.RefreshPlayingProgressBar)
@@ -224,20 +225,39 @@ MusicianFrame.OnSourceSongUpdated = function(event, ...)
 	MusicianFrame.Clear()
 end
 
+--- Refresh buttons
+-- @param event (string)
+-- @param song (Musician.Song)
+MusicianFrame.RefreshButtons = function(event, song)
+	if song ~= Musician.importingSong then return end
+	if not(song.importing) then
+		MusicianFrameClearButton:Enable()
+		MusicianFrameSource:Enable()
+		MusicianFrame.SetLoadingProgressBar(nil)
+		MusicianFrame.Clear()
+	else
+		MusicianFrameClearButton:Disable()
+		MusicianFrameSource:Disable()
+	end
+end
+
 --- Refresh loading progress bar
 -- @param event (string)
 -- @param song (Musician.Song)
 -- @param progression (number)
 MusicianFrame.RefreshLoadingProgressBar = function(event, song, progression)
-	if not(song.importing) then
+	if song ~= Musician.importingSong then return end
+	MusicianFrame.SetLoadingProgressBar(progression)
+end
+
+--- Set loading progress bar position
+-- @param[opt] progression (number)
+MusicianFrame.SetLoadingProgressBar = function(progression)
+	if progression == nil then
 		MusicianFrameTextBackgroundLoadingProgressBar:Hide()
-		MusicianFrame.Clear()
 	else
 		MusicianFrameTextBackgroundLoadingProgressBar:Show()
-
-		if progression ~= nil then
-			MusicianFrameTextBackgroundLoadingProgressBar:SetWidth(max(1, (MusicianFrameTextBackground:GetWidth() - 10) * progression))
-		end
+		MusicianFrameTextBackgroundLoadingProgressBar:SetWidth(max(1, (MusicianFrameTextBackground:GetWidth() - 10) * progression))
 	end
 end
 
