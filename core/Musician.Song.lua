@@ -691,7 +691,8 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 	local noteCount = 0
 
 	-- Header (4)
-	if readBytes(4) ~= Musician.FILE_HEADER then
+	local header = readBytes(4)
+	if header ~= Musician.FILE_HEADER then
 		error(Musician.Msg.INVALID_MUSIC_CODE)
 	end
 
