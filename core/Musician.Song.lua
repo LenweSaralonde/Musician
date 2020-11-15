@@ -120,6 +120,9 @@ function Musician.Song.create()
 	-- @field player (string) Player name, with realm slug
 	self.player = nil
 
+	-- @field sender (string) Name of the player who sent the song
+	self.sender = nil
+
 	-- @field notified (boolean) True when the notification for the song playing has been displayed
 	self.notified = false
 
