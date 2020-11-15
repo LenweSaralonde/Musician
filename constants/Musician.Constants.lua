@@ -12,7 +12,7 @@ Musician.DISCORD_URL = "https://musician.lenwe.io/discord"
 Musician.PATREON_URL = "https://musician.lenwe.io/patreon"
 Musician.PAYPAL_URL = "https://musician.lenwe.io/paypal"
 
-Musician.FILE_HEADER = "MUS6"
+Musician.FILE_HEADER = "MUS7"
 Musician.PROTOCOL_VERSION = 6
 Musician.MAX_NOTE_DURATION = 6
 Musician.NOTE_DURATION_FPS = 255 / Musician.MAX_NOTE_DURATION -- 8-bit
