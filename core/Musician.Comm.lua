@@ -38,13 +38,13 @@ local isBandPlayReady = false
 local readyBandPlayers = {}
 local currentSongCrc32
 
---- Print debug message
+--- Print communication debug message
 -- @param out (boolean) Outgoing message
 -- @param event (string)
 -- @param source (string)
 -- @param message (string)
 -- @param ... (string)
-local function debug(out, event, source, message, ...)
+local function debugComm(out, event, source, message, ...)
 	local prefix
 	if out then
 		prefix = "|cFFFF0000>>>>>|r"
@@ -223,11 +223,11 @@ function Musician.Comm.BroadcastCommMessage(message, type, groupType)
 
 	local groupChatType = Musician.Comm.GetGroupChatType()
 	if groupChatType then
-		debug(true, groupType, groupChatType, message)
+		debugComm(true, groupType, groupChatType, message)
 		Musician.Comm:SendCommMessage(groupType, message, groupChatType, nil, "ALERT")
 	end
 	if Musician.Comm.ChannelIsReady() then
-		debug(true, type, "CHANNEL " .. Musician.Comm.GetChannel(), message)
+		debugComm(true, type, "CHANNEL " .. Musician.Comm.GetChannel(), message)
 		Musician.Comm:SendCommMessage(type, message, "CHANNEL", Musician.Comm.GetChannel(), "ALERT")
 	end
 end
@@ -390,7 +390,7 @@ end
 --- Receive compressed chunk
 --
 function Musician.Comm.OnChunk(prefix, message, distribution, sender)
-	debug(false, prefix, sender .. "(" .. distribution .. ")", message)
+	debugComm(false, prefix, sender .. "(" .. distribution .. ")", message)
 
 	Musician.Registry.RegisterPlayer(sender)
 
@@ -433,7 +433,7 @@ end
 --
 function Musician.Comm.OnStopSong(prefix, message, distribution, sender)
 	sender = Musician.Utils.NormalizePlayerName(sender)
-	debug(false, prefix, sender .. "(" .. distribution .. ")", message)
+	debugComm(false, prefix, sender .. "(" .. distribution .. ")", message)
 	Musician.StopPlayerSong(sender, true)
 	if Musician.Utils.PlayerIsMyself(sender) then
 		isStopPending = false
@@ -472,7 +472,7 @@ function Musician.Comm.QueryBandReady()
 	local groupChatType = Musician.Comm.GetGroupChatType()
 	if groupChatType then
 		local message = Musician.Comm.event.bandReadyQuery
-		debug(true, Musician.Comm.event.bandReadyQuery, groupChatType, message)
+		debugComm(true, Musician.Comm.event.bandReadyQuery, groupChatType, message)
 		Musician.Comm:SendCommMessage(Musician.Comm.event.bandReadyQuery, message, groupChatType, nil, "ALERT")
 	end
 end
@@ -481,7 +481,7 @@ end
 --
 function Musician.Comm.OnBandReadyQuery(prefix, message, distribution, sender)
 	sender = Musician.Utils.NormalizePlayerName(sender)
-	debug(false, prefix, sender .. "(" .. distribution .. ")", message)
+	debugComm(false, prefix, sender .. "(" .. distribution .. ")", message)
 
 	if not(Musician.Utils.PlayerIsInGroup(sender)) then return end
 	if not(currentSongCrc32) then return end
@@ -490,7 +490,7 @@ function Musician.Comm.OnBandReadyQuery(prefix, message, distribution, sender)
 	local groupChatType = Musician.Comm.GetGroupChatType()
 	if isBandPlayReady and groupChatType then
 		local message = tostring(currentSongCrc32)
-		debug(true, Musician.Comm.event.bandReady, groupChatType, message)
+		debugComm(true, Musician.Comm.event.bandReady, groupChatType, message)
 		Musician.Comm:SendCommMessage(Musician.Comm.event.bandReady, message, groupChatType, nil, "ALERT")
 	end
 
@@ -552,7 +552,7 @@ function Musician.Comm.UpdateCurrentSongCrc32(songCrc32)
 		local message = tostring(previousSongcrc32)
 		isBandActionPending = true
 		Musician.Comm:SendMessage(Musician.Events.CommSendAction, Musician.Comm.action.bandNotReady)
-		debug(true, Musician.Comm.event.bandNotReady, groupChatType, message)
+		debugComm(true, Musician.Comm.event.bandNotReady, groupChatType, message)
 		Musician.Comm:SendCommMessage(Musician.Comm.event.bandNotReady, message, groupChatType, nil, "ALERT")
 	end
 
@@ -603,7 +603,7 @@ function Musician.Comm.SetBandPlayReady(isReady)
 	local action = isReady and Musician.Comm.action.bandReady or Musician.Comm.action.bandNotReady
 	local message = tostring(currentSongCrc32)
 	Musician.Comm:SendMessage(Musician.Events.CommSendAction, action)
-	debug(true, type, groupChatType, message)
+	debugComm(true, type, groupChatType, message)
 	Musician.Comm:SendCommMessage(type, message, groupChatType, nil, "ALERT")
 
 	return true
@@ -614,7 +614,7 @@ end
 function Musician.Comm.OnBandPlayReady(prefix, message, distribution, sender)
 
 	sender = Musician.Utils.NormalizePlayerName(sender)
-	debug(false, prefix, sender .. "(" .. distribution .. ")", message)
+	debugComm(false, prefix, sender .. "(" .. distribution .. ")", message)
 
 	if not(Musician.Utils.PlayerIsInGroup(sender)) then return end
 
@@ -653,7 +653,7 @@ function Musician.Comm.PlaySongBand()
 
 	local message = tostring(currentSongCrc32)
 	Musician.Comm:SendMessage(Musician.Events.CommSendAction, Musician.Comm.action.bandPlay)
-	debug(true, Musician.Comm.event.bandPlay, groupChatType, message)
+	debugComm(true, Musician.Comm.event.bandPlay, groupChatType, message)
 	Musician.Comm:SendCommMessage(Musician.Comm.event.bandPlay, message, groupChatType, nil, "ALERT")
 
 	return true
@@ -663,7 +663,7 @@ end
 --
 function Musician.Comm.OnBandPlay(prefix, message, distribution, sender)
 	sender = Musician.Utils.NormalizePlayerName(sender)
-	debug(false, prefix, sender .. "(" .. distribution .. ")", message)
+	debugComm(false, prefix, sender .. "(" .. distribution .. ")", message)
 
 	if Musician.Utils.PlayerIsMyself(sender) then
 		isBandActionPending = false
@@ -702,7 +702,7 @@ function Musician.Comm.StopSongBand()
 
 	local message = tostring(currentSongCrc32)
 	Musician.Comm:SendMessage(Musician.Events.CommSendAction, Musician.Comm.action.bandStop)
-	debug(true, Musician.Comm.event.bandStop, groupChatType, message)
+	debugComm(true, Musician.Comm.event.bandStop, groupChatType, message)
 	Musician.Comm:SendCommMessage(Musician.Comm.event.bandStop, message, groupChatType, nil, "ALERT")
 
 	return true
@@ -712,7 +712,7 @@ end
 --
 function Musician.Comm.OnBandStop(prefix, message, distribution, sender)
 	sender = Musician.Utils.NormalizePlayerName(sender)
-	debug(false, prefix, sender .. "(" .. distribution .. ")", message)
+	debugComm(false, prefix, sender .. "(" .. distribution .. ")", message)
 
 	if Musician.Utils.PlayerIsMyself(sender) then
 		isBandActionPending = false
