@@ -70,6 +70,7 @@ function Musician:OnInitialize()
 
 	Musician.Comm.Init()
 	Musician.Registry.Init()
+	Musician.SongSharer.Init()
 	Musician.SetupHooks()
 
 	MusicianFrame.Init()

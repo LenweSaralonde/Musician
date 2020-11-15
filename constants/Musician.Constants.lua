@@ -273,6 +273,40 @@ Musician.Events.BandReadyPlayersUpdated = "MusicianBandReadyPlayersUpdated"
 -- @param isSynced (boolean)
 Musician.Events.LiveBandSync = "MusicianLiveBandSync"
 
+--- Fired when the song reception process is starting
+-- @field Musician.Events.SongReceiveStart
+-- @param sender (string)
+Musician.Events.SongReceiveStart = "MusicianSongReceiveStart"
+
+--- Fired when the song reception process is making progress
+-- @field Musician.Events.SongReceiveProgress
+-- @param sender (string)
+-- @param progress (number) Progression between 0 and 1
+Musician.Events.SongReceiveProgress = "MusicianSongReceiveProgress"
+
+--- Fired when the song reception process is complete, regardless if it failed or not
+-- @field Musician.Events.SongReceiveComplete
+-- @param sender (string)
+Musician.Events.SongReceiveComplete = "MusicianSongReceiveComplete"
+
+--- Fired when the song reception process has been canceled
+-- @field Musician.Events.SongReceiveCanceled
+-- @param sender (string)
+Musician.Events.SongReceiveCanceled = "MusicianSongReceiveCanceled"
+
+--- Fired when the song reception process is complete successfully
+-- @field Musician.Events.SongReceiveSucessful
+-- @param sender (string)
+-- @param song (Musician.Song)
+Musician.Events.SongReceiveSucessful = "MusicianSongReceiveSucessful"
+
+--- Fired when the song reception process failed
+-- @field Musician.Events.SongReceiveFailed
+-- @param sender (string)
+-- @param reason (string)
+-- @param title (string)
+Musician.Events.SongReceiveFailed = "MusicianSongReceiveFailed"
+
 Musician.IconImages = {}
 Musician.IconImages.NoteDisabled = "Interface\\AddOns\\Musician\\ui\\textures\\muted.blp"
 Musician.IconImages.Note = "Interface\\AddOns\\Musician\\ui\\textures\\unmuted.blp"
