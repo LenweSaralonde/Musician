@@ -287,9 +287,9 @@ function Musician.Registry.PlayerIsInRange(player)
 
 	-- Range check
 	player = Musician.Utils.NormalizePlayerName(player)
-	local posY, posX, posZ, instanceID = UnitPosition("player")
+	local posY, posX, posZ, instanceID = Musician.Utils.GetPlayerPosition()
 	local pp = Musician.Registry.players[player]
-	return Musician.LISTENING_RADIUS ^ 2 > (pp.posY - (posY or 0)) ^ 2 + (pp.posX - (posX or 0)) ^ 2 + (pp.posZ - (posZ or 0)) ^ 2
+	return Musician.LISTENING_RADIUS ^ 2 > (pp.posY - posY) ^ 2 + (pp.posX - posX) ^ 2 + (pp.posZ - posZ) ^ 2
 end
 
 --- Return player GUID
