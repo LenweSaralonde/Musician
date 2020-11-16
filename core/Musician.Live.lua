@@ -429,7 +429,7 @@ function Musician.Live.BandNote(noteOn, key, layer, instrument)
 	if key < Musician.MIN_KEY or key > Musician.MAX_KEY then return end
 
 	local noteOn = noteOn and "ON" or "OFF"
-	local posY, posX, posZ, instanceID = UnitPosition("player")
+	local posY, posX, posZ, instanceID = Musician.Utils.GetPlayerPosition()
 	local guid = UnitGUID("player")
 	local message = strjoin(" ", noteOn, key, layer, instrument, posY, posX, posZ, instanceID, guid)
 	local groupChatType = Musician.Comm.GetGroupChatType()
