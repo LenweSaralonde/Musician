@@ -148,6 +148,16 @@ function Musician.Utils.GetChatIcon(path, r, g, b)
 	return "|T" .. path .. ":0:aspectRatio|t"
 end
 
+--- Get the player position in the 3D world
+-- @return posY (number)
+-- @return posX (number)
+-- @return posZ (number)
+-- @return instanceID (number)
+function Musician.Utils.GetPlayerPosition()
+	local posY, posX, posZ, instanceID = UnitPosition("player") -- posZ is always 0
+	return posY or 0, posX or 0, posZ or 0, instanceID or 0xFFFFFFFF
+end
+
 --- Display a faked emote
 -- @param player (string)
 -- @param playerGUID (string)
@@ -283,10 +293,10 @@ end
 --- Pack player position into a 18-byte chunk string
 -- @return data (string)
 function Musician.Utils.PackPlayerPosition()
-	local posY, posX, posZ, instanceID = UnitPosition("player") -- posZ is always 0
+	local posY, posX, posZ, instanceID = Musician.Utils.GetPlayerPosition()
 
-	local x = Musician.Utils.PackNumber(floor((posX or 0) + .5) + 0x7fffffff, 4)
-	local y = Musician.Utils.PackNumber(floor((posY or 0) + .5) + 0x7fffffff, 4)
+	local x = Musician.Utils.PackNumber(floor(posX + .5) + 0x7fffffff, 4)
+	local y = Musician.Utils.PackNumber(floor(posY + .5) + 0x7fffffff, 4)
 	local i = Musician.Utils.PackNumber(instanceID, 4)
 	local g = Musician.Utils.PackPlayerGuid()
 
