@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.6.1.2
+--------
+* Updated for WoW Shadowlands 9.0.2
+* Fixed error if changing zone while playing music #56
+
 v1.6.1.1
 --------
 * Fixed minor menu glitch that may occur with outdated add-ons
