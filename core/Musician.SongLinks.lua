@@ -1,29 +1,29 @@
---- Song sending module
--- @module Musician.SongSharer
+--- Song links module
+-- @module Musician.SongLinks
 
-Musician.SongSharer = LibStub("AceAddon-3.0"):NewAddon("Musician.SongSharer", "AceComm-3.0", "AceEvent-3.0")
+Musician.SongLinks = LibStub("AceAddon-3.0"):NewAddon("Musician.SongLinks", "AceComm-3.0", "AceEvent-3.0")
 
-local MODULE_NAME = "SongSharer"
+local MODULE_NAME = "SongLinks"
 Musician.AddModule(MODULE_NAME)
 
 local LibDeflate = LibStub:GetLibrary("LibDeflate")
 
-Musician.SongSharer.event = {}
-Musician.SongSharer.event.song = "MusicianSong"
-Musician.SongSharer.event.requestSong = "MusicianSongReq"
-Musician.SongSharer.event.songError = "MusicianSongErr"
+Musician.SongLinks.event = {}
+Musician.SongLinks.event.song = "MusicianSong"
+Musician.SongLinks.event.requestSong = "MusicianSongReq"
+Musician.SongLinks.event.songError = "MusicianSongErr"
 
-Musician.SongSharer.errors = {}
-Musician.SongSharer.errors.notFound = 'notFound'
-Musician.SongSharer.errors.alreadySending = 'alreadySending'
-Musician.SongSharer.errors.alreadyRequested = 'alreadyRequested'
-Musician.SongSharer.errors.timeout = 'timeout'
-Musician.SongSharer.errors.importingFailed = 'importingFailed'
+Musician.SongLinks.errors = {}
+Musician.SongLinks.errors.notFound = 'notFound'
+Musician.SongLinks.errors.alreadySending = 'alreadySending'
+Musician.SongLinks.errors.alreadyRequested = 'alreadyRequested'
+Musician.SongLinks.errors.timeout = 'timeout'
+Musician.SongLinks.errors.importingFailed = 'importingFailed'
 
-Musician.SongSharer.status = {}
-Musician.SongSharer.status.requested = 'requested'
-Musician.SongSharer.status.downloading = 'downloading'
-Musician.SongSharer.status.importing = 'importing'
+Musician.SongLinks.status = {}
+Musician.SongLinks.status.requested = 'requested'
+Musician.SongLinks.status.downloading = 'downloading'
+Musician.SongLinks.status.importing = 'importing'
 
 local sharedSongs = {}
 local sendingSongs = {}
@@ -67,16 +67,16 @@ local function debug(message, ...)
 	Musician.Utils.Debug(MODULE_NAME, message, ...)
 end
 
---- Initialize song sharing
+--- Initialize song links
 --
-function Musician.SongSharer.Init()
-	Musician.SongSharer:RegisterMessage(Musician.Events.SongImportProgress, Musician.SongSharer.OnSongImportProgress)
-	Musician.SongSharer:RegisterComm(Musician.SongSharer.event.song, Musician.SongSharer.OnSongReceived)
-	Musician.SongSharer:RegisterComm(Musician.SongSharer.event.requestSong, Musician.SongSharer.OnRequestSong)
-	Musician.SongSharer:RegisterComm(Musician.SongSharer.event.songError, Musician.SongSharer.OnSongError)
-	Musician.SongSharer:RegisterEvent("CHAT_MSG_ADDON", function(event, prefix, message, distribution, sender)
-		if prefix == Musician.SongSharer.event.song then
-			Musician.SongSharer.OnSongData(prefix, message, distribution, sender)
+function Musician.SongLinks.Init()
+	Musician.SongLinks:RegisterMessage(Musician.Events.SongImportProgress, Musician.SongLinks.OnSongImportProgress)
+	Musician.SongLinks:RegisterComm(Musician.SongLinks.event.song, Musician.SongLinks.OnSongReceived)
+	Musician.SongLinks:RegisterComm(Musician.SongLinks.event.requestSong, Musician.SongLinks.OnRequestSong)
+	Musician.SongLinks:RegisterComm(Musician.SongLinks.event.songError, Musician.SongLinks.OnSongError)
+	Musician.SongLinks:RegisterEvent("CHAT_MSG_ADDON", function(event, prefix, message, distribution, sender)
+		if prefix == Musician.SongLinks.event.song then
+			Musician.SongLinks.OnSongData(prefix, message, distribution, sender)
 		end
 	end)
 end
@@ -85,7 +85,7 @@ end
 -- @param song (Musician.Song)
 -- @param[opt] title (string)
 -- @param[opt] onComplete (function)
-function Musician.SongSharer.AddSong(song, title, onComplete)
+function Musician.SongLinks.AddSong(song, title, onComplete)
 	if title == nil then
 		title = song.name
 	end
@@ -102,12 +102,12 @@ end
 --- Request a song for download to a player
 -- @param title (string)
 -- @param playerName (string)
-function Musician.SongSharer.RequestSong(title, playerName)
+function Musician.SongLinks.RequestSong(title, playerName)
 	playerName = Musician.Utils.NormalizePlayerName(playerName)
 
 	-- Song is already being requested
 	if requestedSongs[playerName] ~= nil then
-		Musician.SongSharer:SendMessage(Musician.Events.SongReceiveFailed, playerName, Musician.SongSharer.errors.alreadyRequested, title)
+		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveFailed, playerName, Musician.SongLinks.errors.alreadyRequested, title)
 		return
 	end
 
@@ -115,15 +115,15 @@ function Musician.SongSharer.RequestSong(title, playerName)
 	local onTimeout = function()
 		if requestedSongs[playerName] == nil then return end
 		debug("Timed out after", REQUEST_TIMEOUT, playerName, title)
-		Musician.SongSharer.RemoveRequest(playerName)
-		Musician.SongSharer:SendMessage(Musician.Events.SongReceiveComplete, playerName)
-		Musician.SongSharer:SendMessage(Musician.Events.SongReceiveFailed, playerName, Musician.SongSharer.errors.timeout, title)
+		Musician.SongLinks.RemoveRequest(playerName)
+		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveComplete, playerName)
+		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveFailed, playerName, Musician.SongLinks.errors.timeout, title)
 	end
 
 	-- Add song request
 	requestedSongs[playerName] = {
 		['title'] = title,
-		['status'] = Musician.SongSharer.status.requested,
+		['status'] = Musician.SongLinks.status.requested,
 		['total'] = nil,
 		['downloaded'] = 0,
 		['song'] = nil,
@@ -131,17 +131,17 @@ function Musician.SongSharer.RequestSong(title, playerName)
 		['timeoutTimer'] = C_Timer.NewTimer(REQUEST_TIMEOUT, onTimeout)
 	}
 
-	Musician.SongSharer:SendMessage(Musician.Events.SongReceiveStart, playerName)
-	Musician.SongSharer:SendMessage(Musician.Events.SongReceiveProgress, playerName, 0)
+	Musician.SongLinks:SendMessage(Musician.Events.SongReceiveStart, playerName)
+	Musician.SongLinks:SendMessage(Musician.Events.SongReceiveProgress, playerName, 0)
 
 	-- Send song request to player
-	debugComm(true, Musician.SongSharer.event.requestSong, playerName, title)
-	Musician.SongSharer:SendCommMessage(Musician.SongSharer.event.requestSong, title, 'WHISPER', playerName, 'ALERT')
+	debugComm(true, Musician.SongLinks.event.requestSong, playerName, title)
+	Musician.SongLinks:SendCommMessage(Musician.SongLinks.event.requestSong, title, 'WHISPER', playerName, 'ALERT')
 end
 
 --- Remove a song download request
 -- @param playerName (string)
-function Musician.SongSharer.RemoveRequest(playerName)
+function Musician.SongLinks.RemoveRequest(playerName)
 	playerName = Musician.Utils.NormalizePlayerName(playerName)
 
 	local requestedSong = requestedSongs[playerName]
@@ -154,62 +154,62 @@ function Musician.SongSharer.RemoveRequest(playerName)
 		requestedSong.timeoutTimer:Cancel()
 	end
 
-	if requestedSong.status == Musician.SongSharer.status.importing then
+	if requestedSong.status == Musician.SongLinks.status.importing then
 		requestedSong.song:CancelImport()
 	end
 end
 
 --- Cancel a song download request
 -- @param playerName (string)
-function Musician.SongSharer.CancelRequest(playerName)
-	Musician.SongSharer.RemoveRequest(playerName)
-	Musician.SongSharer:SendMessage(Musician.Events.SongReceiveComplete, playerName)
-	Musician.SongSharer:SendMessage(Musician.Events.SongReceiveCanceled, playerName)
+function Musician.SongLinks.CancelRequest(playerName)
+	Musician.SongLinks.RemoveRequest(playerName)
+	Musician.SongLinks:SendMessage(Musician.Events.SongReceiveComplete, playerName)
+	Musician.SongLinks:SendMessage(Musician.Events.SongReceiveCanceled, playerName)
 end
 
 --- OnRequestSong
 --
-function Musician.SongSharer.OnRequestSong(prefix, message, distribution, sender)
+function Musician.SongLinks.OnRequestSong(prefix, message, distribution, sender)
 	sender = Musician.Utils.NormalizePlayerName(sender)
-	debugComm(false, Musician.SongSharer.event.requestSong, sender, message)
-	Musician.SongSharer.SendSong(message, sender)
+	debugComm(false, Musician.SongLinks.event.requestSong, sender, message)
+	Musician.SongLinks.SendSong(message, sender)
 end
 
 --- OnSongError
 --
-function Musician.SongSharer.OnSongError(prefix, message, distribution, sender)
+function Musician.SongLinks.OnSongError(prefix, message, distribution, sender)
 	sender = Musician.Utils.NormalizePlayerName(sender)
 	local errorCode, title = string.match(message, "^([^ ]+) (.*)")
-	debugComm(false, Musician.SongSharer.event.songError, sender, errorCode, title)
-	Musician.SongSharer.RemoveRequest(sender)
-	Musician.SongSharer:SendMessage(Musician.Events.SongReceiveComplete, sender)
-	Musician.SongSharer:SendMessage(Musician.Events.SongReceiveFailed, sender, errorCode, title)
+	debugComm(false, Musician.SongLinks.event.songError, sender, errorCode, title)
+	Musician.SongLinks.RemoveRequest(sender)
+	Musician.SongLinks:SendMessage(Musician.Events.SongReceiveComplete, sender)
+	Musician.SongLinks:SendMessage(Musician.Events.SongReceiveFailed, sender, errorCode, title)
 end
 
---- Send shared song to another player by title
+--- Send song to another player by title
 -- @param title (string)
 -- @param playerName (string)
-function Musician.SongSharer.SendSong(title, playerName)
+function Musician.SongLinks.SendSong(title, playerName)
 	playerName = Musician.Utils.NormalizePlayerName(playerName)
 
 	-- Song not available in shared songs list
 	if sharedSongs[title] == nil then
 		debug("Song not found")
-		local message = Musician.SongSharer.errors.notFound .. ' ' .. title
-		debugComm(true, Musician.SongSharer.event.songError, playerName, message)
-		Musician.SongSharer:SendCommMessage(Musician.SongSharer.event.songError, message, 'WHISPER', playerName, 'ALERT')
+		local message = Musician.SongLinks.errors.notFound .. ' ' .. title
+		debugComm(true, Musician.SongLinks.event.songError, playerName, message)
+		Musician.SongLinks:SendCommMessage(Musician.SongLinks.event.songError, message, 'WHISPER', playerName, 'ALERT')
 		return
 	end
 
 	-- Send song data
-	Musician.SongSharer.SendSongData(title, playerName, sharedSongs[title])
+	Musician.SongLinks.SendSongData(title, playerName, sharedSongs[title])
 end
 
 --- Send song data to another player
 -- @param title (string)
 -- @param playerName (string)
 -- @param songData (string)
-function Musician.SongSharer.SendSongData(title, playerName, songData)
+function Musician.SongLinks.SendSongData(title, playerName, songData)
 	playerName = Musician.Utils.NormalizePlayerName(playerName)
 
 	debug("Sending song", playerName, title)
@@ -217,9 +217,9 @@ function Musician.SongSharer.SendSongData(title, playerName, songData)
 	-- Already sending a song to the player
 	if sendingSongs[playerName] then
 		debug("Song already sending")
-		local message = Musician.SongSharer.errors.alreadySending .. ' ' .. title
-		debugComm(true, Musician.SongSharer.event.songError, playerName, message)
-		Musician.SongSharer:SendCommMessage(Musician.SongSharer.event.songError, message, 'WHISPER', playerName, 'ALERT')
+		local message = Musician.SongLinks.errors.alreadySending .. ' ' .. title
+		debugComm(true, Musician.SongLinks.event.songError, playerName, message)
+		Musician.SongLinks:SendCommMessage(Musician.SongLinks.event.songError, message, 'WHISPER', playerName, 'ALERT')
 		return
 	end
 
@@ -231,8 +231,8 @@ function Musician.SongSharer.SendSongData(title, playerName, songData)
 	local msg = #encodedData .. " " .. encodedData
 
 	-- Send song
-	debugComm(true, Musician.SongSharer.event.song, playerName, title, #msg)
-	Musician.SongSharer:SendCommMessage(Musician.SongSharer.event.song, msg, 'WHISPER', playerName, 'BULK', function(_, sent, total)
+	debugComm(true, Musician.SongLinks.event.song, playerName, title, #msg)
+	Musician.SongLinks:SendCommMessage(Musician.SongLinks.event.song, msg, 'WHISPER', playerName, 'BULK', function(_, sent, total)
 		-- Song upload complete
 		if sent == total then
 			sendingSongs[playerName] = nil
@@ -242,7 +242,7 @@ end
 
 --- OnSongData
 -- Notify download progression
-function Musician.SongSharer.OnSongData(prefix, message, distribution, sender)
+function Musician.SongLinks.OnSongData(prefix, message, distribution, sender)
 	sender = Musician.Utils.NormalizePlayerName(sender)
 
 	local requestedSong = requestedSongs[sender]
@@ -259,7 +259,7 @@ function Musician.SongSharer.OnSongData(prefix, message, distribution, sender)
 	local control, data = string.match(message, "^([\001-\009])(.*)")
 	if control then
 		if control == MSG_MULTI_FIRST then
-			requestedSong.status = Musician.SongSharer.status.downloading
+			requestedSong.status = Musician.SongLinks.status.downloading
 			-- Extract total data length to determine the progression
 			requestedSong.total, data = string.match(data, "^([0-9]+) (.*)")
 			requestedSong.downloaded = #data
@@ -270,27 +270,27 @@ function Musician.SongSharer.OnSongData(prefix, message, distribution, sender)
 			-- Update received data length
 			requestedSong.downloaded = requestedSong.downloaded + #data
 		end
-		Musician.SongSharer:SendMessage(Musician.Events.SongReceiveProgress, sender, RECEIVING_PROGRESSION_RATIO * requestedSong.downloaded / requestedSong.total)
+		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveProgress, sender, RECEIVING_PROGRESSION_RATIO * requestedSong.downloaded / requestedSong.total)
 	else
 		-- The whole song fits in a single message
-		Musician.SongSharer:SendMessage(Musician.Events.SongReceiveProgress, sender, RECEIVING_PROGRESSION_RATIO)
+		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveProgress, sender, RECEIVING_PROGRESSION_RATIO)
 	end
 end
 
 --- OnSongImportProgress
 -- Notify import progression
-function Musician.SongSharer.OnSongImportProgress(event, song, importProgress)
+function Musician.SongLinks.OnSongImportProgress(event, song, importProgress)
 	if song.sender then
 		local totalProgress = RECEIVING_PROGRESSION_RATIO + (1 - RECEIVING_PROGRESSION_RATIO) * importProgress
-		Musician.SongSharer:SendMessage(Musician.Events.SongReceiveProgress, song.sender, totalProgress)
+		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveProgress, song.sender, totalProgress)
 	end
 end
 
 --- OnSongReceived
 -- Song data has been received
-function Musician.SongSharer.OnSongReceived(prefix, message, distribution, sender)
+function Musician.SongLinks.OnSongReceived(prefix, message, distribution, sender)
 	sender = Musician.Utils.NormalizePlayerName(sender)
-	debugComm(false, Musician.SongSharer.event.song, sender, #message)
+	debugComm(false, Musician.SongLinks.event.song, sender, #message)
 	local requestedSong = requestedSongs[sender]
 
 	if requestedSong == nil then return end
@@ -300,7 +300,7 @@ function Musician.SongSharer.OnSongReceived(prefix, message, distribution, sende
 	collectgarbage()
 
 	requestedSong.song = song
-	requestedSong.status = Musician.SongSharer.status.importing
+	requestedSong.status = Musician.SongLinks.status.importing
 	requestedSong.timeoutTimer:Cancel()
 	requestedSong.timeoutTimer = nil
 	local title = requestedSong.title
@@ -309,13 +309,13 @@ function Musician.SongSharer.OnSongReceived(prefix, message, distribution, sende
 	local songData = LibDeflate:DecodeForWoWAddonChannel(encodedData)
 	song:ImportCompressed(songData, false, function(success)
 
-		Musician.SongSharer.RemoveRequest(sender)
-		Musician.SongSharer:SendMessage(Musician.Events.SongReceiveComplete, sender)
+		Musician.SongLinks.RemoveRequest(sender)
+		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveComplete, sender)
 
 		-- Import failed
 		if not(success) then
 			debug("Song downloading failed")
-			Musician.SongSharer:SendMessage(Musician.Events.SongReceiveFailed, sender, Musician.SongSharer.errors.importingFailed, title)
+			Musician.SongLinks:SendMessage(Musician.Events.SongReceiveFailed, sender, Musician.SongLinks.errors.importingFailed, title)
 			return
 		end
 
@@ -328,8 +328,8 @@ function Musician.SongSharer.OnSongReceived(prefix, message, distribution, sende
 		collectgarbage()
 
 		debug("Song downloading complete", song.name)
-		Musician.SongSharer:SendMessage(Musician.Events.SongReceiveSucessful, sender, song)
+		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveSucessful, sender, song)
 
-		Musician.SongSharer:SendMessage(Musician.Events.SourceSongLoaded, song, songData)
+		Musician.SongLinks:SendMessage(Musician.Events.SourceSongLoaded, song, songData)
 	end)
 end

@@ -69,7 +69,7 @@ function Musician:OnInitialize()
 
 	Musician.Comm.Init()
 	Musician.Registry.Init()
-	Musician.SongSharer.Init()
+	Musician.SongLinks.Init()
 	Musician.SetupHooks()
 
 	C_Timer.NewTicker(0.5, function() Musician.Utils.MuteGameMusic() end)
