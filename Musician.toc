@@ -14,7 +14,7 @@ core\Musician.Worker.lua
 core\Musician.Sampler.lua
 core\Musician.Comm.lua
 core\Musician.Registry.lua
-core\Musician.SongSharer.lua
+core\Musician.SongLinks.lua
 core\Musician.Preloader.lua
 core\Musician.KeyboardUtils.lua
 core\Musician.Live.lua
