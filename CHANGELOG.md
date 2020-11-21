@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.6.1.3
+--------
+* Fixed broken option checkboxes #57
+
 v1.6.1.2
 --------
 * Updated for WoW Shadowlands 9.0.2
