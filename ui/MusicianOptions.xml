@@ -51,11 +51,7 @@
 										</Anchors>
 										<Scripts>
 											<OnLoad>
-												_G[self:GetName().."Text"]:SetText(Musician.Msg.OPTIONS_ENABLE_EMOTE_LABEL)
-												self:SetHitRectInsets(0, -_G[self:GetName().."Text"]:GetWidth(), 0, 0)
-												self.type = CONTROLTYPE_CHECKBOX
-												BlizzardOptionsPanel_RegisterControl(self, self:GetParent():GetParent())
-												BlizzardOptionsPanel_SetupControl(self)
+												Musician.Options.SetupCheckbox(self, Musician.Msg.OPTIONS_ENABLE_EMOTE_LABEL)
 											</OnLoad>
 										</Scripts>
 									</CheckButton>
@@ -65,11 +61,7 @@
 										</Anchors>
 										<Scripts>
 											<OnLoad>
-												_G[self:GetName().."Text"]:SetText(Musician.Msg.OPTIONS_ENABLE_EMOTE_PROMO_LABEL)
-												self:SetHitRectInsets(0, -_G[self:GetName().."Text"]:GetWidth(), 0, 0)
-												self.type = CONTROLTYPE_CHECKBOX
-												BlizzardOptionsPanel_RegisterControl(self, self:GetParent():GetParent())
-												BlizzardOptionsPanel_SetupDependentControl(_G[self:GetParent():GetName().."Enable"], self)
+												Musician.Options.SetupCheckbox(self, Musician.Msg.OPTIONS_ENABLE_EMOTE_PROMO_LABEL, _G[self:GetParent():GetName().."Enable"])
 											</OnLoad>
 										</Scripts>
 									</CheckButton>
