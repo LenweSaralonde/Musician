@@ -27,6 +27,17 @@ end
 
 Musician.NamePlates.Options.SetCVarBool = setCVarBool
 
+--- Options panel initialization
+--
+function Musician.NamePlates.Options.Init()
+	-- Refresh panel when CVar changed
+	MusicianOptionsPanelUnitNamePlates:RegisterEvent("CVAR_UPDATE")
+	MusicianOptionsPanelUnitNamePlates:SetScript("OnEvent", function(event, ...)
+		Musician.NamePlates.Options.RefreshCheckboxes()
+	end)
+end
+hooksecurefunc(Musician.Options, "Init", Musician.NamePlates.Options.Init)
+
 --- Return default options
 -- @return (table)
 Musician.NamePlates.Options.GetDefaults = function()
@@ -83,13 +94,24 @@ Musician.NamePlates.Options.RefreshCheckboxes = function()
 	end
 end
 
+--- Get text label for cinematic mode
+-- @return label (string)
+Musician.NamePlates.Options.GetCinematicModeLabel = function()
+	local binding = GetBindingKey("TOGGLEUI")
+	if binding then
+		return string.gsub(Musician.Msg.OPTIONS_CINEMATIC_MODE, '{binding}', binding)
+	else
+		return Musician.Msg.OPTIONS_CINEMATIC_MODE_NO_BINDING
+	end
+end
+
 --- Refresh panel and store old values
 --
 Musician.NamePlates.Options.Refresh = function()
 
 	local binding = GetBindingKey("TOGGLEUI")
 	if binding then
-		MusicianOptionsPanelUnitNamePlatesCinematicModeText:SetText(string.gsub(Musician.Msg.OPTIONS_CINEMATIC_MODE, '{binding}', binding))
+		MusicianOptionsPanelUnitNamePlatesCinematicModeText:SetText(Musician.NamePlates.Options.GetCinematicModeLabel())
 	end
 
 	oldSettings = {
@@ -103,13 +125,6 @@ Musician.NamePlates.Options.Refresh = function()
 	MusicianOptionsPanelUnitNamePlatesImage:Show()
 end
 hooksecurefunc(Musician.Options, "Refresh", Musician.NamePlates.Options.Refresh)
-
--- Refresh panel when CVar changed
---
-MusicianOptionsPanelUnitNamePlates:RegisterEvent("CVAR_UPDATE")
-MusicianOptionsPanelUnitNamePlates:SetScript("OnEvent", function(event, ...)
-	Musician.NamePlates.Options.RefreshCheckboxes()
-end)
 
 -- Restore previous values on cancel
 --

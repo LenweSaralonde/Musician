@@ -19,6 +19,27 @@ function Musician.Options.Init()
 	InterfaceOptions_AddCategory(MusicianOptionsPanelContainer)
 end
 
+--- Set up an option checkbox
+-- @param checkbox (CheckButton)
+-- @param labelText (string)
+-- @param[opt] dependantControl (CheckButton)
+-- @param[opt] dependantControl2 (CheckButton)
+function Musician.Options.SetupCheckbox(checkbox, labelText, dependantControl, dependantControl2)
+	local labelElement = _G[checkbox:GetName().."Text"]
+	labelElement:SetText(labelText)
+	checkbox:SetHitRectInsets(0, -labelElement:GetWidth(), 0, 0)
+	checkbox.type = CONTROLTYPE_CHECKBOX
+	checkbox.SetValue = function(checkbox, value) checkbox.newValue = value end
+	BlizzardOptionsPanel_RegisterControl(checkbox, checkbox:GetParent():GetParent())
+
+	if dependantControl then
+		BlizzardOptionsPanel_SetupDependentControl(dependantControl, checkbox)
+		if dependantControl2 then
+			BlizzardOptionsPanel_SetupDependentControl(dependantControl2, checkbox)
+		end
+	end
+end
+
 --- Show Musician's option panel
 --
 function Musician.Options.Show()

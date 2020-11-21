@@ -48,8 +48,8 @@ ui\MusicianKeyboard.lua
 ui\MusicianKeyboardConfig.xml
 ui\MusicianKeyboardConfig.lua
 
-ui\MusicianOptions.xml
 ui\MusicianOptions.lua
+ui\MusicianOptions.xml
 
 ui\MusicianAbout.xml
 ui\MusicianAbout.lua
