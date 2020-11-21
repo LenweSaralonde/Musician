@@ -74,6 +74,16 @@ function Musician.Utils.Highlight(text, color)
 	return "|cFF" .. color .. text .. "|r"
 end
 
+--- Remove text coloring
+-- @param highlightedText (string)
+-- @return text (string)
+function Musician.Utils.RemoveHighlight(highlightedText)
+	local text = highlightedText
+	text = string.gsub(text, '|c[0-9A-F][0-9A-F][0-9A-F][0-9A-F][0-9A-F][0-9A-F][0-9A-F][0-9A-F]', '')
+	text = string.gsub(text, '|r', '')
+	return text
+end
+
 --- Get color code from RGB values
 -- @param r (number) 0-1
 -- @param g (number) 0-1
@@ -497,6 +507,17 @@ end
 -- @return isVisible (boolean)
 function Musician.Utils.PlayerGuidIsVisible(guid)
 	return guid and C_PlayerInfo.IsConnected(PlayerLocation:CreateFromGUID(guid))
+end
+
+--- Shortens the text with ellipsis if its lengths is longer than specified
+-- @param text (string)
+-- @param maxLength (int)
+-- @return ellipsisText (string)
+function Musician.Utils.Ellipsis(text, maxLength)
+	if #text > maxLength then
+		return string.sub(text, 1, maxLength - 1) .. '…'
+	end
+	return text
 end
 
 --- Return the "Player is playing music" emote with promo message

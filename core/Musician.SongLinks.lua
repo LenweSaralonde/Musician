@@ -31,6 +31,24 @@ local requestedSongs = {}
 
 local RECEIVING_PROGRESSION_RATIO = .9
 local REQUEST_TIMEOUT = 30
+local MAX_TITLE_LENGTH = 48
+
+local HYPERLINK_PREFIX = 'musicianSong'
+local CHAT_LINK_PREFIX = 'Musician'
+local LINK_COLOR = '00FFFF'
+local CHAT_MSG_EVENTS = {
+	"CHAT_MSG_CHANNEL",
+	"CHAT_MSG_SAY", "CHAT_MSG_YELL", "CHAT_MSG_EMOTE", "CHAT_MSG_TEXT_EMOTE",
+	"CHAT_MSG_PARTY", "CHAT_MSG_PARTY_LEADER",
+	"CHAT_MSG_RAID", "CHAT_MSG_RAID_LEADER",
+	"CHAT_MSG_GUILD", "CHAT_MSG_OFFICER",
+	"CHAT_MSG_WHISPER", "CHAT_MSG_WHISPER_INFORM"
+}
+local BUBBLE_CHAT_MSG_EVENTS = {
+	"CHAT_MSG_SAY", "CHAT_MSG_YELL",
+	"CHAT_MSG_PARTY", "CHAT_MSG_PARTY_LEADER",
+	"CHAT_MSG_RAID", "CHAT_MSG_RAID_LEADER"
+}
 
 local MSG_MULTI_FIRST = "\001"
 local MSG_MULTI_NEXT  = "\002"
@@ -79,6 +97,149 @@ function Musician.SongLinks.Init()
 			Musician.SongLinks.OnSongData(prefix, message, distribution, sender)
 		end
 	end)
+	for _, event in pairs(BUBBLE_CHAT_MSG_EVENTS) do
+		Musician.SongLinks:RegisterEvent(event, Musician.SongLinks.OnChatBubbleMsg)
+	end
+
+	-- Convert hyperlinks to plain text chat links before sending messages
+	local HookedSubstituteChatMessageBeforeSend = SubstituteChatMessageBeforeSend
+	SubstituteChatMessageBeforeSend = function(msg)
+		msg = HookedSubstituteChatMessageBeforeSend(msg)
+		msg = Musician.SongLinks.HyperlinksToChatLinks(msg)
+		return msg
+	end
+
+	-- Convert received plain text chat links into hyperlinks
+	local messageEventFilter = function(self, event, msg, player, ...)
+		msg = Musician.SongLinks.ChatLinksToHyperlinks(msg, player)
+		return false, msg, player, ...
+	end
+	for _, event in pairs(CHAT_MSG_EVENTS) do
+		ChatFrame_AddMessageEventFilter(event, messageEventFilter)
+	end
+
+	-- Hyperlink hooks
+	hooksecurefunc("ChatFrame_OnHyperlinkShow", function(self, link, text, button)
+		local args = { strsplit(':', link) }
+		if args[1] == HYPERLINK_PREFIX and not(IsModifiedClick("CHATLINK")) then
+			-- Extract player name
+			local player = args[2] or UnitName('player')
+
+			-- Extract title
+			local title = string.match(text, '%[[^:]+: *([^%]]+)%]')
+
+			-- Request download
+			Musician.SongLinks.RequestSong(title, player)
+		end
+	end)
+	local HookedSetHyperlink = ItemRefTooltip.SetHyperlink
+	function ItemRefTooltip:SetHyperlink(link, ...)
+		if (link and link:sub(0, #HYPERLINK_PREFIX) == HYPERLINK_PREFIX) then
+			return
+		end
+		return HookedSetHyperlink(self, link, ...)
+	end
+end
+
+--- Normalize song title for links
+-- @param title (string)
+-- @return normalizedTitle (string)
+function Musician.SongLinks.NormalizeTitleForLinks(title)
+	local normalizedTitle = title
+
+	-- Escape special characters
+	normalizedTitle = string.gsub(normalizedTitle, '|', '¦')
+	normalizedTitle = string.gsub(normalizedTitle, '%[', '(')
+	normalizedTitle = string.gsub(normalizedTitle, '%]', ')')
+
+	-- Shorten title if it exceeds the max length
+	normalizedTitle = Musician.Utils.Ellipsis(normalizedTitle, MAX_TITLE_LENGTH)
+
+	return normalizedTitle
+end
+
+--- Format song hyperlink
+-- @param title (string)
+-- @param[opt] playerName (string)
+-- @return link (string)
+function Musician.SongLinks.GetHyperlink(title, playerName)
+	local locale = Musician.Utils.GetRealmLocale()
+	local prefix = Musician.Locale[locale] and Musician.Locale[locale].LINKS_PREFIX or Musician.Msg.LINKS_PREFIX
+	local format = Musician.Locale[locale] and Musician.Locale[locale].LINKS_FORMAT or Musician.Msg.LINKS_FORMAT
+
+	local linkText = '[' .. format .. ']'
+	linkText = string.gsub(linkText, '{prefix}', prefix)
+	linkText = string.gsub(linkText, '{title}', Musician.SongLinks.NormalizeTitleForLinks(title))
+	linkText = Musician.Utils.Highlight(linkText, LINK_COLOR)
+
+	if playerName == nil or playerName == '' or Musician.Utils.PlayerIsMyself(playerName) then
+		return Musician.Utils.GetLink(HYPERLINK_PREFIX, linkText)
+	else
+		return Musician.Utils.GetLink(HYPERLINK_PREFIX, linkText, Musician.Utils.NormalizePlayerName(playerName))
+	end
+end
+
+--- Format song link for chat
+-- @param title (string)
+-- @param[opt] playerName (string)
+-- @return link (string)
+function Musician.SongLinks.GetChatLink(title, playerName)
+	local normalizedTitle = Musician.SongLinks.NormalizeTitleForLinks(title)
+	if playerName == nil or playerName == '' or Musician.Utils.PlayerIsMyself(playerName) then
+		return '[' .. CHAT_LINK_PREFIX .. ': ' .. normalizedTitle .. ']'
+	else
+		return '[' .. CHAT_LINK_PREFIX .. '<' .. Musician.Utils.NormalizePlayerName(playerName) .. '>: ' .. normalizedTitle .. ']'
+	end
+end
+
+--- Convert hyperlinks into text links for sending in the chat
+-- @param text (string)
+-- @return msg (string)
+function Musician.SongLinks.HyperlinksToChatLinks(text)
+	local capturePattern = '|H' .. HYPERLINK_PREFIX .. ':?([^|]*)|h[^%[]*%[[^:]+: ([^%]]+)%]|r|h'
+	return string.gsub(text, capturePattern, function(playerArg, titleArg)
+		return Musician.SongLinks.GetChatLink(titleArg, playerArg)
+	end)
+end
+
+--- Convert chat text links into hyperlinks
+-- @param msg (string)
+-- @param[opt] playerName (string)
+-- @return text (string)
+function Musician.SongLinks.ChatLinksToHyperlinks(msg, playerName)
+	local capturePattern = '%[' .. CHAT_LINK_PREFIX .. '<?([^>:]*)>?: ([^%]]*)%]'
+	return string.gsub(msg, capturePattern, function(playerArg, titleArg)
+		local title = Musician.Utils.RemoveHighlight(titleArg) -- Remove text coloring added by other addons such as Total RP
+		local player = playerArg ~= '' and playerArg or playerName or ''
+		return Musician.SongLinks.GetHyperlink(title, player)
+	end)
+end
+
+--- Convert chat links for chat bubbles
+-- @param msg (string)
+-- @return text (string)
+function Musician.SongLinks.ChatLinksToChatBubble(msg)
+	local capturePattern = '%[' .. CHAT_LINK_PREFIX .. '<?([^>:]*)>?: ([^%]]*)%]'
+	return string.gsub(msg, capturePattern, function(playerArg, titleArg)
+		titleArg = Musician.Utils.RemoveHighlight(titleArg) -- Remove text coloring added by other addons such as Total RP
+		local note = Musician.Utils.GetChatIcon(Musician.IconImages.Note)
+		return '«' .. note .. titleArg .. '»'
+	end)
+end
+
+--- OnChatBubbleMsg
+-- Replace chat links in chat bubbles
+function Musician.SongLinks.OnChatBubbleMsg(event, msg, player)
+	C_Timer.After(0, function()
+		local bubbles = C_ChatBubbles.GetAllChatBubbles()
+		for _, bubble in pairs(bubbles) do
+			local text = bubble:GetChildren().String:GetText()
+			if bubble.MusicianReplacedText ~= text then
+				bubble.MusicianReplacedText = Musician.SongLinks.ChatLinksToChatBubble(text)
+				bubble:GetChildren().String:SetText(bubble.MusicianReplacedText)
+			end
+		end
+	end)
 end
 
 --- Export and add song for sharing
@@ -90,11 +251,12 @@ function Musician.SongLinks.AddSong(song, title, onComplete)
 		title = song.name
 	end
 
+	local normalizedTitle = Musician.SongLinks.NormalizeTitleForLinks(title)
 	song:ExportCompressed(function(songData)
-		sharedSongs[title] = songData
-		debug("Exported song for sharing", title)
+		sharedSongs[normalizedTitle] = songData
+		debug("Exported song for sharing", normalizedTitle)
 		if onComplete then
-			onComplete(title)
+			onComplete(normalizedTitle)
 		end
 	end)
 end

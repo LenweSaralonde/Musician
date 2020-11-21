@@ -241,6 +241,9 @@ msg.PLAYER_MENU_UNMUTE = "Unmute"
 msg.PLAYER_IS_MUTED = "{icon}{player} is now muted."
 msg.PLAYER_IS_UNMUTED = "{icon}{player} is now unmuted."
 
+msg.LINKS_PREFIX = "Music"
+msg.LINKS_FORMAT = "{prefix}: {title}"
+
 msg.INSTRUMENT_NAMES = {
 	["none"] = "(None)",
 	["accordion"] = "Accordion",
