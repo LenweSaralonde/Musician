@@ -248,6 +248,19 @@ msg.LINKS_LINK_BUTTON = "Link"
 msg.LINKS_SHARE_WINDOW_TITLE = "Share song in the chat:"
 msg.LINKS_SHARE_WINDOW_POST_BUTTON = "Post link"
 
+msg.LINKS_IMPORT_WINDOW_HINT = "Press the Import button to start importing the song into Musician."
+msg.LINKS_IMPORT_WINDOW_IMPORT_BUTTON = "Import song"
+msg.LINKS_IMPORT_WINDOW_HIDE_BUTTON = "Hide"
+msg.LINKS_IMPORT_REQUESTING = "Requesting song from {player}."
+msg.LINKS_IMPORT_DOWNLOADING = "Importing {progress}%"
+
+msg.LINKS_ERROR = {}
+msg.LINKS_ERROR.notFound = "The song {title} is not available from {player}."
+msg.LINKS_ERROR.alreadySending = "A song is already being sent to you by {player}. Please try again in a few seconds."
+msg.LINKS_ERROR.alreadyRequested = "A song is already being requested from {player}."
+msg.LINKS_ERROR.timeout = "The player {player} did not respond."
+msg.LINKS_ERROR.importingFailed = "The song {title} could not be imported from {player}."
+
 msg.INSTRUMENT_NAMES = {
 	["none"] = "(None)",
 	["accordion"] = "Accordion",
