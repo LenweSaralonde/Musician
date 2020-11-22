@@ -950,7 +950,7 @@ function Musician.Song:Export(onComplete, progressionFactor)
 	data = data .. Musician.Utils.PackNumber(self.duration, 3)
 
 	-- Number of tracks (1)
-	data = data .. Musician.Utils.PackNumber(#Musician.sourceSong.tracks, 1)
+	data = data .. Musician.Utils.PackNumber(#self.tracks, 1)
 
 	-- Tracks
 	-- ======
