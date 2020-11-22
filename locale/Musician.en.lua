@@ -241,6 +241,10 @@ msg.PLAYER_IS_UNMUTED = "{icon}{player} is now unmuted."
 
 msg.LINKS_PREFIX = "Music"
 msg.LINKS_FORMAT = "{prefix}: {title}"
+msg.LINKS_LINK_BUTTON = "Link"
+
+msg.LINKS_SHARE_WINDOW_TITLE = "Share song in the chat:"
+msg.LINKS_SHARE_WINDOW_POST_BUTTON = "Post link"
 
 msg.INSTRUMENT_NAMES = {
 	["none"] = "(None)",

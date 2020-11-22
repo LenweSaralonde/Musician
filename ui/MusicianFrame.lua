@@ -41,6 +41,7 @@ MusicianFrame.Init = function()
 	Musician.Frame:RegisterEvent("PLAYER_UNGHOST", MusicianFrame.OnCommChannelUpdate)
 
 	MusicianFrameTrackEditorButton:Disable()
+	MusicianFrameLinkButton:Disable()
 	MusicianFrameTestButton:SetText(Musician.Msg.TEST_SONG)
 	MusicianFrameTestButton:SetEnabled(false)
 	MusicianFramePlayButton:SetText(Musician.Msg.PLAY)
@@ -89,6 +90,63 @@ MusicianFrame.TrackEditor = function()
 	if Musician.sourceSong then
 		MusicianTrackEditor:Show()
 	end
+end
+
+--- Generate song link
+--
+MusicianFrame.GenerateLink = function()
+	if not(Musician.sourceSong) then return end
+
+	local sharedSong = Musician.sourceSong
+
+	local postLink = function(name, popup)
+		local name = strtrim(name)
+		sharedSong.name = name
+		ChatEdit_LinkItem(nil, Musician.SongLinks.GetHyperlink(name))
+		if sharedSong == Musician.sourceSong then
+			MusicianFrame.Clear()
+		end
+
+		if not(sharedSong.exporting) then
+			popup:Hide()
+			Musician.SongLinks.AddSong(sharedSong)
+		end
+	end
+
+	StaticPopupDialogs["MUSICIAN_LINK_SET_TITLE"] = {
+		preferredIndex = STATICPOPUPS_NUMDIALOGS,
+		text = Musician.Msg.LINKS_SHARE_WINDOW_TITLE,
+		button1 = Musician.Msg.LINKS_SHARE_WINDOW_POST_BUTTON,
+		button2 = CANCEL,
+		hasEditBox = 1,
+		maxLetters = 512,
+		editBoxWidth = 350,
+		OnAccept = function(self, params)
+			postLink(self.editBox:GetText(), self)
+			return true
+		end,
+		EditBoxOnEnterPressed = function(self, params)
+			local popup = self:GetParent()
+			postLink(popup.editBox:GetText(), popup)
+		end,
+		EditBoxOnEscapePressed = function(self)
+			self:GetParent():Hide()
+		end,
+		OnShow = function(self)
+			self.editBox:SetText(sharedSong.name)
+			self.editBox:HighlightText(0)
+			self.editBox:SetFocus()
+		end,
+		OnHide = function(self)
+			ChatEdit_FocusActiveWindow()
+			self.editBox:SetText("")
+		end,
+		timeout = 0,
+		exclusive = 1,
+		whileDead = 1,
+		hideOnEscape = 1
+	}
+	StaticPopup_Show("MUSICIAN_LINK_SET_TITLE")
 end
 
 --- OnSourceChanged
@@ -215,10 +273,12 @@ MusicianFrame.OnSourceSongUpdated = function(event, ...)
 	if Musician.sourceSong == nil then
 		MusicianFrameTestButton:Disable()
 		MusicianFrameTrackEditorButton:Disable()
+		MusicianFrameLinkButton:Disable()
 		MusicianTrackEditor:Hide()
 	else
 		MusicianFrameTestButton:Enable()
 		MusicianFrameTrackEditorButton:Enable()
+		MusicianFrameLinkButton:Enable()
 	end
 	MusicianFrame.UpdatePlayButton()
 	MusicianFrame.UpdateBandPlayButton()
