@@ -49,4 +49,6 @@ Musician.Icons = {
 	FileCode = "c",
 	BandPlay = "g",
 	Blank = " ",
+	Export = "#",
+	Link = "8",
 }
