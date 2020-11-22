@@ -307,6 +307,12 @@ Musician.Events.SongReceiveSucessful = "MusicianSongReceiveSucessful"
 -- @param title (string)
 Musician.Events.SongReceiveFailed = "MusicianSongReceiveFailed"
 
+--- Fired when the user clicks on a song link
+-- @field Musician.Events.SongLink
+-- @param title (string)
+-- @param playerName (string)
+Musician.Events.SongLink = "MusicianSongLink"
+
 Musician.IconImages = {}
 Musician.IconImages.NoteDisabled = "Interface\\AddOns\\Musician\\ui\\textures\\muted.blp"
 Musician.IconImages.Note = "Interface\\AddOns\\Musician\\ui\\textures\\unmuted.blp"

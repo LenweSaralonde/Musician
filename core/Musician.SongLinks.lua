@@ -128,8 +128,8 @@ function Musician.SongLinks.Init()
 			-- Extract title
 			local title = string.match(text, '%[[^:]+: *([^%]]+)%]')
 
-			-- Request download
-			Musician.SongLinks.RequestSong(title, player)
+			-- Trigger SongLink event
+			Musician.SongLinks:SendMessage(Musician.Events.SongLink, title, player)
 		end
 	end)
 	local HookedSetHyperlink = ItemRefTooltip.SetHyperlink
@@ -261,6 +261,14 @@ function Musician.SongLinks.AddSong(song, title, onComplete)
 	end)
 end
 
+--- Returns the title of song being requested from the player
+-- @param playerName (string)
+-- @return title (string)
+function Musician.SongLinks.GetRequestingSong(playerName)
+	playerName = Musician.Utils.NormalizePlayerName(playerName)
+	return requestedSongs[playerName] ~= nil and requestedSongs[playerName].title
+end
+
 --- Request a song for download to a player
 -- @param title (string)
 -- @param playerName (string)
@@ -294,7 +302,6 @@ function Musician.SongLinks.RequestSong(title, playerName)
 	}
 
 	Musician.SongLinks:SendMessage(Musician.Events.SongReceiveStart, playerName)
-	Musician.SongLinks:SendMessage(Musician.Events.SongReceiveProgress, playerName, 0)
 
 	-- Send song request to player
 	debugComm(true, Musician.SongLinks.event.requestSong, playerName, title)

@@ -35,6 +35,7 @@ MusicianFrame.Init = function()
 	Musician.Frame:RegisterMessage(Musician.Events.BandStop, MusicianFrame.OnBandStop)
 	Musician.Frame:RegisterMessage(Musician.Events.BandPlayReady, MusicianFrame.OnBandPlayReady)
 	Musician.Frame:RegisterMessage(Musician.Events.BandReadyPlayersUpdated, MusicianFrame.UpdateBandPlayButton)
+	Musician.Frame:RegisterMessage(Musician.Events.SongLink, MusicianFrame.OnSongLinkClick)
 	Musician.Frame:RegisterEvent("GROUP_ROSTER_UPDATE", MusicianFrame.OnRosterUpdate)
 	Musician.Frame:RegisterEvent("PLAYER_DEAD", MusicianFrame.OnCommChannelUpdate)
 	Musician.Frame:RegisterEvent("PLAYER_ALIVE", MusicianFrame.OnCommChannelUpdate)
@@ -147,6 +148,76 @@ MusicianFrame.GenerateLink = function()
 		hideOnEscape = 1
 	}
 	StaticPopup_Show("MUSICIAN_LINK_SET_TITLE")
+end
+
+--- OnSongLinkClick
+-- Called when clicking on a song link
+MusicianFrame.OnSongLinkClick = function(event, title, playerName)
+
+	playerName = Musician.Utils.NormalizePlayerName(playerName)
+
+	local requestingSongTitle = Musician.SongLinks.GetRequestingSong(playerName)
+	if requestingSongTitle then
+		title = requestingSongTitle
+	end
+
+	local isAlreadyImporting = requestingSongTitle
+
+	StaticPopupDialogs["MUSICIAN_LINK_CLICKED"] = {
+		preferredIndex = STATICPOPUPS_NUMDIALOGS,
+		text = title,
+		button1 = isAlreadyImporting and Musician.Msg.LINKS_IMPORT_WINDOW_HIDE_BUTTON or Musician.Msg.LINKS_IMPORT_WINDOW_IMPORT_BUTTON,
+		button2 = CANCEL,
+		subText = not(isAlreadyImporting) and Musician.Msg.LINKS_IMPORT_WINDOW_HINT or string.gsub(Musician.Msg.LINKS_IMPORT_REQUESTING, '{player}', playerName),
+		OnAccept = function(self, params)
+			if Musician.SongLinks.GetRequestingSong(playerName) then
+				self:Hide()
+			else
+				Musician.SongLinks.RequestSong(title, playerName)
+			end
+			return true
+		end,
+		OnCancel = function(self)
+			Musician.SongLinks.CancelRequest(playerName)
+		end,
+		timeout = 0,
+		whileDead = 1,
+		hideOnEscape = 1,
+	}
+	local popup = StaticPopup_Show("MUSICIAN_LINK_CLICKED")
+
+	-- Hide popup when complete
+	Musician.Frame:RegisterMessage(Musician.Events.SongReceiveComplete, function()
+		popup:Hide()
+	end)
+
+	-- Start import
+	Musician.Frame:RegisterMessage(Musician.Events.SongReceiveStart, function(event, sender, progress)
+		sender = Musician.Utils.NormalizePlayerName(sender)
+		if sender ~= playerName then return end
+		local subText = string.gsub(Musician.Msg.LINKS_IMPORT_REQUESTING, '{player}', playerName)
+		popup.SubText:SetText(subText)
+		popup.button1:SetText(Musician.Msg.LINKS_IMPORT_WINDOW_HIDE_BUTTON)
+	end)
+
+	-- Update import progression in subtext
+	Musician.Frame:RegisterMessage(Musician.Events.SongReceiveProgress, function(event, sender, progress)
+		sender = Musician.Utils.NormalizePlayerName(sender)
+		if sender ~= playerName then return end
+		local subText = string.gsub(Musician.Msg.LINKS_IMPORT_DOWNLOADING, '{progress}', floor(progress * 100))
+		popup.SubText:SetText(subText)
+		popup.button1:SetText(Musician.Msg.LINKS_IMPORT_WINDOW_HIDE_BUTTON)
+	end)
+
+	-- Print an error message if an error occurred
+	Musician.Frame:RegisterMessage(Musician.Events.SongReceiveFailed, function(event, sender, reason, title)
+		sender = Musician.Utils.NormalizePlayerName(sender)
+		if sender ~= playerName then return end
+		local msg = Musician.Msg.LINKS_ERROR[reason] or ''
+		msg = string.gsub(msg, '{player}', sender)
+		msg = string.gsub(msg, '{title}', title)
+		Musician.Utils.Error(msg)
+	end)
 end
 
 --- OnSourceChanged
