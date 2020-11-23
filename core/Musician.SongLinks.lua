@@ -253,12 +253,20 @@ function Musician.SongLinks.AddSong(song, title, onComplete)
 
 	local normalizedTitle = Musician.SongLinks.NormalizeTitleForLinks(title)
 	song:ExportCompressed(function(songData)
-		sharedSongs[normalizedTitle] = songData
-		debug("Exported song for sharing", normalizedTitle)
+		Musician.SongLinks.AddSongData(songData, normalizedTitle)
 		if onComplete then
 			onComplete(normalizedTitle)
 		end
 	end)
+end
+
+--- Add song data for sharing
+-- @param songData (string)
+-- @param title (string)
+function Musician.SongLinks.AddSongData(songData, title)
+	local normalizedTitle = Musician.SongLinks.NormalizeTitleForLinks(title)
+	sharedSongs[normalizedTitle] = songData
+	debug("Added song for sharing", normalizedTitle)
 end
 
 --- Returns the title of song being requested from the player
