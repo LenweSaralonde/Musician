@@ -101,7 +101,7 @@ MusicianFrame.GenerateLink = function()
 	local sharedSong = Musician.sourceSong
 
 	local postLink = function(name, popup)
-		local name = strtrim(name)
+		local name = Musician.Utils.NormalizeSongName(name)
 		sharedSong.name = name
 		ChatEdit_LinkItem(nil, Musician.SongLinks.GetHyperlink(name))
 		if sharedSong == Musician.sourceSong then

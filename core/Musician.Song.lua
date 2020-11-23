@@ -35,6 +35,9 @@ local NOTE = Musician.Song.Indexes.NOTE
 local NOTEON = Musician.Song.Indexes.NOTEON
 local CHUNK = Musician.Song.Indexes.CHUNK
 
+-- Max length for the song title
+Musician.Song.MAX_NAME_LENGTH = 512
+
 -- Song modes
 Musician.Song.MODE_DURATION = 0x10 -- Duration are set in chunk notes
 Musician.Song.MODE_LIVE = 0x20 -- No duration in chunk notes
@@ -704,7 +707,7 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 
 	-- Song title (2) + (title length in bytes)
 	local songTitleLength = Musician.Utils.UnpackNumber(readBytes(2))
-	self.name = readBytes(songTitleLength)
+	self.name = Musician.Utils.NormalizeSongName(readBytes(songTitleLength))
 
 	-- Song mode (1)
 	self.mode = Musician.Utils.UnpackNumber(readBytes(1, true))
