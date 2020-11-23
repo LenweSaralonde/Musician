@@ -255,6 +255,12 @@ Musician.PackSong = function(song, fileName) {
 	// Header (4)
 	packedSong += Musician.FILE_HEADER;
 
+	// Song title (2) + (title length in bytes)
+	packedSong += Musician.PackString(song.header.name || Musician.FilenameToTitle(fileName) || '');
+
+	// Song mode (1)
+	packedSong += Musician.PackNumber(0x10, 1);
+
 	// Duration (3)
 	var duration = duration;
 	packedSong += Musician.PackNumber(duration, 3);
@@ -342,9 +348,6 @@ Musician.PackSong = function(song, fileName) {
 	tracks.forEach(function(track) {
 		packedSong += track.notes.join(''); // Notes are already packed
 	});
-
-	// Song title (2) + (title length in bytes)
-	packedSong += Musician.PackString(song.header.name || Musician.FilenameToTitle(fileName) || '');
 
 	// Track names (2) + (title length in bytes)
 	tracks.forEach(function(track) {
