@@ -611,8 +611,14 @@ function Musician.Song:ImportCompressed(compressedData, crop, onComplete)
 	end
 	self.importing = true
 
-	local cursor = 1
-	local uncompressedData = ''
+	-- Get header
+	local header = string.sub(compressedData, 1, #Musician.FILE_HEADER_COMPRESSED)
+	if header ~= Musician.FILE_HEADER_COMPRESSED then
+		error(Musician.Msg.INVALID_MUSIC_CODE)
+	end
+
+	local cursor = #Musician.FILE_HEADER_COMPRESSED + 1
+	local uncompressedData = Musician.FILE_HEADER
 	local uncompressWorker
 
 	-- Uncompress string in a worker
@@ -691,10 +697,17 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 	local noteCount = 0
 
 	-- Header (4)
-	local header = readBytes(4)
+	local header = readBytes(#Musician.FILE_HEADER)
 	if header ~= Musician.FILE_HEADER then
 		error(Musician.Msg.INVALID_MUSIC_CODE)
 	end
+
+	-- Song title (2) + (title length in bytes)
+	local songTitleLength = Musician.Utils.UnpackNumber(readBytes(2))
+	self.name = readBytes(songTitleLength)
+
+	-- Song mode (1)
+	self.mode = Musician.Utils.UnpackNumber(readBytes(1, true))
 
 	-- Duration (3)
 	self.duration = Musician.Utils.UnpackNumber(readBytes(3, true))
@@ -837,10 +850,6 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 			-- Import metadata
 			-- ===============
 
-			-- Song title (2) + (title length in bytes)
-			local songTitleLength = Musician.Utils.UnpackNumber(readBytes(2))
-			self.name = readBytes(songTitleLength)
-
 			-- Track names (2) + (title length in bytes)
 			for trackIndex, track in pairs(self.tracks) do
 				local trackNameLength = Musician.Utils.UnpackNumber(readBytes(2))
@@ -946,6 +955,12 @@ function Musician.Song:Export(onComplete, progressionFactor)
 	-- Header (4)
 	data = data .. Musician.FILE_HEADER
 
+	-- Song title (2) + (title length in bytes)
+	data = data .. Musician.Utils.PackNumber(#self.name, 2) .. self.name
+
+	-- Song mode (1)
+	data = data .. Musician.Utils.PackNumber(self.mode, 1)
+
 	-- Duration (3)
 	data = data .. Musician.Utils.PackNumber(self.duration, 3)
 
@@ -1040,9 +1055,6 @@ function Musician.Song:Export(onComplete, progressionFactor)
 
 			local metadata = ''
 
-			-- Song title (2) + (title length in bytes)
-			metadata = metadata .. Musician.Utils.PackNumber(#self.name, 2) .. self.name
-
 			-- Track names (2) + (title length in bytes)
 			for _, track in pairs(self.tracks) do
 				metadata = metadata .. Musician.Utils.PackNumber(#track.name, 2) .. track.name
@@ -1124,8 +1136,26 @@ function Musician.Song:ExportCompressed(onComplete)
 			end
 
 			-- Compress chunk
-			local chunkSize = min(DEFLATE_CHUNK_SIZE, bytesToRead)
-			local chunk = readBytes(chunkSize)
+			local chunkSize
+			local chunk
+
+			-- First chunk: Uncompressed header + compressed song title only
+			if compressedData == '' then
+				-- Header
+				compressedData = Musician.FILE_HEADER_COMPRESSED
+				readBytes(#Musician.FILE_HEADER)
+
+				-- Title
+				local packedTitleLength = readBytes(2)
+				local titleLength = Musician.Utils.UnpackNumber(packedTitleLength)
+				local title = readBytes(titleLength)
+				chunkSize = 2 + titleLength
+				chunk = packedTitleLength .. title
+			else
+				chunkSize = min(DEFLATE_CHUNK_SIZE, bytesToRead)
+				chunk = readBytes(chunkSize)
+			end
+
 			local compressedChunk = LibDeflate:CompressDeflate(chunk, { level = 9 })
 			bytesToRead = bytesToRead - chunkSize
 			compressedData = compressedData .. Musician.Utils.PackNumber(#compressedChunk, 2) .. compressedChunk
