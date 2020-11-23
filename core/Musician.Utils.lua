@@ -509,13 +509,25 @@ function Musician.Utils.PlayerGuidIsVisible(guid)
 	return guid and C_PlayerInfo.IsConnected(PlayerLocation:CreateFromGUID(guid))
 end
 
---- Shortens the text with ellipsis if its lengths is longer than specified
+--- Shortens the UTF-8 text with ellipsis if its size in bytes is longer than specified
 -- @param text (string)
--- @param maxLength (int)
+-- @param maxBytes (int)
 -- @return ellipsisText (string)
-function Musician.Utils.Ellipsis(text, maxLength)
-	if #text > maxLength then
-		return string.sub(text, 1, maxLength - 1) .. '…'
+function Musician.Utils.Ellipsis(text, maxBytes)
+	if #text > maxBytes then
+		local ellipsis = (maxBytes > 3) and '…' or ''
+		local cursor = maxBytes - #ellipsis
+		local characterCount = strlenutf8(string.sub(text, 1, cursor))
+
+		-- Cutting within an UTF-8 character
+		if cursor < #text and characterCount == strlenutf8(string.sub(text, 1, cursor + 1)) then
+			-- Remove incomplete UTF-8 character as well
+			while cursor >= 1 and characterCount == strlenutf8(string.sub(text, 1, cursor)) do
+				cursor = cursor - 1
+			end
+		end
+
+		return string.sub(text, 1, cursor) .. ellipsis
 	end
 	return text
 end
