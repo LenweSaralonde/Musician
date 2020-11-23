@@ -433,6 +433,13 @@ function Musician.Utils.NormalizePlayerName(playerName)
 	return playerName
 end
 
+--- Return the normalized song name
+-- @param songName (string)
+-- @return normalizedSongName (string)
+function Musician.Utils.NormalizeSongName(songName)
+	return Musician.Utils.Ellipsis(strtrim(songName), Musician.Song.MAX_NAME_LENGTH)
+end
+
 --- Return the simple player name, including the realm slug if needed
 -- @param playerName (string)
 -- @return simpleName (string)
