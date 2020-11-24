@@ -384,9 +384,13 @@ end
 --- Start or stop the actual game music if a song can actually be heard
 -- @param force (boolean)
 function Musician.Utils.MuteGameMusic(force)
-	local isMusicianPlaying = Musician.Utils.SongIsPlaying() or Musician.Live.IsPlayingLive()
-	local isInGameMusicEnabled = GetCVar("Sound_EnableMusic") ~= "0"
-	local mute = Musician_Settings.muteGameMusic and isInGameMusicEnabled and isMusicianPlaying and not(Musician.Sampler.GetMuted())
+	local mute
+
+	if GetCVar("Sound_EnableMusic") ~= "0" then
+		mute = (Musician.Utils.SongIsPlaying() or Musician.Live.IsPlaying()) and not(Musician.Sampler.GetMuted())
+	else
+		mute = false
+	end
 
 	if not(force) and isGameMusicMuted == mute then return end
 
