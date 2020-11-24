@@ -287,7 +287,7 @@ end
 --- Toggle play song
 --
 function Musician.Comm.TogglePlaySong()
-	if Musician.streamingSong and Musician.streamingSong.streaming and Musician.streamingSong.mode ~= Musician.Song.MODE_LIVE then
+	if Musician.streamingSong and Musician.streamingSong.streaming and not(Musician.streamingSong.isLiveStreamingSong) then
 		-- Playing as band
 		if isBandPlayReady then
 			Musician.Comm.StopSongBand()
@@ -349,8 +349,8 @@ function Musician.Comm.ProcessChunk(packedChunk, sender)
 
 	-- No longer in loading range
 	if not(Musician.Registry.PlayerIsInLoadingRange(sender)) then
-		-- Stop currently playing music
-		if Musician.songs[sender] ~= nil then
+		-- Stop and clear existing song
+		if Musician.songs[sender] then
 			Musician.songs[sender]:Stop()
 			Musician.songs[sender] = nil
 			collectgarbage()
@@ -358,13 +358,22 @@ function Musician.Comm.ProcessChunk(packedChunk, sender)
 		return
 	end
 
+	-- Starting a new song over an existing one
+	if Musician.songs[sender] and Musician.songs[sender].songId ~= songId then
+		-- Clear existing song
+		Musician.songs[sender]:Stop()
+		Musician.songs[sender] = nil
+		collectgarbage()
+	end
+
 	-- Create playing song, if missing
 	if Musician.songs[sender] == nil then
 		Musician.songs[sender] = Musician.Song.create()
-	elseif not(Musician.songs[sender].isStreamed) or (Musician.songs[sender].songId ~= songId) then
-		Musician.songs[sender]:Stop()
-		Musician.songs[sender] = Musician.Song.create()
-		collectgarbage()
+
+		-- Receiving my own live streaming song: set live streaming song flag
+		if Musician.Utils.PlayerIsMyself(sender) and mode == Musician.Song.MODE_LIVE and Musician.Live.IsStreaming() then
+			Musician.songs[sender].isLiveStreamingSong = true
+		end
 	end
 
 	-- Decode chunk data

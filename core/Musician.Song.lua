@@ -147,6 +147,9 @@ function Musician.Song.create()
 	-- @field mode (int) Song mode
 	self.mode = Musician.Song.MODE_DURATION
 
+	-- @field isLiveStreamingSong (boolean) Song is used for, or results from live streaming from the current player
+	self.isLiveStreamingSong = false
+
 	-- @field cropFrom (number) Play song from this position
 	self.cropFrom = 0
 
@@ -313,7 +316,7 @@ function Musician.Song:Seek(cursor)
 			end
 
 			-- Seek before
-			if cursor < track.notes[index][NOTE.TIME ] then
+			if cursor < track.notes[index][NOTE.TIME] then
 				to = index
 				-- Seek after
 			else
@@ -322,7 +325,7 @@ function Musician.Song:Seek(cursor)
 		end
 	end
 
-	cursor = max(0, min(cursor, self.duration))
+	cursor = max(0, min(cursor, self.cropTo))
 
 	if cursor == self.cursor then
 		return
@@ -465,7 +468,7 @@ function Musician.Song:NoteOn(track, noteIndex, retries)
 	end
 
 	-- Don't play back my own live notes
-	if Musician.Utils.PlayerIsMyself(self.player) and self.mode == Musician.Song.MODE_LIVE then
+	if Musician.Utils.PlayerIsMyself(self.player) and self.isLiveStreamingSong then
 		return
 	end
 
@@ -515,6 +518,10 @@ end
 -- @param audioOnly (boolean) Stop note audio only
 -- @param[opt] decay (number) Override instrument decay
 function Musician.Song:NoteOff(track, key, audioOnly, decay)
+	if self.mode == Musician.Song.MODE_LIVE then
+		key = key + track.transpose
+	end
+
 	if track.notesOn[key] ~= nil then
 		local handle = track.notesOn[key][NOTEON.HANDLE]
 		if handle ~= 0 then
@@ -710,7 +717,11 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 	self.name = Musician.Utils.NormalizeSongName(readBytes(songTitleLength))
 
 	-- Song mode (1)
-	self.mode = Musician.Utils.UnpackNumber(readBytes(1, true))
+	local mode = Musician.Utils.UnpackNumber(readBytes(1, true))
+	if mode ~= Musician.Song.MODE_LIVE and mode ~= Musician.Song.MODE_DURATION then
+		error("Invalid song mode.")
+	end
+	self.mode = mode
 
 	-- Duration (3)
 	self.duration = Musician.Utils.UnpackNumber(readBytes(3, true))
@@ -810,21 +821,29 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 			if key == 0xFF then
 				trackOffset = trackOffset + 65535 / Musician.NOTE_TIME_FPS -- 16-bit
 			else
-				-- Note on with duration
-
 				-- Time (2)
 				local time = trackOffset + Musician.Utils.UnpackTime(readBytes(2, true), Musician.NOTE_TIME_FPS)
 
-				-- Duration (1)
-				local duration = Musician.Utils.UnpackTime(readBytes(1, true), Musician.NOTE_DURATION_FPS)
+				-- Note on with duration
+				if self.mode == Musician.Song.MODE_DURATION then
+					-- Duration (1)
+					local duration = Musician.Utils.UnpackTime(readBytes(1, true), Musician.NOTE_DURATION_FPS)
 
-				-- Insert note
-				table.insert(track.notes, {
-					[NOTE.ON] = true,
-					[NOTE.KEY] = key,
-					[NOTE.TIME] = time,
-					[NOTE.DURATION] = duration
-				})
+					-- Insert note with duration
+					table.insert(track.notes, {
+						[NOTE.ON] = true,
+						[NOTE.KEY] = key,
+						[NOTE.TIME] = time,
+						[NOTE.DURATION] = duration
+					})
+				elseif self.mode == Musician.Song.MODE_LIVE then
+					-- Insert live note event
+					table.insert(track.notes, {
+						[NOTE.ON] = bit.band(key, 0x80) == 0x80,
+						[NOTE.KEY] = bit.band(key, 0x7F),
+						[NOTE.TIME] = time
+					})
+				end
 
 				importedNotes = importedNotes + 1
 
@@ -943,6 +962,11 @@ function Musician.Song:Export(onComplete, progressionFactor)
 	end
 	self.exporting = true
 
+	-- Invalid song mode
+	if self.mode ~= Musician.Song.MODE_LIVE and self.mode ~= Musician.Song.MODE_DURATION then
+		error("Invalid song mode.")
+	end
+
 	if progressionFactor == nil then
 		progressionFactor = 1
 	end
@@ -980,7 +1004,7 @@ function Musician.Song:Export(onComplete, progressionFactor)
 		data = data .. Musician.Utils.PackNumber(track.midiInstrument, 1)
 
 		-- Channel (1)
-		data = data .. Musician.Utils.PackNumber(track.channel, 1)
+		data = data .. Musician.Utils.PackNumber(track.channel or 0, 1)
 
 		-- Note count (2)
 		data = data .. Musician.Utils.PackNumber(#track.notes, 2)
@@ -1030,14 +1054,24 @@ function Musician.Song:Export(onComplete, progressionFactor)
 				end
 				notesData = notesData .. noteSpacer
 
-				-- Key (1)
-				notesData = notesData .. Musician.Utils.PackNumber(note[NOTE.KEY], 1)
+				-- Duration mode
+				if self.mode == Musician.Song.MODE_DURATION then
+					-- Key (1)
+					notesData = notesData .. Musician.Utils.PackNumber(note[NOTE.KEY], 1)
 
-				-- Time (2)
-				notesData = notesData .. Musician.Utils.PackTime(noteTime, 2, Musician.NOTE_TIME_FPS)
+					-- Time (2)
+					notesData = notesData .. Musician.Utils.PackTime(noteTime, 2, Musician.NOTE_TIME_FPS)
 
-				-- Duration (1)
-				notesData = notesData .. Musician.Utils.PackTime(note[NOTE.DURATION], 1, Musician.NOTE_DURATION_FPS)
+					-- Duration (1)
+					notesData = notesData .. Musician.Utils.PackTime(note[NOTE.DURATION], 1, Musician.NOTE_DURATION_FPS)
+				elseif self.mode == Musician.Song.MODE_LIVE then
+					-- Key on/off event (1)
+					local keyEvent = bit.bor(note[NOTE.ON] and 0x80 or 0x00, bit.band(note[NOTE.KEY], 0x7F))
+					notesData = notesData .. Musician.Utils.PackNumber(keyEvent, 1)
+
+					-- Time (2)
+					notesData = notesData .. Musician.Utils.PackTime(noteTime, 2, Musician.NOTE_TIME_FPS)
+				end
 
 				-- Proceed with next note
 				exportedNotes = exportedNotes + 1
@@ -1060,7 +1094,8 @@ function Musician.Song:Export(onComplete, progressionFactor)
 
 			-- Track names (2) + (title length in bytes)
 			for _, track in pairs(self.tracks) do
-				metadata = metadata .. Musician.Utils.PackNumber(#track.name, 2) .. track.name
+				local trackName = track.name or ''
+				metadata = metadata .. Musician.Utils.PackNumber(#trackName, 2) .. trackName
 			end
 
 			-- Song settings
@@ -1259,12 +1294,12 @@ function Musician.Song:AppendChunk(chunk, mode, songId, chunkDuration, playtimeL
 		self.chunkTime = 0
 	end
 
-	self.isStreamed = true
 	self.mode = mode
 	self.songId = songId
 	self.player = player
 	self.chunkDuration = chunkDuration
 	self.cropTo = max(self.cropTo, self.chunkTime + playtimeLeft)
+	self.duration = ceil(self.cropTo)
 
 	local trackData
 	for _, trackData in pairs(chunk) do

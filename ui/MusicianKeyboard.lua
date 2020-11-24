@@ -566,7 +566,7 @@ local function updateLiveModeButton()
 		MusicianKeyboardTitleIcon:SetText(ICON.SOLO_MODE)
 	end
 
-	if  not(Musician.Live.CanStream()) then
+	if not(Musician.Live.CanStream()) then
 		button:Disable()
 		button.tooltipText = Musician.Msg.LIVE_MODE_DISABLED
 	else

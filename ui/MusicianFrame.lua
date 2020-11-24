@@ -327,7 +327,7 @@ MusicianFrame.OnSongPlayOrStop = function(event, song)
 	if song == Musician.sourceSong then
 		MusicianFrameTestButton:SetText(isPlaying and Musician.Msg.STOP_TEST or Musician.Msg.TEST_SONG)
 		MusicianFrame.RefreshPlayingProgressBar(event, song)
-	elseif Musician.Utils.PlayerIsMyself(song.player) and Musician.songs[song.player] and Musician.songs[song.player].mode ~= Musician.Song.MODE_LIVE then
+	elseif Musician.Utils.PlayerIsMyself(song.player) and Musician.songs[song.player] and not(song.isLiveStreamingSong) then
 		MusicianFramePlayButton:SetText(isPlaying and Musician.Msg.STOP or Musician.Msg.PLAY)
 		MusicianFrame.RefreshPlayingProgressBar(event, song)
 
@@ -400,7 +400,7 @@ MusicianFrame.RefreshPlayingProgressBar = function(event, song)
 
 	if song == Musician.sourceSong then
 		button = MusicianFrameTestButton
-	elseif Musician.Utils.PlayerIsMyself(song.player) and Musician.songs[song.player] and Musician.songs[song.player].mode ~= Musician.Song.MODE_LIVE then
+	elseif Musician.Utils.PlayerIsMyself(song.player) and Musician.songs[song.player] and not(Musician.songs[song.player].isLiveStreamingSong) then
 		button = MusicianFramePlayButton
 	else
 		return
