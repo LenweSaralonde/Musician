@@ -41,6 +41,19 @@ Musician.OS_LINUX = "Linux"
 Musician.Msg = {}
 Musician.Locale = {}
 
+-- Instrument toys to be muted
+Musician.InstrumentToys = {
+	{
+		itemId = 184489, -- Fae Harp
+		soundFiles = {
+			3885818, -- sound/music/shadowlands/mus_90_aw_nocturne_celestial_harp_a.mp3
+			3885820, -- sound/music/shadowlands/mus_90_aw_nocturne_celestial_harp_b.mp3
+			3885822, -- sound/music/shadowlands/mus_90_aw_nocturne_celestial_harp_c.mp3
+			3885824, -- sound/music/shadowlands/mus_90_aw_nocturne_celestial_harp_d.mp3
+		}
+	},
+}
+
 --- Events
 Musician.Events = {}
 

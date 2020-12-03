@@ -362,24 +362,31 @@ end
 --- Start or stop the actual game music if a song can actually be heard
 -- @param force (boolean)
 function Musician.Utils.MuteGameMusic(force)
-	local mute
-
-	if C_CVar.GetCVar("Sound_EnableMusic") ~= "0" then
-		mute = (Musician.Utils.SongIsPlaying() or Musician.Live.IsPlaying()) and not(Musician.Sampler.GetMuted())
-	else
-		mute = false
-	end
+	local isMusicianPlaying = Musician.Utils.SongIsPlaying() or Musician.Live.IsPlaying()
+	local isInGameMusicEnabled = C_CVar.GetCVar("Sound_EnableMusic") ~= "0"
+	local mute = Musician_Settings.muteGameMusic and isInGameMusicEnabled and isMusicianPlaying and not(Musician.Sampler.GetMuted())
 
 	if not(force) and isGameMusicMuted == mute then return end
-
-	isGameMusicMuted = mute
 
 	if mute then
 		-- Play a silent music track to mute and fade actual game music
 		PlayMusic("Interface\\AddOns\\Musician\\instruments\\silent\\silent.mp3")
-	else
+		isGameMusicMuted = true
+	elseif isGameMusicMuted then
 		-- Stop custom silent music, resume game music
 		StopMusic()
+		isGameMusicMuted = false
+	end
+end
+
+--- Mute or unmute music from instrument toys
+-- @param isMuted (boolean)
+function Musician.Utils.SetInstrumentToysMuted(isMuted)
+	local muteFunc = isMuted and MuteSoundFile or UnmuteSoundFile
+	for _, item in pairs(Musician.InstrumentToys) do
+		for _, file in pairs(item.soundFiles) do
+			muteFunc(file)
+		end
 	end
 end
 
