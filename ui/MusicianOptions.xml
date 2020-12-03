@@ -67,6 +67,39 @@
 									</CheckButton>
 								</Frames>
 							</Frame>
+							<Frame name="$parentIntegration">
+								<Size>
+									<AbsDimension x="580" y="50"/>
+								</Size>
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="$parentUnitEmote" relativePoint="BOTTOMLEFT" />
+								</Anchors>
+								<Layers>
+									<Layer level="ARTWORK">
+										<FontString name="$parentTitle" inherits="GameFontNormal" justifyH="LEFT" justifyV="TOP">
+											<Anchors>
+												<Anchor point="TOPLEFT" />
+											</Anchors>
+										</FontString>
+									</Layer>
+								</Layers>
+								<Frames>
+									<CheckButton name="$parentMuteGameMusic" inherits="InterfaceOptionsCheckButtonTemplate">
+										<Anchors>
+											<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-10"/>
+										</Anchors>
+										<Scripts>
+											<OnLoad>
+												Musician.Options.SetupCheckbox(self, Musician.Msg.OPTIONS_AUTO_MUTE_GAME_MUSIC_LABEL)
+											</OnLoad>
+											<OnClick inherit="append">
+												Musician_Settings.muteGameMusic = self:GetChecked()
+												Musician.Utils.MuteGameMusic(true)
+											</OnClick>
+										</Scripts>
+									</CheckButton>
+								</Frames>
+							</Frame>
 						</Frames>
 						<Scripts>
 							<OnLoad>
@@ -76,6 +109,7 @@
 								MusicianOptionsPanelSubText:SetText(subText)
 
 								MusicianOptionsPanelUnitEmoteTitle:SetText(Musician.Msg.OPTIONS_CATEGORY_EMOTE)
+								MusicianOptionsPanelIntegrationTitle:SetText(Musician.Msg.OPTIONS_INTEGRATION_OPTIONS_TITLE)
 							</OnLoad>
 						</Scripts>
 					</Frame>

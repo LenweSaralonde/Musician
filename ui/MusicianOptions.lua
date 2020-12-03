@@ -6,6 +6,8 @@ Musician.Options = {}
 local MODULE_NAME = "Options"
 Musician.AddModule(MODULE_NAME)
 
+local currentMuteGameMusic
+
 --- Options panel initialization
 --
 function Musician.Options.Init()
@@ -55,21 +57,28 @@ function Musician.Options.Refresh()
 	else
 		MusicianOptionsPanelUnitEmoteEnablePromo:Disable()
 	end
+	MusicianOptionsPanelIntegrationMuteGameMusic:SetChecked(Musician_Settings.muteGameMusic)
+	currentMuteGameMusic = Musician_Settings.muteGameMusic
 end
 
 function Musician.Options.Defaults()
 	Musician_Settings.enableEmote = true
 	Musician_Settings.enableEmotePromo = true
+	Musician_Settings.muteGameMusic = true
+	Musician.Utils.MuteGameMusic(true)
 end
 
 function Musician.Options.Cancel()
-
+	Musician_Settings.muteGameMusic = currentMuteGameMusic
+	Musician.Utils.MuteGameMusic(true)
 end
 
 function Musician.Options.Save()
 	Musician_Settings.enableEmote = MusicianOptionsPanelUnitEmoteEnable:GetChecked()
 	Musician_Settings.enableEmotePromo = MusicianOptionsPanelUnitEmoteEnablePromo:GetChecked()
 	Musician_Settings.emoteHintShown = true
+	Musician_Settings.muteGameMusic = MusicianOptionsPanelIntegrationMuteGameMusic:GetChecked()
+	Musician.Utils.MuteGameMusic(true)
 end
 
 --- Update the size of the Musician option panel
