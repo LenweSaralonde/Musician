@@ -3,7 +3,6 @@ Changelog
 
 v1.6.2.0
 --------
-* Added option to mute instrumental toys such as the Fae Harp.
 * Added option to allow in-game music playing along with Musician.
 
 v1.6.1.3
