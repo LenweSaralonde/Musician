@@ -67,6 +67,84 @@
 									</CheckButton>
 								</Frames>
 							</Frame>
+							<Frame name="$parentIntegration">
+								<Size>
+									<AbsDimension x="580" y="70"/>
+								</Size>
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="$parentUnitEmote" relativePoint="BOTTOMLEFT" />
+								</Anchors>
+								<Layers>
+									<Layer level="ARTWORK">
+										<FontString name="$parentTitle" inherits="GameFontNormal" justifyH="LEFT" justifyV="TOP">
+											<Anchors>
+												<Anchor point="TOPLEFT" />
+											</Anchors>
+										</FontString>
+									</Layer>
+								</Layers>
+								<Frames>
+									<CheckButton name="$parentMuteGameMusic" inherits="InterfaceOptionsCheckButtonTemplate">
+										<Anchors>
+											<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-10"/>
+										</Anchors>
+										<Scripts>
+											<OnLoad>
+												Musician.Options.SetupCheckbox(self, Musician.Msg.OPTIONS_AUTO_MUTE_GAME_MUSIC_LABEL)
+											</OnLoad>
+											<OnClick inherit="append">
+												Musician_Settings.muteGameMusic = self:GetChecked()
+												Musician.Utils.MuteGameMusic(true)
+											</OnClick>
+										</Scripts>
+									</CheckButton>
+									<CheckButton name="$parentMuteInstrumentToys" inherits="InterfaceOptionsCheckButtonTemplate">
+										<Anchors>
+											<Anchor point="TOPLEFT" relativeTo="$parentMuteGameMusic" relativePoint="BOTTOMLEFT" x="0" y="4"/>
+										</Anchors>
+										<Scripts>
+											<OnLoad>
+												local label = string.gsub(Musician.Msg.OPTIONS_MUTE_INSTRUMENT_TOYS_LABEL, '{icons}', '')
+												Musician.Options.SetupCheckbox(self, label)
+
+												local itemIcons = {}
+												for itemIndex, itemRow in pairs(Musician.InstrumentToys) do
+													table.insert(itemIcons, '')
+												end
+
+												local loadedItems = 0
+												for itemIndex, itemRow in pairs(Musician.InstrumentToys) do
+													local item = Item:CreateFromItemID(itemRow.itemId)
+													item:ContinueOnItemLoad(function()
+														local fontHeight = self.Text:GetLineHeight() * 1.5
+														local itemString = string.match(item:GetItemLink(), "item[%-?%d:]+")
+														local itemIcon = item:GetItemIcon()
+														local textureString = '|T' .. itemIcon .. ':' .. fontHeight .. '|t'
+														local itemLink = '|H' .. itemString .. '|h' .. textureString .. '|h'
+
+														loadedItems = loadedItems + 1
+														itemIcons[itemIndex] = itemLink
+														if loadedItems == #Musician.InstrumentToys then
+															local strIcons = strjoin(" ", unpack(itemIcons))
+															label = string.gsub(Musician.Msg.OPTIONS_MUTE_INSTRUMENT_TOYS_LABEL, '{icons}', strIcons)
+															self.Text:SetText(label)
+															self:SetHyperlinksEnabled(true)
+															self.tooltipFrame = GameTooltip
+															self:SetScript("OnHyperlinkEnter", InlineHyperlinkFrame_OnEnter)
+															self:SetScript("OnHyperlinkLeave", InlineHyperlinkFrame_OnLeave)
+															self:SetScript("OnHyperlinkClick", InlineHyperlinkFrame_OnClick)
+														end
+													end)
+												end
+											</OnLoad>
+											<OnClick inherit="append">
+												Musician_Settings.muteInstrumentToys = self:GetChecked()
+												Musician.Utils.SetInstrumentToysMuted(Musician_Settings.muteInstrumentToys)
+											</OnClick>
+										</Scripts>
+									</CheckButton>
+								</Frames>
+							</Frame>
 						</Frames>
 						<Scripts>
 							<OnLoad>
@@ -76,6 +154,7 @@
 								MusicianOptionsPanelSubText:SetText(subText)
 
 								MusicianOptionsPanelUnitEmoteTitle:SetText(Musician.Msg.OPTIONS_CATEGORY_EMOTE)
+								MusicianOptionsPanelIntegrationTitle:SetText(Musician.Msg.OPTIONS_INTEGRATION_OPTIONS_TITLE)
 							</OnLoad>
 						</Scripts>
 					</Frame>

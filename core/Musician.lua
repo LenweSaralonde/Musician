@@ -58,6 +58,8 @@ function Musician:OnInitialize()
 		enableEmotePromo = true,
 		emoteHintShown = false,
 		enableTipsAndTricks = true,
+		muteGameMusic = true,
+		muteInstrumentToys = true,
 		debug = {},
 		mutedPlayers = {}
 	}
@@ -70,11 +72,6 @@ function Musician:OnInitialize()
 	Musician.Comm.Init()
 	Musician.Registry.Init()
 	Musician.SetupHooks()
-
-	C_Timer.NewTicker(0.5, function() Musician.Utils.MuteGameMusic() end)
-	Musician:RegisterEvent("PLAYER_ENTERING_WORLD", function()
-		C_Timer.After(1, function() Musician.Utils.MuteGameMusic(true) end)
-	end)
 
 	MusicianFrame.Init()
 	MusicianButton.Init()
@@ -89,6 +86,20 @@ function Musician:OnInitialize()
 	Musician:RegisterMessage(Musician.Events.SongPlay, Musician.OnSongPlayed)
 	Musician:RegisterMessage(Musician.Events.SongImportSucessful, Musician.OnSourceImportSuccessful)
 	Musician:RegisterMessage(Musician.Events.SongImportFailed, Musician.OnSourceImportFailed)
+
+	-- Automatically mute game music
+	C_Timer.NewTicker(0.5, function() Musician.Utils.MuteGameMusic() end)
+	local muteGameMusic = function(...)
+		C_Timer.After(1, function()
+			Musician.Utils.MuteGameMusic(true)
+		end)
+	end
+	Musician:RegisterEvent("PLAYER_ENTERING_WORLD", muteGameMusic)
+	hooksecurefunc('SetCVar', function(cvar, value)
+		if cvar == 'Sound_EnableMusic' then
+			muteGameMusic()
+		end
+	end)
 
 	-- @var frame (Frame)
 	Musician.playerFrame = CreateFrame("Frame")

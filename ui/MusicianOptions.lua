@@ -6,6 +6,9 @@ Musician.Options = {}
 local MODULE_NAME = "Options"
 Musician.AddModule(MODULE_NAME)
 
+local currentMuteGameMusic
+local currentMuteInstrumentToys
+
 --- Options panel initialization
 --
 function Musician.Options.Init()
@@ -17,6 +20,7 @@ function Musician.Options.Init()
 	panel.default = Musician.Options.Defaults
 	MusicianOptionsPanelContainer:SetScript("OnShow", Musician.Options.UpdateSize)
 	InterfaceOptions_AddCategory(MusicianOptionsPanelContainer)
+	Musician.Utils.SetInstrumentToysMuted(Musician_Settings.muteInstrumentToys)
 end
 
 --- Set up an option checkbox
@@ -55,21 +59,36 @@ function Musician.Options.Refresh()
 	else
 		MusicianOptionsPanelUnitEmoteEnablePromo:Disable()
 	end
+	MusicianOptionsPanelIntegrationMuteGameMusic:SetChecked(Musician_Settings.muteGameMusic)
+	MusicianOptionsPanelIntegrationMuteInstrumentToys:SetChecked(Musician_Settings.muteInstrumentToys)
+	currentMuteGameMusic = Musician_Settings.muteGameMusic
+	currentMuteInstrumentToys = Musician_Settings.muteInstrumentToys
 end
 
 function Musician.Options.Defaults()
 	Musician_Settings.enableEmote = true
 	Musician_Settings.enableEmotePromo = true
+	Musician_Settings.muteGameMusic = true
+	Musician_Settings.muteInstrumentToys = true
+	Musician.Utils.MuteGameMusic(true)
+	Musician.Utils.SetInstrumentToysMuted(Musician_Settings.muteInstrumentToys)
 end
 
 function Musician.Options.Cancel()
-
+	Musician_Settings.muteGameMusic = currentMuteGameMusic
+	Musician_Settings.muteInstrumentToys = currentMuteInstrumentToys
+	Musician.Utils.MuteGameMusic(true)
+	Musician.Utils.SetInstrumentToysMuted(Musician_Settings.muteInstrumentToys)
 end
 
 function Musician.Options.Save()
 	Musician_Settings.enableEmote = MusicianOptionsPanelUnitEmoteEnable:GetChecked()
 	Musician_Settings.enableEmotePromo = MusicianOptionsPanelUnitEmoteEnablePromo:GetChecked()
 	Musician_Settings.emoteHintShown = true
+	Musician_Settings.muteGameMusic = MusicianOptionsPanelIntegrationMuteGameMusic:GetChecked()
+	Musician_Settings.muteInstrumentToys = MusicianOptionsPanelIntegrationMuteInstrumentToys:GetChecked()
+	Musician.Utils.MuteGameMusic(true)
+	Musician.Utils.SetInstrumentToysMuted(Musician_Settings.muteInstrumentToys)
 end
 
 --- Update the size of the Musician option panel
