@@ -53,7 +53,7 @@
 						self.icon:SetText(Musician.Icons.Export)
 					</OnLoad>
 					<OnClick>
-						MusicianFrame.GenerateLink()
+						Musician.SongLinkExportFrame.Show()
 					</OnClick>
 				</Scripts>
 			</Button>

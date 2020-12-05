@@ -89,6 +89,92 @@
 		</Layers>
 	</Frame>
 
+	<!-- Standard edit box -->
+
+	<EditBox name="MusicianEditBoxTemplate" virtual="true">
+		<FontString inherits="ChatFontNormal"/>
+		<Size>
+			<AbsDimension y="32"/>
+		</Size>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture name="$parentLeft" file="Interface\ChatFrame\UI-ChatInputBorder-Left2">
+					<Size>
+						<AbsDimension x="32" y="32"/>
+					</Size>
+					<Anchors>
+						<Anchor point="LEFT" x="-10" y="0"/>
+					</Anchors>
+				</Texture>
+				<Texture name="$parentRight" file="Interface\ChatFrame\UI-ChatInputBorder-Right2">
+					<Size>
+						<AbsDimension x="32" y="32"/>
+					</Size>
+					<Anchors>
+						<Anchor point="RIGHT" x="10" y="0"/>
+					</Anchors>
+				</Texture>
+				<Texture name="$parentMid" file="Interface\ChatFrame\UI-ChatInputBorder-Mid2" horizTile="true">
+					<Size>
+						<AbsDimension x="0" y="32"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentLeft" relativePoint="TOPRIGHT">
+							<Offset>
+								<AbsDimension x="0" y="0"/>
+							</Offset>
+						</Anchor>
+						<Anchor point="TOPRIGHT" relativeTo="$parentRight" relativePoint="TOPLEFT">
+							<Offset>
+								<AbsDimension x="0" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK">
+				<FontString parentKey="Instructions" justifyH="LEFT" justifyV="MIDDLE" inherits="GameFontDisableSmall" setAllPoints="true">
+					<Color r="0.35" g="0.35" b="0.35"/>
+				</FontString>
+			</Layer>
+		</Layers>
+	</EditBox>
+
+	<!-- Progress bar -->
+
+	<Frame name="MusicianProgressBarTemplate" virtual="true">
+		<Size>
+			<AbsDimension y="10"/>
+		</Size>
+
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture name="$parentBackground" setAllPoints="true">
+					<Color a="1" r="0" g="0" b="0" />
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK">
+				<Texture name="$parentFill" parentKey="fill">
+					<Anchors>
+						<Anchor point="TOP" />
+						<Anchor point="LEFT" />
+						<Anchor point="BOTTOM" />
+					</Anchors>
+					<Size x="0" />
+					<Color a="1" r="1" g="1" b="1" />
+				</Texture>
+			</Layer>
+		</Layers>
+
+		<Scripts>
+			<OnLoad>
+				self.SetProgress = function(self, progression)
+					self.fill:SetWidth(progression * self:GetWidth())
+				end
+			</OnLoad>
+		</Scripts>
+	</Frame>
+
 	<!-- Standard button with icon font template -->
 
 	<Button name="MusicianIconButtonTemplate" inherits="UIPanelButtonTemplate" virtual="true">
