@@ -246,8 +246,11 @@ msg.LINKS_PREFIX = "Music"
 msg.LINKS_FORMAT = "{prefix}: {title}"
 msg.LINKS_LINK_BUTTON = "Link"
 
-msg.LINKS_SHARE_WINDOW_TITLE = "Share song in the chat:"
-msg.LINKS_SHARE_WINDOW_POST_BUTTON = "Post link"
+msg.LINK_EXPORT_WINDOW_TITLE = "Create song link"
+msg.LINK_EXPORT_WINDOW_SONG_TITLE_LABEL = "Song title:"
+msg.LINK_EXPORT_WINDOW_HINT = "The link will remain active until you log out or reload the interface."
+msg.LINK_EXPORT_WINDOW_PROGRESS = "Generating link… {progress}%"
+msg.LINK_EXPORT_WINDOW_POST_BUTTON = "Post link into the chat"
 
 msg.LINKS_IMPORT_WINDOW_HINT = "Press the Import button to start importing the song into Musician."
 msg.LINKS_IMPORT_WINDOW_IMPORT_BUTTON = "Import song"
