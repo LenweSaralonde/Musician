@@ -50,7 +50,7 @@
 			<Button name="$parentCancelImportButton" inherits="UIPanelButtonTemplate" level="OVERLAY" parentKey="cancelImportButton">
 				<Size x="200" y="24" />
 				<Anchors>
-					<Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$parentProgressBar" y="-10" />
+					<Anchor point="TOP" relativeTo="$parentImportButton" />
 				</Anchors>
 				<Scripts>
 					<OnClick inherit="append">
@@ -78,6 +78,9 @@
 				-- Allow posting player hyperlinks
 				self:SetHyperlinksEnabled(true)
 				self:SetScript("OnHyperlinkClick", InlineHyperlinkFrame_OnClick)
+
+				self.cancelImportButton:SetText(Musician.Msg.LINK_IMPORT_WINDOW_CANCEL_IMPORT_BUTTON)
+				self.importButton:SetText(Musician.Msg.LINK_IMPORT_WINDOW_IMPORT_BUTTON)
 			</OnLoad>
 		</Scripts>
 
