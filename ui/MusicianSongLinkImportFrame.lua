@@ -58,12 +58,12 @@ local function update(title, playerName)
 	local frameTitle = string.gsub(Musician.Msg.LINK_IMPORT_WINDOW_TITLE, '{player}', playerLink)
 	frame.title:SetText(frameTitle)
 
-	-- Set song title
-	frame.songTitle:SetText(title)
-
 	local requestingSong = Musician.SongLinks.GetRequestingSong(playerName)
 	-- A song is not being requested
 	if not(requestingSong) then
+		-- Set song title
+		frame.songTitle:SetText(title)
+
 		-- Default hint text
 		frame.hint:SetText(Musician.Msg.LINK_IMPORT_WINDOW_HINT)
 		frame.hint:Show()
@@ -77,6 +77,9 @@ local function update(title, playerName)
 		-- Update progression
 		updateProgression()
 	else
+		-- Set song title
+		frame.songTitle:SetText(requestingSong.title)
+
 		-- Hide import button
 		frame.importButton:Hide()
 
