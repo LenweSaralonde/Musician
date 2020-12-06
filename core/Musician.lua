@@ -76,6 +76,7 @@ function Musician:OnInitialize()
 
 	MusicianFrame.Init()
 	MusicianButton.Init()
+	Musician.SongLinkImportFrame.Init()
 	Musician.TrackEditor.Init()
 	Musician.KeyboardUtils.Init()
 	Musician.KeyboardConfig.Init()

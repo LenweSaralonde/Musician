@@ -252,11 +252,12 @@ msg.LINK_EXPORT_WINDOW_HINT = "The link will remain active until you log out or 
 msg.LINK_EXPORT_WINDOW_PROGRESS = "Generating link… {progress}%"
 msg.LINK_EXPORT_WINDOW_POST_BUTTON = "Post link into the chat"
 
-msg.LINKS_IMPORT_WINDOW_HINT = "Press the Import button to start importing the song into Musician."
-msg.LINKS_IMPORT_WINDOW_IMPORT_BUTTON = "Import song"
-msg.LINKS_IMPORT_WINDOW_HIDE_BUTTON = "Hide"
-msg.LINKS_IMPORT_REQUESTING = "Requesting song from {player}."
-msg.LINKS_IMPORT_DOWNLOADING = "Importing {progress}%"
+msg.LINK_IMPORT_WINDOW_TITLE = "Import song from {player}:"
+msg.LINK_IMPORT_WINDOW_HINT = "Click “Import” to start importing the song into Musician."
+msg.LINK_IMPORT_WINDOW_IMPORT_BUTTON = "Import song"
+msg.LINK_IMPORT_WINDOW_CANCEL_IMPORT_BUTTON = "Cancel import"
+msg.LINK_IMPORT_WINDOW_REQUESTING = "Requesting song from {player}…"
+msg.LINK_IMPORT_WINDOW_PROGRESS = "Importing… {progress}%"
 
 msg.LINKS_ERROR = {}
 msg.LINKS_ERROR.notFound = "The song {title} is not available from {player}."

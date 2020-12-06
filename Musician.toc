@@ -58,4 +58,7 @@ ui\MusicianAbout.lua
 ui\MusicianSongLinkExportFrame.xml
 ui\MusicianSongLinkExportFrame.lua
 
+ui\MusicianSongLinkImportFrame.xml
+ui\MusicianSongLinkImportFrame.lua
+
 modules\modules.xml
