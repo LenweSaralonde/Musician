@@ -22,81 +22,118 @@ local function cancelImport(playerName)
 	Musician.SongLinks.CancelRequest(playerName)
 end
 
---- OnSongLinkClick
--- Called when clicking on a song link
-function Musician.SongLinkImportFrame.OnSongLinkClick(event, title, playerName)
-	playerName = Musician.Utils.NormalizePlayerName(playerName)
-	local playerDisplayName = Musician.Utils.FormatPlayerName(playerName)
-	local playerLink = Musician.Utils.GetLink('player', Musician.Utils.Highlight(playerDisplayName), playerName)
-
-	-- Get currently requesting song title from the player, if any
-	local isAlreadyImporting = false
-	local requestingSongTitle = Musician.SongLinks.GetRequestingSong(playerName)
-	if requestingSongTitle then
-		title = requestingSongTitle
-		isAlreadyImporting = true
-	end
-
+local function updateProgression(progress)
 	local frame = MusicianSongLinkImportFrame
-
-	if not(isAlreadyImporting) then
-		local frameTitle = string.gsub(Musician.Msg.LINK_IMPORT_WINDOW_TITLE, '{player}', playerLink)
-		frame.title:SetText(frameTitle)
-		frame.songTitle:SetText(title)
+	if progress == nil then
 		frame.progressText:SetText(Musician.Msg.LINK_IMPORT_WINDOW_PROGRESS)
 		frame.progressText:Hide()
 		frame.progressBar:Hide()
+	else
+		local progressText = string.gsub(Musician.Msg.LINK_IMPORT_WINDOW_PROGRESS, '{progress}', floor(progress * 100))
+		frame.hint:Hide()
+		frame.progressText:SetText(progressText)
+		frame.progressText:Show()
+		frame.progressBar:SetProgress(progress)
+		frame.progressBar:Show()
+	end
+end
+
+local function update(title, playerName)
+	playerName = Musician.Utils.NormalizePlayerName(playerName)
+
+	local frame = MusicianSongLinkImportFrame
+
+	-- Set frame title
+	local playerDisplayName = Musician.Utils.FormatPlayerName(playerName)
+	local playerLink = Musician.Utils.GetLink('player', Musician.Utils.Highlight(playerDisplayName), playerName)
+	local frameTitle = string.gsub(Musician.Msg.LINK_IMPORT_WINDOW_TITLE, '{player}', playerLink)
+	frame.title:SetText(frameTitle)
+
+	-- Set song title
+	frame.songTitle:SetText(title)
+
+	local requestingSong = Musician.SongLinks.GetRequestingSong(playerName)
+	-- A song is not being requested
+	if not(requestingSong) then
+		-- Default hint text
 		frame.hint:SetText(Musician.Msg.LINK_IMPORT_WINDOW_HINT)
 		frame.hint:Show()
-		frame.importButton:SetText(Musician.Msg.LINK_IMPORT_WINDOW_IMPORT_BUTTON)
+
+		-- Show import button
 		frame.importButton:Show()
-		frame.cancelImportButton:SetText(Musician.Msg.LINK_IMPORT_WINDOW_CANCEL_IMPORT_BUTTON)
+
+		-- Hide cancel button
 		frame.cancelImportButton:Hide()
 
-		frame.startImport = function()
-			startImport(title, playerName)
-		end
-		frame.cancelImport = function()
-			cancelImport(playerName)
-		end
+		-- Update progression
+		updateProgression()
+	else
+		-- Hide import button
+		frame.importButton:Hide()
 
-		-- Hide popup when complete
-		Musician.SongLinkImportFrame:RegisterMessage(Musician.Events.SongReceiveComplete, function()
-			frame:Hide()
-		end)
-
-		-- Start import
-		Musician.SongLinkImportFrame:RegisterMessage(Musician.Events.SongReceiveStart, function(event, sender, progress)
-			sender = Musician.Utils.NormalizePlayerName(sender)
-			if sender ~= playerName then return end
+		-- Show cancel button
+		frame.cancelImportButton:Show()
+		-- Set hint text
+		if requestingSong.progress == nil then
+			-- Song has been requested but download has not started
 			local hintText = string.gsub(Musician.Msg.LINK_IMPORT_WINDOW_REQUESTING, '{player}', playerLink)
 			frame.hint:SetText(hintText)
-			frame.importButton:Hide()
-			frame.cancelImportButton:Show()
-		end)
-
-		-- Update import progression
-		Musician.SongLinkImportFrame:RegisterMessage(Musician.Events.SongReceiveProgress, function(event, sender, progress)
-			sender = Musician.Utils.NormalizePlayerName(sender)
-			if sender ~= playerName then return end
+			frame.hint:Show()
+		else
 			frame.hint:Hide()
-			local progressText = string.gsub(Musician.Msg.LINK_IMPORT_WINDOW_PROGRESS, '{progress}', floor(progress * 100))
-			frame.progressText:SetText(progressText)
-			frame.progressText:Show()
-			frame.progressBar:SetProgress(progress)
-			frame.progressBar:Show()
-		end)
+		end
 
-		-- Print an error message if an error occurred
-		Musician.SongLinkImportFrame:RegisterMessage(Musician.Events.SongReceiveFailed, function(event, sender, reason, title)
-			sender = Musician.Utils.NormalizePlayerName(sender)
-			if sender ~= playerName then return end
-			local msg = Musician.Msg.LINKS_ERROR[reason] or ''
-			msg = string.gsub(msg, '{player}', Musician.Utils.FormatPlayerName(sender))
-			msg = string.gsub(msg, '{title}', title)
-			Musician.Utils.Error(msg)
-		end)
+		-- Update progression
+		updateProgression(requestingSong.progress)
 	end
+end
+
+--- OnSongLinkClick
+-- Called when a song hyperlink is clicked
+function Musician.SongLinkImportFrame.OnSongLinkClick(event, title, playerName)
+	playerName = Musician.Utils.NormalizePlayerName(playerName)
+
+	local frame = MusicianSongLinkImportFrame
+
+	update(title, playerName)
+
+	frame.startImport = function()
+		startImport(title, playerName)
+	end
+	frame.cancelImport = function()
+		cancelImport(playerName)
+	end
+
+	-- Hide popup when complete
+	Musician.SongLinkImportFrame:RegisterMessage(Musician.Events.SongReceiveComplete, function(event, sender)
+		sender = Musician.Utils.NormalizePlayerName(sender)
+		if sender ~= playerName then return end
+		frame:Hide()
+	end)
+
+	-- Start import
+	Musician.SongLinkImportFrame:RegisterMessage(Musician.Events.SongReceiveStart, function(event, sender)
+		sender = Musician.Utils.NormalizePlayerName(sender)
+		if sender ~= playerName then return end
+		update(title, playerName)
+	end)
+
+	-- Update import progression
+	Musician.SongLinkImportFrame:RegisterMessage(Musician.Events.SongReceiveProgress, function(event, sender, progress)
+		sender = Musician.Utils.NormalizePlayerName(sender)
+		if sender ~= playerName then return end
+		updateProgression(progress)
+	end)
+
+	-- Print an error message if an error occurred
+	Musician.SongLinkImportFrame:RegisterMessage(Musician.Events.SongReceiveFailed, function(event, sender, reason, title)
+		sender = Musician.Utils.NormalizePlayerName(sender)
+		if sender ~= playerName then return end
+		local msg = Musician.Msg.LINKS_ERROR[reason] or ''
+		msg = string.gsub(msg, '{player}', Musician.Utils.FormatPlayerName(sender))
+		msg = string.gsub(msg, '{title}', title)
+		Musician.Utils.Error(msg)
+	end)
 
 	frame:Show()
 end
