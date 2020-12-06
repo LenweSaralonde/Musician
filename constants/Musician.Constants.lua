@@ -298,7 +298,8 @@ Musician.Events.SongReceiveCanceled = "MusicianSongReceiveCanceled"
 --- Fired when the song reception process is complete successfully
 -- @field Musician.Events.SongReceiveSucessful
 -- @param sender (string)
--- @param song (Musician.Song)
+-- @param songData (string)
+-- @param[opt] song (Musician.Song)
 Musician.Events.SongReceiveSucessful = "MusicianSongReceiveSucessful"
 
 --- Fired when the song reception process failed

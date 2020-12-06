@@ -269,18 +269,19 @@ function Musician.SongLinks.AddSongData(songData, title)
 	debug("Added song for sharing", normalizedTitle)
 end
 
---- Returns the title of song being requested from the player
+--- Returns requestedSong data for the player
 -- @param playerName (string)
--- @return title (string)
+-- @return requestedSong (table)
 function Musician.SongLinks.GetRequestingSong(playerName)
 	playerName = Musician.Utils.NormalizePlayerName(playerName)
-	return requestedSongs[playerName] ~= nil and requestedSongs[playerName].title
+	return requestedSongs[playerName]
 end
 
 --- Request a song for download to a player
 -- @param title (string)
 -- @param playerName (string)
-function Musician.SongLinks.RequestSong(title, playerName)
+-- @param[opt=false] dataOnly (boolean)
+function Musician.SongLinks.RequestSong(title, playerName, dataOnly)
 	playerName = Musician.Utils.NormalizePlayerName(playerName)
 
 	-- Song is already being requested
@@ -300,13 +301,15 @@ function Musician.SongLinks.RequestSong(title, playerName)
 
 	-- Add song request
 	requestedSongs[playerName] = {
-		['title'] = title,
-		['status'] = Musician.SongLinks.status.requested,
-		['total'] = nil,
-		['downloaded'] = 0,
-		['song'] = nil,
-		['onTimeout'] = onTimeout,
-		['timeoutTimer'] = C_Timer.NewTimer(REQUEST_TIMEOUT, onTimeout)
+		title = title,
+		status = Musician.SongLinks.status.requested,
+		total = nil,
+		downloaded = 0,
+		progress = nil,
+		song = nil,
+		dataOnly = dataOnly,
+		onTimeout = onTimeout,
+		timeoutTimer = C_Timer.NewTimer(REQUEST_TIMEOUT, onTimeout)
 	}
 
 	Musician.SongLinks:SendMessage(Musician.Events.SongReceiveStart, playerName)
@@ -339,6 +342,7 @@ end
 --- Cancel a song download request
 -- @param playerName (string)
 function Musician.SongLinks.CancelRequest(playerName)
+	playerName = Musician.Utils.NormalizePlayerName(playerName)
 	Musician.SongLinks.RemoveRequest(playerName)
 	Musician.SongLinks:SendMessage(Musician.Events.SongReceiveComplete, playerName)
 	Musician.SongLinks:SendMessage(Musician.Events.SongReceiveCanceled, playerName)
@@ -434,6 +438,8 @@ function Musician.SongLinks.OnSongData(prefix, message, distribution, sender)
 
 	-- Get progression from chunks
 	local control, data = string.match(message, "^([\001-\009])(.*)")
+	local receivingProgressionRatio = requestedSong.dataOnly and 1 or RECEIVING_PROGRESSION_RATIO
+	local progression
 	if control then
 		if control == MSG_MULTI_FIRST then
 			requestedSong.status = Musician.SongLinks.status.downloading
@@ -447,11 +453,13 @@ function Musician.SongLinks.OnSongData(prefix, message, distribution, sender)
 			-- Update received data length
 			requestedSong.downloaded = requestedSong.downloaded + #data
 		end
-		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveProgress, sender, RECEIVING_PROGRESSION_RATIO * requestedSong.downloaded / requestedSong.total)
+		progress = receivingProgressionRatio * requestedSong.downloaded / requestedSong.total
 	else
 		-- The whole song fits in a single message
-		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveProgress, sender, RECEIVING_PROGRESSION_RATIO)
+		progress = receivingProgressionRatio
 	end
+	requestedSong.progress = progress
+	Musician.SongLinks:SendMessage(Musician.Events.SongReceiveProgress, sender, progress)
 end
 
 --- OnSongImportProgress
@@ -459,6 +467,9 @@ end
 function Musician.SongLinks.OnSongImportProgress(event, song, importProgress)
 	if song.sender then
 		local totalProgress = RECEIVING_PROGRESSION_RATIO + (1 - RECEIVING_PROGRESSION_RATIO) * importProgress
+		if requestedSongs[sender] then
+			requestedSongs[sender].progress = totalProgress
+		end
 		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveProgress, song.sender, totalProgress)
 	end
 end
@@ -472,6 +483,18 @@ function Musician.SongLinks.OnSongReceived(prefix, message, distribution, sender
 
 	if requestedSong == nil then return end
 
+	local dataLength, encodedData = string.match(message, "^([0-9]+) (.*)")
+	local songData = LibDeflate:DecodeForWoWAddonChannel(encodedData)
+
+	-- Data only
+	if requestedSong.dataOnly then
+		Musician.SongLinks.RemoveRequest(sender)
+		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveComplete, sender)
+		debug("Song downloading complete (data only)", requestedSong.title)
+		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveSucessful, sender, songData)
+		return
+	end
+
 	local song = Musician.Song.create()
 	song.sender = sender
 	collectgarbage()
@@ -481,11 +504,7 @@ function Musician.SongLinks.OnSongReceived(prefix, message, distribution, sender
 	requestedSong.timeoutTimer:Cancel()
 	requestedSong.timeoutTimer = nil
 	local title = requestedSong.title
-
-	local dataLength, encodedData = string.match(message, "^([0-9]+) (.*)")
-	local songData = LibDeflate:DecodeForWoWAddonChannel(encodedData)
 	song:ImportCompressed(songData, false, function(success)
-
 		Musician.SongLinks.RemoveRequest(sender)
 		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveComplete, sender)
 
@@ -505,7 +524,7 @@ function Musician.SongLinks.OnSongReceived(prefix, message, distribution, sender
 		collectgarbage()
 
 		debug("Song downloading complete", song.name)
-		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveSucessful, sender, song)
+		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveSucessful, sender, songData, song)
 
 		Musician.SongLinks:SendMessage(Musician.Events.SourceSongLoaded, song, songData)
 	end)
