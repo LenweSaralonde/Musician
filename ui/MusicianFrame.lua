@@ -212,7 +212,7 @@ end
 
 --- OnSourceSongUpdated
 --
-MusicianFrame.OnSourceSongUpdated = function(event, ...)
+MusicianFrame.OnSourceSongUpdated = function()
 	if Musician.sourceSong == nil then
 		MusicianFrameTestButton:Disable()
 		MusicianFrameTrackEditorButton:Disable()
