@@ -1,12 +1,12 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 
 	<Frame name="MusicianSongLinkExportFrame" inherits="MusicianDialogTemplate">
-		<Size x="480" y="175" />
+		<Size x="360" y="175" />
 		<Layers>
 			<Layer level="BACKGROUND">
 				<FontString name="$parentTitle" inherits="GameFontNormal">
 					<Anchors>
-						<Anchor point="TOP" x="0" y="-15" />
+						<Anchor point="TOP" y="-15" />
 					</Anchors>
 				</FontString>
 				<FontString name="$parentSongTitleLabel" inherits="GameFontHighlightLeft">
@@ -41,7 +41,7 @@
 			<Layer level="BACKGROUND">
 				<FontString name="$parentProgressText" inherits="GameFontNormal" parentKey="progressText">
 					<Anchors>
-						<Anchor point="TOP" x="0" y="-5" relativeTo="$parentSongTitle" relativePoint="BOTTOM" />
+						<Anchor point="TOP" relativeTo="$parentSongTitle" relativePoint="BOTTOM" y="-5" />
 						<Anchor point="LEFT" x="25" />
 						<Anchor point="RIGHT" x="-25" />
 					</Anchors>
@@ -52,7 +52,7 @@
 		<Frames>
 			<Frame name="$parentProgressBar" inherits="MusicianProgressBarTemplate" parentKey="progressBar">
 				<Anchors>
-					<Anchor point="TOP" x="0" y="-10" relativeTo="$parentProgressText" relativePoint="BOTTOM" />
+					<Anchor point="TOP" relativeTo="$parentProgressText" relativePoint="BOTTOM" y="-10" />
 					<Anchor point="LEFT" x="25" />
 					<Anchor point="RIGHT" x="-25" />
 				</Anchors>
@@ -60,7 +60,7 @@
 			<Button name="$parentPostLinkButton" inherits="UIPanelButtonTemplate" level="OVERLAY" parentKey="postLinkButton">
 				<Size x="200" y="24" />
 				<Anchors>
-					<Anchor point="TOP" y="-10" relativePoint="BOTTOM" relativeTo="$parentProgressBar" />
+					<Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$parentProgressBar" y="-10" />
 				</Anchors>
 				<Scripts>
 					<OnClick inherit="append">
