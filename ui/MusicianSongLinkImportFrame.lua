@@ -85,6 +85,7 @@ local function update(title, playerName)
 
 		-- Show cancel button
 		frame.cancelImportButton:Show()
+
 		-- Set hint text
 		if requestingSong.progress == nil then
 			-- Song has been requested but download has not started
