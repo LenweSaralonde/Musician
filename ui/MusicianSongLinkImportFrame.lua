@@ -10,6 +10,15 @@ Musician.AddModule(MODULE_NAME)
 --
 function Musician.SongLinkImportFrame.Init()
 	Musician.SongLinkImportFrame:RegisterMessage(Musician.Events.SongLink, Musician.SongLinkImportFrame.OnSongLinkClick)
+
+	-- Print an error message if an import error occurred
+	Musician.SongLinkImportFrame:RegisterMessage(Musician.Events.SongReceiveFailed, function(event, sender, reason, title)
+		sender = Musician.Utils.NormalizePlayerName(sender)
+		local msg = Musician.Msg.LINKS_ERROR[reason] or ''
+		msg = string.gsub(msg, '{player}', Musician.Utils.FormatPlayerName(sender))
+		msg = string.gsub(msg, '{title}', title)
+		Musician.Utils.Error(msg)
+	end)
 end
 
 local function startImport(title, playerName)
@@ -123,16 +132,6 @@ function Musician.SongLinkImportFrame.OnSongLinkClick(event, title, playerName)
 		sender = Musician.Utils.NormalizePlayerName(sender)
 		if sender ~= playerName then return end
 		updateProgression(progress)
-	end)
-
-	-- Print an error message if an error occurred
-	Musician.SongLinkImportFrame:RegisterMessage(Musician.Events.SongReceiveFailed, function(event, sender, reason, title)
-		sender = Musician.Utils.NormalizePlayerName(sender)
-		if sender ~= playerName then return end
-		local msg = Musician.Msg.LINKS_ERROR[reason] or ''
-		msg = string.gsub(msg, '{player}', Musician.Utils.FormatPlayerName(sender))
-		msg = string.gsub(msg, '{title}', title)
-		Musician.Utils.Error(msg)
 	end)
 
 	frame:Show()
