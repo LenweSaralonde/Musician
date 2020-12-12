@@ -266,6 +266,15 @@ msg.LINKS_ERROR.alreadyRequested = "A song is already being requested from {play
 msg.LINKS_ERROR.timeout = "The player {player} did not respond."
 msg.LINKS_ERROR.importingFailed = "The song {title} could not be imported from {player}."
 
+msg.TRPE_EXPORT_AS_ITEM_BUTTON = "Export as a Total RP item"
+msg.TRPE_PREPARING_EXPORT = "Preparing export… {progress}%"
+msg.TRPE_ITEM_NAME = "{title}"
+msg.TRPE_ITEM_TOOLTIP_REQUIRES_MUSICIAN = "Requires Musician"
+msg.TRPE_ITEM_TOOLTIP_SHEET_MUSIC = "Sheet music"
+msg.TRPE_ITEM_USE_HINT = "Read the sheet music"
+msg.TRPE_ITEM_MUSICIAN_NOT_FOUND = "You need the Musician add-on to be able to use this item.\nGet it from {url}."
+msg.TRPE_ITEM_NOTES = "Import the song into Musician to play it for nearby players.\n\nDownload Musician: {url}\n"
+
 msg.INSTRUMENT_NAMES = {
 	["none"] = "(None)",
 	["accordion"] = "Accordion",
