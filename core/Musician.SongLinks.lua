@@ -148,9 +148,13 @@ function Musician.SongLinks.NormalizeTitleForLinks(title)
 	local normalizedTitle = title
 
 	-- Escape special characters
-	normalizedTitle = string.gsub(normalizedTitle, '|', '¦')
+	normalizedTitle = string.gsub(normalizedTitle, '|+', ' – ')
 	normalizedTitle = string.gsub(normalizedTitle, '%[', '(')
 	normalizedTitle = string.gsub(normalizedTitle, '%]', ')')
+
+	-- Remove duplicate spaces
+	normalizedTitle = string.gsub(normalizedTitle, ' +', ' ')
+	normalizedTitle = strtrim(normalizedTitle)
 
 	-- Shorten title if it exceeds the max length
 	normalizedTitle = Musician.Utils.Ellipsis(normalizedTitle, MAX_TITLE_LENGTH)
@@ -163,9 +167,8 @@ end
 -- @param[opt] playerName (string)
 -- @return link (string)
 function Musician.SongLinks.GetHyperlink(title, playerName)
-	local locale = Musician.Utils.GetRealmLocale()
-	local prefix = Musician.Locale[locale] and Musician.Locale[locale].LINKS_PREFIX or Musician.Msg.LINKS_PREFIX
-	local format = Musician.Locale[locale] and Musician.Locale[locale].LINKS_FORMAT or Musician.Msg.LINKS_FORMAT
+	local prefix = Musician.Utils.GetMsg('LINKS_PREFIX')
+	local format = Musician.Utils.GetMsg('LINKS_FORMAT')
 
 	local linkText = '[' .. format .. ']'
 	linkText = string.gsub(linkText, '{prefix}', prefix)
