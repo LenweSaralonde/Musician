@@ -10,11 +10,9 @@ local exporting = false
 
 local function onExportComplete()
 	MusicianSongLinkExportFrame:Hide()
-	exporting = false
 end
 
 local function postLink(sharedSong)
-	exporting = true
 	local frame = MusicianSongLinkExportFrame
 	local name = Musician.Utils.NormalizeSongName(frame.songTitle:GetText())
 	sharedSong.name = name
@@ -22,8 +20,6 @@ local function postLink(sharedSong)
 		MusicianFrame.Clear()
 	end
 	ChatEdit_LinkItem(nil, Musician.SongLinks.GetHyperlink(name))
-	frame.postLinkButton:Disable()
-	frame.songTitle:Disable()
 	Musician.SongLinks.AddSong(sharedSong, name, onExportComplete)
 end
 
@@ -57,6 +53,9 @@ function Musician.SongLinkExportFrame.Show()
 
 		Musician.SongLinkExportFrame:RegisterMessage(Musician.Events.SongExportStart, function(event, song)
 			if song ~= sharedSong then return end
+			exporting = true
+			frame.postLinkButton:Disable()
+			frame.songTitle:Disable()
 			frame.progressBar:Show()
 			frame.progressText:Show()
 			frame.hint:Hide()
@@ -75,6 +74,7 @@ function Musician.SongLinkExportFrame.Show()
 			frame.progressBar:Hide()
 			frame.progressText:Hide()
 			frame.hint:Show()
+			exporting = false
 		end)
 	end
 
