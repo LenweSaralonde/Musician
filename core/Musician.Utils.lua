@@ -528,12 +528,20 @@ function Musician.Utils.Ellipsis(text, maxBytes)
 	return text
 end
 
+--- Returns localized message
+-- @param msg (string)
+-- @param[opt] locale (string) Defaults to the realm locale
+-- @return localizedMsg (string)
+function Musician.Utils.GetMsg(msg, locale)
+	if locale == nil then locale = Musician.Utils.GetRealmLocale() end
+	return Musician.Locale[locale] and Musician.Locale[locale][msg] or Musician.Msg[msg]
+end
+
 --- Return the "Player is playing music" emote with promo message
 -- @return promoEmote (string)
 function Musician.Utils.GetPromoEmote()
-	local locale = Musician.Utils.GetRealmLocale()
-	local EMOTE_PLAYING_MUSIC = Musician.Locale[locale] and Musician.Locale[locale].EMOTE_PLAYING_MUSIC or Musician.Msg.EMOTE_PLAYING_MUSIC
-	local EMOTE_PROMO = Musician.Locale[locale] and Musician.Locale[locale].EMOTE_PROMO or Musician.Msg.EMOTE_PROMO
+	local EMOTE_PLAYING_MUSIC = Musician.Utils.GetMsg('EMOTE_PLAYING_MUSIC')
+	local EMOTE_PROMO = Musician.Utils.GetMsg('EMOTE_PROMO')
 
 	local sendPromoPart = Musician_Settings.enableEmotePromo
 
@@ -558,7 +566,7 @@ end
 function Musician.Utils.HasPromoEmote(message)
 	local lang
 	for lang, locale in pairs(Musician.Locale) do
-		if string.find(message, locale.EMOTE_PLAYING_MUSIC, 1, true) == 1 then
+		if locale.EMOTE_PLAYING_MUSIC ~= nil and string.find(message, locale.EMOTE_PLAYING_MUSIC, 1, true) == 1 then
 			local isFullPromoEmote = string.find(message, locale.EMOTE_PROMO, 1, true) ~= nil
 			return true, isFullPromoEmote
 		end
