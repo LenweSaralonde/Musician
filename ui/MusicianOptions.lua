@@ -32,6 +32,17 @@ function Musician.Options.SetupCheckbox(checkbox, labelText, dependantControl, d
 	checkbox:SetHitRectInsets(0, -labelElement:GetWidth(), 0, 0)
 	checkbox.type = CONTROLTYPE_CHECKBOX
 	checkbox.SetValue = function(checkbox, value) checkbox.newValue = value end
+	checkbox.Disable = function (self)
+		getmetatable(self).__index.Disable(self)
+		_G[self:GetName().."Text"]:SetTextColor(GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b)
+	end
+	checkbox.Enable = function (self)
+		getmetatable(self).__index.Enable(self)
+		local text = _G[self:GetName().."Text"]
+		local fontObject = text:GetFontObject()
+		text:SetTextColor(fontObject:GetTextColor())
+	end
+
 	BlizzardOptionsPanel_RegisterControl(checkbox, checkbox:GetParent():GetParent())
 
 	if dependantControl then
