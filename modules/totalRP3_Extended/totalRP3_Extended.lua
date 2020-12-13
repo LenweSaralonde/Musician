@@ -132,7 +132,6 @@ local function createItem(sharedSong)
 	local locale = frame.locale.value
 	local icon = frame.preview.selectedIcon
 	local quantity = frame.addToBag:GetChecked() and tonumber(frame.quantity:GetText())
-	local addToDB = frame.addToDB:GetChecked()
 
 	sharedSong.name = title
 	if sharedSong == Musician.sourceSong then
@@ -141,12 +140,7 @@ local function createItem(sharedSong)
 
 	sharedSong:ExportCompressed(function(songData)
 		frame:Hide()
-		local ID = Musician.TRP3E.AddSheetMusicItem(title, songData, locale, icon, quantity, addToDB)
-		-- Open TRP editor if add to DB was chosen
-		if addToDB then
-			TRP3_API.extended.tools.goToPage(ID, true)
-			TRP3_ToolFrame:Show()
-		end
+		local ID = Musician.TRP3E.AddSheetMusicItem(title, songData, locale, icon, quantity)
 	end)
 end
 
@@ -213,11 +207,6 @@ function Musician.TRP3E.ShowExportFrame()
 		frame.addToBag:SetChecked(true)
 		frame.quantity:SetText(1)
 
-		-- Add to the database
-
-		frame.addToDB:Enable()
-		frame.addToDB:SetChecked(false)
-
 		-- Hint and progress bar
 
 		frame.hint:SetText(Musician.Msg.TRPE_EXPORT_WINDOW_HINT)
@@ -243,7 +232,6 @@ function Musician.TRP3E.ShowExportFrame()
 			frame.preview:Disable()
 			frame.addToBag:Disable()
 			frame.quantity:Disable()
-			frame.addToDB:Disable()
 			frame.progressBar:Show()
 			frame.progressText:Show()
 			frame.hint:Hide()
@@ -424,27 +412,21 @@ end
 -- @param[opt] locale (string) Item locale. By default, the current realm locale is used.
 -- @param[opt=Musician.TRP3E.ITEM_ICON] icon (string) Item icon
 -- @param[opt=1] quantity (int) Item quantity to be added in the main inventory
--- @param[opt=false] addToDB (boolean) Add item to the main DB
 -- @return objectID (string)
-function Musician.TRP3E.AddSheetMusicItem(title, songData, locale, icon, quantity, addToDB)
+function Musician.TRP3E.AddSheetMusicItem(title, songData, locale, icon, quantity)
 
 	title = Musician.TRP3E.NormalizeTitle(title)
 
 	if icon == nil then icon = Musician.TRP3E.ITEM_ICON end
 	if locale == nil then locale = Musician.Utils.GetRealmLocale() end
 	if quantity == nil then quantity = 1 end
-	if addToDB == nil then addToDB = false end
 
 	local objectID, object = Musician.TRP3E.GetSheetMusicItem(title, icon, locale)
 
 	Musician.TRP3E.UpdateSheetMusicItem(object, songData, locale)
 
-	-- Add to the DB
-	if addToDB and TRP3_DB.my[objectID] == nil then
-		TRP3_DB.my[objectID] = object
-	end
-
 	-- Register object then refresh UI
+	TRP3_DB.my[objectID] = object
 	TRP3_API.security.computeSecurity(objectID, object)
 	TRP3_API.extended.unregisterObject(objectID)
 	TRP3_API.extended.registerObject(objectID, object, 0)
