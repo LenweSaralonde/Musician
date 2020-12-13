@@ -146,9 +146,14 @@ end
 
 local function injectUIData()
 	local frame = MusicianTRPEExportFrame
+	local title = frame.songTitle:GetText()
 	local locale = frame.locale.value
-	local ID, object = Musician.TRP3E.CreateSheetMusicItem(frame.songTitle:GetText(), frame.preview.selectedIcon, locale)
-	Musician.TRP3E.UpdateSheetMusicItem(object, '', locale)
+	local icon = frame.preview.selectedIcon
+	local ID, object, isExisting = Musician.TRP3E.GetSheetMusicItem(title, locale, icon)
+	if isExisting then -- Return a copy in case the item already exists to avoid updating it
+		object = Musician.Utils.DeepCopy(object)
+	end
+	Musician.TRP3E.UpdateSheetMusicItem(object, title, '', locale, icon)
 	return object
 end
 
@@ -156,6 +161,17 @@ local function onIconSelected(icon)
 	local frame = MusicianTRPEExportFrame
 	frame.preview.Icon:SetTexture("Interface\\ICONS\\" .. (icon or "TEMP"))
 	frame.preview.selectedIcon = icon
+end
+
+local function updateHint()
+	local frame = MusicianTRPEExportFrame
+	local objectID, object, isExisting = Musician.TRP3E.GetSheetMusicItem(frame.songTitle:GetText())
+
+	if isExisting then
+		frame.hint:SetText(Musician.Msg.TRPE_EXPORT_WINDOW_HINT_EXISTING)
+	else
+		frame.hint:SetText(Musician.Msg.TRPE_EXPORT_WINDOW_HINT_NEW)
+	end
 end
 
 --- Show the TRP item export frame
@@ -172,6 +188,9 @@ function Musician.TRP3E.ShowExportFrame()
 			createItem(sharedSong)
 		end
 
+		-- Retrieve existing item data
+		local objectID, object = Musician.TRP3E.GetSheetMusicItem(sharedSong.name)
+
 		-- Song title
 
 		frame.songTitle:SetMaxBytes(Musician.Song.MAX_NAME_LENGTH)
@@ -179,6 +198,8 @@ function Musician.TRP3E.ShowExportFrame()
 		frame.songTitle:HighlightText(0)
 		frame.songTitle:SetFocus()
 		frame.songTitle:Enable()
+		frame.songTitle:SetScript('OnKeyDown', updateHint)
+		frame.songTitle:SetScript('OnTextChanged', updateHint)
 
 		-- Locale
 
@@ -188,7 +209,7 @@ function Musician.TRP3E.ShowExportFrame()
 		-- Preview (icon select)
 
 		frame.preview:Enable()
-		onIconSelected(Musician.TRP3E.ITEM_ICON)
+		onIconSelected(object.BA.IC)
 		frame.preview.Name:SetText(TRP3_API.loc.EDITOR_PREVIEW)
 		frame.preview.InfoText:SetText(TRP3_API.loc.EDITOR_ICON_SELECT)
 		frame.preview:SetScript('OnEnter', function(self)
@@ -207,10 +228,12 @@ function Musician.TRP3E.ShowExportFrame()
 		frame.addToBag:SetChecked(true)
 		frame.quantity:SetText(1)
 
-		-- Hint and progress bar
+		-- Hint
 
-		frame.hint:SetText(Musician.Msg.TRPE_EXPORT_WINDOW_HINT)
+		updateHint()
 		frame.hint:Show()
+
+		-- Progress bar
 
 		frame.progressText:SetText(Musician.Msg.TRPE_EXPORT_WINDOW_PROGRESS)
 		frame.progressText:Hide()
@@ -414,16 +437,14 @@ end
 -- @param[opt=1] quantity (int) Item quantity to be added in the main inventory
 -- @return objectID (string)
 function Musician.TRP3E.AddSheetMusicItem(title, songData, locale, icon, quantity)
-
 	title = Musician.TRP3E.NormalizeTitle(title)
 
 	if icon == nil then icon = Musician.TRP3E.ITEM_ICON end
 	if locale == nil then locale = Musician.Utils.GetRealmLocale() end
 	if quantity == nil then quantity = 1 end
 
-	local objectID, object = Musician.TRP3E.GetSheetMusicItem(title, icon, locale)
-
-	Musician.TRP3E.UpdateSheetMusicItem(object, songData, locale)
+	local objectID, object = Musician.TRP3E.GetSheetMusicItem(title, locale, icon)
+	Musician.TRP3E.UpdateSheetMusicItem(object, title, songData, locale, icon)
 
 	-- Register object then refresh UI
 	TRP3_DB.my[objectID] = object
@@ -445,29 +466,40 @@ end
 
 --- Get new or existing sheet music item for the provided song title
 -- @param title (string) Song title
--- @param icon (string) Item icon
--- @param locale (string) Item locale
+-- @param[opt] locale (string) Item locale. By default, the current realm locale is used.
+-- @param[opt=Musician.TRP3E.ITEM_ICON] icon (string) Item icon
 -- @return ID (string)
 -- @return object (table)
-function Musician.TRP3E.GetSheetMusicItem(title, icon, locale)
+-- @return isExisting (boolean)
+function Musician.TRP3E.GetSheetMusicItem(title, locale, icon)
+	title = Musician.TRP3E.NormalizeTitle(title)
+
 	-- Find existing sheet music item by title
 	for ID, object in pairs(TRP3_DB.global) do
-		if string.sub(ID, 1, #Musician.TRP3E.ID_PREFIX) == Musician.TRP3E.ID_PREFIX and string.find(object.BA.NA, title, 1, true) ~= nil then
-			return ID, object
+		for locale, _ in pairs(Musician.Locale) do
+			local itemName = string.gsub(Musician.Utils.GetMsg('TRPE_ITEM_NAME', locale), '{title}', title)
+			if string.sub(ID, 1, #Musician.TRP3E.ID_PREFIX) == Musician.TRP3E.ID_PREFIX and object.BA.NA == itemName then
+				return ID, object, true
+			end
 		end
 	end
 
 	-- Create new object
-	return Musician.TRP3E.CreateSheetMusicItem(title, icon, locale)
+	local ID, object = Musician.TRP3E.CreateSheetMusicItem(title, locale, icon)
+	return ID, object, false
 end
 
 --- Create a new sheet music item for the provided song title
 -- @param title (string) Song title
--- @param icon (string) Item icon
--- @param locale (string) Item locale
+-- @param[opt] locale (string) Item locale. By default, the current realm locale is used.
+-- @param[opt=Musician.TRP3E.ITEM_ICON] icon (string) Item icon
 -- @return ID (string)
 -- @return object (table)
-function Musician.TRP3E.CreateSheetMusicItem(title, icon, locale)
+function Musician.TRP3E.CreateSheetMusicItem(title, locale, icon)
+	title = Musician.TRP3E.NormalizeTitle(title)
+	if icon == nil then icon = Musician.TRP3E.ITEM_ICON end
+	if locale == nil then locale = Musician.Utils.GetRealmLocale() end
+
 	-- Generate ID
 	local ID = Musician.TRP3E.ID_PREFIX .. TRP3_API.utils.str.id()
 
@@ -479,7 +511,7 @@ function Musician.TRP3E.CreateSheetMusicItem(title, icon, locale)
 
 	-- Set up item defaults. These can be customized by the user
 	if object.BA == nil then object.BA = {} end
-	object.BA.NA = string.gsub(Musician.Utils.GetMsg('TRPE_ITEM_NAME', locale), '{title}', Musician.TRP3E.NormalizeTitle(title))
+	object.BA.NA = string.gsub(Musician.Utils.GetMsg('TRPE_ITEM_NAME', locale), '{title}', title)
 	object.BA.IC = icon
 	object.BA.ST = Musician.TRP3E.ITEM_MAX_STACK
 	object.BA.QA = Musician.TRP3E.ITEM_QUALITY
@@ -493,15 +525,25 @@ end
 
 --- Update an existing sheet music item to set the song data
 -- @param object (table)
+-- @param title (string) Song title
 -- @param songData (string)
 -- @param locale (string)
-function Musician.TRP3E.UpdateSheetMusicItem(object, songData, locale)
+-- @param icon (string)
+function Musician.TRP3E.UpdateSheetMusicItem(object, title, songData, locale, icon)
+	title = Musician.TRP3E.NormalizeTitle(title)
+
 	-- Update version
 	object.MD.V = object.MD.V + 1
 	object.MD.SD = date("%d/%m/%y %H:%M:%S")
 	object.MD.SB = TRP3_API.globals.player_id
 	object.MD.tV = TRP3_API.globals.extended_version
 	object.MD.dV = TRP3_API.globals.extended_display_version
+
+	-- Update name
+	object.BA.NA = string.gsub(Musician.Utils.GetMsg('TRPE_ITEM_NAME', locale), '{title}', title)
+
+	-- Update icon
+	object.BA.IC = icon
 
 	-- Update locale
 	object.MD.LO = locale

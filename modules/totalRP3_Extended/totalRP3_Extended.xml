@@ -2,7 +2,7 @@
 	<Script file="totalRP3_Extended.lua"/>
 
 	<Frame name="MusicianTRPEExportFrame" inherits="MusicianDialogTemplate">
-		<Size x="360" y="334" />
+		<Size x="360" y="308" />
 
 		<!-- Window title -->
 
