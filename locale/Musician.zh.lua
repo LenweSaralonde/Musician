@@ -5,6 +5,8 @@ local Instrument = Musician.MIDI_INSTRUMENTS
 local Percussion = Musician.MIDI_PERCUSSIONS
 local KEY = Musician.KEYBOARD_KEY
 
+msg.LOCALE_NAME = "中文"
+
 msg.PLAY = "播放"
 msg.STOP = "停止"
 msg.PAUSE = "暂停"

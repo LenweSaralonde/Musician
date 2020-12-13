@@ -1,3 +1,214 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="totalRP3_Extended.lua"/>
+
+	<Frame name="MusicianTRPEExportFrame" inherits="MusicianDialogTemplate">
+		<Size x="360" y="334" />
+
+		<!-- Window title -->
+
+		<Layers>
+			<Layer level="BACKGROUND">
+				<FontString name="$parentTitle" inherits="GameFontNormal" parentKey="title">
+					<Anchors>
+						<Anchor point="TOP" y="-15" />
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+
+		<!-- Song title -->
+
+		<Layers>
+			<Layer level="BACKGROUND">
+				<FontString name="$parentSongTitleLabel"  parentKey="songTitleLabel" inherits="GameFontNormalLeft">
+					<Anchors>
+						<Anchor point="TOP" relativeTo="$parentTitle" relativePoint="BOTTOM" y="-7" />
+						<Anchor point="LEFT" x="25" />
+						<Anchor point="RIGHT" x="-25" />
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<EditBox name="$parentSongTitle" inherits="MusicianEditBoxTemplate" parentKey="songTitle">
+				<Anchors>
+					<Anchor point="TOP" relativeTo="$parentSongTitleLabel" relativePoint="BOTTOM" y="-2" />
+					<Anchor point="LEFT" x="32" />
+					<Anchor point="RIGHT" x="-32" />
+				</Anchors>
+				<Scripts>
+					<OnEnterPressed>
+						self:GetParent().createItem()
+					</OnEnterPressed>
+					<OnEscapePressed>
+						self:GetParent():Hide()
+					</OnEscapePressed>
+				</Scripts>
+			</EditBox>
+		</Frames>
+
+		<!-- Item locale -->
+
+		<Layers>
+			<Layer level="BACKGROUND">
+				<FontString name="$parentLocaleLabel" parentKey="localeLabel" inherits="GameFontNormalLeft">
+					<Anchors>
+						<Anchor point="TOP" relativeTo="$parentSongTitle" relativePoint="BOTTOM" y="-12" />
+						<Anchor point="LEFT" x="25" />
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Frame name="$parentLocale" parentKey="locale" inherits="MusicianDropDownMenuTooltipTemplate">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="$parentLocaleLabel" relativePoint="RIGHT" x="-10" y="-4" />
+				</Anchors>
+				<Scripts>
+					<OnLoad inherit="prepend">
+						MSA_DropDownMenu_SetWidth(self, 80)
+					</OnLoad>
+				</Scripts>
+			</Frame>
+		</Frames>
+
+		<!-- Item preview (icon) -->
+
+		<Frames>
+			<Frame name="$parentPreviewContainer" parentKey="previewContainer">
+				<Size x="37" y="37" />
+				<Anchors>
+					<Anchor point="TOP" relativeTo="$parentLocaleLabel" relativePoint="BOTTOM" y="-25" />
+					<Anchor point="LEFT" x="32" />
+				</Anchors>
+			</Frame>
+		</Frames>
+
+		<!-- Add to your bag + quantity -->
+
+		<Frames>
+			<CheckButton name="$parentAddToBag" parentKey="addToBag" inherits="InterfaceOptionsCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentPreviewContainer" relativePoint="BOTTOMLEFT" y="-25"/>
+				</Anchors>
+				<Scripts>
+					<OnLoad inherit="append">
+						Musician.Options.SetupCheckbox(self, Musician.Msg.TRPE_EXPORT_WINDOW_ADD_TO_BAG)
+						self.onChange = function()
+							local frame = self:GetParent()
+							if self:GetChecked() then
+								frame.quantity:Enable()
+							else
+								frame.quantity:Disable()
+							end
+						end
+						hooksecurefunc(self, 'SetChecked', self.onChange)
+					</OnLoad>
+					<OnClick inherit="append">
+						self.onChange()
+					</OnClick>
+				</Scripts>
+			</CheckButton>
+		</Frames>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<FontString name="$parentQuantityLabel" parentKey="quantityLabel" inherits="GameFontNormalRight">
+					<Anchors>
+						<Anchor point="BOTTOM" relativeTo="$parentAddToBagText" />
+						<Anchor point="LEFT" relativeTo="$parentAddToBagText" relativePoint="RIGHT" x="10" />
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<EditBox name="$parentQuantity" inherits="MusicianEditBoxTemplate" parentKey="quantity" numeric="true" letters="2">
+				<Anchors>
+					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentQuantityLabel" x="15" />
+					<Anchor point="RIGHT" relativePoint="RIGHT" relativeTo="$parentQuantityLabel" x="35" />
+				</Anchors>
+				<Scripts>
+					<OnEditFocusGained>
+						self:HighlightText(0)
+					</OnEditFocusGained>
+					<OnEnterPressed>
+						self:GetParent().createItem()
+					</OnEnterPressed>
+					<OnEscapePressed>
+						self:GetParent():Hide()
+					</OnEscapePressed>
+				</Scripts>
+			</EditBox>
+		</Frames>
+
+		<!-- Add to the DB and customize -->
+
+		<Frames>
+			<CheckButton name="$parentAddToDB" parentKey="addToDB" inherits="InterfaceOptionsCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentAddToBag" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						Musician.Options.SetupCheckbox(self, Musician.Msg.TRPE_EXPORT_WINDOW_ADD_TO_DB_AND_CUSTOMIZE)
+					</OnLoad>
+				</Scripts>
+			</CheckButton>
+		</Frames>
+
+		<!-- Progress bar and stuff -->
+
+		<Layers>
+			<Layer level="BACKGROUND">
+				<FontString name="$parentProgressText" inherits="GameFontNormal" parentKey="progressText">
+					<Anchors>
+						<Anchor point="TOP" relativeTo="$parentAddToDB" relativePoint="BOTTOM" y="-5" />
+						<Anchor point="LEFT" x="25" />
+						<Anchor point="RIGHT" x="-25" />
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Frame name="$parentProgressBar" inherits="MusicianProgressBarTemplate" parentKey="progressBar">
+				<Anchors>
+					<Anchor point="TOP" relativeTo="$parentProgressText" relativePoint="BOTTOM" y="-10" />
+					<Anchor point="LEFT" x="25" />
+					<Anchor point="RIGHT" x="-25" />
+				</Anchors>
+			</Frame>
+			<Button name="$parentExportItemButton" inherits="UIPanelButtonTemplate" level="OVERLAY" parentKey="exportItemButton">
+				<Size x="200" y="24" />
+				<Anchors>
+					<Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$parentProgressBar" y="-10" />
+				</Anchors>
+				<Scripts>
+					<OnClick inherit="append">
+						self:GetParent().createItem()
+					</OnClick>
+				</Scripts>
+			</Button>
+		</Frames>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<FontString name="$parentHint" inherits="GameFontNormal" parentKey="hint">
+					<Anchors>
+						<Anchor point="TOP" relativeTo="$parentProgressText" />
+						<Anchor point="BOTTOM" relativeTo="$parentProgressBar" />
+						<Anchor point="LEFT" x="25" />
+						<Anchor point="RIGHT" x="-25" />
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+
+		<Scripts>
+			<OnLoad inherit="prepend">
+				self.title:SetText(Musician.Msg.TRPE_EXPORT_WINDOW_TITLE)
+				self.songTitleLabel:SetText(Musician.Msg.LINK_EXPORT_WINDOW_SONG_TITLE_LABEL)
+				self.localeLabel:SetText(Musician.Msg.TRPE_EXPORT_WINDOW_LOCALE)
+				self.quantityLabel:SetText(Musician.Msg.TRPE_EXPORT_WINDOW_QUANTITY)
+			</OnLoad>
+		</Scripts>
+	</Frame>
+
 </Ui>

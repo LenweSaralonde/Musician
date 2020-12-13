@@ -4,6 +4,8 @@ local msg = Musician.Locale.en
 local Instrument = Musician.MIDI_INSTRUMENTS
 local Percussion = Musician.MIDI_PERCUSSIONS
 
+msg.LOCALE_NAME = "English"
+
 msg.PLAY = "Play"
 msg.STOP = "Stop"
 msg.PAUSE = "Pause"
@@ -266,14 +268,22 @@ msg.LINKS_ERROR.alreadyRequested = "A song is already being requested from {play
 msg.LINKS_ERROR.timeout = "The player {player} did not respond."
 msg.LINKS_ERROR.importingFailed = "The song {title} could not be imported from {player}."
 
-msg.TRPE_EXPORT_AS_ITEM_BUTTON = "Export as a Total RP item"
-msg.TRPE_PREPARING_EXPORT = "Preparing export… {progress}%"
 msg.TRPE_ITEM_NAME = "{title}"
 msg.TRPE_ITEM_TOOLTIP_REQUIRES_MUSICIAN = "Requires Musician"
 msg.TRPE_ITEM_TOOLTIP_SHEET_MUSIC = "Sheet music"
 msg.TRPE_ITEM_USE_HINT = "Read the sheet music"
 msg.TRPE_ITEM_MUSICIAN_NOT_FOUND = "You need the Musician add-on to be able to use this item.\nGet it from {url}."
 msg.TRPE_ITEM_NOTES = "Import the song into Musician to play it for nearby players.\n\nDownload Musician: {url}\n"
+
+msg.TRPE_EXPORT_BUTTON = "Export"
+msg.TRPE_EXPORT_WINDOW_TITLE = "Export song as a Total RP item"
+msg.TRPE_EXPORT_WINDOW_LOCALE = "Item language:"
+msg.TRPE_EXPORT_WINDOW_ADD_TO_BAG = "Add to your bag"
+msg.TRPE_EXPORT_WINDOW_QUANTITY = "Quantity:"
+msg.TRPE_EXPORT_WINDOW_ADD_TO_DB_AND_CUSTOMIZE = "Add to the database and customize"
+msg.TRPE_EXPORT_WINDOW_HINT = "Create a sheet music item in Total RP Extended that can be traded with other players."
+msg.TRPE_EXPORT_WINDOW_CREATE_ITEM_BUTTON = "Create item"
+msg.TRPE_EXPORT_WINDOW_PROGRESS = "Creating item… {progress}%"
 
 msg.INSTRUMENT_NAMES = {
 	["none"] = "(None)",
