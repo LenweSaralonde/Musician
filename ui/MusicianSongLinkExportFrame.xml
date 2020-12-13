@@ -1,7 +1,7 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 
 	<Frame name="MusicianSongLinkExportFrame" inherits="MusicianDialogTemplate">
-		<Size x="360" y="175" />
+		<Size x="360" y="171" />
 		<Layers>
 			<Layer level="BACKGROUND">
 				<FontString name="$parentTitle" inherits="GameFontNormal">
@@ -9,9 +9,9 @@
 						<Anchor point="TOP" y="-15" />
 					</Anchors>
 				</FontString>
-				<FontString name="$parentSongTitleLabel" inherits="GameFontHighlightLeft">
+				<FontString name="$parentSongTitleLabel" inherits="GameFontNormalLeft">
 					<Anchors>
-						<Anchor point="TOP" relativeTo="$parentTitle" relativePoint="BOTTOM" y="-5" />
+						<Anchor point="TOP" relativeTo="$parentTitle" relativePoint="BOTTOM" y="-7" />
 						<Anchor point="LEFT" x="25" />
 						<Anchor point="RIGHT" x="-25" />
 					</Anchors>
@@ -22,7 +22,7 @@
 		<Frames>
 			<EditBox name="$parentSongTitle" inherits="MusicianEditBoxTemplate" parentKey="songTitle">
 				<Anchors>
-					<Anchor point="TOP" relativeTo="$parentSongTitleLabel" relativePoint="BOTTOM" />
+					<Anchor point="TOP" relativeTo="$parentSongTitleLabel" relativePoint="BOTTOM" y="-2" />
 					<Anchor point="LEFT" x="32" />
 					<Anchor point="RIGHT" x="-32" />
 				</Anchors>
