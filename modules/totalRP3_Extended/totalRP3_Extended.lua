@@ -18,71 +18,255 @@ Musician.TRP3E.ITEM_MAX_STACK = 20
 Musician.TRP3E.ITEM_ICON = '70_professions_scroll_01' -- Sheet music on a scroll
 Musician.TRP3E.ITEM_ERROR_SOUND = 847 -- igQuestFailed
 
+local exporting = false
+
 --- OnEnable
 --
 function Musician.TRP3E:OnEnable()
 	if TRP3_API and TRP3_API.extended then
 		Musician.Utils.Debug(MODULE_NAME, "Total RP3 Extended module started.")
 		Musician.TRP3E.RegisterHooks()
-		Musician.TRP3E.CreateButtons()
+		Musician.TRP3E.InitUI()
 	end
 end
 
---- Attach module controls to the main Musician UI
---
-function Musician.TRP3E.CreateButtons()
+local function initLocaleDropdown()
+	local dropdown = MusicianTRPEExportFrame.locale
 
-	-- Export as TRP item button in song link export frame
+	local localeValues = {}
+	for locale, msg in pairs(Musician.Locale) do
+		table.insert(localeValues, { locale, msg.LOCALE_NAME or locale })
+	end
+
+	table.sort(localeValues, function (a, b)
+		return a[2] < b[2]
+	end)
+
+	local localeIndexes = {}
+	for index, value in pairs(localeValues) do
+		localeIndexes[value[1]] = index
+	end
+
+	dropdown.SetValue = function(value)
+		dropdown.value = value
+		local index = localeIndexes[value]
+		MSA_DropDownMenu_SetText(dropdown, localeValues[index][2])
+	end
+
+	dropdown.OnClick = function(self, arg1, arg2, checked)
+		dropdown.SetValue(arg1)
+	end
+
+	dropdown.GetItems = function(frame, level, menuList)
+		local info = MSA_DropDownMenu_CreateInfo()
+		info.func = dropdown.OnClick
+		for _, value in pairs(localeValues) do
+			info.arg1 = value[1]
+			info.text = value[2]
+			info.checked = dropdown.value == value[1]
+			MSA_DropDownMenu_AddButton(info)
+		end
+	end
+
+	MSA_DropDownMenu_Initialize(dropdown, dropdown.GetItems)
+end
+
+--- Init the UI elements
+--
+function Musician.TRP3E.InitUI()
+	-- Change Link button label to "Export" in main window
 	--
 
-	local exportFrame = MusicianSongLinkExportFrame
-	local exportIntoTRPButton = CreateFrame("Button", "MusicianExportIntoTRPButton", exportFrame, "UIPanelButtonTemplate")
-	local postLinkButton = exportFrame.postLinkButton
-	exportIntoTRPButton:SetWidth(postLinkButton:GetWidth())
-	exportIntoTRPButton:SetHeight(postLinkButton:GetHeight())
-	exportIntoTRPButton:SetText(Musician.Msg.TRPE_EXPORT_AS_ITEM_BUTTON)
-	exportIntoTRPButton:SetPoint("TOP", postLinkButton, "BOTTOM", 0, -5)
-	exportFrame:SetHeight(exportFrame:GetHeight() + postLinkButton:GetHeight() + 5)
+	local linkButton = MusicianFrameLinkButton
+	linkButton:SetText(Musician.Msg.TRPE_EXPORT_BUTTON)
 
-	local sharedSong
+	-- Replace link button action by a menu in main window
+	--
 
-	local isExportingToTRP3 = false
-	exportIntoTRPButton:HookScript("OnClick", function()
-		isExportingToTRP3 = true
-		local name = Musician.Utils.NormalizeSongName(exportFrame.songTitle:GetText())
-		sharedSong.name = name
-		if sharedSong == Musician.sourceSong then
-			MusicianFrame.Clear()
-		end
-		sharedSong:ExportCompressed(function(songData)
-			exportFrame:Hide()
-			local ID = Musician.TRP3E.AddSheetMusicItem(sharedSong.name, songData, nil, nil, 0, true)
+	local linkButtonDefaultAction = linkButton:GetScript('OnClick')
+	linkButton:SetScript('OnClick', function()
+		local menu = {
+			{
+				notCheckable = true,
+				text = Musician.Msg.LINK_EXPORT_WINDOW_TITLE,
+				func = linkButtonDefaultAction
+			},
+			{
+				notCheckable = true,
+				text = Musician.Msg.TRPE_EXPORT_WINDOW_TITLE,
+				func = Musician.TRP3E.ShowExportFrame
+			},
+		}
+		local menuFrame = CreateFrame("Frame", "MusicianTRPE_ExportMenu", UIParent, "MusicianDropDownMenuTooltipTemplate")
+		Musician.Utils.EasyMenu(menu, menuFrame, "cursor", 0 , 0, "MENU")
+	end)
+
+	-- Create preview widget in item export window
+	--
+
+	local frame = MusicianTRPEExportFrame
+	frame.preview = CreateFrame('Button', frame:GetName() .. 'Preview', frame.previewContainer, 'TRP3_QuestButtonTemplate')
+	frame.preview:SetAllPoints(frame.previewContainer)
+	frame.preview.Disable = function(self)
+		getmetatable(self).__index.Disable(self)
+		self.Name:SetTextColor(GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b)
+		self.InfoText:SetTextColor(GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b)
+	end
+	frame.preview.Enable = function(self)
+		getmetatable(self).__index.Enable(self)
+		local nameFontObject = self.Name:GetFontObject()
+		self.Name:SetTextColor(nameFontObject:GetTextColor())
+		local infoTextFontObject = self.InfoText:GetFontObject()
+		self.InfoText:SetTextColor(infoTextFontObject:GetTextColor())
+	end
+
+	-- Init item locale dropdown
+	--
+
+	initLocaleDropdown()
+end
+
+local function createItem(sharedSong)
+	local frame = MusicianTRPEExportFrame
+	local title = Musician.Utils.NormalizeSongName(frame.songTitle:GetText())
+	local locale = frame.locale.value
+	local icon = frame.preview.selectedIcon
+	local quantity = frame.addToBag:GetChecked() and tonumber(frame.quantity:GetText())
+	local addToDB = frame.addToDB:GetChecked()
+
+	sharedSong.name = title
+	if sharedSong == Musician.sourceSong then
+		MusicianFrame.Clear()
+	end
+
+	sharedSong:ExportCompressed(function(songData)
+		frame:Hide()
+		local ID = Musician.TRP3E.AddSheetMusicItem(title, songData, locale, icon, quantity, addToDB)
+		-- Open TRP editor if add to DB was chosen
+		if addToDB then
 			TRP3_API.extended.tools.goToPage(ID, true)
 			TRP3_ToolFrame:Show()
-		end)
+		end
 	end)
+end
 
-	hooksecurefunc(Musician.SongLinkExportFrame, 'Show', function()
-		sharedSong = Musician.sourceSong
+local function injectUIData()
+	local frame = MusicianTRPEExportFrame
+	local locale = frame.locale.value
+	local ID, object = Musician.TRP3E.CreateSheetMusicItem(frame.songTitle:GetText(), frame.preview.selectedIcon, locale)
+	Musician.TRP3E.UpdateSheetMusicItem(object, '', locale)
+	return object
+end
 
-		Musician.TRP3E:RegisterMessage(Musician.Events.SongExportStart, function(event, song)
+local function onIconSelected(icon)
+	local frame = MusicianTRPEExportFrame
+	frame.preview.Icon:SetTexture("Interface\\ICONS\\" .. (icon or "TEMP"))
+	frame.preview.selectedIcon = icon
+end
+
+--- Show the TRP item export frame
+--
+function Musician.TRP3E.ShowExportFrame()
+	if not(Musician.sourceSong) then return end
+
+	local frame = MusicianTRPEExportFrame
+
+	if not(exporting) then
+		local sharedSong = Musician.sourceSong
+
+		frame.createItem = function()
+			createItem(sharedSong)
+		end
+
+		-- Song title
+
+		frame.songTitle:SetMaxBytes(Musician.Song.MAX_NAME_LENGTH)
+		frame.songTitle:SetText(sharedSong.name)
+		frame.songTitle:HighlightText(0)
+		frame.songTitle:SetFocus()
+		frame.songTitle:Enable()
+
+		-- Locale
+
+		MSA_DropDownMenu_EnableDropDown(frame.locale)
+		frame.locale.SetValue(Musician.Utils.GetRealmLocale())
+
+		-- Preview (icon select)
+
+		frame.preview:Enable()
+		onIconSelected(Musician.TRP3E.ITEM_ICON)
+		frame.preview.Name:SetText(TRP3_API.loc.EDITOR_PREVIEW)
+		frame.preview.InfoText:SetText(TRP3_API.loc.EDITOR_ICON_SELECT)
+		frame.preview:SetScript('OnEnter', function(self)
+			TRP3_API.inventory.showItemTooltip(self, TRP3_API.globals.empty, injectUIData(), true)
+		end)
+		frame.preview:SetScript('OnLeave', function(self)
+			TRP3_ItemTooltip:Hide()
+		end)
+		frame.preview:SetScript('OnClick', function(self)
+			TRP3_API.popup.showPopup(TRP3_API.popup.ICONS, { parent = frame, point = "LEFT", parentPoint = "RIGHT" }, { onIconSelected })
+		end)
+
+		-- Add to bag and quantity
+
+		frame.addToBag:Enable()
+		frame.addToBag:SetChecked(true)
+		frame.quantity:SetText(1)
+
+		-- Add to the database
+
+		frame.addToDB:Enable()
+		frame.addToDB:SetChecked(false)
+
+		-- Hint and progress bar
+
+		frame.hint:SetText(Musician.Msg.TRPE_EXPORT_WINDOW_HINT)
+		frame.hint:Show()
+
+		frame.progressText:SetText(Musician.Msg.TRPE_EXPORT_WINDOW_PROGRESS)
+		frame.progressText:Hide()
+		frame.progressBar:Hide()
+
+		-- Export button
+
+		frame.exportItemButton:SetText(Musician.Msg.TRPE_EXPORT_WINDOW_CREATE_ITEM_BUTTON)
+		frame.exportItemButton:Enable()
+
+		-- Set events
+
+		Musician.SongLinkExportFrame:RegisterMessage(Musician.Events.SongExportStart, function(event, song)
 			if song ~= sharedSong then return end
-			exportIntoTRPButton:Disable()
+			exporting = true
+			frame.exportItemButton:Disable()
+			frame.songTitle:Disable()
+			MSA_DropDownMenu_DisableDropDown(frame.locale)
+			frame.preview:Disable()
+			frame.addToBag:Disable()
+			frame.quantity:Disable()
+			frame.addToDB:Disable()
+			frame.progressBar:Show()
+			frame.progressText:Show()
+			frame.hint:Hide()
 		end)
 
-		Musician.TRP3E:RegisterMessage(Musician.Events.SongExportProgress, function(event, song, progress)
-		 	if song ~= sharedSong or not(isExportingToTRP3) then return end
-		 	local percentageText = floor(progress * 100)
-		 	local progressText = string.gsub(Musician.Msg.TRPE_PREPARING_EXPORT, '{progress}', percentageText)
-		 	exportFrame.progressText:SetText(progressText)
-		end)
-
-		Musician.TRP3E:RegisterMessage(Musician.Events.SongExportComplete, function(event, song)
+		Musician.SongLinkExportFrame:RegisterMessage(Musician.Events.SongExportProgress, function(event, song, progress)
 			if song ~= sharedSong then return end
-			isExportingToTRP3 = false
-			exportIntoTRPButton:Enable()
+			frame.progressBar:SetProgress(progress)
+			local percentageText = floor(progress * 100)
+			local progressText = string.gsub(Musician.Msg.TRPE_EXPORT_WINDOW_PROGRESS, '{progress}', percentageText)
+			frame.progressText:SetText(progressText)
 		end)
-	end)
+
+		Musician.SongLinkExportFrame:RegisterMessage(Musician.Events.SongExportComplete, function(event, song)
+			if song ~= sharedSong then return end
+			frame.progressBar:Hide()
+			frame.progressText:Hide()
+			frame.hint:Show()
+			exporting = false
+		end)
+	end
+
+	frame:Show()
 end
 
 --- Enable or disable a TRP3 checkbox
@@ -313,7 +497,7 @@ function Musician.TRP3E.CreateSheetMusicItem(title, icon, locale)
 
 	-- Set up item defaults. These can be customized by the user
 	if object.BA == nil then object.BA = {} end
-	object.BA.NA = string.gsub(Musician.Utils.GetMsg('TRPE_ITEM_NAME', locale), '{title}', title)
+	object.BA.NA = string.gsub(Musician.Utils.GetMsg('TRPE_ITEM_NAME', locale), '{title}', Musician.TRP3E.NormalizeTitle(title))
 	object.BA.IC = icon
 	object.BA.ST = Musician.TRP3E.ITEM_MAX_STACK
 	object.BA.QA = Musician.TRP3E.ITEM_QUALITY

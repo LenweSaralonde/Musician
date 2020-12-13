@@ -5,6 +5,8 @@ local Instrument = Musician.MIDI_INSTRUMENTS
 local Percussion = Musician.MIDI_PERCUSSIONS
 local KEY = Musician.KEYBOARD_KEY
 
+msg.LOCALE_NAME = "Français"
+
 msg.PLAY = "Jouer"
 msg.STOP = "Stop"
 msg.PAUSE = "Pause"
