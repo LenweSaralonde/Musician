@@ -16,7 +16,7 @@ MusicianFrame.bandPlayReadyPlayers = {}
 
 --- Init
 --
-MusicianFrame.Init = function()
+function MusicianFrame.Init()
 	MusicianFrame:SetClampedToScreen(true)
 
 	Musician.Frame:RegisterMessage(Musician.Events.CommChannelUpdate, MusicianFrame.OnCommChannelUpdate)
@@ -63,7 +63,7 @@ end
 
 --- Set focus to import field
 --
-MusicianFrame.Focus = function()
+function MusicianFrame.Focus()
 	if not(MusicianFrameSource:HasFocus()) then
 		MusicianFrameSource:HighlightText(0)
 		MusicianFrameSource:SetFocus()
@@ -72,7 +72,7 @@ end
 
 --- Clear import field
 -- @param focus (boolean)
-MusicianFrame.Clear = function(focus)
+function MusicianFrame.Clear(focus)
 	sourceBuffer = {}
 	sourceBufferCharIndex = 1
 
@@ -86,7 +86,7 @@ end
 
 --- Open track editor
 --
-MusicianFrame.TrackEditor = function()
+function MusicianFrame.TrackEditor()
 	if Musician.sourceSong then
 		MusicianTrackEditor:Show()
 	end
@@ -94,7 +94,7 @@ end
 
 --- OnSourceChanged
 --
-MusicianFrame.OnSourceChanged = function(self, isUserInput)
+function MusicianFrame.OnSourceChanged(self, isUserInput)
 	MusicianFrameSource:HighlightText(0, 0)
 	MusicianFrameSource:ClearFocus()
 
@@ -108,7 +108,7 @@ end
 
 --- Import source song
 --
-MusicianFrame.ImportSource = function()
+function MusicianFrame.ImportSource()
 	local source = table.concat(sourceBuffer)
 	if source == "" or source == MusicianFrame.GetDefaultText() then
 		return
@@ -119,7 +119,7 @@ end
 
 --- Preview source song
 --
-MusicianFrame.TogglePreviewSong = function()
+function MusicianFrame.TogglePreviewSong()
 	if Musician.sourceSong then
 		if Musician.sourceSong:IsPlaying() then
 			Musician.sourceSong:Stop()
@@ -131,7 +131,7 @@ end
 
 --- Return default text for import text field
 -- @return (string)
-MusicianFrame.GetDefaultText = function()
+function MusicianFrame.GetDefaultText()
 	local defaultText = string.gsub(Musician.Msg.PASTE_MUSIC_CODE, "{url}", Musician.CONVERTER_URL)
 	local shortcut
 
@@ -154,7 +154,7 @@ end
 --- Update Play button
 -- @param isEnabled (boolean)
 -- @param isPlaying (boolean)
-MusicianFrame.UpdatePlayButton = function()
+function MusicianFrame.UpdatePlayButton()
 	isEnabled = Musician.sourceSong and Musician.Comm.CanPlay() and not(isCommActionPending)
 
 	-- This may happen on trial accounts in raid mode
@@ -167,7 +167,7 @@ end
 
 --- OnRosterUpdate
 --
-MusicianFrame.OnRosterUpdate = function(event)
+function MusicianFrame.OnRosterUpdate(event)
 	MusicianFrame.UpdatePlayButton()
 	MusicianFrame.UpdateBandPlayButton()
 end
@@ -175,7 +175,7 @@ end
 --- OnCommChannelUpdate
 -- @param event (string)
 -- @param isConnected (boolean)
-MusicianFrame.OnCommChannelUpdate = function(event, isConnected)
+function MusicianFrame.OnCommChannelUpdate(event, isConnected)
 	MusicianFrame.UpdatePlayButton()
 	MusicianFrame.UpdateBandPlayButton()
 end
@@ -183,7 +183,7 @@ end
 --- OnCommSendAction
 -- @param event (string)
 -- @param action (string)
-MusicianFrame.OnCommSendAction = function(event, action)
+function MusicianFrame.OnCommSendAction(event, action)
 	local isComplete = event == Musician.Events.CommSendActionComplete
 	isCommActionPending = not(isComplete)
 	MusicianFrame.UpdatePlayButton()
@@ -193,7 +193,7 @@ end
 --- OnCommSendAction
 -- @param event (string)
 -- @param song (Musician.Song)
-MusicianFrame.OnSongPlayOrStop = function(event, song)
+function MusicianFrame.OnSongPlayOrStop(event, song)
 	local isPlaying = event == Musician.Events.SongPlay
 
 	if song == Musician.sourceSong then
@@ -212,7 +212,7 @@ end
 
 --- OnSourceSongUpdated
 --
-MusicianFrame.OnSourceSongUpdated = function()
+function MusicianFrame.OnSourceSongUpdated()
 	if Musician.sourceSong == nil then
 		MusicianFrameTestButton:Disable()
 		MusicianFrameTrackEditorButton:Disable()
@@ -231,7 +231,7 @@ end
 --- Refresh buttons
 -- @param event (string)
 -- @param song (Musician.Song)
-MusicianFrame.RefreshButtons = function(event, song)
+function MusicianFrame.RefreshButtons(event, song)
 	if song ~= Musician.importingSong then return end
 	if not(song.importing) then
 		MusicianFrameClearButton:Enable()
@@ -248,14 +248,14 @@ end
 -- @param event (string)
 -- @param song (Musician.Song)
 -- @param progression (number)
-MusicianFrame.RefreshLoadingProgressBar = function(event, song, progression)
+function MusicianFrame.RefreshLoadingProgressBar(event, song, progression)
 	if song ~= Musician.importingSong then return end
 	MusicianFrame.SetLoadingProgressBar(progression)
 end
 
 --- Set loading progress bar position
 -- @param[opt] progression (number)
-MusicianFrame.SetLoadingProgressBar = function(progression)
+function MusicianFrame.SetLoadingProgressBar(progression)
 	if progression == nil then
 		MusicianFrameTextBackgroundLoadingProgressBar:Hide()
 	else
@@ -267,7 +267,7 @@ end
 --- Regresh progress bar of the song
 -- @param event (string)
 -- @param song (Musician.Song) Can be the source song or the song currently playing
-MusicianFrame.RefreshPlayingProgressBar = function(event, song)
+function MusicianFrame.RefreshPlayingProgressBar(event, song)
 	local button
 
 	if song == Musician.sourceSong then
@@ -290,7 +290,7 @@ end
 --- Regresh bandwidth indicator
 -- @param event (string)
 -- @param bandwidth (number)
-MusicianFrame.RefreshBandwidthIndicator = function(event, bandwidth)
+function MusicianFrame.RefreshBandwidthIndicator(event, bandwidth)
 	local r = max(0, min(1, bandwidth * 2))
 	local g = max(0, min(1, 2 - bandwidth * 2))
 	local b = 0
@@ -306,7 +306,7 @@ end
 
 --- Update band play button
 --
-MusicianFrame.UpdateBandPlayButton = function()
+function MusicianFrame.UpdateBandPlayButton()
 
 	-- Update button visibility
 
@@ -349,7 +349,7 @@ end
 
 --- OnBandPlayReady
 --
-MusicianFrame.OnBandPlayReady = function(event, player, songCrc32, isReady)
+function MusicianFrame.OnBandPlayReady(event, player, songCrc32, isReady)
 	-- Display "Is ready" emote in the chat
 	if Musician.Comm.GetCurrentSongCrc32() == songCrc32 then
 		local emote = isReady and Musician.Msg.EMOTE_PLAYER_IS_READY or Musician.Msg.EMOTE_PLAYER_IS_NOT_READY
@@ -359,7 +359,7 @@ end
 
 --- OnBandPlay
 --
-MusicianFrame.OnBandPlay = function(event, player, songCrc32)
+function MusicianFrame.OnBandPlay(event, player, songCrc32)
 	-- Display "Started band play" emote in the chat
 	if Musician.Comm.GetCurrentSongCrc32() == songCrc32 then
 		Musician.Utils.DisplayEmote(player, UnitGUID(Musician.Utils.SimplePlayerName(player)), Musician.Msg.EMOTE_PLAY_IN_BAND_START)
@@ -368,7 +368,7 @@ end
 
 --- OnBandStop
 --
-MusicianFrame.OnBandStop = function(event, player, songCrc32)
+function MusicianFrame.OnBandStop(event, player, songCrc32)
 	-- Display "Stopped band play" emote in the chat
 	if Musician.Comm.GetCurrentSongCrc32() == songCrc32 then
 		Musician.Utils.DisplayEmote(player, UnitGUID(Musician.Utils.SimplePlayerName(player)), Musician.Msg.EMOTE_PLAY_IN_BAND_STOP)

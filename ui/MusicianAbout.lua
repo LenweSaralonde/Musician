@@ -19,12 +19,12 @@ end
 
 --- Init
 --
-Musician.About.Init = function()
+function Musician.About.Init()
 	MusicianAbout:SetClampedToScreen(true)
 	MusicianAbout:SetScript("OnShow", Musician.About.OnShow)
 end
 
-Musician.About.OnShow = function()
+function Musician.About.OnShow()
 	MusicianAboutTitle:SetText(Musician.Msg.ABOUT_TITLE)
 
 	local versionStr = string.gsub(Musician.Msg.ABOUT_VERSION, "{version}", Musician.Utils.GetVersionText())

@@ -13,7 +13,7 @@ local NBSP = " " -- non breaking space
 
 --- Init
 --
-Musician.CrossRP.Options.Init = function()
+function Musician.CrossRP.Options.Init()
 	C_Timer.NewTicker(1, Musician.CrossRP.Options.UpdateActiveBands)
 	MusicianOptionsPanelCrossRP:SetScript("OnShow", Musician.CrossRP.Options.UpdateActiveBands)
 	MusicianOptionsPanelCrossRPImage:ClearAllPoints()
@@ -23,7 +23,7 @@ end
 
 --- Update active bands list in options panel
 --
-Musician.CrossRP.Options.UpdateActiveBands = function()
+function Musician.CrossRP.Options.UpdateActiveBands()
 	if MusicianOptionsPanelCrossRPSubText:IsVisible() then
 		local bands = Musician.CrossRP.Options.GetActiveBandStrings()
 		if #bands > 0 then
@@ -38,7 +38,7 @@ end
 
 --- Get active bands as strings
 -- @return {table}
-Musician.CrossRP.Options.GetActiveBandStrings = function()
+function Musician.CrossRP.Options.GetActiveBandStrings()
 	local status = CrossRP.Proto.GetNetworkStatus()
 	local item
 
