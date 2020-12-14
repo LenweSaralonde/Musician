@@ -689,7 +689,7 @@ end
 
 --- Show
 --
-Musician.Keyboard.Show = function()
+function Musician.Keyboard.Show()
 	if not(Musician.KeyboardUtils.KeyboardIsConfigured()) then
 		Musician.Utils.Popup(Musician.Msg.SHOULD_CONFIGURE_KEYBOARD, function() MusicianKeyboardConfig:Show() end)
 		Musician.KeyboardConfig.showKeyboardOnComplete = true
@@ -702,7 +702,7 @@ end
 --- OnFrame
 -- @param event (string)
 -- @param elapsed (boolean)
-Musician.Keyboard.OnFrame = function(event, elapsed)
+function Musician.Keyboard.OnFrame(event, elapsed)
 	-- Make program key LEDs blink when saving or deleting a program
 	if MusicianKeyboard.IsSavingProgram() or MusicianKeyboard.IsDeletingProgram() then
 		programLedBlinkTime = programLedBlinkTime + elapsed
@@ -726,7 +726,7 @@ end
 -- @param instrumentData (table)
 -- @param isChordNote (boolean)
 -- @param source (table)
-Musician.Keyboard.OnLiveNoteOn = function(event, key, layer, instrumentData, isChordNote, source)
+function Musician.Keyboard.OnLiveNoteOn(event, key, layer, instrumentData, isChordNote, source)
 	if source ~= MusicianKeyboard then return end
 
 	local button = noteButtons[layer] and noteButtons[layer][key]
@@ -754,7 +754,7 @@ end
 -- @param layer (number)
 -- @param isChordNote (boolean)
 -- @param source (table)
-Musician.Keyboard.OnLiveNoteOff = function(event, key, layer, isChordNote, source)
+function Musician.Keyboard.OnLiveNoteOff(event, key, layer, isChordNote, source)
 	if source ~= MusicianKeyboard then return end
 
 	local button = noteButtons[layer] and noteButtons[layer][key]
@@ -769,21 +769,21 @@ end
 --- OnPhysicalKeyDown
 -- @param event (string)
 -- @param keyValue (string)
-Musician.Keyboard.OnPhysicalKeyDown = function(event, keyValue)
+function Musician.Keyboard.OnPhysicalKeyDown(event, keyValue)
 	Musician.Keyboard.OnPhysicalKey(keyValue, true)
 end
 
 --- OnPhysicalKeyUp
 -- @param event (string)
 -- @param keyValue (string)
-Musician.Keyboard.OnPhysicalKeyUp = function(event, keyValue)
+function Musician.Keyboard.OnPhysicalKeyUp(event, keyValue)
 	Musician.Keyboard.OnPhysicalKey(keyValue, false)
 end
 
 --- Key up/down handler, from physical keyboard
 -- @param keyValue (string)
 -- @param down (boolean)
-Musician.Keyboard.OnPhysicalKey = function(keyValue, down)
+function Musician.Keyboard.OnPhysicalKey(keyValue, down)
 
 	-- Override standard Toggle UI to keep the keyboard visible on screen
 	if down and GetBindingFromClick(keyValue) == "TOGGLEUI" and not(InCombatLockdown()) then
@@ -807,7 +807,7 @@ end
 -- @param keyValue (string)
 -- @param down (boolean)
 -- @return (boolean)
-Musician.Keyboard.KeyButtonStateDiffers = function(keyValue, down)
+function Musician.Keyboard.KeyButtonStateDiffers(keyValue, down)
 	local button = keyValueButtons[keyValue]
 	local newButtonState = down and "PUSHED" or "NORMAL"
 	return not(button) or button:GetButtonState() ~= newButtonState and not(button.clicked)
@@ -816,7 +816,7 @@ end
 --- Set on-screen keyboard button up/down state, without triggering its action.
 -- @param button (Button)
 -- @param down (boolean)
-Musician.Keyboard.SetButtonState = function(button, down)
+function Musician.Keyboard.SetButtonState(button, down)
 	if button then
 		button.keyPressed = true
 		if down and button:GetButtonState() ~= "PUSHED" then
@@ -866,7 +866,7 @@ end
 
 --- Set all buttons up
 -- @param[opt] onlyForLayer (number)
-Musician.Keyboard.SetButtonsUp = function(onlyForLayer)
+function Musician.Keyboard.SetButtonsUp(onlyForLayer)
 	local layers = (onlyForLayer ~= nil) and { onlyForLayer } or { LAYER.LOWER, LAYER.UPPER }
 
 	if noteButtons then
@@ -885,7 +885,7 @@ end
 -- @param keyValue (string)
 -- @param down (boolean)
 -- @return (boolean) True if the keypress was consumed
-Musician.Keyboard.OnKey = function(keyValue, down)
+function Musician.Keyboard.OnKey(keyValue, down)
 	if down and keyValue == "ESCAPE" then
 		if MusicianKeyboard.IsSavingProgram() then
 			MusicianKeyboard.SetSavingProgram(false)
@@ -907,7 +907,7 @@ end
 --- Change keyboard layout
 -- @param layoutIndex (number)
 -- @param[opt=true] doKeyboardRefresh (boolean) Rebuild key mapping when true
-Musician.Keyboard.SetLayout = function(layoutIndex, doKeyboardRefresh)
+function Musician.Keyboard.SetLayout(layoutIndex, doKeyboardRefresh)
 	if Musician.Keyboard.config.layout == layoutIndex then
 		return
 	end
@@ -934,7 +934,7 @@ end
 --- Change base key
 -- @param key (number)
 -- @param[opt=true] doKeyboardRefresh (boolean) Rebuild key mapping when true
-Musician.Keyboard.SetBaseKey = function(key, doKeyboardRefresh)
+function Musician.Keyboard.SetBaseKey(key, doKeyboardRefresh)
 	if Musician.Keyboard.config.baseKey == key then
 		return
 	end
@@ -958,7 +958,7 @@ end
 -- @param layer (number)
 -- @param instrument (number)
 -- @param[opt=true] doKeyboardRefresh (boolean) Rebuild key mapping when true
-Musician.Keyboard.SetInstrument = function(layer, instrument, doKeyboardRefresh)
+function Musician.Keyboard.SetInstrument(layer, instrument, doKeyboardRefresh)
 	if Musician.Keyboard.config.instrument[layer] == instrument then
 		return
 	end
@@ -986,7 +986,7 @@ end
 -- @param layer (number)
 -- @param amount (number)
 -- @param[opt=true] doKeyboardRefresh (boolean) Rebuild key mapping when true
-Musician.Keyboard.ShiftKeys = function(layer, amount, doKeyboardRefresh)
+function Musician.Keyboard.ShiftKeys(layer, amount, doKeyboardRefresh)
 	local shift = Musician.Keyboard.config.shift[layer] + amount
 	Musician.Keyboard.SetKeyShift(layer, shift, doKeyboardRefresh)
 end
@@ -995,7 +995,7 @@ end
 -- @param layer (number)
 -- @param shift (number) Shift amount
 -- @param[opt=true] doKeyboardRefresh (boolean) Rebuild key mapping when true
-Musician.Keyboard.SetKeyShift = function(layer, shift, doKeyboardRefresh)
+function Musician.Keyboard.SetKeyShift(layer, shift, doKeyboardRefresh)
 	if Musician.Keyboard.config.shift[layer] == shift then
 		return
 	end
@@ -1013,7 +1013,7 @@ end
 -- @param layer (number)
 -- @param enable (boolean)
 -- @param[opt=true] doKeyboardRefresh (boolean) Rebuild key mapping when true
-Musician.Keyboard.SetPowerChords = function(layer, enable, doKeyboardRefresh)
+function Musician.Keyboard.SetPowerChords(layer, enable, doKeyboardRefresh)
 	if Musician.Keyboard.config.powerChords[layer] == enable then
 		return
 	end
@@ -1038,7 +1038,7 @@ end
 
 --- Build keyboard mapping from actual configuration
 --
-Musician.Keyboard.BuildMapping = function()
+function Musician.Keyboard.BuildMapping()
 
 	Musician.Keyboard.mapping = {}
 
@@ -1126,7 +1126,7 @@ end
 -- @param down (boolean)
 -- @param keyValue (string)
 -- @return (boolean) True if the keypress was consumed
-MusicianKeyboard.NoteKey = function(down, keyValue)
+function MusicianKeyboard.NoteKey(down, keyValue)
 	local key = Musician.KeyboardUtils.GetKey(keyValue)
 
 	if key == nil then
@@ -1183,7 +1183,7 @@ end
 -- @param down (boolean)
 -- @param keyValue (string)
 -- @return (boolean) True if the keypress was consumed
-MusicianKeyboard.ProgramActionKey = function(down, keyValue)
+function MusicianKeyboard.ProgramActionKey(down, keyValue)
 
 	if keyValue == "DELETE" then
 		MusicianKeyboard.SetDeletingProgram(down)
@@ -1207,7 +1207,7 @@ end
 -- @param down (boolean)
 -- @param keyValue (string)
 -- @return (boolean) True if the keypress was consumed
-MusicianKeyboard.FunctionKey = function(down, keyValue)
+function MusicianKeyboard.FunctionKey(down, keyValue)
 	local key = Musician.KeyboardUtils.GetKey(keyValue)
 
 	if key == nil or ProgramKeys[key] == nil then
@@ -1232,7 +1232,7 @@ end
 
 --- Set program saving mode
 -- @param value (boolean)
-MusicianKeyboard.SetSavingProgram = function(value)
+function MusicianKeyboard.SetSavingProgram(value)
 	if savingProgram ~= value then
 		programLedBlinkTime = 0
 		savingProgram = value
@@ -1249,7 +1249,7 @@ end
 
 --- Set program deleting mode
 -- @param value (boolean)
-MusicianKeyboard.SetDeletingProgram = function(value)
+function MusicianKeyboard.SetDeletingProgram(value)
 	if deletingProgram ~= value then
 		programLedBlinkTime = 0
 		deletingProgram = value
@@ -1260,19 +1260,19 @@ end
 
 --- Get program saving mode
 -- @return (boolean)
-MusicianKeyboard.IsSavingProgram = function()
+function MusicianKeyboard.IsSavingProgram()
 	return savingProgram
 end
 
 --- Get program deleting mode
 -- @return (boolean)
-MusicianKeyboard.IsDeletingProgram = function()
+function MusicianKeyboard.IsDeletingProgram()
 	return deletingProgram
 end
 
 --- Load configuration
 -- @param config (table)
-MusicianKeyboard.LoadConfig = function(config)
+function MusicianKeyboard.LoadConfig(config)
 	Musician.Keyboard.SetLayout(config.layout, false)
 	Musician.Keyboard.SetBaseKey(config.baseKey, false)
 	Musician.Keyboard.SetInstrument(LAYER.UPPER, config.instrument[LAYER.UPPER], false)
@@ -1292,14 +1292,14 @@ end
 --- Has saved program
 -- @param program (number)
 -- @return (boolean)
-MusicianKeyboard.HasSavedProgram = function(program)
+function MusicianKeyboard.HasSavedProgram(program)
 	return Musician_Settings.keyboardPrograms and Musician_Settings.keyboardPrograms[program]
 end
 
 --- Indicate if the provided program is the current one that has been loaded
 -- @param program (number)
 -- @return (boolean)
-MusicianKeyboard.IsCurrentProgram = function(program)
+function MusicianKeyboard.IsCurrentProgram(program)
 	return program == loadedProgram
 end
 
@@ -1314,7 +1314,7 @@ end
 --- Load saved program
 -- @param program (number)
 -- @return (boolean)
-MusicianKeyboard.LoadProgram = function(program)
+function MusicianKeyboard.LoadProgram(program)
 	if MusicianKeyboard.HasSavedProgram(program) then
 		MusicianKeyboard.LoadConfig(Musician_Settings.keyboardPrograms[program])
 		loadedProgram = program
@@ -1332,7 +1332,7 @@ end
 
 --- Save program
 -- @param program (number)
-MusicianKeyboard.SaveProgram = function(program)
+function MusicianKeyboard.SaveProgram(program)
 	if Musician_Settings.keyboardPrograms == nil then
 		Musician_Settings.keyboardPrograms = {}
 	end
@@ -1344,7 +1344,7 @@ end
 
 --- Delete a program
 -- @param program (number)
-MusicianKeyboard.DeleteProgram = function(program)
+function MusicianKeyboard.DeleteProgram(program)
 	if Musician_Settings.keyboardPrograms == nil or Musician_Settings.keyboardPrograms[program] == nil then
 		return
 	end
@@ -1356,7 +1356,7 @@ end
 
 --- Toggle UI, keeping the keyboard visible
 --
-Musician.Keyboard.ToggleUI = function()
+function Musician.Keyboard.ToggleUI()
 	ToggleFrame(UIParent)
 
 	-- Update keyboard parent frame to make it visible when the main UI is hidden
@@ -1382,7 +1382,7 @@ end
 -- @param upperTrackIndex (number)
 -- @param lowerTrackIndex (number)
 -- @param[opt=true] doKeyboardRefresh (boolean) Rebuild key mapping when true
-Musician.Keyboard.EnableDemoMode = function(upperTrackIndex, lowerTrackIndex, doKeyboardRefresh)
+function Musician.Keyboard.EnableDemoMode(upperTrackIndex, lowerTrackIndex, doKeyboardRefresh)
 	local config = Musician.Keyboard.config
 
 	local currentUpperTrackIndex = config.demoTrackMapping and config.demoTrackMapping[LAYER.UPPER]
@@ -1432,14 +1432,14 @@ end
 
 --- Disable demo mode
 -- @param[opt=true] doKeyboardRefresh (boolean) Rebuild key mapping when true
-Musician.Keyboard.DisableDemoMode = function(doKeyboardRefresh)
+function Musician.Keyboard.DisableDemoMode(doKeyboardRefresh)
 	Musician.Keyboard.EnableDemoMode(nil, nil, doKeyboardRefresh)
 end
 
 --- Demo mode OnSongPlay
 -- @param event (string)
 -- @param song (Musician.Song)
-Musician.Keyboard.OnSongPlay = function(event, song)
+function Musician.Keyboard.OnSongPlay(event, song)
 	if song ~= Musician.sourceSong then
 		return
 	end
@@ -1449,7 +1449,7 @@ end
 
 --- Configure demo mode relatively to the source song
 -- @param[opt=true] doKeyboardRefresh (boolean) Rebuild key mapping when true
-Musician.Keyboard.ConfigureDemo = function(doKeyboardRefresh)
+function Musician.Keyboard.ConfigureDemo(doKeyboardRefresh)
 	local song = Musician.sourceSong
 	local config = Musician.Keyboard.config
 
@@ -1484,7 +1484,7 @@ end
 -- @param song (Musician.Song)
 -- @param track (table)
 -- @param key (number)
-Musician.Keyboard.OnNoteOn = function(event, song, track, key)
+function Musician.Keyboard.OnNoteOn(event, song, track, key)
 	local config = Musician.Keyboard.config
 	if config.demoTrackMapping == nil or not(Musician.sourceSong) or song ~= Musician.sourceSong then
 		return
@@ -1509,7 +1509,7 @@ end
 -- @param song (Musician.Song)
 -- @param track (number)
 -- @param key (number)
-Musician.Keyboard.OnNoteOff = function(event, song, track, key)
+function Musician.Keyboard.OnNoteOff(event, song, track, key)
 	local config = Musician.Keyboard.config
 	if config.demoTrackMapping == nil or not(Musician.sourceSong) or song ~= Musician.sourceSong then
 		return
@@ -1529,7 +1529,7 @@ end
 
 --- Update band sync button
 --
-Musician.Keyboard.UpdateBandSyncButton = function()
+function Musician.Keyboard.UpdateBandSyncButton()
 
 	-- Update button visibility
 
@@ -1573,7 +1573,7 @@ end
 
 --- OnLiveBandSync
 --
-Musician.Keyboard.OnLiveBandSync = function(event, player, isSynced)
+function Musician.Keyboard.OnLiveBandSync(event, player, isSynced)
 	-- Display "Is synced" emote in the chat
 	if not(Musician.Utils.PlayerIsMyself(player)) then
 		local emote = isSynced and Musician.Msg.EMOTE_PLAYER_LIVE_SYNC_ENABLED or Musician.Msg.EMOTE_PLAYER_LIVE_SYNC_DISABLED

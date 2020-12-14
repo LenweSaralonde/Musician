@@ -1540,7 +1540,7 @@ end
 -- @return position (table) player position and GUID
 -- @return trackCount (int)
 -- @return headerLength (number)
-Musician.Song.UnpackChunkHeader = function(data)
+function Musician.Song.UnpackChunkHeader(data)
 
 	local readBytes = Musician.Utils.GetByteReader(data)
 
@@ -1584,7 +1584,7 @@ end
 --- Unpack song chunk data
 -- @param data (string)
 -- @return chunk (table)
-Musician.Song.UnpackChunkData = function(data)
+function Musician.Song.UnpackChunkData(data)
 
 	-- Get header data
 	local mode, songId, chunkDuration, playtimeLeft, position, trackCount, headerLength = Musician.Song.UnpackChunkHeader(data)

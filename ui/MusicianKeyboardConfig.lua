@@ -81,7 +81,7 @@ end
 
 --- Initialize keyboard configurator.
 --
-Musician.KeyboardConfig.Init = function()
+function Musician.KeyboardConfig.Init()
 	createKeyboard()
 
 	-- Bind scripts
@@ -92,7 +92,7 @@ end
 
 --- OnShow
 --
-Musician.KeyboardConfig.OnShow = function(self)
+function Musician.KeyboardConfig.OnShow(self)
 	PlaySound(SOUNDKIT.IG_QUEST_LIST_OPEN)
 	Musician.KeyboardConfig.UnselectKeyBinding()
 	Musician.KeyboardConfig.Reset()
@@ -103,13 +103,13 @@ end
 
 --- OnHide
 --
-Musician.KeyboardConfig.OnHide = function(self)
+function Musician.KeyboardConfig.OnHide(self)
 	PlaySound(SOUNDKIT.IG_QUEST_LIST_CLOSE)
 end
 
 --- Reset configurator with actually saved values.
 --
-Musician.KeyboardConfig.Reset = function()
+function Musician.KeyboardConfig.Reset()
 	local key
 	keysTodo = 0
 	keysDone = 0
@@ -140,7 +140,7 @@ end
 
 --- Clear keyboard configuration and start over.
 --
-Musician.KeyboardConfig.Clear = function()
+function Musician.KeyboardConfig.Clear()
 	local key
 	keysTodo = 0
 	keysDone = 0
@@ -164,7 +164,7 @@ end
 
 --- Save configuration and close.
 --
-Musician.KeyboardConfig.Save = function()
+function Musician.KeyboardConfig.Save()
 	Musician.KeyboardUtils.SetMapping(currentMapping)
 	MusicianKeyboardConfig:Hide()
 	Musician.Keyboard.BuildMapping()
@@ -176,19 +176,19 @@ end
 
 --- Cancel changes and close.
 --
-Musician.KeyboardConfig.Cancel = function()
+function Musician.KeyboardConfig.Cancel()
 	MusicianKeyboardConfig:Hide()
 end
 
 --- Return true if configuration is complete.
 --
-Musician.KeyboardConfig.IsComplete = function()
+function Musician.KeyboardConfig.IsComplete()
 	return keysDone == keysTodo
 end
 
 --- Update UI accordingly to configuration completion.
 -- Lock save button if configuration is incomplete.
-Musician.KeyboardConfig.UpdateCompletion = function()
+function Musician.KeyboardConfig.UpdateCompletion()
 	Musician.KeyboardConfig.UpdateHint()
 	if Musician.KeyboardConfig.IsComplete() then
 		MusicianKeyboardConfigSaveButton:Enable()
@@ -199,7 +199,7 @@ end
 
 --- OnKeyDown
 --
-Musician.KeyboardConfig.Button_OnKeyDown = function(self, keyValue, arg)
+function Musician.KeyboardConfig.Button_OnKeyDown(self, keyValue, arg)
 	if selectedKeyButton then
 		if keyValue == "ESCAPE" then
 			Musician.KeyboardConfig.UnselectKeyBinding()
@@ -252,7 +252,7 @@ end
 
 --- Jump to the next binding
 --
-Musician.KeyboardConfig.SelectNextKeyBinding = function()
+function Musician.KeyboardConfig.SelectNextKeyBinding()
 	if selectedKeyButton == nil then
 		return
 	end
@@ -276,7 +276,7 @@ end
 
 --- Clear selected binding
 --
-Musician.KeyboardConfig.ClearSelectedKeyBinding = function()
+function Musician.KeyboardConfig.ClearSelectedKeyBinding()
 	if selectedKeyButton and selectedKeyButton.keyValue then
 		local keyValue = selectedKeyButton.keyValue
 
@@ -298,7 +298,7 @@ end
 
 --- Key bindings OnClick
 --
-Musician.KeyboardConfig.Key_OnClick = function(self, button, down)
+function Musician.KeyboardConfig.Key_OnClick(self, button, down)
 	if selectedKeyButton and selectedKeyButton == self then
 		Musician.KeyboardConfig.UnselectKeyBinding()
 	else
@@ -308,7 +308,7 @@ end
 
 --- Select a key binding
 -- @param key (string)
-Musician.KeyboardConfig.SelectKeyBinding = function(key)
+function Musician.KeyboardConfig.SelectKeyBinding(key)
 	Musician.KeyboardConfig.UnselectKeyBinding()
 	local button = getKeyButton(key)
 	PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
@@ -331,7 +331,7 @@ end
 
 --- Unselect key binding
 --
-Musician.KeyboardConfig.UnselectKeyBinding = function()
+function Musician.KeyboardConfig.UnselectKeyBinding()
 	if selectedKeyButton then
 		BindingButtonTemplate_SetSelected(selectedKeyButton, false)
 		selectedKeyButton = nil
@@ -343,7 +343,7 @@ end
 
 --- Update hint text
 --
-Musician.KeyboardConfig.UpdateHint = function()
+function Musician.KeyboardConfig.UpdateHint()
 	if selectedKeyButton then
 		local msg = Musician.Msg.PRESS_KEY_BINDING
 		msg = string.gsub(msg, '{col}', Musician.Utils.Highlight(selectedKeyButton.col))

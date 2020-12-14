@@ -10,7 +10,7 @@ local oldSettings = {}
 
 --- Return default options
 -- @return (table)
-Musician.TRP3.Options.GetDefaults = function()
+function Musician.TRP3.Options.GetDefaults()
 	return {
 		trp3MapScan = true,
 	}
@@ -18,7 +18,7 @@ end
 
 --- Set default options
 --
-Musician.TRP3.Options.Defaults = function()
+function Musician.TRP3.Options.Defaults()
 	Musician_Settings = Mixin(Musician_Settings, Musician.TRP3.Options.GetDefaults())
 	Musician.TRP3.Options.RefreshCheckboxes()
 end
@@ -26,13 +26,13 @@ hooksecurefunc(Musician.Options, "Defaults", Musician.TRP3.Options.Defaults)
 
 --- Refresh checkboxes based on actual values
 --
-Musician.TRP3.Options.RefreshCheckboxes = function()
+function Musician.TRP3.Options.RefreshCheckboxes()
 	MusicianOptionsPanelTRP3MapScan:SetChecked(Musician_Settings.trp3MapScan)
 end
 
 --- Refresh panel and store old values
 --
-Musician.TRP3.Options.Refresh = function()
+function Musician.TRP3.Options.Refresh()
 	oldSettings = {
 		trp3MapScan = Musician_Settings.trp3MapScan,
 	}
@@ -54,7 +54,7 @@ end)
 
 --- Save values
 --
-Musician.TRP3.Options.Save = function(fromButton)
+function Musician.TRP3.Options.Save(fromButton)
 	Musician_Settings.trp3MapScan = MusicianOptionsPanelTRP3MapScan:GetChecked()
 end
 hooksecurefunc(Musician.Options, "Save", Musician.TRP3.Options.Save)

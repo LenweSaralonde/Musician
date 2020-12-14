@@ -40,7 +40,7 @@ hooksecurefunc(Musician.Options, "Init", Musician.NamePlates.Options.Init)
 
 --- Return default options
 -- @return (table)
-Musician.NamePlates.Options.GetDefaults = function()
+function Musician.NamePlates.Options.GetDefaults()
 	return {
 		showNamePlateIcon = true,
 		hideNamePlateBars = true,
@@ -51,7 +51,7 @@ end
 
 --- Set default options
 --
-Musician.NamePlates.Options.Defaults = function()
+function Musician.NamePlates.Options.Defaults()
 	MusicianOptionsPanelUnitNamePlatesEnable:SetChecked(true)
 	ExecuteFrameScript(MusicianOptionsPanelUnitNamePlatesEnable, "OnClick", "LeftButton")
 	setCVarBool("nameplateShowFriendlyNPCs", false)
@@ -61,7 +61,7 @@ hooksecurefunc(Musician.Options, "Defaults", Musician.NamePlates.Options.Default
 
 --- Refresh checkboxes based on actual values
 --
-Musician.NamePlates.Options.RefreshCheckboxes = function()
+function Musician.NamePlates.Options.RefreshCheckboxes()
 	local enable = C_CVar.GetCVarBool("nameplateShowAll") and C_CVar.GetCVarBool("nameplateShowFriends")
 	local showIcon = Musician_Settings.showNamePlateIcon
 	local hideNamePlateBars = Musician_Settings.hideNamePlateBars
@@ -96,7 +96,7 @@ end
 
 --- Get text label for cinematic mode
 -- @return label (string)
-Musician.NamePlates.Options.GetCinematicModeLabel = function()
+function Musician.NamePlates.Options.GetCinematicModeLabel()
 	local binding = GetBindingKey("TOGGLEUI")
 	if binding then
 		return string.gsub(Musician.Msg.OPTIONS_CINEMATIC_MODE, '{binding}', binding)
@@ -107,7 +107,7 @@ end
 
 --- Refresh panel and store old values
 --
-Musician.NamePlates.Options.Refresh = function()
+function Musician.NamePlates.Options.Refresh()
 
 	local binding = GetBindingKey("TOGGLEUI")
 	if binding then
@@ -140,7 +140,7 @@ end)
 
 --- Save values
 --
-Musician.NamePlates.Options.Save = function(fromButton)
+function Musician.NamePlates.Options.Save(fromButton)
 	setCVarBool("nameplateShowFriendlyNPCs", not(MusicianOptionsPanelUnitNamePlatesHideNPCs:GetChecked()))
 	Musician_Settings.showNamePlateIcon = MusicianOptionsPanelUnitNamePlatesShowIcon:GetChecked()
 	Musician_Settings.hideNamePlateBars = MusicianOptionsPanelUnitNamePlatesHideNamePlateBars:GetChecked()
