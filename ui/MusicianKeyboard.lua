@@ -168,7 +168,7 @@ end
 local function generateKeys()
 
 	-- Size container
-	MusicianKeyboardKeys:SetHeight(4 * KEY_SIZE)
+	MusicianKeyboardKeys:SetHeight(4.5 * KEY_SIZE)
 	MusicianKeyboardKeys:SetWidth(15 * KEY_SIZE)
 
 	-- Create keys
@@ -276,7 +276,7 @@ local function setKeys()
 				else
 					button.background:SetColorTexture(0, 0, 0, 0)
 					button:Disable()
-					button:SetAlpha(.5)
+					button:SetAlpha(.25)
 					button.tooltipText = nil
 				end
 
@@ -330,7 +330,27 @@ local function setKeys()
 				keyVisible = false
 			end
 
-			if keyVisible and row ~= #Musician.KEYBOARD then -- Do not display the last row
+			-- Handle last row and spacebar for sustain
+			if row == #Musician.KEYBOARD then
+				button:SetHeight(KEY_SIZE / 2)
+				if keyValue == 'SPACE' then
+					keyVisible = true
+					button.tooltipText = nil
+					button.subText:SetText('')
+					button.Text:SetAllPoints(button)
+					button:SetText(string.gsub(Musician.Msg.SUSTAIN_KEY, '{key}', keyValueName))
+					button:SetNormalFontObject(GameFontNormal)
+					button:SetDisabledFontObject(GameFontDisable)
+					button:SetHighlightFontObject(GameFontHighlight)
+					button.background:SetColorTexture(.8, 0, 0, 1)
+					button:SetAlpha(1)
+					button:Enable()
+				else
+					keyVisible = false
+				end
+			end
+
+			if keyVisible then
 				button:Show()
 			else
 				button:Hide()
