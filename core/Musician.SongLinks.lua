@@ -236,10 +236,17 @@ function Musician.SongLinks.OnChatBubbleMsg(event, msg, player)
 	C_Timer.After(0, function()
 		local bubbles = C_ChatBubbles.GetAllChatBubbles()
 		for _, bubble in pairs(bubbles) do
-			local text = bubble:GetChildren().String:GetText()
-			if bubble.MusicianReplacedText ~= text then
-				bubble.MusicianReplacedText = Musician.SongLinks.ChatLinksToChatBubble(text)
-				bubble:GetChildren().String:SetText(bubble.MusicianReplacedText)
+			-- Find the FontString element in the bubble structure
+			for _, region in pairs({ bubble:GetRegions() }) do
+				if region:GetObjectType() == 'FontString' then
+					-- Replace text in found region
+					local text = region:GetText()
+					if bubble.MusicianReplacedText ~= text then
+						bubble.MusicianReplacedText = Musician.SongLinks.ChatLinksToChatBubble(text)
+						region:SetText(bubble.MusicianReplacedText)
+					end
+					return
+				end
 			end
 		end
 	end)
