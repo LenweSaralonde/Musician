@@ -1,12 +1,12 @@
 
 var Musician = {};
 
-Musician.FILE_HEADER = 'MUS6';
+Musician.FILE_HEADER = 'MUS7';
 Musician.MAX_NOTE_DURATION = 6;
 Musician.NOTE_DURATION_FPS = 255 / Musician.MAX_NOTE_DURATION; // 8-bit
 Musician.NOTE_TIME_FPS = 240;
 Musician.MAX_NOTE_TIME = 65535 / Musician.NOTE_TIME_FPS; // 16-bit
-Musician.CONVERTER_VERSION = 12;
+Musician.CONVERTER_VERSION = 13;
 
 Musician.CompareEvents = function(a, b) {
 	if (a.time < b.time) { // A before B
@@ -255,6 +255,12 @@ Musician.PackSong = function(song, fileName) {
 	// Header (4)
 	packedSong += Musician.FILE_HEADER;
 
+	// Song title (2) + (title length in bytes)
+	packedSong += Musician.PackString(song.header.name || Musician.FilenameToTitle(fileName) || '');
+
+	// Song mode (1)
+	packedSong += Musician.PackNumber(0x10, 1);
+
 	// Duration (3)
 	var duration = duration;
 	packedSong += Musician.PackNumber(duration, 3);
@@ -342,9 +348,6 @@ Musician.PackSong = function(song, fileName) {
 	tracks.forEach(function(track) {
 		packedSong += track.notes.join(''); // Notes are already packed
 	});
-
-	// Song title (2) + (title length in bytes)
-	packedSong += Musician.PackString(song.header.name || Musician.FilenameToTitle(fileName) || '');
 
 	// Track names (2) + (title length in bytes)
 	tracks.forEach(function(track) {

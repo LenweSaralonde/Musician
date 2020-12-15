@@ -13,7 +13,7 @@ local NOTEON = Musician.Song.Indexes.NOTEON
 
 --- Init
 --
-Musician.TrackEditor.Init = function()
+function Musician.TrackEditor.Init()
 
 	MusicianTrackEditor:SetClampedToScreen(true)
 
@@ -68,7 +68,7 @@ end
 
 --- Song loaded handler
 --
-Musician.TrackEditor.OnLoad = function()
+function Musician.TrackEditor.OnLoad()
 	Musician.TrackEditor.UpdateSlider()
 	Musician.TrackEditor.UpdateButtons(nil, Musician.sourceSong)
 	Musician.TrackEditor.UpdateBounds()
@@ -96,7 +96,7 @@ end
 --- Update buttons when the song starts or stops playing
 -- @param event (string)
 -- @param song (Musician.Song)
-Musician.TrackEditor.UpdateButtons = function(event, song)
+function Musician.TrackEditor.UpdateButtons(event, song)
 	if song == Musician.sourceSong then
 		if song:IsPlaying() then
 			MusicianTrackEditorPlayButton.tooltipText = Musician.Msg.PAUSE
@@ -116,13 +116,13 @@ end
 
 --- UpdateSyncButton
 --
-Musician.TrackEditor.UpdateSyncButton = function()
+function Musician.TrackEditor.UpdateSyncButton()
 	MusicianTrackEditorSynchronizeButton:SetEnabled(isSourceSongStreaming())
 end
 
 --- UpdateSlider
 --
-Musician.TrackEditor.UpdateSlider = function()
+function Musician.TrackEditor.UpdateSlider()
 	MusicianTrackEditorSourceSongSliderLow:SetText("")
 	MusicianTrackEditorSourceSongSliderHigh:SetText("")
 	MusicianTrackEditorSourceSongSlider:SetMinMaxValues(Musician.sourceSong.cropFrom, Musician.sourceSong.cropTo)
@@ -132,7 +132,7 @@ end
 --- Update cursor position
 -- @param event (string)
 -- @param song (Musician.Song)
-Musician.TrackEditor.UpdateCursor = function(event, song)
+function Musician.TrackEditor.UpdateCursor(event, song)
 	if song == Musician.sourceSong then
 		if not(MusicianTrackEditorSourceSongSlider.dragging) then
 			local cursor = max(Musician.sourceSong.cropFrom, min(Musician.sourceSong.cropTo, Musician.sourceSong.cursor))
@@ -148,14 +148,14 @@ end
 
 --- UpdateBounds
 --
-Musician.TrackEditor.UpdateBounds = function()
+function Musician.TrackEditor.UpdateBounds()
 	MusicianTrackEditorCropFrom:SetText(Musician.Utils.FormatTime(Musician.sourceSong.cropFrom))
 	MusicianTrackEditorCropTo:SetText(Musician.Utils.FormatTime(Musician.sourceSong.cropTo))
 end
 
 --- Track widget factory
 -- @param trackIndex (number)
-Musician.TrackEditor.CreateTrackWidget = function(trackIndex)
+function Musician.TrackEditor.CreateTrackWidget(trackIndex)
 	local trackFrameName = 'MusicianTrackEditorTrack' .. trackIndex
 	local trackFrame = _G[trackFrameName]
 	local track = Musician.sourceSong.tracks[trackIndex]
@@ -240,7 +240,7 @@ end
 --- Init track transpose dropdown
 -- @param dropdown (MSA_DropDownMenu)
 -- @param trackIndex (number)
-Musician.TrackEditor.InitTransposeDropdown = function(dropdown, trackIndex)
+function Musician.TrackEditor.InitTransposeDropdown(dropdown, trackIndex)
 
 	local transposeValues = {"+2", "+1", "0", "-1", "-2"}
 
@@ -282,7 +282,7 @@ end
 --- Init track instrument dropdown
 -- @param dropdown (MSA_DropDownMenu)
 -- @param trackIndex (number)
-Musician.TrackEditor.InitInstrumentDropdown = function(dropdown, trackIndex)
+function Musician.TrackEditor.InitInstrumentDropdown(dropdown, trackIndex)
 	dropdown.trackIndex = trackIndex
 	dropdown.tooltipText = Musician.Msg.CHANGE_TRACK_INSTRUMENT
 
@@ -303,7 +303,7 @@ end
 
 --- Set crop start position
 -- @param position (number)
-Musician.TrackEditor.SetCropFrom = function(position)
+function Musician.TrackEditor.SetCropFrom(position)
 	if position < Musician.sourceSong.cropTo then
 		Musician.sourceSong.cropFrom = position
 	end
@@ -319,7 +319,7 @@ end
 
 --- Set crop end position
 -- @param position (number)
-Musician.TrackEditor.SetCropTo = function(position)
+function Musician.TrackEditor.SetCropTo(position)
 	if position > Musician.sourceSong.cropFrom then
 		Musician.sourceSong.cropTo = position
 	end
@@ -334,7 +334,7 @@ end
 
 --- Synchronize track settings with currently streaming song
 --
-Musician.TrackEditor.Synchronize = function()
+function Musician.TrackEditor.Synchronize()
 	if not(isSourceSongStreaming()) then return end
 
 	local trackIndex, sourceTrack
@@ -349,7 +349,7 @@ end
 
 --- OnUpdate
 --
-Musician.TrackEditor.OnUpdate = function(event, elapsed)
+function Musician.TrackEditor.OnUpdate(event, elapsed)
 	if Musician.sourceSong then
 		local track
 		-- Update track activity meters
@@ -381,7 +381,7 @@ end
 -- @param song (Musician.Song)
 -- @param track (table)
 -- @param key (number)
-Musician.TrackEditor.NoteOn = function(event, song, track, key)
+function Musician.TrackEditor.NoteOn(event, song, track, key)
 	if song == Musician.sourceSong then
 		local meterTexture = _G['MusicianTrackEditorTrack' .. track.index].meterTexture
 		local _, instrumentData = Musician.Sampler.GetSoundFile(track.instrument, key)
@@ -395,7 +395,7 @@ end
 -- @param song (Musician.Song)
 -- @param track (table)
 -- @param key (number)
-Musician.TrackEditor.NoteOff = function(event, song, track, key)
+function Musician.TrackEditor.NoteOff(event, song, track, key)
 	if song == Musician.sourceSong then
 		-- Stop if all notes of the track are off
 		if track.polyphony == 0 then

@@ -42,6 +42,22 @@
 				</Scripts>
 			</Button>
 
+			<Button name="$parentLinkButton" inherits="MusicianIconTextButtonTemplate" level="OVERLAY">
+				<Size x="70" y="22" />
+				<Anchors>
+					<Anchor point="TOPRIGHT" x="-10" y="-10" relativePoint="TOPRIGHT" />
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						self:SetText(Musician.Msg.LINKS_LINK_BUTTON)
+						self.icon:SetText(Musician.Icons.Export)
+					</OnLoad>
+					<OnClick>
+						Musician.SongLinkExportFrame.Show()
+					</OnClick>
+				</Scripts>
+			</Button>
+
 			<Button name="$parentTestButton" inherits="MusicianIconTextProgressBarButtonTemplate">
 				<Size x="120" y="22" />
 				<Anchors>

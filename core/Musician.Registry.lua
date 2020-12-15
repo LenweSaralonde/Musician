@@ -25,12 +25,12 @@ local newProtocolNotified = false
 
 local pendingPlayerQueries = {} -- Query messages queue
 
---- Print debug message
+--- Print communication debug message
 -- @param out (boolean) Outgoing message
 -- @param event (string)
 -- @param source (string)
 -- @param ... (string)
-local function debug(out, event, source, ...)
+local function debugComm(out, event, source, ...)
 	local prefix
 	if out then
 		prefix = "|cFFFF0000>>>>>|r"
@@ -60,7 +60,7 @@ function Musician.Registry.Init()
 
 		-- Send Query message to group
 		if Musician.Comm.GetGroupChatType() then
-			debug(true, Musician.Registry.event.query, Musician.Comm.GetGroupChatType())
+			debugComm(true, Musician.Registry.event.query, Musician.Comm.GetGroupChatType())
 			Musician.Registry:SendCommMessage(Musician.Registry.event.query, Musician.Registry.GetVersionString(), Musician.Comm.GetGroupChatType(), nil, "ALERT")
 		end
 	end
@@ -72,7 +72,7 @@ function Musician.Registry.Init()
 	-- Send Query message to group when joining
 	Musician.Registry:RegisterEvent("GROUP_JOINED", function()
 		if Musician.Comm.GetGroupChatType() then
-			debug(true, Musician.Registry.event.query, Musician.Comm.GetGroupChatType())
+			debugComm(true, Musician.Registry.event.query, Musician.Comm.GetGroupChatType())
 			Musician.Registry:SendCommMessage(Musician.Registry.event.query, Musician.Registry.GetVersionString(), Musician.Comm.GetGroupChatType(), nil, "ALERT")
 		end
 	end)
@@ -109,7 +109,7 @@ function Musician.Registry.Init()
 		end
 
 		if player and Musician.Registry.PlayerIsRegisteredWithNoVersion(player) then
-			debug(true, Musician.Registry.event.query, player)
+			debugComm(true, Musician.Registry.event.query, player)
 			Musician.Registry:SendCommMessage(Musician.Registry.event.query, Musician.Registry.GetVersionString(), 'WHISPER', player, "ALERT")
 		end
 	end)
@@ -397,7 +397,7 @@ end
 --
 function Musician.Registry.SendHello()
 	if Musician.Comm.GetChannel() ~= nil then
-		debug(true, Musician.Registry.event.hello, Musician.Comm.GetChannel())
+		debugComm(true, Musician.Registry.event.hello, Musician.Comm.GetChannel())
 		Musician.Registry:SendCommMessage(Musician.Registry.event.hello, Musician.Registry.GetVersionString(), 'CHANNEL', Musician.Comm.GetChannel(), "ALERT")
 	end
 end
@@ -418,14 +418,14 @@ end
 --- Receive Hello message
 --
 function Musician.Registry.OnHello(prefix, version, distribution, player)
-	debug(false, prefix, player, distribution, version)
+	debugComm(false, prefix, player, distribution, version)
 	Musician.Registry.SetPlayerVersion(player, version)
 end
 
 --- Receive Query message
 --
 function Musician.Registry.OnQuery(prefix, version, distribution, player)
-	debug(false, prefix, player, distribution, version)
+	debugComm(false, prefix, player, distribution, version)
 	player = Musician.Utils.NormalizePlayerName(player)
 
 	if Musician.Utils.PlayerIsMyself(player) then
@@ -435,10 +435,10 @@ function Musician.Registry.OnQuery(prefix, version, distribution, player)
 	Musician.Registry.SetPlayerVersion(player, version)
 
 	if distribution == 'WHISPER' then
-		debug(true, Musician.Registry.event.hello, player)
+		debugComm(true, Musician.Registry.event.hello, player)
 		Musician.Registry:SendCommMessage(Musician.Registry.event.hello, Musician.Registry.GetVersionString(), 'WHISPER', player, "ALERT")
 	elseif Musician.Comm.GetGroupChatType() then
-		debug(true, Musician.Registry.event.hello, Musician.Comm.GetGroupChatType())
+		debugComm(true, Musician.Registry.event.hello, Musician.Comm.GetGroupChatType())
 		Musician.Registry:SendCommMessage(Musician.Registry.event.hello, Musician.Registry.GetVersionString(), Musician.Comm.GetGroupChatType(), nil, "ALERT")
 	end
 end

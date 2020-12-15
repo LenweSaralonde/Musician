@@ -30,7 +30,8 @@ local NOTE = Musician.Song.Indexes.NOTE
 local CHUNK_DURATION = 1
 
 local streamingStartTimer
-local isPlayingLive = false
+local liveStreamingSong
+local shouldMuteGameMusic = false
 local isBandSyncMode = false
 local playingLiveTimer
 local syncedBandPlayers = {}
@@ -74,7 +75,7 @@ local function createLiveSong(player)
 	song.liveTrackIndexes = {}
 	song.cropTo = STREAM_PADDING
 	song.duration = STREAM_PADDING
-	song.isLiveSong = true
+	song.isLiveStreamingSong = true
 	return song
 end
 
@@ -145,7 +146,17 @@ end
 
 --- Trigger event LiveModeChange when live mode state has changed
 --
-local function liveModeStatusChanged()
+local function liveModeStatusChanged(event, ...)
+	-- Live stopped streaming: destroy live streaming song
+	if event == Musician.Events.StreamStop then
+		local song = ...
+		if song == liveStreamingSong then
+			liveStreamingSong = nil
+			collectgarbage()
+		end
+	end
+
+	-- Send event
 	Musician.Live:SendMessage(Musician.Events.LiveModeChange)
 end
 
@@ -189,7 +200,7 @@ end
 --- muteGameMusic
 --
 local function muteGameMusic()
-	isPlayingLive = true
+	shouldMuteGameMusic = true
 	Musician.Utils.MuteGameMusic()
 	if playingLiveTimer then
 		playingLiveTimer:Cancel()
@@ -203,16 +214,22 @@ local function unmuteGameMusic()
 		playingLiveTimer:Cancel()
 	end
 	playingLiveTimer = C_Timer.NewTimer(STREAM_PADDING, function()
-		isPlayingLive = false
+		shouldMuteGameMusic = false
 		Musician.Utils.MuteGameMusic()
 		playingLiveTimer = nil
 	end)
 end
 
---- Indicate whenever the player is playing live, regardless if in solo or live mode
--- @return isPlayingLive (boolean)
-function Musician.Live.IsPlayingLive()
-	return isPlayingLive
+--- Indicate whenever the player is playing live music, regardless if in solo or live mode
+-- @return isPlaying (boolean)
+function Musician.Live.IsPlaying()
+	return shouldMuteGameMusic
+end
+
+--- Indicate whenever the player is streaming live music
+-- @return isStreaming (boolean)
+function Musician.Live.IsStreaming()
+	return liveStreamingSong ~= nil
 end
 
 --- Indicate whenever the live mode can stream
@@ -223,8 +240,8 @@ function Musician.Live.CanStream()
 		return false
 	end
 
-	-- Actually streaming a song that is not a live song
-	if Musician.streamingSong and Musician.streamingSong.streaming and Musician.streamingSong.mode ~= Musician.Song.MODE_LIVE then
+	-- Actually streaming a song that is not the live streaming song
+	if Musician.streamingSong and Musician.streamingSong.streaming and not(Musician.streamingSong.isLiveStreamingSong) then
 		return false
 	end
 
@@ -235,12 +252,13 @@ end
 -- and assign it to Musician.streamingSong
 function Musician.Live.CreateLiveSong()
 	-- Live song already created
-	if Musician.streamingSong and (Musician.streamingSong.streaming or streamingStartTimer) then
+	if liveStreamingSong then
 		return
 	end
 
 	-- Create song instance
-	Musician.streamingSong = createLiveSong()
+	liveStreamingSong = createLiveSong()
+	Musician.streamingSong = liveStreamingSong
 
 	-- Initialize start time
 	songStartTime = GetTime()
@@ -251,8 +269,8 @@ function Musician.Live.CreateLiveSong()
 	end
 
 	streamingStartTimer = C_Timer.NewTimer(CHUNK_DURATION * 1.05, function()
-		if Musician.streamingSong and not(Musician.streamingSong.streaming) and Musician.streamingSong.isLiveSong then
-			Musician.streamingSong:Stream()
+		if Musician.streamingSong and not(Musician.streamingSong.streaming) and Musician.streamingSong.isLiveStreamingSong then
+			liveStreamingSong:Stream()
 		end
 		streamingStartTimer = nil
 	end)
@@ -276,7 +294,7 @@ function Musician.Live.InsertNote(noteOn, key, layer, instrument)
 	Musician.Live.CreateLiveSong()
 
 	-- Insert note in track
-	local track = getLiveTrack(Musician.streamingSong, layer, instrument)
+	local track = getLiveTrack(liveStreamingSong, layer, instrument)
 	local noteTime = GetTime() - songStartTime
 
 	table.insert(track.notes, {
@@ -286,15 +304,15 @@ function Musician.Live.InsertNote(noteOn, key, layer, instrument)
 	})
 
 	-- Update song bounds
-	Musician.streamingSong.cropTo = noteTime + STREAM_PADDING
-	Musician.streamingSong.duration = noteTime + STREAM_PADDING
+	liveStreamingSong.cropTo = noteTime + STREAM_PADDING
+	liveStreamingSong.duration = noteTime + STREAM_PADDING
 
 	-- Send visual note event
 	if not(Musician.Live.IsBandSyncMode() and Musician.Live.IsLiveEnabled()) then
 		if noteOn then
-			Musician.Live:SendMessage(Musician.Events.VisualNoteOn, Musician.streamingSong, track, key)
+			Musician.Live:SendMessage(Musician.Events.VisualNoteOn, liveStreamingSong, track, key)
 		else
-			Musician.Live:SendMessage(Musician.Events.VisualNoteOff, Musician.streamingSong, track, key)
+			Musician.Live:SendMessage(Musician.Events.VisualNoteOff, liveStreamingSong, track, key)
 		end
 	end
 end

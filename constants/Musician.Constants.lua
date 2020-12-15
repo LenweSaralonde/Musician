@@ -12,13 +12,15 @@ Musician.DISCORD_URL = "https://musician.lenwe.io/discord"
 Musician.PATREON_URL = "https://musician.lenwe.io/patreon"
 Musician.PAYPAL_URL = "https://musician.lenwe.io/paypal"
 
-Musician.FILE_HEADER = "MUS6"
+Musician.FILE_HEADER = "MUS7"
+Musician.FILE_HEADER_COMPRESSED = "MUZ7"
 Musician.PROTOCOL_VERSION = 6
 Musician.MAX_NOTE_DURATION = 6
 Musician.NOTE_DURATION_FPS = 255 / Musician.MAX_NOTE_DURATION -- 8-bit
 Musician.CHUNK_DURATION = 2
 Musician.NOTE_TIME_FPS = 240
 Musician.MAX_CHUNK_NOTE_TIME = 255 / Musician.NOTE_TIME_FPS -- 8-bit
+Musician.MAX_NOTE_TIME = 65535 / Musician.NOTE_TIME_FPS -- 16-bit
 
 Musician.NOTE_NAMES = {[0] = 'C', [1] = 'C#', [2] = 'D', [3] = 'D#', [4] = 'E', [5] = 'F', [6] = 'F#', [7] = 'G', [8] = 'G#', [9] = 'A', [10] = 'Bb', [11] = 'B'}
 Musician.NOTE_IDS   = {['C'] = 0, ['C#'] = 1, ['D'] = 2, ['D#'] = 3, ['E'] = 4, ['F'] = 5, ['F#'] = 6, ['G'] = 7, ['G#'] = 8, ['A'] = 9, ['Bb'] = 10, ['B'] = 11}
@@ -220,6 +222,22 @@ Musician.Events.SongImportSucessful = "MusicianSongImportSucessful"
 -- @param song (Musician.Song)
 Musician.Events.SongImportFailed = "MusicianSongImportFailed"
 
+--- Fired when the song exporting process is starting
+-- @field Musician.Events.SongExportStart
+-- @param song (Musician.Song)
+Musician.Events.SongExportStart = "MusicianSongExportStart"
+
+--- Fired when the song exporting process is making progress
+-- @field Musician.Events.SongExportProgress
+-- @param song (Musician.Song)
+-- @param progress (number) Progression between 0 and 1
+Musician.Events.SongExportProgress = "MusicianSongExportProgress"
+
+--- Fired when the song exporting process is complete, regardless if it failed or not
+-- @field Musician.Events.SongExportComplete
+-- @param song (Musician.Song)
+Musician.Events.SongExportComplete = "MusicianSongExportComplete"
+
 --- Fired when the source song Musician.sourceSong has been successfully loaded
 -- @field Musician.Events.SourceSongLoaded
 -- @param song (Musician.Song)
@@ -268,6 +286,47 @@ Musician.Events.BandReadyPlayersUpdated = "MusicianBandReadyPlayersUpdated"
 -- @param player (string) Player name
 -- @param isSynced (boolean)
 Musician.Events.LiveBandSync = "MusicianLiveBandSync"
+
+--- Fired when the song reception process is starting
+-- @field Musician.Events.SongReceiveStart
+-- @param sender (string)
+Musician.Events.SongReceiveStart = "MusicianSongReceiveStart"
+
+--- Fired when the song reception process is making progress
+-- @field Musician.Events.SongReceiveProgress
+-- @param sender (string)
+-- @param progress (number) Progression between 0 and 1
+Musician.Events.SongReceiveProgress = "MusicianSongReceiveProgress"
+
+--- Fired when the song reception process is complete, regardless if it failed or not
+-- @field Musician.Events.SongReceiveComplete
+-- @param sender (string)
+Musician.Events.SongReceiveComplete = "MusicianSongReceiveComplete"
+
+--- Fired when the song reception process has been canceled
+-- @field Musician.Events.SongReceiveCanceled
+-- @param sender (string)
+Musician.Events.SongReceiveCanceled = "MusicianSongReceiveCanceled"
+
+--- Fired when the song reception process is complete successfully
+-- @field Musician.Events.SongReceiveSucessful
+-- @param sender (string)
+-- @param songData (string)
+-- @param[opt] song (Musician.Song)
+Musician.Events.SongReceiveSucessful = "MusicianSongReceiveSucessful"
+
+--- Fired when the song reception process failed
+-- @field Musician.Events.SongReceiveFailed
+-- @param sender (string)
+-- @param reason (string)
+-- @param title (string)
+Musician.Events.SongReceiveFailed = "MusicianSongReceiveFailed"
+
+--- Fired when the user clicks on a song link
+-- @field Musician.Events.SongLink
+-- @param title (string)
+-- @param playerName (string)
+Musician.Events.SongLink = "MusicianSongLink"
 
 Musician.IconImages = {}
 Musician.IconImages.NoteDisabled = "Interface\\AddOns\\Musician\\ui\\textures\\muted.blp"

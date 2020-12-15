@@ -71,10 +71,12 @@ function Musician:OnInitialize()
 
 	Musician.Comm.Init()
 	Musician.Registry.Init()
+	Musician.SongLinks.Init()
 	Musician.SetupHooks()
 
 	MusicianFrame.Init()
 	MusicianButton.Init()
+	Musician.SongLinkImportFrame.Init()
 	Musician.TrackEditor.Init()
 	Musician.KeyboardUtils.Init()
 	Musician.KeyboardConfig.Init()

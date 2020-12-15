@@ -6,7 +6,8 @@ Musician.Song = LibStub("AceAddon-3.0"):NewAddon("Musician.Song", "AceEvent-3.0"
 local MODULE_NAME = "Song"
 Musician.AddModule(MODULE_NAME)
 
-LibCRC32 = LibStub:GetLibrary("LibCRC32")
+local LibCRC32 = LibStub:GetLibrary("LibCRC32")
+local LibDeflate = LibStub:GetLibrary("LibDeflate")
 
 Musician.Song.__index = Musician.Song
 
@@ -34,15 +35,27 @@ local NOTE = Musician.Song.Indexes.NOTE
 local NOTEON = Musician.Song.Indexes.NOTEON
 local CHUNK = Musician.Song.Indexes.CHUNK
 
+-- Max length for the song title
+Musician.Song.MAX_NAME_LENGTH = 512
+
+-- Song modes
 Musician.Song.MODE_DURATION = 0x10 -- Duration are set in chunk notes
 Musician.Song.MODE_LIVE = 0x20 -- No duration in chunk notes
 
-local CHUNK_VERSION = 0x01 -- Max: 0x0F (15)
+-- Track options
+Musician.Song.TRACK_OPTION_HAS_INSTRUMENT = 0x1
+Musician.Song.TRACK_OPTION_MUTED = 0x2
+Musician.Song.TRACK_OPTION_SOLO = 0x4
 
+local CHUNK_VERSION = 0x01 -- Max: 0x0F (15)
 local BASE64DECODE_PROGRESSION_RATIO = .75
+local COMPRESS_PROGRESSION_RATIO = .5
+local UNCOMPRESS_PROGRESSION_RATIO = .33
+local DEFLATE_CHUNK_SIZE = 2048
 
 local IMPORT_CONVERT_RATE = 70 -- Number of base64 chunks to be converted in 1 ms
 local IMPORT_NOTE_RATE = 36 -- Number of notes to be imported in 1 ms
+local EXPORT_NOTE_RATE = 36 -- Number of notes to be exported in 1 ms
 
 local playingSongs = {}
 local playingSongCount = 0
@@ -101,7 +114,7 @@ function Musician.Song.create()
 	-- @field tracks (table) Song tracks, including instrument and notes
 	self.tracks = {}
 
-	-- @field duration (float) Song duration in seconds
+	-- @field duration (int) Song duration in seconds
 	self.duration = 0
 
 	-- @field name (string) Song title
@@ -109,6 +122,9 @@ function Musician.Song.create()
 
 	-- @field player (string) Player name, with realm slug
 	self.player = nil
+
+	-- @field sender (string) Name of the player who sent the song
+	self.sender = nil
 
 	-- @field notified (boolean) True when the notification for the song playing has been displayed
 	self.notified = false
@@ -122,11 +138,17 @@ function Musician.Song.create()
 	-- @field importing (boolean) True when the song is being imported
 	self.importing = false
 
+	-- @field exporting (boolean) True when the song is being exported
+	self.exporting = false
+
 	-- @field chunkDuration (number) Duration of a streaming chunk, in seconds
 	self.chunkDuration = Musician.CHUNK_DURATION
 
 	-- @field mode (int) Song mode
 	self.mode = Musician.Song.MODE_DURATION
+
+	-- @field isLiveStreamingSong (boolean) Song is used for, or results from live streaming from the current player
+	self.isLiveStreamingSong = false
 
 	-- @field cropFrom (number) Play song from this position
 	self.cropFrom = 0
@@ -294,7 +316,7 @@ function Musician.Song:Seek(cursor)
 			end
 
 			-- Seek before
-			if cursor < track.notes[index][NOTE.TIME ] then
+			if cursor < track.notes[index][NOTE.TIME] then
 				to = index
 				-- Seek after
 			else
@@ -303,7 +325,7 @@ function Musician.Song:Seek(cursor)
 		end
 	end
 
-	cursor = max(0, min(cursor, self.duration))
+	cursor = max(0, min(cursor, self.cropTo))
 
 	if cursor == self.cursor then
 		return
@@ -446,7 +468,7 @@ function Musician.Song:NoteOn(track, noteIndex, retries)
 	end
 
 	-- Don't play back my own live notes
-	if Musician.Utils.PlayerIsMyself(self.player) and self.mode == Musician.Song.MODE_LIVE then
+	if Musician.Utils.PlayerIsMyself(self.player) and self.isLiveStreamingSong then
 		return
 	end
 
@@ -496,6 +518,10 @@ end
 -- @param audioOnly (boolean) Stop note audio only
 -- @param[opt] decay (number) Override instrument decay
 function Musician.Song:NoteOff(track, key, audioOnly, decay)
+	if self.mode == Musician.Song.MODE_LIVE then
+		key = key + track.transpose
+	end
+
 	if track.notesOn[key] ~= nil then
 		local handle = track.notesOn[key][NOTEON.HANDLE]
 		if handle ~= 0 then
@@ -537,50 +563,123 @@ end
 -- @param crop (boolean) Automatically crop song to first and last note
 -- @param[opt] onComplete (function) Called when the whole import process is complete. Argument is true when successful
 function Musician.Song:ImportFromBase64(base64data, crop, onComplete)
-	if self.importing then
-		error("The song is already importing.")
+	if self.importing or self.exporting then
+		self:OnImportError("The song is already importing or exporting.", onComplete)
+		return
+	end
+
+	local success, err = pcall(function()
+		self.importing = true
+
+		Musician.Song:SendMessage(Musician.Events.SongImportStart, self)
+		Musician.Song:SendMessage(Musician.Events.SongImportProgress, self, 0)
+
+		local cursor = 1
+		local decodedData = ''
+		local base64DecodingWorker
+
+		-- Decode string in a worker
+		base64DecodingWorker = function()
+			-- Importing process has been canceled
+			if not(self.importing) then
+				Musician.Worker.Remove(base64DecodingWorker)
+				Musician.Song:SendMessage(Musician.Events.SongImportComplete, self)
+				Musician.Song:SendMessage(Musician.Events.SongImportFailed, self)
+				return
+			end
+
+			-- Notify progression
+			local progression = min(1, cursor / #base64data)
+			Musician.Song:SendMessage(Musician.Events.SongImportProgress, self, progression * BASE64DECODE_PROGRESSION_RATIO)
+
+			-- Decode some chunks
+			local cursorTo = min(#base64data, cursor + IMPORT_CONVERT_RATE * 4 - 1)
+			decodedData = decodedData .. Musician.Utils.Base64Decode(string.sub(base64data, cursor, cursorTo))
+			cursor = cursorTo + 1
+
+			-- Decoding is complete: import data
+			if cursor >= #base64data then
+				Musician.Song:SendMessage(Musician.Events.SongImportProgress, self, BASE64DECODE_PROGRESSION_RATIO)
+				self.importing = false
+				Musician.Worker.Remove(base64DecodingWorker)
+				self:Import(decodedData, crop, BASE64DECODE_PROGRESSION_RATIO, onComplete)
+				return
+			end
+		end
+		Musician.Worker.Set(base64DecodingWorker, function()
+			error(Musician.Msg.INVALID_MUSIC_CODE)
+		end)
+	end)
+
+	if not(success) then
+		self.importing = false
+		self:OnImportError(Musician.Msg.INVALID_MUSIC_CODE, onComplete)
+	end
+end
+
+--- Import song from a compressed string
+-- @param compressedData (string)
+-- @param crop (boolean) Automatically crop song to first and last note
+-- @param[opt] onComplete (function) Called when the whole import process is complete. Argument is true when successful
+function Musician.Song:ImportCompressed(compressedData, crop, onComplete)
+	if self.importing or self.exporting then
+		self:OnImportError("The song is already importing or exporting.", onComplete)
+		return
 	end
 	self.importing = true
 
-	Musician.Song:SendMessage(Musician.Events.SongImportStart, self)
-	Musician.Song:SendMessage(Musician.Events.SongImportProgress, self, 0)
-
-	local cursor = 1
-	local decodedData = ''
-	local base64DecodingWorker
-
-	-- Decode string in a worker
-	base64DecodingWorker = function()
-		-- Importing process has been canceled
-		if not(self.importing) then
-			Musician.Worker.Remove(base64DecodingWorker)
-			return
+	local success, err = pcall(function()
+		-- Get header
+		local header = string.sub(compressedData, 1, #Musician.FILE_HEADER_COMPRESSED)
+		if header ~= Musician.FILE_HEADER_COMPRESSED then
+			error(Musician.Msg.INVALID_MUSIC_CODE)
 		end
 
-		-- Notify progression
-		local progression = min(1, cursor / #base64data)
-		Musician.Song:SendMessage(Musician.Events.SongImportProgress, self, progression * BASE64DECODE_PROGRESSION_RATIO)
+		local cursor = #Musician.FILE_HEADER_COMPRESSED + 1
+		local uncompressedData = Musician.FILE_HEADER
+		local uncompressWorker
 
-		-- Decode some chunks
-		local cursorTo = min(#base64data, cursor + IMPORT_CONVERT_RATE * 4 - 1)
-		decodedData = decodedData .. Musician.Utils.Base64Decode(string.sub(base64data, cursor, cursorTo))
-		cursor = cursorTo + 1
+		-- Uncompress string in a worker
+		uncompressWorker = function()
+			-- Importing process has been canceled
+			if not(self.importing) then
+				Musician.Worker.Remove(uncompressWorker)
+				Musician.Song:SendMessage(Musician.Events.SongImportComplete, self)
+				Musician.Song:SendMessage(Musician.Events.SongImportFailed, self)
+				return
+			end
 
-		-- Decoding is complete: import data
-		if cursor >= #base64data then
-			Musician.Song:SendMessage(Musician.Events.SongImportProgress, self, BASE64DECODE_PROGRESSION_RATIO)
-			self.importing = false
-			Musician.Worker.Remove(base64DecodingWorker)
-			self:Import(decodedData, crop, BASE64DECODE_PROGRESSION_RATIO, onComplete)
-			return
+			-- Notify progression
+			local progression = min(1, cursor / #compressedData)
+			Musician.Song:SendMessage(Musician.Events.SongImportProgress, self, progression * UNCOMPRESS_PROGRESSION_RATIO)
+
+			-- Compressed chunk size (2)
+			local compressedChunkSize = Musician.Utils.UnpackNumber(string.sub(compressedData, cursor, cursor + 1))
+			cursor = cursor + 2
+
+			-- Uncompress chunk
+			local compressedChunk = string.sub(compressedData, cursor, cursor + compressedChunkSize - 1)
+			cursor = cursor + compressedChunkSize
+			uncompressedData = uncompressedData .. LibDeflate:DecompressDeflate(compressedChunk)
+
+			-- Uncompressing is complete: import data
+			if cursor >= #compressedData then
+				Musician.Song:SendMessage(Musician.Events.SongImportProgress, self, UNCOMPRESS_PROGRESSION_RATIO)
+				self.importing = false
+				Musician.Worker.Remove(uncompressWorker)
+				self:Import(uncompressedData, crop, UNCOMPRESS_PROGRESSION_RATIO, onComplete)
+				return
+			end
 		end
-	end
-	Musician.Worker.Set(base64DecodingWorker, function()
-		self:OnImportError()
-		if onComplete then
-			onComplete(false)
-		end
+		Musician.Worker.Set(uncompressWorker, function()
+			error(Musician.Msg.INVALID_MUSIC_CODE)
+		end)
 	end)
+
+	if not(success) then
+		self.importing = false
+		self:OnImportError(Musician.Msg.INVALID_MUSIC_CODE, onComplete)
+	end
 end
 
 --- Import song from string
@@ -589,225 +688,540 @@ end
 -- @param[opt=0] previousProgression (number) Add previous progression (0-1)
 -- @param[opt] onComplete (function) Called when the whole import process is complete. Argument is true when successful
 function Musician.Song:Import(data, crop, previousProgression, onComplete)
-	if self.importing then
-		error("The song is already importing.")
+	if self.importing or self.exporting then
+		self:OnImportError("The song is already importing or exporting.", onComplete)
+		return
 	end
-	self.importing = true
 
-	if previousProgression == nil then
-		Musician.Song:SendMessage(Musician.Events.SongImportStart, self)
-		previousProgression = 0
-	end
-	Musician.Song:SendMessage(Musician.Events.SongImportProgress, self, previousProgression)
+	local success, err = pcall(function()
+		self.importing = true
 
-	local chunksCrc32
-	local readBytesInternal = Musician.Utils.GetByteReader(data, Musician.Msg.INVALID_MUSIC_CODE)
-
-	local readBytes = function(length, updateCrc32)
-		local bytes = readBytesInternal(length)
-		if updateCrc32 then
-			chunksCrc32 = LibCRC32:hashChunk(bytes, chunksCrc32)
+		if previousProgression == nil then
+			Musician.Song:SendMessage(Musician.Events.SongImportStart, self)
+			previousProgression = 0
 		end
-		return bytes
-	end
+		Musician.Song:SendMessage(Musician.Events.SongImportProgress, self, previousProgression)
 
-	local progression
+		local chunksCrc32
+		local readBytesInternal, getCursor = Musician.Utils.GetByteReader(data, Musician.Msg.INVALID_MUSIC_CODE)
 
-	-- Import song header
-	-- ==================
-
-	local noteCount = 0
-
-	-- Header (4)
-	if readBytes(4) ~= Musician.FILE_HEADER then
-		error(Musician.Msg.INVALID_MUSIC_CODE)
-	end
-
-	-- Duration (3)
-	self.duration = Musician.Utils.UnpackNumber(readBytes(3, true))
-	self.cropFrom = 0
-	self.cropTo = self.duration
-
-	-- Number of tracks (1)
-	local trackCount = Musician.Utils.UnpackNumber(readBytes(1, true))
-
-	-- Track information: instrument (1), channel (1), number of notes (2)
-	local track, trackIndex
-	self.tracks = {}
-	for trackIndex = 1, trackCount do
-		local track = {}
-
-		-- Instrument (1)
-		track.instrument = Musician.Utils.UnpackNumber(readBytes(1))
-		track.midiInstrument = track.instrument
-
-		-- Channel (1)
-		track.channel = Musician.Utils.UnpackNumber(readBytes(1))
-
-		-- Note count (2)
-		track.noteCount = Musician.Utils.UnpackNumber(readBytes(2, true))
-		noteCount = noteCount + track.noteCount
-
-		-- Track index
-		track.index = trackIndex
-
-		-- Track notes
-		track.notes = {}
-
-		-- Current playing note index
-		track.playIndex = 1
-
-		-- Track is muted
-		track.muted = (track.noteCount == 0)
-
-		-- Track is solo
-		track.solo = false
-
-		-- Track transposition
-		track.transpose = 0
-
-		-- Notes currently playing
-		track.notesOn = {}
-
-		-- Polyphony
-		track.polyphony = 0
-
-		-- Track name
-		track.name = nil
-
-		-- Insert track
-		table.insert(self.tracks, track)
-	end
-
-	-- Update progression
-	progression = previousProgression + (1 - previousProgression) / (noteCount + 2)
-	Musician.Song:SendMessage(Musician.Events.SongImportProgress, self, progression)
-
-	-- Import notes
-	-- ============
-
-	local importedNotes = 0
-	local trackOffset = 0
-	local trackIndex = 1
-	local noteIndex = 1
-	local noteImportingWorker
-
-	-- Import notes in a worker
-	noteImportingWorker = function()
-		-- Importing process has been canceled
-		if not(self.importing) then
-			Musician.Worker.Remove(noteImportingWorker)
-			return
+		local readBytes = function(length, updateCrc32)
+			local bytes = readBytesInternal(length)
+			if updateCrc32 then
+				chunksCrc32 = LibCRC32:hashChunk(bytes, chunksCrc32)
+			end
+			return bytes
 		end
 
-		-- Import some notes
-		local stopOnNoteCount = min(importedNotes + IMPORT_NOTE_RATE, noteCount)
-		while importedNotes < stopOnNoteCount do
+		local progression
 
-			local track = self.tracks[trackIndex]
+		-- Import song header
+		-- ==================
 
-			-- Ignore empty tracks
-			while track.noteCount == 0 do
-				trackIndex = trackIndex + 1
-				track = self.tracks[trackIndex]
-			end
+		local noteCount = 0
 
-			-- Key (1)
-			local key = Musician.Utils.UnpackNumber(readBytes(1, true))
+		-- Header (4)
+		local header = readBytes(#Musician.FILE_HEADER)
+		if header ~= Musician.FILE_HEADER then
+			error(Musician.Msg.INVALID_MUSIC_CODE)
+		end
 
-			-- This is a spacer (key 0xFF)
-			if key == 0xFF then
-				trackOffset = trackOffset + 65535 / Musician.NOTE_TIME_FPS -- 16-bit
-			else
-				-- Note on with duration
+		-- Song title (2) + (title length in bytes)
+		local songTitleLength = Musician.Utils.UnpackNumber(readBytes(2))
+		self.name = Musician.Utils.NormalizeSongName(readBytes(songTitleLength))
 
-				-- Time (2)
-				local time = trackOffset + Musician.Utils.UnpackTime(readBytes(2, true), Musician.NOTE_TIME_FPS)
+		-- Song mode (1)
+		local mode = Musician.Utils.UnpackNumber(readBytes(1, true))
+		if mode ~= Musician.Song.MODE_LIVE and mode ~= Musician.Song.MODE_DURATION then
+			error("Invalid song mode.")
+		end
+		self.mode = mode
 
-				-- Duration (1)
-				local duration = Musician.Utils.UnpackTime(readBytes(1, true), Musician.NOTE_DURATION_FPS)
+		-- Duration (3)
+		self.duration = Musician.Utils.UnpackNumber(readBytes(3, true))
+		self.cropFrom = 0
+		self.cropTo = self.duration
 
-				-- Insert note
-				table.insert(track.notes, {
-					[NOTE.ON] = true,
-					[NOTE.KEY] = key,
-					[NOTE.TIME] = time,
-					[NOTE.DURATION] = duration
-				})
+		-- Number of tracks (1)
+		local trackCount = Musician.Utils.UnpackNumber(readBytes(1, true))
 
-				importedNotes = importedNotes + 1
+		-- Track information: instrument (1), channel (1), number of notes (2)
+		local track, trackIndex
+		self.tracks = {}
+		for trackIndex = 1, trackCount do
+			local track = {}
 
-				-- Track import complete
-				if noteIndex == track.noteCount then
-					track.noteCount = nil -- We don't need this information anymore
+			-- Instrument (1)
+			track.instrument = Musician.Utils.UnpackNumber(readBytes(1))
+			track.midiInstrument = track.instrument
 
-					-- Proceed with next track
-					trackIndex = trackIndex + 1
-					trackOffset = 0
-					noteIndex = 1
-				else
-					noteIndex = noteIndex + 1
-				end
-			end
+			-- Channel (1)
+			track.channel = Musician.Utils.UnpackNumber(readBytes(1))
+
+			-- Note count (2)
+			track.noteCount = Musician.Utils.UnpackNumber(readBytes(2, true))
+			noteCount = noteCount + track.noteCount
+
+			-- Track index
+			track.index = trackIndex
+
+			-- Track notes
+			track.notes = {}
+
+			-- Current playing note index
+			track.playIndex = 1
+
+			-- Track is muted
+			track.muted = (track.noteCount == 0)
+
+			-- Track is solo
+			track.solo = false
+
+			-- Track transposition
+			track.transpose = 0
+
+			-- Notes currently playing
+			track.notesOn = {}
+
+			-- Polyphony
+			track.polyphony = 0
+
+			-- Track name
+			track.name = nil
+
+			-- Insert track
+			table.insert(self.tracks, track)
 		end
 
 		-- Update progression
-		progression = previousProgression + (1 - previousProgression) * (importedNotes + 1) / (noteCount + 2)
+		progression = previousProgression + (1 - previousProgression) / (noteCount + 2)
 		Musician.Song:SendMessage(Musician.Events.SongImportProgress, self, progression)
 
-		-- All notes have been imported
-		if importedNotes == noteCount then
-			Musician.Worker.Remove(noteImportingWorker)
+		-- Import notes
+		-- ============
 
-			-- Import metadata
-			-- ===============
+		local importedNotes = 0
+		local trackOffset = 0
+		local trackIndex = 1
+		local noteIndex = 1
+		local noteImportingWorker
 
-			-- Song title (2) + (title length in bytes)
-			local songTitleLength = Musician.Utils.UnpackNumber(readBytes(2))
-			self.name = readBytes(songTitleLength)
-
-			-- Track names (2) + (title length in bytes)
-			for trackIndex, track in pairs(self.tracks) do
-				local trackNameLength = Musician.Utils.UnpackNumber(readBytes(2))
-				track.name = readBytes(trackNameLength)
+		-- Import notes in a worker
+		noteImportingWorker = function()
+			-- Importing process has been canceled
+			if not(self.importing) then
+				Musician.Worker.Remove(noteImportingWorker)
+				Musician.Song:SendMessage(Musician.Events.SongImportComplete, self)
+				Musician.Song:SendMessage(Musician.Events.SongImportFailed, self)
+				return
 			end
 
-			-- Crop song
-			if crop then
-				self.cropFrom = self.duration
-				self.cropTo = 0
-				for trackIndex, track in pairs(self.tracks) do
-					if #track.notes > 0 then
-						self.cropFrom = min(self.cropFrom, track.notes[1][NOTE.TIME])
-						self.cropTo = max(self.cropTo, track.notes[#track.notes][NOTE.TIME] + track.notes[#track.notes][NOTE.DURATION])
+			-- Import some notes
+			local stopOnNoteCount = min(importedNotes + IMPORT_NOTE_RATE, noteCount)
+			while importedNotes < stopOnNoteCount do
+
+				local track = self.tracks[trackIndex]
+
+				-- Ignore empty tracks
+				while track.noteCount == 0 do
+					trackIndex = trackIndex + 1
+					track = self.tracks[trackIndex]
+				end
+
+				-- Key (1)
+				local key = Musician.Utils.UnpackNumber(readBytes(1, true))
+
+				-- This is a spacer (key 0xFF)
+				if key == 0xFF then
+					trackOffset = trackOffset + 65535 / Musician.NOTE_TIME_FPS -- 16-bit
+				else
+					-- Time (2)
+					local time = trackOffset + Musician.Utils.UnpackTime(readBytes(2, true), Musician.NOTE_TIME_FPS)
+
+					-- Note on with duration
+					if self.mode == Musician.Song.MODE_DURATION then
+						-- Duration (1)
+						local duration = Musician.Utils.UnpackTime(readBytes(1, true), Musician.NOTE_DURATION_FPS)
+
+						-- Insert note with duration
+						table.insert(track.notes, {
+							[NOTE.ON] = true,
+							[NOTE.KEY] = key,
+							[NOTE.TIME] = time,
+							[NOTE.DURATION] = duration
+						})
+					elseif self.mode == Musician.Song.MODE_LIVE then
+						-- Insert live note event
+						table.insert(track.notes, {
+							[NOTE.ON] = bit.band(key, 0x80) == 0x80,
+							[NOTE.KEY] = bit.band(key, 0x7F),
+							[NOTE.TIME] = time
+						})
+					end
+
+					importedNotes = importedNotes + 1
+
+					-- Track import complete
+					if noteIndex == track.noteCount then
+						track.noteCount = nil -- We don't need this information anymore
+
+						-- Proceed with next track
+						trackIndex = trackIndex + 1
+						trackOffset = 0
+						noteIndex = 1
+					else
+						noteIndex = noteIndex + 1
 					end
 				end
 			end
-			self.cursor = self.cropFrom
-
-			-- CRC32
-			self.crc32 = LibCRC32:getFinalCrc(chunksCrc32)
 
 			-- Update progression
-			progression = 1
+			progression = previousProgression + (1 - previousProgression) * (importedNotes + 1) / (noteCount + 2)
 			Musician.Song:SendMessage(Musician.Events.SongImportProgress, self, progression)
 
-			-- Import is complete!
-			self.importing = false
-			Musician.Song:SendMessage(Musician.Events.SongImportComplete, self)
-			Musician.Song:SendMessage(Musician.Events.SongImportSucessful, self, data)
-			if onComplete then
-				onComplete(true)
+			-- All notes have been imported
+			if importedNotes == noteCount then
+				Musician.Worker.Remove(noteImportingWorker)
+
+				-- Import metadata
+				-- ===============
+
+				-- Track names (2) + (title length in bytes)
+				for trackIndex, track in pairs(self.tracks) do
+					local trackNameLength = Musician.Utils.UnpackNumber(readBytes(2))
+					track.name = readBytes(trackNameLength)
+				end
+
+				-- Optional metadata
+				if getCursor() < #data then
+
+					-- Song settings (optional)
+					-- ========================
+					crop = false
+
+					-- cropFrom (4)
+					self.cropFrom = Musician.Utils.UnpackNumber(readBytes(4)) / 100
+
+					-- cropTo (4)
+					self.cropTo = Musician.Utils.UnpackNumber(readBytes(4)) / 100
+
+					-- Track settings (optional)
+					-- =========================
+
+					for trackIndex, track in pairs(self.tracks) do
+						-- Track options (1)
+						local trackOptions = Musician.Utils.UnpackNumber(readBytes(1))
+						local hasInstrument = bit.band(trackOptions, Musician.Song.TRACK_OPTION_HAS_INSTRUMENT) ~= 0
+						local muted = bit.band(trackOptions, Musician.Song.TRACK_OPTION_MUTED) ~= 0
+						local solo = bit.band(trackOptions, Musician.Song.TRACK_OPTION_SOLO) ~= 0
+						self:SetTrackSolo(track, solo)
+						self:SetTrackMuted(track, muted)
+
+						-- Instrument (1)
+						local instrument = Musician.Utils.UnpackNumber(readBytes(1))
+						track.instrument = hasInstrument and instrument or -1
+
+						-- Transpose (1)
+						track.transpose = Musician.Utils.UnpackNumber(readBytes(1)) - 127
+					end
+				end
+
+				-- Crop song
+				if crop then
+					self.cropFrom = self.duration
+					self.cropTo = 0
+					for trackIndex, track in pairs(self.tracks) do
+						if #track.notes > 0 then
+							self.cropFrom = min(self.cropFrom, track.notes[1][NOTE.TIME])
+							self.cropTo = max(self.cropTo, track.notes[#track.notes][NOTE.TIME] + track.notes[#track.notes][NOTE.DURATION])
+						end
+					end
+					self.cropFrom = floor(self.cropFrom * 100) / 100
+					self.cropTo = ceil(self.cropTo * 100) / 100
+				end
+				self.cursor = self.cropFrom
+
+				-- CRC32
+				self.crc32 = LibCRC32:getFinalCrc(chunksCrc32)
+
+				-- Update progression
+				progression = 1
+				Musician.Song:SendMessage(Musician.Events.SongImportProgress, self, progression)
+
+				-- Import is complete!
+				self.importing = false
+				Musician.Song:SendMessage(Musician.Events.SongImportComplete, self)
+				Musician.Song:SendMessage(Musician.Events.SongImportSucessful, self, data)
+				if onComplete then
+					onComplete(true)
+				end
 			end
+		end
+
+		Musician.Worker.Set(noteImportingWorker, function()
+			error(Musician.Msg.INVALID_MUSIC_CODE)
+		end)
+	end)
+
+	if not(success) then
+		self.importing = false
+		self:OnImportError(Musician.Msg.INVALID_MUSIC_CODE, onComplete)
+	end
+end
+
+--- Export song to string
+-- @param onComplete (function) Called when the whole export process is complete. Data is provided when successful
+-- @param[opt=1] progressionFactor (number) (0-1)
+function Musician.Song:Export(onComplete, progressionFactor)
+	if self.importing or self.exporting then
+		self:OnExportError("The song is already importing or exporting.", onComplete)
+		return
+	end
+	self.exporting = true
+
+	-- Invalid song mode
+	if self.mode ~= Musician.Song.MODE_LIVE and self.mode ~= Musician.Song.MODE_DURATION then
+		self.exporting = false
+		self:OnExportError("Invalid song mode.", onComplete)
+		return
+	end
+
+	if progressionFactor == nil then
+		progressionFactor = 1
+	end
+
+	Musician.Song:SendMessage(Musician.Events.SongExportStart, self)
+	Musician.Song:SendMessage(Musician.Events.SongExportProgress, self, 0)
+
+	local data = ''
+
+	-- Song header
+	-- ===========
+
+	-- Header (4)
+	data = data .. Musician.FILE_HEADER
+
+	-- Song title (2) + (title length in bytes)
+	data = data .. Musician.Utils.PackNumber(#self.name, 2) .. self.name
+
+	-- Song mode (1)
+	data = data .. Musician.Utils.PackNumber(self.mode, 1)
+
+	-- Duration (3)
+	data = data .. Musician.Utils.PackNumber(self.duration, 3)
+
+	-- Number of tracks (1)
+	data = data .. Musician.Utils.PackNumber(#self.tracks, 1)
+
+	-- Tracks
+	-- ======
+
+	local track
+	local noteCount = 0
+	for _, track in pairs(self.tracks) do
+		-- Instrument (1)
+		data = data .. Musician.Utils.PackNumber(track.midiInstrument, 1)
+
+		-- Channel (1)
+		data = data .. Musician.Utils.PackNumber(track.channel or 0, 1)
+
+		-- Note count (2)
+		data = data .. Musician.Utils.PackNumber(#track.notes, 2)
+		noteCount = noteCount + #track.notes
+	end
+
+	-- Notes
+	-- =====
+
+	local exportedNotes = 0
+	local trackOffset = 0
+	local trackIndex = 1
+	local noteIndex = 1
+	local offset = 0
+	local noteExportingWorker
+
+	-- Export notes in a worker
+	noteExportingWorker = function()
+		-- Exporting process has been canceled
+		if not(self.exporting) then
+			Musician.Worker.Remove(noteExportingWorker)
+			return
+		end
+
+		-- Export some notes
+		local track = self.tracks[trackIndex]
+		local notesData = ''
+		local stopOnNoteCount = min(exportedNotes + EXPORT_NOTE_RATE, noteCount)
+		while exportedNotes < stopOnNoteCount do
+			local note = track.notes[noteIndex]
+
+			-- No more note in this track: skip to next track
+			if note == nil then
+				trackIndex = trackIndex + 1
+				track = self.tracks[trackIndex]
+				noteIndex = 1
+				offset = 0
+			else
+				local noteTime = note[NOTE.TIME] - offset
+
+				-- Insert note spacers if needed
+				local noteSpacer = ''
+				while noteTime > Musician.MAX_NOTE_TIME do
+					noteSpacer = noteSpacer .. Musician.Utils.PackNumber(0xFF, 1)
+					noteTime = noteTime - Musician.MAX_NOTE_TIME
+					offset = offset + Musician.MAX_NOTE_TIME
+				end
+				notesData = notesData .. noteSpacer
+
+				-- Duration mode
+				if self.mode == Musician.Song.MODE_DURATION then
+					-- Key (1)
+					notesData = notesData .. Musician.Utils.PackNumber(note[NOTE.KEY], 1)
+
+					-- Time (2)
+					notesData = notesData .. Musician.Utils.PackTime(noteTime, 2, Musician.NOTE_TIME_FPS)
+
+					-- Duration (1)
+					notesData = notesData .. Musician.Utils.PackTime(note[NOTE.DURATION], 1, Musician.NOTE_DURATION_FPS)
+				elseif self.mode == Musician.Song.MODE_LIVE then
+					-- Key on/off event (1)
+					local keyEvent = bit.bor(note[NOTE.ON] and 0x80 or 0x00, bit.band(note[NOTE.KEY], 0x7F))
+					notesData = notesData .. Musician.Utils.PackNumber(keyEvent, 1)
+
+					-- Time (2)
+					notesData = notesData .. Musician.Utils.PackTime(noteTime, 2, Musician.NOTE_TIME_FPS)
+				end
+
+				-- Proceed with next note
+				exportedNotes = exportedNotes + 1
+				noteIndex = noteIndex + 1
+			end
+		end
+		data = data .. notesData
+		if noteCount > 0 then
+			Musician.Song:SendMessage(Musician.Events.SongExportProgress, self, progressionFactor * exportedNotes / noteCount)
+		end
+
+		-- All notes have been exported
+		if exportedNotes == noteCount then
+			Musician.Worker.Remove(noteExportingWorker)
+
+			-- Metadata
+			-- ========
+
+			local metadata = ''
+
+			-- Track names (2) + (title length in bytes)
+			for _, track in pairs(self.tracks) do
+				local trackName = track.name or ''
+				metadata = metadata .. Musician.Utils.PackNumber(#trackName, 2) .. trackName
+			end
+
+			-- Song settings
+			-- =============
+
+			-- cropFrom (4)
+			metadata = metadata .. Musician.Utils.PackNumber(floor(self.cropFrom * 100), 4)
+
+			-- cropTo (4)
+			metadata = metadata .. Musician.Utils.PackNumber(ceil(self.cropTo * 100), 4)
+
+			-- Track settings
+			-- ==============
+
+			local track
+			for _, track in pairs(self.tracks) do
+
+				-- Track options (1)
+				local hasInstrument = (track.instrument ~= -1) and Musician.Song.TRACK_OPTION_HAS_INSTRUMENT or 0
+				local muted = track.muted and Musician.Song.TRACK_OPTION_MUTED or 0
+				local solo = track.solo and Musician.Song.TRACK_OPTION_SOLO or 0
+				local trackOptions = bit.bor(hasInstrument, muted, solo)
+				metadata = metadata .. Musician.Utils.PackNumber(trackOptions, 1)
+
+				-- Instrument (1)
+				local instrument = hasInstrument and track.instrument or 0
+				metadata = metadata .. Musician.Utils.PackNumber(instrument, 1)
+
+				-- Transpose (1)
+				metadata = metadata .. Musician.Utils.PackNumber(track.transpose + 127, 1)
+			end
+
+			-- Append metadata
+			data = data .. metadata
+
+			-- Export complete!
+
+			self.exporting = false
+
+			if progressionFactor == 1 then
+				Musician.Song:SendMessage(Musician.Events.SongExportComplete, self)
+			end
+
+			onComplete(data)
 		end
 	end
 
-	Musician.Worker.Set(noteImportingWorker, function()
-		self:OnImportError()
-		if onComplete then
-			onComplete(false)
+	Musician.Worker.Set(noteExportingWorker)
+end
+
+--- Export song to compressed string
+-- @param onComplete (function) Called when the whole export process is complete. Data is provided when successful
+function Musician.Song:ExportCompressed(onComplete)
+	self:Export(function(data)
+		self.exporting = true
+		local readBytes = Musician.Utils.GetByteReader(data)
+		local bytesToRead = #data
+		local compressedData = ''
+
+		-- Compress exported data using worker
+		local compressChunkWorker
+		compressChunkWorker = function()
+			-- Exporting process has been cancelled
+			if not(self.exporting) then
+				Musician.Worker.Remove(compressChunkWorker)
+				return
+			end
+
+			-- Exporting process is complete
+			if bytesToRead == 0 then
+				Musician.Worker.Remove(compressChunkWorker)
+				self.exporting = false
+				Musician.Song:SendMessage(Musician.Events.SongExportComplete, self)
+				onComplete(compressedData)
+				return
+			end
+
+			-- Compress chunk
+			local chunkSize
+			local chunk
+
+			-- First chunk: Uncompressed header + compressed song title only
+			if compressedData == '' then
+				-- Header
+				compressedData = Musician.FILE_HEADER_COMPRESSED
+				readBytes(#Musician.FILE_HEADER)
+
+				-- Title
+				local packedTitleLength = readBytes(2)
+				local titleLength = Musician.Utils.UnpackNumber(packedTitleLength)
+				local title = readBytes(titleLength)
+				chunkSize = 2 + titleLength
+				chunk = packedTitleLength .. title
+			else
+				chunkSize = min(DEFLATE_CHUNK_SIZE, bytesToRead)
+				chunk = readBytes(chunkSize)
+			end
+
+			local compressedChunk = LibDeflate:CompressDeflate(chunk, { level = 9 })
+			bytesToRead = bytesToRead - chunkSize
+			compressedData = compressedData .. Musician.Utils.PackNumber(#compressedChunk, 2) .. compressedChunk
+
+			local progression = 1 - COMPRESS_PROGRESSION_RATIO + COMPRESS_PROGRESSION_RATIO * (1 - bytesToRead / #data)
+			Musician.Song:SendMessage(Musician.Events.SongExportProgress, self, progression)
 		end
-	end)
+		Musician.Worker.Set(compressChunkWorker)
+	end, 1 - COMPRESS_PROGRESSION_RATIO)
 end
 
 --- Cancel current import
@@ -816,13 +1230,33 @@ function Musician.Song:CancelImport()
 	self.importing = false
 end
 
---- Handle importing error
+--- Cancel current export
 --
-function Musician.Song:OnImportError()
-	self.importing = false
+function Musician.Song:CancelExport()
+	self.exporting = false
+end
+
+--- Handle importing error
+-- @param msg (string) Error message
+-- @param[opt] onComplete (function)
+function Musician.Song:OnImportError(msg, onComplete)
 	Musician.Song:SendMessage(Musician.Events.SongImportComplete, self)
 	Musician.Song:SendMessage(Musician.Events.SongImportFailed, self)
-	Musician.Utils.Error(Musician.Msg.INVALID_MUSIC_CODE)
+	if onComplete then
+		onComplete(false)
+	end
+	Musician.Utils.Error(msg)
+end
+
+--- Handle exporting error
+-- @param msg (string) Error message
+-- @param[opt] onComplete (function)
+function Musician.Song:OnExportError(msg, onComplete)
+	Musician.Song:SendMessage(Musician.Events.SongExportComplete, self)
+	if onComplete then
+		onComplete()
+	end
+	Musician.Utils.Error(msg)
 end
 
 --- Clone song
@@ -893,12 +1327,12 @@ function Musician.Song:AppendChunk(chunk, mode, songId, chunkDuration, playtimeL
 		self.chunkTime = 0
 	end
 
-	self.isStreamed = true
 	self.mode = mode
 	self.songId = songId
 	self.player = player
 	self.chunkDuration = chunkDuration
 	self.cropTo = max(self.cropTo, self.chunkTime + playtimeLeft)
+	self.duration = ceil(self.cropTo)
 
 	local trackData
 	for _, trackData in pairs(chunk) do
@@ -1106,7 +1540,7 @@ end
 -- @return position (table) player position and GUID
 -- @return trackCount (int)
 -- @return headerLength (number)
-Musician.Song.UnpackChunkHeader = function(data)
+function Musician.Song.UnpackChunkHeader(data)
 
 	local readBytes = Musician.Utils.GetByteReader(data)
 
@@ -1150,7 +1584,7 @@ end
 --- Unpack song chunk data
 -- @param data (string)
 -- @return chunk (table)
-Musician.Song.UnpackChunkData = function(data)
+function Musician.Song.UnpackChunkData(data)
 
 	-- Get header data
 	local mode, songId, chunkDuration, playtimeLeft, position, trackCount, headerLength = Musician.Song.UnpackChunkHeader(data)

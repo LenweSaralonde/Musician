@@ -4,6 +4,8 @@ local msg = Musician.Locale.en
 local Instrument = Musician.MIDI_INSTRUMENTS
 local Percussion = Musician.MIDI_PERCUSSIONS
 
+msg.LOCALE_NAME = "English"
+
 msg.PLAY = "Play"
 msg.STOP = "Stop"
 msg.PAUSE = "Pause"
@@ -203,6 +205,7 @@ msg.CHANGE_LOWER_INSTRUMENT = "Change lower instrument"
 msg.CHANGE_UPPER_INSTRUMENT = "Change upper instrument"
 msg.LOWER_INSTRUMENT_MAPPED_TO_CHANNEL = "Lower instrument (track #{track})"
 msg.UPPER_INSTRUMENT_MAPPED_TO_CHANNEL = "Upper instrument (track #{track})"
+msg.SUSTAIN_KEY = "Sustain"
 msg.POWER_CHORDS = "Power chords"
 msg.PROGRAM_BUTTON = "P {num}"
 msg.EMPTY_PROGRAM = "Empty program"
@@ -241,6 +244,47 @@ msg.PLAYER_MENU_UNMUTE = "Unmute"
 
 msg.PLAYER_IS_MUTED = "{icon}{player} is now muted."
 msg.PLAYER_IS_UNMUTED = "{icon}{player} is now unmuted."
+
+msg.LINKS_PREFIX = "Music"
+msg.LINKS_FORMAT = "{prefix}: {title}"
+msg.LINKS_LINK_BUTTON = "Link"
+
+msg.LINK_EXPORT_WINDOW_TITLE = "Create song link"
+msg.LINK_EXPORT_WINDOW_SONG_TITLE_LABEL = "Song title:"
+msg.LINK_EXPORT_WINDOW_HINT = "The link will remain active until you log out or reload the interface."
+msg.LINK_EXPORT_WINDOW_PROGRESS = "Generating link… {progress}%"
+msg.LINK_EXPORT_WINDOW_POST_BUTTON = "Post link into the chat"
+
+msg.LINK_IMPORT_WINDOW_TITLE = "Import song from {player}:"
+msg.LINK_IMPORT_WINDOW_HINT = "Click “Import” to start importing the song into Musician."
+msg.LINK_IMPORT_WINDOW_IMPORT_BUTTON = "Import song"
+msg.LINK_IMPORT_WINDOW_CANCEL_IMPORT_BUTTON = "Cancel import"
+msg.LINK_IMPORT_WINDOW_REQUESTING = "Requesting song from {player}…"
+msg.LINK_IMPORT_WINDOW_PROGRESS = "Importing… {progress}%"
+
+msg.LINKS_ERROR = {}
+msg.LINKS_ERROR.notFound = "The song {title} is not available from {player}."
+msg.LINKS_ERROR.alreadySending = "A song is already being sent to you by {player}. Please try again in a few seconds."
+msg.LINKS_ERROR.alreadyRequested = "A song is already being requested from {player}."
+msg.LINKS_ERROR.timeout = "The player {player} did not respond."
+msg.LINKS_ERROR.importingFailed = "The song {title} could not be imported from {player}."
+
+msg.TRPE_ITEM_NAME = "{title}"
+msg.TRPE_ITEM_TOOLTIP_REQUIRES_MUSICIAN = "Requires Musician"
+msg.TRPE_ITEM_TOOLTIP_SHEET_MUSIC = "Sheet music"
+msg.TRPE_ITEM_USE_HINT = "Read the sheet music"
+msg.TRPE_ITEM_MUSICIAN_NOT_FOUND = "You need the latest version of the Musician add-on to be able to use this item.\nGet it from {url}."
+msg.TRPE_ITEM_NOTES = "Import the song into Musician to play it for the nearby players.\n\nDownload Musician: {url}\n"
+
+msg.TRPE_EXPORT_BUTTON = "Export"
+msg.TRPE_EXPORT_WINDOW_TITLE = "Export song as a Total RP item"
+msg.TRPE_EXPORT_WINDOW_LOCALE = "Item language:"
+msg.TRPE_EXPORT_WINDOW_ADD_TO_BAG = "Add to your bag"
+msg.TRPE_EXPORT_WINDOW_QUANTITY = "Quantity:"
+msg.TRPE_EXPORT_WINDOW_HINT_NEW = "Create a sheet music item in Total RP Extended that can be traded with other players."
+msg.TRPE_EXPORT_WINDOW_HINT_EXISTING = "An item already exists for this song, it will be updated."
+msg.TRPE_EXPORT_WINDOW_CREATE_ITEM_BUTTON = "Create item"
+msg.TRPE_EXPORT_WINDOW_PROGRESS = "Creating item… {progress}%"
 
 msg.INSTRUMENT_NAMES = {
 	["none"] = "(None)",

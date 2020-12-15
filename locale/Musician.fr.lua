@@ -5,6 +5,8 @@ local Instrument = Musician.MIDI_INSTRUMENTS
 local Percussion = Musician.MIDI_PERCUSSIONS
 local KEY = Musician.KEYBOARD_KEY
 
+msg.LOCALE_NAME = "Français"
+
 msg.PLAY = "Jouer"
 msg.STOP = "Stop"
 msg.PAUSE = "Pause"
@@ -243,6 +245,7 @@ msg.CHANGE_LOWER_INSTRUMENT = "Changer l'instrument inférieur"
 msg.CHANGE_UPPER_INSTRUMENT = "Changer l'instrument supérieur"
 msg.LOWER_INSTRUMENT_MAPPED_TO_CHANNEL = "Instrument inférieur (piste n°{track})"
 msg.UPPER_INSTRUMENT_MAPPED_TO_CHANNEL = "Instrument supérieur (piste n°{track})"
+msg.SUSTAIN_KEY = "Maintenir"
 msg.POWER_CHORDS = "Power chords"
 msg.PROGRAM_BUTTON = "P {num}"
 msg.EMPTY_PROGRAM = "Programme vide"

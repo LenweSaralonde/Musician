@@ -74,6 +74,16 @@ function Musician.Utils.Highlight(text, color)
 	return "|cFF" .. color .. text .. "|r"
 end
 
+--- Remove text coloring
+-- @param highlightedText (string)
+-- @return text (string)
+function Musician.Utils.RemoveHighlight(highlightedText)
+	local text = highlightedText
+	text = string.gsub(text, '|c[0-9A-F][0-9A-F][0-9A-F][0-9A-F][0-9A-F][0-9A-F][0-9A-F][0-9A-F]', '')
+	text = string.gsub(text, '|r', '')
+	return text
+end
+
 --- Get color code from RGB values
 -- @param r (number) 0-1
 -- @param g (number) 0-1
@@ -209,13 +219,12 @@ function Musician.Utils.PackNumber(num, bytes)
 	local m = num
 	local b
 	local packed = ''
-	local i = 0
+	local i
 
-	while m > 0 or i < bytes do
+	for i = 1, bytes do
 		b = m % 256
 		m = (m - b) / 256
 		packed = string.char(b) .. packed
-		i = i + 1
 	end
 
 	return string.sub(packed, -bytes)
@@ -227,9 +236,9 @@ end
 function Musician.Utils.UnpackNumber(data)
 	local num = 0
 
-	while string.len(data) > 0 do
-		num = num * 256 + string.byte(string.sub(data, 1, 1))
-		data = string.sub(data, 2)
+	local i
+	for i = 1, #data do
+		num = num * 256 + string.byte(data:sub(i, i))
 	end
 
 	return num
@@ -353,7 +362,7 @@ end
 --- Start or stop the actual game music if a song can actually be heard
 -- @param force (boolean)
 function Musician.Utils.MuteGameMusic(force)
-	local isMusicianPlaying = Musician.Utils.SongIsPlaying() or Musician.Live.IsPlayingLive()
+	local isMusicianPlaying = Musician.Utils.SongIsPlaying() or Musician.Live.IsPlaying()
 	local isInGameMusicEnabled = C_CVar.GetCVar("Sound_EnableMusic") ~= "0"
 	local mute = Musician_Settings.muteGameMusic and isInGameMusicEnabled and isMusicianPlaying and not(Musician.Sampler.GetMuted())
 
@@ -411,6 +420,13 @@ function Musician.Utils.NormalizePlayerName(playerName)
 	end
 
 	return playerName
+end
+
+--- Return the normalized song name
+-- @param songName (string)
+-- @return normalizedSongName (string)
+function Musician.Utils.NormalizeSongName(songName)
+	return Musician.Utils.Ellipsis(strtrim(songName), Musician.Song.MAX_NAME_LENGTH)
 end
 
 --- Return the simple player name, including the realm slug if needed
@@ -489,12 +505,43 @@ function Musician.Utils.PlayerGuidIsVisible(guid)
 	return guid and C_PlayerInfo.IsConnected(PlayerLocation:CreateFromGUID(guid))
 end
 
+--- Shortens the UTF-8 text with ellipsis if its size in bytes is longer than specified
+-- @param text (string)
+-- @param maxBytes (int)
+-- @return ellipsisText (string)
+function Musician.Utils.Ellipsis(text, maxBytes)
+	if #text > maxBytes then
+		local ellipsis = (maxBytes > 3) and '…' or ''
+		local cursor = maxBytes - #ellipsis
+		local characterCount = strlenutf8(string.sub(text, 1, cursor))
+
+		-- Cutting within an UTF-8 character
+		if cursor < #text and characterCount == strlenutf8(string.sub(text, 1, cursor + 1)) then
+			-- Remove incomplete UTF-8 character as well
+			while cursor >= 1 and characterCount == strlenutf8(string.sub(text, 1, cursor)) do
+				cursor = cursor - 1
+			end
+		end
+
+		return string.sub(text, 1, cursor) .. ellipsis
+	end
+	return text
+end
+
+--- Returns localized message
+-- @param msg (string)
+-- @param[opt] locale (string) Defaults to the realm locale
+-- @return localizedMsg (string)
+function Musician.Utils.GetMsg(msg, locale)
+	if locale == nil then locale = Musician.Utils.GetRealmLocale() end
+	return Musician.Locale[locale] and Musician.Locale[locale][msg] or Musician.Msg[msg]
+end
+
 --- Return the "Player is playing music" emote with promo message
 -- @return promoEmote (string)
 function Musician.Utils.GetPromoEmote()
-	local locale = Musician.Utils.GetRealmLocale()
-	local EMOTE_PLAYING_MUSIC = Musician.Locale[locale] and Musician.Locale[locale].EMOTE_PLAYING_MUSIC or Musician.Msg.EMOTE_PLAYING_MUSIC
-	local EMOTE_PROMO = Musician.Locale[locale] and Musician.Locale[locale].EMOTE_PROMO or Musician.Msg.EMOTE_PROMO
+	local EMOTE_PLAYING_MUSIC = Musician.Utils.GetMsg('EMOTE_PLAYING_MUSIC')
+	local EMOTE_PROMO = Musician.Utils.GetMsg('EMOTE_PROMO')
 
 	local sendPromoPart = Musician_Settings.enableEmotePromo
 
@@ -519,7 +566,7 @@ end
 function Musician.Utils.HasPromoEmote(message)
 	local lang
 	for lang, locale in pairs(Musician.Locale) do
-		if string.find(message, locale.EMOTE_PLAYING_MUSIC, 1, true) == 1 then
+		if locale.EMOTE_PLAYING_MUSIC ~= nil and string.find(message, locale.EMOTE_PLAYING_MUSIC, 1, true) == 1 then
 			local isFullPromoEmote = string.find(message, locale.EMOTE_PROMO, 1, true) ~= nil
 			return true, isFullPromoEmote
 		end
@@ -806,10 +853,10 @@ function Musician.Utils.SetFontStringTextFixedSize(fontString, text)
 	end
 end
 
---- Return a byte reader function for provided data string
+--- Return byte reader functions for provided data string
 -- @param data (string)
 -- @param err (string) Error to be returned in case of reading error
--- @return readBytes (function)
+-- @return readBytes (function), getCursor (function)
 function Musician.Utils.GetByteReader(data, err)
 	local cursor = 1
 	return function(length)
@@ -820,6 +867,9 @@ function Musician.Utils.GetByteReader(data, err)
 			error(err)
 		end
 		return bytes
+	end,
+	function()
+		return cursor
 	end
 end
 
