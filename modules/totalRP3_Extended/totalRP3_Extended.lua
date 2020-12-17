@@ -508,7 +508,11 @@ local function importSong(encodedSongData, infoId)
 			return
 		end
 	end
-	Musician.Worker.Set(base64DecodeWorker)
+	Musician.Worker.Set(base64DecodeWorker, function()
+		Musician.Worker.Remove(base64DecodeWorker)
+		Musician.TRP3E:SendMessage(Musician.TRP3E.Event.LoadComplete, infoId, nil, false)
+		Musician.Utils.Error(Musician.Msg.INVALID_MUSIC_CODE)
+	end)
 end
 
 --- Indicates whenever the provided item class ID is a musician object
