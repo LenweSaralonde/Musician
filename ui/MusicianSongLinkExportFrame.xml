@@ -1,12 +1,12 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 
 	<Frame name="MusicianSongLinkExportFrame" inherits="MusicianDialogTemplate">
-		<Size x="360" y="171" />
+		<Size x="360" y="179" />
 		<Layers>
 			<Layer level="BACKGROUND">
 				<FontString name="$parentTitle" inherits="GameFontNormal">
 					<Anchors>
-						<Anchor point="TOP" y="-15" />
+						<Anchor point="TOP" y="-20" />
 					</Anchors>
 				</FontString>
 				<FontString name="$parentSongTitleLabel" inherits="GameFontNormalLeft">
