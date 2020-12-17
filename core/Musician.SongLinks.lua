@@ -531,11 +531,12 @@ function Musician.SongLinks.OnSongReceived(prefix, message, distribution, sender
 		end
 
 		Musician.sourceSong = song
-		collectgarbage()
 
 		debug("Song downloading complete", song.name)
 		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveSucessful, sender, songData, song)
-
 		Musician.SongLinks:SendMessage(Musician.Events.SourceSongLoaded, song, songData)
+
+		song = nil
+		collectgarbage()
 	end)
 end

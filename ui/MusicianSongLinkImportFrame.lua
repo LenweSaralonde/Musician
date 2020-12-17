@@ -117,13 +117,6 @@ function Musician.SongLinkImportFrame.OnSongLinkClick(event, title, playerName)
 		cancelImport(playerName)
 	end
 
-	-- Hide popup when complete
-	Musician.SongLinkImportFrame:RegisterMessage(Musician.Events.SongReceiveComplete, function(event, sender)
-		sender = Musician.Utils.NormalizePlayerName(sender)
-		if sender ~= playerName then return end
-		frame:Hide()
-	end)
-
 	-- Start import
 	Musician.SongLinkImportFrame:RegisterMessage(Musician.Events.SongReceiveStart, function(event, sender)
 		sender = Musician.Utils.NormalizePlayerName(sender)
@@ -136,6 +129,16 @@ function Musician.SongLinkImportFrame.OnSongLinkClick(event, title, playerName)
 		sender = Musician.Utils.NormalizePlayerName(sender)
 		if sender ~= playerName then return end
 		updateProgression(progress)
+	end)
+
+	-- Hide popup when complete
+	Musician.SongLinkImportFrame:RegisterMessage(Musician.Events.SongReceiveComplete, function(event, sender)
+		sender = Musician.Utils.NormalizePlayerName(sender)
+		if sender ~= playerName then return end
+		frame:Hide()
+		Musician.SongLinkImportFrame:UnregisterMessage(Musician.Events.SongReceiveComplete)
+		Musician.SongLinkImportFrame:UnregisterMessage(Musician.Events.SongReceiveStart)
+		Musician.SongLinkImportFrame:UnregisterMessage(Musician.Events.SongReceiveProgress)
 	end)
 
 	frame:Show()

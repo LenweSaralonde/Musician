@@ -269,6 +269,10 @@ local function createItem(song, locale, icon, quantity)
 				Musician.TRP3E.AddSheetMusicItem(song.name, encodedSongData, locale, icon, quantity)
 				Musician.TRP3E:SendMessage(Musician.TRP3E.Event.CreateProgress, song, 1)
 				Musician.TRP3E:SendMessage(Musician.TRP3E.Event.CreateComplete, song)
+				song = nil
+				Musician.TRP3E:UnregisterMessage(Musician.Events.SongExportStart)
+				Musician.TRP3E:UnregisterMessage(Musician.Events.SongExportProgress)
+				collectgarbage()
 				return
 			end
 		end
@@ -388,7 +392,7 @@ function Musician.TRP3E.ShowExportFrame()
 
 		-- Set events
 
-		Musician.SongLinkExportFrame:RegisterMessage(Musician.TRP3E.Event.CreateStart, function(event, song)
+		Musician.TRP3E:RegisterMessage(Musician.TRP3E.Event.CreateStart, function(event, song)
 			exporting = true
 			frame.exportItemButton:Disable()
 			frame.songTitle:Disable()
@@ -401,19 +405,24 @@ function Musician.TRP3E.ShowExportFrame()
 			frame.hint:Hide()
 		end)
 
-		Musician.SongLinkExportFrame:RegisterMessage(Musician.TRP3E.Event.CreateProgress, function(event, song, progress)
+		Musician.TRP3E:RegisterMessage(Musician.TRP3E.Event.CreateProgress, function(event, song, progress)
 			frame.progressBar:SetProgress(progress)
 			local percentageText = floor(progress * 100)
 			local progressText = string.gsub(Musician.Msg.TRPE_EXPORT_WINDOW_PROGRESS, '{progress}', percentageText)
 			frame.progressText:SetText(progressText)
 		end)
 
-		Musician.SongLinkExportFrame:RegisterMessage(Musician.TRP3E.Event.CreateComplete, function(event, song)
+		Musician.TRP3E:RegisterMessage(Musician.TRP3E.Event.CreateComplete, function(event, song)
 			frame.progressBar:Hide()
 			frame.progressText:Hide()
 			frame.hint:Show()
 			frame:Hide()
 			exporting = false
+			Musician.TRP3E:UnregisterMessage(Musician.TRP3E.Event.CreateStart)
+			Musician.TRP3E:UnregisterMessage(Musician.TRP3E.Event.CreateProgress)
+			Musician.TRP3E:UnregisterMessage(Musician.TRP3E.Event.CreateComplete)
+			sharedSong = nil
+			collectgarbage()
 		end)
 	end
 
@@ -492,6 +501,8 @@ local function importSong(encodedSongData, infoId)
 				song.TRP3ItemID = nil
 				importingIDs[infoId] = nil
 				Musician.TRP3E:SendMessage(Musician.TRP3E.Event.LoadComplete, infoId, song, success)
+				song = nil
+				collectgarbage()
 			end)
 
 			return
