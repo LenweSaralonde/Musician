@@ -75,6 +75,11 @@ function Musician.SongLinkExportFrame.Show()
 			frame.progressText:Hide()
 			frame.hint:Show()
 			exporting = false
+			Musician.SongLinkExportFrame:UnregisterMessage(Musician.Events.SongExportStart)
+			Musician.SongLinkExportFrame:UnregisterMessage(Musician.Events.SongExportProgress)
+			Musician.SongLinkExportFrame:UnregisterMessage(Musician.Events.SongExportComplete)
+			sharedSong = nil
+			collectgarbage()
 		end)
 	end
 
