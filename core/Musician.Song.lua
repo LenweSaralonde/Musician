@@ -568,53 +568,48 @@ function Musician.Song:ImportFromBase64(base64data, crop, onComplete)
 		return
 	end
 
-	local success, err = pcall(function()
-		self.importing = true
+	self.importing = true
 
-		Musician.Song:SendMessage(Musician.Events.SongImportStart, self)
-		Musician.Song:SendMessage(Musician.Events.SongImportProgress, self, 0)
+	Musician.Song:SendMessage(Musician.Events.SongImportStart, self)
+	Musician.Song:SendMessage(Musician.Events.SongImportProgress, self, 0)
 
-		local cursor = 1
-		local decodedData = ''
-		local base64DecodingWorker
+	local cursor = 1
+	local decodedData = ''
+	local base64DecodingWorker
 
-		-- Decode string in a worker
-		base64DecodingWorker = function()
-			-- Importing process has been canceled
-			if not(self.importing) then
-				Musician.Worker.Remove(base64DecodingWorker)
-				Musician.Song:SendMessage(Musician.Events.SongImportComplete, self)
-				Musician.Song:SendMessage(Musician.Events.SongImportFailed, self)
-				return
-			end
-
-			-- Notify progression
-			local progression = min(1, cursor / #base64data)
-			Musician.Song:SendMessage(Musician.Events.SongImportProgress, self, progression * BASE64DECODE_PROGRESSION_RATIO)
-
-			-- Decode some chunks
-			local cursorTo = min(#base64data, cursor + IMPORT_CONVERT_RATE * 4 - 1)
-			decodedData = decodedData .. Musician.Utils.Base64Decode(string.sub(base64data, cursor, cursorTo))
-			cursor = cursorTo + 1
-
-			-- Decoding is complete: import data
-			if cursor >= #base64data then
-				Musician.Song:SendMessage(Musician.Events.SongImportProgress, self, BASE64DECODE_PROGRESSION_RATIO)
-				self.importing = false
-				Musician.Worker.Remove(base64DecodingWorker)
-				self:Import(decodedData, crop, BASE64DECODE_PROGRESSION_RATIO, onComplete)
-				return
-			end
+	-- Decode string in a worker
+	base64DecodingWorker = function()
+		-- Importing process has been canceled
+		if not(self.importing) then
+			Musician.Worker.Remove(base64DecodingWorker)
+			Musician.Song:SendMessage(Musician.Events.SongImportComplete, self)
+			Musician.Song:SendMessage(Musician.Events.SongImportFailed, self)
+			return
 		end
-		Musician.Worker.Set(base64DecodingWorker, function()
-			error(Musician.Msg.INVALID_MUSIC_CODE)
-		end)
-	end)
 
-	if not(success) then
+		-- Notify progression
+		local progression = min(1, cursor / #base64data)
+		Musician.Song:SendMessage(Musician.Events.SongImportProgress, self, progression * BASE64DECODE_PROGRESSION_RATIO)
+
+		-- Decode some chunks
+		local cursorTo = min(#base64data, cursor + IMPORT_CONVERT_RATE * 4 - 1)
+		decodedData = decodedData .. Musician.Utils.Base64Decode(string.sub(base64data, cursor, cursorTo))
+		cursor = cursorTo + 1
+
+		-- Decoding is complete: import data
+		if cursor >= #base64data then
+			Musician.Song:SendMessage(Musician.Events.SongImportProgress, self, BASE64DECODE_PROGRESSION_RATIO)
+			self.importing = false
+			Musician.Worker.Remove(base64DecodingWorker)
+			self:Import(decodedData, crop, BASE64DECODE_PROGRESSION_RATIO, onComplete)
+			return
+		end
+	end
+	Musician.Worker.Set(base64DecodingWorker, function()
+		Musician.Worker.Remove(base64DecodingWorker)
 		self.importing = false
 		self:OnImportError(Musician.Msg.INVALID_MUSIC_CODE, onComplete)
-	end
+	end)
 end
 
 --- Import song from a compressed string
@@ -672,7 +667,9 @@ function Musician.Song:ImportCompressed(compressedData, crop, onComplete)
 			end
 		end
 		Musician.Worker.Set(uncompressWorker, function()
-			error(Musician.Msg.INVALID_MUSIC_CODE)
+			Musician.Worker.Remove(uncompressWorker)
+			self.importing = false
+			self:OnImportError(Musician.Msg.INVALID_MUSIC_CODE, onComplete)
 		end)
 	end)
 
@@ -959,7 +956,9 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 		end
 
 		Musician.Worker.Set(noteImportingWorker, function()
-			error(Musician.Msg.INVALID_MUSIC_CODE)
+			Musician.Worker.Remove(noteImportingWorker)
+			self.importing = false
+			self:OnImportError(Musician.Msg.INVALID_MUSIC_CODE, onComplete)
 		end)
 	end)
 
