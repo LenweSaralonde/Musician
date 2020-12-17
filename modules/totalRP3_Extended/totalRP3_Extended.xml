@@ -2,7 +2,7 @@
 	<Script file="totalRP3_Extended.lua"/>
 
 	<Frame name="MusicianTRPEExportFrame" inherits="MusicianDialogTemplate">
-		<Size x="360" y="308" />
+		<Size x="360" y="316" />
 
 		<!-- Window title -->
 
@@ -10,7 +10,7 @@
 			<Layer level="BACKGROUND">
 				<FontString name="$parentTitle" inherits="GameFontNormal" parentKey="title">
 					<Anchors>
-						<Anchor point="TOP" y="-15" />
+						<Anchor point="TOP" y="-20" />
 					</Anchors>
 				</FontString>
 			</Layer>
