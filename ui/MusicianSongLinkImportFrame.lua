@@ -122,6 +122,7 @@ function Musician.SongLinkImportFrame.OnSongLinkClick(event, title, playerName)
 		sender = Musician.Utils.NormalizePlayerName(sender)
 		if sender ~= playerName then return end
 		update(title, playerName)
+		Musician.SongLinkImportFrame:UnregisterMessage(Musician.Events.SongReceiveStart)
 	end)
 
 	-- Update import progression
@@ -137,7 +138,6 @@ function Musician.SongLinkImportFrame.OnSongLinkClick(event, title, playerName)
 		if sender ~= playerName then return end
 		frame:Hide()
 		Musician.SongLinkImportFrame:UnregisterMessage(Musician.Events.SongReceiveComplete)
-		Musician.SongLinkImportFrame:UnregisterMessage(Musician.Events.SongReceiveStart)
 		Musician.SongLinkImportFrame:UnregisterMessage(Musician.Events.SongReceiveProgress)
 	end)
 
