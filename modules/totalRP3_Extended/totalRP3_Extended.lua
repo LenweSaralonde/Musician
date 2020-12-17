@@ -692,7 +692,7 @@ function Musician.TRP3E.CreateSheetMusicItem(title, locale, icon)
 	local ID = Musician.TRP3E.ID_PREFIX .. TRP3_API.utils.str.id()
 
 	-- Create base item
-	local object = TRP3_API.extended.tools.getBlankItemData(TRP3_DB.modes.NORMAL)
+	local object = TRP3_API.extended.tools.getBlankItemData(TRP3_DB.modes.EXPERT)
 
 	-- Set version
 	object.MD.V = 0 -- Will be increased to 1 on the first call to UpdateSheetMusicItem()
