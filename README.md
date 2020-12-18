@@ -60,9 +60,11 @@ Songs can be saved and loaded back in game using the optional add-on [MusicianLi
 ### Play as a band
 Songs can be played in sync as a band, in which each member is playing a different part.
 
-To allow synchronized play, all band members should be grouped in the same party or raid.
+To allow synchronized play, all band members should be grouped in the same party or raid and have the same song loaded into Musician.
 
-1. Load the same song as the other members of the band from MIDI of [from the list](https://musician.lenwe.io/musicianlist).
+Use the **Link**/**Export** button ![Link button](./img/link-button.png) to share songs with your band members.
+
+1. Load the same song as the other members of the band from MIDI, [from the list](https://musician.lenwe.io/musicianlist) or from a song chat link.
 2. Open the **Song Editor** then check **Solo** for the tracks you want to play with your character. Adjust other track settings as you like.
 3. Click the **Play as a band** button ![Play as band button](./img/band-play-button-song.png) when you're done (the green LED starts blinking).
 4. When every member is ready, the band leader clicks the **Play** button for synchronized start (the green LED turns on).
@@ -70,7 +72,6 @@ To allow synchronized play, all band members should be grouped in the same party
 
 Remarks:
 
-* The song should be loaded from the same MIDI file to work.
 * Mouse over the **Play as a band** button to check which members of the band are ready.
 * Each band member can do all the changes they want in the Song Editor, except changing the start and end points that would result in being out of sync.
 * Keep in mind that the overall polyphony is limited and is shared among all the members of the band.
@@ -126,11 +127,17 @@ Some basic modifications can be made to the imported song in the song editor, wh
 * Change track instruments
 * Transpose tracks
 
-The song editor also shows some information about the tracks (MIDI instrument, start and end points, number of notes...) and the activity while the song is playing.
+The song editor also shows some information about the tracks (MIDI instrument, start and end points, number of notes…) and the activity while the song is playing. Click the track start or end point timecode to reach it in the timeline.
 
 You can still change the track settings of the song currently playing by clicking the **Synchronize track settings** button ![Synchronize track settings button](./img/synchronize-track-settings-button.png) as long as you have the same song loaded in the editor.
 
 ![Song editor](./img/song-editor.png)
+
+Share your songs with the other players
+---------------------------------------
+Songs can be shared with other players as links to be posted into the chat. Click the **Link** or **Export** button ![Link button](./img/link-button.png), set a title and you're done!
+
+The links remain active until you log out or reload the interface.
 
 Cross-faction play
 ------------------
@@ -154,16 +161,22 @@ Musician integrates with role-playing add-ons [Total RP](https://www.curseforge.
 
 ![Total RP map scan](./img/trp-map-scan.png)
 
-Tips
-----
+In addition, the [Total RP Extended](https://www.curseforge.com/wow/addons/total-rp-3-extended) plugin allows you to export your songs as sheet music items that can be traded with other players. Click the **Export** button to create one.
+
+![Total RP Extended item export](./img/total-rp-extended-item-export.png)![Total RP Extended item in bag](./img/total-rp-extended-sheet-music-item.png)
+
+Tips and tricks
+---------------
 * You can preview the song at any moment prior to playing it for other players by clicking the **Preview** button or using the song editor. If another song is playing nearby, it will be muted for you only.
 * If another player has Musician, it will be shown in his/her tooltip. Just hover the other players with your mouse cursor to see who can hear you!
-* You can add lyrics by combining Musician with the [StoryTeller add-on](https://musician.lenwe.io/storyteller)!
-* Load the next song while the current one is playing to reduce waiting time between songs.
+* Use toys such as the [\[Blingtron's Circuit Design Tutorial\]](https://www.wowhead.com/item=132518/blingtrons-circuit-design-tutorial) and the [\[Fae Harp\]](https://www.wowhead.com/item=184489/fae-harp) to make your performance visually more immersive!
+* You can add lyrics by combining Musician with the [StoryTeller add-on](https://musician.lenwe.io/storyteller).
+* Load and prepare the next song while the current one is playing to reduce waiting time between songs.
 * The radius for hearing the music is approximately 40 meters.
 * Play songs that are relevant with your "band" composition. It's nonsense to play orchestral music with only two bards ! 😃 However you can still role-play as if your character owns a kind of gnomish *Music-o-Matic* jukebox machine that is capable of reproducing a whole band.
 * A text emote is shown to the players who don't have Musician when you play a song. You can disable this emote in the add-on options.
-* Nameplates animations and icons are compatible with the most popular nameplate add-ons (KuiNameplates, Plater, ElvUI...).
+* Nameplates animations and icons are compatible with the most popular nameplate add-ons (KuiNameplates, Plater, ElvUI…).
+* [Check out the wiki](https://github.com/LenweSaralonde/Musician/wiki/) for more!
 
 Compose your own music
 ----------------------
@@ -203,7 +216,7 @@ The drum kits are replaced by traditional percussions such as a bodhrán (frame 
 
 Check the full mapping in [Musician.MidiMapping.lua](https://github.com/LenweSaralonde/Musician/blob/master/constants/Musician.MidiMapping.lua) for details.
 
-Unfortunately, due to limitations of the WoW UI, velocity and controls (volume, padding, pitch bend, modulation...) are not supported. The polypohony is roughly 12 notes.
+Unfortunately, due to limitations of the WoW UI, velocity and controls (volume, padding, pitch bend, modulation…) are not supported. The polypohony is roughly 12 notes.
 
 Limitations and known issues
 ----------------------------
