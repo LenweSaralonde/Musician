@@ -248,6 +248,7 @@ msg.PLAYER_IS_UNMUTED = "{icon}{player} is now unmuted."
 msg.LINKS_PREFIX = "Music"
 msg.LINKS_FORMAT = "{prefix}: {title}"
 msg.LINKS_LINK_BUTTON = "Link"
+msg.LINKS_CHAT_BUBBLE = "“{note}{title}”"
 
 msg.LINK_EXPORT_WINDOW_TITLE = "Create song link"
 msg.LINK_EXPORT_WINDOW_SONG_TITLE_LABEL = "Song title:"

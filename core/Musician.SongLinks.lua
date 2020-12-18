@@ -224,9 +224,10 @@ end
 function Musician.SongLinks.ChatLinksToChatBubble(msg)
 	local capturePattern = '%[' .. CHAT_LINK_PREFIX .. '<?([^>:]*)>?: ([^%]]*)%]'
 	return string.gsub(msg, capturePattern, function(playerArg, titleArg)
-		titleArg = Musician.Utils.RemoveHighlight(titleArg) -- Remove text coloring added by other addons such as Total RP
-		local note = Musician.Utils.GetChatIcon(Musician.IconImages.Note)
-		return '«' .. note .. titleArg .. '»'
+		local text = Musician.Msg.LINKS_CHAT_BUBBLE
+		text = string.gsub(text, '{note}', Musician.Utils.GetChatIcon(Musician.IconImages.Note))
+		text = string.gsub(text, '{title}', Musician.Utils.RemoveHighlight(titleArg)) -- Remove text coloring added by other addons such as Total RP
+		return text
 	end)
 end
 

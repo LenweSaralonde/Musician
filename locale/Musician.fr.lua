@@ -286,6 +286,7 @@ msg.PLAYER_IS_UNMUTED = "{icon}{player} n'est plus en mode silencieux."
 msg.LINKS_PREFIX = "Musique"
 msg.LINKS_FORMAT = "{prefix} : {title}"
 msg.LINKS_LINK_BUTTON = "Lien"
+msg.LINKS_CHAT_BUBBLE = "« {note}{title} »"
 
 msg.LINK_EXPORT_WINDOW_TITLE = "Créer un lien pour le morceau"
 msg.LINK_EXPORT_WINDOW_SONG_TITLE_LABEL = "Titre du morceau :"
