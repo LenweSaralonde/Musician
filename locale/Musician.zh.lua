@@ -285,6 +285,7 @@ msg.PLAYER_IS_UNMUTED = "{icon}{player}已关闭静音。"
 msg.LINKS_PREFIX = "音乐"
 msg.LINKS_FORMAT = "{prefix}: {title}"
 msg.LINKS_LINK_BUTTON = "链接"
+msg.LINKS_CHAT_BUBBLE = "“{note}{title}”"
 
 msg.LINK_EXPORT_WINDOW_TITLE = "创建音乐链接"
 msg.LINK_EXPORT_WINDOW_SONG_TITLE_LABEL = "音乐标题："
