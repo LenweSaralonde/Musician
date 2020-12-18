@@ -54,7 +54,7 @@ local function update(title, playerName)
 
 	-- Set frame title
 	local playerDisplayName = Musician.Utils.FormatPlayerName(playerName)
-	local playerLink = Musician.Utils.GetLink('player', Musician.Utils.Highlight(playerDisplayName), playerName)
+	local playerLink = Musician.Utils.Highlight('[') .. Musician.Utils.GetLink('player', Musician.Utils.Highlight(playerDisplayName), playerName) .. Musician.Utils.Highlight(']')
 	local frameTitle = string.gsub(Musician.Msg.LINK_IMPORT_WINDOW_TITLE, '{player}', playerLink)
 	frame.title:SetText(frameTitle)
 
