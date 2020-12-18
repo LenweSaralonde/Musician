@@ -74,8 +74,12 @@ local function initLocaleDropdown()
 	end
 
 	dropdown.SetValue = function(value)
-		dropdown.value = value
 		local index = localeIndexes[value]
+		if index == nil then
+			dropdown.SetValue('en')
+			return
+		end
+		dropdown.value = value
 		MSA_DropDownMenu_SetText(dropdown, localeValues[index][2])
 	end
 
