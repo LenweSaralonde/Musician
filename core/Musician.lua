@@ -494,9 +494,6 @@ function Musician.SetupHooks()
 			elseif args[2] == "unmute" then
 				PlaySound(80)
 				Musician.MutePlayer(args[3], false)
-			-- Seek source song
-			elseif args[2] == "seek" and Musician.sourceSong ~= nil then
-				Musician.sourceSong:Seek(args[3])
 			-- Open options panel
 			elseif args[2] == "options" then
 				Musician.Options.Show()
@@ -507,6 +504,13 @@ function Musician.SetupHooks()
 	local HookedSetHyperlink = ItemRefTooltip.SetHyperlink
 	function ItemRefTooltip:SetHyperlink(link, ...)
 		if (link and link:sub(0, 8) == "musician") then
+			local args = { strsplit(':', link) }
+
+			-- Seek source song
+			if args[2] == "seek" and Musician.sourceSong ~= nil then
+				Musician.sourceSong:Seek(args[3])
+			end
+
 			return
 		end
 		return HookedSetHyperlink(self, link, ...)

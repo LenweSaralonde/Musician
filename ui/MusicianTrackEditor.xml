@@ -202,6 +202,13 @@
 			</Frame>
 
 		</Frames>
+
+		<Scripts>
+			<OnLoad>
+				self:SetHyperlinksEnabled(true)
+				self:SetScript("OnHyperlinkClick", InlineHyperlinkFrame_OnClick)
+			</OnLoad>
+		</Scripts>
 	</Frame>
 
 

@@ -221,8 +221,8 @@ function Musician.TrackEditor.CreateTrackWidget(trackIndex)
 	if #track.notes > 0 then
 		local firstNote = track.notes[1][NOTE.TIME]
 		local lastNote = track.notes[noteCount][NOTE.TIME] + (track.notes[noteCount][NOTE.DURATION] or 0)
-		trackInfo = trackInfo .. " [" .. Musician.Utils.GetLink('seek', Musician.Utils.FormatTime(firstNote, true), firstNote)
-		trackInfo = trackInfo .. " – " .. Musician.Utils.GetLink('seek', Musician.Utils.FormatTime(lastNote, true), lastNote) .. "]"
+		trackInfo = trackInfo .. " [" .. Musician.Utils.GetLink('musician', Musician.Utils.FormatTime(firstNote, true), 'seek', firstNote)
+		trackInfo = trackInfo .. " – " .. Musician.Utils.GetLink('musician', Musician.Utils.FormatTime(lastNote, true), 'seek', lastNote) .. "]"
 	end
 	trackInfo = trackInfo .. " (" .. noteCount .. ")"
 
