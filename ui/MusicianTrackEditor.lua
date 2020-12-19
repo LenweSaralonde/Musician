@@ -305,7 +305,7 @@ end
 -- @param position (number)
 function Musician.TrackEditor.SetCropFrom(position)
 	if position < Musician.sourceSong.cropTo then
-		Musician.sourceSong.cropFrom = position
+		Musician.sourceSong.cropFrom = floor(position * 100) / 100
 	end
 
 	if Musician.sourceSong.cursor < position then
@@ -321,7 +321,7 @@ end
 -- @param position (number)
 function Musician.TrackEditor.SetCropTo(position)
 	if position > Musician.sourceSong.cropFrom then
-		Musician.sourceSong.cropTo = position
+		Musician.sourceSong.cropTo = ceil(position * 100) / 100
 	end
 
 	if Musician.sourceSong.cursor > position then
