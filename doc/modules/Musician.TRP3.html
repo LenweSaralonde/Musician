@@ -70,6 +70,10 @@
   <li><a href="../modules/Musician.Registry.html">Musician.Registry</a></li>
   <li><a href="../modules/Musician.Sampler.html">Musician.Sampler</a></li>
   <li><a href="../modules/Musician.Song.html">Musician.Song</a></li>
+  <li><a href="../modules/Musician.SongLinkExportFrame.html">Musician.SongLinkExportFrame</a></li>
+  <li><a href="../modules/Musician.SongLinkImportFrame.html">Musician.SongLinkImportFrame</a></li>
+  <li><a href="../modules/Musician.SongLinks.html">Musician.SongLinks</a></li>
+  <li><strong>Musician.TRP3</strong></li>
   <li><strong>Musician.TRP3</strong></li>
   <li><a href="../modules/Musician.TRP3.Options.html">Musician.TRP3.Options</a></li>
   <li><a href="../modules/Musician.TrackEditor.html">Musician.TrackEditor</a></li>
@@ -91,32 +95,68 @@
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#Musician.TRP3.GetRpName">Musician.TRP3.GetRpName (player)</a></td>
-	<td class="summary">Return RP display name for player</td>
+	<td class="name" nowrap><a href="#Musician.TRP3E.AddSheetMusicItem">Musician.TRP3E.AddSheetMusicItem (title, encodedSongData[, locale[, icon=Musician.TRP3E.ITEM_ICON[, quantity=1]]])</a></td>
+	<td class="summary">Add or update existing sheet music item into TRP3 items</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Musician.TRP3.HookNamePlates">Musician.TRP3.HookNamePlates ()</a></td>
-	<td class="summary">Hook TRP player nameplates (standard)</td>
+	<td class="name" nowrap><a href="#Musician.TRP3E.CreateSheetMusicItem">Musician.TRP3E.CreateSheetMusicItem (title[, locale[, icon=Musician.TRP3E.ITEM_ICON]])</a></td>
+	<td class="summary">Create a new sheet music item for the provided song title</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Musician.TRP3.HookPlayerMap">Musician.TRP3.HookPlayerMap ()</a></td>
-	<td class="summary">Hook TRP player map</td>
+	<td class="name" nowrap><a href="#Musician.TRP3E.FilterTooltip">Musician.TRP3E.FilterTooltip (tooltip)</a></td>
+	<td class="summary">Remove the "Require Musician" message from item tooltip</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Musician.TRP3.HookPlayerNames">Musician.TRP3.HookPlayerNames ()</a></td>
-	<td class="summary">Hook player name formatting</td>
+	<td class="name" nowrap><a href="#Musician.TRP3E.GetSheetMusicItem">Musician.TRP3E.GetSheetMusicItem (title[, locale[, icon=Musician.TRP3E.ITEM_ICON]])</a></td>
+	<td class="summary">Get new or existing sheet music item for the provided song title</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Musician.TRP3.HookTooltip">Musician.TRP3.HookTooltip ()</a></td>
-	<td class="summary">Hook TRP player tooltip</td>
+	<td class="name" nowrap><a href="#Musician.TRP3E.GetSlotButtons">Musician.TRP3E.GetSlotButtons (infoId)</a></td>
+	<td class="summary">Get the UI slot buttons corresponding to the provided item infoId</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Musician.TRP3.IsPlayingMusic">Musician.TRP3.IsPlayingMusic (player)</a></td>
-	<td class="summary">Return true if the player is currently playing some music</td>
+	<td class="name" nowrap><a href="#Musician.TRP3E.GetWorkflow">Musician.TRP3E.GetWorkflow (encodedSongData, locale)</a></td>
+	<td class="summary">Returns the internal item workflow for provided song data</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Musician.TRP3.OnSongChunk">Musician.TRP3.OnSongChunk (event, sender, mode, songId, chunkDuration, playtimeLeft, posY, posX, posZ, instanceID, guid)</a></td>
-	<td class="summary">OnSongChunk</td>
+	<td class="name" nowrap><a href="#Musician.TRP3E.InitUI">Musician.TRP3E.InitUI ()</a></td>
+	<td class="summary">Init the UI elements</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.TRP3E.IsMusicianId">Musician.TRP3E.IsMusicianId (classId)</a></td>
+	<td class="summary">Indicates whenever the provided item class ID is a musician object</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.TRP3E.IsMusicianItem">Musician.TRP3E.IsMusicianItem (object)</a></td>
+	<td class="summary">Indicates whenever the provided TRP3 item object is a Musician sheet music</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.TRP3E.NormalizeTitle">Musician.TRP3E.NormalizeTitle (title)</a></td>
+	<td class="summary">Normalize song title for TRP item names</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.TRP3E.RegisterHooks">Musician.TRP3E.RegisterHooks ()</a></td>
+	<td class="summary">Register TRP3 Extended hooks</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.TRP3E.SetCheckboxEnabled">Musician.TRP3E.SetCheckboxEnabled (checkbox, enabled)</a></td>
+	<td class="summary">Enable or disable a TRP3 checkbox</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.TRP3E.SetEditBoxEnabled">Musician.TRP3E.SetEditBoxEnabled (editBox, enabled)</a></td>
+	<td class="summary">Enable or disable a TRP3 edit box</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.TRP3E.ShowExportFrame">Musician.TRP3E.ShowExportFrame ()</a></td>
+	<td class="summary">Show the TRP item export frame</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.TRP3E.UpdateSheetMusicItem">Musician.TRP3E.UpdateSheetMusicItem (object, title, encodedSongData, locale, icon)</a></td>
+	<td class="summary">Update an existing sheet music item to set the song data</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.TRP3E:OnEnable">Musician.TRP3E:OnEnable ()</a></td>
+	<td class="summary">OnEnable</td>
 	</tr>
 </table>
 
@@ -128,24 +168,39 @@
 
     <dl class="function">
     <dt>
-    <a name = "Musician.TRP3.GetRpName"></a>
-    <strong>Musician.TRP3.GetRpName (player)</strong>
+    <a name = "Musician.TRP3E.AddSheetMusicItem"></a>
+    <strong>Musician.TRP3E.AddSheetMusicItem (title, encodedSongData[, locale[, icon=Musician.TRP3E.ITEM_ICON[, quantity=1]]])</strong>
     </dt>
     <dd>
-    Return RP display name for player
+    Add or update existing sheet music item into TRP3 items
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">player</span>
-         (string)
+        <li><span class="parameter">title</span>
+         (string) Song title
+        </li>
+        <li><span class="parameter">encodedSongData</span>
+         (string) Base64-encoded song data
+        </li>
+        <li><span class="parameter">locale</span>
+         (string) Item locale. By default, the current realm locale is used.
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">icon</span>
+         (string) Item icon
+         (<em>default</em> Musician.TRP3E.ITEM_ICON)
+        </li>
+        <li><span class="parameter">quantity</span>
+         (int) Item quantity to be added in the main inventory
+         (<em>default</em> 1)
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        (string)
+        objectID (string)
     </ol>
 
 
@@ -153,80 +208,34 @@
 
 </dd>
     <dt>
-    <a name = "Musician.TRP3.HookNamePlates"></a>
-    <strong>Musician.TRP3.HookNamePlates ()</strong>
+    <a name = "Musician.TRP3E.CreateSheetMusicItem"></a>
+    <strong>Musician.TRP3E.CreateSheetMusicItem (title[, locale[, icon=Musician.TRP3E.ITEM_ICON]])</strong>
     </dt>
     <dd>
-    Hook TRP player nameplates (standard)
-
-
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Musician.TRP3.HookPlayerMap"></a>
-    <strong>Musician.TRP3.HookPlayerMap ()</strong>
-    </dt>
-    <dd>
-    Hook TRP player map
-
-
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Musician.TRP3.HookPlayerNames"></a>
-    <strong>Musician.TRP3.HookPlayerNames ()</strong>
-    </dt>
-    <dd>
-    Hook player name formatting
-
-
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Musician.TRP3.HookTooltip"></a>
-    <strong>Musician.TRP3.HookTooltip ()</strong>
-    </dt>
-    <dd>
-    Hook TRP player tooltip
-
-
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Musician.TRP3.IsPlayingMusic"></a>
-    <strong>Musician.TRP3.IsPlayingMusic (player)</strong>
-    </dt>
-    <dd>
-    Return true if the player is currently playing some music
+    Create a new sheet music item for the provided song title
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">player</span>
-         (string)
+        <li><span class="parameter">title</span>
+         (string) Song title
+        </li>
+        <li><span class="parameter">locale</span>
+         (string) Item locale. By default, the current realm locale is used.
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">icon</span>
+         (string) Item icon
+         (<em>default</em> Musician.TRP3E.ITEM_ICON)
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
-
-        (boolean)
+        <li>
+        ID (string)</li>
+        <li>
+        object (table)</li>
     </ol>
 
 
@@ -234,49 +243,318 @@
 
 </dd>
     <dt>
-    <a name = "Musician.TRP3.OnSongChunk"></a>
-    <strong>Musician.TRP3.OnSongChunk (event, sender, mode, songId, chunkDuration, playtimeLeft, posY, posX, posZ, instanceID, guid)</strong>
+    <a name = "Musician.TRP3E.FilterTooltip"></a>
+    <strong>Musician.TRP3E.FilterTooltip (tooltip)</strong>
     </dt>
     <dd>
-    OnSongChunk
+    Remove the "Require Musician" message from item tooltip
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">event</span>
-
-        </li>
-        <li><span class="parameter">sender</span>
-
-        </li>
-        <li><span class="parameter">mode</span>
-
-        </li>
-        <li><span class="parameter">songId</span>
-
-        </li>
-        <li><span class="parameter">chunkDuration</span>
-
-        </li>
-        <li><span class="parameter">playtimeLeft</span>
-
-        </li>
-        <li><span class="parameter">posY</span>
-
-        </li>
-        <li><span class="parameter">posX</span>
-
-        </li>
-        <li><span class="parameter">posZ</span>
-
-        </li>
-        <li><span class="parameter">instanceID</span>
-
-        </li>
-        <li><span class="parameter">guid</span>
-
+        <li><span class="parameter">tooltip</span>
+         (Frame)
         </li>
     </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.TRP3E.GetSheetMusicItem"></a>
+    <strong>Musician.TRP3E.GetSheetMusicItem (title[, locale[, icon=Musician.TRP3E.ITEM_ICON]])</strong>
+    </dt>
+    <dd>
+    Get new or existing sheet music item for the provided song title
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">title</span>
+         (string) Song title
+        </li>
+        <li><span class="parameter">locale</span>
+         (string) Item locale. By default, the current realm locale is used.
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">icon</span>
+         (string) Item icon
+         (<em>default</em> Musician.TRP3E.ITEM_ICON)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+        ID (string)</li>
+        <li>
+        object (table)</li>
+        <li>
+        isExisting (boolean)</li>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.TRP3E.GetSlotButtons"></a>
+    <strong>Musician.TRP3E.GetSlotButtons (infoId)</strong>
+    </dt>
+    <dd>
+    Get the UI slot buttons corresponding to the provided item infoId
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">infoId</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        slotButtons (table)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.TRP3E.GetWorkflow"></a>
+    <strong>Musician.TRP3E.GetWorkflow (encodedSongData, locale)</strong>
+    </dt>
+    <dd>
+    Returns the internal item workflow for provided song data
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">encodedSongData</span>
+         (string) Base64-encoded song data
+        </li>
+        <li><span class="parameter">locale</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        workflow (table)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.TRP3E.InitUI"></a>
+    <strong>Musician.TRP3E.InitUI ()</strong>
+    </dt>
+    <dd>
+    Init the UI elements
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.TRP3E.IsMusicianId"></a>
+    <strong>Musician.TRP3E.IsMusicianId (classId)</strong>
+    </dt>
+    <dd>
+    Indicates whenever the provided item class ID is a musician object
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">classId</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        isMusicianId (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.TRP3E.IsMusicianItem"></a>
+    <strong>Musician.TRP3E.IsMusicianItem (object)</strong>
+    </dt>
+    <dd>
+    Indicates whenever the provided TRP3 item object is a Musician sheet music
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">object</span>
+         (table)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        isMusicianItem (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.TRP3E.NormalizeTitle"></a>
+    <strong>Musician.TRP3E.NormalizeTitle (title)</strong>
+    </dt>
+    <dd>
+    Normalize song title for TRP item names
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">title</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        normalizedTitle (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.TRP3E.RegisterHooks"></a>
+    <strong>Musician.TRP3E.RegisterHooks ()</strong>
+    </dt>
+    <dd>
+    Register TRP3 Extended hooks
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.TRP3E.SetCheckboxEnabled"></a>
+    <strong>Musician.TRP3E.SetCheckboxEnabled (checkbox, enabled)</strong>
+    </dt>
+    <dd>
+    Enable or disable a TRP3 checkbox
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">checkbox</span>
+         (CheckButton) inherits TRP3_CheckBox
+        </li>
+        <li><span class="parameter">enabled</span>
+         (boolean)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.TRP3E.SetEditBoxEnabled"></a>
+    <strong>Musician.TRP3E.SetEditBoxEnabled (editBox, enabled)</strong>
+    </dt>
+    <dd>
+    Enable or disable a TRP3 edit box
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">editBox</span>
+         (EditBox) inherits TRP3_TitledEditBox
+        </li>
+        <li><span class="parameter">enabled</span>
+         (boolean)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.TRP3E.ShowExportFrame"></a>
+    <strong>Musician.TRP3E.ShowExportFrame ()</strong>
+    </dt>
+    <dd>
+    Show the TRP item export frame
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.TRP3E.UpdateSheetMusicItem"></a>
+    <strong>Musician.TRP3E.UpdateSheetMusicItem (object, title, encodedSongData, locale, icon)</strong>
+    </dt>
+    <dd>
+    Update an existing sheet music item to set the song data
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">object</span>
+         (table)
+        </li>
+        <li><span class="parameter">title</span>
+         (string) Song title
+        </li>
+        <li><span class="parameter">encodedSongData</span>
+         (string) Base64-encoded song data
+        </li>
+        <li><span class="parameter">locale</span>
+         (string)
+        </li>
+        <li><span class="parameter">icon</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.TRP3E:OnEnable"></a>
+    <strong>Musician.TRP3E:OnEnable ()</strong>
+    </dt>
+    <dd>
+    OnEnable
+
+
 
 
 
@@ -290,7 +568,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-09-28 20:32:32 </i>
+<i style="float:right;">Last updated 2020-12-20 18:10:10 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

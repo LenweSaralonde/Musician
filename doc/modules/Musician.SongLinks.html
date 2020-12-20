@@ -1,0 +1,745 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Musician</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/Musician.html">Musician</a></li>
+  <li><a href="../modules/Musician.About.html">Musician.About</a></li>
+  <li><a href="../modules/Musician.Comm.html">Musician.Comm</a></li>
+  <li><a href="../modules/Musician.Constants.html">Musician.Constants</a></li>
+  <li><a href="../modules/Musician.Credits.html">Musician.Credits</a></li>
+  <li><a href="../modules/Musician.CrossRP.html">Musician.CrossRP</a></li>
+  <li><a href="../modules/Musician.CrossRP.Options.html">Musician.CrossRP.Options</a></li>
+  <li><a href="../modules/Musician.ElvUI.html">Musician.ElvUI</a></li>
+  <li><a href="../modules/Musician.Extras.html">Musician.Extras</a></li>
+  <li><a href="../modules/Musician.Frame.html">Musician.Frame</a></li>
+  <li><a href="../modules/Musician.Icons.html">Musician.Icons</a></li>
+  <li><a href="../modules/Musician.Instruments.html">Musician.Instruments</a></li>
+  <li><a href="../modules/Musician.Keyboard.html">Musician.Keyboard</a></li>
+  <li><a href="../modules/Musician.KeyboardConfig.html">Musician.KeyboardConfig</a></li>
+  <li><a href="../modules/Musician.KeyboardConstants.html">Musician.KeyboardConstants</a></li>
+  <li><a href="../modules/Musician.KeyboardUtils.html">Musician.KeyboardUtils</a></li>
+  <li><a href="../modules/Musician.KuiNamePlates.html">Musician.KuiNamePlates</a></li>
+  <li><a href="../modules/Musician.Layouts.html">Musician.Layouts</a></li>
+  <li><a href="../modules/Musician.Live.html">Musician.Live</a></li>
+  <li><a href="../modules/Musician.Midi.html">Musician.Midi</a></li>
+  <li><a href="../modules/Musician.MidiMapping.html">Musician.MidiMapping</a></li>
+  <li><a href="../modules/Musician.MyRolePlay.html">Musician.MyRolePlay</a></li>
+  <li><a href="../modules/Musician.NamePlates.html">Musician.NamePlates</a></li>
+  <li><a href="../modules/Musician.NamePlates.Options.html">Musician.NamePlates.Options</a></li>
+  <li><a href="../modules/Musician.NeatPlates.html">Musician.NeatPlates</a></li>
+  <li><a href="../modules/Musician.Options.html">Musician.Options</a></li>
+  <li><a href="../modules/Musician.PercussionIcons.html">Musician.PercussionIcons</a></li>
+  <li><a href="../modules/Musician.Plater.html">Musician.Plater</a></li>
+  <li><a href="../modules/Musician.Preloader.html">Musician.Preloader</a></li>
+  <li><a href="../modules/Musician.Registry.html">Musician.Registry</a></li>
+  <li><a href="../modules/Musician.Sampler.html">Musician.Sampler</a></li>
+  <li><a href="../modules/Musician.Song.html">Musician.Song</a></li>
+  <li><a href="../modules/Musician.SongLinkExportFrame.html">Musician.SongLinkExportFrame</a></li>
+  <li><a href="../modules/Musician.SongLinkImportFrame.html">Musician.SongLinkImportFrame</a></li>
+  <li><strong>Musician.SongLinks</strong></li>
+  <li><a href="../modules/Musician.TRP3.html">Musician.TRP3</a></li>
+  <li><a href="../modules/Musician.TRP3.html">Musician.TRP3</a></li>
+  <li><a href="../modules/Musician.TRP3.Options.html">Musician.TRP3.Options</a></li>
+  <li><a href="../modules/Musician.TrackEditor.html">Musician.TrackEditor</a></li>
+  <li><a href="../modules/Musician.Utils.html">Musician.Utils</a></li>
+  <li><a href="../modules/Musician.VolumeMeter.html">Musician.VolumeMeter</a></li>
+  <li><a href="../modules/Musician.Worker.html">Musician.Worker</a></li>
+  <li><a href="../modules/MusicianButton.html">MusicianButton</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>Musician.SongLinks</code></h1>
+<p>Song links module</p>
+<p></p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#Musician.SongLinks.AddSong">Musician.SongLinks.AddSong (song[, title[, onComplete]])</a></td>
+	<td class="summary">Export and add song for sharing</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.SongLinks.AddSongData">Musician.SongLinks.AddSongData (songData, title)</a></td>
+	<td class="summary">Add song data for sharing</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.SongLinks.CancelRequest">Musician.SongLinks.CancelRequest (playerName)</a></td>
+	<td class="summary">Cancel a song download request</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.SongLinks.ChatLinksToChatBubble">Musician.SongLinks.ChatLinksToChatBubble (msg)</a></td>
+	<td class="summary">Convert chat links for chat bubbles</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.SongLinks.ChatLinksToHyperlinks">Musician.SongLinks.ChatLinksToHyperlinks (msg[, playerName])</a></td>
+	<td class="summary">Convert chat text links into hyperlinks</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.SongLinks.GetChatLink">Musician.SongLinks.GetChatLink (title[, playerName])</a></td>
+	<td class="summary">Format song link for chat</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.SongLinks.GetHyperlink">Musician.SongLinks.GetHyperlink (title[, playerName])</a></td>
+	<td class="summary">Format song hyperlink</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.SongLinks.GetRequestingSong">Musician.SongLinks.GetRequestingSong (playerName)</a></td>
+	<td class="summary">Returns requestedSong data for the player</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.SongLinks.HyperlinksToChatLinks">Musician.SongLinks.HyperlinksToChatLinks (text)</a></td>
+	<td class="summary">Convert hyperlinks into text links for sending in the chat</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.SongLinks.Init">Musician.SongLinks.Init ()</a></td>
+	<td class="summary">Initialize song links</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.SongLinks.NormalizeTitleForLinks">Musician.SongLinks.NormalizeTitleForLinks (title)</a></td>
+	<td class="summary">Normalize song title for links</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.SongLinks.OnChatBubbleMsg">Musician.SongLinks.OnChatBubbleMsg (event, msg, player)</a></td>
+	<td class="summary">OnChatBubbleMsg
+ Replace chat links in chat bubbles</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.SongLinks.OnRequestSong">Musician.SongLinks.OnRequestSong (prefix, message, distribution, sender)</a></td>
+	<td class="summary">OnRequestSong</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.SongLinks.OnSongData">Musician.SongLinks.OnSongData (prefix, message, distribution, sender)</a></td>
+	<td class="summary">OnSongData
+ Notify download progression</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.SongLinks.OnSongError">Musician.SongLinks.OnSongError (prefix, message, distribution, sender)</a></td>
+	<td class="summary">OnSongError</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.SongLinks.OnSongImportProgress">Musician.SongLinks.OnSongImportProgress (event, song, importProgress)</a></td>
+	<td class="summary">OnSongImportProgress
+ Notify import progression</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.SongLinks.OnSongReceived">Musician.SongLinks.OnSongReceived (prefix, message, distribution, sender)</a></td>
+	<td class="summary">OnSongReceived
+ Song data has been received</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.SongLinks.RemoveRequest">Musician.SongLinks.RemoveRequest (playerName)</a></td>
+	<td class="summary">Remove a song download request</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.SongLinks.RequestSong">Musician.SongLinks.RequestSong (title, playerName[, dataOnly=false])</a></td>
+	<td class="summary">Request a song for download to a player</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.SongLinks.SendSong">Musician.SongLinks.SendSong (title, playerName)</a></td>
+	<td class="summary">Send song to another player by title</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.SongLinks.SendSongData">Musician.SongLinks.SendSongData (title, playerName, songData)</a></td>
+	<td class="summary">Send song data to another player</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "Musician.SongLinks.AddSong"></a>
+    <strong>Musician.SongLinks.AddSong (song[, title[, onComplete]])</strong>
+    </dt>
+    <dd>
+    Export and add song for sharing
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">song</span>
+         (Musician.Song)
+        </li>
+        <li><span class="parameter">title</span>
+         (string)
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">onComplete</span>
+         (function)
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.SongLinks.AddSongData"></a>
+    <strong>Musician.SongLinks.AddSongData (songData, title)</strong>
+    </dt>
+    <dd>
+    Add song data for sharing
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">songData</span>
+         (string)
+        </li>
+        <li><span class="parameter">title</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.SongLinks.CancelRequest"></a>
+    <strong>Musician.SongLinks.CancelRequest (playerName)</strong>
+    </dt>
+    <dd>
+    Cancel a song download request
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">playerName</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.SongLinks.ChatLinksToChatBubble"></a>
+    <strong>Musician.SongLinks.ChatLinksToChatBubble (msg)</strong>
+    </dt>
+    <dd>
+    Convert chat links for chat bubbles
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">msg</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        text (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.SongLinks.ChatLinksToHyperlinks"></a>
+    <strong>Musician.SongLinks.ChatLinksToHyperlinks (msg[, playerName])</strong>
+    </dt>
+    <dd>
+    Convert chat text links into hyperlinks
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">msg</span>
+         (string)
+        </li>
+        <li><span class="parameter">playerName</span>
+         (string)
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        text (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.SongLinks.GetChatLink"></a>
+    <strong>Musician.SongLinks.GetChatLink (title[, playerName])</strong>
+    </dt>
+    <dd>
+    Format song link for chat
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">title</span>
+         (string)
+        </li>
+        <li><span class="parameter">playerName</span>
+         (string)
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        link (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.SongLinks.GetHyperlink"></a>
+    <strong>Musician.SongLinks.GetHyperlink (title[, playerName])</strong>
+    </dt>
+    <dd>
+    Format song hyperlink
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">title</span>
+         (string)
+        </li>
+        <li><span class="parameter">playerName</span>
+         (string)
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        link (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.SongLinks.GetRequestingSong"></a>
+    <strong>Musician.SongLinks.GetRequestingSong (playerName)</strong>
+    </dt>
+    <dd>
+    Returns requestedSong data for the player
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">playerName</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        requestedSong (table)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.SongLinks.HyperlinksToChatLinks"></a>
+    <strong>Musician.SongLinks.HyperlinksToChatLinks (text)</strong>
+    </dt>
+    <dd>
+    Convert hyperlinks into text links for sending in the chat
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">text</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        msg (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.SongLinks.Init"></a>
+    <strong>Musician.SongLinks.Init ()</strong>
+    </dt>
+    <dd>
+    Initialize song links
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.SongLinks.NormalizeTitleForLinks"></a>
+    <strong>Musician.SongLinks.NormalizeTitleForLinks (title)</strong>
+    </dt>
+    <dd>
+    Normalize song title for links
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">title</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        normalizedTitle (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.SongLinks.OnChatBubbleMsg"></a>
+    <strong>Musician.SongLinks.OnChatBubbleMsg (event, msg, player)</strong>
+    </dt>
+    <dd>
+    OnChatBubbleMsg
+ Replace chat links in chat bubbles
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+
+        </li>
+        <li><span class="parameter">msg</span>
+
+        </li>
+        <li><span class="parameter">player</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.SongLinks.OnRequestSong"></a>
+    <strong>Musician.SongLinks.OnRequestSong (prefix, message, distribution, sender)</strong>
+    </dt>
+    <dd>
+    OnRequestSong
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">prefix</span>
+
+        </li>
+        <li><span class="parameter">message</span>
+
+        </li>
+        <li><span class="parameter">distribution</span>
+
+        </li>
+        <li><span class="parameter">sender</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.SongLinks.OnSongData"></a>
+    <strong>Musician.SongLinks.OnSongData (prefix, message, distribution, sender)</strong>
+    </dt>
+    <dd>
+    OnSongData
+ Notify download progression
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">prefix</span>
+
+        </li>
+        <li><span class="parameter">message</span>
+
+        </li>
+        <li><span class="parameter">distribution</span>
+
+        </li>
+        <li><span class="parameter">sender</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.SongLinks.OnSongError"></a>
+    <strong>Musician.SongLinks.OnSongError (prefix, message, distribution, sender)</strong>
+    </dt>
+    <dd>
+    OnSongError
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">prefix</span>
+
+        </li>
+        <li><span class="parameter">message</span>
+
+        </li>
+        <li><span class="parameter">distribution</span>
+
+        </li>
+        <li><span class="parameter">sender</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.SongLinks.OnSongImportProgress"></a>
+    <strong>Musician.SongLinks.OnSongImportProgress (event, song, importProgress)</strong>
+    </dt>
+    <dd>
+    OnSongImportProgress
+ Notify import progression
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+
+        </li>
+        <li><span class="parameter">song</span>
+
+        </li>
+        <li><span class="parameter">importProgress</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.SongLinks.OnSongReceived"></a>
+    <strong>Musician.SongLinks.OnSongReceived (prefix, message, distribution, sender)</strong>
+    </dt>
+    <dd>
+    OnSongReceived
+ Song data has been received
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">prefix</span>
+
+        </li>
+        <li><span class="parameter">message</span>
+
+        </li>
+        <li><span class="parameter">distribution</span>
+
+        </li>
+        <li><span class="parameter">sender</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.SongLinks.RemoveRequest"></a>
+    <strong>Musician.SongLinks.RemoveRequest (playerName)</strong>
+    </dt>
+    <dd>
+    Remove a song download request
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">playerName</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.SongLinks.RequestSong"></a>
+    <strong>Musician.SongLinks.RequestSong (title, playerName[, dataOnly=false])</strong>
+    </dt>
+    <dd>
+    Request a song for download to a player
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">title</span>
+         (string)
+        </li>
+        <li><span class="parameter">playerName</span>
+         (string)
+        </li>
+        <li><span class="parameter">dataOnly</span>
+         (boolean)
+         (<em>default</em> false)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.SongLinks.SendSong"></a>
+    <strong>Musician.SongLinks.SendSong (title, playerName)</strong>
+    </dt>
+    <dd>
+    Send song to another player by title
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">title</span>
+         (string)
+        </li>
+        <li><span class="parameter">playerName</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.SongLinks.SendSongData"></a>
+    <strong>Musician.SongLinks.SendSongData (title, playerName, songData)</strong>
+    </dt>
+    <dd>
+    Send song data to another player
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">title</span>
+         (string)
+        </li>
+        <li><span class="parameter">playerName</span>
+         (string)
+        </li>
+        <li><span class="parameter">songData</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2020-12-20 18:10:10 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

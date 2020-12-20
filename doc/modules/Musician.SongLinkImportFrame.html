@@ -71,11 +71,11 @@
   <li><a href="../modules/Musician.Sampler.html">Musician.Sampler</a></li>
   <li><a href="../modules/Musician.Song.html">Musician.Song</a></li>
   <li><a href="../modules/Musician.SongLinkExportFrame.html">Musician.SongLinkExportFrame</a></li>
-  <li><a href="../modules/Musician.SongLinkImportFrame.html">Musician.SongLinkImportFrame</a></li>
+  <li><strong>Musician.SongLinkImportFrame</strong></li>
   <li><a href="../modules/Musician.SongLinks.html">Musician.SongLinks</a></li>
   <li><a href="../modules/Musician.TRP3.html">Musician.TRP3</a></li>
   <li><a href="../modules/Musician.TRP3.html">Musician.TRP3</a></li>
-  <li><strong>Musician.TRP3.Options</strong></li>
+  <li><a href="../modules/Musician.TRP3.Options.html">Musician.TRP3.Options</a></li>
   <li><a href="../modules/Musician.TrackEditor.html">Musician.TrackEditor</a></li>
   <li><a href="../modules/Musician.Utils.html">Musician.Utils</a></li>
   <li><a href="../modules/Musician.VolumeMeter.html">Musician.VolumeMeter</a></li>
@@ -87,32 +87,21 @@
 
 <div id="content">
 
-<h1>Module <code>Musician.TRP3.Options</code></h1>
-<p>Options for Total RP 3 integration</p>
+<h1>Module <code>Musician.SongLinkImportFrame</code></h1>
+<p>Link import window</p>
 <p></p>
 
 
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#Musician.TRP3.Options.Defaults">Musician.TRP3.Options.Defaults ()</a></td>
-	<td class="summary">Set default options</td>
+	<td class="name" nowrap><a href="#Musician.SongLinkImportFrame.Init">Musician.SongLinkImportFrame.Init ()</a></td>
+	<td class="summary">Init</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Musician.TRP3.Options.GetDefaults">Musician.TRP3.Options.GetDefaults ()</a></td>
-	<td class="summary">Return default options</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Musician.TRP3.Options.Refresh">Musician.TRP3.Options.Refresh ()</a></td>
-	<td class="summary">Refresh panel and store old values</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Musician.TRP3.Options.RefreshCheckboxes">Musician.TRP3.Options.RefreshCheckboxes ()</a></td>
-	<td class="summary">Refresh checkboxes based on actual values</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Musician.TRP3.Options.Save">Musician.TRP3.Options.Save (fromButton)</a></td>
-	<td class="summary">Save values</td>
+	<td class="name" nowrap><a href="#Musician.SongLinkImportFrame.OnSongLinkClick">Musician.SongLinkImportFrame.OnSongLinkClick (event, title, playerName)</a></td>
+	<td class="summary">OnSongLinkClick
+ Called when a song hyperlink is clicked</td>
 	</tr>
 </table>
 
@@ -124,11 +113,11 @@
 
     <dl class="function">
     <dt>
-    <a name = "Musician.TRP3.Options.Defaults"></a>
-    <strong>Musician.TRP3.Options.Defaults ()</strong>
+    <a name = "Musician.SongLinkImportFrame.Init"></a>
+    <strong>Musician.SongLinkImportFrame.Init ()</strong>
     </dt>
     <dd>
-    Set default options
+    Init
 
 
 
@@ -138,63 +127,23 @@
 
 </dd>
     <dt>
-    <a name = "Musician.TRP3.Options.GetDefaults"></a>
-    <strong>Musician.TRP3.Options.GetDefaults ()</strong>
+    <a name = "Musician.SongLinkImportFrame.OnSongLinkClick"></a>
+    <strong>Musician.SongLinkImportFrame.OnSongLinkClick (event, title, playerName)</strong>
     </dt>
     <dd>
-    Return default options
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-        (table)
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Musician.TRP3.Options.Refresh"></a>
-    <strong>Musician.TRP3.Options.Refresh ()</strong>
-    </dt>
-    <dd>
-    Refresh panel and store old values
-
-
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Musician.TRP3.Options.RefreshCheckboxes"></a>
-    <strong>Musician.TRP3.Options.RefreshCheckboxes ()</strong>
-    </dt>
-    <dd>
-    Refresh checkboxes based on actual values
-
-
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Musician.TRP3.Options.Save"></a>
-    <strong>Musician.TRP3.Options.Save (fromButton)</strong>
-    </dt>
-    <dd>
-    Save values
+    OnSongLinkClick
+ Called when a song hyperlink is clicked
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">fromButton</span>
+        <li><span class="parameter">event</span>
+
+        </li>
+        <li><span class="parameter">title</span>
+
+        </li>
+        <li><span class="parameter">playerName</span>
 
         </li>
     </ul>

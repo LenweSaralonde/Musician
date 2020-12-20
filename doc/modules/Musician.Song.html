@@ -70,6 +70,10 @@
   <li><a href="../modules/Musician.Registry.html">Musician.Registry</a></li>
   <li><a href="../modules/Musician.Sampler.html">Musician.Sampler</a></li>
   <li><strong>Musician.Song</strong></li>
+  <li><a href="../modules/Musician.SongLinkExportFrame.html">Musician.SongLinkExportFrame</a></li>
+  <li><a href="../modules/Musician.SongLinkImportFrame.html">Musician.SongLinkImportFrame</a></li>
+  <li><a href="../modules/Musician.SongLinks.html">Musician.SongLinks</a></li>
+  <li><a href="../modules/Musician.TRP3.html">Musician.TRP3</a></li>
   <li><a href="../modules/Musician.TRP3.html">Musician.TRP3</a></li>
   <li><a href="../modules/Musician.TRP3.Options.html">Musician.TRP3.Options</a></li>
   <li><a href="../modules/Musician.TrackEditor.html">Musician.TrackEditor</a></li>
@@ -115,6 +119,10 @@
 	<td class="summary">Append chunk data to current song</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:CancelExport">Musician.Song:CancelExport ()</a></td>
+	<td class="summary">Cancel current export</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#Musician.Song:CancelImport">Musician.Song:CancelImport ()</a></td>
 	<td class="summary">Cancel current import</td>
 	</tr>
@@ -127,6 +135,14 @@
 	<td class="summary">Convert song to live mode.</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:Export">Musician.Song:Export (onComplete[, progressionFactor=1])</a></td>
+	<td class="summary">Export song to string</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:ExportCompressed">Musician.Song:ExportCompressed (onComplete)</a></td>
+	<td class="summary">Export song to compressed string</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#Musician.Song:GetId">Musician.Song:GetId ()</a></td>
 	<td class="summary">Return song ID</td>
 	</tr>
@@ -137,6 +153,10 @@
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Song:Import">Musician.Song:Import (data, crop[, previousProgression=0[, onComplete]])</a></td>
 	<td class="summary">Import song from string</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:ImportCompressed">Musician.Song:ImportCompressed (compressedData, crop[, onComplete])</a></td>
+	<td class="summary">Import song from a compressed string</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Song:ImportFromBase64">Musician.Song:ImportFromBase64 (base64data, crop[, onComplete])</a></td>
@@ -159,7 +179,11 @@
 	<td class="summary">Play a note</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Musician.Song:OnImportError">Musician.Song:OnImportError ()</a></td>
+	<td class="name" nowrap><a href="#Musician.Song:OnExportError">Musician.Song:OnExportError (msg[, onComplete])</a></td>
+	<td class="summary">Handle exporting error</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:OnImportError">Musician.Song:OnImportError (msg[, onComplete])</a></td>
 	<td class="summary">Handle importing error</td>
 	</tr>
 	<tr>
@@ -390,6 +414,20 @@
 
 </dd>
     <dt>
+    <a name = "Musician.Song:CancelExport"></a>
+    <strong>Musician.Song:CancelExport ()</strong>
+    </dt>
+    <dd>
+    Cancel current export
+
+
+
+
+
+
+
+</dd>
+    <dt>
     <a name = "Musician.Song:CancelImport"></a>
     <strong>Musician.Song:CancelImport ()</strong>
     </dt>
@@ -431,6 +469,50 @@
  For testing only
 
 
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song:Export"></a>
+    <strong>Musician.Song:Export (onComplete[, progressionFactor=1])</strong>
+    </dt>
+    <dd>
+    Export song to string
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">onComplete</span>
+         (function) Called when the whole export process is complete. Data is provided when successful
+        </li>
+        <li><span class="parameter">progressionFactor</span>
+         (number) (0-1)
+         (<em>default</em> 1)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song:ExportCompressed"></a>
+    <strong>Musician.Song:ExportCompressed (onComplete)</strong>
+    </dt>
+    <dd>
+    Export song to compressed string
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">onComplete</span>
+         (function) Called when the whole export process is complete. Data is provided when successful
+        </li>
+    </ul>
 
 
 
@@ -494,6 +576,33 @@
         <li><span class="parameter">previousProgression</span>
          (number) Add previous progression (0-1)
          (<em>default</em> 0)
+        </li>
+        <li><span class="parameter">onComplete</span>
+         (function) Called when the whole import process is complete. Argument is true when successful
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song:ImportCompressed"></a>
+    <strong>Musician.Song:ImportCompressed (compressedData, crop[, onComplete])</strong>
+    </dt>
+    <dd>
+    Import song from a compressed string
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">compressedData</span>
+         (string)
+        </li>
+        <li><span class="parameter">crop</span>
+         (boolean) Automatically crop song to first and last note
         </li>
         <li><span class="parameter">onComplete</span>
          (function) Called when the whole import process is complete. Argument is true when successful
@@ -628,13 +737,47 @@
 
 </dd>
     <dt>
+    <a name = "Musician.Song:OnExportError"></a>
+    <strong>Musician.Song:OnExportError (msg[, onComplete])</strong>
+    </dt>
+    <dd>
+    Handle exporting error
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">msg</span>
+         (string) Error message
+        </li>
+        <li><span class="parameter">onComplete</span>
+         (function)
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
     <a name = "Musician.Song:OnImportError"></a>
-    <strong>Musician.Song:OnImportError ()</strong>
+    <strong>Musician.Song:OnImportError (msg[, onComplete])</strong>
     </dt>
     <dd>
     Handle importing error
 
 
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">msg</span>
+         (string) Error message
+        </li>
+        <li><span class="parameter">onComplete</span>
+         (function)
+         (<em>optional</em>)
+        </li>
+    </ul>
 
 
 
@@ -937,7 +1080,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-09-28 20:32:32 </i>
+<i style="float:right;">Last updated 2020-12-20 18:10:10 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
