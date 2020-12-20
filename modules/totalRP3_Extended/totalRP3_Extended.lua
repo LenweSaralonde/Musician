@@ -39,8 +39,8 @@ local containerFrames = { }
 --
 function Musician.TRP3E:OnInitialize()
 	-- Register all item container frames such as bags as soon as they are created
-	hooksecurefunc('CreateFrame', function(type, name)
-		if type == 'Frame' and name and string.sub(name, 1, 14) == 'TRP3_Container'  then
+	hooksecurefunc('CreateFrame', function(frameType, name)
+		if frameType == 'Frame' and name and type(name) == 'string' and string.sub(name, 1, 14) == 'TRP3_Container'  then
 			table.insert(containerFrames, _G[name])
 		end
 	end)
