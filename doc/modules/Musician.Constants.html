@@ -69,6 +69,9 @@
   <li><a href="../modules/Musician.Registry.html">Musician.Registry</a></li>
   <li><a href="../modules/Musician.Sampler.html">Musician.Sampler</a></li>
   <li><a href="../modules/Musician.Song.html">Musician.Song</a></li>
+  <li><a href="../modules/Musician.SongLinkExportFrame.html">Musician.SongLinkExportFrame</a></li>
+  <li><a href="../modules/Musician.SongLinkImportFrame.html">Musician.SongLinkImportFrame</a></li>
+  <li><a href="../modules/Musician.SongLinks.html">Musician.SongLinks</a></li>
   <li><a href="../modules/Musician.TRP3.html">Musician.TRP3</a></li>
   <li><a href="../modules/Musician.TRP3.Options.html">Musician.TRP3.Options</a></li>
   <li><a href="../modules/Musician.TrackEditor.html">Musician.TrackEditor</a></li>
@@ -186,6 +189,18 @@
 	<td class="summary">Fired when the song cursor position has changed</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#Musician.Events.SongExportComplete">Musician.Events.SongExportComplete</a></td>
+	<td class="summary">Fired when the song exporting process is complete, regardless if it failed or not</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Events.SongExportProgress">Musician.Events.SongExportProgress</a></td>
+	<td class="summary">Fired when the song exporting process is making progress</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Events.SongExportStart">Musician.Events.SongExportStart</a></td>
+	<td class="summary">Fired when the song exporting process is starting</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#Musician.Events.SongImportComplete">Musician.Events.SongImportComplete</a></td>
 	<td class="summary">Fired when the song importing process is complete, regardless if it failed or not</td>
 	</tr>
@@ -210,8 +225,36 @@
 	<td class="summary">Fired when the instrument of a song track has changed in the song editor</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#Musician.Events.SongLink">Musician.Events.SongLink</a></td>
+	<td class="summary">Fired when the user clicks on a song link</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#Musician.Events.SongPlay">Musician.Events.SongPlay</a></td>
 	<td class="summary">Fired when a song starts playing</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Events.SongReceiveCanceled">Musician.Events.SongReceiveCanceled</a></td>
+	<td class="summary">Fired when the song reception process has been canceled</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Events.SongReceiveComplete">Musician.Events.SongReceiveComplete</a></td>
+	<td class="summary">Fired when the song reception process is complete, regardless if it failed or not</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Events.SongReceiveFailed">Musician.Events.SongReceiveFailed</a></td>
+	<td class="summary">Fired when the song reception process failed</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Events.SongReceiveProgress">Musician.Events.SongReceiveProgress</a></td>
+	<td class="summary">Fired when the song reception process is making progress</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Events.SongReceiveStart">Musician.Events.SongReceiveStart</a></td>
+	<td class="summary">Fired when the song reception process is starting</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Events.SongReceiveSucessful">Musician.Events.SongReceiveSucessful</a></td>
+	<td class="summary">Fired when the song reception process is complete successfully</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Events.SongStop">Musician.Events.SongStop</a></td>
@@ -758,6 +801,66 @@
 
 </dd>
     <dt>
+    <a name = "Musician.Events.SongExportComplete"></a>
+    <strong>Musician.Events.SongExportComplete</strong>
+    </dt>
+    <dd>
+    Fired when the song exporting process is complete, regardless if it failed or not
+
+
+    <ul>
+        <li><span class="parameter">song</span>
+         (Musician.Song)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Events.SongExportProgress"></a>
+    <strong>Musician.Events.SongExportProgress</strong>
+    </dt>
+    <dd>
+    Fired when the song exporting process is making progress
+
+
+    <ul>
+        <li><span class="parameter">song</span>
+         (Musician.Song)
+        </li>
+        <li><span class="parameter">progress</span>
+         (number) Progression between 0 and 1
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Events.SongExportStart"></a>
+    <strong>Musician.Events.SongExportStart</strong>
+    </dt>
+    <dd>
+    Fired when the song exporting process is starting
+
+
+    <ul>
+        <li><span class="parameter">song</span>
+         (Musician.Song)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
     <a name = "Musician.Events.SongImportComplete"></a>
     <strong>Musician.Events.SongImportComplete</strong>
     </dt>
@@ -884,6 +987,28 @@
 
 </dd>
     <dt>
+    <a name = "Musician.Events.SongLink"></a>
+    <strong>Musician.Events.SongLink</strong>
+    </dt>
+    <dd>
+    Fired when the user clicks on a song link
+
+
+    <ul>
+        <li><span class="parameter">title</span>
+         (string)
+        </li>
+        <li><span class="parameter">playerName</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
     <a name = "Musician.Events.SongPlay"></a>
     <strong>Musician.Events.SongPlay</strong>
     </dt>
@@ -894,6 +1019,136 @@
     <ul>
         <li><span class="parameter">song</span>
          (Musician.Song)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Events.SongReceiveCanceled"></a>
+    <strong>Musician.Events.SongReceiveCanceled</strong>
+    </dt>
+    <dd>
+    Fired when the song reception process has been canceled
+
+
+    <ul>
+        <li><span class="parameter">sender</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Events.SongReceiveComplete"></a>
+    <strong>Musician.Events.SongReceiveComplete</strong>
+    </dt>
+    <dd>
+    Fired when the song reception process is complete, regardless if it failed or not
+
+
+    <ul>
+        <li><span class="parameter">sender</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Events.SongReceiveFailed"></a>
+    <strong>Musician.Events.SongReceiveFailed</strong>
+    </dt>
+    <dd>
+    Fired when the song reception process failed
+
+
+    <ul>
+        <li><span class="parameter">sender</span>
+         (string)
+        </li>
+        <li><span class="parameter">reason</span>
+         (string)
+        </li>
+        <li><span class="parameter">title</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Events.SongReceiveProgress"></a>
+    <strong>Musician.Events.SongReceiveProgress</strong>
+    </dt>
+    <dd>
+    Fired when the song reception process is making progress
+
+
+    <ul>
+        <li><span class="parameter">sender</span>
+         (string)
+        </li>
+        <li><span class="parameter">progress</span>
+         (number) Progression between 0 and 1
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Events.SongReceiveStart"></a>
+    <strong>Musician.Events.SongReceiveStart</strong>
+    </dt>
+    <dd>
+    Fired when the song reception process is starting
+
+
+    <ul>
+        <li><span class="parameter">sender</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Events.SongReceiveSucessful"></a>
+    <strong>Musician.Events.SongReceiveSucessful</strong>
+    </dt>
+    <dd>
+    Fired when the song reception process is complete successfully
+
+
+    <ul>
+        <li><span class="parameter">sender</span>
+         (string)
+        </li>
+        <li><span class="parameter">songData</span>
+         (string)
+        </li>
+        <li><span class="parameter">song</span>
+         (Musician.Song)
+         (<em>optional</em>)
         </li>
     </ul>
 
@@ -1043,7 +1298,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-09-28 20:39:12 </i>
+<i style="float:right;">Last updated 2020-12-20 18:10:20 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

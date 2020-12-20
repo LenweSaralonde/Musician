@@ -68,6 +68,9 @@
   <li><a href="../modules/Musician.Registry.html">Musician.Registry</a></li>
   <li><a href="../modules/Musician.Sampler.html">Musician.Sampler</a></li>
   <li><a href="../modules/Musician.Song.html">Musician.Song</a></li>
+  <li><a href="../modules/Musician.SongLinkExportFrame.html">Musician.SongLinkExportFrame</a></li>
+  <li><a href="../modules/Musician.SongLinkImportFrame.html">Musician.SongLinkImportFrame</a></li>
+  <li><a href="../modules/Musician.SongLinks.html">Musician.SongLinks</a></li>
   <li><a href="../modules/Musician.TRP3.html">Musician.TRP3</a></li>
   <li><a href="../modules/Musician.TRP3.Options.html">Musician.TRP3.Options</a></li>
   <li><a href="../modules/Musician.TrackEditor.html">Musician.TrackEditor</a></li>
@@ -129,6 +132,10 @@
 	<td class="summary">Blizzard's EasyMenu_Initialize using MSA_DropDownMenu</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.Ellipsis">Musician.Utils.Ellipsis (text, maxBytes)</a></td>
+	<td class="summary">Shortens the UTF-8 text with ellipsis if its size in bytes is longer than specified</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.Error">Musician.Utils.Error (msg)</a></td>
 	<td class="summary">Display an error message in a popup</td>
 	</tr>
@@ -158,7 +165,7 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.GetByteReader">Musician.Utils.GetByteReader (data, err)</a></td>
-	<td class="summary">Return a byte reader function for provided data string</td>
+	<td class="summary">Return byte reader functions for provided data string</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.GetChatIcon">Musician.Utils.GetChatIcon (path[, r=0[, g=0[, b=0]]])</a></td>
@@ -173,6 +180,10 @@
 	<td class="summary">Get hyperlink</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.GetMsg">Musician.Utils.GetMsg (msg[, locale])</a></td>
+	<td class="summary">Returns localized message</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.GetNormalizedRealmName">Musician.Utils.GetNormalizedRealmName ()</a></td>
 	<td class="summary">Return the normalized realm name the player belongs to
  Safer than the standard GetNormalizedRealmName() that may return nil sometimes</td>
@@ -184,6 +195,10 @@
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.GetPlayerLink">Musician.Utils.GetPlayerLink (player)</a></td>
 	<td class="summary">Get player hyperlink</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.GetPlayerPosition">Musician.Utils.GetPlayerPosition ()</a></td>
+	<td class="summary">Get the player position in the 3D world</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.GetPromoEmote">Musician.Utils.GetPromoEmote ()</a></td>
@@ -212,6 +227,10 @@
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.NormalizePlayerName">Musician.Utils.NormalizePlayerName (playerName)</a></td>
 	<td class="summary">Return the normalized player name, including realm slug</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.NormalizeSongName">Musician.Utils.NormalizeSongName (songName)</a></td>
+	<td class="summary">Return the normalized song name</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.OverrideNextFullPromoEmote">Musician.Utils.OverrideNextFullPromoEmote ()</a></td>
@@ -280,6 +299,10 @@
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.RemoveChatMessage">Musician.Utils.RemoveChatMessage (lineID)</a></td>
 	<td class="summary">Remove a chat message by its line ID</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.RemoveHighlight">Musician.Utils.RemoveHighlight (highlightedText)</a></td>
+	<td class="summary">Remove text coloring</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.ResetFullPromoEmoteCooldown">Musician.Utils.ResetFullPromoEmoteCooldown ()</a></td>
@@ -563,6 +586,34 @@
 
 </dd>
     <dt>
+    <a name = "Musician.Utils.Ellipsis"></a>
+    <strong>Musician.Utils.Ellipsis (text, maxBytes)</strong>
+    </dt>
+    <dd>
+    Shortens the UTF-8 text with ellipsis if its size in bytes is longer than specified
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">text</span>
+         (string)
+        </li>
+        <li><span class="parameter">maxBytes</span>
+         (int)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        ellipsisText (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
     <a name = "Musician.Utils.Error"></a>
     <strong>Musician.Utils.Error (msg)</strong>
     </dt>
@@ -738,7 +789,7 @@
     <strong>Musician.Utils.GetByteReader (data, err)</strong>
     </dt>
     <dd>
-    Return a byte reader function for provided data string
+    Return byte reader functions for provided data string
 
 
     <h3>Parameters:</h3>
@@ -754,7 +805,7 @@
     <h3>Returns:</h3>
     <ol>
 
-        readBytes (function)
+        readBytes (function), getCursor (function)
     </ol>
 
 
@@ -861,6 +912,35 @@
 
 </dd>
     <dt>
+    <a name = "Musician.Utils.GetMsg"></a>
+    <strong>Musician.Utils.GetMsg (msg[, locale])</strong>
+    </dt>
+    <dd>
+    Returns localized message
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">msg</span>
+         (string)
+        </li>
+        <li><span class="parameter">locale</span>
+         (string) Defaults to the realm locale
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        localizedMsg (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
     <a name = "Musician.Utils.GetNormalizedRealmName"></a>
     <strong>Musician.Utils.GetNormalizedRealmName ()</strong>
     </dt>
@@ -918,6 +998,31 @@
     <ol>
 
         playerLink (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.GetPlayerPosition"></a>
+    <strong>Musician.Utils.GetPlayerPosition ()</strong>
+    </dt>
+    <dd>
+    Get the player position in the 3D world
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+        posY (number)</li>
+        <li>
+        posX (number)</li>
+        <li>
+        posZ (number)</li>
+        <li>
+        instanceID (number)</li>
     </ol>
 
 
@@ -1075,6 +1180,31 @@
     <ol>
 
         normalizedPlayerName (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.NormalizeSongName"></a>
+    <strong>Musician.Utils.NormalizeSongName (songName)</strong>
+    </dt>
+    <dd>
+    Return the normalized song name
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">songName</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        normalizedSongName (string)
     </ol>
 
 
@@ -1487,6 +1617,31 @@
 
 </dd>
     <dt>
+    <a name = "Musician.Utils.RemoveHighlight"></a>
+    <strong>Musician.Utils.RemoveHighlight (highlightedText)</strong>
+    </dt>
+    <dd>
+    Remove text coloring
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">highlightedText</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        text (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
     <a name = "Musician.Utils.ResetFullPromoEmoteCooldown"></a>
     <strong>Musician.Utils.ResetFullPromoEmoteCooldown ()</strong>
     </dt>
@@ -1778,7 +1933,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-09-28 20:39:12 </i>
+<i style="float:right;">Last updated 2020-12-20 18:10:20 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

@@ -32,7 +32,7 @@
 
 <h2>Contents</h2>
 <ul>
-<li><a href="#Tables">Tables</a></li>
+<li><a href="#Functions">Functions</a></li>
 </ul>
 
 
@@ -53,7 +53,7 @@
   <li><a href="../modules/Musician.KeyboardConstants.html">Musician.KeyboardConstants</a></li>
   <li><a href="../modules/Musician.KeyboardUtils.html">Musician.KeyboardUtils</a></li>
   <li><a href="../modules/Musician.KuiNamePlates.html">Musician.KuiNamePlates</a></li>
-  <li><strong>Musician.Layouts</strong></li>
+  <li><a href="../modules/Musician.Layouts.html">Musician.Layouts</a></li>
   <li><a href="../modules/Musician.Live.html">Musician.Live</a></li>
   <li><a href="../modules/Musician.Midi.html">Musician.Midi</a></li>
   <li><a href="../modules/Musician.MidiMapping.html">Musician.MidiMapping</a></li>
@@ -69,7 +69,7 @@
   <li><a href="../modules/Musician.Sampler.html">Musician.Sampler</a></li>
   <li><a href="../modules/Musician.Song.html">Musician.Song</a></li>
   <li><a href="../modules/Musician.SongLinkExportFrame.html">Musician.SongLinkExportFrame</a></li>
-  <li><a href="../modules/Musician.SongLinkImportFrame.html">Musician.SongLinkImportFrame</a></li>
+  <li><strong>Musician.SongLinkImportFrame</strong></li>
   <li><a href="../modules/Musician.SongLinks.html">Musician.SongLinks</a></li>
   <li><a href="../modules/Musician.TRP3.html">Musician.TRP3</a></li>
   <li><a href="../modules/Musician.TRP3.Options.html">Musician.TRP3.Options</a></li>
@@ -85,16 +85,21 @@
 
 <div id="content">
 
-<h1>Module <code>Musician.Layouts</code></h1>
-<p>Keyboard layouts</p>
+<h1>Module <code>Musician.SongLinkImportFrame</code></h1>
+<p>Link import window</p>
 <p></p>
 
 
-<h2><a href="#Tables">Tables</a></h2>
+<h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#Musician.LAYOUT_ORIENTATION">Musician.LAYOUT_ORIENTATION</a></td>
-	<td class="summary">Live keyboard orientations</td>
+	<td class="name" nowrap><a href="#Musician.SongLinkImportFrame.Init">Musician.SongLinkImportFrame.Init ()</a></td>
+	<td class="summary">Init</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.SongLinkImportFrame.OnSongLinkClick">Musician.SongLinkImportFrame.OnSongLinkClick (event, title, playerName)</a></td>
+	<td class="summary">OnSongLinkClick
+ Called when a song hyperlink is clicked</td>
 	</tr>
 </table>
 
@@ -102,23 +107,41 @@
 <br/>
 
 
-    <h2 class="section-header "><a name="Tables"></a>Tables</h2>
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
 
     <dl class="function">
     <dt>
-    <a name = "Musician.LAYOUT_ORIENTATION"></a>
-    <strong>Musician.LAYOUT_ORIENTATION</strong>
+    <a name = "Musician.SongLinkImportFrame.Init"></a>
+    <strong>Musician.SongLinkImportFrame.Init ()</strong>
     </dt>
     <dd>
-    Live keyboard orientations
+    Init
 
 
-    <h3>Fields:</h3>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.SongLinkImportFrame.OnSongLinkClick"></a>
+    <strong>Musician.SongLinkImportFrame.OnSongLinkClick (event, title, playerName)</strong>
+    </dt>
+    <dd>
+    OnSongLinkClick
+ Called when a song hyperlink is clicked
+
+
+    <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">HORIZONTAL</span>
+        <li><span class="parameter">event</span>
 
         </li>
-        <li><span class="parameter">VERTICAL</span>
+        <li><span class="parameter">title</span>
+
+        </li>
+        <li><span class="parameter">playerName</span>
 
         </li>
     </ul>
