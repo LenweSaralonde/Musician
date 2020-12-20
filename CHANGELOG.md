@@ -1,6 +1,16 @@
 Changelog
 =========
 
+v1.7.0.0
+--------
+*"A link to the bard"*
+
+* Songs can be shared with other players using chat hyperlinks.
+* Track start and end timecodes are now clickable in the song editor.
+* Added sustain key (spacebar) in the live keyboard interface.
+* Added soundfont list for CoolSoft VirtualMIDISynth.
+* Several bugfixes and improvements
+
 v1.6.2.0
 --------
 * Added option to allow in-game music playing along with Musician.
