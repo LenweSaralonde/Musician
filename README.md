@@ -62,7 +62,7 @@ Songs can be played in sync as a band, in which each member is playing a differe
 
 To allow synchronized play, all band members should be grouped in the same party or raid and have the same song loaded into Musician.
 
-Use the **Link**/**Export** button ![Link button](./img/link-button.png) to share songs with your band members.
+Use the **Link** button ![Link button](./img/link-button.png) to share songs with your band members.
 
 1. Load the same song as the other members of the band from MIDI, [from the list](https://musician.lenwe.io/musicianlist) or from a song chat link.
 2. Open the **Song Editor** then check **Solo** for the tracks you want to play with your character. Adjust other track settings as you like.
@@ -135,7 +135,7 @@ You can still change the track settings of the song currently playing by clickin
 
 Share your songs with the other players
 ---------------------------------------
-Songs can be shared with other players as links to be posted into the chat. Click the **Link** or **Export** button ![Link button](./img/link-button.png), set a title and you're done!
+Songs can be shared with other players as links to be posted into the chat. Click the **Link** button ![Link button](./img/link-button.png), set a title and you're done!
 
 The links remain active until you log out or reload the interface.
 
@@ -147,15 +147,10 @@ Musician integrates with role-playing add-ons [Total RP](https://www.curseforge.
 
 ![Total RP map scan](./img/trp-map-scan.png)
 
-In addition, the [Total RP Extended](https://www.curseforge.com/wow/addons/total-rp-3-extended) plugin allows you to export your songs as sheet music items that can be traded with other players. Click the **Export** button to create one.
-
-![Total RP Extended item export](./img/total-rp-extended-item-export.png)![Total RP Extended item in bag](./img/total-rp-extended-sheet-music-item.png)
-
 Tips and tricks
 ---------------
 * You can preview the song at any moment prior to playing it for other players by clicking the **Preview** button or using the song editor. If another song is playing nearby, it will be muted for you only.
 * If another player has Musician, it will be shown in his/her tooltip. Just hover the other players with your mouse cursor to see who can hear you!
-* Use toys such as the [\[Blingtron's Circuit Design Tutorial\]](https://www.wowhead.com/item=132518/blingtrons-circuit-design-tutorial) and the [\[Fae Harp\]](https://www.wowhead.com/item=184489/fae-harp) to make your performance visually more immersive!
 * You can add lyrics by combining Musician with the [StoryTeller add-on](https://musician.lenwe.io/storyteller).
 * Load and prepare the next song while the current one is playing to reduce waiting time between songs.
 * The radius for hearing the music is approximately 40 meters.
