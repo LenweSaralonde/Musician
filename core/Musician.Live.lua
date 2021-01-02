@@ -347,7 +347,7 @@ end
 function Musician.Live.NoteOn(key, layer, instrument, isChordNote, source)
 
 	-- Key is out of range
-	if key < Musician.MIN_KEY or key > Musician.MAX_KEY then return end
+	if key < Musician.MIN_KEY or key > Musician.MAX_KEY or instrument == -1 then return end
 
 	local soundFile, instrumentData = Musician.Sampler.GetSoundFile(instrument, key)
 
@@ -398,7 +398,7 @@ end
 function Musician.Live.NoteOff(key, layer, instrument, isChordNote, ignoreSustain)
 
 	-- Key is out of range
-	if key < Musician.MIN_KEY or key > Musician.MAX_KEY then return end
+	if key < Musician.MIN_KEY or key > Musician.MAX_KEY or instrument == -1 then return end
 
 	local noteOnKey = key .. '-' .. layer .. '-' .. instrument
 	if not(notesOn[noteOnKey]) then return end
