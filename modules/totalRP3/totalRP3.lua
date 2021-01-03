@@ -109,11 +109,29 @@ local function onPinUpdate(self, elapsed)
 	local r, g, b, a = unpack(self.musicianColor)
 
 	if isPlayingMusic then
+		-- Add ping texture if missing
+		if self.musicianPingTexture == nil then
+			self.musicianPingTexture = self:CreateTexture(nil, 'OVERLAY')
+			self.musicianPingTexture:SetTexture('Interface\\AddOns\\Musician\\ui\\textures\\map-pin-ping.blp')
+			self.musicianPingTexture:SetPoint('CENTER', -14, 2)
+			self.musicianPingTexture:SetBlendMode('ADD')
+		end
+
+		-- Make icon blink
 		self.musicianBlinkTime = self.musicianBlinkTime + elapsed
 		local blink = abs(1 - 2 * (4 * self.musicianBlinkTime % 1))
 		self.Texture:SetVertexColor(r, g, b, Lerp(.33, 1, blink))
+
+		-- Animate ping texture
+		local ping = 2 * self.musicianBlinkTime % 1
+		self.musicianPingTexture:Show()
+		self.musicianPingTexture:SetScale(Lerp(.1, .66, ping))
+		self.musicianPingTexture:SetVertexColor(1, 1, .8, Lerp(.75, 0, ping))
 	elseif self.musicianIsPlayingMusic ~= isPlayingMusic then
 		self.Texture:SetVertexColor(r, g, b, a)
+		if self.musicianPingTexture then
+			self.musicianPingTexture:Hide()
+		end
 	end
 
 	self.musicianIsPlayingMusic = isPlayingMusic
@@ -196,6 +214,9 @@ function Musician.TRP3.HookPlayerMap()
 					self.musicianPlayer = displayData.musicianPlayer
 					self:SetScript("OnUpdate", onPinUpdate)
 				else
+					if self.musicianPingTexture then
+						self.musicianPingTexture:Hide()
+					end
 					self:SetScript("OnUpdate", nil)
 				end
 			end
