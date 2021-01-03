@@ -62,22 +62,6 @@
 				self.background:SetDrawLayer("BACKGROUND", -8)
 				self.subTextPoint = { self.subText:GetPoint() }
 			</OnLoad>
-			<OnMouseDown inherit="append">
-				local point, relativeTo, relativePoint, xOfs, yOfs = unpack(self.subTextPoint)
-				local x, y = self:GetPushedTextOffset()
-				self.subText:SetPoint(point, relativeTo, relativePoint, xOfs + x, yOfs + y)
-				if not(self.keyPressed) and not(self.down) then
-					Musician.Keyboard.OnKey(self.keyValue, true)
-				end
-				self.down = true
-			</OnMouseDown>
-			<OnMouseUp inherit="append">
-				self.subText:SetPoint(unpack(self.subTextPoint))
-				if not(self.keyPressed) and self.down then
-					Musician.Keyboard.OnKey(self.keyValue, false)
-				end
-				self.down = false
-			</OnMouseUp>
 			<OnSizeChanged>
 				self.glowColor:SetAlpha(0)
 				self.background:SetWidth(w - 7)
@@ -97,20 +81,6 @@
 
 	<Button name="MusicianProgramKeyTemplate" inherits="MusicianLEDTextButtonTemplate" virtual="true">
 		<Size x="48" y="24" />
-		<Scripts>
-			<OnMouseDown inherit="append">
-				if not(self.keyPressed) and not(self.down) then
-					Musician.Keyboard.OnKey(self.keyValue, true)
-				end
-				self.down = true
-			</OnMouseDown>
-			<OnMouseUp inherit="append">
-				if not(self.keyPressed) and self.down then
-					Musician.Keyboard.OnKey(self.keyValue, false)
-				end
-				self.down = false
-			</OnMouseUp>
-		</Scripts>
 	</Button>
 
 	<Button name="MusicianProgramKeyNoLEDTemplate" inherits="MusicianProgramKeyTemplate" virtual="true">
@@ -244,9 +214,12 @@
 	<Frame name="MusicianKeyboard" inherits="MusicianDialogTemplate" enableKeyboard="true">
 		<Scripts>
 			<OnHide inherit="append">
-				Musician.Keyboard.SetButtonState(MusicianKeyboardProgramKeysWriteProgramToggle, true)
+				-- Reset write program button on hide
 				MusicianKeyboard.SetSavingProgram(false)
-				Musician.Keyboard.SetButtonState(MusicianKeyboardProgramKeysWriteProgramToggle, false)
+				MusicianKeyboard.SetDeletingProgram(false)
+				MusicianKeyboardProgramKeysWriteProgram.keyDown = false
+				MusicianKeyboardProgramKeysWriteProgram.mouseDown = false
+				Musician.Keyboard.SetButtonState(MusicianKeyboardProgramKeysWriteProgram, false)
 			</OnHide>
 			<OnLoad inherit="prepend">
 				MusicianKeyboard.showKeyboard = function(visible)
@@ -385,16 +358,14 @@
 						<DisabledFont style="MusicianFontIconsDisable"/>
 					</Button>
 
-					<Button name="$parentWriteProgramToggle" inherits="MusicianProgramKeyNoLEDTemplate">
-						<Size x="48" y="24" />
+					<Button name="$parentWriteProgramToggle" alpha="0">
 						<Anchors>
-							<Anchor point="CENTER" relativeTo="$parentWriteProgram" relativePoint="CENTER" />
+							<Anchor point="TOPRIGHT" relativeTo="$parentWriteProgram" />
+							<Anchor point="BOTTOMLEFT" relativeTo="$parentWriteProgram" />
 						</Anchors>
 						<Scripts>
 							<OnLoad inherit="append">
 								self.button = MusicianKeyboardProgramKeysWriteProgram
-								self:SetText(self.button:GetText())
-								self.button.hiddenButton = self
 								self:SetFrameLevel(self.button:GetFrameLevel() + 1)
 							</OnLoad>
 							<OnEnter inherit="append">
@@ -406,15 +377,8 @@
 								ExecuteFrameScript(self.button, "OnLeave", motion)
 							</OnLeave>
 							<OnMouseDown inherit="append">
-								if self.button:GetButtonState() ~= "PUSHED" then
-									self:SetAlpha(0)
-									self.button:SetButtonState("PUSHED")
-									ExecuteFrameScript(self.button, "OnMouseDown", button)
-								else
-									self:SetAlpha(1)
-									self.button:SetButtonState("NORMAL")
-									ExecuteFrameScript(self.button, "OnMouseUp", button)
-								end
+								MusicianKeyboard.SetDeletingProgram(false)
+								MusicianKeyboard.SetSavingProgram(not(MusicianKeyboard.IsSavingProgram()))
 							</OnMouseDown>
 						</Scripts>
 						<NormalFont style="MusicianFontIconsNormal"/>

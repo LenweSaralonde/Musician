@@ -18,6 +18,7 @@ local savingProgram = false
 local deletingProgram = false
 local loadedProgram = nil
 local modifiedLayers = {}
+local currentMouseButton
 
 local keyButtons = {}
 local keyValueButtons = {}
@@ -163,6 +164,17 @@ local function updateFunctionKeys()
 	updateFunctionKeysLEDs()
 end
 
+--- Apply widget scripts to virtual keyboard buttons
+--
+local function extendButton(button)
+	button.SuperOnMouseDown = button:GetScript('OnMouseDown')
+	button.SuperOnMouseUp = button:GetScript('OnMouseUp')
+	button:SetScript("OnMouseDown", Musician.Keyboard.OnVirtualKeyMouseDown)
+	button:SetScript("OnMouseUp", Musician.Keyboard.OnVirtualKeyMouseUp)
+	button:HookScript("OnEnter", Musician.Keyboard.OnVirtualKeyEnter)
+	button:HookScript("OnLeave", Musician.Keyboard.OnVirtualKeyLeave)
+end
+
 --- Create the keyboard keys.
 --
 local function generateKeys()
@@ -176,9 +188,8 @@ local function generateKeys()
 	for row, rowKeys in pairs(Musician.KEYBOARD) do
 		for col, key in pairs(rowKeys) do
 			local button = CreateFrame("Button", "$parent" .. key .. "Button", MusicianKeyboardKeys, "MusicianKeyboardKeyTemplate")
-
+			extendButton(button)
 			table.insert(keyButtons, button)
-
 			button.key = key
 			button.row = row
 			button.col = col
@@ -191,11 +202,17 @@ local function generateKeys()
 	local keyX = 0
 	for col, key in pairs(FunctionKeys) do
 		local button = CreateFrame("Button", "$parent" .. key .. "Button", MusicianKeyboardProgramKeys, "MusicianProgramKeyTemplate")
+		extendButton(button)
 		table.insert(keyButtons, button)
 		button.key = key
 		button.col = col
 		button.index = #keyButtons
 	end
+
+	-- Init Program write key
+	local writeProgramButton = MusicianKeyboardProgramKeysWriteProgram
+	writeProgramButton.SuperOnMouseDown = writeProgramButton:GetScript('OnMouseDown')
+	writeProgramButton.SuperOnMouseUp = writeProgramButton:GetScript('OnMouseUp')
 end
 
 --- Set keyboard keys (notes, color etc)
@@ -386,6 +403,7 @@ local function setKeys()
 
 	-- Set Write program button
 	keyValueButtons[KEY.WriteProgram] = MusicianKeyboardProgramKeysWriteProgram
+	keyValueButtons['DELETE'] = MusicianKeyboardProgramKeysWriteProgram
 	MusicianKeyboardProgramKeysWriteProgram.keyValue = KEY.WriteProgram
 end
 
@@ -793,9 +811,18 @@ function Musician.Keyboard.OnPhysicalKey(keyValue, down)
 	end
 
 	MusicianKeyboard:SetPropagateKeyboardInput(true)
-	if Musician.Keyboard.KeyButtonStateDiffers(keyValue, down) then
+
+	-- Grab virtual keyboard key button
+	local button = keyValueButtons[keyValue]
+	if not(button) then	return end
+
+	-- Call handler if up/down status changes
+	local wasDown = button.keyDown and not(button.mouseDown)
+	local wasUp = not(button.keyDown) and not(button.mouseDown)
+	button.keyDown = down
+	if not(down) and wasDown or down and wasUp then
 		if Musician.Keyboard.OnKey(keyValue, down) then
-			Musician.Keyboard.SetButtonState(keyValueButtons[keyValue], down)
+			Musician.Keyboard.SetButtonState(button, down)
 			MusicianKeyboard:SetPropagateKeyboardInput(false)
 		end
 	else
@@ -803,30 +830,79 @@ function Musician.Keyboard.OnPhysicalKey(keyValue, down)
 	end
 end
 
---- Return true if the provided keypress' button down state differs from the provided one.
--- @param keyValue (string)
+--- Virtual keyboard button mouse down handler
+-- @param button (Button)
+-- @param mouseButton (string)
+function Musician.Keyboard.OnVirtualKeyMouseDown(button, mouseButton)
+	if currentMouseButton and IsMouseButtonDown() then
+		Musician.Keyboard.OnVirtualKey(currentMouseButton, true)
+	end
+end
+
+--- Virtual keyboard button mouse up handler
+-- @param button (Button)
+-- @param mouseButton (string)
+function Musician.Keyboard.OnVirtualKeyMouseUp(button, mouseButton)
+	if currentMouseButton and not(IsMouseButtonDown()) then
+		Musician.Keyboard.OnVirtualKey(currentMouseButton, false)
+	end
+end
+
+--- Virtual keyboard button mouse enter handler
+-- @param button (Button)
+function Musician.Keyboard.OnVirtualKeyEnter(button)
+	currentMouseButton = button
+	if IsMouseButtonDown() then
+		Musician.Keyboard.OnVirtualKey(button, true)
+	end
+end
+
+--- Virtual keyboard button mouse leave handler
+-- @param button (Button)
+function Musician.Keyboard.OnVirtualKeyLeave(button)
+	if currentMouseButton and IsMouseButtonDown() then
+		Musician.Keyboard.OnVirtualKey(button, false)
+	end
+	currentMouseButton = nil
+end
+
+--- Key up/down handler, from virtual keyboard
+-- @param button (Button)
 -- @param down (boolean)
--- @return (boolean)
-function Musician.Keyboard.KeyButtonStateDiffers(keyValue, down)
-	local button = keyValueButtons[keyValue]
-	local newButtonState = down and "PUSHED" or "NORMAL"
-	return not(button) or button:GetButtonState() ~= newButtonState and not(button.clicked)
+function Musician.Keyboard.OnVirtualKey(button, down)
+	local wasDown = not(button.keyDown) and button.mouseDown
+	local wasUp = not(button.keyDown) and not(button.mouseDown)
+	button.mouseDown = down
+	if not(down) and wasDown or down and wasUp then
+		Musician.Keyboard.OnKey(button.keyValue, down)
+		Musician.Keyboard.SetButtonState(button, down)
+	end
 end
 
 --- Set on-screen keyboard button up/down state, without triggering its action.
 -- @param button (Button)
 -- @param down (boolean)
 function Musician.Keyboard.SetButtonState(button, down)
-	if button then
-		button.keyPressed = true
-		if down and button:GetButtonState() ~= "PUSHED" then
-			button:SetButtonState("PUSHED")
-			ExecuteFrameScript(button, "OnMouseDown", "LeftButton")
-		elseif not(down) and button:GetButtonState() ~= "NORMAL" then
-			button:SetButtonState("NORMAL")
-			ExecuteFrameScript(button, "OnMouseUp", "LeftButton")
+	if not(button) then return end
+	button.down = down
+	if down then
+		if button.SuperOnMouseDown then
+			button:SuperOnMouseDown()
 		end
-		button.keyPressed = false
+		if button.subText and button.subTextPoint then
+			local point, relativeTo, relativePoint, xOfs, yOfs = unpack(button.subTextPoint)
+			local x, y = button:GetPushedTextOffset()
+			button.subText:SetPoint(point, relativeTo, relativePoint, xOfs + x, yOfs + y)
+		end
+		button:SetButtonState("PUSHED", true)
+	else
+		if button.SuperOnMouseUp then
+			button:SuperOnMouseUp()
+		end
+		if button.subText and button.subTextPoint then
+			button.subText:SetPoint(unpack(button.subTextPoint))
+		end
+		button:SetButtonState("NORMAL", true)
 	end
 end
 
@@ -1186,6 +1262,7 @@ end
 function MusicianKeyboard.ProgramActionKey(down, keyValue)
 
 	if keyValue == "DELETE" then
+		MusicianKeyboard.SetSavingProgram(false)
 		MusicianKeyboard.SetDeletingProgram(down)
 		return true
 	end
@@ -1196,6 +1273,7 @@ function MusicianKeyboard.ProgramActionKey(down, keyValue)
 		(key == KEY.ShiftLeft or key == KEY.ShiftRight) and IsMacClient() -- Use Shift instead of Ctrl on MacOS
 
 	if isControlDown or key == KEY.WriteProgram then
+		MusicianKeyboard.SetDeletingProgram(false)
 		MusicianKeyboard.SetSavingProgram(down)
 		return true
 	end
@@ -1237,11 +1315,6 @@ function MusicianKeyboard.SetSavingProgram(value)
 		programLedBlinkTime = 0
 		savingProgram = value
 		Musician.Keyboard.SetButtonState(keyValueButtons[KEY.WriteProgram], value)
-		if value then
-			keyValueButtons[KEY.WriteProgram].hiddenButton:SetAlpha(0)
-		else
-			keyValueButtons[KEY.WriteProgram].hiddenButton:SetAlpha(1)
-		end
 		PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
 		updateFunctionKeys()
 	end
