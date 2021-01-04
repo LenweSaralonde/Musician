@@ -219,8 +219,8 @@
 		<Scripts>
 			<OnHide inherit="append">
 				-- Reset write program button on hide
-				MusicianKeyboard.SetSavingProgram(false)
-				MusicianKeyboard.SetDeletingProgram(false)
+				Musician.Keyboard.SetSavingProgram(false)
+				Musician.Keyboard.SetDeletingProgram(false)
 			</OnHide>
 			<OnLoad inherit="prepend">
 				MusicianKeyboard.showKeyboard = function(visible)
@@ -374,8 +374,8 @@
 								ExecuteFrameScript(self.button, "OnLeave", motion)
 							</OnLeave>
 							<OnMouseDown>
-								MusicianKeyboard.SetDeletingProgram(false)
-								MusicianKeyboard.SetSavingProgram(not(MusicianKeyboard.IsSavingProgram()))
+								Musician.Keyboard.SetDeletingProgram(false)
+								Musician.Keyboard.SetSavingProgram(not(Musician.Keyboard.IsSavingProgram()))
 							</OnMouseDown>
 						</Scripts>
 					</Button>
@@ -412,8 +412,8 @@
 								ExecuteFrameScript(self.button, "OnLeave", motion)
 							</OnLeave>
 							<OnMouseDown>
-								MusicianKeyboard.SetDeletingProgram((not(MusicianKeyboard.IsDeletingProgram())))
-								MusicianKeyboard.SetSavingProgram(false)
+								Musician.Keyboard.SetDeletingProgram((not(Musician.Keyboard.IsDeletingProgram())))
+								Musician.Keyboard.SetSavingProgram(false)
 							</OnMouseDown>
 						</Scripts>
 					</Button>
