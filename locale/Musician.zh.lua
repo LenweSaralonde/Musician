@@ -148,6 +148,7 @@ msg.CONFIGURE_KEYBOARD_HINT_COMPLETE = "键盘设置已完成。\n你现在可�
 msg.CONFIGURE_KEYBOARD_START_OVER = "重新设置"
 msg.CONFIGURE_KEYBOARD_SAVE = "保存配置"
 msg.PRESS_KEY_BINDING = "按下 #{col}列#{row}行的按钮。"
+msg.KEY_CAN_BE_EMPTY = "该密钥是可选的，可以为空。"
 msg.KEY_IS_MERGEABLE = "这可以和你键盘上的{key}键相同：{action}"
 msg.KEY_CAN_BE_MERGED = "此时，请直接按下{key}键。"
 msg.KEY_CANNOT_BE_MERGED = "此时，请忽略并设置下一个键。"
