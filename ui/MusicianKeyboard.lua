@@ -917,7 +917,7 @@ local function refreshKeyboard()
 	local layer, refresh
 	for layer, refresh in pairs(modifiedLayers) do
 		if refresh then
-			Musician.Keyboard.SetButtonsUp(layer)
+			Musician.Keyboard.ResetButtons(layer)
 			Musician.Live.AllNotesOff(layer)
 		end
 	end
@@ -944,16 +944,16 @@ local function refreshKeyboard()
 	modifiedLayers = {}
 end
 
---- Set all buttons up
+--- Reset buttons volume meters
 -- @param[opt] onlyForLayer (number)
-function Musician.Keyboard.SetButtonsUp(onlyForLayer)
+function Musician.Keyboard.ResetButtons(onlyForLayer)
 	local layers = (onlyForLayer ~= nil) and { onlyForLayer } or { LAYER.LOWER, LAYER.UPPER }
 
 	if noteButtons then
 		local button, layer
 		for _, layer in pairs(layers) do
 			for _, button in pairs(noteButtons[layer]) do
-				Musician.Keyboard.SetButtonState(button, false)
+				Musician.Keyboard.SetButtonState(button, button.mouseDown or button.keyDown)
 				button.volumeMeter:Reset()
 				button.glowColor:SetAlpha(0)
 			end
