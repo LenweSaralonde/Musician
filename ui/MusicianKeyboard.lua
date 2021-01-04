@@ -12,8 +12,8 @@ local KEY = Musician.KEYBOARD_KEY
 local KEY_SIZE = 50
 
 local programLedBlinkTime = 0
-local savingProgram = false
-local deletingProgram = false
+local isSavingProgram = false
+local isDeletingProgram = false
 local loadedProgram = nil
 local modifiedLayers = {}
 local currentMouseButton
@@ -1331,9 +1331,9 @@ end
 --- Set program saving mode
 -- @param value (boolean)
 function MusicianKeyboard.SetSavingProgram(value)
-	if savingProgram ~= value then
+	if isSavingProgram ~= value then
 		programLedBlinkTime = 0
-		savingProgram = value
+		isSavingProgram = value
 		local button = keyValueButtons[KEY.WriteProgram]
 		button.keyDown = value
 		Musician.Keyboard.SetButtonState(button, value)
@@ -1345,9 +1345,9 @@ end
 --- Set program deleting mode
 -- @param value (boolean)
 function MusicianKeyboard.SetDeletingProgram(value)
-	if deletingProgram ~= value then
+	if isDeletingProgram ~= value then
 		programLedBlinkTime = 0
-		deletingProgram = value
+		isDeletingProgram = value
 		local button = keyValueButtons[KEY.Delete]
 		button.keyDown = value
 		Musician.Keyboard.SetButtonState(button, value)
@@ -1359,13 +1359,13 @@ end
 --- Get program saving mode
 -- @return (boolean)
 function MusicianKeyboard.IsSavingProgram()
-	return savingProgram
+	return isSavingProgram
 end
 
 --- Get program deleting mode
 -- @return (boolean)
 function MusicianKeyboard.IsDeletingProgram()
-	return deletingProgram
+	return isDeletingProgram
 end
 
 --- Load configuration
