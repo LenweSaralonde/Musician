@@ -914,6 +914,7 @@ local function refreshKeyboard()
 	for layer, refresh in pairs(modifiedLayers) do
 		if refresh then
 			Musician.Keyboard.ResetButtons(layer)
+			Musician.Live.SetSustain(false, layer)
 			Musician.Live.AllNotesOff(layer)
 		end
 	end
@@ -964,8 +965,7 @@ end
 function Musician.Keyboard.OnKey(keyValue, down)
 	-- Set sustain
 	if keyValue == "SPACE" then
-		Musician.Live.SetSustain(down, LAYER.UPPER)
-		Musician.Live.SetSustain(down, LAYER.LOWER)
+		Musician.Keyboard.SetSustain(down)
 		return true
 	end
 
@@ -1676,4 +1676,26 @@ function Musician.Keyboard.OnLiveBandSync(event, player, isSynced)
 
 	-- Update button
 	Musician.Keyboard.UpdateBandSyncButton()
+end
+
+--- Set sustain
+-- @param value (boolean)
+function Musician.Keyboard.SetSustain(value)
+	local config = Musician.Keyboard.config
+
+	-- Determine if lower and upper instruments are "plucked" like piano, guitar etc.
+	local upperInstrumentName = Musician.Sampler.GetInstrumentName(config.instrument[LAYER.UPPER])
+	local lowerInstrumentName = Musician.Sampler.GetInstrumentName(config.instrument[LAYER.LOWER])
+	local upperIsPlucked = config.instrument[LAYER.UPPER] >= 128 or Musician.INSTRUMENTS[upperInstrumentName] and Musician.INSTRUMENTS[upperInstrumentName].isPlucked or false
+	local lowerIsPlucked = config.instrument[LAYER.LOWER] >= 128 or Musician.INSTRUMENTS[lowerInstrumentName] and Musician.INSTRUMENTS[lowerInstrumentName].isPlucked or false
+
+	-- Do not sustain the non-plucked instrument if the other one is plucked
+	if upperIsPlucked ~= lowerIsPlucked then
+		Musician.Live.SetSustain(value and upperIsPlucked, LAYER.UPPER)
+		Musician.Live.SetSustain(value and lowerIsPlucked, LAYER.LOWER)
+	else
+		-- Both instruments are either plucked or not: sustain both
+		Musician.Live.SetSustain(value, LAYER.UPPER)
+		Musician.Live.SetSustain(value, LAYER.LOWER)
+	end
 end
