@@ -18,6 +18,11 @@ local ALLOWED_DUPLICATES = {
 	[KEY.IntlRo] = "RSHIFT",
 }
 
+local ALLOWED_EMPTY = {
+	[KEY.IntlYen] = true,
+	[KEY.Backquote] = true,
+}
+
 local selectedKeyButton = nil
 local keyButtons = {}
 local currentMapping
@@ -125,7 +130,7 @@ function Musician.KeyboardConfig.Reset()
 			button:SetText(keyName)
 			button.keyValue = keyValue
 
-			if Musician.Msg.FIXED_KEY_NAMES[key] == nil and ALLOWED_DUPLICATES[key] == nil then
+			if Musician.Msg.FIXED_KEY_NAMES[key] == nil and ALLOWED_DUPLICATES[key] == nil and not(ALLOWED_EMPTY[key]) then
 				keysTodo = keysTodo + 1
 				if button.keyValue ~= nil then
 					keysDone = keysDone + 1
@@ -150,7 +155,7 @@ function Musician.KeyboardConfig.Clear()
 			if button then
 				button:SetText("")
 				button.keyValue = nil
-				if ALLOWED_DUPLICATES[key] == nil then
+				if ALLOWED_DUPLICATES[key] == nil and not(ALLOWED_EMPTY[key]) then
 					keysTodo = keysTodo + 1
 				end
 			end
@@ -211,10 +216,11 @@ function Musician.KeyboardConfig.Button_OnKeyDown(self, keyValue, arg)
 			if isAllowedBinding then
 
 				-- This key value is already mapped to another physical key: clear text (except if it's a key with fixed binding)
-				if currentMapping[keyValue] ~= nil and (fixedBindingKey == nil or fixedBindingKey ~= currentMapping[keyValue]) then
-					getKeyButton(currentMapping[keyValue]):SetText("")
-					getKeyButton(currentMapping[keyValue]).keyValue = nil
-					if ALLOWED_DUPLICATES[currentMapping[keyValue]] == nil then
+				local currentKeyValue = currentMapping[keyValue]
+				if currentKeyValue ~= nil and (fixedBindingKey == nil or fixedBindingKey ~= currentKeyValue) then
+					getKeyButton(currentKeyValue):SetText("")
+					getKeyButton(currentKeyValue).keyValue = nil
+					if ALLOWED_DUPLICATES[currentKeyValue] == nil and not(ALLOWED_EMPTY[currentKeyValue]) then
 						keysDone = keysDone - 1
 					end
 				end
@@ -227,7 +233,7 @@ function Musician.KeyboardConfig.Button_OnKeyDown(self, keyValue, arg)
 						currentMapping[selectedKeyButton.keyValue] = nil
 					end
 				else
-					if ALLOWED_DUPLICATES[selectedKeyButton.key] == nil then
+					if ALLOWED_DUPLICATES[selectedKeyButton.key] == nil and not(ALLOWED_EMPTY[selectedKeyButton.key]) then
 						keysDone = keysDone + 1
 					end
 				end
@@ -286,7 +292,7 @@ function Musician.KeyboardConfig.ClearSelectedKeyBinding()
 			currentMapping[keyValue] = nil
 		end
 
-		if ALLOWED_DUPLICATES[selectedKeyButton.key] == nil then
+		if ALLOWED_DUPLICATES[selectedKeyButton.key] == nil and not(ALLOWED_EMPTY[selectedKeyButton.key]) then
 			keysDone = keysDone - 1
 		end
 
@@ -366,6 +372,10 @@ function Musician.KeyboardConfig.UpdateHint()
 			msg2 = string.gsub(msg2, '{action}', msg2Action)
 
 			msg = msg .. "\n" .. msg2
+		end
+
+		if ALLOWED_EMPTY[selectedKeyButton.key] then
+			msg = msg .. '\n' .. Musician.Msg.KEY_CAN_BE_EMPTY
 		end
 
 		MusicianKeyboardConfigHint:SetText(msg)

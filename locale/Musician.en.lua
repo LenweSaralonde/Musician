@@ -148,6 +148,7 @@ msg.CONFIGURE_KEYBOARD_HINT_COMPLETE = "Keyboard configuration is complete.\nYou
 msg.CONFIGURE_KEYBOARD_START_OVER = "Start over"
 msg.CONFIGURE_KEYBOARD_SAVE = "Save configuration"
 msg.PRESS_KEY_BINDING = "Press the key #{col} in row #{row}."
+msg.KEY_CAN_BE_EMPTY = "This key is optional and can be empty."
 msg.KEY_IS_MERGEABLE = "This key could be the same as the {key} key on your keyboard: {action}"
 msg.KEY_CAN_BE_MERGED = "in this case, just press the {key} key."
 msg.KEY_CANNOT_BE_MERGED = "in this case, just ignore it and proceed to the next key."

@@ -149,6 +149,7 @@ msg.CONFIGURE_KEYBOARD_HINT_COMPLETE = "La configuration du clavier est terminé
 msg.CONFIGURE_KEYBOARD_START_OVER = "Recommencer"
 msg.CONFIGURE_KEYBOARD_SAVE = "Enregistrer"
 msg.PRESS_KEY_BINDING = "Appuyez sur la touche n°{col} de la rangée {row}."
+msg.KEY_CAN_BE_EMPTY = "Cette touche est optionnelle et peut être vide."
 msg.KEY_IS_MERGEABLE = "Il se peut que cette touche soit la même que {key} sur votre clavier : {action}"
 msg.KEY_CAN_BE_MERGED = "si c'est le cas, appuyez simplement sur la touche {key}."
 msg.KEY_CANNOT_BE_MERGED = "si c'est le cas, passez à la touche suivante."
