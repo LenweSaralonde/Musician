@@ -182,6 +182,7 @@ msg.FIXED_KEY_NAMES = {
 	[KEY.MetaRight] = "Meta",
 	[KEY.ContextMenu] = "Menu",
 	[KEY.ControlRight] = "Ctrl",
+	[KEY.Delete] = "Delete",
 }
 
 msg.KEYBOARD_LAYOUTS = {}
@@ -214,6 +215,7 @@ msg.LOAD_PROGRAM_NUM = "Load program #{num} ({key})"
 msg.SAVE_PROGRAM_NUM = "Save in program #{num} ({key})"
 msg.DELETE_PROGRAM_NUM = "Erase program #{num} ({key})"
 msg.WRITE_PROGRAM = "Save program ({key})"
+msg.DELETE_PROGRAM = "Delete program ({key})"
 msg.PROGRAM_SAVED = "Program #{num} saved."
 msg.PROGRAM_DELETED = "Program #{num} erased."
 msg.DEMO_MODE_ENABLED = "Keyboard demo mode enabled:\n{mapping}"

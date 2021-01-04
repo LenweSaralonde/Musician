@@ -331,6 +331,18 @@
       "css": "link",
       "code": 56,
       "src": "fontawesome"
+    },
+    {
+      "uid": "5211af474d3a9848f67f945e2ccaf143",
+      "css": "cross",
+      "code": 70,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "bbfb51903f40597f0b70fd75bc7b5cac",
+      "css": "trash",
+      "code": 74,
+      "src": "fontawesome"
     }
   ]
 }

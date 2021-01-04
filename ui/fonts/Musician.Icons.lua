@@ -51,4 +51,6 @@ Musician.Icons = {
 	Blank = " ",
 	Export = "#",
 	Link = "8",
+	Cross = "F",
+	Trash = "J",
 }

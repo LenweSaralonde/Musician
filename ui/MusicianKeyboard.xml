@@ -83,7 +83,7 @@
 		<Size x="48" y="24" />
 	</Button>
 
-	<Button name="MusicianProgramKeyNoLEDTemplate" inherits="MusicianProgramKeyTemplate" virtual="true">
+	<Button name="MusicianProgramKeyActionTemplate" inherits="MusicianProgramKeyTemplate" virtual="true">
 		<ButtonText name="$parentText" parentKey="Text">
 			<Anchors>
 				<Anchor point="CENTER" x="0" />
@@ -91,10 +91,14 @@
 		</ButtonText>
 		<Scripts>
 			<OnLoad inherit="append">
+				self.Text:SetPoint('CENTER', 1.5, 0)
 				self.led:Hide()
 				self.ledOff:Hide()
 			</OnLoad>
 		</Scripts>
+		<NormalFont style="MusicianFontIconsNormal"/>
+		<HighlightFont style="MusicianFontIconsHighlight"/>
+		<DisabledFont style="MusicianFontIconsDisable"/>
 	</Button>
 
 	<!-- Square button template -->
@@ -217,9 +221,6 @@
 				-- Reset write program button on hide
 				MusicianKeyboard.SetSavingProgram(false)
 				MusicianKeyboard.SetDeletingProgram(false)
-				MusicianKeyboardProgramKeysWriteProgram.keyDown = false
-				MusicianKeyboardProgramKeysWriteProgram.mouseDown = false
-				Musician.Keyboard.SetButtonState(MusicianKeyboardProgramKeysWriteProgram, false)
 			</OnHide>
 			<OnLoad inherit="prepend">
 				MusicianKeyboard.showKeyboard = function(visible)
@@ -340,7 +341,7 @@
 				</Anchors>
 
 				<Frames>
-					<Button name="$parentWriteProgram" inherits="MusicianProgramKeyNoLEDTemplate">
+					<Button name="$parentWriteProgram" inherits="MusicianProgramKeyActionTemplate">
 						<Size x="48" y="24" />
 						<Anchors>
 							<Anchor point="TOPRIGHT" relativeTo="$parent" relativePoint="TOPRIGHT" />
@@ -353,37 +354,68 @@
 								self.tooltipText = string.gsub(Musician.Msg.WRITE_PROGRAM, "{key}", Musician.Msg.FIXED_KEY_NAMES[controlKey])
 							</OnLoad>
 						</Scripts>
-						<NormalFont style="MusicianFontIconsNormal"/>
-						<HighlightFont style="MusicianFontIconsHighlight"/>
-						<DisabledFont style="MusicianFontIconsDisable"/>
 					</Button>
-
 					<Button name="$parentWriteProgramToggle" alpha="0">
 						<Anchors>
 							<Anchor point="TOPRIGHT" relativeTo="$parentWriteProgram" />
 							<Anchor point="BOTTOMLEFT" relativeTo="$parentWriteProgram" />
 						</Anchors>
 						<Scripts>
-							<OnLoad inherit="append">
+							<OnLoad>
 								self.button = MusicianKeyboardProgramKeysWriteProgram
 								self:SetFrameLevel(self.button:GetFrameLevel() + 1)
 							</OnLoad>
-							<OnEnter inherit="append">
+							<OnEnter>
 								self.button:LockHighlight()
 								ExecuteFrameScript(self.button, "OnEnter", motion)
 							</OnEnter>
-							<OnLeave inherit="append">
+							<OnLeave>
 								self.button:UnlockHighlight()
 								ExecuteFrameScript(self.button, "OnLeave", motion)
 							</OnLeave>
-							<OnMouseDown inherit="append">
+							<OnMouseDown>
 								MusicianKeyboard.SetDeletingProgram(false)
 								MusicianKeyboard.SetSavingProgram(not(MusicianKeyboard.IsSavingProgram()))
 							</OnMouseDown>
 						</Scripts>
-						<NormalFont style="MusicianFontIconsNormal"/>
-						<HighlightFont style="MusicianFontIconsHighlight"/>
-						<DisabledFont style="MusicianFontIconsDisable"/>
+					</Button>
+
+					<Button name="$parentDeleteProgram" inherits="MusicianProgramKeyActionTemplate">
+						<Size x="26" y="24" />
+						<Anchors>
+							<Anchor point="RIGHT" relativeTo="$parentWriteProgram" relativePoint="LEFT" />
+						</Anchors>
+						<Scripts>
+							<OnLoad inherit="append">
+								self:SetText(Musician.Icons.Trash)
+								local KEY = Musician.KEYBOARD_KEY
+								self.tooltipText = string.gsub(Musician.Msg.DELETE_PROGRAM, "{key}", Musician.Msg.FIXED_KEY_NAMES[KEY.Delete])
+							</OnLoad>
+						</Scripts>
+					</Button>
+					<Button name="$parentDeleteProgramToggle" alpha="0">
+						<Anchors>
+							<Anchor point="TOPRIGHT" relativeTo="$parentDeleteProgram" />
+							<Anchor point="BOTTOMLEFT" relativeTo="$parentDeleteProgram" />
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								self.button = MusicianKeyboardProgramKeysDeleteProgram
+								self:SetFrameLevel(self.button:GetFrameLevel() + 1)
+							</OnLoad>
+							<OnEnter>
+								self.button:LockHighlight()
+								ExecuteFrameScript(self.button, "OnEnter", motion)
+							</OnEnter>
+							<OnLeave>
+								self.button:UnlockHighlight()
+								ExecuteFrameScript(self.button, "OnLeave", motion)
+							</OnLeave>
+							<OnMouseDown>
+								MusicianKeyboard.SetDeletingProgram((not(MusicianKeyboard.IsDeletingProgram())))
+								MusicianKeyboard.SetSavingProgram(false)
+							</OnMouseDown>
+						</Scripts>
 					</Button>
 				</Frames>
 
