@@ -10,9 +10,7 @@ local LAYER = Musician.KEYBOARD_LAYER
 local KEY = Musician.KEYBOARD_KEY
 
 local KEY_SIZE = 50
-local FUNCTION_KEY_SIZE = 58.5
 
-local writeProgramDown = false
 local programLedBlinkTime = 0
 local savingProgram = false
 local deletingProgram = false
@@ -213,6 +211,11 @@ local function generateKeys()
 	local writeProgramButton = MusicianKeyboardProgramKeysWriteProgram
 	writeProgramButton.SuperOnMouseDown = writeProgramButton:GetScript('OnMouseDown')
 	writeProgramButton.SuperOnMouseUp = writeProgramButton:GetScript('OnMouseUp')
+
+	-- Init Program delete  key
+	local deleteProgramButton = MusicianKeyboardProgramKeysDeleteProgram
+	deleteProgramButton.SuperOnMouseDown = deleteProgramButton:GetScript('OnMouseDown')
+	deleteProgramButton.SuperOnMouseUp = deleteProgramButton:GetScript('OnMouseUp')
 end
 
 --- Set keyboard keys (notes, color etc)
@@ -378,6 +381,7 @@ local function setKeys()
 	end
 
 	-- Set function keys
+	local functionKeyWidth = (MusicianKeyboardProgramKeys:GetWidth() - MusicianKeyboardProgramKeysWriteProgram:GetWidth() - MusicianKeyboardProgramKeysDeleteProgram:GetWidth()) / 12
 	local keyX = 0
 	for col, key in pairs(FunctionKeys) do
 		local button = getFunctionKeyButton(key)
@@ -391,8 +395,7 @@ local function setKeys()
 
 		button:Enable()
 		button:SetAlpha(1)
-
-		button:SetWidth(FUNCTION_KEY_SIZE)
+		button:SetWidth(functionKeyWidth)
 		button:SetHeight(MusicianKeyboardProgramKeysWriteProgram:GetHeight())
 		button:SetPoint("TOPLEFT", MusicianKeyboardProgramKeys, "TOPLEFT", keyX, 0)
 		button:SetText(string.gsub(Musician.Msg.PROGRAM_BUTTON, "{num}", ProgramKeys[key]))
@@ -403,8 +406,11 @@ local function setKeys()
 
 	-- Set Write program button
 	keyValueButtons[KEY.WriteProgram] = MusicianKeyboardProgramKeysWriteProgram
-	keyValueButtons['DELETE'] = MusicianKeyboardProgramKeysWriteProgram
 	MusicianKeyboardProgramKeysWriteProgram.keyValue = KEY.WriteProgram
+
+	-- Set Delete program button
+	keyValueButtons[KEY.Delete] = MusicianKeyboardProgramKeysDeleteProgram
+	MusicianKeyboardProgramKeysDeleteProgram.keyValue = KEY.Delete
 end
 
 --- Initialize layout list
@@ -803,9 +809,7 @@ end
 -- @param down (boolean)
 function Musician.Keyboard.OnPhysicalKey(keyValue, down)
 
-	-- Override standard Toggle UI to keep the keyboard visible on screen
-	if down and GetBindingFromClick(keyValue) == "TOGGLEUI" and not(InCombatLockdown()) then
-		Musician.Keyboard.ToggleUI()
+	if MusicianKeyboard.SpecialActionKey(down, keyValue) then
 		MusicianKeyboard:SetPropagateKeyboardInput(false)
 		return
 	end
@@ -962,22 +966,14 @@ end
 -- @param down (boolean)
 -- @return (boolean) True if the keypress was consumed
 function Musician.Keyboard.OnKey(keyValue, down)
-	if down and keyValue == "ESCAPE" then
-		if MusicianKeyboard.IsSavingProgram() then
-			MusicianKeyboard.SetSavingProgram(false)
-		else
-			MusicianKeyboard:Hide()
-		end
-		return true
-	end
-
+	-- Set sustain
 	if keyValue == "SPACE" then
 		Musician.Live.SetSustain(down, LAYER.UPPER)
 		Musician.Live.SetSustain(down, LAYER.LOWER)
 		return true
 	end
 
-	return MusicianKeyboard.NoteKey(down, keyValue) or MusicianKeyboard.FunctionKey(down, keyValue) or MusicianKeyboard.ProgramActionKey(down, keyValue)
+	return MusicianKeyboard.NoteKey(down, keyValue) or MusicianKeyboard.FunctionKey(down, keyValue)
 end
 
 --- Change keyboard layout
@@ -1255,18 +1251,42 @@ function MusicianKeyboard.NoteKey(down, keyValue)
 	return true
 end
 
---- Program action key pressed
+--- Special action key pressed. Physical keyboard only.
 -- @param down (boolean)
 -- @param keyValue (string)
 -- @return (boolean) True if the keypress was consumed
-function MusicianKeyboard.ProgramActionKey(down, keyValue)
+function MusicianKeyboard.SpecialActionKey(down, keyValue)
 
+	-- Override standard Toggle UI to keep the keyboard visible on screen
+	if down and GetBindingFromClick(keyValue) == "TOGGLEUI" and not(InCombatLockdown()) then
+		Musician.Keyboard.ToggleUI()
+		return true
+	end
+
+	-- Escape key
+	if down and keyValue == "ESCAPE" then
+		if MusicianKeyboard.IsSavingProgram() then
+			-- Leave saving program mode
+			MusicianKeyboard.SetSavingProgram(false)
+		elseif MusicianKeyboard.IsDeletingProgram() then
+			-- Leave deleting program mode
+			MusicianKeyboard.SetDeletingProgram(false)
+		else
+			-- Hide main window
+			MusicianKeyboard:Hide()
+		end
+
+		return true
+	end
+
+	-- Set deleting program
 	if keyValue == "DELETE" then
 		MusicianKeyboard.SetSavingProgram(false)
 		MusicianKeyboard.SetDeletingProgram(down)
 		return true
 	end
 
+	-- Set writing program
 	local key = Musician.KeyboardUtils.GetKey(keyValue)
 	local isControlDown =
 		(key == KEY.ControlLeft or key == KEY.ControlRight) and not(IsMacClient()) or
@@ -1314,7 +1334,9 @@ function MusicianKeyboard.SetSavingProgram(value)
 	if savingProgram ~= value then
 		programLedBlinkTime = 0
 		savingProgram = value
-		Musician.Keyboard.SetButtonState(keyValueButtons[KEY.WriteProgram], value)
+		local button = keyValueButtons[KEY.WriteProgram]
+		button.keyDown = value
+		Musician.Keyboard.SetButtonState(button, value)
 		PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
 		updateFunctionKeys()
 	end
@@ -1326,6 +1348,9 @@ function MusicianKeyboard.SetDeletingProgram(value)
 	if deletingProgram ~= value then
 		programLedBlinkTime = 0
 		deletingProgram = value
+		local button = keyValueButtons[KEY.Delete]
+		button.keyDown = value
+		Musician.Keyboard.SetButtonState(button, value)
 		PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
 		updateFunctionKeys()
 	end
