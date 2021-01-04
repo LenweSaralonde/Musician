@@ -834,8 +834,7 @@ end
 
 --- Virtual keyboard button mouse down handler
 -- @param button (Button)
--- @param mouseButton (string)
-function Musician.Keyboard.OnVirtualKeyMouseDown(button, mouseButton)
+function Musician.Keyboard.OnVirtualKeyMouseDown(button)
 	if currentMouseButton and IsMouseButtonDown() then
 		Musician.Keyboard.OnVirtualKey(currentMouseButton, true)
 	end
@@ -843,8 +842,7 @@ end
 
 --- Virtual keyboard button mouse up handler
 -- @param button (Button)
--- @param mouseButton (string)
-function Musician.Keyboard.OnVirtualKeyMouseUp(button, mouseButton)
+function Musician.Keyboard.OnVirtualKeyMouseUp(button)
 	if currentMouseButton and not(IsMouseButtonDown()) then
 		Musician.Keyboard.OnVirtualKey(currentMouseButton, false)
 	end
