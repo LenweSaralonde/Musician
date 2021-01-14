@@ -189,8 +189,8 @@ Musician.INSTRUMENTS = {
 		color = Musician.COLORS.Brown,
 		source = "ERA II Medieval Legends"
 	},
-	["distorsion-guitar"] = {
-		path = "Interface\\AddOns\\Musician\\instruments\\distorsion-guitar",
+	["distortion-guitar"] = {
+		path = "Interface\\AddOns\\Musician\\instruments\\distortion-guitar",
 		decay = 75,
 		isPercussion = false,
 		isPlucked = false,
@@ -577,7 +577,7 @@ Musician.INSTRUMENTS_AVAILABLE = {
 	"clarinet",
 	"bassoon",
 
-	"distorsion-guitar",
+	"distortion-guitar",
 	"clean-guitar",
 	"bass-guitar",
 

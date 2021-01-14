@@ -42,9 +42,9 @@ Musician.MIDI_INSTRUMENT_MAPPING = {
 	[Instrument.ElectricGuitarJazz] = "clean-guitar",
 	[Instrument.ElectricGuitarClean] = "clean-guitar",
 	[Instrument.ElectricGuitarMuted] = "clean-guitar",
-	[Instrument.OverdrivenGuitar] = "distorsion-guitar",
-	[Instrument.DistortionGuitar] = "distorsion-guitar",
-	[Instrument.Guitarharmonics] = "distorsion-guitar",
+	[Instrument.OverdrivenGuitar] = "distortion-guitar",
+	[Instrument.DistortionGuitar] = "distortion-guitar",
+	[Instrument.Guitarharmonics] = "distortion-guitar",
 
 	-- Bass
 	[Instrument.AcousticBass] = "lute",
