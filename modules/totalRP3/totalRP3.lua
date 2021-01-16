@@ -8,6 +8,8 @@ Musician.AddModule(MODULE_NAME)
 
 local playersPlayingMusic = {}
 local IS_PLAYING_TIMEOUT = 3
+local PIN_TEXTURE = 'Interface\\AddOns\\Musician\\ui\\textures\\map-pin'
+local PIN_HIGHLIGHT_TEXTURE = 'Interface\\AddOns\\Musician\\ui\\textures\\map-pin-highlight'
 
 function Musician.TRP3:OnEnable()
 	if TRP3_API then
@@ -102,41 +104,6 @@ function Musician.TRP3.OnSongChunk(event, sender, mode, songId, chunkDuration, p
 	end
 end
 
---- onPinUpdate
---
-local function onPinUpdate(self, elapsed)
-	local isPlayingMusic = Musician.TRP3.IsPlayingMusic(self.musicianPlayer)
-	local r, g, b, a = unpack(self.musicianColor)
-
-	if isPlayingMusic then
-		-- Add ping texture if missing
-		if self.musicianPingTexture == nil then
-			self.musicianPingTexture = self:CreateTexture(nil, 'OVERLAY')
-			self.musicianPingTexture:SetTexture('Interface\\AddOns\\Musician\\ui\\textures\\map-pin-ping.blp')
-			self.musicianPingTexture:SetPoint('CENTER', -14, 2)
-			self.musicianPingTexture:SetBlendMode('ADD')
-		end
-
-		-- Make icon blink
-		self.musicianBlinkTime = self.musicianBlinkTime + elapsed
-		local blink = abs(1 - 2 * (4 * self.musicianBlinkTime % 1))
-		self.Texture:SetVertexColor(r, g, b, Lerp(.33, 1, blink))
-
-		-- Animate ping texture
-		local ping = 2 * self.musicianBlinkTime % 1
-		self.musicianPingTexture:Show()
-		self.musicianPingTexture:SetScale(Lerp(.1, .66, ping))
-		self.musicianPingTexture:SetVertexColor(1, 1, .8, Lerp(.75, 0, ping))
-	elseif self.musicianIsPlayingMusic ~= isPlayingMusic then
-		self.Texture:SetVertexColor(r, g, b, a)
-		if self.musicianPingTexture then
-			self.musicianPingTexture:Hide()
-		end
-	end
-
-	self.musicianIsPlayingMusic = isPlayingMusic
-end
-
 --- Hook TRP player map
 --
 function Musician.TRP3.HookPlayerMap()
@@ -200,24 +167,16 @@ function Musician.TRP3.HookPlayerMap()
 					end
 
 					newDisplayData.playerName = newDisplayData.playerName .. " " .. icon
-					self.Texture:SetTexture("Interface\\AddOns\\Musician\\ui\\textures\\map-pin.blp")
-					self.HighlightTexture:SetTexture("Interface\\AddOns\\Musician\\ui\\textures\\map-pin-highlight.blp")
-				end
+					self.Texture:SetTexture(PIN_TEXTURE)
+					self.HighlightTexture:SetTexture(PIN_HIGHLIGHT_TEXTURE)
 
-				-- Decorate
-				TRP3_PlayerMapPinMixin_Decorate(self, newDisplayData, ...)
+					TRP3_PlayerMapPinMixin_Decorate(self, newDisplayData, ...)
 
-				-- Attach OnUpdate script if registered
-				if Musician_Settings.trp3MapScan and displayData.musicianIsRegistered then
-					self.musicianBlinkTime = 0
-					self.musicianColor = { self.Texture:GetVertexColor() }
-					self.musicianPlayer = displayData.musicianPlayer
-					self:SetScript("OnUpdate", onPinUpdate)
+					self.Texture:SetSize(20, 20)
+					self.HighlightTexture:SetSize(20, 20)
+					self:SetSize(20, 20)
 				else
-					if self.musicianPingTexture then
-						self.musicianPingTexture:Hide()
-					end
-					self:SetScript("OnUpdate", nil)
+					TRP3_PlayerMapPinMixin_Decorate(self, newDisplayData, ...)
 				end
 			end
 		end
