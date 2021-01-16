@@ -19,7 +19,7 @@
 				</Texture>
 			</Layer>
 			<Layer level="HIGHLIGHT">
-				<Texture parentKey="HighlightTexture" file="Interface/AddOns/Musician/ui/textures/map-pin-highlight">
+				<Texture parentKey="HighlightTexture" file="Interface/AddOns/Musician/ui/textures/map-pin-highlight" alphaMode="ADD" alpha="0.4">
 					<Size x="20" y="20"/>
 					<Anchors>
 						<Anchor point="CENTER" x="0" y="0"/>
@@ -41,7 +41,7 @@
 				</Texture>
 			</Layer>
 			<Layer level="HIGHLIGHT">
-				<Texture parentKey="HighlightTexture" file="Interface/AddOns/Musician/ui/textures/map-pin-highlight">
+				<Texture parentKey="HighlightTexture" file="Interface/AddOns/Musician/ui/textures/map-pin-highlight" alphaMode="ADD" alpha="0.4">
 					<Size x="20" y="20"/>
 					<Anchors>
 						<Anchor point="CENTER" x="0" y="0"/>
