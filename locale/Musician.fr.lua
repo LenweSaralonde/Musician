@@ -1,11 +1,8 @@
-Musician.Locale.fr = Musician.Utils.DeepCopy(Musician.Locale.en)
+local msg = Musician.InitLocale('fr', "Français", 'frFR')
 
-local msg = Musician.Locale.fr
 local Instrument = Musician.MIDI_INSTRUMENTS
 local Percussion = Musician.MIDI_PERCUSSIONS
 local KEY = Musician.KEYBOARD_KEY
-
-msg.LOCALE_NAME = "Français"
 
 msg.PLAY = "Jouer"
 msg.STOP = "Stop"
@@ -303,7 +300,6 @@ msg.LINK_IMPORT_WINDOW_CANCEL_IMPORT_BUTTON = "Annuler l'importation"
 msg.LINK_IMPORT_WINDOW_REQUESTING = "Récupération du morceau auprès de {player}…"
 msg.LINK_IMPORT_WINDOW_PROGRESS = "Importation… {progress}%"
 
-msg.LINKS_ERROR = {}
 msg.LINKS_ERROR.notFound = "Le morceau « {title} » n'est pas disponible auprès de {player}."
 msg.LINKS_ERROR.alreadySending = "Un morceau est déjà en train de vous être envoyé par {player}. Réessayez dans quelques secondes."
 msg.LINKS_ERROR.alreadyRequested = "Un morceau est déjà demandé auprès de {player}."
@@ -483,6 +479,7 @@ msg.MIDI_INSTRUMENT_NAMES[Instrument.TelephoneRing] = "Sonnerie de téléphone"
 msg.MIDI_INSTRUMENT_NAMES[Instrument.Helicopter] = "Hélicoptère"
 msg.MIDI_INSTRUMENT_NAMES[Instrument.Applause] = "Aplaudissements"
 msg.MIDI_INSTRUMENT_NAMES[Instrument.Gunshot] = "Coup de feu"
+
 msg.MIDI_INSTRUMENT_NAMES[Instrument.StandardKit] = "Kit de batterie standard"
 msg.MIDI_INSTRUMENT_NAMES[Instrument.RoomKit] = "Kit de batterie studio"
 msg.MIDI_INSTRUMENT_NAMES[Instrument.PowerKit] = "Kit de batterie rock"
@@ -493,7 +490,9 @@ msg.MIDI_INSTRUMENT_NAMES[Instrument.BrushKit] = "Kit de batterie avec balais"
 msg.MIDI_INSTRUMENT_NAMES[Instrument.OrchestraKit] = "Percussions orchestrales"
 msg.MIDI_INSTRUMENT_NAMES[Instrument.SoundFXKit] = "Effets sonores"
 msg.MIDI_INSTRUMENT_NAMES[Instrument.MT32Kit] = "Kit de batterie MT-32"
+
 msg.MIDI_INSTRUMENT_NAMES[Instrument.None] = "Aucun"
+
 msg.UNKNOWN_DRUMKIT = "Kit de batterie inconnu ({midi})"
 
 msg.MIDI_PERCUSSION_NAMES[Percussion.Laser] = "Laser"
@@ -560,7 +559,3 @@ msg.MIDI_PERCUSSION_NAMES[Percussion.Surdu] = "Surdo résonant"
 msg.MIDI_PERCUSSION_NAMES[Percussion.SnareDrumRod] = "Tige de caisse claire"
 msg.MIDI_PERCUSSION_NAMES[Percussion.OceanDrum] = "Tambour de l'océan"
 msg.MIDI_PERCUSSION_NAMES[Percussion.SnareDrumBrush] = "Balais"
-
-if ( GetLocale() == "frFR" ) then
-	Musician.Msg = msg
-end

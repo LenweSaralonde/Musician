@@ -1,11 +1,8 @@
-Musician.Locale.zh = Musician.Utils.DeepCopy(Musician.Locale.en)
+local msg = Musician.InitLocale('zh', "中文", 'zhCN', 'zhTW')
 
-local msg = Musician.Locale.zh
 local Instrument = Musician.MIDI_INSTRUMENTS
 local Percussion = Musician.MIDI_PERCUSSIONS
 local KEY = Musician.KEYBOARD_KEY
-
-msg.LOCALE_NAME = "中文"
 
 msg.PLAY = "播放"
 msg.STOP = "停止"
@@ -303,7 +300,6 @@ msg.LINK_IMPORT_WINDOW_CANCEL_IMPORT_BUTTON = "取消导入"
 msg.LINK_IMPORT_WINDOW_REQUESTING = "正从玩家{player}请求数据……"
 msg.LINK_IMPORT_WINDOW_PROGRESS = "导入中……{progress}%"
 
-msg.LINKS_ERROR = {}
 msg.LINKS_ERROR.notFound = "音乐“{title}”无法从玩家{player}获取。"
 msg.LINKS_ERROR.alreadySending = "玩家{player}已经向你发送了一首音乐。请几秒后重试。"
 msg.LINKS_ERROR.alreadyRequested = "玩家{player}已经请求发送一首音乐。"
@@ -483,6 +479,7 @@ msg.MIDI_INSTRUMENT_NAMES[Instrument.TelephoneRing] = "电话铃声"
 msg.MIDI_INSTRUMENT_NAMES[Instrument.Helicopter] = "直升机声"
 msg.MIDI_INSTRUMENT_NAMES[Instrument.Applause] = "欢呼鼓掌声"
 msg.MIDI_INSTRUMENT_NAMES[Instrument.Gunshot] = "枪声"
+
 msg.MIDI_INSTRUMENT_NAMES[Instrument.StandardKit] = "标准鼓组"
 msg.MIDI_INSTRUMENT_NAMES[Instrument.RoomKit] = "录音室鼓组"
 msg.MIDI_INSTRUMENT_NAMES[Instrument.PowerKit] = "强音鼓组"
@@ -493,7 +490,9 @@ msg.MIDI_INSTRUMENT_NAMES[Instrument.BrushKit] = "鼓刷鼓组"
 msg.MIDI_INSTRUMENT_NAMES[Instrument.OrchestraKit] = "管弦乐鼓组"
 msg.MIDI_INSTRUMENT_NAMES[Instrument.SoundFXKit] = "声音效果"
 msg.MIDI_INSTRUMENT_NAMES[Instrument.MT32Kit] = "MT-32鼓组"
+
 msg.MIDI_INSTRUMENT_NAMES[Instrument.None] = "(无)"
+
 msg.UNKNOWN_DRUMKIT = "未知鼓组 ({midi})"
 
 msg.MIDI_PERCUSSION_NAMES[Percussion.Laser] = "激光"
@@ -560,7 +559,3 @@ msg.MIDI_PERCUSSION_NAMES[Percussion.Surdu] = "巴西鼓"
 msg.MIDI_PERCUSSION_NAMES[Percussion.SnareDrumRod] = "军鼓击杆"
 msg.MIDI_PERCUSSION_NAMES[Percussion.OceanDrum] = "拨浪鼓"
 msg.MIDI_PERCUSSION_NAMES[Percussion.SnareDrumBrush] = "军鼓擦杆"
-
-if (GetLocale() == "zhCN" or GetLocale() == "zhTW") then
-    Musician.Msg = msg
-end

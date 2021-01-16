@@ -138,6 +138,40 @@ function Musician.AddModule(moduleName)
 	table.insert(Musician.modules, moduleName)
 end
 
+--- Initialize a locale and returns the initialized message table
+-- @param languageCode (string) Short language code (ie 'en')
+-- @param languageName (string) Locale name (ie "English")
+-- @param localeCode (string) Long locale code (ie 'enUS')
+-- @param[opt] ... (string) Additional locale codes
+-- @return msg (table) Initialized message table
+function Musician.InitLocale(languageCode, languageName, localeCode, ...)
+	local localeCodes = { localeCode, ... }
+
+	-- Set English (en) as base locale
+	local baseLocale = languageCode == 'en' and Musician.Locale.base or Musician.Locale.en
+
+	-- Init table
+	local msg = Musician.Utils.DeepCopy(baseLocale)
+	Musician.Locale[languageCode] = msg
+	msg.LOCALE_NAME = languageName
+	msg.LOCALE_CODES = localeCodes
+
+	-- Set English (en) as the current language by default
+	if languageCode == 'en' then
+		Musician.Msg = msg
+	else
+		-- Set localized messages
+		for _, locale in pairs(localeCodes) do
+			if GetLocale() == locale then
+				Musician.Msg = msg
+				break;
+			end
+		end
+	end
+
+	return msg
+end
+
 --- Get command definitions
 -- @return commands (table)
 function Musician.GetCommands()
