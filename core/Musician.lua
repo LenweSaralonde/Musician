@@ -164,7 +164,7 @@ function Musician.InitLocale(languageCode, languageName, localeCode, ...)
 		for _, locale in pairs(localeCodes) do
 			if GetLocale() == locale then
 				Musician.Msg = msg
-				break;
+				break
 			end
 		end
 	end
