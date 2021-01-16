@@ -1,5 +1,5 @@
-Musician.Locale.base = {}
-local msg = Musician.Locale.base
+Musician.LocaleBase = {}
+local msg = Musician.LocaleBase
 
 msg.FIXED_KEY_NAMES = {}
 msg.KEYBOARD_LAYOUTS = {}
