@@ -311,6 +311,9 @@ msg.LINKS_ERROR.alreadyRequested = "玩家{player}已经请求发送一首音乐
 msg.LINKS_ERROR.timeout = "玩家{player}没有响应。"
 msg.LINKS_ERROR.importingFailed = "歌曲{title}无法从玩家{player}处导入。"
 
+msg.MAP_TRACKING_OPTIONS_TITLE = "Musician"
+msg.MAP_TRACKING_OPTION_ACTIVE_MUSICIANS = "活跃音乐家"
+
 msg.TRPE_ITEM_NAME = "{title}"
 msg.TRPE_ITEM_TOOLTIP_REQUIRES_MUSICIAN = "需要Musician"
 msg.TRPE_ITEM_TOOLTIP_SHEET_MUSIC = "乐谱"

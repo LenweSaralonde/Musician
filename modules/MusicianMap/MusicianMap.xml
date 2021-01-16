@@ -1,0 +1,53 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="MusicianMap.lua"/>
+
+	<Frame name="MusicianWorldMapPinTemplate" enableMouseMotion="true" mixin="MusicianWorldMapPoiMixin" virtual="true">
+		<Size x="20" y="20"/>
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture parentKey="PingTexture" file="Interface/AddOns/Musician/ui/textures/map-pin-ping" alphaMode="ADD">
+					<Size x="20" y="20"/>
+					<Anchors>
+						<Anchor point="CENTER" x="-1.75" y="0"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="Texture" file="Interface/AddOns/Musician/ui/textures/map-pin">
+					<Size x="20" y="20"/>
+					<Anchors>
+						<Anchor point="CENTER" x="0" y="0"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="HIGHLIGHT">
+				<Texture parentKey="HighlightTexture" file="Interface/AddOns/Musician/ui/textures/map-pin-highlight">
+					<Size x="20" y="20"/>
+					<Anchors>
+						<Anchor point="CENTER" x="0" y="0"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+	</Frame>
+
+	<Frame name="MusicianMiniMapPinTemplate" enableMouseMotion="true" mixin="MusicianMiniMapPoiMixin" virtual="true">
+		<Size x="20" y="20"/>
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture parentKey="Texture" file="Interface/AddOns/Musician/ui/textures/map-pin">
+					<Size x="20" y="20"/>
+					<Anchors>
+						<Anchor point="CENTER" x="0" y="0"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="HIGHLIGHT">
+				<Texture parentKey="HighlightTexture" file="Interface/AddOns/Musician/ui/textures/map-pin-highlight">
+					<Size x="20" y="20"/>
+					<Anchors>
+						<Anchor point="CENTER" x="0" y="0"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+	</Frame>
+</Ui>
