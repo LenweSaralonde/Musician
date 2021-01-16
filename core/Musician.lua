@@ -148,7 +148,7 @@ function Musician.InitLocale(languageCode, languageName, localeCode, ...)
 	local localeCodes = { localeCode, ... }
 
 	-- Set English (en) as base locale
-	local baseLocale = languageCode == 'en' and Musician.Locale.base or Musician.Locale.en
+	local baseLocale = languageCode == 'en' and Musician.LocaleBase or Musician.Locale.en
 
 	-- Init table
 	local msg = Musician.Utils.DeepCopy(baseLocale)
