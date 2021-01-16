@@ -310,6 +310,9 @@ msg.LINKS_ERROR.alreadyRequested = "Un morceau est déjà demandé auprès de {p
 msg.LINKS_ERROR.timeout = "{player} n'a pas répondu."
 msg.LINKS_ERROR.importingFailed = "Le morceau {title} n'a pas pu être importé auprès de {player}."
 
+msg.MAP_TRACKING_OPTIONS_TITLE = "Musician"
+msg.MAP_TRACKING_OPTION_ACTIVE_MUSICIANS = "Musiciens actifs"
+
 msg.TRPE_ITEM_NAME = "{title}"
 msg.TRPE_ITEM_TOOLTIP_REQUIRES_MUSICIAN = "Nécessite Musician"
 msg.TRPE_ITEM_TOOLTIP_SHEET_MUSIC = "Partition"

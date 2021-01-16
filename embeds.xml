@@ -10,4 +10,6 @@
 	<Include file="lib\LibDeflate\lib.xml"/>
 	<Script file="lib\LibRealmInfo\LibRealmInfo.lua"/>
 	<Script file="lib\LibCRC32\LibCRC32.lua"/>
+	<Script file="lib\HereBeDragons\HereBeDragons-2.0.lua"/>
+	<Script file="lib\HereBeDragons\HereBeDragons-Pins-2.0.lua"/>
 </Ui>

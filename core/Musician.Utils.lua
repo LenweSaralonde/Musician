@@ -161,7 +161,7 @@ end
 --- Get the player position in the 3D world
 -- @return posY (number)
 -- @return posX (number)
--- @return posZ (number)
+-- @return posZ (number) Always 0
 -- @return instanceID (number)
 function Musician.Utils.GetPlayerPosition()
 	local posY, posX, posZ, instanceID = UnitPosition("player") -- posZ is always 0
@@ -325,6 +325,14 @@ end
 -- @return data (string)
 function Musician.Utils.PackPlayerPosition()
 	local posY, posX, posZ, instanceID = Musician.Utils.GetPlayerPosition()
+
+	-- Only set (0, 0) as integer coordinates when posX and posY exactly equal 0,
+	-- meaning the coordinates could not be retrieved (for example in a dungeon).
+	if not(posX == 0 and posY == 0) and posX >= -.5 and posX < .5 and posY >= -.5 and posY < 5 then
+		-- Round to the closest non-zero integer coordinates
+		posX = 2 * floor(posX) + 1
+		posY = 2 * floor(posY) + 1
+	end
 
 	local x = Musician.Utils.PackNumber(floor(posX + .5) + 0x7fffffff, 4)
 	local y = Musician.Utils.PackNumber(floor(posY + .5) + 0x7fffffff, 4)
