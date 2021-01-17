@@ -266,6 +266,7 @@ msg.EMOTE_PLAYING_MUSIC = "正在演奏一首音乐。"
 msg.EMOTE_PROMO = "(安装 \"Musician\" 插件就可以听了)"
 msg.EMOTE_SONG_NOT_LOADED = "(这首音乐无法播放，因为玩家 {player}使用的插件版本和你不兼容。)"
 msg.EMOTE_PLAYER_OTHER_REALM = "(这个玩家处于另一个服务器。)"
+msg.EMOTE_PLAYER_OTHER_FACTION = "(该玩家来自另一个派系。)"
 
 msg.TOOLTIP_LEFT_CLICK = "**左键点击**: {action}"
 msg.TOOLTIP_RIGHT_CLICK = "**右键点击**: {action}"

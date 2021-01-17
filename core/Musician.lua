@@ -663,6 +663,8 @@ function Musician.SetupHooks()
 	end)
 
 	-- Add muted/unmuted status to player messages when playing
+	--
+
 	local HookedGetPlayerLink = GetPlayerLink
 	GetPlayerLink = function(...)
 		local link = HookedGetPlayerLink(...)
@@ -682,8 +684,9 @@ function Musician.SetupHooks()
 	end
 
 	-- Add stop button to "Player plays music" emote
+	--
 
-	local messageEventFilter = function(self, event, msg, player, languageName, channelName, playerName2, pflag, ...)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_EMOTE", function(self, event, msg, player, languageName, channelName, playerName2, pflag, ...)
 
 		local fullPlayerName = Musician.Utils.NormalizePlayerName(player)
 
@@ -692,11 +695,9 @@ function Musician.SetupHooks()
 		local isPromoEmoteSuccessful = false
 
 		-- "Player is playing music."
-		if event == "CHAT_MSG_EMOTE" then
-			isPromoEmote, isFullPromoEmote = Musician.Utils.HasPromoEmote(msg)
-			if isFullPromoEmote then
-				Musician.Utils.ResetFullPromoEmoteCooldown()
-			end
+		isPromoEmote, isFullPromoEmote = Musician.Utils.HasPromoEmote(msg)
+		if isFullPromoEmote then
+			Musician.Utils.ResetFullPromoEmoteCooldown()
 		end
 
 		-- Process promo emote
@@ -734,26 +735,35 @@ function Musician.SetupHooks()
 				-- Player is not in the channel and not in my group: it's from another realm
 				if not(Musician.Utils.PlayerIsOnSameRealm(player)) and not(Musician.Utils.PlayerIsInGroup(player)) then
 					msg = Musician.Msg.EMOTE_PLAYING_MUSIC .. " " .. Musician.Utils.Highlight(Musician.Msg.EMOTE_PLAYER_OTHER_REALM, 'FF0000')
-				else -- Song has not been loaded (incompatible version)
-					local errorMsg = string.gsub(Musician.Msg.EMOTE_SONG_NOT_LOADED, '{player}', Musician.Utils.GetPlayerLink(fullPlayerName))
-					msg = Musician.Msg.EMOTE_PLAYING_MUSIC .. " " .. Musician.Utils.Highlight(errorMsg, 'FF0000')
+				else
+					-- Determine if it's a language I'm supposed to understand
+					local isUnderstoodLanguage = false
+					for l = 1, GetNumLanguages() do
+						local myLanguageName, _ = GetLanguageByIndex(l)
+						if languageName == myLanguageName then
+							isUnderstoodLanguage = true
+							break
+						end
+					end
+
+					-- Player does not speak a language I should understand: player is from the other faction and I'm using an Elixir of Tongues
+					if not(isUnderstoodLanguage) then
+						msg = Musician.Msg.EMOTE_PLAYING_MUSIC .. " " .. Musician.Utils.Highlight(Musician.Msg.EMOTE_PLAYER_OTHER_FACTION, 'FF0000')
+					else -- Song has not been loaded (incompatible version)
+						local errorMsg = string.gsub(Musician.Msg.EMOTE_SONG_NOT_LOADED, '{player}', Musician.Utils.GetPlayerLink(fullPlayerName))
+						msg = Musician.Msg.EMOTE_PLAYING_MUSIC .. " " .. Musician.Utils.Highlight(errorMsg, 'FF0000')
+					end
 				end
 
 				isPromoEmoteSuccessful = false
 			end
-		end
 
-		-- Send promo emote event
-		if isPromoEmote then
+			-- Send promo emote event
 			Musician:SendMessage(Musician.Events.PromoEmote, isPromoEmoteSuccessful, msg, fullPlayerName, languageName, channelName, playerName2, pflag, ...)
 		end
 
 		return false, msg, player, languageName, channelName, playerName2, pflag, ...
-	end
-
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", messageEventFilter)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", messageEventFilter)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_EMOTE", messageEventFilter)
+	end)
 end
 
 --- Add a tips and tricks callback
