@@ -307,8 +307,10 @@ msg.LINKS_ERROR.alreadyRequested = "Un morceau est déjà demandé auprès de {p
 msg.LINKS_ERROR.timeout = "{player} n'a pas répondu."
 msg.LINKS_ERROR.importingFailed = "Le morceau {title} n'a pas pu être importé auprès de {player}."
 
-msg.MAP_TRACKING_OPTIONS_TITLE = "Musician"
-msg.MAP_TRACKING_OPTION_ACTIVE_MUSICIANS = "Musiciens actifs"
+msg.MAP_OPTIONS_TITLE = "Carte"
+msg.MAP_OPTIONS_SUB_TEXT = "Afficher les musiciens actifs proches :"
+msg.MAP_OPTIONS_MINI_MAP = "Sur la mini-carte"
+msg.MAP_OPTIONS_WORLD_MAP = "Sur la carte du monde"
 
 msg.TRPE_ITEM_NAME = "{title}"
 msg.TRPE_ITEM_TOOLTIP_REQUIRES_MUSICIAN = "Nécessite Musician"
