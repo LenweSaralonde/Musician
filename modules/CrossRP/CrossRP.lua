@@ -246,6 +246,41 @@ function Musician.CrossRP.Init()
 		foreignerScanLastAmount = scans
 	end)
 
+	-- Filter out "is playing music" emotes that come from the other faction is there is a valid link
+	--
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_EMOTE", function(self, event, msg, player, languageName, channelName, playerName2, pflag, ...)
+		local isPromoEmote, _ = Musician.Utils.HasPromoEmote(msg)
+		-- Promo emote has been found
+		if isPromoEmote then
+			local fullPlayerName = Musician.Utils.NormalizePlayerName(player)
+			-- Music is not loaded or is not actually playing
+			if Musician.songs[fullPlayerName] == nil or not(Musician.songs[fullPlayerName]:IsPlaying()) then
+				-- Determine if it's a language I'm supposed to understand
+				local isUnderstoodLanguage = false
+				for l = 1, GetNumLanguages() do
+					local myLanguageName, _ = GetLanguageByIndex(l)
+					if languageName == myLanguageName then
+						isUnderstoodLanguage = true
+						break
+					end
+				end
+
+				-- Player does not speak a language I should understand: player is from the other faction and I'm using an Elixir of Tongues
+				if not(isUnderstoodLanguage) and Musician.Utils.PlayerIsOnSameRealm(player) and not(Musician.Utils.PlayerIsInGroup(player)) then
+					-- Check if there is an active link to the other player faction
+					local playerBand = CrossRP.Proto.DestFromFullname(player, Musician.CrossRP.GetAdverseFaction())
+
+					-- Dismiss emote if link is active
+					if CrossRP.Proto.SelectBridge(playerBand) then
+						return true
+					end
+				end
+			end
+		end
+
+		return false, msg, player, languageName, channelName, playerName2, pflag, ...
+	end)
+
 	-- Init options
 	Musician.CrossRP.Options.Init()
 end
@@ -264,18 +299,17 @@ function Musician.CrossRP.GetFactionId(faction)
 	return string.sub(faction, 1, 1)
 end
 
---- Return player's adverse band (ie 537H for EU-KirinTor Alliance)
+--- Return player's adverse faction ID (ie H for Alliance)
 -- @return (string)
-function Musician.CrossRP.GetAdverseBand()
-	local playerBand = CrossRP.Proto.GetBandFromUnit("player")
-	local bandNumber, faction = string.match(playerBand, "(%d+)([AHN])")
+function Musician.CrossRP.GetAdverseFaction()
+	local faction = UnitFactionGroup('player')
 
-	if faction == "A" then
-		return bandNumber .. "H"
-	elseif faction == "H" then
-		return bandNumber .. "A"
+	if faction == 'Alliance' then
+		return 'H'
+	elseif faction == 'Horde' then
+		return 'A'
 	else
-		return nil
+		return ''
 	end
 end
 
