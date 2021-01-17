@@ -265,6 +265,7 @@ msg.EMOTE_PLAYING_MUSIC = "is playing a song."
 msg.EMOTE_PROMO = "(Get the “Musician” add-on to listen)"
 msg.EMOTE_SONG_NOT_LOADED = "(The song cannot play because {player} is using an incompatible version.)"
 msg.EMOTE_PLAYER_OTHER_REALM = "(This player is on another realm.)"
+msg.EMOTE_PLAYER_OTHER_FACTION = "(This player is from another faction.)"
 
 msg.TOOLTIP_LEFT_CLICK = "**Left click**: {action}"
 msg.TOOLTIP_RIGHT_CLICK = "**Right click**: {action}"
