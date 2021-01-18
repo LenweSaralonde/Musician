@@ -1,0 +1,581 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Musician</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+<li><a href="#Tables">Tables</a></li>
+<li><a href="#Fields">Fields</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/Musician.html">Musician</a></li>
+  <li><a href="../modules/Musician.About.html">Musician.About</a></li>
+  <li><a href="../modules/Musician.Comm.html">Musician.Comm</a></li>
+  <li><a href="../modules/Musician.Constants.html">Musician.Constants</a></li>
+  <li><a href="../modules/Musician.Credits.html">Musician.Credits</a></li>
+  <li><a href="../modules/Musician.CrossRP.html">Musician.CrossRP</a></li>
+  <li><a href="../modules/Musician.CrossRP.Options.html">Musician.CrossRP.Options</a></li>
+  <li><a href="../modules/Musician.ElvUI.html">Musician.ElvUI</a></li>
+  <li><a href="../modules/Musician.Extras.html">Musician.Extras</a></li>
+  <li><a href="../modules/Musician.Frame.html">Musician.Frame</a></li>
+  <li><a href="../modules/Musician.Icons.html">Musician.Icons</a></li>
+  <li><a href="../modules/Musician.Instruments.html">Musician.Instruments</a></li>
+  <li><a href="../modules/Musician.Keyboard.html">Musician.Keyboard</a></li>
+  <li><a href="../modules/Musician.KeyboardConfig.html">Musician.KeyboardConfig</a></li>
+  <li><a href="../modules/Musician.KeyboardConstants.html">Musician.KeyboardConstants</a></li>
+  <li><a href="../modules/Musician.KeyboardUtils.html">Musician.KeyboardUtils</a></li>
+  <li><a href="../modules/Musician.KuiNamePlates.html">Musician.KuiNamePlates</a></li>
+  <li><a href="../modules/Musician.Layouts.html">Musician.Layouts</a></li>
+  <li><a href="../modules/Musician.Live.html">Musician.Live</a></li>
+  <li><strong>Musician.Map</strong></li>
+  <li><a href="../modules/Musician.Midi.html">Musician.Midi</a></li>
+  <li><a href="../modules/Musician.MidiMapping.html">Musician.MidiMapping</a></li>
+  <li><a href="../modules/Musician.MyRolePlay.html">Musician.MyRolePlay</a></li>
+  <li><a href="../modules/Musician.NamePlates.html">Musician.NamePlates</a></li>
+  <li><a href="../modules/Musician.NamePlates.Options.html">Musician.NamePlates.Options</a></li>
+  <li><a href="../modules/Musician.NeatPlates.html">Musician.NeatPlates</a></li>
+  <li><a href="../modules/Musician.Options.html">Musician.Options</a></li>
+  <li><a href="../modules/Musician.PercussionIcons.html">Musician.PercussionIcons</a></li>
+  <li><a href="../modules/Musician.Plater.html">Musician.Plater</a></li>
+  <li><a href="../modules/Musician.Preloader.html">Musician.Preloader</a></li>
+  <li><a href="../modules/Musician.Registry.html">Musician.Registry</a></li>
+  <li><a href="../modules/Musician.Sampler.html">Musician.Sampler</a></li>
+  <li><a href="../modules/Musician.Song.html">Musician.Song</a></li>
+  <li><a href="../modules/Musician.SongLinkExportFrame.html">Musician.SongLinkExportFrame</a></li>
+  <li><a href="../modules/Musician.SongLinkImportFrame.html">Musician.SongLinkImportFrame</a></li>
+  <li><a href="../modules/Musician.SongLinks.html">Musician.SongLinks</a></li>
+  <li><a href="../modules/Musician.TRP3.html">Musician.TRP3</a></li>
+  <li><a href="../modules/Musician.TRP3.html">Musician.TRP3</a></li>
+  <li><a href="../modules/Musician.TRP3.Options.html">Musician.TRP3.Options</a></li>
+  <li><a href="../modules/Musician.TrackEditor.html">Musician.TrackEditor</a></li>
+  <li><a href="../modules/Musician.Utils.html">Musician.Utils</a></li>
+  <li><a href="../modules/Musician.VolumeMeter.html">Musician.VolumeMeter</a></li>
+  <li><a href="../modules/Musician.Worker.html">Musician.Worker</a></li>
+  <li><a href="../modules/MusicianButton.html">MusicianButton</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>Musician.Map</code></h1>
+<p>Shows position of currently playing musicians on the world map.</p>
+<p></p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Map.GetMiniMapTracking">Musician.Map.GetMiniMapTracking ()</a></td>
+	<td class="summary">Get tracking setting for the mini map</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Map.GetWorldMapTracking">Musician.Map.GetWorldMapTracking ()</a></td>
+	<td class="summary">Get tracking setting for the world map</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Map.HookMiniMapTracking">Musician.Map.HookMiniMapTracking ()</a></td>
+	<td class="summary">Hook tracking options for the minimap</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Map.HookWorldMapTracking">Musician.Map.HookWorldMapTracking ()</a></td>
+	<td class="summary">Hook tracking options for the world map</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Map.OnSongChunk">Musician.Map.OnSongChunk (event, sender, mode, songId, chunkDuration, playtimeLeft, posY, posX, posZ, instanceID, guid)</a></td>
+	<td class="summary">OnSongChunk
+ Handler for Musician.Events.SongChunk</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Map.RefreshMiniMap">Musician.Map.RefreshMiniMap ()</a></td>
+	<td class="summary">Refresh minimap pins</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Map.RefreshWorldMap">Musician.Map.RefreshWorldMap ()</a></td>
+	<td class="summary">Refresh world map pins</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Map.RemoveMiniMapPin">Musician.Map.RemoveMiniMapPin (player)</a></td>
+	<td class="summary">Remove player minimap pin</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Map.RemovePlayer">Musician.Map.RemovePlayer (player)</a></td>
+	<td class="summary">Remove active player from maps</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Map.RemoveWorldMapPin">Musician.Map.RemoveWorldMapPin (player)</a></td>
+	<td class="summary">Remove player world map pin</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Map.SetMiniMapTracking">Musician.Map.SetMiniMapTracking (enabled)</a></td>
+	<td class="summary">Set tracking setting for the mini map</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Map.SetWorldMapTracking">Musician.Map.SetWorldMapTracking (enabled)</a></td>
+	<td class="summary">Set tracking setting for the world map</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Map.UpdateMiniMapPin">Musician.Map.UpdateMiniMapPin (player, posX, posY, instanceID)</a></td>
+	<td class="summary">Add or update player minimap pin</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Map.UpdatePlayer">Musician.Map.UpdatePlayer (player, posX, posY, instanceID)</a></td>
+	<td class="summary">Update or add active player position to maps from world position</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Map.UpdateWorldMapPin">Musician.Map.UpdateWorldMapPin (player, posX, posY, instanceID)</a></td>
+	<td class="summary">Add or update player world map pin</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Map:OnEnable">Musician.Map:OnEnable ()</a></td>
+	<td class="summary">OnEnable</td>
+	</tr>
+</table>
+<h2><a href="#Tables">Tables</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#MusicianMiniMapPoiMixin">MusicianMiniMapPoiMixin</a></td>
+	<td class="summary">Minimap pin mixin</td>
+	</tr>
+</table>
+<h2><a href="#Fields">Fields</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#MusicianWorldMapPoiMixin">MusicianWorldMapPoiMixin</a></td>
+	<td class="summary">World map pin mixin</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "Musician.Map.GetMiniMapTracking"></a>
+    <strong>Musician.Map.GetMiniMapTracking ()</strong>
+    </dt>
+    <dd>
+    Get tracking setting for the mini map
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        enabled (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Map.GetWorldMapTracking"></a>
+    <strong>Musician.Map.GetWorldMapTracking ()</strong>
+    </dt>
+    <dd>
+    Get tracking setting for the world map
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        enabled (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Map.HookMiniMapTracking"></a>
+    <strong>Musician.Map.HookMiniMapTracking ()</strong>
+    </dt>
+    <dd>
+    Hook tracking options for the minimap
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Map.HookWorldMapTracking"></a>
+    <strong>Musician.Map.HookWorldMapTracking ()</strong>
+    </dt>
+    <dd>
+    Hook tracking options for the world map
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Map.OnSongChunk"></a>
+    <strong>Musician.Map.OnSongChunk (event, sender, mode, songId, chunkDuration, playtimeLeft, posY, posX, posZ, instanceID, guid)</strong>
+    </dt>
+    <dd>
+    OnSongChunk
+ Handler for Musician.Events.SongChunk
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+
+        </li>
+        <li><span class="parameter">sender</span>
+
+        </li>
+        <li><span class="parameter">mode</span>
+
+        </li>
+        <li><span class="parameter">songId</span>
+
+        </li>
+        <li><span class="parameter">chunkDuration</span>
+
+        </li>
+        <li><span class="parameter">playtimeLeft</span>
+
+        </li>
+        <li><span class="parameter">posY</span>
+
+        </li>
+        <li><span class="parameter">posX</span>
+
+        </li>
+        <li><span class="parameter">posZ</span>
+
+        </li>
+        <li><span class="parameter">instanceID</span>
+
+        </li>
+        <li><span class="parameter">guid</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Map.RefreshMiniMap"></a>
+    <strong>Musician.Map.RefreshMiniMap ()</strong>
+    </dt>
+    <dd>
+    Refresh minimap pins
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Map.RefreshWorldMap"></a>
+    <strong>Musician.Map.RefreshWorldMap ()</strong>
+    </dt>
+    <dd>
+    Refresh world map pins
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Map.RemoveMiniMapPin"></a>
+    <strong>Musician.Map.RemoveMiniMapPin (player)</strong>
+    </dt>
+    <dd>
+    Remove player minimap pin
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">player</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Map.RemovePlayer"></a>
+    <strong>Musician.Map.RemovePlayer (player)</strong>
+    </dt>
+    <dd>
+    Remove active player from maps
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">player</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Map.RemoveWorldMapPin"></a>
+    <strong>Musician.Map.RemoveWorldMapPin (player)</strong>
+    </dt>
+    <dd>
+    Remove player world map pin
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">player</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Map.SetMiniMapTracking"></a>
+    <strong>Musician.Map.SetMiniMapTracking (enabled)</strong>
+    </dt>
+    <dd>
+    Set tracking setting for the mini map
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">enabled</span>
+         (boolean)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Map.SetWorldMapTracking"></a>
+    <strong>Musician.Map.SetWorldMapTracking (enabled)</strong>
+    </dt>
+    <dd>
+    Set tracking setting for the world map
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">enabled</span>
+         (boolean)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Map.UpdateMiniMapPin"></a>
+    <strong>Musician.Map.UpdateMiniMapPin (player, posX, posY, instanceID)</strong>
+    </dt>
+    <dd>
+    Add or update player minimap pin
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">player</span>
+         (string)
+        </li>
+        <li><span class="parameter">posX</span>
+         (number)
+        </li>
+        <li><span class="parameter">posY</span>
+         (number)
+        </li>
+        <li><span class="parameter">instanceID</span>
+         (number)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Map.UpdatePlayer"></a>
+    <strong>Musician.Map.UpdatePlayer (player, posX, posY, instanceID)</strong>
+    </dt>
+    <dd>
+    Update or add active player position to maps from world position
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">player</span>
+         (string)
+        </li>
+        <li><span class="parameter">posX</span>
+         (number)
+        </li>
+        <li><span class="parameter">posY</span>
+         (number)
+        </li>
+        <li><span class="parameter">instanceID</span>
+         (number)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Map.UpdateWorldMapPin"></a>
+    <strong>Musician.Map.UpdateWorldMapPin (player, posX, posY, instanceID)</strong>
+    </dt>
+    <dd>
+    Add or update player world map pin
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">player</span>
+         (string)
+        </li>
+        <li><span class="parameter">posX</span>
+         (number)
+        </li>
+        <li><span class="parameter">posY</span>
+         (number)
+        </li>
+        <li><span class="parameter">instanceID</span>
+         (number)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Map:OnEnable"></a>
+    <strong>Musician.Map:OnEnable ()</strong>
+    </dt>
+    <dd>
+    OnEnable
+
+
+
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Tables"></a>Tables</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "MusicianMiniMapPoiMixin"></a>
+    <strong>MusicianMiniMapPoiMixin</strong>
+    </dt>
+    <dd>
+    Minimap pin mixin
+
+
+
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Fields"></a>Fields</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "MusicianWorldMapPoiMixin"></a>
+    <strong>MusicianWorldMapPoiMixin</strong>
+    </dt>
+    <dd>
+    World map pin mixin
+
+
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2021-01-18 18:07:54 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
