@@ -34,6 +34,7 @@ All you need is to have the add-on installed. Nothing more is required.
 * To mute a player, right-click on his/her name or portrait to open the menu then select **Mute**. Do the same to unmute.
 * You can also just stop the song being played by clicking the **[Stop]** hyperlink in the player's emote.
 * Right click on the minimap button to enable or disable all the music from the add-on.
+* The characters currently playing music can be shown on the world map and the minimap.
 
 ![Nameplate animations](./img/nameplates.gif)
 
