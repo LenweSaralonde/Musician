@@ -55,6 +55,8 @@
   <li><a href="../modules/Musician.KuiNamePlates.html">Musician.KuiNamePlates</a></li>
   <li><a href="../modules/Musician.Layouts.html">Musician.Layouts</a></li>
   <li><a href="../modules/Musician.Live.html">Musician.Live</a></li>
+  <li><a href="../modules/Musician.Map.html">Musician.Map</a></li>
+  <li><a href="../modules/Musician.Map.Options.html">Musician.Map.Options</a></li>
   <li><a href="../modules/Musician.Midi.html">Musician.Midi</a></li>
   <li><a href="../modules/Musician.MidiMapping.html">Musician.MidiMapping</a></li>
   <li><a href="../modules/Musician.MyRolePlay.html">Musician.MyRolePlay</a></li>
@@ -101,6 +103,10 @@
 	<td class="summary">Configure demo mode relatively to the source song</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.DeleteProgram">Musician.Keyboard.DeleteProgram (program)</a></td>
+	<td class="summary">Delete a program</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#Musician.Keyboard.DisableDemoMode">Musician.Keyboard.DisableDemoMode ([doKeyboardRefresh=true])</a></td>
 	<td class="summary">Disable demo mode</td>
 	</tr>
@@ -109,12 +115,40 @@
 	<td class="summary">Enable demo mode with provided track indexes</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.FunctionKey">Musician.Keyboard.FunctionKey (down, keyValue)</a></td>
+	<td class="summary">Function key pressed</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.HasSavedProgram">Musician.Keyboard.HasSavedProgram (program)</a></td>
+	<td class="summary">Has saved program</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#Musician.Keyboard.Init">Musician.Keyboard.Init ()</a></td>
 	<td class="summary">Initialize keyboard</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Musician.Keyboard.KeyButtonStateDiffers">Musician.Keyboard.KeyButtonStateDiffers (keyValue, down)</a></td>
-	<td class="summary">Return true if the provided keypress' button down state differs from the provided one.</td>
+	<td class="name" nowrap><a href="#Musician.Keyboard.IsCurrentProgram">Musician.Keyboard.IsCurrentProgram (program)</a></td>
+	<td class="summary">Indicate if the provided program is the current one that has been loaded</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.IsDeletingProgram">Musician.Keyboard.IsDeletingProgram ()</a></td>
+	<td class="summary">Get program deleting mode</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.IsSavingProgram">Musician.Keyboard.IsSavingProgram ()</a></td>
+	<td class="summary">Get program saving mode</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.LoadConfig">Musician.Keyboard.LoadConfig (config)</a></td>
+	<td class="summary">Load configuration</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.LoadProgram">Musician.Keyboard.LoadProgram (program)</a></td>
+	<td class="summary">Load saved program</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.NoteKey">Musician.Keyboard.NoteKey (down, keyValue)</a></td>
+	<td class="summary">Note key pressed</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Keyboard.OnFrame">Musician.Keyboard.OnFrame (event, elapsed)</a></td>
@@ -161,6 +195,34 @@
 	<td class="summary">Demo mode OnSongPlay</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.OnVirtualKey">Musician.Keyboard.OnVirtualKey (button, down)</a></td>
+	<td class="summary">Key up/down handler, from virtual keyboard</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.OnVirtualKeyEnter">Musician.Keyboard.OnVirtualKeyEnter (button)</a></td>
+	<td class="summary">Virtual keyboard button mouse enter handler</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.OnVirtualKeyLeave">Musician.Keyboard.OnVirtualKeyLeave (button)</a></td>
+	<td class="summary">Virtual keyboard button mouse leave handler</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.OnVirtualKeyMouseDown">Musician.Keyboard.OnVirtualKeyMouseDown ()</a></td>
+	<td class="summary">Virtual keyboard button mouse down handler</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.OnVirtualKeyMouseUp">Musician.Keyboard.OnVirtualKeyMouseUp ()</a></td>
+	<td class="summary">Virtual keyboard button mouse up handler</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.ResetButtons">Musician.Keyboard.ResetButtons ([onlyForLayer])</a></td>
+	<td class="summary">Reset buttons volume meters</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.SaveProgram">Musician.Keyboard.SaveProgram (program)</a></td>
+	<td class="summary">Save program</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#Musician.Keyboard.SetBaseKey">Musician.Keyboard.SetBaseKey (key[, doKeyboardRefresh=true])</a></td>
 	<td class="summary">Change base key</td>
 	</tr>
@@ -169,8 +231,8 @@
 	<td class="summary">Set on-screen keyboard button up/down state, without triggering its action.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Musician.Keyboard.SetButtonsUp">Musician.Keyboard.SetButtonsUp ([onlyForLayer])</a></td>
-	<td class="summary">Set all buttons up</td>
+	<td class="name" nowrap><a href="#Musician.Keyboard.SetDeletingProgram">Musician.Keyboard.SetDeletingProgram (value)</a></td>
+	<td class="summary">Set program deleting mode</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Keyboard.SetInstrument">Musician.Keyboard.SetInstrument (layer, instrument[, doKeyboardRefresh=true])</a></td>
@@ -189,6 +251,14 @@
 	<td class="summary">Set power chords \m/</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.SetSavingProgram">Musician.Keyboard.SetSavingProgram (value)</a></td>
+	<td class="summary">Set program saving mode</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.SetSustain">Musician.Keyboard.SetSustain (value)</a></td>
+	<td class="summary">Set sustain</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#Musician.Keyboard.ShiftKeys">Musician.Keyboard.ShiftKeys (layer, amount[, doKeyboardRefresh=true])</a></td>
 	<td class="summary">Shift keys</td>
 	</tr>
@@ -197,64 +267,16 @@
 	<td class="summary">Show</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#Musician.Keyboard.SpecialActionKey">Musician.Keyboard.SpecialActionKey (down, keyValue)</a></td>
+	<td class="summary">Special action key pressed.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#Musician.Keyboard.ToggleUI">Musician.Keyboard.ToggleUI ()</a></td>
 	<td class="summary">Toggle UI, keeping the keyboard visible</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Keyboard.UpdateBandSyncButton">Musician.Keyboard.UpdateBandSyncButton ()</a></td>
 	<td class="summary">Update band sync button</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#MusicianKeyboard.DeleteProgram">MusicianKeyboard.DeleteProgram (program)</a></td>
-	<td class="summary">Delete a program</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#MusicianKeyboard.FunctionKey">MusicianKeyboard.FunctionKey (down, keyValue)</a></td>
-	<td class="summary">Function key pressed</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#MusicianKeyboard.HasSavedProgram">MusicianKeyboard.HasSavedProgram (program)</a></td>
-	<td class="summary">Has saved program</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#MusicianKeyboard.IsCurrentProgram">MusicianKeyboard.IsCurrentProgram (program)</a></td>
-	<td class="summary">Indicate if the provided program is the current one that has been loaded</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#MusicianKeyboard.IsDeletingProgram">MusicianKeyboard.IsDeletingProgram ()</a></td>
-	<td class="summary">Get program deleting mode</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#MusicianKeyboard.IsSavingProgram">MusicianKeyboard.IsSavingProgram ()</a></td>
-	<td class="summary">Get program saving mode</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#MusicianKeyboard.LoadConfig">MusicianKeyboard.LoadConfig (config)</a></td>
-	<td class="summary">Load configuration</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#MusicianKeyboard.LoadProgram">MusicianKeyboard.LoadProgram (program)</a></td>
-	<td class="summary">Load saved program</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#MusicianKeyboard.NoteKey">MusicianKeyboard.NoteKey (down, keyValue)</a></td>
-	<td class="summary">Note key pressed</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#MusicianKeyboard.ProgramActionKey">MusicianKeyboard.ProgramActionKey (down, keyValue)</a></td>
-	<td class="summary">Program action key pressed</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#MusicianKeyboard.SaveProgram">MusicianKeyboard.SaveProgram (program)</a></td>
-	<td class="summary">Save program</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#MusicianKeyboard.SetDeletingProgram">MusicianKeyboard.SetDeletingProgram (value)</a></td>
-	<td class="summary">Set program deleting mode</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#MusicianKeyboard.SetSavingProgram">MusicianKeyboard.SetSavingProgram (value)</a></td>
-	<td class="summary">Set program saving mode</td>
 	</tr>
 </table>
 
@@ -292,6 +314,26 @@
         <li><span class="parameter">doKeyboardRefresh</span>
          (boolean) Rebuild key mapping when true
          (<em>default</em> true)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.DeleteProgram"></a>
+    <strong>Musician.Keyboard.DeleteProgram (program)</strong>
+    </dt>
+    <dd>
+    Delete a program
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">program</span>
+         (number)
         </li>
     </ul>
 
@@ -349,6 +391,59 @@
 
 </dd>
     <dt>
+    <a name = "Musician.Keyboard.FunctionKey"></a>
+    <strong>Musician.Keyboard.FunctionKey (down, keyValue)</strong>
+    </dt>
+    <dd>
+    Function key pressed
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">down</span>
+         (boolean)
+        </li>
+        <li><span class="parameter">keyValue</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (boolean) True if the keypress was consumed
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.HasSavedProgram"></a>
+    <strong>Musician.Keyboard.HasSavedProgram (program)</strong>
+    </dt>
+    <dd>
+    Has saved program
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">program</span>
+         (number)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
     <a name = "Musician.Keyboard.Init"></a>
     <strong>Musician.Keyboard.Init ()</strong>
     </dt>
@@ -363,20 +458,17 @@
 
 </dd>
     <dt>
-    <a name = "Musician.Keyboard.KeyButtonStateDiffers"></a>
-    <strong>Musician.Keyboard.KeyButtonStateDiffers (keyValue, down)</strong>
+    <a name = "Musician.Keyboard.IsCurrentProgram"></a>
+    <strong>Musician.Keyboard.IsCurrentProgram (program)</strong>
     </dt>
     <dd>
-    Return true if the provided keypress' button down state differs from the provided one.
+    Indicate if the provided program is the current one that has been loaded
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">keyValue</span>
-         (string)
-        </li>
-        <li><span class="parameter">down</span>
-         (boolean)
+        <li><span class="parameter">program</span>
+         (number)
         </li>
     </ul>
 
@@ -384,6 +476,117 @@
     <ol>
 
         (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.IsDeletingProgram"></a>
+    <strong>Musician.Keyboard.IsDeletingProgram ()</strong>
+    </dt>
+    <dd>
+    Get program deleting mode
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.IsSavingProgram"></a>
+    <strong>Musician.Keyboard.IsSavingProgram ()</strong>
+    </dt>
+    <dd>
+    Get program saving mode
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.LoadConfig"></a>
+    <strong>Musician.Keyboard.LoadConfig (config)</strong>
+    </dt>
+    <dd>
+    Load configuration
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">config</span>
+         (table)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.LoadProgram"></a>
+    <strong>Musician.Keyboard.LoadProgram (program)</strong>
+    </dt>
+    <dd>
+    Load saved program
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">program</span>
+         (number)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.NoteKey"></a>
+    <strong>Musician.Keyboard.NoteKey (down, keyValue)</strong>
+    </dt>
+    <dd>
+    Note key pressed
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">down</span>
+         (boolean)
+        </li>
+        <li><span class="parameter">keyValue</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (boolean) True if the keypress was consumed
     </ol>
 
 
@@ -685,6 +888,138 @@
 
 </dd>
     <dt>
+    <a name = "Musician.Keyboard.OnVirtualKey"></a>
+    <strong>Musician.Keyboard.OnVirtualKey (button, down)</strong>
+    </dt>
+    <dd>
+    Key up/down handler, from virtual keyboard
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">button</span>
+         (Button)
+        </li>
+        <li><span class="parameter">down</span>
+         (boolean)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.OnVirtualKeyEnter"></a>
+    <strong>Musician.Keyboard.OnVirtualKeyEnter (button)</strong>
+    </dt>
+    <dd>
+    Virtual keyboard button mouse enter handler
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">button</span>
+         (Button)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.OnVirtualKeyLeave"></a>
+    <strong>Musician.Keyboard.OnVirtualKeyLeave (button)</strong>
+    </dt>
+    <dd>
+    Virtual keyboard button mouse leave handler
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">button</span>
+         (Button)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.OnVirtualKeyMouseDown"></a>
+    <strong>Musician.Keyboard.OnVirtualKeyMouseDown ()</strong>
+    </dt>
+    <dd>
+    Virtual keyboard button mouse down handler
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.OnVirtualKeyMouseUp"></a>
+    <strong>Musician.Keyboard.OnVirtualKeyMouseUp ()</strong>
+    </dt>
+    <dd>
+    Virtual keyboard button mouse up handler
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.ResetButtons"></a>
+    <strong>Musician.Keyboard.ResetButtons ([onlyForLayer])</strong>
+    </dt>
+    <dd>
+    Reset buttons volume meters
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">onlyForLayer</span>
+         (number)
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.SaveProgram"></a>
+    <strong>Musician.Keyboard.SaveProgram (program)</strong>
+    </dt>
+    <dd>
+    Save program
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">program</span>
+         (number)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
     <a name = "Musician.Keyboard.SetBaseKey"></a>
     <strong>Musician.Keyboard.SetBaseKey (key[, doKeyboardRefresh=true])</strong>
     </dt>
@@ -732,18 +1067,17 @@
 
 </dd>
     <dt>
-    <a name = "Musician.Keyboard.SetButtonsUp"></a>
-    <strong>Musician.Keyboard.SetButtonsUp ([onlyForLayer])</strong>
+    <a name = "Musician.Keyboard.SetDeletingProgram"></a>
+    <strong>Musician.Keyboard.SetDeletingProgram (value)</strong>
     </dt>
     <dd>
-    Set all buttons up
+    Set program deleting mode
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">onlyForLayer</span>
-         (number)
-         (<em>optional</em>)
+        <li><span class="parameter">value</span>
+         (boolean)
         </li>
     </ul>
 
@@ -858,6 +1192,46 @@
 
 </dd>
     <dt>
+    <a name = "Musician.Keyboard.SetSavingProgram"></a>
+    <strong>Musician.Keyboard.SetSavingProgram (value)</strong>
+    </dt>
+    <dd>
+    Set program saving mode
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+         (boolean)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Keyboard.SetSustain"></a>
+    <strong>Musician.Keyboard.SetSustain (value)</strong>
+    </dt>
+    <dd>
+    Set sustain
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+         (boolean)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
     <a name = "Musician.Keyboard.ShiftKeys"></a>
     <strong>Musician.Keyboard.ShiftKeys (layer, amount[, doKeyboardRefresh=true])</strong>
     </dt>
@@ -899,6 +1273,34 @@
 
 </dd>
     <dt>
+    <a name = "Musician.Keyboard.SpecialActionKey"></a>
+    <strong>Musician.Keyboard.SpecialActionKey (down, keyValue)</strong>
+    </dt>
+    <dd>
+    Special action key pressed.  Physical keyboard only.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">down</span>
+         (boolean)
+        </li>
+        <li><span class="parameter">keyValue</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        (boolean) True if the keypress was consumed
+    </ol>
+
+
+
+
+</dd>
+    <dt>
     <a name = "Musician.Keyboard.ToggleUI"></a>
     <strong>Musician.Keyboard.ToggleUI ()</strong>
     </dt>
@@ -926,303 +1328,6 @@
 
 
 </dd>
-    <dt>
-    <a name = "MusicianKeyboard.DeleteProgram"></a>
-    <strong>MusicianKeyboard.DeleteProgram (program)</strong>
-    </dt>
-    <dd>
-    Delete a program
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">program</span>
-         (number)
-        </li>
-    </ul>
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "MusicianKeyboard.FunctionKey"></a>
-    <strong>MusicianKeyboard.FunctionKey (down, keyValue)</strong>
-    </dt>
-    <dd>
-    Function key pressed
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">down</span>
-         (boolean)
-        </li>
-        <li><span class="parameter">keyValue</span>
-         (string)
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        (boolean) True if the keypress was consumed
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "MusicianKeyboard.HasSavedProgram"></a>
-    <strong>MusicianKeyboard.HasSavedProgram (program)</strong>
-    </dt>
-    <dd>
-    Has saved program
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">program</span>
-         (number)
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        (boolean)
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "MusicianKeyboard.IsCurrentProgram"></a>
-    <strong>MusicianKeyboard.IsCurrentProgram (program)</strong>
-    </dt>
-    <dd>
-    Indicate if the provided program is the current one that has been loaded
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">program</span>
-         (number)
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        (boolean)
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "MusicianKeyboard.IsDeletingProgram"></a>
-    <strong>MusicianKeyboard.IsDeletingProgram ()</strong>
-    </dt>
-    <dd>
-    Get program deleting mode
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-        (boolean)
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "MusicianKeyboard.IsSavingProgram"></a>
-    <strong>MusicianKeyboard.IsSavingProgram ()</strong>
-    </dt>
-    <dd>
-    Get program saving mode
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-        (boolean)
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "MusicianKeyboard.LoadConfig"></a>
-    <strong>MusicianKeyboard.LoadConfig (config)</strong>
-    </dt>
-    <dd>
-    Load configuration
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">config</span>
-         (table)
-        </li>
-    </ul>
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "MusicianKeyboard.LoadProgram"></a>
-    <strong>MusicianKeyboard.LoadProgram (program)</strong>
-    </dt>
-    <dd>
-    Load saved program
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">program</span>
-         (number)
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        (boolean)
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "MusicianKeyboard.NoteKey"></a>
-    <strong>MusicianKeyboard.NoteKey (down, keyValue)</strong>
-    </dt>
-    <dd>
-    Note key pressed
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">down</span>
-         (boolean)
-        </li>
-        <li><span class="parameter">keyValue</span>
-         (string)
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        (boolean) True if the keypress was consumed
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "MusicianKeyboard.ProgramActionKey"></a>
-    <strong>MusicianKeyboard.ProgramActionKey (down, keyValue)</strong>
-    </dt>
-    <dd>
-    Program action key pressed
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">down</span>
-         (boolean)
-        </li>
-        <li><span class="parameter">keyValue</span>
-         (string)
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        (boolean) True if the keypress was consumed
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "MusicianKeyboard.SaveProgram"></a>
-    <strong>MusicianKeyboard.SaveProgram (program)</strong>
-    </dt>
-    <dd>
-    Save program
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">program</span>
-         (number)
-        </li>
-    </ul>
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "MusicianKeyboard.SetDeletingProgram"></a>
-    <strong>MusicianKeyboard.SetDeletingProgram (value)</strong>
-    </dt>
-    <dd>
-    Set program deleting mode
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">value</span>
-         (boolean)
-        </li>
-    </ul>
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "MusicianKeyboard.SetSavingProgram"></a>
-    <strong>MusicianKeyboard.SetSavingProgram (value)</strong>
-    </dt>
-    <dd>
-    Set program saving mode
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">value</span>
-         (boolean)
-        </li>
-    </ul>
-
-
-
-
-
-</dd>
 </dl>
 
 
@@ -1230,7 +1335,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-12-20 18:10:20 </i>
+<i style="float:right;">Last updated 2021-01-18 18:08:21 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
