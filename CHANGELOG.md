@@ -1,6 +1,14 @@
 Changelog
 =========
 
+v1.7.1.0
+--------
+* Added active musicians tracking on the world map and the minimap
+* Improved live keyboard ergonomics
+* Fixed compatibility issue with japanese keyboards
+* Improved localization to ease up collaboration
+* Minor bugfixes and improvements
+
 v1.7.0.0
 --------
 *"A link to the bard"*
