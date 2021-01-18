@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.7.1.1
+--------
+* Fixed minimap pin sometimes blinking
+
 v1.7.1.0
 --------
 * Added active musicians tracking on the world map and the minimap
