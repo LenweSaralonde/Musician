@@ -257,6 +257,7 @@ function Musician.Map.RemoveMiniMapPin(player)
 	if pin ~= nil then
 		HereBeDragons_Pins:RemoveMinimapIcon(Musician.Map, pin)
 		miniMapPinPool:Release(pin)
+		miniMapPlayerPins[player] = nil
 	end
 end
 
