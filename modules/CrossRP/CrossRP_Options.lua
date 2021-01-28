@@ -39,7 +39,7 @@ end
 --- Get active bands as strings
 -- @return {table}
 function Musician.CrossRP.Options.GetActiveBandStrings()
-	local status = CrossRP.Proto.GetNetworkStatus()
+	local status = Musician.CrossRP.GetNetworkStatus()
 	local item
 
 	local bands = {}

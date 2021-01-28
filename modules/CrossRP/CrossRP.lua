@@ -57,6 +57,50 @@ local function debug(out, event, source, ...)
 	Musician.Utils.Debug("CrossRP", prefix, event, source, ...)
 end
 
+--- Safely call a function and return its values. Return nil in case of error.
+-- @param func (function)
+local function safeCall(func, ...)
+	local result = { pcall (func, ...) }
+	local success = table.remove(result, 1)
+	if not(success) then 
+		return nil
+	end
+	return unpack(result)
+end
+
+--- Wrap CrossRP protocol functions that may fire errors when improper parameters are provided such as unknown realm
+function Musician.CrossRP.IsDestLinked(...)
+	return safeCall(CrossRP.Proto.IsDestLinked, ...)
+end
+
+function Musician.CrossRP.SelectBridge(...)
+	return safeCall(CrossRP.Proto.SelectBridge, ...)
+end
+
+function Musician.CrossRP.DestFromFullname(...)
+	return safeCall(CrossRP.Proto.DestFromFullname, ...)
+end
+
+function Musician.CrossRP.GetBandFromUnit(...)
+	return safeCall(CrossRP.Proto.GetBandFromUnit, ...)
+end
+
+function Musician.CrossRP.GetBandFromDest(...)
+	return safeCall(CrossRP.Proto.GetBandFromDest, ...)
+end
+
+function Musician.CrossRP.DestToFullname(...)
+	return safeCall(CrossRP.Proto.DestToFullname, ...)
+end
+
+function Musician.CrossRP.Send(...)
+	return safeCall(CrossRP.Proto.Send, ...)
+end
+
+function Musician.CrossRP.GetNetworkStatus(...)
+	return safeCall(CrossRP.Proto.GetNetworkStatus, ...) or {}
+end
+
 --- OnEnable
 --
 function Musician.CrossRP:OnEnable()
@@ -97,9 +141,9 @@ function Musician.CrossRP.Init()
 			return
 		end
 
-		local myBand = CrossRP.Proto.GetBandFromUnit("player")
-		local isInMyBand = CrossRP.Proto.IsDestLinked(myBand, destination)
-		local isPlayerBandReachable = CrossRP.Proto.SelectBridge(destination, false)
+		local myBand = Musician.CrossRP.GetBandFromUnit("player")
+		local isInMyBand = Musician.CrossRP.IsDestLinked(myBand, destination)
+		local isPlayerBandReachable = Musician.CrossRP.SelectBridge(destination, false)
 		local playerHasNoVersion = not(Musician.Registry.PlayerIsRegistered(player)) or Musician.Registry.PlayerIsRegisteredWithNoVersion(player)
 
 		-- Player is not in my band and is not registered: send Query message via CrossRP if possible
@@ -138,7 +182,7 @@ function Musician.CrossRP.Init()
 
 			debug(true, Musician.Registry.event.query, destination, player, unpack(queriedPlayers[player]))
 
-			CrossRP.Proto.Send(
+			Musician.CrossRP.Send(
 				destination,
 				{ Musician.Registry.event.query, player, Musician.CrossRP.GetHelloString() },
 				{ guarantee = true, priority = "URGENT" }
@@ -174,7 +218,7 @@ function Musician.CrossRP.Init()
 			local simplePlayerName = Musician.Utils.SimplePlayerName(player)
 			local faction = Musician.CrossRP.GetFactionId(UnitFactionGroup(simplePlayerName))
 			if not(faction) then return end
-			local source = CrossRP.Proto.DestFromFullname(player, faction)
+			local source = Musician.CrossRP.DestFromFullname(player, faction)
 			local guid = UnitGUID(simplePlayerName)
 			Musician.CrossRP.RegisterPlayerFromSource(source, guid)
 		end
@@ -216,7 +260,7 @@ function Musician.CrossRP.Init()
 		local scansToDo = math.ceil(FOREIGNERS_SCAN_MAX_TIME / scansPerMs)
 
 		-- Perform scan
-		local myBand = CrossRP.Proto.GetBandFromUnit("player")
+		local myBand = Musician.CrossRP.GetBandFromUnit("player")
 		if foreignerScanIndex == nil then foreignerScanIndex = 1 end
 		local scans = 0
 		local startTime = debugprofilestop()
@@ -268,10 +312,10 @@ function Musician.CrossRP.Init()
 				-- Player does not speak a language I should understand: player is from the other faction and I'm using an Elixir of Tongues
 				if not(isUnderstoodLanguage) and Musician.Utils.PlayerIsOnSameRealm(player) and not(Musician.Utils.PlayerIsInGroup(player)) then
 					-- Check if there is an active link to the other player faction
-					local playerBand = CrossRP.Proto.DestFromFullname(player, Musician.CrossRP.GetAdverseFaction())
+					local playerBand = Musician.CrossRP.DestFromFullname(player, Musician.CrossRP.GetAdverseFaction())
 
 					-- Dismiss emote if link is active
-					if CrossRP.Proto.SelectBridge(playerBand) then
+					if Musician.CrossRP.SelectBridge(playerBand) then
 						return true
 					end
 				end
@@ -293,10 +337,14 @@ end
 
 --- Return faction ID from faction name
 -- @param faction (string) (Horde, Alliance or Neutral)
--- @return (string) (H, A or N)
+-- @return (string) factionId (H, A or N)
 function Musician.CrossRP.GetFactionId(faction)
 	if not(faction) then return nil end
-	return string.sub(faction, 1, 1)
+	local factionId = string.upper(string.sub(faction, 1, 1))
+	if factionId == 'A' or factionId == 'H' or factionId == 'N' then
+		return factionId
+	end
+	return nil
 end
 
 --- Return player's adverse faction ID (ie H for Alliance)
@@ -321,18 +369,18 @@ function Musician.CrossRP.GetUnitDestination(unit)
 	local player = GetUnitName(unit, true)
 	local faction = Musician.CrossRP.GetFactionId(UnitFactionGroup(unit))
 	if not(faction) then return nil end
-	return CrossRP.Proto.DestFromFullname(player, faction)
+	return Musician.CrossRP.DestFromFullname(player, faction)
 end
 
 --- Return CrossRP destination for broadcast, based on the presence of nearby foreign players
 -- @return (array)
 function Musician.CrossRP.GetBroadcastDestination()
 
-	local myBand = CrossRP.Proto.GetBandFromUnit("player")
+	local myBand = Musician.CrossRP.GetBandFromUnit("player")
 	local destination = {}
 	local band
 	for band, _ in pairs(activeBands) do
-		if not(CrossRP.Proto.IsDestLinked(band, myBand)) then
+		if not(Musician.CrossRP.IsDestLinked(band, myBand)) then
 			table.insert(destination, band)
 		end
 	end
@@ -348,17 +396,17 @@ end
 -- @param source (string)
 -- @param[opt] guid (string)
 function Musician.CrossRP.RegisterPlayerFromSource(source, guid)
-	local player = CrossRP.Proto.DestToFullname(source)
+	local player = Musician.CrossRP.DestToFullname(source)
 	if player then
 		Musician.Registry.RegisterPlayer(player)
 
-		local myBand = CrossRP.Proto.GetBandFromUnit("player")
-		local isInMyBand = CrossRP.Proto.IsDestLinked(myBand, source)
+		local myBand = Musician.CrossRP.GetBandFromUnit("player")
+		local isInMyBand = Musician.CrossRP.IsDestLinked(myBand, source)
 		local playerData = Musician.Registry.players[player]
 
 		if not(isInMyBand) and not(playerData.crossRpSource) then
 			playerData.crossRpSource = source
-			playerData.crossRpBand = CrossRP.Proto.GetBandFromDest(source)
+			playerData.crossRpBand = Musician.CrossRP.GetBandFromDest(source)
 			table.insert(foreigners, player)
 		end
 
@@ -381,7 +429,7 @@ function Musician.CrossRP.SendHello(destination)
 
 	if destination then
 		debug(true, Musician.Registry.event.hello, destination)
-		CrossRP.Proto.Send(
+		Musician.CrossRP.Send(
 			destination,
 			{ Musician.Registry.event.hello, Musician.CrossRP.GetHelloString() },
 			options
@@ -395,7 +443,7 @@ end
 -- @param complete (boolean)
 function Musician.CrossRP.OnHelloOrQuery(source, message, complete)
 
-	local player = CrossRP.Proto.DestToFullname(source)
+	local player = Musician.CrossRP.DestToFullname(source)
 	local type, rawData = message:match("^(%S+) (.*)")
 	local destination, version, guid
 
@@ -446,7 +494,7 @@ function Musician.CrossRP.StreamCompressedSongChunk(compressedChunk)
 
 	-- Send chunk
 	debug(true, Musician.CrossRP.event.chunk, destination, streamingSongId, chunkId, #(Musician.CrossRP.event.chunk .. " " .. serializedData))
-	CrossRP.Proto.Send(
+	Musician.CrossRP.Send(
 		destination,
 		{ Musician.CrossRP.event.chunk, serializedData },
 		{ guarantee = false, priority = "FAST" }
@@ -458,11 +506,11 @@ end
 -- @param message (string)
 -- @param complete (boolean)
 function Musician.CrossRP.OnSongChunk(source, message, complete)
-	local myBand = CrossRP.Proto.GetBandFromUnit("player")
-	local player = CrossRP.Proto.DestToFullname(source)
+	local myBand = Musician.CrossRP.GetBandFromUnit("player")
+	local player = Musician.CrossRP.DestToFullname(source)
 
 	-- Do not process if receiving a chunk from my own band or from someone in my group
-	if CrossRP.Proto.IsDestLinked(myBand, source) or not(player) or Musician.Utils.PlayerIsInGroup(player) then
+	if Musician.CrossRP.IsDestLinked(myBand, source) or not(player) or Musician.Utils.PlayerIsInGroup(player) then
 		return
 	end
 
@@ -515,7 +563,7 @@ function Musician.CrossRP.StopSong()
 	if not(destination) then return end
 
 	debug(true, Musician.CrossRP.event.stop, destination)
-	CrossRP.Proto.Send(
+	Musician.CrossRP.Send(
 		destination,
 		{ Musician.CrossRP.event.stop },
 		{ guarantee = true, priority = "FAST" }
@@ -528,11 +576,11 @@ end
 -- @param complete (boolean)
 function Musician.CrossRP.OnSongStop(source, message, complete)
 
-	local myBand = CrossRP.Proto.GetBandFromUnit("player")
-	local player = CrossRP.Proto.DestToFullname(source)
+	local myBand = Musician.CrossRP.GetBandFromUnit("player")
+	local player = Musician.CrossRP.DestToFullname(source)
 
 	-- Do not process if receiving a stop from my own band or from someone in my group
-	if CrossRP.Proto.IsDestLinked(myBand, source) or not(player) or Musician.Utils.PlayerIsInGroup(player) then
+	if Musician.CrossRP.IsDestLinked(myBand, source) or not(player) or Musician.Utils.PlayerIsInGroup(player) then
 		return
 	end
 
