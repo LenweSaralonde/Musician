@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.7.1.2
+--------
+* Updated 3rd party libraries to address rare compatibility errors with other add-ons.
+
 v1.7.1.1
 --------
 * Fixed minimap pin sometimes blinking
