@@ -110,9 +110,13 @@ function Musician.SongLinks.Init()
 	end
 
 	-- Convert received plain text chat links into hyperlinks
-	local messageEventFilter = function(self, event, msg, player, ...)
+	local messageEventFilter = function(self, event, msg, sender, ...)
+		local player = sender
+		if event == 'CHAT_MSG_WHISPER_INFORM' then
+			player = UnitName('player')
+		end
 		msg = Musician.SongLinks.ChatLinksToHyperlinks(msg, player)
-		return false, msg, player, ...
+		return false, msg, sender, ...
 	end
 	for _, event in pairs(CHAT_MSG_EVENTS) do
 		ChatFrame_AddMessageEventFilter(event, messageEventFilter)
