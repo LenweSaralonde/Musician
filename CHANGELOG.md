@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.7.1.3
+--------
+* Added Threat Plates support.
+* Fixed song link owner when sent as whisper message.
+
 v1.7.1.2
 --------
 * Updated 3rd party libraries to address rare compatibility errors with other add-ons.
