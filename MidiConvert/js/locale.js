@@ -4,13 +4,15 @@ var MUSICIAN_MSG = {};
 var MUSICIAN_DOWNLOAD_URL = null;
 var MUSICIAN_VERSION = null;
 
+var localeFile;
+
 switch (userLang) {
 	case 'fr':
-		localeFile = userLang + '.js?v=3';
+		localeFile = userLang;
 		break;
 
 	default:
-		localeFile = 'default.js?v=3';
+		localeFile = 'default';
 }
 
 // Set localized strings
@@ -21,7 +23,6 @@ window.onload = function() {
 	document.getElementById("CopyButton").innerHTML = MUSICIAN_MSG.copy;
 	setDownloadLink();
 	document.getElementById("main").style = 'opacity: 1';
-	document.getElementById("MusicianWindow").src = 'img/' + MUSICIAN_MSG.windowBackgroundImage;
 	document.querySelector("#Discord a").title = MUSICIAN_MSG.joinDiscord;
 	document.querySelector("#BattleNet a").title = MUSICIAN_MSG.joinBattleNet;
 	document.querySelector("#Patreon a").title = MUSICIAN_MSG.becomeAPatron;
@@ -48,5 +49,5 @@ function setDownloadLink() {
 }
 
 var localeScriptTag = document.createElement('script');
-localeScriptTag.src = './locale/' + localeFile;
+localeScriptTag.src = './locale/' + localeFile + '.js?v=4';
 document.head.appendChild(localeScriptTag);
