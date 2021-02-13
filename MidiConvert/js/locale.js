@@ -8,6 +8,7 @@ var localeFile;
 
 switch (userLang) {
 	case 'fr':
+	case 'zh':
 		localeFile = userLang;
 		break;
 

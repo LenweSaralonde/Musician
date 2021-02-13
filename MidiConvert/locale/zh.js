@@ -1,0 +1,15 @@
+MUSICIAN_MSG.title = "Musician – MIDI 导入";
+MUSICIAN_MSG.header = "将MIDI文件导入Musician";
+MUSICIAN_MSG.instructions = "点击浏览或将MIDI文件拖动到此处。";
+MUSICIAN_MSG.copy = "复制";
+MUSICIAN_MSG.copySuccess = "已复制到剪贴板";
+MUSICIAN_MSG.copyError = "无法复制";
+MUSICIAN_MSG.unsupportedBrowser = "不支持此类型的浏览器";
+MUSICIAN_MSG.dowload = "下载《魔兽世界》的Musician插件";
+MUSICIAN_MSG.dowloadVersion = "下载《魔兽世界》正式服和怀旧服使用的Musician v{version}";
+MUSICIAN_MSG.joinDiscord = "加入我们的Discord社区";
+MUSICIAN_MSG.joinBattleNet = "加入我们的战网群组";
+MUSICIAN_MSG.becomeAPatron = "成为Patron并捐赠本项目";
+MUSICIAN_MSG.donatePayPal = "对本项目进行捐赠";
+MUSICIAN_MSG.patreonLink = "成为Patron";
+MUSICIAN_MSG.donateLink = "捐赠";
