@@ -383,12 +383,44 @@ function Musician.Comm.ProcessChunk(packedChunk, sender)
 	end
 
 	-- Append chunk data
-	Musician.songs[sender]:AppendChunk(chunk, mode, songId, chunkDuration, playtimeLeft, sender)
+	local receivingSong = Musician.songs[sender]
+	receivingSong:AppendChunk(chunk, mode, songId, chunkDuration, playtimeLeft, sender)
 
 	-- Play song if not already started
-	if not(Musician.songs[sender]:IsPlaying()) and not(Musician.songs[sender].willPlay) then
-		Musician.songs[sender].willPlay = true
-		Musician.songs[sender]:Play(chunkDuration / 2)
+	if not(receivingSong:IsPlaying()) and not(receivingSong.willPlay) then
+
+		-- Play song with delay to anticipate lag
+		local playDelay = chunkDuration / 2
+		receivingSong.willPlay = true
+		receivingSong:Play(playDelay)
+		receivingSong.playStartTime = debugprofilestop() / 1000
+
+		-- Catch up out-of-sync songs in band play mode due to server lag
+		if mode == Musician.Song.MODE_DURATION then
+			local delayMin = 1 / 60
+			local delayMax = playDelay
+			for _, song in pairs(Musician.songs) do
+				if receivingSong ~= song and song:IsPlaying() and song.playStartTime then
+					-- Consider the songs belong to the same band if they have the same playtime left
+					local songPlaytimeLeft = song.cropTo - song.chunkTime
+
+					-- Calculate synchronization delay
+					local syncDelay = (receivingSong.playStartTime - receivingSong.cursor - song.playStartTime) % chunkDuration
+
+					-- The newly receiving song has same playing time left as the already playing one and is slightly late with it
+					if playtimeLeft == songPlaytimeLeft + song.chunkDuration and syncDelay > delayMin and syncDelay < delayMax then
+						-- Catch up sync delay for the receiving song
+						receivingSong:Seek(syncDelay)
+					-- The newly receiving song has same playing time left as the already playing one and is slightly early with it
+					elseif playtimeLeft == songPlaytimeLeft and syncDelay > delayMax and syncDelay < chunkDuration - delayMin then
+						-- Catch up sync delay for the already playing song
+						song:Seek(song.cursor + chunkDuration - syncDelay)
+						song.playStartTime = song.playStartTime - chunkDuration + syncDelay
+					end
+				end
+			end
+		end
+
 		if Musician.Utils.PlayerIsMyself(sender) then
 			isPlayPending = false
 			Musician.Comm:SendMessage(Musician.Events.CommSendActionComplete, Musician.Comm.action.play)
