@@ -15,7 +15,9 @@ if ChatThrottleLibExtended and ChatThrottleLibExtended.version >= CTL_VERSION th
 end
 
 if not(ChatThrottleLibExtended) then
-	ChatThrottleLibExtended = {}
+	ChatThrottleLibExtended = Mixin({}, ChatThrottleLib)
+	ChatThrottleLibExtended.SendChatMessage = nil
+	ChatThrottleLibExtended.SendAddonMessage = nil
 end
 
 ChatThrottleLibExtended.version = CTLE_VERSION
@@ -25,11 +27,19 @@ ChatThrottleLibExtended.BNET_MAX_LENGTH = 4079
 
 local bMyTraffic = false
 
+------------------ TWEAKABLES -----------------
+
+-- Battle.net messages limit is 10 messages per 10 seconds
+-- http://web.archive.org/web/20150104185757/http://us.battle.net/wow/en/forum/topic/11437004031
+ChatThrottleLibExtended.MAX_CPS = ChatThrottleLibExtended.BNET_MAX_LENGTH
+ChatThrottleLibExtended.BURST = 2 * ChatThrottleLibExtended.BNET_MAX_LENGTH
+
 -----------------------------------------------------------------------
 -- ChatThrottleLibExtended:Init
 
 function ChatThrottleLibExtended:Init()
 	if not(self.securelyHooked) then
+		ChatThrottleLib.Init(self)
 		self.securelyHooked = true
 		-- BNSendGameData
 		hooksecurefunc("BNSendGameData", function(...)
@@ -45,7 +55,7 @@ function ChatThrottleLibExtended.Hook_BNSendGameData(destination, prefix, text)
 	if bMyTraffic then
 		return
 	end
-	local self = ChatThrottleLib -- Use ChatThrottleLib's queue and stat values
+	local self = ChatThrottleLibExtended -- Use ChatThrottleLib's own queue and stat values
 	local size = tostring(text or ""):len() + tostring(prefix or ""):len()
 	size = size + tostring(destination or ""):len() + self.MSG_OVERHEAD
 	self.avail = self.avail - size
@@ -56,7 +66,6 @@ end
 -- ChatThrottleLibExtended:BNSendGameData
 
 function ChatThrottleLibExtended:BNSendGameData(prio, prefix, text, target, queueName, callbackFn, callbackArg)
-	local self = ChatThrottleLib -- Use ChatThrottleLib's queue and stat values
 	if not self or not prio or not prefix or not text  or not self.Prio[prio] then
 		error('Usage: ChatThrottleLibExtended:BNSendGameData("{BULK||NORMAL||ALERT}", "prefix", "text", "target")', 2)
 	end
