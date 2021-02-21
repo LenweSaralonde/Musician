@@ -140,9 +140,22 @@ end
 function Musician.Utils.GetFullPlayerName(player)
 	if Musician.Utils.IsBattleNetID(player) then
 		for i = 1, BNGetNumFriends() do
-			local accountInfo = C_BattleNet.GetFriendAccountInfo(i)
-			if accountInfo.gameAccountInfo and accountInfo.gameAccountInfo.gameAccountID == tonumber(player) then
-				return string.gsub(accountInfo.battleTag, '#[0-9]+$', '')
+			local battleTag
+			if C_BattleNet then
+				local accountInfo = C_BattleNet.GetFriendAccountInfo(i)
+				if accountInfo.gameAccountInfo and accountInfo.gameAccountInfo.gameAccountID == tonumber(player) then
+					battleTag = accountInfo.battleTag
+				end
+			else
+				local accountInfo = { BNGetFriendInfoByID(i) }
+				local gameAccountId = accountInfo and accountInfo[6]
+				if gameAccountId == tonumber(player) then
+					battleTag = accountInfo and accountInfo[3]
+				end
+			end
+			if battleTag then
+				local nickName = string.gsub(battleTag, '#[0-9]+$', '')
+				return nickName
 			end
 		end
 		return UNKNOWN
@@ -168,10 +181,18 @@ end
 -- @param battleNetAccountId (string)
 -- @return battleNetGameAccountId (string)
 function Musician.Utils.GetBattleNetGameAccountID(battleNetAccountId)
-	local accountInfo = C_BattleNet.GetAccountInfoByID(battleNetAccountId)
-	local gameAccountInfo = accountInfo and accountInfo.gameAccountInfo
-	if gameAccountInfo and Musician.Utils.IsBattleNetGameAccountOnline(gameAccountInfo.gameAccountID) then
-		return gameAccountInfo.gameAccountID
+	if C_BattleNet then
+		local accountInfo = C_BattleNet.GetAccountInfoByID(battleNetAccountId)
+		local gameAccountInfo = accountInfo and accountInfo.gameAccountInfo
+		if gameAccountInfo and Musician.Utils.IsBattleNetGameAccountOnline(gameAccountInfo.gameAccountID) then
+			return gameAccountInfo.gameAccountID
+		end
+	else
+		local accountInfo = { BNGetFriendInfoByID(battleNetAccountId) }
+		local gameAccountID = accountInfo and accountInfo[6]
+		if gameAccountID and Musician.Utils.IsBattleNetGameAccountOnline(gameAccountID) then
+			return gameAccountID
+		end
 	end
 	return nil
 end
@@ -180,9 +201,17 @@ end
 -- @param gameAccountId (int)
 -- @return isOnline (string)
 function Musician.Utils.IsBattleNetGameAccountOnline(gameAccountId)
-	local gameAccountInfo = C_BattleNet.GetGameAccountInfoByID(gameAccountId)
-	return gameAccountInfo and gameAccountInfo.clientProgram == 'WoW' and gameAccountInfo.isOnline
+	if C_BattleNet then
+		local gameAccountInfo = C_BattleNet.GetGameAccountInfoByID(gameAccountId)
+		return gameAccountInfo and gameAccountInfo.clientProgram == 'WoW' and gameAccountInfo.isOnline
+	else
+		local gameAccountInfo = { BNGetGameAccountInfo(gameAccountId) }
+		local clientProgram = gameAccountInfo and gameAccountInfo[3]
+		local isOnline = gameAccountInfo and gameAccountInfo[1]
+		return gameAccountInfo and clientProgram == 'WoW' and isOnline
+	end
 end
+
 --- Return the code to insert an icon in a chat message or a text string
 -- @param path (string)
 -- @param[opt=0] r (number) 0-1
