@@ -17,14 +17,12 @@ end
 -- @param player (string)
 -- @return (string)
 function Musician.MyRolePlay.GetRpName(player)
-	player = Musician.Utils.NormalizePlayerName(player)
-
+	player = Musician.Utils.GetFullPlayerName(player)
 	if msp and msp.char and msp.char[player] and msp.char[player].field and msp.char[player].field.NA then
 		if msp.char[player].field.NA ~= "" then
 			return msp.char[player].field.NA
 		end
 	end
-
 	return Musician.Utils.SimplePlayerName(player)
 end
 

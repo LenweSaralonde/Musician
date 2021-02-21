@@ -34,7 +34,7 @@ end
 -- @param player (string)
 -- @return (string)
 function Musician.TRP3.GetRpName(player)
-	player = Musician.Utils.NormalizePlayerName(player)
+	player = Musician.Utils.GetFullPlayerName(player)
 	local trpPlayer = AddOn_TotalRP3.Player.static.CreateFromCharacterID(player)
 	return trpPlayer:GetCustomColoredRoleplayingNamePrefixedWithIcon()
 end
