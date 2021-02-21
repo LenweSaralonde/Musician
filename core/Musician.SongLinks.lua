@@ -1,7 +1,7 @@
 --- Song links module
 -- @module Musician.SongLinks
 
-Musician.SongLinks = LibStub("AceAddon-3.0"):NewAddon("Musician.SongLinks", "AceComm-3.0", "AceEvent-3.0")
+Musician.SongLinks = LibStub("AceAddon-3.0"):NewAddon("Musician.SongLinks", "AceComm-3.0", "AceComm-3.0-Extended", "AceEvent-3.0")
 
 local MODULE_NAME = "SongLinks"
 Musician.AddModule(MODULE_NAME)
@@ -42,7 +42,8 @@ local CHAT_MSG_EVENTS = {
 	"CHAT_MSG_PARTY", "CHAT_MSG_PARTY_LEADER",
 	"CHAT_MSG_RAID", "CHAT_MSG_RAID_LEADER",
 	"CHAT_MSG_GUILD", "CHAT_MSG_OFFICER",
-	"CHAT_MSG_WHISPER", "CHAT_MSG_WHISPER_INFORM"
+	"CHAT_MSG_WHISPER", "CHAT_MSG_WHISPER_INFORM",
+	"CHAT_MSG_BN_WHISPER", "CHAT_MSG_BN_WHISPER_INFORM"
 }
 local BUBBLE_CHAT_MSG_EVENTS = {
 	"CHAT_MSG_SAY", "CHAT_MSG_YELL",
@@ -85,18 +86,37 @@ local function debug(message, ...)
 	Musician.Utils.Debug(MODULE_NAME, message, ...)
 end
 
+--- Send communication message.
+-- Same parameters as AceComm:SendCommMessage but will use Battle.net if the provided target is a game account ID.
+local function SendCommMessage(prefix, text, kind, target, priority, callback, callbackArg)
+	if kind == 'WHISPER' and Musician.Utils.IsBattleNetID(target) then
+		if Musician.Utils.IsBattleNetGameAccountOnline(target) then
+			Musician.SongLinks:SendBNetCommMessage(prefix, text, target, priority, callback, callbackArg)
+		end
+	else
+		Musician.SongLinks:SendCommMessage(prefix, text, kind, target, priority, callback, callbackArg)
+	end
+end
+
 --- Initialize song links
 --
 function Musician.SongLinks.Init()
+	-- Track song import progression
 	Musician.SongLinks:RegisterMessage(Musician.Events.SongImportProgress, Musician.SongLinks.OnSongImportProgress)
+
+	-- Register communication for game chat
 	Musician.SongLinks:RegisterComm(Musician.SongLinks.event.song, Musician.SongLinks.OnSongReceived)
 	Musician.SongLinks:RegisterComm(Musician.SongLinks.event.requestSong, Musician.SongLinks.OnRequestSong)
 	Musician.SongLinks:RegisterComm(Musician.SongLinks.event.songError, Musician.SongLinks.OnSongError)
-	Musician.SongLinks:RegisterEvent("CHAT_MSG_ADDON", function(event, prefix, message, distribution, sender)
-		if prefix == Musician.SongLinks.event.song then
-			Musician.SongLinks.OnSongData(prefix, message, distribution, sender)
-		end
-	end)
+	Musician.SongLinks:RegisterEvent("CHAT_MSG_ADDON", Musician.SongLinks.OnSongData)
+
+	-- Register communication for Battle.net chat
+	Musician.SongLinks:RegisterBNetComm(Musician.SongLinks.event.song, Musician.SongLinks.OnSongReceived)
+	Musician.SongLinks:RegisterBNetComm(Musician.SongLinks.event.requestSong, Musician.SongLinks.OnRequestSong)
+	Musician.SongLinks:RegisterBNetComm(Musician.SongLinks.event.songError, Musician.SongLinks.OnSongError)
+	Musician.SongLinks:RegisterEvent("BN_CHAT_MSG_ADDON", Musician.SongLinks.OnSongData)
+
+	-- Replace song links in chat bubbles
 	for _, event in pairs(BUBBLE_CHAT_MSG_EVENTS) do
 		Musician.SongLinks:RegisterEvent(event, Musician.SongLinks.OnChatBubbleMsg)
 	end
@@ -112,8 +132,11 @@ function Musician.SongLinks.Init()
 	-- Convert received plain text chat links into hyperlinks
 	local messageEventFilter = function(self, event, msg, sender, ...)
 		local player = sender
-		if event == 'CHAT_MSG_WHISPER_INFORM' then
+		if event == 'CHAT_MSG_WHISPER_INFORM' or event == 'CHAT_MSG_BN_WHISPER_INFORM' then
 			player = UnitName('player')
+		elseif event == 'CHAT_MSG_BN_WHISPER' then
+			local _, _, playerName2, _, _, _, _, _, _, _, bnSenderID = ...
+			player = Musician.Utils.GetBattleNetGameAccountID(bnSenderID)
 		end
 		msg = Musician.SongLinks.ChatLinksToHyperlinks(msg, player)
 		return false, msg, sender, ...
@@ -324,7 +347,7 @@ function Musician.SongLinks.RequestSong(title, playerName, dataOnly)
 
 	-- Send song request to player
 	debugComm(true, Musician.SongLinks.event.requestSong, playerName, title)
-	Musician.SongLinks:SendCommMessage(Musician.SongLinks.event.requestSong, title, 'WHISPER', playerName, 'ALERT')
+	SendCommMessage(Musician.SongLinks.event.requestSong, title, 'WHISPER', playerName, 'ALERT')
 end
 
 --- Remove a song download request
@@ -386,7 +409,7 @@ function Musician.SongLinks.SendSong(title, playerName)
 		debug("Song not found")
 		local message = Musician.SongLinks.errors.notFound .. ' ' .. title
 		debugComm(true, Musician.SongLinks.event.songError, playerName, message)
-		Musician.SongLinks:SendCommMessage(Musician.SongLinks.event.songError, message, 'WHISPER', playerName, 'ALERT')
+		SendCommMessage(Musician.SongLinks.event.songError, message, 'WHISPER', playerName, 'ALERT')
 		return
 	end
 
@@ -408,20 +431,27 @@ function Musician.SongLinks.SendSongData(title, playerName, songData)
 		debug("Song already sending")
 		local message = Musician.SongLinks.errors.alreadySending .. ' ' .. title
 		debugComm(true, Musician.SongLinks.event.songError, playerName, message)
-		Musician.SongLinks:SendCommMessage(Musician.SongLinks.event.songError, message, 'WHISPER', playerName, 'ALERT')
+		SendCommMessage(Musician.SongLinks.event.songError, message, 'WHISPER', playerName, 'ALERT')
 		return
 	end
 
 	sendingSongs[playerName] = title
 
-	local encodedData = LibDeflate:EncodeForWoWAddonChannel(songData)
+	local encodedData
+	if Musician.Utils.IsBattleNetID(playerName) then
+		-- Encode in base 64 for sending through Battle.net
+		-- Base64 encoding overhead is less important than EncodeForWoWChatChannel()
+		encodedData = Musician.Utils.Base64Encode(songData)
+	else
+		encodedData = LibDeflate:EncodeForWoWAddonChannel(songData)
+	end
 
 	-- Prepend data length to the message so the recipient can determine the progression
 	local msg = #encodedData .. " " .. encodedData
 
 	-- Send song
 	debugComm(true, Musician.SongLinks.event.song, playerName, title, #msg)
-	Musician.SongLinks:SendCommMessage(Musician.SongLinks.event.song, msg, 'WHISPER', playerName, 'BULK', function(_, sent, total)
+	SendCommMessage(Musician.SongLinks.event.song, msg, 'WHISPER', playerName, 'BULK', function(_, sent, total)
 		-- Song upload complete
 		if sent == total then
 			sendingSongs[playerName] = nil
@@ -431,7 +461,9 @@ end
 
 --- OnSongData
 -- Notify download progression
-function Musician.SongLinks.OnSongData(prefix, message, distribution, sender)
+function Musician.SongLinks.OnSongData(event, prefix, message, distribution, sender)
+	if prefix ~= Musician.SongLinks.event.song then return end
+
 	sender = Musician.Utils.NormalizePlayerName(sender)
 
 	local requestedSong = requestedSongs[sender]
@@ -492,7 +524,12 @@ function Musician.SongLinks.OnSongReceived(prefix, message, distribution, sender
 	if requestedSong == nil then return end
 
 	local dataLength, encodedData = string.match(message, "^([0-9]+) (.*)")
-	local songData = LibDeflate:DecodeForWoWAddonChannel(encodedData)
+	local songData
+	if Musician.Utils.IsBattleNetID(sender) then
+		songData = Musician.Utils.Base64Decode(encodedData)
+	else
+		songData = LibDeflate:DecodeForWoWAddonChannel(encodedData)
+	end
 
 	-- Data only
 	if requestedSong.dataOnly then

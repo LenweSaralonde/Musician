@@ -54,7 +54,13 @@ local function update(title, playerName)
 
 	-- Set frame title
 	local playerDisplayName = Musician.Utils.FormatPlayerName(playerName)
-	local playerLink = Musician.Utils.Highlight('[') .. Musician.Utils.GetLink('player', Musician.Utils.Highlight(playerDisplayName), playerName) .. Musician.Utils.Highlight(']')
+	local playerLink
+	if Musician.Utils.IsBattleNetID(playerName) then
+		playerLink = Musician.Utils.Highlight('[') .. Musician.Utils.Highlight(playerDisplayName) .. Musician.Utils.Highlight(']')
+	else
+		playerLink = Musician.Utils.Highlight('[') .. Musician.Utils.GetLink('player', Musician.Utils.Highlight(playerDisplayName), playerName) .. Musician.Utils.Highlight(']')
+	end
+
 	local frameTitle = string.gsub(Musician.Msg.LINK_IMPORT_WINDOW_TITLE, '{player}', playerLink)
 	frame.title:SetText(frameTitle)
 
@@ -105,6 +111,11 @@ end
 -- Called when a song hyperlink is clicked
 function Musician.SongLinkImportFrame.OnSongLinkClick(event, title, playerName)
 	playerName = Musician.Utils.NormalizePlayerName(playerName)
+
+	-- It's a link from a Battle.net message: player name is a game account ID
+	if Musician.Utils.IsBattleNetID(playerName) and not(Musician.Utils.IsBattleNetGameAccountOnline(playerName)) then
+		return
+	end
 
 	local frame = MusicianSongLinkImportFrame
 

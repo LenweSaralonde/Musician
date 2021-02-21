@@ -134,13 +134,55 @@ function Musician.Utils.GetPlayerLink(player)
 	return Musician.Utils.GetLink('player', player, player)
 end
 
+--- Get player full name with realm slug or Battle.net account name if a Battle.net game account ID is provided
+-- @param player (string)
+-- @return fullPlayerName (string)
+function Musician.Utils.GetFullPlayerName(player)
+	if Musician.Utils.IsBattleNetID(player) then
+		for i = 1, BNGetNumFriends() do
+			local accountInfo = C_BattleNet.GetFriendAccountInfo(i)
+			if accountInfo.gameAccountInfo and accountInfo.gameAccountInfo.gameAccountID == tonumber(player) then
+				return string.gsub(accountInfo.battleTag, '#[0-9]+$', '')
+			end
+		end
+		return UNKNOWN
+	end
+	return Musician.Utils.NormalizePlayerName(player)
+end
+
 --- Get player name for display
 -- @param player (string)
 -- @return formattedPlayerName (string)
 function Musician.Utils.FormatPlayerName(player)
-	return Musician.Utils.SimplePlayerName(player)
+	return Musician.Utils.SimplePlayerName(Musician.Utils.GetFullPlayerName(player))
 end
 
+--- Return true when the provided player name is a Battle.net ID
+-- @param playerName (string)
+-- @return isBattleNetID (boolean)
+function Musician.Utils.IsBattleNetID(playerName)
+	return string.find(playerName, '^%d+$') ~= nil
+end
+
+--- Get Battle.net game account ID from the Battle.net account ID.
+-- @param battleNetAccountId (string)
+-- @return battleNetGameAccountId (string)
+function Musician.Utils.GetBattleNetGameAccountID(battleNetAccountId)
+	local accountInfo = C_BattleNet.GetAccountInfoByID(battleNetAccountId)
+	local gameAccountInfo = accountInfo and accountInfo.gameAccountInfo
+	if gameAccountInfo and Musician.Utils.IsBattleNetGameAccountOnline(gameAccountInfo.gameAccountID) then
+		return gameAccountInfo.gameAccountID
+	end
+	return nil
+end
+
+--- Indicates whenever the provided game account ID is online
+-- @param gameAccountId (int)
+-- @return isOnline (string)
+function Musician.Utils.IsBattleNetGameAccountOnline(gameAccountId)
+	local gameAccountInfo = C_BattleNet.GetGameAccountInfoByID(gameAccountId)
+	return gameAccountInfo and gameAccountInfo.clientProgram == 'WoW' and gameAccountInfo.isOnline
+end
 --- Return the code to insert an icon in a chat message or a text string
 -- @param path (string)
 -- @param[opt=0] r (number) 0-1
@@ -444,6 +486,11 @@ end
 -- @param playerName (string)
 -- @return normalizedPlayerName (string)
 function Musician.Utils.NormalizePlayerName(playerName)
+	-- Battle.net id
+	if Musician.Utils.IsBattleNetID(playerName) then
+		return tostring(playerName) -- Should always be a string
+	end
+
 	-- Append missing realm name
 	if string.find(playerName, '-') == nil then
 		return playerName .. '-' .. Musician.Utils.GetNormalizedRealmName()
