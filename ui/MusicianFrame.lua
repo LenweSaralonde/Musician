@@ -35,6 +35,7 @@ function MusicianFrame.Init()
 	Musician.Frame:RegisterMessage(Musician.Events.BandStop, MusicianFrame.OnBandStop)
 	Musician.Frame:RegisterMessage(Musician.Events.BandPlayReady, MusicianFrame.OnBandPlayReady)
 	Musician.Frame:RegisterMessage(Musician.Events.BandReadyPlayersUpdated, MusicianFrame.UpdateBandPlayButton)
+	Musician.Frame:RegisterMessage(Musician.Events.SongReceiveSucessful, MusicianFrame.OnSongReceiveSucessful)
 	Musician.Frame:RegisterEvent("GROUP_ROSTER_UPDATE", MusicianFrame.OnRosterUpdate)
 	Musician.Frame:RegisterEvent("PLAYER_DEAD", MusicianFrame.OnCommChannelUpdate)
 	Musician.Frame:RegisterEvent("PLAYER_ALIVE", MusicianFrame.OnCommChannelUpdate)
@@ -372,5 +373,14 @@ function MusicianFrame.OnBandStop(event, player, songCrc32)
 	-- Display "Stopped band play" emote in the chat
 	if Musician.Comm.GetCurrentSongCrc32() == songCrc32 then
 		Musician.Utils.DisplayEmote(player, UnitGUID(Musician.Utils.SimplePlayerName(player)), Musician.Msg.EMOTE_PLAY_IN_BAND_STOP)
+	end
+end
+
+--- OnSongReceiveSucessful
+-- Show main window when a downloaded song has been successfully imported for playing.
+function MusicianFrame.OnSongReceiveSucessful(event, sender, songData, song)
+	local isDataOnly = song == nil
+	if not(isDataOnly) then
+		MusicianFrame:Show()
 	end
 end
