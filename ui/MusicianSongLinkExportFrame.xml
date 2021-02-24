@@ -66,6 +66,14 @@
 					<OnClick inherit="append">
 						self:GetParent().postLink()
 					</OnClick>
+					<OnEnter inherit="append">
+						-- Prevent the chat edit box from being closed when the button is clicked
+						self.chatEditOnFocusLost = ChatEdit_OnEditFocusLost
+						ChatEdit_OnEditFocusLost = function() end
+					</OnEnter>
+					<OnLeave inherit="append">
+						ChatEdit_OnEditFocusLost = self.chatEditOnFocusLost
+					</OnLeave>
 				</Scripts>
 			</Button>
 		</Frames>
