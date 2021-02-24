@@ -78,9 +78,15 @@
 		</Layers>
 
 		<Scripts>
-			<OnLoad>self:RegisterForDrag("LeftButton")</OnLoad>
+			<OnLoad>
+				Musician.RestoreFramePosition(self)
+				self:RegisterForDrag("LeftButton")
+			</OnLoad>
 			<OnDragStart>self:StartMoving()</OnDragStart>
-			<OnDragStop>self:StopMovingOrSizing()</OnDragStop>
+			<OnDragStop>
+				self:StopMovingOrSizing()
+				Musician.SaveFramePosition(self)
+			</OnDragStop>
 			<OnKeyDown inherit="append">
 				if self:IsShown() and key == "ESCAPE" and not(self.noEscape) then
 					self:SetPropagateKeyboardInput(false)
