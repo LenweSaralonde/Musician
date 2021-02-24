@@ -62,8 +62,12 @@ function Musician:OnInitialize()
 		debug = {},
 		mutedPlayers = {}
 	}
-
 	Musician_Settings = Mixin(defaultSettings, Musician_Settings or {})
+
+	local defaultCharacterSettings = {
+		framePosition = {}
+	}
+	Musician_CharacterSettings = Mixin(defaultCharacterSettings, Musician_CharacterSettings or {})
 
 	Musician.songs = {}
 	Musician.sourceSong = nil
@@ -765,6 +769,55 @@ function Musician.SetupHooks()
 
 		return false, msg, player, languageName, channelName, playerName2, pflag, ...
 	end)
+end
+
+--- Save the frame after it was moved
+-- @param frame (Frame)
+function Musician.SaveFramePosition(frame)
+	-- Saved variables have not been initialized yet
+	if Musician_CharacterSettings == nil then
+		-- Try again on next frame
+		C_Timer.After(0, function() Musician.SaveFramePosition(frame) end)
+		return
+	end
+
+	local frameName = frame:GetName()
+	if frameName == nil then
+		return
+	end
+
+	local framePosition = { frame:GetLeft(), frame:GetTop() }
+	if frame:IsResizable() then
+		table.insert(framePosition, frame:GetWidth())
+		table.insert(framePosition, frame:GetHeight())
+	end
+
+	Musician_CharacterSettings.framePosition[frameName] = framePosition
+end
+
+--- Restore the frame position on startup
+-- @param frame (Frame)
+function Musician.RestoreFramePosition(frame)
+	-- Saved variables have not been initialized yet
+	if Musician_CharacterSettings == nil then
+		-- Try again on next frame
+		C_Timer.After(0, function() Musician.RestoreFramePosition(frame) end)
+		return
+	end
+
+	local frameName = frame:GetName()
+	if frameName == nil or Musician_CharacterSettings.framePosition[frameName] == nil then
+		return
+	end
+
+	local xOfs, yOfs, width, height = unpack(Musician_CharacterSettings.framePosition[frameName])
+	if xOfs ~= nil and yOfs ~= nil then
+		frame:ClearAllPoints()
+		frame:SetPoint('TOPLEFT', UIParent, 'BOTTOMLEFT', xOfs, yOfs)
+		if frame:IsResizable() and width ~= nil and height ~= nil then
+			frame:SetSize(width, height)
+		end
+	end
 end
 
 --- Add a tips and tricks callback

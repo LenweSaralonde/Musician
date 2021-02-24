@@ -4,6 +4,7 @@
 ## Version: 1.7.1.3
 ## Notes: Listen to and perform music with your character
 ## SavedVariables: Musician_Settings
+## SavedVariablesPerCharacter: Musician_CharacterSettings
 
 embeds.xml
 

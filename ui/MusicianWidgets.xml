@@ -21,9 +21,15 @@
 	<Frame name="MusicianDialogTemplateNoAnchor" parent="UIParent" toplevel="true" enableMouse="true" movable="true" hidden="true" clampedtoscreen="true" frameStrata="DIALOG" virtual="true">
 
 		<Scripts>
-			<OnLoad>self:RegisterForDrag("LeftButton")</OnLoad>
+			<OnLoad>
+				Musician.RestoreFramePosition(self)
+				self:RegisterForDrag("LeftButton")
+			</OnLoad>
 			<OnDragStart>self:StartMoving()</OnDragStart>
-			<OnDragStop>self:StopMovingOrSizing()</OnDragStop>
+			<OnDragStop>
+				self:StopMovingOrSizing()
+				Musician.SaveFramePosition(self)
+			</OnDragStop>
 			<OnKeyDown inherit="append">
 				if self:IsShown() and key == "ESCAPE" and not(self.noEscape) then
 					self:SetPropagateKeyboardInput(false)
