@@ -305,6 +305,7 @@ msg.LINKS_ERROR.notFound = "音乐“{title}”无法从玩家{player}获取。"
 msg.LINKS_ERROR.alreadySending = "玩家{player}已经向你发送了一首音乐。请几秒后重试。"
 msg.LINKS_ERROR.alreadyRequested = "玩家{player}已经请求发送一首音乐。"
 msg.LINKS_ERROR.timeout = "玩家{player}没有响应。"
+msg.LINKS_ERROR.offline = "{player}未登录魔兽世界。"
 msg.LINKS_ERROR.importingFailed = "歌曲{title}无法从玩家{player}处导入。"
 
 msg.MAP_OPTIONS_MAP = "地图"

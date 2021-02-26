@@ -18,6 +18,7 @@ Musician.SongLinks.errors.notFound = 'notFound'
 Musician.SongLinks.errors.alreadySending = 'alreadySending'
 Musician.SongLinks.errors.alreadyRequested = 'alreadyRequested'
 Musician.SongLinks.errors.timeout = 'timeout'
+Musician.SongLinks.errors.offline = 'offline'
 Musician.SongLinks.errors.importingFailed = 'importingFailed'
 
 Musician.SongLinks.status = {}
@@ -136,7 +137,7 @@ function Musician.SongLinks.Init()
 			player = UnitName('player')
 		elseif event == 'CHAT_MSG_BN_WHISPER' then
 			local _, _, playerName2, _, _, _, _, _, _, _, bnSenderID = ...
-			player = Musician.Utils.GetBattleNetGameAccountID(bnSenderID)
+			player = tonumber(bnSenderID)
 		end
 		msg = Musician.SongLinks.ChatLinksToHyperlinks(msg, player)
 		return false, msg, sender, ...

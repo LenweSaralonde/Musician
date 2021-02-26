@@ -53,11 +53,13 @@ local function update(title, playerName)
 	local frame = MusicianSongLinkImportFrame
 
 	-- Set frame title
-	local playerDisplayName = Musician.Utils.FormatPlayerName(playerName)
 	local playerLink
 	if Musician.Utils.IsBattleNetID(playerName) then
+		local accountID = playerName
+		local playerDisplayName = Musician.Utils.GetBattleNetPlayerName(accountID)
 		playerLink = Musician.Utils.Highlight('[') .. Musician.Utils.Highlight(playerDisplayName) .. Musician.Utils.Highlight(']')
 	else
+		local playerDisplayName = Musician.Utils.FormatPlayerName(playerName)
 		playerLink = Musician.Utils.Highlight('[') .. Musician.Utils.GetLink('player', Musician.Utils.Highlight(playerDisplayName), playerName) .. Musician.Utils.Highlight(']')
 	end
 
@@ -111,42 +113,57 @@ end
 -- Called when a song hyperlink is clicked
 function Musician.SongLinkImportFrame.OnSongLinkClick(event, title, playerName)
 	playerName = Musician.Utils.NormalizePlayerName(playerName)
+	local playerNameOrAccountID = playerName
+	local playerNameOrGameAccountID = playerName
 
-	-- It's a link from a Battle.net message: player name is a game account ID
-	if Musician.Utils.IsBattleNetID(playerName) and not(Musician.Utils.IsBattleNetGameAccountOnline(playerName)) then
-		return
+	-- Requesting from a Battle.net friend
+	if Musician.Utils.IsBattleNetID(playerNameOrAccountID) then
+		local gameAccountID = Musician.Utils.GetBattleNetGameAccountID(playerNameOrAccountID)
+		-- Friend is not logged into WoW
+		if gameAccountID == nil then
+			local friendName = Musician.Utils.GetBattleNetPlayerName(playerNameOrAccountID)
+			if friendName then
+				local msg = Musician.Msg.LINKS_ERROR[Musician.SongLinks.errors.offline]
+				msg = string.gsub(msg, '{player}', friendName)
+				msg = string.gsub(msg, '{title}', title)
+				Musician.Utils.Error(msg)
+			end
+			return
+		else
+			playerNameOrGameAccountID = gameAccountID
+		end
 	end
 
 	local frame = MusicianSongLinkImportFrame
 
-	update(title, playerName)
+	update(title, playerNameOrAccountID)
 
 	frame.startImport = function()
-		startImport(title, playerName)
+		startImport(title, playerNameOrGameAccountID)
 	end
 	frame.cancelImport = function()
-		cancelImport(playerName)
+		cancelImport(playerNameOrGameAccountID)
 	end
 
 	-- Start import
 	Musician.SongLinkImportFrame:RegisterMessage(Musician.Events.SongReceiveStart, function(event, sender)
 		sender = Musician.Utils.NormalizePlayerName(sender)
-		if sender ~= playerName then return end
-		update(title, playerName)
+		if sender ~= playerNameOrAccountID then return end
+		update(title, playerNameOrAccountID)
 		Musician.SongLinkImportFrame:UnregisterMessage(Musician.Events.SongReceiveStart)
 	end)
 
 	-- Update import progression
 	Musician.SongLinkImportFrame:RegisterMessage(Musician.Events.SongReceiveProgress, function(event, sender, progress)
 		sender = Musician.Utils.NormalizePlayerName(sender)
-		if sender ~= playerName then return end
+		if sender ~= playerNameOrGameAccountID then return end
 		updateProgression(progress)
 	end)
 
 	-- Hide popup when complete
 	Musician.SongLinkImportFrame:RegisterMessage(Musician.Events.SongReceiveComplete, function(event, sender)
 		sender = Musician.Utils.NormalizePlayerName(sender)
-		if sender ~= playerName then return end
+		if sender ~= playerNameOrGameAccountID then return end
 		frame:Hide()
 		Musician.SongLinkImportFrame:UnregisterMessage(Musician.Events.SongReceiveComplete)
 		Musician.SongLinkImportFrame:UnregisterMessage(Musician.Events.SongReceiveProgress)

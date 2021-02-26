@@ -305,6 +305,7 @@ msg.LINKS_ERROR.notFound = "Le morceau « {title} » n'est pas disponible aupr
 msg.LINKS_ERROR.alreadySending = "Un morceau est déjà en train de vous être envoyé par {player}. Réessayez dans quelques secondes."
 msg.LINKS_ERROR.alreadyRequested = "Un morceau est déjà demandé auprès de {player}."
 msg.LINKS_ERROR.timeout = "{player} n'a pas répondu."
+msg.LINKS_ERROR.offline = "{player} n'est pas connecté dans World of Warcraft."
 msg.LINKS_ERROR.importingFailed = "Le morceau {title} n'a pas pu être importé auprès de {player}."
 
 msg.MAP_OPTIONS_TITLE = "Carte"
