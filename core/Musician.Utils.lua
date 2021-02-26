@@ -134,33 +134,35 @@ function Musician.Utils.GetPlayerLink(player)
 	return Musician.Utils.GetLink('player', player, player)
 end
 
---- Get player full name with realm slug or Battle.net account name if a Battle.net game account ID is provided
--- @param player (string)
+--- Get player full name with realm slug or Battle.net account name if a Battle.net game account ID is provided.
+-- @param playerOrGameAccountID (string|number)
 -- @return fullPlayerName (string)
-function Musician.Utils.GetFullPlayerName(player)
-	if Musician.Utils.IsBattleNetID(player) then
-		for i = 1, BNGetNumFriends() do
-			local battleTag
-			if C_BattleNet then
-				local accountInfo = C_BattleNet.GetFriendAccountInfo(i)
-				if accountInfo.gameAccountInfo and accountInfo.gameAccountInfo.gameAccountID == tonumber(player) then
-					battleTag = accountInfo.battleTag
-				end
-			else
-				local accountInfo = { BNGetFriendInfoByID(i) }
-				local gameAccountId = accountInfo and accountInfo[6]
-				if gameAccountId == tonumber(player) then
-					battleTag = accountInfo and accountInfo[3]
-				end
-			end
-			if battleTag then
-				local nickName = string.gsub(battleTag, '#[0-9]+$', '')
-				return nickName
-			end
-		end
+function Musician.Utils.GetFullPlayerName(playerOrGameAccountID)
+	if Musician.Utils.IsBattleNetID(playerOrGameAccountID) then
+		local accountID = Musician.Utils.GetBattleNetAccountID(playerOrGameAccountID)
+		return accountID and Musician.Utils.GetBattleNetPlayerName(accountID) or UNKNOWN
+	end
+	return Musician.Utils.NormalizePlayerName(playerOrGameAccountID)
+end
+
+--- Get Battle.net player name from the account ID.
+-- @param accountID (number)
+-- @return playerName (string)
+function Musician.Utils.GetBattleNetPlayerName(accountID)
+	local battleTag
+	if C_BattleNet then
+		local accountInfo = C_BattleNet.GetAccountInfoByID(accountID)
+		battleTag = accountInfo and accountInfo.battleTag
+	else
+		local accountInfo = { BNGetFriendInfoByID(accountID) }
+		battleTag = accountInfo and accountInfo[3]
+	end
+	if battleTag then
+		local playerName = string.gsub(battleTag, '#[0-9]+$', '')
+		return playerName
+	else
 		return UNKNOWN
 	end
-	return Musician.Utils.NormalizePlayerName(player)
 end
 
 --- Get player name for display
@@ -170,45 +172,80 @@ function Musician.Utils.FormatPlayerName(player)
 	return Musician.Utils.SimplePlayerName(Musician.Utils.GetFullPlayerName(player))
 end
 
---- Return true when the provided player name is a Battle.net ID
--- @param playerName (string)
+--- Return true when the provided player name is a Battle.net account ID or Battle.net game account ID.
+-- @param playerName (string|number)
 -- @return isBattleNetID (boolean)
 function Musician.Utils.IsBattleNetID(playerName)
-	return string.find(playerName, '^%d+$') ~= nil
+	return type(playerName) == 'number' or string.find(playerName, '^[0-9]+$') ~= nil
 end
 
---- Get Battle.net game account ID from the Battle.net account ID.
--- @param battleNetAccountId (string)
--- @return battleNetGameAccountId (string)
-function Musician.Utils.GetBattleNetGameAccountID(battleNetAccountId)
-	if C_BattleNet then
-		local accountInfo = C_BattleNet.GetAccountInfoByID(battleNetAccountId)
-		local gameAccountInfo = accountInfo and accountInfo.gameAccountInfo
-		if gameAccountInfo and Musician.Utils.IsBattleNetGameAccountOnline(gameAccountInfo.gameAccountID) then
-			return gameAccountInfo.gameAccountID
+--- Get the Battle.net account ID from the Battle.net game account ID.
+-- @param gameAccountID (number)
+-- @return accountID (number)
+function Musician.Utils.GetBattleNetAccountID(gameAccountID)
+	gameAccountID = tonumber(gameAccountID)
+	for i = 1, BNGetNumFriends() do
+		local numGameAccounts = C_BattleNet and C_BattleNet.GetFriendNumGameAccounts(i) or BNGetNumFriendGameAccounts(i)
+		for g = 1, numGameAccounts do
+			local foundGameAccountID
+			if C_BattleNet then
+				local gameAccountInfo = C_BattleNet.GetFriendGameAccountInfo(i, g)
+				foundGameAccountID = gameAccountInfo and gameAccountInfo.gameAccountID
+			else
+				local gameAccountInfo = { BNGetFriendGameAccountInfo(i, g) }
+				foundGameAccountID = gameAccountInfo and gameAccountInfo[16]
+			end
+			if foundGameAccountID == gameAccountID then
+				if C_BattleNet then
+					local accountInfo = C_BattleNet.GetFriendAccountInfo(i)
+					return accountInfo.bnetAccountID
+				else
+					local accountInfo = { BNGetFriendInfo(i) }
+					return accountInfo[1]
+				end
+			end
 		end
-	else
-		local accountInfo = { BNGetFriendInfoByID(battleNetAccountId) }
-		local gameAccountID = accountInfo and accountInfo[6]
-		if gameAccountID and Musician.Utils.IsBattleNetGameAccountOnline(gameAccountID) then
+	end
+	return nil
+end
+
+--- Get a valid Battle.net game account ID from the Battle.net account ID.
+-- @param accountID (number)
+-- @return gameAccountID (number)
+function Musician.Utils.GetBattleNetGameAccountID(accountID)
+	local friendIndex = BNGetFriendIndex(accountID)
+	if friendIndex == nil then return nil end
+	local numGameAccounts = C_BattleNet and C_BattleNet.GetFriendNumGameAccounts(friendIndex) or BNGetNumFriendGameAccounts(friendIndex)
+	if numGameAccounts == nil or numGameAccounts == 0 then return nil end
+
+	for gameAccountIndex = 1, numGameAccounts do
+		local gameAccountID
+		if C_BattleNet then
+			local gameAccountInfo = C_BattleNet.GetFriendGameAccountInfo(friendIndex, gameAccountIndex)
+			gameAccountID = gameAccountInfo and gameAccountInfo.gameAccountID
+		else
+			local gameAccountInfo = { BNGetFriendGameAccountInfo(friendIndex, gameAccountIndex) }
+			gameAccountID = gameAccountInfo and gameAccountInfo[16]
+		end
+		if Musician.Utils.IsBattleNetGameAccountOnline(gameAccountID) then
 			return gameAccountID
 		end
 	end
 	return nil
 end
 
---- Indicates whenever the provided game account ID is online
--- @param gameAccountId (int)
--- @return isOnline (string)
-function Musician.Utils.IsBattleNetGameAccountOnline(gameAccountId)
+--- Indicates whenever the provided Battle.net game account ID is online
+-- @param gameAccountID (number)
+-- @return isOnline (boolean)
+function Musician.Utils.IsBattleNetGameAccountOnline(gameAccountID)
 	if C_BattleNet then
-		local gameAccountInfo = C_BattleNet.GetGameAccountInfoByID(gameAccountId)
+		local gameAccountInfo = C_BattleNet.GetGameAccountInfoByID(gameAccountID)
 		return gameAccountInfo and gameAccountInfo.clientProgram == 'WoW' and gameAccountInfo.isOnline
 	else
-		local gameAccountInfo = { BNGetGameAccountInfo(gameAccountId) }
+		local gameAccountInfo = { BNGetGameAccountInfo(gameAccountID) }
 		local clientProgram = gameAccountInfo and gameAccountInfo[3]
 		local isOnline = gameAccountInfo and gameAccountInfo[1]
-		return gameAccountInfo and clientProgram == 'WoW' and isOnline
+		return clientProgram == 'WoW' and isOnline
 	end
 end
 
@@ -511,13 +548,13 @@ function Musician.Utils.GetRealmLocale()
 	return string.gsub(locale, "[A-Z]+", "")
 end
 
---- Return the normalized player name, including realm slug
--- @param playerName (string)
--- @return normalizedPlayerName (string)
+--- Return the normalized player name, including realm slug. Normalized player name is a number if a Battle.net account ID or Battle.net game account ID is provided.
+-- @param playerName (string|number)
+-- @return normalizedPlayerName (string|number)
 function Musician.Utils.NormalizePlayerName(playerName)
-	-- Battle.net id
+	-- Battle.net ID
 	if Musician.Utils.IsBattleNetID(playerName) then
-		return tostring(playerName) -- Should always be a string
+		return tonumber(playerName)
 	end
 
 	-- Append missing realm name
