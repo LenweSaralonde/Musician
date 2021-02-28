@@ -301,6 +301,7 @@ msg.LINK_IMPORT_WINDOW_IMPORT_BUTTON = "Importer"
 msg.LINK_IMPORT_WINDOW_CANCEL_IMPORT_BUTTON = "Annuler l'importation"
 msg.LINK_IMPORT_WINDOW_REQUESTING = "Récupération du morceau auprès de {player}…"
 msg.LINK_IMPORT_WINDOW_PROGRESS = "Importation… {progress}%"
+msg.LINK_IMPORT_WINDOW_SELECT_ACCOUNT = "Veuillez sélectionner le personnage à partir duquel récupérer le morceau:"
 
 msg.LINKS_ERROR.notFound = "Le morceau « {title} » n'est pas disponible auprès de {player}."
 msg.LINKS_ERROR.alreadySending = "Un morceau est déjà en train de vous être envoyé par {player}. Réessayez dans quelques secondes."

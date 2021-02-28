@@ -301,6 +301,7 @@ msg.LINK_IMPORT_WINDOW_IMPORT_BUTTON = "Import song"
 msg.LINK_IMPORT_WINDOW_CANCEL_IMPORT_BUTTON = "Cancel import"
 msg.LINK_IMPORT_WINDOW_REQUESTING = "Requesting song from {player}…"
 msg.LINK_IMPORT_WINDOW_PROGRESS = "Importing… {progress}%"
+msg.LINK_IMPORT_WINDOW_SELECT_ACCOUNT = "Please select the character to retrieve the song from:"
 
 msg.LINKS_ERROR.notFound = "The song “{title}” is not available from {player}."
 msg.LINKS_ERROR.alreadySending = "A song is already being sent to you by {player}. Please try again in a few seconds."
