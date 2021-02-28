@@ -139,30 +139,16 @@ end
 -- @return fullPlayerName (string)
 function Musician.Utils.GetFullPlayerName(playerOrGameAccountID)
 	if Musician.Utils.IsBattleNetID(playerOrGameAccountID) then
-		local accountID = Musician.Utils.GetBattleNetAccountID(playerOrGameAccountID)
-		return accountID and Musician.Utils.GetBattleNetPlayerName(accountID) or UNKNOWN
+		local gameAccountID = playerOrGameAccountID
+		local accountID = Musician.Utils.GetBattleNetAccountID(gameAccountID)
+		if accountID == nil then return UNKNOWN end
+
+		local accountInfo = Musician.Utils.GetBattleNetAccount(accountID)
+		local gameAccountInfo = Musician.Utils.GetBattleNetGameAccount(gameAccountID)
+
+		return accountInfo.accountDisplayName .. ' (' .. gameAccountInfo.characterName .. ')'
 	end
 	return Musician.Utils.NormalizePlayerName(playerOrGameAccountID)
-end
-
---- Get Battle.net player name from the account ID.
--- @param accountID (number)
--- @return playerName (string)
-function Musician.Utils.GetBattleNetPlayerName(accountID)
-	local battleTag
-	if C_BattleNet then
-		local accountInfo = C_BattleNet.GetAccountInfoByID(accountID)
-		battleTag = accountInfo and accountInfo.battleTag
-	else
-		local accountInfo = { BNGetFriendInfoByID(accountID) }
-		battleTag = accountInfo and accountInfo[3]
-	end
-	if battleTag then
-		local playerName = string.gsub(battleTag, '#[0-9]+$', '')
-		return playerName
-	else
-		return UNKNOWN
-	end
 end
 
 --- Get player name for display
@@ -209,44 +195,123 @@ function Musician.Utils.GetBattleNetAccountID(gameAccountID)
 	return nil
 end
 
---- Get a valid Battle.net game account ID from the Battle.net account ID.
+--- Get Battle.net account info for provided Battle.net account ID.
 -- @param accountID (number)
--- @return gameAccountID (number)
-function Musician.Utils.GetBattleNetGameAccountID(accountID)
+-- @return accountInfo (table)
+function Musician.Utils.GetBattleNetAccount(accountID)
+	local accountInfo
+	if C_BattleNet then
+		accountInfo = C_BattleNet.GetAccountInfoByID(accountID)
+		if accountInfo == nil then return {} end
+	else
+		local presenceID, accountName, battleTag, isBattleTagPresence,
+			characterName, bnetIDGameAccount, client, isOnline, lastOnline,
+			isAFK, isDND, messageText, noteText, isRIDFriend, messageTime,
+			canSoR, isReferAFriend, canSummonFriend = BNGetFriendInfoByID(accountID)
+		if presenceID == nil then return {} end
+		accountInfo = {
+			bnetAccountID = presenceID, -- Unique numeric identifier for the friend's Battle.net account during this session
+			accountName = accountName, -- A protected string representing the friend's full name or BattleTag name
+			battleTag = battleTag, -- The friend's BattleTag (e.g., "Nickname#0001")
+			--isFriend = , --
+			isBattleTagFriend = isBattleTagPresence, -- Whether or not the friend is known by their BattleTag
+			lastOnlineTime = lastOnline, -- The number of seconds elapsed since this friend was last online (from the epoch date of January 1, 1970). Returns nil if currently online.
+			isAFK = isAFK, -- Whether or not the friend is flagged as Away
+			isDND = isDND, -- Whether or not the friend is flagged as Busy
+			--isFavorite = , -- Whether or not the friend is marked as a favorite by you
+			appearOffline = not(isOnline), --
+			customMessage = messageText, -- The Battle.net broadcast message
+			customMessageTime = messageTime, -- The number of seconds elapsed since the current broadcast message was sent
+			--note = , -- The contents of the player's note about this friend
+			--rafLinkType = , -- Enum.RafLinkType
+			--gameAccountInfo = , -- BNetGameAccountInfo
+		}
+	end
+
+	accountInfo.gameAccountInfo = nil
+	accountInfo.accountDisplayName = string.gsub(accountInfo.battleTag, '#[0-9]+$', '')
+
+	return accountInfo
+end
+
+--- formatClassicGameAccountInfo
+-- @return gameAccountInfo (table)
+local function formatClassicGameAccountInfo(...)
+	local hasFocus, characterName, client, realmName, realmID, faction,
+	race, class, guild, zoneName, level, gameText, broadcastText, broadcastTime,
+	canSoR, bnetIDGameAccount, presenceID, unknown, unknown, characterGUID, wowProjectID, wowClassicRealm = ...
+
+	if characterName == nil then return {} end
+
+	local realmDisplayName = string.gsub(gameText, '^.+%s%-%s', '')
+
+	return {
+		gameAccountID = bnetIDGameAccount, -- Unique numeric identifier for the friend's Battle.net game account
+		clientProgram = client, -- BNET_CLIENT
+		isOnline = characterName ~= nil, -- boolean
+		--isGameBusy = , -- boolean
+		--isGameAFK = , -- boolean
+		wowProjectID = wowProjectID, -- number?
+		characterName = characterName, -- The name of the logged in toon/character
+		realmName = realmName, -- The name of the logged in realm
+		realmDisplayName = realmDisplayName, --
+		realmID = realmID, -- The ID for the logged in realm
+		factionName = faction, -- The englishFaction name (i.e., "Alliance" or "Horde")
+		raceName = race, -- The localized race name (e.g., "Blood Elf")
+		className = class, -- The localized class name (e.g., "Death Knight")
+		areaName = zoneName, -- The localized zone name (e.g., "The Undercity")
+		characterLevel = level, -- The current level (e.g., "90")
+		richPresence = gameText, -- For WoW, returns "zoneName - realmName". For StarCraft 2 and Diablo 3, returns the location or activity the player is currently engaged in.
+		playerGuid = characterGUID, -- A unique numeric identifier for the friend's character during this session.
+		--isWowMobile = , --
+		--canSummon = , --
+		hasFocus = hasFocus, -- Whether or not this toon is the one currently being displayed in Blizzard's FriendFrame
+	}
+end
+
+--- Get Battle.net WoW game account info for provided Battle.net game account ID.
+-- @param gameAccountID (number)
+-- @return gameAccountInfo (table)
+function Musician.Utils.GetBattleNetGameAccount(gameAccountID)
+	if C_BattleNet then
+		return C_BattleNet.GetGameAccountInfoByID(gameAccountID) or {}
+	else
+		return formatClassicGameAccountInfo(BNGetGameAccountInfo(gameAccountID))
+	end
+end
+
+--- Get WoW game accounts info for provided Battle.net account ID.
+-- @param accountID (number)
+-- @return gameAccountsInfo (table)
+function Musician.Utils.GetBattleNetGameAccounts(accountID)
+	local gameAccountsInfo = {}
 	local friendIndex = BNGetFriendIndex(accountID)
-	if friendIndex == nil then return nil end
+	if friendIndex == nil then return gameAccountsInfo end
 	local numGameAccounts = C_BattleNet and C_BattleNet.GetFriendNumGameAccounts(friendIndex) or BNGetNumFriendGameAccounts(friendIndex)
-	if numGameAccounts == nil or numGameAccounts == 0 then return nil end
+	if numGameAccounts == nil or numGameAccounts == 0 then return gameAccountsInfo end
 
 	for gameAccountIndex = 1, numGameAccounts do
-		local gameAccountID
+		local gameAccountInfo
 		if C_BattleNet then
-			local gameAccountInfo = C_BattleNet.GetFriendGameAccountInfo(friendIndex, gameAccountIndex)
-			gameAccountID = gameAccountInfo and gameAccountInfo.gameAccountID
+			gameAccountInfo = C_BattleNet.GetFriendGameAccountInfo(friendIndex, gameAccountIndex)
 		else
-			local gameAccountInfo = { BNGetFriendGameAccountInfo(friendIndex, gameAccountIndex) }
-			gameAccountID = gameAccountInfo and gameAccountInfo[16]
+			gameAccountInfo = formatClassicGameAccountInfo(BNGetFriendGameAccountInfo(friendIndex, gameAccountIndex))
 		end
-		if Musician.Utils.IsBattleNetGameAccountOnline(gameAccountID) then
-			return gameAccountID
+
+		if gameAccountInfo.clientProgram == 'WoW' and gameAccountInfo.isOnline then
+			table.insert(gameAccountsInfo, gameAccountInfo)
 		end
 	end
-	return nil
+
+	return gameAccountsInfo
 end
 
 --- Indicates whenever the provided Battle.net game account ID is online
 -- @param gameAccountID (number)
 -- @return isOnline (boolean)
 function Musician.Utils.IsBattleNetGameAccountOnline(gameAccountID)
-	if C_BattleNet then
-		local gameAccountInfo = C_BattleNet.GetGameAccountInfoByID(gameAccountID)
-		return gameAccountInfo and gameAccountInfo.clientProgram == 'WoW' and gameAccountInfo.isOnline
-	else
-		local gameAccountInfo = { BNGetGameAccountInfo(gameAccountID) }
-		local clientProgram = gameAccountInfo and gameAccountInfo[3]
-		local isOnline = gameAccountInfo and gameAccountInfo[1]
-		return clientProgram == 'WoW' and isOnline
-	end
+	local gameAccountInfo = Musician.Utils.GetBattleNetGameAccount(gameAccountID)
+	return gameAccountInfo and gameAccountInfo.clientProgram == 'WoW' and gameAccountInfo.isOnline
 end
 
 --- Return the code to insert an icon in a chat message or a text string
