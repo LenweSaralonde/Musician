@@ -301,7 +301,7 @@ msg.LINK_IMPORT_WINDOW_IMPORT_BUTTON = "导入音乐"
 msg.LINK_IMPORT_WINDOW_CANCEL_IMPORT_BUTTON = "取消导入"
 msg.LINK_IMPORT_WINDOW_REQUESTING = "正从玩家{player}请求数据……"
 msg.LINK_IMPORT_WINDOW_PROGRESS = "导入中……{progress}%"
-msg.LINK_IMPORT_WINDOW_SELECT_ACCOUNT = "请选择字符以从以下位置检索歌曲："
+msg.LINK_IMPORT_WINDOW_SELECT_ACCOUNT = "请选择希望获取歌曲的角色："
 
 msg.LINKS_ERROR.notFound = "音乐“{title}”无法从玩家{player}获取。"
 msg.LINKS_ERROR.alreadySending = "玩家{player}已经向你发送了一首音乐。请几秒后重试。"
