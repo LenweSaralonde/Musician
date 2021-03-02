@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v1.7.2.0
+--------
+* Song links can now be exchanged through Battle.net messages.
+* Improved synchronization when playing songs as a band.
+* MIDI converter has been translated in chinese.
+* Window positions are now properly saved.
+
 v1.7.1.3
 --------
 * Added Threat Plates support.
