@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.7.2.1
+--------
+* TOC update for WoW patch 9.0.5.
+
 v1.7.2.0
 --------
 * Song links can now be exchanged through Battle.net messages.
