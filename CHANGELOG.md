@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.7.2.1
+--------
+* TOC update for WoW Classic patch 1.13.7
+
 v1.7.2.0
 --------
 * Song links can now be exchanged through Battle.net messages.
