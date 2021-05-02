@@ -1,8 +1,24 @@
+------------------------------------------------------------------------
+-- Please read the localization guide in the Wiki:
+-- https://github.com/LenweSaralonde/Musician/wiki/Localization
+--
+-- * Commented out msg lines need to be translated.
+-- * Do not translate anything on the left hand side of the = sign.
+-- * Do not translate placeholders in curly braces ({variable}).
+-- * Keep the text as a single line. Use \n for carriage return.
+-- * Escape double quotes (") with a backslash (\").
+-- * Check the result in game to make sure your text fits the UI.
+------------------------------------------------------------------------
+
 local msg = Musician.InitLocale('en', "English", 'enUS', 'enGB')
 
 local Instrument = Musician.MIDI_INSTRUMENTS
 local Percussion = Musician.MIDI_PERCUSSIONS
 local KEY = Musician.KEYBOARD_KEY
+
+------------------------------------------------------------------------
+---------------- ↑↑↑ DO NOT EDIT THE LINES ABOVE ! ↑↑↑  ----------------
+------------------------------------------------------------------------
 
 --- Main frame controls
 msg.PLAY = "Play"
