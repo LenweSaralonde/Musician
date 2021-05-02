@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.7.2.2
+--------
+* Improved localization to ease up collaboration.
+* Fixed Total RP Extended sheet music items localized strings not updating when item locale is changed.
+
 v1.7.2.1
 --------
 * TOC update for WoW patch 9.0.5.
