@@ -354,7 +354,7 @@ function Musician.TRP3E.ShowExportFrame()
 		-- Locale
 
 		MSA_DropDownMenu_EnableDropDown(frame.locale)
-		frame.locale.SetValue(Musician.Utils.GetRealmLocale())
+		frame.locale.SetValue(object.MD.LO or Musician.Utils.GetRealmLocale())
 
 		-- Preview (icon select)
 
@@ -685,6 +685,19 @@ function Musician.TRP3E.GetSheetMusicItem(title, locale, icon)
 	return ID, object, false
 end
 
+--- Update localized strings within the TRP item object
+-- @param object (table)
+-- @param title (string) Song title
+-- @param locale (string) Item locale
+function updateItemStrings(object, title, locale)
+	object.BA.NA = string.gsub(Musician.Utils.GetMsg('TRPE_ITEM_NAME', locale), '{title}', title)
+	object.BA.LE = Musician.Utils.GetMsg('TRPE_ITEM_TOOLTIP_SHEET_MUSIC', locale)
+	object.NT = string.gsub(Musician.Utils.GetMsg('TRPE_ITEM_NOTES', locale), '{url}', Musician.URL)
+	if object.US ~= nil then
+		object.US.AC = Musician.Utils.GetMsg('TRPE_ITEM_USE_HINT', locale)
+	end
+end
+
 --- Create a new sheet music item for the provided song title
 -- @param title (string) Song title
 -- @param[opt] locale (string) Item locale. By default, the current realm locale is used.
@@ -707,14 +720,14 @@ function Musician.TRP3E.CreateSheetMusicItem(title, locale, icon)
 
 	-- Set up item defaults. These can be customized by the user
 	if object.BA == nil then object.BA = {} end
-	object.BA.NA = string.gsub(Musician.Utils.GetMsg('TRPE_ITEM_NAME', locale), '{title}', title)
 	object.BA.IC = icon
 	object.BA.ST = Musician.TRP3E.ITEM_MAX_STACK
 	object.BA.QA = Musician.TRP3E.ITEM_QUALITY
-	object.BA.LE = Musician.Utils.GetMsg('TRPE_ITEM_TOOLTIP_SHEET_MUSIC', locale)
 	object.BA.PS = Musician.TRP3E.ITEM_PICKUP_SOUND
 	object.BA.DS = Musician.TRP3E.ITEM_DROP_SOUND
-	object.NT = string.gsub(Musician.Utils.GetMsg('TRPE_ITEM_NOTES', locale), '{url}', Musician.URL)
+
+	-- Set item localized strings
+	updateItemStrings(object, title, locale)
 
 	return ID, object
 end
@@ -741,7 +754,11 @@ function Musician.TRP3E.UpdateSheetMusicItem(object, title, encodedSongData, loc
 	-- Update icon
 	object.BA.IC = icon
 
-	-- Update locale
+	-- Update locale and strings
+	if object.MD.LO ~= locale then
+		-- Refresh localized strings if the locale was changed
+		updateItemStrings(object, title, locale)
+	end
 	object.MD.LO = locale
 
 	-- Set right tooltip text. Hidden when Musician is installed
