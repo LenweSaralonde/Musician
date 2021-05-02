@@ -17,9 +17,9 @@ msg.UNMUTE = "Rétablir la musique"
 
 msg.MENU_TITLE = "Musician"
 msg.MENU_IMPORT_SONG = "Importer et jouer un morceau"
-msg.MENU_PLAY = msg.PLAY
-msg.MENU_STOP = msg.STOP
-msg.MENU_PLAY_PREVIEW = msg.TEST_SONG
+msg.MENU_PLAY = "Jouer"
+msg.MENU_STOP = "Stop"
+msg.MENU_PLAY_PREVIEW = "Aperçu"
 msg.MENU_STOP_PREVIEW = "Arrêter l'aperçu"
 msg.MENU_LIVE_PLAY = "Jouer en direct"
 msg.MENU_SHOW_KEYBOARD = "Ouvrir le clavier"
@@ -72,14 +72,12 @@ msg.OPTIONS_CROSS_RP_SUB_TEXT_ACTIVE = "La communication Cross RP est active pou
 msg.TIPS_AND_TRICKS_ENABLE = "Montrer les astuces au démarrage."
 
 msg.TIPS_AND_TRICKS_NAMEPLATES_TITLE = "Animations et barres d'info"
-msg.TIPS_AND_TRICKS_NAMEPLATES_TEXT = "Une animation spéciale est visible sur les personnages qui jouent de la musique lorsque les barres d'info sont activées.\n\n" ..
-	"Une icône {icon} apparaît également pour les joueurs qui ont Musician et qui peuvent vous écouter.\n\n" ..
-	"Souhaitez-vous activer les barres d'info et les animations maintenant ?"
+msg.TIPS_AND_TRICKS_NAMEPLATES_TEXT = "Une animation spéciale est visible sur les personnages qui jouent de la musique lorsque les barres d'info sont activées.\n\nUne icône {icon} apparaît également pour les joueurs qui ont Musician et qui peuvent vous écouter.\n\nSouhaitez-vous activer les barres d'info et les animations maintenant ?"
 msg.TIPS_AND_TRICKS_NAMEPLATES_OK = "Activer les barres d'info et les animations"
 msg.TIPS_AND_TRICKS_NAMEPLATES_CANCEL = "Non merci"
 
 msg.TIPS_AND_TRICKS_CROSS_RP_TITLE = "Musique inter-faction avec Cross RP"
-msg.TIPS_AND_TRICKS_CROSS_RP_TEXT = msg.OPTIONS_CROSS_RP_SUB_TEXT
+msg.TIPS_AND_TRICKS_CROSS_RP_TEXT = "Installez l'add-on Cross RP de Tammya-MoonGuard pour activer\nla musique inter-faction et inter-royaumes !"
 msg.TIPS_AND_TRICKS_CROSS_RP_OK = "OK"
 
 msg.STARTUP = "Bienvenue dans Musician v{version}."
