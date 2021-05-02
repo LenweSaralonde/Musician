@@ -4,6 +4,7 @@ local Instrument = Musician.MIDI_INSTRUMENTS
 local Percussion = Musician.MIDI_PERCUSSIONS
 local KEY = Musician.KEYBOARD_KEY
 
+--- Main frame controls
 msg.PLAY = "Play"
 msg.STOP = "Stop"
 msg.PAUSE = "Pause"
@@ -15,6 +16,7 @@ msg.EDIT = "Edit"
 msg.MUTE = "Mute"
 msg.UNMUTE = "Unmute"
 
+--- Minimap button menu
 msg.MENU_TITLE = "Musician"
 msg.MENU_IMPORT_SONG = "Import and play a song"
 msg.MENU_PLAY = "Play"
@@ -27,6 +29,7 @@ msg.MENU_SETTINGS = "Settings"
 msg.MENU_OPTIONS = "Options"
 msg.MENU_ABOUT = "About"
 
+--- Chat commands
 msg.COMMAND_LIST_TITLE = "Musician Commands:"
 msg.COMMAND_SHOW = "Show song import window"
 msg.COMMAND_PREVIEW_PLAY = "Start or stop previewing song"
@@ -41,9 +44,11 @@ msg.COMMAND_LIVE_DEMO_PARAMS = "{ **<upper track #>** **<lower track #>** || **o
 msg.COMMAND_HELP = "Show this help message"
 msg.ERR_COMMAND_UNKNOWN = "Unknown “{command}” command. Type {help} to get the command list."
 
+--- Global error messages
 msg.ERR_CLASSIC_ON_RETAIL = "You're using the **Classic** version of Musician on the **Retail** version of WoW.\nPlease install the **Retail** version of Musician."
 msg.ERR_RETAIL_ON_CLASSIC = "You're using the ***Retail** version of Musician on the **Classic** version of WoW.\nPlease install the **Classic** version of Musician."
 
+--- Add-on options
 msg.OPTIONS_TITLE = "Musician"
 msg.OPTIONS_SUB_TEXT = "Join the Discord server for support! {url}"
 msg.OPTIONS_CATEGORY_EMOTE = "Emote"
@@ -68,6 +73,7 @@ msg.OPTIONS_CROSS_RP_SUB_TEXT = "Install the Cross RP add-on by Tammya-MoonGuard
 msg.OPTIONS_CROSS_RP_SUB_TEXT_NO_GATEWAY = "There is no Cross RP node available for the moment.\nPlease be patient…"
 msg.OPTIONS_CROSS_RP_SUB_TEXT_ACTIVE = "Cross RP communication is active for the following locations:\n\n{bands}"
 
+--- Tips and Tricks
 msg.TIPS_AND_TRICKS_ENABLE = "Show tips and tricks on startup."
 
 msg.TIPS_AND_TRICKS_NAMEPLATES_TITLE = "Animations and nameplates"
@@ -79,29 +85,31 @@ msg.TIPS_AND_TRICKS_CROSS_RP_TITLE = "Cross-faction music with Cross RP"
 msg.TIPS_AND_TRICKS_CROSS_RP_TEXT = "Install the Cross RP add-on by Tammya-MoonGuard to activate\ncross-faction and cross-realm music!"
 msg.TIPS_AND_TRICKS_CROSS_RP_OK = "OK"
 
+--- Welcome messages
 msg.STARTUP = "Welcome to Musician v{version}."
+msg.PLAYER_COUNT_ONLINE = "There are {count} other music fans around!"
+msg.PLAYER_COUNT_ONLINE_ONE = "There is another music fan around!"
+msg.PLAYER_COUNT_ONLINE_NONE = "There are no other music fans around yet."
 
+--- New version notifications
 msg.NEW_VERSION = "A new version of Musician has been released! Download the update from {url} ."
 msg.NEW_PROTOCOL_VERSION = "Your version of Musician is outdated and does not work anymore.\nPlease download the update from\n{url}"
-msg.SHOULD_CONFIGURE_KEYBOARD = "You have to configure the keyboard before playing."
 
+--- Player tooltips
 msg.PLAYER_TOOLTIP = "Musician"
 msg.PLAYER_TOOLTIP_VERSION = "Musician v{version}"
 msg.PLAYER_TOOLTIP_VERSION_OUTDATED = " (Outdated)"
 msg.PLAYER_TOOLTIP_VERSION_INCOMPATIBLE = " (INCOMPATIBLE)"
 msg.PLAYER_TOOLTIP_PRELOADING = "Preloading sounds… ({progress})"
 
-msg.PLAYER_COUNT_ONLINE = "There are {count} other music fans around!"
-msg.PLAYER_COUNT_ONLINE_ONE = "There is another music fan around!"
-msg.PLAYER_COUNT_ONLINE_NONE = "There are no other music fans around yet."
-
+--- Song import
 msg.INVALID_MUSIC_CODE = "Invalid music code."
-
 msg.PLAY_A_SONG = "Play a song"
 msg.IMPORT_A_SONG = "Import a song"
 msg.PASTE_MUSIC_CODE = "Import your song in MIDI format at:\n{url}\n\nthen paste the music code here ({shortcut})…"
 msg.SONG_IMPORTED = "Loaded song: {title}."
 
+--- Play as a band
 msg.PLAY_IN_BAND = "Play as a band"
 msg.PLAY_IN_BAND_HINT = "Click here when you are ready to play this song with your band."
 msg.PLAY_IN_BAND_READY_PLAYERS = "Ready band members:"
@@ -110,12 +118,14 @@ msg.EMOTE_PLAYER_IS_NOT_READY = "is no longer ready to play as a band."
 msg.EMOTE_PLAY_IN_BAND_START = "started band playing."
 msg.EMOTE_PLAY_IN_BAND_STOP = "stopped band playing."
 
+--- Play as a band (live)
 msg.LIVE_SYNC = "Play live as a band"
 msg.LIVE_SYNC_HINT = "Click here to activate band synchronization."
 msg.SYNCED_PLAYERS = "Live band members:"
 msg.EMOTE_PLAYER_LIVE_SYNC_ENABLED = "is playing music with you."
 msg.EMOTE_PLAYER_LIVE_SYNC_DISABLED = "stopped playing music with you."
 
+--- Song editor frame
 msg.SONG_EDITOR = "Song editor"
 msg.MARKER_FROM = "From"
 msg.MARKER_TO = "To"
@@ -137,6 +147,8 @@ msg.HEADER_NUMBER = "#"
 msg.HEADER_OCTAVE = "Octave"
 msg.HEADER_INSTRUMENT = "Instrument"
 
+--- Configure live keyboard frame
+msg.SHOULD_CONFIGURE_KEYBOARD = "You have to configure the keyboard before playing."
 msg.CONFIGURE_KEYBOARD = "Configure keyboard"
 msg.CONFIGURE_KEYBOARD_HINT = "Click a key to set…"
 msg.CONFIGURE_KEYBOARD_HINT_COMPLETE = "Keyboard configuration is complete.\nYou can now save your changes and start playing music!"
@@ -150,6 +162,7 @@ msg.KEY_CANNOT_BE_MERGED = "in this case, just ignore it and proceed to the next
 msg.NEXT_KEY = "Next key"
 msg.CLEAR_KEY = "Clear key"
 
+--- About frame
 msg.ABOUT_TITLE = "Musician"
 msg.ABOUT_VERSION = "version {version}"
 msg.ABOUT_AUTHOR = "By LenweSaralonde – {url}"
@@ -161,6 +174,7 @@ msg.ABOUT_PATREON = "Become a patron: {url}"
 msg.ABOUT_PAYPAL = "Donate: {url}"
 msg.ABOUT_SUPPORTERS = "Special thanks to the supporters of the project <3"
 
+--- Fixed PC keyboard key names
 msg.FIXED_KEY_NAMES[KEY.Backspace] = "Back"
 msg.FIXED_KEY_NAMES[KEY.Tab] = "Tab"
 msg.FIXED_KEY_NAMES[KEY.CapsLock] = "Caps lock"
@@ -177,6 +191,7 @@ msg.FIXED_KEY_NAMES[KEY.ContextMenu] = "Menu"
 msg.FIXED_KEY_NAMES[KEY.ControlRight] = "Ctrl"
 msg.FIXED_KEY_NAMES[KEY.Delete] = "Delete"
 
+--- Live keyboard layouts, based on musical modes
 msg.KEYBOARD_LAYOUTS["Piano"] = "Piano"
 msg.KEYBOARD_LAYOUTS["Chromatic"] = "Chromatic"
 msg.KEYBOARD_LAYOUTS["Modes"] = "Modes"
@@ -220,9 +235,11 @@ msg.KEYBOARD_LAYOUTS["4th"] = "4th"
 msg.KEYBOARD_LAYOUTS["5th"] = "5th"
 msg.KEYBOARD_LAYOUTS["Octave"] = "Octave"
 
+--- Live keyboard layout types
 msg.HORIZONTAL_LAYOUT = "Horizontal"
 msg.VERTICAL_LAYOUT = "Vertical"
 
+--- Live keyboard frame
 msg.LIVE_SONG_NAME = "Live song"
 msg.SOLO_MODE = "Solo Mode"
 msg.LIVE_MODE = "Live Mode"
@@ -256,15 +273,18 @@ msg.DEMO_MODE_ENABLED = "Keyboard demo mode enabled:\n{mapping}"
 msg.DEMO_MODE_MAPPING = "{layer} → Track #{track}"
 msg.DEMO_MODE_DISABLED = "Keyboard demo mode disabled."
 
+--- Live keyboard layers
 msg.LAYERS[Musician.KEYBOARD_LAYER.UPPER] = "Upper"
 msg.LAYERS[Musician.KEYBOARD_LAYER.LOWER] = "Lower"
 
+--- Chat emotes
 msg.EMOTE_PLAYING_MUSIC = "is playing a song."
 msg.EMOTE_PROMO = "(Get the “Musician” add-on to listen)"
 msg.EMOTE_SONG_NOT_LOADED = "(The song cannot play because {player} is using an incompatible version.)"
 msg.EMOTE_PLAYER_OTHER_REALM = "(This player is on another realm.)"
 msg.EMOTE_PLAYER_OTHER_FACTION = "(This player is from another faction.)"
 
+--- Minimap button tooltips
 msg.TOOLTIP_LEFT_CLICK = "**Left click**: {action}"
 msg.TOOLTIP_RIGHT_CLICK = "**Right click**: {action}"
 msg.TOOLTIP_DRAG_AND_DROP = "**Drag and drop** to move"
@@ -273,25 +293,30 @@ msg.TOOLTIP_ACTION_OPEN_MENU = "Open the main menu"
 msg.TOOLTIP_ACTION_MUTE = "Mute all music"
 msg.TOOLTIP_ACTION_UNMUTE = "Unmute music"
 
+--- Player menu options
 msg.PLAYER_MENU_TITLE = "Music"
 msg.PLAYER_MENU_STOP_CURRENT_SONG = "Stop current song"
 msg.PLAYER_MENU_MUTE = "Mute"
 msg.PLAYER_MENU_UNMUTE = "Unmute"
 
+--- Player actions feedback
 msg.PLAYER_IS_MUTED = "{icon}{player} is now muted."
 msg.PLAYER_IS_UNMUTED = "{icon}{player} is now unmuted."
 
+--- Song links
 msg.LINKS_PREFIX = "Music"
 msg.LINKS_FORMAT = "{prefix}: {title}"
 msg.LINKS_LINK_BUTTON = "Link"
 msg.LINKS_CHAT_BUBBLE = "“{note}{title}”"
 
+--- Song link export frame
 msg.LINK_EXPORT_WINDOW_TITLE = "Create song link"
 msg.LINK_EXPORT_WINDOW_SONG_TITLE_LABEL = "Song title:"
 msg.LINK_EXPORT_WINDOW_HINT = "The link will remain active until you log out or reload the interface."
 msg.LINK_EXPORT_WINDOW_PROGRESS = "Generating link… {progress}%"
 msg.LINK_EXPORT_WINDOW_POST_BUTTON = "Post link into the chat"
 
+--- Song link import frame
 msg.LINK_IMPORT_WINDOW_TITLE = "Import song from {player}:"
 msg.LINK_IMPORT_WINDOW_HINT = "Click “Import” to start importing the song into Musician."
 msg.LINK_IMPORT_WINDOW_IMPORT_BUTTON = "Import song"
@@ -300,6 +325,7 @@ msg.LINK_IMPORT_WINDOW_REQUESTING = "Requesting song from {player}…"
 msg.LINK_IMPORT_WINDOW_PROGRESS = "Importing… {progress}%"
 msg.LINK_IMPORT_WINDOW_SELECT_ACCOUNT = "Please select the character to retrieve the song from:"
 
+--- Song links errors
 msg.LINKS_ERROR.notFound = "The song “{title}” is not available from {player}."
 msg.LINKS_ERROR.alreadySending = "A song is already being sent to you by {player}. Please try again in a few seconds."
 msg.LINKS_ERROR.alreadyRequested = "A song is already being requested from {player}."
@@ -307,11 +333,13 @@ msg.LINKS_ERROR.timeout = "{player} did not respond."
 msg.LINKS_ERROR.offline = "{player} is not logged into World of Warcraft."
 msg.LINKS_ERROR.importingFailed = "The song {title} could not be imported from {player}."
 
+--- Map tracking options
 msg.MAP_OPTIONS_TITLE = "Map"
 msg.MAP_OPTIONS_SUB_TEXT = "Show nearby musicians playing:"
 msg.MAP_OPTIONS_MINI_MAP = "On the minimap"
 msg.MAP_OPTIONS_WORLD_MAP = "On the world map"
 
+--- Total RP Extended module
 msg.TRPE_ITEM_NAME = "{title}"
 msg.TRPE_ITEM_TOOLTIP_REQUIRES_MUSICIAN = "Requires Musician"
 msg.TRPE_ITEM_TOOLTIP_SHEET_MUSIC = "Sheet music"
@@ -329,6 +357,7 @@ msg.TRPE_EXPORT_WINDOW_HINT_EXISTING = "An item already exists for this song, it
 msg.TRPE_EXPORT_WINDOW_CREATE_ITEM_BUTTON = "Create item"
 msg.TRPE_EXPORT_WINDOW_PROGRESS = "Creating item… {progress}%"
 
+--- Musician instrument names
 msg.INSTRUMENT_NAMES["none"] = "(None)"
 msg.INSTRUMENT_NAMES["accordion"] = "Accordion"
 msg.INSTRUMENT_NAMES["bagpipe"] = "Bagpipe"
@@ -354,6 +383,8 @@ msg.INSTRUMENT_NAMES["war-drum"] = "War drum"
 msg.INSTRUMENT_NAMES["woodblock"] = "Woodblock"
 msg.INSTRUMENT_NAMES["tambourine-shake"] = "Tambourine (shaken)"
 
+--- General MIDI instrument names
+-- Check out Wikipedia in your own language to get the list.
 msg.MIDI_INSTRUMENT_NAMES[Instrument.AcousticGrandPiano] = "Acoustic grand piano"
 msg.MIDI_INSTRUMENT_NAMES[Instrument.BrightAcousticPiano] = "Bright acoustic piano"
 msg.MIDI_INSTRUMENT_NAMES[Instrument.ElectricGrandPiano] = "Electric grand piano"
@@ -483,6 +514,8 @@ msg.MIDI_INSTRUMENT_NAMES[Instrument.Helicopter] = "Helicopter"
 msg.MIDI_INSTRUMENT_NAMES[Instrument.Applause] = "Applause"
 msg.MIDI_INSTRUMENT_NAMES[Instrument.Gunshot] = "Gunshot"
 
+--- General MIDI drum kit names
+-- Check out Wikipedia in your own language to get the list.
 msg.MIDI_INSTRUMENT_NAMES[Instrument.StandardKit] = "Standard drum kit"
 msg.MIDI_INSTRUMENT_NAMES[Instrument.RoomKit] = "Room drum kit"
 msg.MIDI_INSTRUMENT_NAMES[Instrument.PowerKit] = "Power drum kit"
@@ -493,72 +526,72 @@ msg.MIDI_INSTRUMENT_NAMES[Instrument.BrushKit] = "Brush drum kit"
 msg.MIDI_INSTRUMENT_NAMES[Instrument.OrchestraKit] = "Orchestra drum kit"
 msg.MIDI_INSTRUMENT_NAMES[Instrument.SoundFXKit] = "Sound FX"
 msg.MIDI_INSTRUMENT_NAMES[Instrument.MT32Kit] = "MT-32 drum kit"
-
 msg.MIDI_INSTRUMENT_NAMES[Instrument.None] = "(None)"
-
 msg.UNKNOWN_DRUMKIT = "Unknown drum kit ({midi})"
 
-msg.MIDI_PERCUSSION_NAMES[Percussion.Laser] = "Laser"
-msg.MIDI_PERCUSSION_NAMES[Percussion.Whip] = "Whip"
-msg.MIDI_PERCUSSION_NAMES[Percussion.ScratchPush] = "Scratch push"
-msg.MIDI_PERCUSSION_NAMES[Percussion.ScratchPull] = "Scratch pull"
-msg.MIDI_PERCUSSION_NAMES[Percussion.StickClick] = "Stick click"
-msg.MIDI_PERCUSSION_NAMES[Percussion.SquareClick] = "Square click"
-msg.MIDI_PERCUSSION_NAMES[Percussion.MetronomeClick] = "Metronome click"
-msg.MIDI_PERCUSSION_NAMES[Percussion.MetronomeBell] = "Metronome bell"
-msg.MIDI_PERCUSSION_NAMES[Percussion.AcousticBassDrum] = "Acoustic bass drum"
-msg.MIDI_PERCUSSION_NAMES[Percussion.BassDrum1] = "Bass drum 1"
-msg.MIDI_PERCUSSION_NAMES[Percussion.SideStick] = "Side stick"
-msg.MIDI_PERCUSSION_NAMES[Percussion.AcousticSnare] = "Acoustic snare"
-msg.MIDI_PERCUSSION_NAMES[Percussion.HandClap] = "Hand clap"
-msg.MIDI_PERCUSSION_NAMES[Percussion.ElectricSnare] = "Electric snare"
-msg.MIDI_PERCUSSION_NAMES[Percussion.LowFloorTom] = "Low floor tom"
-msg.MIDI_PERCUSSION_NAMES[Percussion.ClosedHiHat] = "Closed hi-hat"
-msg.MIDI_PERCUSSION_NAMES[Percussion.HighFloorTom] = "High floor tom"
-msg.MIDI_PERCUSSION_NAMES[Percussion.PedalHiHat] = "Pedal hi-hat"
-msg.MIDI_PERCUSSION_NAMES[Percussion.LowTom] = "Low tom"
-msg.MIDI_PERCUSSION_NAMES[Percussion.OpenHiHat] = "Open hi-hat"
-msg.MIDI_PERCUSSION_NAMES[Percussion.LowMidTom] = "Low-mid tom"
-msg.MIDI_PERCUSSION_NAMES[Percussion.HiMidTom] = "Hi-mid tom"
-msg.MIDI_PERCUSSION_NAMES[Percussion.CrashCymbal1] = "Crash cymbal 1"
-msg.MIDI_PERCUSSION_NAMES[Percussion.HighTom] = "High tom"
-msg.MIDI_PERCUSSION_NAMES[Percussion.RideCymbal1] = "Ride cymbal 1"
-msg.MIDI_PERCUSSION_NAMES[Percussion.ChineseCymbal] = "Chinese cymbal"
-msg.MIDI_PERCUSSION_NAMES[Percussion.RideBell] = "Ride bell"
-msg.MIDI_PERCUSSION_NAMES[Percussion.Tambourine] = "Tambourine"
-msg.MIDI_PERCUSSION_NAMES[Percussion.SplashCymbal] = "Splash cymbal"
-msg.MIDI_PERCUSSION_NAMES[Percussion.Cowbell] = "Cowbell"
-msg.MIDI_PERCUSSION_NAMES[Percussion.CrashCymbal2] = "Crash cymbal 2"
-msg.MIDI_PERCUSSION_NAMES[Percussion.Vibraslap] = "Vibraslap"
-msg.MIDI_PERCUSSION_NAMES[Percussion.RideCymbal2] = "Ride cymbal 2"
-msg.MIDI_PERCUSSION_NAMES[Percussion.HiBongo] = "Hi bongo"
-msg.MIDI_PERCUSSION_NAMES[Percussion.LowBongo] = "Low bongo"
-msg.MIDI_PERCUSSION_NAMES[Percussion.MuteHiConga] = "Mute hi conga"
-msg.MIDI_PERCUSSION_NAMES[Percussion.OpenHiConga] = "Open hi conga"
-msg.MIDI_PERCUSSION_NAMES[Percussion.LowConga] = "Low conga"
-msg.MIDI_PERCUSSION_NAMES[Percussion.HighTimbale] = "High timbale"
-msg.MIDI_PERCUSSION_NAMES[Percussion.LowTimbale] = "Low timbale"
-msg.MIDI_PERCUSSION_NAMES[Percussion.HighAgogo] = "High agogo"
-msg.MIDI_PERCUSSION_NAMES[Percussion.LowAgogo] = "Low agogo"
-msg.MIDI_PERCUSSION_NAMES[Percussion.Cabasa] = "Cabasa"
-msg.MIDI_PERCUSSION_NAMES[Percussion.Maracas] = "Maracas"
-msg.MIDI_PERCUSSION_NAMES[Percussion.ShortWhistle] = "Short whistle"
-msg.MIDI_PERCUSSION_NAMES[Percussion.LongWhistle] = "Long whistle"
-msg.MIDI_PERCUSSION_NAMES[Percussion.ShortGuiro] = "Short guiro"
-msg.MIDI_PERCUSSION_NAMES[Percussion.LongGuiro] = "Long guiro"
-msg.MIDI_PERCUSSION_NAMES[Percussion.Claves] = "Claves"
-msg.MIDI_PERCUSSION_NAMES[Percussion.HiWoodBlock] = "Hi wood block"
-msg.MIDI_PERCUSSION_NAMES[Percussion.LowWoodBlock] = "Low wood block"
-msg.MIDI_PERCUSSION_NAMES[Percussion.MuteCuica] = "Mute cuica"
-msg.MIDI_PERCUSSION_NAMES[Percussion.OpenCuica] = "Open cuica"
-msg.MIDI_PERCUSSION_NAMES[Percussion.MuteTriangle] = "Mute triangle"
-msg.MIDI_PERCUSSION_NAMES[Percussion.OpenTriangle] = "Open triangle"
-msg.MIDI_PERCUSSION_NAMES[Percussion.Shaker] = "Shaker"
-msg.MIDI_PERCUSSION_NAMES[Percussion.SleighBell] = "Sleigh bell"
-msg.MIDI_PERCUSSION_NAMES[Percussion.BellTree] = "Bell tree"
-msg.MIDI_PERCUSSION_NAMES[Percussion.Castanets] = "Castanets"
-msg.MIDI_PERCUSSION_NAMES[Percussion.SurduDeadStroke] = "Surdu dead stroke"
-msg.MIDI_PERCUSSION_NAMES[Percussion.Surdu] = "Surdu"
-msg.MIDI_PERCUSSION_NAMES[Percussion.SnareDrumRod] = "Snare drum rod"
-msg.MIDI_PERCUSSION_NAMES[Percussion.OceanDrum] = "Ocean drum"
-msg.MIDI_PERCUSSION_NAMES[Percussion.SnareDrumBrush] = "Snare drum brush"
+--- General MIDI percussion list
+-- Check out Wikipedia in your own language to get the list.
+msg.MIDI_PERCUSSION_NAMES[Percussion.Laser] = "Laser" -- MIDI key 27
+msg.MIDI_PERCUSSION_NAMES[Percussion.Whip] = "Whip" -- MIDI key 28
+msg.MIDI_PERCUSSION_NAMES[Percussion.ScratchPush] = "Scratch push" -- MIDI key 29
+msg.MIDI_PERCUSSION_NAMES[Percussion.ScratchPull] = "Scratch pull" -- MIDI key 30
+msg.MIDI_PERCUSSION_NAMES[Percussion.StickClick] = "Stick click" -- MIDI key 31
+msg.MIDI_PERCUSSION_NAMES[Percussion.SquareClick] = "Square click" -- MIDI key 32
+msg.MIDI_PERCUSSION_NAMES[Percussion.MetronomeClick] = "Metronome click" -- MIDI key 33
+msg.MIDI_PERCUSSION_NAMES[Percussion.MetronomeBell] = "Metronome bell" -- MIDI key 34
+msg.MIDI_PERCUSSION_NAMES[Percussion.AcousticBassDrum] = "Acoustic bass drum" -- MIDI key 35
+msg.MIDI_PERCUSSION_NAMES[Percussion.BassDrum1] = "Bass drum 1" -- MIDI key 36
+msg.MIDI_PERCUSSION_NAMES[Percussion.SideStick] = "Side stick" -- MIDI key 37
+msg.MIDI_PERCUSSION_NAMES[Percussion.AcousticSnare] = "Acoustic snare" -- MIDI key 38
+msg.MIDI_PERCUSSION_NAMES[Percussion.HandClap] = "Hand clap" -- MIDI key 39
+msg.MIDI_PERCUSSION_NAMES[Percussion.ElectricSnare] = "Electric snare" -- MIDI key 40
+msg.MIDI_PERCUSSION_NAMES[Percussion.LowFloorTom] = "Low floor tom" -- MIDI key 41
+msg.MIDI_PERCUSSION_NAMES[Percussion.ClosedHiHat] = "Closed hi-hat" -- MIDI key 42
+msg.MIDI_PERCUSSION_NAMES[Percussion.HighFloorTom] = "High floor tom" -- MIDI key 43
+msg.MIDI_PERCUSSION_NAMES[Percussion.PedalHiHat] = "Pedal hi-hat" -- MIDI key 44
+msg.MIDI_PERCUSSION_NAMES[Percussion.LowTom] = "Low tom" -- MIDI key 45
+msg.MIDI_PERCUSSION_NAMES[Percussion.OpenHiHat] = "Open hi-hat" -- MIDI key 46
+msg.MIDI_PERCUSSION_NAMES[Percussion.LowMidTom] = "Low-mid tom" -- MIDI key 47
+msg.MIDI_PERCUSSION_NAMES[Percussion.HiMidTom] = "Hi-mid tom" -- MIDI key 48
+msg.MIDI_PERCUSSION_NAMES[Percussion.CrashCymbal1] = "Crash cymbal 1" -- MIDI key 49
+msg.MIDI_PERCUSSION_NAMES[Percussion.HighTom] = "High tom" -- MIDI key 50
+msg.MIDI_PERCUSSION_NAMES[Percussion.RideCymbal1] = "Ride cymbal 1" -- MIDI key 51
+msg.MIDI_PERCUSSION_NAMES[Percussion.ChineseCymbal] = "Chinese cymbal" -- MIDI key 52
+msg.MIDI_PERCUSSION_NAMES[Percussion.RideBell] = "Ride bell" -- MIDI key 53
+msg.MIDI_PERCUSSION_NAMES[Percussion.Tambourine] = "Tambourine" -- MIDI key 54
+msg.MIDI_PERCUSSION_NAMES[Percussion.SplashCymbal] = "Splash cymbal" -- MIDI key 55
+msg.MIDI_PERCUSSION_NAMES[Percussion.Cowbell] = "Cowbell" -- MIDI key 56
+msg.MIDI_PERCUSSION_NAMES[Percussion.CrashCymbal2] = "Crash cymbal 2" -- MIDI key 57
+msg.MIDI_PERCUSSION_NAMES[Percussion.Vibraslap] = "Vibraslap" -- MIDI key 58
+msg.MIDI_PERCUSSION_NAMES[Percussion.RideCymbal2] = "Ride cymbal 2" -- MIDI key 59
+msg.MIDI_PERCUSSION_NAMES[Percussion.HiBongo] = "Hi bongo" -- MIDI key 60
+msg.MIDI_PERCUSSION_NAMES[Percussion.LowBongo] = "Low bongo" -- MIDI key 61
+msg.MIDI_PERCUSSION_NAMES[Percussion.MuteHiConga] = "Mute hi conga" -- MIDI key 62
+msg.MIDI_PERCUSSION_NAMES[Percussion.OpenHiConga] = "Open hi conga" -- MIDI key 63
+msg.MIDI_PERCUSSION_NAMES[Percussion.LowConga] = "Low conga" -- MIDI key 64
+msg.MIDI_PERCUSSION_NAMES[Percussion.HighTimbale] = "High timbale" -- MIDI key 65
+msg.MIDI_PERCUSSION_NAMES[Percussion.LowTimbale] = "Low timbale" -- MIDI key 66
+msg.MIDI_PERCUSSION_NAMES[Percussion.HighAgogo] = "High agogo" -- MIDI key 67
+msg.MIDI_PERCUSSION_NAMES[Percussion.LowAgogo] = "Low agogo" -- MIDI key 68
+msg.MIDI_PERCUSSION_NAMES[Percussion.Cabasa] = "Cabasa" -- MIDI key 69
+msg.MIDI_PERCUSSION_NAMES[Percussion.Maracas] = "Maracas" -- MIDI key 70
+msg.MIDI_PERCUSSION_NAMES[Percussion.ShortWhistle] = "Short whistle" -- MIDI key 71
+msg.MIDI_PERCUSSION_NAMES[Percussion.LongWhistle] = "Long whistle" -- MIDI key 72
+msg.MIDI_PERCUSSION_NAMES[Percussion.ShortGuiro] = "Short guiro" -- MIDI key 73
+msg.MIDI_PERCUSSION_NAMES[Percussion.LongGuiro] = "Long guiro" -- MIDI key 74
+msg.MIDI_PERCUSSION_NAMES[Percussion.Claves] = "Claves" -- MIDI key 75
+msg.MIDI_PERCUSSION_NAMES[Percussion.HiWoodBlock] = "Hi wood block" -- MIDI key 76
+msg.MIDI_PERCUSSION_NAMES[Percussion.LowWoodBlock] = "Low wood block" -- MIDI key 77
+msg.MIDI_PERCUSSION_NAMES[Percussion.MuteCuica] = "Mute cuica" -- MIDI key 78
+msg.MIDI_PERCUSSION_NAMES[Percussion.OpenCuica] = "Open cuica" -- MIDI key 79
+msg.MIDI_PERCUSSION_NAMES[Percussion.MuteTriangle] = "Mute triangle" -- MIDI key 80
+msg.MIDI_PERCUSSION_NAMES[Percussion.OpenTriangle] = "Open triangle" -- MIDI key 81
+msg.MIDI_PERCUSSION_NAMES[Percussion.Shaker] = "Shaker" -- MIDI key 82
+msg.MIDI_PERCUSSION_NAMES[Percussion.SleighBell] = "Sleigh bell" -- MIDI key 83
+msg.MIDI_PERCUSSION_NAMES[Percussion.BellTree] = "Bell tree" -- MIDI key 84
+msg.MIDI_PERCUSSION_NAMES[Percussion.Castanets] = "Castanets" -- MIDI key 85
+msg.MIDI_PERCUSSION_NAMES[Percussion.SurduDeadStroke] = "Surdu dead stroke" -- MIDI key 86
+msg.MIDI_PERCUSSION_NAMES[Percussion.Surdu] = "Surdu" -- MIDI key 87
+msg.MIDI_PERCUSSION_NAMES[Percussion.SnareDrumRod] = "Snare drum rod" -- MIDI key 88
+msg.MIDI_PERCUSSION_NAMES[Percussion.OceanDrum] = "Ocean drum" -- MIDI key 89
+msg.MIDI_PERCUSSION_NAMES[Percussion.SnareDrumBrush] = "Snare drum brush" -- MIDI key 90
