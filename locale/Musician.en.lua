@@ -17,10 +17,10 @@ msg.UNMUTE = "Unmute"
 
 msg.MENU_TITLE = "Musician"
 msg.MENU_IMPORT_SONG = "Import and play a song"
-msg.MENU_PLAY = msg.PLAY
-msg.MENU_STOP = msg.STOP
-msg.MENU_PLAY_PREVIEW = msg.TEST_SONG
-msg.MENU_STOP_PREVIEW = msg.STOP_TEST
+msg.MENU_PLAY = "Play"
+msg.MENU_STOP = "Stop"
+msg.MENU_PLAY_PREVIEW = "Preview"
+msg.MENU_STOP_PREVIEW = "Stop preview"
 msg.MENU_LIVE_PLAY = "Live play"
 msg.MENU_SHOW_KEYBOARD = "Open keyboard"
 msg.MENU_SETTINGS = "Settings"
@@ -71,14 +71,12 @@ msg.OPTIONS_CROSS_RP_SUB_TEXT_ACTIVE = "Cross RP communication is active for the
 msg.TIPS_AND_TRICKS_ENABLE = "Show tips and tricks on startup."
 
 msg.TIPS_AND_TRICKS_NAMEPLATES_TITLE = "Animations and nameplates"
-msg.TIPS_AND_TRICKS_NAMEPLATES_TEXT = "A special animation is visible on characters who play music when nameplates are enabled.\n\n" ..
-	"An icon {icon} also indicates who have Musician and can hear you.\n\n" ..
-	"Do you want to enable nameplates and animations now?"
+msg.TIPS_AND_TRICKS_NAMEPLATES_TEXT = "A special animation is visible on characters who play music when nameplates are enabled.\n\nAn icon {icon} also indicates who have Musician and can hear you.\n\nDo you want to enable nameplates and animations now?"
 msg.TIPS_AND_TRICKS_NAMEPLATES_OK = "Enable nameplates and animations"
 msg.TIPS_AND_TRICKS_NAMEPLATES_CANCEL = "Later"
 
 msg.TIPS_AND_TRICKS_CROSS_RP_TITLE = "Cross-faction music with Cross RP"
-msg.TIPS_AND_TRICKS_CROSS_RP_TEXT = msg.OPTIONS_CROSS_RP_SUB_TEXT
+msg.TIPS_AND_TRICKS_CROSS_RP_TEXT = "Install the Cross RP add-on by Tammya-MoonGuard to activate\ncross-faction and cross-realm music!"
 msg.TIPS_AND_TRICKS_CROSS_RP_OK = "OK"
 
 msg.STARTUP = "Welcome to Musician v{version}."

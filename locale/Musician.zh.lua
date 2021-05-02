@@ -17,10 +17,10 @@ msg.UNMUTE = "取消静音"
 
 msg.MENU_TITLE = "Musician"
 msg.MENU_IMPORT_SONG = "导入并播放一首音乐"
-msg.MENU_PLAY = msg.PLAY
-msg.MENU_STOP = msg.STOP
-msg.MENU_PLAY_PREVIEW = msg.TEST_SONG
-msg.MENU_STOP_PREVIEW = msg.STOP_TEST
+msg.MENU_PLAY = "播放"
+msg.MENU_STOP = "停止"
+msg.MENU_PLAY_PREVIEW = "预览"
+msg.MENU_STOP_PREVIEW = "停止预览"
 msg.MENU_LIVE_PLAY = "现场演奏"
 msg.MENU_SHOW_KEYBOARD = "打开键盘"
 msg.MENU_SETTINGS = "设定"
@@ -71,14 +71,12 @@ msg.OPTIONS_CROSS_RP_SUB_TEXT_ACTIVE = "Cross RP连接已在以下位置启动�
 msg.TIPS_AND_TRICKS_ENABLE = "启动时显示小贴士。"
 
 msg.TIPS_AND_TRICKS_NAMEPLATES_TITLE = "动画和姓名版"
-msg.TIPS_AND_TRICKS_NAMEPLATES_TEXT = "当姓名版选项打开时，正在播放音乐的玩家会显示特殊动画。\n\n" ..
-	"{icon}显示了安装Musician并能听到你演奏的玩家。\n\n" ..
-	"你想打开姓名版和动画吗？"
+msg.TIPS_AND_TRICKS_NAMEPLATES_TEXT = "当姓名版选项打开时，正在播放音乐的玩家会显示特殊动画。\n\n{icon}显示了安装Musician并能听到你演奏的玩家。\n\n你想打开姓名版和动画吗？"
 msg.TIPS_AND_TRICKS_NAMEPLATES_OK = "打开姓名版和动画"
 msg.TIPS_AND_TRICKS_NAMEPLATES_CANCEL = "稍后再说"
 
 msg.TIPS_AND_TRICKS_CROSS_RP_TITLE = "使用Cross RP进行跨阵营/跨服演奏"
-msg.TIPS_AND_TRICKS_CROSS_RP_TEXT = msg.OPTIONS_CROSS_RP_SUB_TEXT
+msg.TIPS_AND_TRICKS_CROSS_RP_TEXT = "安装Tammya-月亮守卫的Cross RP插件来进行跨服/跨阵营的音乐演奏！"
 msg.TIPS_AND_TRICKS_CROSS_RP_OK = "好的"
 
 msg.STARTUP = "欢迎使用Musician v{version}."
