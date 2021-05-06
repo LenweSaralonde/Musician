@@ -10,7 +10,7 @@
 -- * Check the result in game to make sure your text fits the UI.
 ------------------------------------------------------------------------
 
-local msg = Musician.InitLocale("zh", "中文", "zhTW", "zhCN")
+local msg = Musician.InitLocale("zh", "中文", "zhCN", "zhTW")
 
 local Instrument = Musician.MIDI_INSTRUMENTS
 local Percussion = Musician.MIDI_PERCUSSIONS

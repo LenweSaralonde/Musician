@@ -10,7 +10,7 @@
 -- * Check the result in game to make sure your text fits the UI.
 ------------------------------------------------------------------------
 
-local msg = Musician.InitLocale("es", "Español", "esMX", "esES")
+local msg = Musician.InitLocale("es", "Español", "esES", "esMX")
 
 local Instrument = Musician.MIDI_INSTRUMENTS
 local Percussion = Musician.MIDI_PERCUSSIONS
