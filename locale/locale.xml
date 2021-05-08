@@ -9,6 +9,7 @@
 	<Script file="Musician.de.lua" />
 	<Script file="Musician.it.lua" />
 	<Script file="Musician.ru.lua" />
-	<Script file="Musician.kr.lua" />
+	<Script file="Musician.ko.lua" />
 	<Script file="Musician.zh.lua" />
+	<Script file="Musician.tw.lua" />
 </Ui>
