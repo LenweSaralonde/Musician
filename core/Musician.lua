@@ -13,7 +13,7 @@ local tipsAndTricks = {}
 function Musician:OnInitialize()
 
 	-- Check WoW project type
-	if WOW_PROJECT_ID ~= Musician.WOW_PROJECT_ID then
+	if not(Musician.WOW_PROJECT_IDS[WOW_PROJECT_ID]) then
 
 		-- Disable modules
 		local module
@@ -30,10 +30,10 @@ function Musician:OnInitialize()
 
 		-- Display error messages
 		local msg
-		if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-			msg = Musician.Msg.ERR_CLASSIC_ON_RETAIL
-		else
+		if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then
 			msg = Musician.Msg.ERR_RETAIL_ON_CLASSIC
+		else
+			msg = Musician.Msg.ERR_CLASSIC_ON_RETAIL
 		end
 
 		msg = Musician.Utils.FormatText(msg)
