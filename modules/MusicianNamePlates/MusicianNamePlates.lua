@@ -242,6 +242,13 @@ local function addNote(animatedNotesFrame, song, track, key)
 	renderAnimatedNote(noteFrame, 0)
 end
 
+--- Set frame text bypassing hooks
+-- @param frame (Frame)
+-- @param text (string)
+local function setTextUnhooked(frame, text)
+	getmetatable(frame).__index.SetText(frame, text)
+end
+
 --- OnUpdate handler for the animated notes frame
 -- @param animatedNotesFrame (Frame)
 -- @param elapsed (number)
@@ -464,10 +471,6 @@ end
 -- @param append (boolean) Add note icon at the end of the string
 function Musician.NamePlates.AddNoteIcon(namePlate, textElement, append)
 
-	-- Avoid recursion when called with hooked SetText()
-	if textElement.musicianUpdatingNote then return end
-	textElement.musicianUpdatingNote = true
-
 	-- Hook the SetText() function to ensure the icon is always added, even when modified by a third party
 	if textElement.musicianSetTextIsHooked == nil then
 		textElement.musicianSetTextIsHooked = true
@@ -482,7 +485,6 @@ function Musician.NamePlates.AddNoteIcon(namePlate, textElement, append)
 	if player and not(Musician.Utils.PlayerIsMyself(player)) and Musician_Settings.showNamePlateIcon and Musician.Registry.PlayerIsRegistered(player) then
 		local nameString = textElement:GetText()
 		if nameString == nil then
-			textElement.musicianUpdatingNote = false
 			return
 		end
 
@@ -498,9 +500,9 @@ function Musician.NamePlates.AddNoteIcon(namePlate, textElement, append)
 		-- Add icon placeholder if not found or previously removed
 		if from == nil then
 			if append then
-				textElement:SetText(nameString .. " " .. iconPlaceholder)
+				setTextUnhooked(textElement, nameString .. " " .. iconPlaceholder)
 			else
-				textElement:SetText(iconPlaceholder .. " " .. nameString)
+				setTextUnhooked(textElement, iconPlaceholder .. " " .. nameString)
 			end
 		end
 
@@ -549,12 +551,10 @@ function Musician.NamePlates.AddNoteIcon(namePlate, textElement, append)
 				nameString = string.sub(nameString, 1, from - 1) .. string.sub(nameString, to + 1, #nameString)
 				nameString = string.gsub(nameString, '%s+', ' ')
 				nameString = strtrim(nameString)
-				textElement:SetText(nameString)
+				setTextUnhooked(textElement, nameString)
 			end
 		end
 	end
-
-	textElement.musicianUpdatingNote = false
 end
 
 --- Attach Musician nameplate

@@ -67,10 +67,12 @@ end
 --
 function Musician.TRP3.HookNamePlates()
 	if not(Musician.NamePlates) then return end
-	if AddOn_TotalRP3 and AddOn_TotalRP3.NamePlates and AddOn_TotalRP3.NamePlates.BlizzardDecoratorMixin then
+	if TRP3_BlizzardNamePlates and TRP3_BlizzardNamePlates.UpdateNamePlate then
 		Musician.Utils.Debug(MODULE_NAME, "Adding nameplate support.")
-		hooksecurefunc(AddOn_TotalRP3.NamePlates.BlizzardDecoratorMixin, "UpdateNamePlateName", function(self, namePlate)
-			Musician.NamePlates.UpdateNoteIcon(namePlate)
+		hooksecurefunc(TRP3_BlizzardNamePlates, "UpdateNamePlate", function(self, namePlate)
+			if namePlate and namePlate.UnitFrame then
+				Musician.NamePlates.UpdateNoteIcon(namePlate)
+			end
 		end)
 	end
 end
