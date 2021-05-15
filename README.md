@@ -16,8 +16,6 @@ Quick links
 * [Bug tracker](https://github.com/LenweSaralonde/Musician/issues) — Report issues
 * [GitHub repo](https://github.com/LenweSaralonde/Musician) — Contribute to the project
 
-Musician is also available for WoW Classic, be sure to install the right version of the add-on.
-
 Un [Guide en français](https://www.lenwe.info/guide-musician/) est également disponible. 🇫🇷🥖🍷
 
 tl;dr
@@ -142,15 +140,13 @@ The links remain active until you log out or reload the interface.
 
 Cross-faction play
 ------------------
-Cross-faction (and cross-realm) music can be achieved through the [Cross RP add-on](https://www.curseforge.com/wow/addons/cross-rp) by Tammya-MoonGuard.
+Cross-faction (and cross-realm) music can be achieved on WoW Retail through the [Cross RP add-on](https://www.curseforge.com/wow/addons/cross-rp) by Tammya-MoonGuard.
 
 This add-on is very straightforward, just install it and it works!
 
 Cross RP relies on a peer to peer network established by the players who run it so the faction/realm you want to play with may not be always reachable. Feel free to encourage other players to install Cross RP and expand the network!
 
 You can see what realms and factions you're connected to in Musician's options or by mousing over the Cross RP minimap button.
-
-Cross-faction play is not available on WoW Classic.
 
 ![Cross-faction play with Cross RP](./img/cross-rp.png)
 
@@ -170,7 +166,7 @@ Tips and tricks
 ---------------
 * You can preview the song at any moment prior to playing it for other players by clicking the **Preview** button or using the song editor. If another song is playing nearby, it will be muted for you only.
 * If another player has Musician, it will be shown in his/her tooltip. Just hover the other players with your mouse cursor to see who can hear you!
-* Use toys such as the [\[Blingtron's Circuit Design Tutorial\]](https://www.wowhead.com/item=132518/blingtrons-circuit-design-tutorial) and the [\[Fae Harp\]](https://www.wowhead.com/item=184489/fae-harp) to make your performance visually more immersive!
+* Use toys such as the [\[Blingtron's Circuit Design Tutorial\]](https://www.wowhead.com/item=132518/blingtrons-circuit-design-tutorial) and the [\[Fae Harp\]](https://www.wowhead.com/item=184489/fae-harp) to make your performance visually more immersive! (WoW Retail only)
 * You can add lyrics by combining Musician with the [StoryTeller add-on](https://musician.lenwe.io/storyteller).
 * Load and prepare the next song while the current one is playing to reduce waiting time between songs.
 * The radius for hearing the music is approximately 40 meters.

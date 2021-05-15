@@ -4,11 +4,12 @@ Changelog
 v1.7.2.2
 --------
 * Improved localization to ease up collaboration.
-* Fixed Total RP Extended sheet music items localized strings not updating when item locale is changed.
+* Fixed Total RP Extended sheet music items localized strings not updating when item locale is changed. (Retail)
 
 v1.7.2.1
 --------
 * TOC update for WoW patch 9.0.5.
+* TOC update for WoW Classic patch 1.13.7
 
 v1.7.2.0
 --------
@@ -50,7 +51,7 @@ v1.7.0.0
 
 v1.6.2.0
 --------
-* Added option to mute instrumental toys such as the Fae Harp.
+* Added option to mute instrumental toys such as the Fae Harp. (Retail)
 * Added option to allow in-game music playing along with Musician.
 
 v1.6.1.3
@@ -71,7 +72,7 @@ v1.6.1.0
 * Updated for WoW Shadowlands 9.0.1 prepatch
 * Set default window position to the right
 * Fixed altered GameTooltip font size
-* Fixed rare LUA error in CrossRP module #55
+* Fixed rare LUA error in CrossRP module #55 (Retail)
 * Misc improvements
 
 v1.6.0.9
@@ -132,6 +133,7 @@ v1.5.5.8
 
 v1.5.5.7
 --------
+* Updated communication protocol for WoW Classic 1.13.3 #39
 * Added "About" box with the list of supporters list #37
 * Added donation and Patreon links on the MIDI converter web app
 * Fixed add-on options sometimes not showing up #36
@@ -140,7 +142,8 @@ v1.5.5.7
 v1.5.5.6
 --------
 * Update for WoW 8.2.5
-* HD borders!
+* HD borders! (Retail)
+* Fixed ElvUI Classic nameplates hook #34 (Classic)
 * Fixed live keyboard UI dropdowns go off screen #35
 
 v1.5.5.5
