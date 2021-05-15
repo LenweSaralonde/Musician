@@ -396,9 +396,14 @@ end
 --- Send a Hello to the channel
 --
 function Musician.Registry.SendHello()
-	if Musician.Comm.GetChannel() ~= nil then
-		debugComm(true, Musician.Registry.event.hello, Musician.Comm.GetChannel())
-		Musician.Registry:SendCommMessage(Musician.Registry.event.hello, Musician.Registry.GetVersionString(), 'CHANNEL', Musician.Comm.GetChannel(), "ALERT")
+	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+		if Musician.Comm.GetChannel() ~= nil then
+			debugComm(true, Musician.Registry.event.hello, Musician.Comm.GetChannel())
+			Musician.Registry:SendCommMessage(Musician.Registry.event.hello, Musician.Registry.GetVersionString(), 'CHANNEL', Musician.Comm.GetChannel(), "ALERT")
+		end
+	else
+		debugComm(true, Musician.Registry.event.hello, 'YELL')
+		Musician.Registry:SendCommMessage(Musician.Registry.event.hello, Musician.Registry.GetVersionString(), 'YELL', nil, "ALERT")
 	end
 end
 
@@ -557,7 +562,12 @@ function Musician.Registry.NotifyNewVersion(otherVersion)
 		msg = string.gsub(msg, '{version}', Musician.Utils.Highlight(theirVersion))
 
 		-- Display message with fanfare sound
-		local _, handle = PlaySound(67788, 'Master')
+		if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+			local _, handle = PlaySound(67788, 'Master')
+		else
+			PlaySoundFile("Interface\\AddOns\\Musician\\ui\\sound\\fx_flute_mylunesmelody_short.ogg")
+		end
+
 		Musician.Utils.Print(msg)
 	end
 

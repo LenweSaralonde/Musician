@@ -37,14 +37,22 @@ end
 -- @param msg (string)
 function Musician.Utils.PrintError(msg)
 	DEFAULT_CHAT_FRAME:AddMessage(msg, RED_FONT_COLOR.r, RED_FONT_COLOR.g, RED_FONT_COLOR.b)
-	PlaySound(32051)
+	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+		PlaySound(32051)
+	else
+		PlaySoundFile("sound\\interface\\error.ogg")
+	end
 end
 
 --- Display an error message in a popup
 -- @param msg (string)
 function Musician.Utils.Error(msg)
 	message(msg)
-	PlaySound(32051)
+	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+		PlaySound(32051)
+	else
+		PlaySoundFile("sound\\interface\\error.ogg")
+	end
 end
 
 --- Display a message in a popup
@@ -566,7 +574,7 @@ end
 -- @param force (boolean)
 function Musician.Utils.MuteGameMusic(force)
 	local isMusicianPlaying = Musician.Utils.SongIsPlaying() or Musician.Live.IsPlaying()
-	local isInGameMusicEnabled = C_CVar.GetCVar("Sound_EnableMusic") ~= "0"
+	local isInGameMusicEnabled = (C_CVar and C_CVar.GetCVar or GetCVar)("Sound_EnableMusic") ~= "0"
 	local mute = Musician_Settings.muteGameMusic and isInGameMusicEnabled and isMusicianPlaying and not(Musician.Sampler.GetMuted())
 
 	if not(force) and isGameMusicMuted == mute then return end
