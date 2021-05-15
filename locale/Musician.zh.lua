@@ -347,6 +347,10 @@ msg.LINKS_ERROR.offline = "{player}未登录魔兽世界。"
 msg.LINKS_ERROR.importingFailed = "歌曲{title}无法从玩家{player}处导入。"
 
 --- Map tracking options
+msg.MAP_OPTIONS_TITLE = "地图”"
+msg.MAP_OPTIONS_SUB_TEXT = "显示附近在演奏的玩家："
+msg.MAP_OPTIONS_MINI_MAP = "于小地图显示"
+msg.MAP_OPTIONS_WORLD_MAP = "于世界地图显示"
 msg.MAP_TRACKING_OPTIONS_TITLE = "Musician"
 msg.MAP_TRACKING_OPTION_ACTIVE_MUSICIANS = "活跃音乐家"
 

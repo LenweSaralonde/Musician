@@ -347,6 +347,10 @@ msg.LINKS_ERROR.offline = "{player} não está conectado ao World of Warcraft."
 msg.LINKS_ERROR.importingFailed = "A música {title} não pôde ser importada de {player}."
 
 --- Map tracking options
+msg.MAP_OPTIONS_TITLE = "Mapa"
+msg.MAP_OPTIONS_SUB_TEXT = "Mostrar músicos próximos tocando:"
+msg.MAP_OPTIONS_MINI_MAP = "No minimapa"
+msg.MAP_OPTIONS_WORLD_MAP = "No mapa mundial"
 msg.MAP_TRACKING_OPTIONS_TITLE = "Musician"
 msg.MAP_TRACKING_OPTION_ACTIVE_MUSICIANS = "Musicians tocando"
 

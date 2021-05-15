@@ -347,6 +347,10 @@ msg.LINKS_ERROR.offline = "{player}는 월드 오브 워크래프트에 로그�
 msg.LINKS_ERROR.importingFailed = "{player}에서 {title} 노래를 가져올 수 없습니다."
 
 --- Map tracking options
+msg.MAP_OPTIONS_TITLE = "지도"
+msg.MAP_OPTIONS_SUB_TEXT = "재생중인 주변 음악가 표시 :"
+msg.MAP_OPTIONS_MINI_MAP = "미니 맵에서"
+msg.MAP_OPTIONS_WORLD_MAP = "세계지도에서"
 msg.MAP_TRACKING_OPTIONS_TITLE = "Musician"
 msg.MAP_TRACKING_OPTION_ACTIVE_MUSICIANS = "연주하는 Musician"
 

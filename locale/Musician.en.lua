@@ -347,6 +347,10 @@ msg.LINKS_ERROR.offline = "{player} is not logged into World of Warcraft."
 msg.LINKS_ERROR.importingFailed = "The song {title} could not be imported from {player}."
 
 --- Map tracking options
+msg.MAP_OPTIONS_TITLE = "Map"
+msg.MAP_OPTIONS_SUB_TEXT = "Show nearby musicians playing:"
+msg.MAP_OPTIONS_MINI_MAP = "On the minimap"
+msg.MAP_OPTIONS_WORLD_MAP = "On the world map"
 msg.MAP_TRACKING_OPTIONS_TITLE = "Musician"
 msg.MAP_TRACKING_OPTION_ACTIVE_MUSICIANS = "Musicians playing"
 
