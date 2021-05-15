@@ -590,13 +590,15 @@ function Musician.Utils.MuteGameMusic(force)
 	end
 end
 
---- Mute or unmute music from instrument toys
+--- Mute or unmute music from instrument toys (Retail only)
 -- @param isMuted (boolean)
 function Musician.Utils.SetInstrumentToysMuted(isMuted)
-	local muteFunc = isMuted and MuteSoundFile or UnmuteSoundFile
-	for _, item in pairs(Musician.InstrumentToys) do
-		for _, file in pairs(item.soundFiles) do
-			muteFunc(file)
+	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+		local muteFunc = isMuted and MuteSoundFile or UnmuteSoundFile
+		for _, item in pairs(Musician.InstrumentToys) do
+			for _, file in pairs(item.soundFiles) do
+				muteFunc(file)
+			end
 		end
 	end
 end

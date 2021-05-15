@@ -104,37 +104,42 @@
 										</Anchors>
 										<Scripts>
 											<OnLoad>
-												local label = string.gsub(Musician.Msg.OPTIONS_MUTE_INSTRUMENT_TOYS_LABEL, '{icons}', '')
-												Musician.Options.SetupCheckbox(self, label)
+												if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+													local label = string.gsub(Musician.Msg.OPTIONS_MUTE_INSTRUMENT_TOYS_LABEL, '{icons}', '')
+													Musician.Options.SetupCheckbox(self, label)
 
-												local itemIcons = {}
-												for itemIndex, itemRow in pairs(Musician.InstrumentToys) do
-													table.insert(itemIcons, '')
-												end
+													local itemIcons = {}
+													for itemIndex, itemRow in pairs(Musician.InstrumentToys) do
+														table.insert(itemIcons, '')
+													end
 
-												local loadedItems = 0
-												for itemIndex, itemRow in pairs(Musician.InstrumentToys) do
-													local item = Item:CreateFromItemID(itemRow.itemId)
-													item:ContinueOnItemLoad(function()
-														local fontHeight = self.Text:GetLineHeight() * 1.5
-														local itemString = string.match(item:GetItemLink(), "item[%-?%d:]+")
-														local itemIcon = item:GetItemIcon()
-														local textureString = '|T' .. itemIcon .. ':' .. fontHeight .. '|t'
-														local itemLink = '|H' .. itemString .. '|h' .. textureString .. '|h'
+													local loadedItems = 0
+													for itemIndex, itemRow in pairs(Musician.InstrumentToys) do
+														local item = Item:CreateFromItemID(itemRow.itemId)
+														item:ContinueOnItemLoad(function()
+															local fontHeight = self.Text:GetLineHeight() * 1.5
+															local itemString = string.match(item:GetItemLink(), "item[%-?%d:]+")
+															local itemIcon = item:GetItemIcon()
+															local textureString = '|T' .. itemIcon .. ':' .. fontHeight .. '|t'
+															local itemLink = '|H' .. itemString .. '|h' .. textureString .. '|h'
 
-														loadedItems = loadedItems + 1
-														itemIcons[itemIndex] = itemLink
-														if loadedItems == #Musician.InstrumentToys then
-															local strIcons = strjoin(" ", unpack(itemIcons))
-															label = string.gsub(Musician.Msg.OPTIONS_MUTE_INSTRUMENT_TOYS_LABEL, '{icons}', strIcons)
-															self.Text:SetText(label)
-															self:SetHyperlinksEnabled(true)
-															self.tooltipFrame = GameTooltip
-															self:SetScript("OnHyperlinkEnter", InlineHyperlinkFrame_OnEnter)
-															self:SetScript("OnHyperlinkLeave", InlineHyperlinkFrame_OnLeave)
-															self:SetScript("OnHyperlinkClick", InlineHyperlinkFrame_OnClick)
-														end
-													end)
+															loadedItems = loadedItems + 1
+															itemIcons[itemIndex] = itemLink
+															if loadedItems == #Musician.InstrumentToys then
+																local strIcons = strjoin(" ", unpack(itemIcons))
+																label = string.gsub(Musician.Msg.OPTIONS_MUTE_INSTRUMENT_TOYS_LABEL, '{icons}', strIcons)
+																self.Text:SetText(label)
+																self:SetHyperlinksEnabled(true)
+																self.tooltipFrame = GameTooltip
+																self:SetScript("OnHyperlinkEnter", InlineHyperlinkFrame_OnEnter)
+																self:SetScript("OnHyperlinkLeave", InlineHyperlinkFrame_OnLeave)
+																self:SetScript("OnHyperlinkClick", InlineHyperlinkFrame_OnClick)
+															end
+														end)
+													end
+												else
+													self:Hide()
+													MusicianOptionsPanelIntegration:SetHeight(50)
 												end
 											</OnLoad>
 											<OnClick inherit="append">
