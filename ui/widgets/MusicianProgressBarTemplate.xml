@@ -1,11 +1,9 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<!-- Progress bar -->
-
 	<Frame name="MusicianProgressBarTemplate" virtual="true">
 		<Size>
 			<AbsDimension y="10"/>
 		</Size>
-
 		<Layers>
 			<Layer level="BACKGROUND">
 				<Texture name="$parentBackground" setAllPoints="true">
@@ -24,7 +22,6 @@
 				</Texture>
 			</Layer>
 		</Layers>
-
 		<Scripts>
 			<OnLoad>
 				self.SetProgress = function(self, progression)

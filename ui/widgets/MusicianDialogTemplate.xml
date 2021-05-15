@@ -59,7 +59,6 @@
 				</Texture>
 			</Layer>
 		</Layers>
-
 		<Scripts>
 			<OnLoad>
 				Musician.RestoreFramePosition(self)
@@ -85,7 +84,6 @@
 				PlaySound(SOUNDKIT.IG_QUEST_LIST_CLOSE)
 			</OnHide>
 		</Scripts>
-
 		<Frames>
 			<Button name="$parentCloseButton" parentKey="close" inherits="UIPanelCloseButton">
 				<Anchors>

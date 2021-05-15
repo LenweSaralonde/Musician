@@ -2,7 +2,6 @@
 	<!-- Dialog Window -->
 
 	<Frame name="MusicianDialogTemplateNoAnchor" parent="UIParent" toplevel="true" enableMouse="true" movable="true" hidden="true" clampedtoscreen="true" frameStrata="DIALOG" virtual="true">
-
 		<Scripts>
 			<OnLoad>
 				Musician.RestoreFramePosition(self)
@@ -28,7 +27,6 @@
 				PlaySound(SOUNDKIT.IG_QUEST_LIST_CLOSE)
 			</OnHide>
 		</Scripts>
-
 		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
 			<BackgroundInsets>
 				<AbsInset left="11" right="12" top="12" bottom="11" />
@@ -40,7 +38,6 @@
 				<AbsValue val="32" />
 			</EdgeSize>
 		</Backdrop>
-
 		<Frames>
 			<Button name="$parentCloseButton" parentKey="close" inherits="UIPanelCloseButton">
 				<Anchors>
