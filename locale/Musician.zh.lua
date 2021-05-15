@@ -60,10 +60,6 @@ msg.COMMAND_LIVE_DEMO_PARAMS = "{ **<上音轨编号>** **<下音轨编号>** ||
 msg.COMMAND_HELP = "显示这条帮助信息"
 msg.ERR_COMMAND_UNKNOWN = "未知的 \"{command}\" 指令。输入 {help} 来获得指令表。"
 
---- Global error messages
-msg.ERR_CLASSIC_ON_RETAIL = "你正在正式版服务器使用怀旧版Musician插件，请安装正式版的插件。"
-msg.ERR_RETAIL_ON_CLASSIC = "你正在怀旧版服务器使用正式版Musician插件，请安装怀旧版的插件。"
-
 --- Add-on options
 msg.OPTIONS_TITLE = "Musician"
 msg.OPTIONS_SUB_TEXT = "加入Discord社区来帮助我们！ {url}"

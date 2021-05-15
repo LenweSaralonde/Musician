@@ -60,10 +60,6 @@ msg.COMMAND_LIVE_DEMO_PARAMS = "{** <위쪽 트랙 #> ** ** <아래쪽 트랙 #>
 msg.COMMAND_HELP = "이 도움말 메시지 표시"
 msg.ERR_COMMAND_UNKNOWN = "알 수없는“{command}”명령입니다. 명령 목록을 얻으려면 {help}를 입력하십시오."
 
---- Global error messages
-msg.ERR_CLASSIC_ON_RETAIL = "WoW의 ** 소매 ** 버전에서 뮤지션의 ** 클래식 ** 버전을 사용하고 있습니다.\n뮤지션의 ** 정품 ** 버전을 설치하세요."
-msg.ERR_RETAIL_ON_CLASSIC = "** Classic ** 버전의 WoW에서 *** Retail ** 버전의 Musician을 사용 중입니다.\nMusician의 ** Classic ** 버전을 설치하세요."
-
 --- Add-on options
 msg.OPTIONS_TITLE = "Musician"
 msg.OPTIONS_SUB_TEXT = "Discord 서버에 가입하여 지원을 받으세요! {url}"

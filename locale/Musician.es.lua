@@ -60,10 +60,6 @@ msg.COMMAND_LIVE_DEMO_PARAMS = "{** <número de pista superior> ** ** <número d
 msg.COMMAND_HELP = "Mostrar este mensaje de ayuda"
 msg.ERR_COMMAND_UNKNOWN = "Comando “{command}” desconocido. Escriba {help} para obtener la lista de comandos."
 
---- Global error messages
-msg.ERR_CLASSIC_ON_RETAIL = "Estás usando la versión ** Clásica ** de Musician en la versión ** Minorista ** de WoW.\nInstale la versión ** Minorista ** de Musician."
-msg.ERR_RETAIL_ON_CLASSIC = "Estás usando la versión *** Minorista ** de Musician en la versión ** Clásica ** de WoW.\nInstale la versión ** Clásica ** de Musician."
-
 --- Add-on options
 msg.OPTIONS_TITLE = "Musician"
 msg.OPTIONS_SUB_TEXT = "¡Únete al servidor de Discord para recibir asistencia! {url}"

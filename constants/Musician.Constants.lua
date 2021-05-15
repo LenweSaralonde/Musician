@@ -1,12 +1,6 @@
 --- Global constants
 -- @module Musician.Constants
 
-Musician.WOW_PROJECT_IDS = {
-	[WOW_PROJECT_MAINLINE or 0] = true,
-	[WOW_PROJECT_CLASSIC or 0] = false,
-	[WOW_PROJECT_BURNING_CRUSADE_CLASSIC or 0] = false
-}
-
 Musician.CHANNEL  = "MusicianComm"
 Musician.PASSWORD = "TrustMeIMAMusician"
 

@@ -12,41 +12,6 @@ local tipsAndTricks = {}
 --
 function Musician:OnInitialize()
 
-	-- Check WoW project type
-	if not(Musician.WOW_PROJECT_IDS[WOW_PROJECT_ID]) then
-
-		-- Disable modules
-		local module
-		for _, module in pairs(Musician) do
-			if type(module) == 'table' then
-				if module.OnInitialize then
-					module.OnInitialize = function() end
-				end
-				if module.OnEnable then
-					module.OnEnable = function() end
-				end
-			end
-		end
-
-		-- Display error messages
-		local msg
-		if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then
-			msg = Musician.Msg.ERR_RETAIL_ON_CLASSIC
-		else
-			msg = Musician.Msg.ERR_CLASSIC_ON_RETAIL
-		end
-
-		msg = Musician.Utils.FormatText(msg)
-		DEFAULT_CHAT_FRAME:AddMessage(msg, RED_FONT_COLOR.r, RED_FONT_COLOR.g, RED_FONT_COLOR.b)
-
-		C_Timer.After(6, function()
-			message(msg)
-			PlaySound(846)
-		end)
-
-		return
-	end
-
 	-- Init settings
 	local defaultSettings = {
 		minimap = {
