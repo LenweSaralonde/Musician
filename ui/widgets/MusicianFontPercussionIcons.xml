@@ -1,0 +1,8 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+	<!-- Percussion icon fonts -->
+	<Font name="MusicianFontPercussionIconsNormal" inherits="GameFontNormal" font="Interface\AddOns\Musician\ui\fonts\musician-percussions.ttf" height="14" virtual="true" />
+	<Font name="MusicianFontPercussionIconsHighlight" inherits="GameFontHighlight" font="Interface\AddOns\Musician\ui\fonts\musician-percussions.ttf" height="14" virtual="true" />
+	<Font name="MusicianFontPercussionIconsDisable" inherits="GameFontDisable" font="Interface\AddOns\Musician\ui\fonts\musician-percussions.ttf" height="14" virtual="true" />
+	<Font name="MusicianFontPercussionIconsNormalLarge" inherits="GameFontNormalLarge" font="Interface\AddOns\Musician\ui\fonts\musician-percussions.ttf" height="20" virtual="true" />
+	<Font name="MusicianFontPercussionIconsHighlightLarge" inherits="GameFontHighlightLarge" font="Interface\AddOns\Musician\ui\fonts\musician-percussions.ttf" height="20" virtual="true" />
+</Ui>

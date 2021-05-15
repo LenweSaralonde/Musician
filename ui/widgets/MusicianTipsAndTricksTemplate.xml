@@ -1,0 +1,57 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+	<!-- Tips and tricks window -->
+	<Frame name="MusicianTipsAndTricksTemplate" inherits="GlowBoxTemplate" hidden="true" virtual="true">
+		<Size x="640" y="360" />
+		<Anchors>
+			<Anchor point="CENTER" y="50" />
+		</Anchors>
+		<Frames>
+			<Frame inherits="ShadowOverlaySmallTemplate" setAllPoints="true" />
+			<CheckButton name="$parentEnableTipsAndTricks" parentKey="enableCheckbox" inherits="InterfaceOptionsSmallCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeTo="$parent" x="10" y="10"/>
+				</Anchors>
+				<Scripts>
+					<OnShow>
+						self:SetChecked(Musician_Settings.enableTipsAndTricks)
+					</OnShow>
+					<OnLoad>
+						_G[self:GetName().."Text"]:SetText(Musician.Msg.TIPS_AND_TRICKS_ENABLE)
+						self:SetHitRectInsets(0, -_G[self:GetName().."Text"]:GetWidth(), 0, 0)
+						self:HookScript("OnClick", function()
+							Musician_Settings.enableTipsAndTricks = self:GetChecked()
+						end)
+					</OnLoad>
+				</Scripts>
+			</CheckButton>
+		</Frames>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentTitle" parentKey="title" inherits="GameFontNormalShadowHuge2" justifyH="CENTER" justifyV="TOP">
+					<Anchors>
+						<Anchor point="TOP" y="-16"/>
+						<Anchor point="LEFT" x="10"/>
+						<Anchor point="RIGHT" x="-10"/>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentText" parentKey="text" inherits="GameFontHighlightLarge" justifyH="LEFT" justifyV="MIDDLE">
+					<Size y="150" />
+					<Anchors>
+						<Anchor point="TOP" relativeTo="$parentTitle" relativePoint="BOTTOM" />
+						<Anchor point="BOTTOM" y="30" />
+						<Anchor point="LEFT" x="30"/>
+						<Anchor point="RIGHT" x="-30"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnShow>
+				PlaySound(SOUNDKIT.IG_QUEST_LIST_OPEN)
+			</OnShow>
+			<OnHide>
+				PlaySound(SOUNDKIT.IG_QUEST_LIST_CLOSE)
+			</OnHide>
+		</Scripts>
+	</Frame>
+</Ui>

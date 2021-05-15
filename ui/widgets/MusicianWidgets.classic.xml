@@ -1,0 +1,21 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="MusicianWidgets.lua"/>
+	<Include file="MusicianFontIcons.xml"/>
+	<Include file="MusicianFontPercussionIcons.xml"/>
+	<Include file="MusicianDialogTemplate.classic.xml"/>
+	<Include file="MusicianBasicMessageDialog.classic.xml"/>
+	<Include file="MusicianEditBoxTemplate.xml"/>
+	<Include file="MusicianProgressBarTemplate.xml"/>
+	<Include file="MusicianIconButtonTemplate.xml"/>
+	<Include file="MusicianIconTextButtonTemplate.xml"/>
+	<Include file="MusicianLEDTextButtonTemplate.xml"/>
+	<Include file="MusicianIconTextProgressBarButtonTemplate.xml"/>
+	<Include file="MusicianBandPlayButtonTemplate.xml"/>
+	<Include file="MusicianDropDownMenuTooltipTemplate.xml"/>
+	<Include file="MusicianInstrumentDropdownTemplate.xml"/>
+	<Include file="MusicianOptionsSmallCheckButtonTemplate.xml"/>
+	<Include file="MusicianImageTemplate.xml"/>
+	<Include file="MusicianAnimatedImageTemplate.xml"/>
+	<Include file="MusicianTipsAndTricksTemplate.xml"/>
+	<Include file="MusicianTipsAndTricksButtonTemplates.xml"/>
+</Ui>

@@ -34,8 +34,7 @@ locale\locale.xml
 ui\fonts\Musician.Icons.lua
 ui\fonts\Musician.PercussionIcons.lua
 
-ui\MusicianWidgetsClassic.lua
-ui\MusicianWidgets.xml
+ui\widgets\MusicianWidgets.classic.xml
 
 ui\MusicianFrame.xml
 ui\MusicianFrame.lua

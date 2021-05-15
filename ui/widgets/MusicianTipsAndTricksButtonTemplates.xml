@@ -1,0 +1,48 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+	<!-- Tips and tricks window buttons -->
+
+	<!-- Cancel button -->
+	<Button name="MusicianTipsAndTricksCancelButtonTemplate" inherits="UIMenuButtonStretchTemplate" level="OVERLAY" virtual="true">
+		<Size y="30" x="30" />
+		<ButtonText name="$parentText" parentKey="Text" />
+		<Scripts>
+			<OnLoad>
+				self:SetWidth(self.Text:GetStringWidth() + 24)
+				self:GetHighlightTexture():SetTexCoord(0, 1, 0.2086, 0.5659)
+			</OnLoad>
+			<OnClick>
+				Musician_UIPanelCloseButton_OnClick(self)
+			</OnClick>
+		</Scripts>
+	</Button>
+
+	<!-- OK button -->
+	<Button name="MusicianTipsAndTricksOkButtonTemplate" inherits="UIMenuButtonStretchTemplate" level="OVERLAY" virtual="true">
+		<Size y="44" x="44" />
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture parentKey="background" name="$parentBackground">
+					<Anchors>
+						<Anchor point="TOPLEFT" x="3" y="-3" />
+						<Anchor point="BOTTOMRIGHT" x="-3" y="3" />
+					</Anchors>
+					<Color a="1" r=".75" g="0" b="0" />
+				</Texture>
+			</Layer>
+		</Layers>
+		<ButtonText name="$parentText" parentKey="Text" />
+		<NormalFont style="GameFontNormalHuge"/>
+		<HighlightFont style="GameFontHighlightHuge"/>
+		<DisabledFont style="GameFontDisableHuge"/>
+		<Scripts>
+			<OnLoad>
+				self.background:SetDrawLayer("BACKGROUND", -8)
+				self:SetWidth(max(128, self.Text:GetStringWidth() + 40))
+				self:GetHighlightTexture():SetTexCoord(0, 1, 0.2086, 0.5659)
+			</OnLoad>
+			<OnClick>
+				Musician_UIPanelCloseButton_OnClick(self)
+			</OnClick>
+		</Scripts>
+	</Button>
+</Ui>

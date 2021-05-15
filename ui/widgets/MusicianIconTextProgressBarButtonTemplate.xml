@@ -1,0 +1,19 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+	<!-- Button with icon and progress bar -->
+	<Button name="MusicianIconTextProgressBarButtonTemplate" inherits="MusicianIconTextButtonTemplate" virtual="true">
+		<Layers>
+			<Layer level="OVERLAY">
+				<Texture name="$parentProgressBar" parentKey="progressBar" alphaMode="ADD">
+					<Size x="0" y="1"/>
+					<Anchors>
+						<Anchor point="BOTTOMLEFT" x="5" y="3" relativePoint="BOTTOMLEFT" />
+					</Anchors>
+					<Color a="1" r="1" g="0.82" b="0" />
+				</Texture>
+			</Layer>
+		</Layers>
+		<OnLoad>
+			self.progressBar:SetWidth(self:GetWidth())
+		</OnLoad>
+	</Button>
+</Ui>

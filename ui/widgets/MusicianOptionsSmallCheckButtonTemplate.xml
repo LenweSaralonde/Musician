@@ -1,0 +1,16 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+	<!-- Small Checkbox -->
+	<CheckButton name="MusicianOptionsSmallCheckButtonTemplate" virtual="true" inherits="OptionsSmallCheckButtonTemplate">
+		<Size>
+			<AbsDimension x="16" y="16"/>
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="0" right="0" top="0" bottom="0"/>
+		</HitRectInsets>
+		<Scripts>
+			<OnClick>
+				PlaySound(self:GetChecked() and SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON or SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF)
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+</Ui>

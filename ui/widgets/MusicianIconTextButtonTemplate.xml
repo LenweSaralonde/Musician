@@ -1,0 +1,55 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+	<!-- Standard button with text and icon template -->
+	<Button name="MusicianIconTextButtonTemplate" inherits="UIPanelButtonTemplate" virtual="true">
+		<Layers>
+			<Layer level="OVERLAY">
+				<FontString name="$parentIcon" parentKey="icon" inherits="MusicianFontIconsNormal" justifyh="LEFT">
+					<Size x="32" y="32" />
+					<Anchors>
+						<Anchor point="LEFT" relativePoint="LEFT" relativeTo="$parent" x="10" />
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<ButtonText name="$parentText" parentKey="Text">
+			<Anchors>
+				<Anchor point="CENTER" x="8" />
+			</Anchors>
+		</ButtonText>
+		<Scripts>
+			<OnEnter inherit="append">
+				if self:IsEnabled() then
+					self.icon:SetFontObject(MusicianFontIconsHighlight)
+				end
+			</OnEnter>
+			<OnLeave inherit="append">
+				if self:IsEnabled() then
+					self.icon:SetFontObject(MusicianFontIconsNormal)
+				end
+			</OnLeave>
+			<OnEnable inherit="append">
+				self.icon:SetFontObject(MusicianFontIconsNormal)
+			</OnEnable>
+			<OnDisable inherit="append">
+				self.icon:SetFontObject(MusicianFontIconsDisable)
+			</OnDisable>
+			<OnMouseDown inherit="prepend">
+				if self:IsEnabled() then
+					if (not self.icon.oldPoint) then
+						local point, relativeTo, relativePoint, x, y = self.icon:GetPoint(1)
+						self.icon.oldPoint = point
+						self.icon.oldX = x
+						self.icon.oldY = y
+					end
+					local ox, oy = self:GetPushedTextOffset()
+					self.icon:SetPoint(self.icon.oldPoint, self.icon.oldX + ox, self.icon.oldY + oy)
+				end
+			</OnMouseDown>
+			<OnMouseUp inherit="prepend">
+				if self:IsEnabled() then
+					self.icon:SetPoint(self.icon.oldPoint, self.icon.oldX, self.icon.oldY)
+				end
+			</OnMouseUp>
+		</Scripts>
+	</Button>
+</Ui>
