@@ -17,6 +17,11 @@ local NOTES_TEXTURE = 167069 -- "spells\\t_vfx_note.blp"
 local NOTES_TEXTURE_RACE = {
 	VoidElf = 1664883, -- "spells\\t_vfx_note_void.blp",
 }
+
+if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then
+	NOTES_TEXTURE = "Interface\\AddOns\\Musician\\ui\\textures\\t_vfx_note.blp"
+end
+
 local NOTES_TEXTURE_COORDS = {
 	{0, 0.5, 0, 0.5},
 	{0.5, 1, 0, 0.5},
@@ -72,7 +77,9 @@ function Musician.NamePlates:OnEnable()
 	hooksecurefunc("CompactUnitFrame_UpdateName", Musician.NamePlates.OnUnitFrameUpdate)
 
 	-- Player target changed
-	hooksecurefunc("CompactUnitFrame_UpdateWidgetsOnlyMode", Musician.NamePlates.OnUnitFrameUpdate)
+	if CompactUnitFrame_UpdateWidgetsOnlyMode ~= nil then
+		hooksecurefunc("CompactUnitFrame_UpdateWidgetsOnlyMode", Musician.NamePlates.OnUnitFrameUpdate)
+	end
 
 	-- Player registered
 	Musician.NamePlates:RegisterMessage(Musician.Registry.event.playerRegistered, Musician.NamePlates.OnPlayerRegistered)
@@ -259,7 +266,7 @@ function Musician.NamePlates.OnNamePlateNotesFrameUpdate(animatedNotesFrame, ela
 
 		-- Get current zoom level
 		local cameraZoom = GetCameraZoom()
-		local cameraOffset = C_CVar.GetCVar("test_cameraOverShoulder")
+		local cameraOffset = (C_CVar and C_CVar.GetCVar or GetCVar)("test_cameraOverShoulder")
 
 		-- Zoom level changed
 		if animatedNotesFrame.zoomTo ~= cameraZoom or animatedNotesFrame.cameraOffset ~= cameraOffset then
