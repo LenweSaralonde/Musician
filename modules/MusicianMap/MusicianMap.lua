@@ -81,8 +81,11 @@ function Musician.Map:OnEnable()
 	hooksecurefunc(WorldMapFrame, 'OnMapChanged', Musician.Map.RefreshWorldMap)
 	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
 		Musician.Map.HookWorldMapTracking()
+	end
+	if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
 		Musician.Map.HookMiniMapTracking()
 	end
+	Musician.Map.MinimapTrackingUpdate()
 end
 
 --- OnSongChunk
@@ -157,6 +160,15 @@ end
 function Musician.Map.SetMiniMapTracking(enabled)
 	setTrackingOption(TRACKING.MINIMAP, enabled)
 	Musician.Map.RefreshMiniMap()
+	Musician.Map.MinimapTrackingUpdate()
+end
+
+--- Update the minimap tracking
+--
+function Musician.Map.MinimapTrackingUpdate()
+	if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+		MiniMapTracking_Update()
+	end
 end
 
 --- Update or add active player position to maps from world position
@@ -301,7 +313,6 @@ function Musician.Map.HookMiniMapTracking()
 	hooksecurefunc('SetTracking', function(id, on, ...)
 		if id == hookedGetNumTrackingTypes() + 1 then
 			Musician.Map.SetMiniMapTracking(on)
-			MiniMapTracking_Update()
 		end
 	end)
 
