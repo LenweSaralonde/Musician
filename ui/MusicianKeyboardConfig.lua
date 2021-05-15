@@ -246,7 +246,11 @@ function Musician.KeyboardConfig.Button_OnKeyDown(self, keyValue, arg)
 				Musician.KeyboardConfig.UpdateCompletion()
 				Musician.KeyboardConfig.SelectNextKeyBinding()
 			else
-				PlaySound(32051)
+				if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+					PlaySound(32051)
+				else
+					PlaySoundFile("sound\\interface\\error.ogg")
+				end
 			end
 		end
 	else
