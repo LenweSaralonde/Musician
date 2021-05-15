@@ -1,0 +1,59 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+	<Frame name="MusicianOptionsPanelMap" parent="MusicianOptionsPanel">
+		<Size>
+			<AbsDimension x="580" y="96"/>
+		</Size>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentTitle" inherits="GameFontNormal" justifyH="LEFT" justifyV="TOP">
+					<Anchors>
+						<Anchor point="TOPLEFT" />
+					</Anchors>
+				</FontString>
+				<FontString name="$parentSubText" inherits="GameFontHighlightSmall" nonspacewrap="true" maxLines="3" justifyH="LEFT" justifyV="TOP">
+					<Size>
+						<AbsDimension y="22" x="0"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-8" />
+						<Anchor point="RIGHT" x="-32" y="0"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<CheckButton name="$parentMiniMap" inherits="InterfaceOptionsCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentSubText" relativePoint="BOTTOMLEFT" x="0" y="4"/>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						Musician.Options.SetupCheckbox(self, Musician.Msg.MAP_OPTIONS_MINI_MAP)
+						self:HookScript("OnClick", function()
+							Musician.Map.Options.Save(true)
+						end)
+					</OnLoad>
+				</Scripts>
+			</CheckButton>
+			<CheckButton name="$parentWorldMap" inherits="InterfaceOptionsCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentMiniMap" relativePoint="BOTTOMLEFT" x="0" y="0"/>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						Musician.Options.SetupCheckbox(self, Musician.Msg.MAP_OPTIONS_WORLD_MAP)
+						self:HookScript("OnClick", function()
+							Musician.Map.Options.Save(true)
+						end)
+					</OnLoad>
+				</Scripts>
+			</CheckButton>
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				MusicianOptionsPanelMapTitle:SetText(Musician.Msg.MAP_OPTIONS_TITLE)
+				MusicianOptionsPanelMapSubText:SetText(Musician.Msg.MAP_OPTIONS_SUB_TEXT)
+			</OnLoad>
+		</Scripts>
+	</Frame>
+</Ui>

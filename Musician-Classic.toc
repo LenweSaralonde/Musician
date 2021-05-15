@@ -63,4 +63,4 @@ ui\MusicianSongLinkExportFrame.lua
 ui\MusicianSongLinkImportFrame.xml
 ui\MusicianSongLinkImportFrame.lua
 
-modules\modules.xml
+modules\modules.classic.xml

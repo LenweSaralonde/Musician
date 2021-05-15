@@ -79,8 +79,10 @@ function Musician.Map:OnEnable()
 	miniMapPinPool = CreateFramePool("FRAME", Minimap, PIN_TEMPLATE_MINI_MAP)
 	self:RegisterMessage(Musician.Events.SongChunk, Musician.Map.OnSongChunk)
 	hooksecurefunc(WorldMapFrame, 'OnMapChanged', Musician.Map.RefreshWorldMap)
-	Musician.Map.HookWorldMapTracking()
-	Musician.Map.HookMiniMapTracking()
+	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+		Musician.Map.HookWorldMapTracking()
+		Musician.Map.HookMiniMapTracking()
+	end
 end
 
 --- OnSongChunk
