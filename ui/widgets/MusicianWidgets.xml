@@ -11,6 +11,7 @@
 	<Include file="MusicianLEDTextButtonTemplate.xml"/>
 	<Include file="MusicianIconTextProgressBarButtonTemplate.xml"/>
 	<Include file="MusicianBandPlayButtonTemplate.xml"/>
+	<Include file="MusicianEditBoxBackdropTemplate.xml"/>
 	<Include file="MusicianDropDownMenuTooltipTemplate.xml"/>
 	<Include file="MusicianInstrumentDropdownTemplate.xml"/>
 	<Include file="MusicianOptionsSmallCheckButtonTemplate.xml"/>

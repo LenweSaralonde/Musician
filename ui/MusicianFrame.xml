@@ -3,10 +3,6 @@
 
 		<Size x="320" y="160" />
 
-		<Anchors>
-			<Anchor point="RIGHT" x="0" y="93" />
-		</Anchors>
-
 		<Layers>
 			<Layer level="BACKGROUND">
 				<FontString name="$parentTitle" inherits="GameFontNormal">
@@ -137,7 +133,7 @@
 				</ScrollChild>
 			</ScrollFrame>
 
-			<Frame name="$parentTextBackground" inherits="BackdropTemplate">
+			<Frame name="$parentTextBackground" inherits="MusicianEditBoxBackdropTemplate">
 				<Size x="300" y="99" />
 				<Anchors>
 					<Anchor point="TOP" y="-31" relativePoint="TOP" />
@@ -153,25 +149,6 @@
 						</Texture>
 					</Layer>
 				</Layers>
-				<Scripts>
-					<OnLoad>
-						self:SetBackdrop({
-							bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
-							edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-							tile = true,
-							tileSize = 16,
-							edgeSize = 16,
-							insets = {
-								left = 5,
-								right = 5,
-								top = 5,
-								bottom = 5,
-							},
-						})
-						self:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b)
-						self:SetBackdropColor(TOOLTIP_DEFAULT_BACKGROUND_COLOR.r, TOOLTIP_DEFAULT_BACKGROUND_COLOR.g, TOOLTIP_DEFAULT_BACKGROUND_COLOR.b)
-					</OnLoad>
-				</Scripts>
 			</Frame>
 
 			<Button name="$parentClearButton" inherits="MusicianIconButtonTemplate" level="OVERLAY">
@@ -197,5 +174,13 @@
 			</Button>
 
 		</Frames>
+
+		<Scripts>
+			<OnLoad inherit="prepend">
+				self:ClearAllPoints()
+				local defaultY = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE and 93 or 126
+				self:SetPoint('RIGHT', UIParent, 'RIGHT', 0, defaultY)
+			</OnLoad>
+		</Scripts>
 	</Frame>
 </Ui>
