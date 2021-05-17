@@ -347,12 +347,12 @@ msg.LINKS_ERROR.offline = "{player}未登錄魔獸世界。"
 msg.LINKS_ERROR.importingFailed = "歌曲{title}無法從玩家{player}處導入。"
 
 --- Map tracking options
-msg.MAP_TRACKING_OPTIONS_TITLE = "Musician"
-msg.MAP_TRACKING_OPTION_ACTIVE_MUSICIANS = "活躍音樂家"
 msg.MAP_OPTIONS_TITLE = "地圖”"
 msg.MAP_OPTIONS_SUB_TEXT = "顯示附近在演奏的玩家："
 msg.MAP_OPTIONS_MINI_MAP = "於小地圖顯示"
 msg.MAP_OPTIONS_WORLD_MAP = "於世界地圖顯示"
+msg.MAP_TRACKING_OPTIONS_TITLE = "Musician"
+msg.MAP_TRACKING_OPTION_ACTIVE_MUSICIANS = "活躍音樂家"
 
 --- Total RP Extended module
 msg.TRPE_ITEM_NAME = "{title}"
