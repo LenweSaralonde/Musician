@@ -25,17 +25,8 @@ function MusicianButton.Init()
 
 	local musicianLDB = LibStub("LibDataBroker-1.1"):NewDataObject("Musician", ldbData)
 
-	-- Convert old minimap position format
-	if tonumber(Musician_Settings.minimapPosition) ~= nil then
-		Musician_Settings.minimap = {
-			minimapPos = Musician_Settings.minimapPosition,
-			hide = false
-		}
-		Musician_Settings.minimapPosition = nil
-	end
-
 	-- Create button
-	icon:Register("Musician", musicianLDB, Musician_Settings.minimap)
+	icon:Register("Musician", musicianLDB, Musician_CharacterSettings.minimap)
 
 	-- Create menu frame
 	local buttonFrame = icon:GetMinimapButton("Musician")

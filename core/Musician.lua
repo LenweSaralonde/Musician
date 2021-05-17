@@ -14,10 +14,6 @@ function Musician:OnInitialize()
 
 	-- Init settings
 	local defaultSettings = {
-		minimap = {
-			minimapPos = 154,
-			hide = false
-		},
 		nextSongId = 0,
 		enableEmote = true,
 		enableEmotePromo = true,
@@ -30,8 +26,17 @@ function Musician:OnInitialize()
 	}
 	Musician_Settings = Mixin(defaultSettings, Musician_Settings or {})
 
+	-- Remove obsolete settings
+	Musician_Settings.minimapPosition = nil
+	Musician_Settings.minimap = nil
+
+	-- Init character settings
 	local defaultCharacterSettings = {
-		framePosition = {}
+		framePosition = {},
+		minimap = {
+			minimapPos = 154,
+			hide = false
+		},
 	}
 	Musician_CharacterSettings = Mixin(defaultCharacterSettings, Musician_CharacterSettings or {})
 
