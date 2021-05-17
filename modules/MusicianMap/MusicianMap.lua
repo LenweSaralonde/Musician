@@ -52,30 +52,32 @@ end
 -- @param option (string) from Musician.Map.TRACKING
 -- @return enabled (boolean)
 local function getTrackingOption(option)
-	local player = Musician.Utils.NormalizePlayerName(UnitName('player'))
-	if Musician_Settings.tracking ~= nil and Musician_Settings.tracking[player] ~= nil and Musician_Settings.tracking[player][option] ~= nil then
-		return Musician_Settings.tracking[player][option]
-	end
-	return true -- Enable by default
+	return Musician_CharacterSettings.tracking[option]
 end
 
 --- Set map tracking option settting
 -- @param option (string) from Musician.Map.TRACKING
 -- @param enabled (boolean)
 local function setTrackingOption(option, enabled)
-	local player = Musician.Utils.NormalizePlayerName(UnitName('player'))
-	if Musician_Settings.tracking == nil then
-		Musician_Settings.tracking = {}
-	end
-	if Musician_Settings.tracking[player] == nil then
-		Musician_Settings.tracking[player] = {}
-	end
-	Musician_Settings.tracking[player][option] = enabled
+	Musician_CharacterSettings.tracking[option] = enabled
 end
 
 --- OnEnable
 --
 function Musician.Map:OnEnable()
+
+	-- Init character settings
+	local defaultCharacterSettings = {
+		tracking = {
+			[Musician.Map.TRACKING.MINIMAP] = true,
+			[Musician.Map.TRACKING.WORLDMAP] = true,
+		},
+	}
+	Musician_CharacterSettings = Mixin(defaultCharacterSettings, Musician_CharacterSettings or {})
+
+	-- Remove obsolete global settings
+	Musician_Settings.tracking = nil
+
 	miniMapPinPool = CreateFramePool("FRAME", Minimap, PIN_TEMPLATE_MINI_MAP)
 	self:RegisterMessage(Musician.Events.SongChunk, Musician.Map.OnSongChunk)
 	hooksecurefunc(WorldMapFrame, 'OnMapChanged', Musician.Map.RefreshWorldMap)
