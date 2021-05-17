@@ -34,7 +34,7 @@ function Musician:OnInitialize()
 	local defaultCharacterSettings = {
 		framePosition = {},
 		minimap = {
-			minimapPos = 154,
+			minimapPos = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and 177 or WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC and 197 or 154,
 			hide = false
 		},
 	}
