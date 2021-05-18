@@ -828,11 +828,7 @@ end
 --- Return the current version as text for the end user
 -- @return version (string)
 function Musician.Utils.GetVersionText()
-	local version = GetAddOnMetadata("Musician", "Version")
-	if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then
-		version = version .. "-classic"
-	end
-	return version
+	return GetAddOnMetadata("Musician", "Version")
 end
 
 --- Compare two version numbers
