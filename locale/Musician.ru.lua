@@ -46,7 +46,7 @@ msg.MENU_OPTIONS = "Параметры"
 msg.MENU_ABOUT = "О"
 
 --- Chat commands
-msg.COMMAND_LIST_TITLE = "Команды музыканта:"
+msg.COMMAND_LIST_TITLE = "Команды Musician:"
 msg.COMMAND_SHOW = "Показать окно импорта песни"
 msg.COMMAND_PREVIEW_PLAY = "Начать или прекратить предварительный просмотр песни"
 msg.COMMAND_PREVIEW_STOP = "Прекратить предварительный просмотр песни"
@@ -179,13 +179,14 @@ msg.CLEAR_KEY = "Очистить ключ"
 msg.ABOUT_TITLE = "Musician"
 msg.ABOUT_VERSION = "версия {version}"
 msg.ABOUT_AUTHOR = "Автор LenweSaralonde - {url}"
-msg.ABOUT_AUTHOR_EXTRA1 = "Китайская локализация от Grayson Blackclaw"
 msg.ABOUT_LICENSE = "Выпущено под лицензией GNU General Public License v3.0"
 msg.ABOUT_DISCORD = "Discord: {url}"
 msg.ABOUT_SUPPORT = "Тебе нравится Musician? Поделись со всеми!"
 msg.ABOUT_PATREON = "Станьте патреоном: {url}"
 msg.ABOUT_PAYPAL = "Пожертвовать (PayPal): {url}"
 msg.ABOUT_SUPPORTERS = "Отдельное спасибо поддерживающим проект <3"
+msg.ABOUT_LOCALIZATION_TEAM = "Команда переводчиков:"
+msg.ABOUT_CONTRIBUTE_TO_LOCALIZATION = "Помогите нам перевести Musician на ваш язык!\n{url}"
 
 --- Fixed PC keyboard key names
 msg.FIXED_KEY_NAMES[KEY.Backspace] = "Назад"
@@ -356,7 +357,7 @@ msg.MAP_TRACKING_OPTION_ACTIVE_MUSICIANS = "Musicianы играют"
 
 --- Total RP Extended module
 msg.TRPE_ITEM_NAME = "{title}"
-msg.TRPE_ITEM_TOOLTIP_REQUIRES_MUSICIAN = "Требуется музыкант"
+msg.TRPE_ITEM_TOOLTIP_REQUIRES_MUSICIAN = "Требуется Musician"
 msg.TRPE_ITEM_TOOLTIP_SHEET_MUSIC = "Ноты"
 msg.TRPE_ITEM_USE_HINT = "Читать ноты"
 msg.TRPE_ITEM_MUSICIAN_NOT_FOUND = "Вам необходимо установить последнюю версию дополнения «Musician», чтобы иметь возможность использовать этот элемент.\nПолучить с {url}"

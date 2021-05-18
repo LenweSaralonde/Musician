@@ -32,14 +32,42 @@ function Musician.About.OnShow()
 
 	MusicianAboutAuthor:SetText(highlightUrl(Musician.Msg.ABOUT_AUTHOR, Musician.URL))
 
-	-- Extra credits
-	local extra = 1
-	local authorExtra = {}
-	while Musician.Msg['ABOUT_AUTHOR_EXTRA' .. extra] ~= nil do
-		table.insert(authorExtra, Musician.Msg['ABOUT_AUTHOR_EXTRA' .. extra])
-		extra = extra + 1
+	-- Localization Team
+	local translators = {}
+	for _, row in pairs(Musician.LocalizationTeam) do
+		local locale = row[1]
+		for i = 2, #row do
+			local translator = row[i]
+			if translators[translator] == nil then
+				translators[translator] = {}
+			end
+			for _, localeCode in pairs(Musician.Locale[locale].LOCALE_CODES) do
+				if localeCode == 'enGB' then localeCode = 'enUS' end
+				translators[translator][localeCode] = localeCode
+			end
+		end
 	end
-	MusicianAboutAuthorExtra:SetText(strjoin("\n", unpack(authorExtra)))
+	local translatorsFlat = {}
+	for translator, localeCodes in pairs(translators) do
+		local localCodesFlat = {}
+		for _, localeCode in pairs(localeCodes) do
+			table.insert(localCodesFlat, localeCode)
+		end
+		table.insert(translatorsFlat, { translator, localCodesFlat })
+	end
+	table.sort(translatorsFlat, function(a, b)
+		return a[1] ~= Musician.DefaultTranslator and b[1] == Musician.DefaultTranslator
+	end)
+	local translatorsText = {}
+	for _, row in pairs(translatorsFlat) do
+		table.insert(translatorsText, row[1] .. " (" .. strjoin(", ", unpack(row[2])) .. ")")
+	end
+
+	MusicianAboutLocalization:SetText(
+		Musician.Msg.ABOUT_LOCALIZATION_TEAM .. "\n\n" ..
+		strjoin(" / ", unpack(translatorsText)) .. "\n\n" ..
+		highlightUrl(Musician.Msg.ABOUT_CONTRIBUTE_TO_LOCALIZATION, Musician.LOCALIZATION_URL)
+	)
 
 	-- Instrument sources
 	local sampleSources = {}
@@ -60,8 +88,8 @@ function Musician.About.OnShow()
 	MusicianAboutPatreon:SetText(highlightUrl(Musician.Msg.ABOUT_PATREON, Musician.PATREON_URL))
 	MusicianAboutPaypal:SetText(highlightUrl(Musician.Msg.ABOUT_PAYPAL, Musician.PAYPAL_URL))
 
+	-- Supporters
 	MusicianAboutSupportersTitle:SetText(Musician.Msg.ABOUT_SUPPORTERS)
-
 	local supporters = { }
 	randomizeHighlight(supporters, Musician.LEGENDARY_SUPPORTERS, "FF8000")
 	randomizeHighlight(supporters, Musician.SUPPORTERS, "FFFFFF")

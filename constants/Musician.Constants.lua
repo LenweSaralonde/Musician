@@ -9,6 +9,7 @@ Musician.CONVERTER_URL = "https://musician.lenwe.io/import"
 Musician.DISCORD_URL = "https://musician.lenwe.io/discord"
 Musician.PATREON_URL = "https://musician.lenwe.io/patreon"
 Musician.PAYPAL_URL = "https://musician.lenwe.io/paypal"
+Musician.LOCALIZATION_URL = "https://musician.lenwe.io/localize"
 
 Musician.FILE_HEADER = "MUS7"
 Musician.FILE_HEADER_COMPRESSED = "MUZ7"

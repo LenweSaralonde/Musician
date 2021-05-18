@@ -66,7 +66,7 @@
 					</Anchors>
 				</FontString>
 
-				<FontString name="$parentAuthorExtra" inherits="GameFontNormalSmallLeft">
+				<FontString name="$parentLocalization" inherits="GameFontNormalSmallLeft">
 					<Color r="1" g="1" b="1"/>
 					<Anchors>
 						<Anchor point="TOPLEFT" y="-15" relativePoint="BOTTOMLEFT" relativeTo="$parentSupport" />
@@ -77,7 +77,7 @@
 				<FontString name="$parentInstrumentSources" inherits="GameFontWhiteTiny2" justifyH="LEFT">
 					<Color r="1" g="1" b="1"/>
 					<Anchors>
-						<Anchor point="TOPLEFT" y="-15" relativePoint="BOTTOMLEFT" relativeTo="$parentAuthorExtra" />
+						<Anchor point="TOPLEFT" y="-15" relativePoint="BOTTOMLEFT" relativeTo="$parentLocalization" />
 						<Anchor point="RIGHT" x="-15" relativeTo="$parent" />
 					</Anchors>
 				</FontString>
