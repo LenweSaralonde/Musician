@@ -1,6 +1,12 @@
 Changelog
 =========
 
+v1.7.3.0
+--------
+* Unified version for WoW Shadowlands, WoW Classic and WoW Burning Crusade Classic.
+* Created localization for German, Spanish, Italian, Korean, Portugese, Russian and traditional Chinese using Google Translate.
+* Minor bugfixes and improvements.
+
 v1.7.2.2
 --------
 * Improved localization to ease up collaboration.
