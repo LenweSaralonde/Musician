@@ -185,8 +185,8 @@ msg.ABOUT_SUPPORT = "你喜欢Musician吗？把它分享给大家吧！"
 msg.ABOUT_PATREON = "成为Patreon捐助者：{url}"
 msg.ABOUT_PAYPAL = "成为PayPal捐助者：{url}"
 msg.ABOUT_SUPPORTERS = "特别鸣谢本插件的捐助者们！ <3"
-msg.ABOUT_LOCALIZATION_TEAM = "翻译团队:"
-msg.ABOUT_CONTRIBUTE_TO_LOCALIZATION = "帮助我们用您的语言翻译Musician！\n{url}"
+msg.ABOUT_LOCALIZATION_TEAM = "本地化团队:"
+msg.ABOUT_CONTRIBUTE_TO_LOCALIZATION = "帮助我们将Musician翻译为你的语言！\n{url}"
 
 --- Fixed PC keyboard key names
 msg.FIXED_KEY_NAMES[KEY.Backspace] = "Backspace"
