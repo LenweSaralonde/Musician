@@ -1,0 +1,15 @@
+MUSICIAN_MSG.title = "Musician - MIDI-Import";
+MUSICIAN_MSG.header = "Importiere eine MIDI-Datei in Musician";
+MUSICIAN_MSG.instructions = "Klicken oder löschen Sie hier eine MIDI-Datei.";
+MUSICIAN_MSG.copy = "Kopieren";
+MUSICIAN_MSG.copySuccess = "In Zwischenablage kopiert";
+MUSICIAN_MSG.copyError = "Kopieren nicht möglich";
+MUSICIAN_MSG.unsupportedBrowser = "Nicht unterstützter Browser";
+MUSICIAN_MSG.dowload = "Musician-Addon für World of Warcraft herunterladen";
+MUSICIAN_MSG.dowloadVersion = "Download des Musician-Addon v{version} für World of Warcraft";
+MUSICIAN_MSG.joinDiscord = "Tritt unserer Discord-Community bei";
+MUSICIAN_MSG.joinBattleNet = "Tritt unserer Battle.net-Gruppe bei";
+MUSICIAN_MSG.becomeAPatron = "Werden Sie ein Benutzer, der das Projekt unterstützt";
+MUSICIAN_MSG.donatePayPal = "Spenden Sie, um das Projekt zu unterstützen";
+MUSICIAN_MSG.patreonLink = "Werden Sie ein Benutzer";
+MUSICIAN_MSG.donateLink = "Spenden";

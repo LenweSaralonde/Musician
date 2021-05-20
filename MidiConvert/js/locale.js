@@ -1,4 +1,6 @@
-var userLang = (navigator.language || navigator.userLanguage).replace(/-.*$/g, '');
+var userLang = (navigator.language || navigator.userLanguage).replace(/[-_].*$/g, '');
+
+var LOCALE_VERSION = 6;
 var MUSICIAN_MSG = {};
 
 var MUSICIAN_DOWNLOAD_URL = null;
@@ -7,7 +9,13 @@ var MUSICIAN_VERSION = null;
 var localeFile;
 
 switch (userLang) {
+	case 'de':
+	case 'es':
 	case 'fr':
+	case 'it':
+	case 'ko':
+	case 'pt':
+	case 'ru':
 	case 'zh':
 		localeFile = userLang;
 		break;
@@ -50,5 +58,5 @@ function setDownloadLink() {
 }
 
 var localeScriptTag = document.createElement('script');
-localeScriptTag.src = './locale/' + localeFile + '.js?v=4';
+localeScriptTag.src = './locale/' + localeFile + '.js?v=' + LOCALE_VERSION;
 document.head.appendChild(localeScriptTag);
