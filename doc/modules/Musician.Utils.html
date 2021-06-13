@@ -99,6 +99,10 @@
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.AdjustAudioSettings">Musician.Utils.AdjustAudioSettings (noSoundSystemRestart)</a></td>
+	<td class="summary">Automatically adjust the audio settings, if needed.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.Base64Decode">Musician.Utils.Base64Decode (data)</a></td>
 	<td class="summary">Decode base 64 string
  Lua 5.1+ base64 v3.0 (c) 2009 by Alex Kloss <alexthkloss@web.de>
@@ -198,6 +202,10 @@
 	<td class="summary">Get color code from RGB values</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.GetCurrentAudioSettings">Musician.Utils.GetCurrentAudioSettings ()</a></td>
+	<td class="summary">Get the current audio settings.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.GetFullPlayerName">Musician.Utils.GetFullPlayerName (playerOrGameAccountID)</a></td>
 	<td class="summary">Get player full name with realm slug or Battle.net account name if a Battle.net game account ID is provided.</td>
 	</tr>
@@ -206,8 +214,16 @@
 	<td class="summary">Get hyperlink</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.GetMaxPolyphony">Musician.Utils.GetMaxPolyphony ()</a></td>
+	<td class="summary">Calculate the maximum polyphony depending on the enabled audio channels.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.GetMsg">Musician.Utils.GetMsg (msg[, locale])</a></td>
 	<td class="summary">Returns localized message</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.GetNewAudioSettings">Musician.Utils.GetNewAudioSettings (oldSettings)</a></td>
+	<td class="summary">Get the new audio settings that differs from the provided ones.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.GetNormalizedRealmName">Musician.Utils.GetNormalizedRealmName ()</a></td>
@@ -392,6 +408,10 @@
 	<td class="summary">Unpack a string into a time or duration in seconds</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.UpdateAudioSettings">Musician.Utils.UpdateAudioSettings (newSettings, noSoundSystemRestart)</a></td>
+	<td class="summary">Update the audio settings to the new provided parameters</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.VersionCompare">Musician.Utils.VersionCompare (versionA, versionB)</a></td>
 	<td class="summary">Compare two version numbers</td>
 	</tr>
@@ -404,6 +424,26 @@
     <h2 class="section-header "><a name="Functions"></a>Functions</h2>
 
     <dl class="function">
+    <dt>
+    <a name = "Musician.Utils.AdjustAudioSettings"></a>
+    <strong>Musician.Utils.AdjustAudioSettings (noSoundSystemRestart)</strong>
+    </dt>
+    <dd>
+    Automatically adjust the audio settings, if needed.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">noSoundSystemRestart</span>
+        =false] (boolean) Don't restart sound system when true
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
     <dt>
     <a name = "Musician.Utils.Base64Decode"></a>
     <strong>Musician.Utils.Base64Decode (data)</strong>
@@ -1023,6 +1063,25 @@
 
 </dd>
     <dt>
+    <a name = "Musician.Utils.GetCurrentAudioSettings"></a>
+    <strong>Musician.Utils.GetCurrentAudioSettings ()</strong>
+    </dt>
+    <dd>
+    Get the current audio settings.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        audioSettings (table)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
     <a name = "Musician.Utils.GetFullPlayerName"></a>
     <strong>Musician.Utils.GetFullPlayerName (playerOrGameAccountID)</strong>
     </dt>
@@ -1079,6 +1138,25 @@
 
 </dd>
     <dt>
+    <a name = "Musician.Utils.GetMaxPolyphony"></a>
+    <strong>Musician.Utils.GetMaxPolyphony ()</strong>
+    </dt>
+    <dd>
+    Calculate the maximum polyphony depending on the enabled audio channels.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        polyphony (number)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
     <a name = "Musician.Utils.GetMsg"></a>
     <strong>Musician.Utils.GetMsg (msg[, locale])</strong>
     </dt>
@@ -1101,6 +1179,31 @@
     <ol>
 
         localizedMsg (string)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.GetNewAudioSettings"></a>
+    <strong>Musician.Utils.GetNewAudioSettings (oldSettings)</strong>
+    </dt>
+    <dd>
+    Get the new audio settings that differs from the provided ones.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">oldSettings</span>
+         (table) as returned by Musician.Utils.GetCurrentAudioSettings()
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        newSettings (table)
     </ol>
 
 
@@ -2156,6 +2259,29 @@
 
 </dd>
     <dt>
+    <a name = "Musician.Utils.UpdateAudioSettings"></a>
+    <strong>Musician.Utils.UpdateAudioSettings (newSettings, noSoundSystemRestart)</strong>
+    </dt>
+    <dd>
+    Update the audio settings to the new provided parameters
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">newSettings</span>
+         (table) as returned by Musician.Utils.GetCurrentAudioSettings() or Musician.Utils.GetNewAudioSettings()
+        </li>
+        <li><span class="parameter">noSoundSystemRestart</span>
+        =false] (boolean) Don't restart sound system when true
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
     <a name = "Musician.Utils.VersionCompare"></a>
     <strong>Musician.Utils.VersionCompare (versionA, versionB)</strong>
     </dt>
@@ -2190,7 +2316,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2021-05-18 19:12:08 </i>
+<i style="float:right;">Last updated 2021-06-13 16:20:14 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
