@@ -208,14 +208,25 @@ end
 -- @param soundFile (string) Sample file path
 -- @param tries (int) Number of attempts in case of failures due to limited polyphony
 -- @param[opt] onPlay (function) Called when the sound file starts playing
-local function playNoteFile(handle, instrumentData, soundFile, tries, onPlay)
+-- @param[opt] channel (string) Audio channel to use
+local function playNoteFile(handle, instrumentData, soundFile, tries, onPlay, channel)
 	if not(notesOn[handle]) then
 		return
 	end
 
-	local willPlay, soundHandle = Musician.Sampler.PlaySoundFile(soundFile, 'SFX')
+	local audioChannels = Musician_Settings.audioChannels
 
-	if willPlay then -- Note sound file plays
+	if channel == nil then
+		channel = audioChannels.Master and 'Master' or audioChannels.SFX and 'SFX' or audioChannels.Dialog and 'Dialog'
+		if not(channel) then
+			return
+		end
+	end
+
+	local willPlay, soundHandle = Musician.Sampler.PlaySoundFile(soundFile, channel)
+
+	-- Note sound file will play
+	if willPlay then
 		-- Keep internal handle
 		notesOn[handle][NOTEON.SOUND_HANDLE] = soundHandle
 
@@ -232,16 +243,37 @@ local function playNoteFile(handle, instrumentData, soundFile, tries, onPlay)
 		if onPlay then
 			onPlay(handle)
 		end
-	else -- Note failed to play due to lack of available polyphony
-		Musician.Utils.Debug(MODULE_NAME, 'Dropped note', handle, "(tries: " .. tries .. ")")
-		if tries < 2 then
-			-- Stop oldest note to release a polyphony slot
-			Musician.Sampler.StopOldestNote()
-			-- Try again on the next frame
-			C_Timer.After(0, function()
-				playNoteFile(handle, instrumentData, soundFile, tries + 1, onPlay)
-			end)
+
+		return
+	end
+
+	-- Failed to play on Master channel: try on the next available channel
+	if channel == 'Master' then
+		local nextChannel = audioChannels.SFX and 'SFX' or audioChannels.Dialog and 'Dialog'
+		if nextChannel then
+			playNoteFile(handle, instrumentData, soundFile, tries, onPlay, nextChannel)
+			return
 		end
+	end
+
+	-- Failed to play on SFX channel: try on the next available channel
+	if channel == 'SFX' then
+		local nextChannel = audioChannels.Dialog and 'Dialog'
+		if nextChannel then
+			playNoteFile(handle, instrumentData, soundFile, tries, onPlay, nextChannel)
+			return
+		end
+	end
+
+ 	-- Note failed to play due to lack of available polyphony
+	Musician.Utils.Debug(MODULE_NAME, 'Dropped note', handle, "(tries: " .. tries .. ")")
+	if tries < 2 then
+		-- Stop the oldest note to release a polyphony slot
+		Musician.Sampler.StopOldestNote()
+		-- Try again on the next frame
+		C_Timer.After(0, function()
+			playNoteFile(handle, instrumentData, soundFile, tries + 1, onPlay)
+		end)
 	end
 end
 

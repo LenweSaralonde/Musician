@@ -345,6 +345,7 @@ end
 --- Resume a song playing
 -- @param eventSent (boolean)
 function Musician.Song:Resume(eventSent)
+	Musician.Utils.AdjustAudioSettings(true)
 	addPlayingSong(self)
 	self.playing = true
 	if not(eventSent) then

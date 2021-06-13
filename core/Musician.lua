@@ -22,13 +22,22 @@ function Musician:OnInitialize()
 		muteGameMusic = true,
 		muteInstrumentToys = true,
 		debug = {},
-		mutedPlayers = {}
+		mutedPlayers = {},
+		audioChannels = {
+			SFX = true,
+			Master = true,
+			Dialog = true,
+		},
+		autoAdjustAudioSettings = true
 	}
 	Musician_Settings = Mixin(defaultSettings, Musician_Settings or {})
 
 	-- Remove obsolete settings
 	Musician_Settings.minimapPosition = nil
 	Musician_Settings.minimap = nil
+
+	-- Fix audio settings
+	Musician.Utils.AdjustAudioSettings()
 
 	-- Init character settings
 	local defaultCharacterSettings = {

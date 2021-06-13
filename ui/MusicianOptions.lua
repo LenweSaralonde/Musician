@@ -8,6 +8,8 @@ Musician.AddModule(MODULE_NAME)
 
 local currentMuteGameMusic
 local currentMuteInstrumentToys
+local currentAudioConfiguration
+local currentAutoAdjustAudioConfig
 
 --- Options panel initialization
 --
@@ -74,6 +76,9 @@ function Musician.Options.Refresh()
 	MusicianOptionsPanelIntegrationMuteInstrumentToys:SetChecked(Musician_Settings.muteInstrumentToys)
 	currentMuteGameMusic = Musician_Settings.muteGameMusic
 	currentMuteInstrumentToys = Musician_Settings.muteInstrumentToys
+	currentAudioConfiguration = Musician.Utils.GetCurrentAudioSettings()
+	currentAutoAdjustAudioConfig = Musician_Settings.autoAdjustAudioSettings
+	Musician.Options.RefreshAudioSettings()
 end
 
 function Musician.Options.Defaults()
@@ -83,6 +88,40 @@ function Musician.Options.Defaults()
 	Musician_Settings.muteInstrumentToys = true
 	Musician.Utils.MuteGameMusic(true)
 	Musician.Utils.SetInstrumentToysMuted(Musician_Settings.muteInstrumentToys)
+	Musician_Settings.audioChannels.SFX = true
+	Musician_Settings.audioChannels.Master = true
+	Musician_Settings.audioChannels.Dialog = true
+	Musician_Settings.autoAdjustAudioSettings = true
+	Musician.Options.RefreshAudioSettings()
+end
+
+function Musician.Options.RefreshAudioSettings()
+	local newAudioConfig = Musician.Utils.GetNewAudioSettings(currentAudioConfiguration)
+	if Musician_Settings.autoAdjustAudioSettings then
+		Musician.Utils.UpdateAudioSettings(newAudioConfig)
+	end
+
+	local audioChannels = Musician_Settings.audioChannels
+
+	local checked = (audioChannels.SFX and 1 or 0) + (audioChannels.Master and 1 or 0) + (audioChannels.Dialog and 1 or 0)
+
+	-- Make sure at least one channel is checked
+	if checked == 0 then
+		-- Check SFX if none
+		audioChannels.SFX = true
+		checked = 1
+	end
+
+	-- Set checkboxes
+	MusicianOptionsPanelAudioChannelsSFX:SetChecked(audioChannels.SFX)
+	MusicianOptionsPanelAudioChannelsMaster:SetChecked(audioChannels.Master)
+	MusicianOptionsPanelAudioChannelsDialog:SetChecked(audioChannels.Dialog)
+	MusicianOptionsPanelAudioChannelsAutoAdjust:SetChecked(Musician_Settings.autoAdjustAudioSettings)
+
+	-- Calculate polyphony
+	local polyphony = Musician.Msg.OPTIONS_AUDIO_CHANNELS_TOTAL_POLYPHONY
+	polyphony = string.gsub(polyphony, '{polyphony}', Musician.Utils.Highlight(Musician.Utils.GetMaxPolyphony()))
+	MusicianOptionsPanelAudioChannelsPolyphony:SetText(polyphony)
 end
 
 function Musician.Options.Cancel()
@@ -90,6 +129,8 @@ function Musician.Options.Cancel()
 	Musician_Settings.muteInstrumentToys = currentMuteInstrumentToys
 	Musician.Utils.MuteGameMusic(true)
 	Musician.Utils.SetInstrumentToysMuted(Musician_Settings.muteInstrumentToys)
+	Musician.Utils.UpdateAudioSettings(currentAudioConfiguration)
+	Musician_Settings.autoAdjustAudioSettings = currentAutoAdjustAudioConfig
 end
 
 function Musician.Options.Save()

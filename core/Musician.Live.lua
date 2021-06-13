@@ -220,6 +220,18 @@ local function unmuteGameMusic()
 	end)
 end
 
+local lastTimeAdjusted
+
+--- adjustAudioSettings
+--
+local function adjustAudioSettings()
+	local now = debugprofilestop()
+	if lastTimeAdjusted == nil or now - lastTimeAdjusted > 10000 then
+		Musician.Utils.AdjustAudioSettings(true)
+	end
+	lastTimeAdjusted = now
+end
+
 --- Indicate whenever the player is playing live music, regardless if in solo or live mode
 -- @return isPlaying (boolean)
 function Musician.Live.IsPlaying()
@@ -364,8 +376,9 @@ function Musician.Live.NoteOn(key, layer, instrument, isChordNote, source)
 		Musician.Live.NoteOff(key, layer, instrument, isChordNote, true)
 	end
 
-	-- Mute game music
+	-- Mute game music and adjust audio settings
 	muteGameMusic()
+	adjustAudioSettings()
 
 	-- Play note
 	local handle = 0

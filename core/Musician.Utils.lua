@@ -14,6 +14,11 @@ local isGameMusicMuted = false
 local fullPromoEmoteLastSeen
 local overrideNextFullPromoEmote = false
 
+local GetCVar = (C_CVar and C_CVar.GetCVar or GetCVar)
+local GetCVarNumber = function(cvar)
+	return floor(tonumber(GetCVar(cvar)) * 1000) / 1000
+end
+
 --- Display a message in the console
 -- @param msg (string)
 function Musician.Utils.Print(msg)
@@ -574,7 +579,7 @@ end
 -- @param force (boolean)
 function Musician.Utils.MuteGameMusic(force)
 	local isMusicianPlaying = Musician.Utils.SongIsPlaying() or Musician.Live.IsPlaying()
-	local isInGameMusicEnabled = (C_CVar and C_CVar.GetCVar or GetCVar)("Sound_EnableMusic") ~= "0"
+	local isInGameMusicEnabled = GetCVar("Sound_EnableMusic") ~= "0"
 	local mute = Musician_Settings.muteGameMusic and isInGameMusicEnabled and isMusicianPlaying and not(Musician.Sampler.GetMuted())
 
 	if not(force) and isGameMusicMuted == mute then return end
@@ -600,6 +605,119 @@ function Musician.Utils.SetInstrumentToysMuted(isMuted)
 				muteFunc(file)
 			end
 		end
+	end
+end
+
+--- Calculate the maximum polyphony depending on the enabled audio channels.
+-- @return polyphony (number)
+function Musician.Utils.GetMaxPolyphony()
+	local audioChannels = Musician_Settings.audioChannels
+	return (audioChannels.Master and 30 or 0) + (audioChannels.SFX and 15 or 0) + (audioChannels.Dialog and 20 or 0)
+end
+
+--- Get the current audio settings.
+-- @return audioSettings (table)
+function Musician.Utils.GetCurrentAudioSettings()
+	return {
+		audioChannels = Mixin({}, Musician_Settings.audioChannels),
+		polyphony = Musician.Utils.GetMaxPolyphony(),
+		CVars = {
+			Sound_SFXVolume = GetCVarNumber('Sound_SFXVolume'),
+			Sound_DialogVolume = GetCVarNumber('Sound_DialogVolume'),
+			Sound_NumChannels = GetCVarNumber('Sound_NumChannels'),
+		}
+	}
+end
+
+--- Get the new audio settings that differs from the provided ones.
+-- @param oldSettings (table) as returned by Musician.Utils.GetCurrentAudioSettings()
+-- @return newSettings (table)
+function Musician.Utils.GetNewAudioSettings(oldSettings)
+
+	local audioChannels = Mixin({}, Musician_Settings.audioChannels)
+	local newSettings = {
+		audioChannels = audioChannels,
+		polyphony = Musician.Utils.GetMaxPolyphony(),
+		CVars = {}
+	}
+
+	-- Master is enabled along with SFX: make sure SFX level is 100%
+	if audioChannels.Master and audioChannels.SFX and oldSettings.CVars.Sound_SFXVolume ~= 1 then
+		newSettings.CVars.Sound_SFXVolume = 1
+	end
+
+	-- Master is enabled along with Dialog: make sure Dialog level is 100%
+	if audioChannels.Master and audioChannels.Dialog and oldSettings.CVars.Sound_DialogVolume ~= 1 then
+		newSettings.CVars.Sound_DialogVolume = 1
+	end
+
+	-- Dialog is enabled along with SFX: Use the highest value of the two
+	if not(audioChannels.Master) and audioChannels.SFX and audioChannels.Dialog then
+		local sfxVolume = oldSettings.CVars.Sound_SFXVolume
+		local dialogVolume = oldSettings.CVars.Sound_DialogVolume
+		if sfxVolume > dialogVolume and newSettings.CVars.Sound_DialogVolume ~= sfxVolume then
+			newSettings.CVars.Sound_DialogVolume = sfxVolume
+		elseif dialogVolume > sfxVolume and newSettings.CVars.Sound_SFXVolume ~= dialogVolume then
+			newSettings.CVars.Sound_SFXVolume = dialogVolume
+		end
+	end
+
+	-- Make sure we have enough audio channels to fit the polyphony
+	if oldSettings.CVars.Sound_NumChannels < newSettings.polyphony then
+		local channelNumberSettings = { 24, 48, 64, 128, 256, 512 }
+		for _, numChannels in pairs(channelNumberSettings) do
+			if numChannels >= newSettings.polyphony then
+				if newSettings.CVars.Sound_NumChannels ~= numChannels then
+					newSettings.CVars.Sound_NumChannels = numChannels
+				end
+				break
+			end
+		end
+	end
+
+	return newSettings
+end
+
+--- Update the audio settings to the new provided parameters
+-- @param newSettings (table) as returned by Musician.Utils.GetCurrentAudioSettings() or Musician.Utils.GetNewAudioSettings()
+-- @param [noSoundSystemRestart=false] (boolean) Don't restart sound system when true
+function Musician.Utils.UpdateAudioSettings(newSettings, noSoundSystemRestart)
+
+	-- Avoid changing settings while in combat
+	if InCombatLockdown() then
+		C_Timer.After(1, function() Musician.Utils.UpdateAudioSettings(newSettings, noSoundSystemRestart) end)
+		return
+	end
+
+	-- CVars
+	for key, value in pairs(newSettings.CVars) do
+		if GetCVarNumber(key) ~= value then
+			SetCVar(key, value)
+			-- Sound system needs to be restarted after the total number of sound channels was changed
+			if key == 'Sound_NumChannels' and not(noSoundSystemRestart) then
+				Sound_GameSystem_RestartSoundSystem()
+			end
+		end
+	end
+
+	-- Musician audio channels
+	Mixin(Musician_Settings.audioChannels, newSettings.audioChannels)
+end
+
+--- Automatically adjust the audio settings, if needed.
+-- @param [noSoundSystemRestart=false] (boolean) Don't restart sound system when true
+function Musician.Utils.AdjustAudioSettings(noSoundSystemRestart)
+	-- Always make sure at least one audio channel is selected (SFX)
+	local audioChannels = Musician_Settings.audioChannels
+	if not(audioChannels.Master) and not(audioChannels.SFX) and not(audioChannels.Dialog) then
+		audioChannels.SFX = true
+	end
+
+	-- Adjust audio settings if the option is enabled
+	if Musician_Settings.autoAdjustAudioSettings then
+		local currentAudioSettings = Musician.Utils.GetCurrentAudioSettings()
+		local newAudioSettings = Musician.Utils.GetNewAudioSettings(currentAudioSettings)
+		Musician.Utils.UpdateAudioSettings(newAudioSettings, noSoundSystemRestart)
 	end
 end
 

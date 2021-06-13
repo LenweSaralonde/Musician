@@ -150,6 +150,108 @@
 									</CheckButton>
 								</Frames>
 							</Frame>
+							<Frame name="$parentAudioChannels">
+								<Size>
+									<AbsDimension x="580" y="86"/>
+								</Size>
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="$parentIntegration" relativePoint="BOTTOMLEFT" />
+								</Anchors>
+								<Layers>
+									<Layer level="ARTWORK">
+										<FontString name="$parentTitle" inherits="GameFontNormal" justifyH="LEFT" justifyV="TOP">
+											<Anchors>
+												<Anchor point="TOPLEFT" />
+											</Anchors>
+										</FontString>
+										<FontString name="$parentSubText" inherits="GameFontHighlightSmall" nonspacewrap="true" maxLines="3" justifyH="LEFT" justifyV="TOP">
+											<Size>
+												<AbsDimension y="22" x="0"/>
+											</Size>
+											<Anchors>
+												<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-8" />
+												<Anchor point="RIGHT" x="-32" y="0"/>
+											</Anchors>
+										</FontString>
+									</Layer>
+								</Layers>
+								<Frames>
+									<CheckButton name="$parentMaster" inherits="InterfaceOptionsCheckButtonTemplate">
+										<Anchors>
+											<Anchor point="TOPLEFT" relativeTo="$parentSubText" relativePoint="BOTTOMLEFT" x="0" y="4"/>
+										</Anchors>
+										<Scripts>
+											<OnLoad>
+												local label = string.gsub(Musician.Msg.OPTIONS_AUDIO_CHANNELS_CHANNEL_POLYPHONY, '{channel}', MASTER_VOLUME)
+												label = string.gsub(label, '{polyphony}', '30')
+												Musician.Options.SetupCheckbox(self, label)
+											</OnLoad>
+											<OnClick inherit="append">
+												Musician_Settings.audioChannels.Master = self:GetChecked()
+												Musician.Options.RefreshAudioSettings()
+											</OnClick>
+										</Scripts>
+									</CheckButton>
+									<CheckButton name="$parentSFX" inherits="InterfaceOptionsCheckButtonTemplate">
+										<Anchors>
+											<Anchor point="LEFT" relativeTo="$parentMasterText" relativePoint="RIGHT" x="10" y="0"/>
+											<Anchor point="TOP" relativeTo="$parentMaster" relativePoint="TOP" x="0" y="0"/>
+										</Anchors>
+										<Scripts>
+											<OnLoad>
+												local label = string.gsub(Musician.Msg.OPTIONS_AUDIO_CHANNELS_CHANNEL_POLYPHONY, '{channel}', SOUND_VOLUME)
+												label = string.gsub(label, '{polyphony}', '15')
+												Musician.Options.SetupCheckbox(self, label)
+											</OnLoad>
+											<OnClick inherit="append">
+												Musician_Settings.audioChannels.SFX = self:GetChecked()
+												Musician.Options.RefreshAudioSettings()
+											</OnClick>
+										</Scripts>
+									</CheckButton>
+									<CheckButton name="$parentDialog" inherits="InterfaceOptionsCheckButtonTemplate">
+										<Anchors>
+											<Anchor point="LEFT" relativeTo="$parentSFXText" relativePoint="RIGHT" x="10" y="0"/>
+											<Anchor point="TOP" relativeTo="$parentSFX" relativePoint="TOP" x="0" y="0"/>
+										</Anchors>
+										<Scripts>
+											<OnLoad>
+												local label = string.gsub(Musician.Msg.OPTIONS_AUDIO_CHANNELS_CHANNEL_POLYPHONY, '{channel}', DIALOG_VOLUME)
+												label = string.gsub(label, '{polyphony}', '20')
+												Musician.Options.SetupCheckbox(self, label)
+											</OnLoad>
+											<OnClick inherit="append">
+												Musician_Settings.audioChannels.Dialog = self:GetChecked()
+												Musician.Options.RefreshAudioSettings()
+											</OnClick>
+										</Scripts>
+									</CheckButton>
+									<CheckButton name="$parentAutoAdjust" inherits="InterfaceOptionsSmallCheckButtonTemplate">
+										<Anchors>
+											<Anchor point="TOPLEFT" relativeTo="$parentMaster" relativePoint="BOTTOMLEFT" x="10" y="4"/>
+										</Anchors>
+										<Scripts>
+											<OnLoad>
+												Musician.Options.SetupCheckbox(self, Musician.Msg.OPTIONS_AUDIO_CHANNELS_AUTO_ADJUST_CONFIG)
+											</OnLoad>
+											<OnClick inherit="append">
+												Musician_Settings.autoAdjustAudioSettings = self:GetChecked()
+												Musician.Options.RefreshAudioSettings()
+											</OnClick>
+										</Scripts>
+									</CheckButton>
+								</Frames>
+								<Layers>
+									<Layer level="ARTWORK">
+
+										<FontString name="$parentPolyphony" inherits="GameFontNormal" nonspacewrap="true" maxLines="3" justifyH="LEFT" justifyV="TOP">
+											<Anchors>
+												<Anchor point="LEFT" relativeTo="$parentDialogText" relativePoint="RIGHT" x="36" y="0" />
+											</Anchors>
+										</FontString>
+									</Layer>
+								</Layers>
+							</Frame>
 						</Frames>
 						<Scripts>
 							<OnLoad>
@@ -160,6 +262,9 @@
 
 								MusicianOptionsPanelUnitEmoteTitle:SetText(Musician.Msg.OPTIONS_CATEGORY_EMOTE)
 								MusicianOptionsPanelIntegrationTitle:SetText(Musician.Msg.OPTIONS_INTEGRATION_OPTIONS_TITLE)
+
+								MusicianOptionsPanelAudioChannelsTitle:SetText(Musician.Msg.OPTIONS_AUDIO_CHANNELS_TITLE)
+								MusicianOptionsPanelAudioChannelsSubText:SetText(Musician.Msg.OPTIONS_AUDIO_CHANNELS_HINT)
 							</OnLoad>
 						</Scripts>
 					</Frame>
