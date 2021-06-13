@@ -73,7 +73,7 @@ Remarks:
 
 * Mouse over the **Play as a band** button to check which members of the band are ready.
 * Each band member can do all the changes they want in the Song Editor, except changing the start and end points that would result in being out of sync.
-* Keep in mind that the overall polyphony is limited and is shared among all the members of the band.
+* Keep in mind that the overall polyphony can be limited and is shared among all the members of the band.
 
 Play live
 ---------
@@ -173,6 +173,7 @@ Tips and tricks
 * Play songs that are relevant with your "band" composition. It's nonsense to play orchestral music with only two bards ! 😃 However you can still role-play as if your character owns a kind of gnomish *Music-o-Matic* jukebox machine that is capable of reproducing a whole band.
 * A text emote is shown to the players who don't have Musician when you play a song. You can disable this emote in the add-on options.
 * Nameplates animations and icons are compatible with the most popular nameplate add-ons (KuiNameplates, Plater, ElvUI…).
+* You can configure the add-on to use several audio channels to increase the maximum polyphony.
 * [Check out the wiki](https://github.com/LenweSaralonde/Musician/wiki/) for more!
 
 Compose your own music
@@ -213,7 +214,7 @@ The drum kits are replaced by traditional percussions such as a bodhrán (frame 
 
 Check the full mapping in [Musician.MidiMapping.lua](https://github.com/LenweSaralonde/Musician/blob/master/constants/Musician.MidiMapping.lua) for details.
 
-Unfortunately, due to limitations of the WoW UI, velocity and controls (volume, padding, pitch bend, modulation…) are not supported. The polypohony is roughly 12 notes.
+Unfortunately, due to limitations of the WoW UI, velocity and controls (volume, padding, pitch bend, modulation…) are not supported. The polypohony may be limited for some players, try to avoid songs having more than 12 simultaneous notes.
 
 Limitations and known issues
 ----------------------------
