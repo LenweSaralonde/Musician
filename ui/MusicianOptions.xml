@@ -170,7 +170,7 @@
 											</Size>
 											<Anchors>
 												<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-8" />
-												<Anchor point="RIGHT" x="-32" y="0"/>
+												<Anchor point="RIGHT" x="0" y="0"/>
 											</Anchors>
 										</FontString>
 									</Layer>
