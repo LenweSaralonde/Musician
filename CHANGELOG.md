@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.7.4.0
+--------
+* Instrument samples can now be played using multiple audio channels to increase polyphony. #60
+
 v1.7.3.0
 --------
 * Unified version for WoW Shadowlands, WoW Classic and WoW Burning Crusade Classic.
