@@ -80,7 +80,15 @@ function Musician.TrackEditor.OnLoad()
 	for trackIndex = 1, trackCount, 1 do
 		Musician.TrackEditor.CreateTrackWidget(trackIndex)
 	end
+
+	-- Resize track container
 	MusicianTrackEditorTrackContainer:SetHeight(32 * trackCount)
+
+	-- Resize main window
+	local headerHeight = 142
+	local minRows = 4
+	local maxRows = floor((UIParent:GetHeight() / MusicianTrackEditor:GetScale() - headerHeight) / 32)
+	MusicianTrackEditor:SetHeight(headerHeight + 32 * min(maxRows, max(minRows, trackCount)))
 
 	-- Hide unused tracks
 	trackIndex = trackCount + 1

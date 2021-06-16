@@ -92,8 +92,11 @@
 	<!-- Track row template -->
 
 	<Frame name="MusicianTrackTemplate" virtual="true">
-		<Size x="569" y="32" />
-
+		<Size y="32" />
+		<Anchors>
+			<Anchor point="LEFT" x="0" />
+			<Anchor point="RIGHT" x="0" />
+		</Anchors>
 		<Layers>
 			<Layer level="OVERLAY">
 				<FontString name="$parentTrackId" parentKey="idText" inherits="GameFontHighlightLarge" justifyh="" justifyv="" text="00">
@@ -214,7 +217,7 @@
 
 	<!-- Main frame -->
 
-	<Frame name="MusicianTrackEditor" inherits="MusicianDialogTemplate">
+	<Frame name="MusicianTrackEditor" inherits="MusicianDialogTemplate" resizable="true">
 
 		<Size x="620" y="500" />
 
@@ -223,9 +226,11 @@
 			<!-- Player slider -->
 
 			<Slider name="$parentSourceSongSlider" inherits="OptionsSliderTemplate" defaultValue="1" minValue="1" maxValue="1" valueStep=".01" stepsPerPage="1000">
-				<Size x="590" y="22"/>
+				<Size y="22"/>
 				<Anchors>
 					<Anchor point="TOP" x="0" y="-60"/>
+					<Anchor point="LEFT" x="20" />
+					<Anchor point="RIGHT" x="-20" />
 				</Anchors>
 				<HitRectInsets>
 					<AbsInset left="0" right="0" top="0" bottom="0"/>
@@ -384,9 +389,11 @@
 			<!-- Track list -->
 
 			<ScrollFrame name="$parentScrollFrame" inherits="UIPanelScrollFrameTemplate">
-				<Size x="570" y="350"/>
 				<Anchors>
-					<Anchor point="BOTTOM" x="-13" y="12" relativeTo="$parent" />
+					<Anchor point="TOP" y="-132" />
+					<Anchor point="LEFT" x="13" />
+					<Anchor point="RIGHT" x="-39" />
+					<Anchor point="BOTTOM" y="12" />
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
@@ -423,6 +430,9 @@
 							ScrollFrame_OnScrollRangeChanged(self, 0, range)
 						end)
 					</OnScrollRangeChanged>
+					<OnSizeChanged inherit="append">
+						MusicianTrackEditorTrackContainer:SetWidth(self:GetWidth())
+					</OnSizeChanged>
 				</Scripts>
 				<ScrollChild>
 					<Frame name="MusicianTrackEditorTrackContainer">
@@ -435,11 +445,49 @@
 			</ScrollFrame>
 
 			<Frame name="$parentBackground" inherits="MusicianFieldset">
-				<Size x="604" y="360" />
 				<Anchors>
-					<Anchor point="TOPLEFT" x="-5" y="8" relativeTo="$parentScrollFrame" />
+					<Anchor point="TOPLEFT" x="-5" y="7" relativeTo="$parentScrollFrame" />
+					<Anchor point="BOTTOMRIGHT" x="6" y="-3" relativeTo="$parentScrollFrame"/>
 				</Anchors>
 			</Frame>
+
+			<!-- Resize button -->
+
+			<Button name="$parentResizeButton" parentKey="resizeButton">
+				<Size x="20" y="20"/>
+				<Anchors>
+					<Anchor point="BOTTOMRIGHT" x="3" y="-3"/>
+				</Anchors>
+				<Scripts>
+					<OnMouseDown>
+						self:SetButtonState("PUSHED", true)
+						self:GetHighlightTexture():Hide()
+						local window = self:GetParent()
+						window:StartSizing("BOTTOMRIGHT")
+					</OnMouseDown>
+					<OnMouseUp>
+						self:SetButtonState("NORMAL", false)
+						self:GetHighlightTexture():Show()
+						local window = self:GetParent()
+						window:StopMovingOrSizing()
+						FCF_SavePositionAndDimensions(window)
+					</OnMouseUp>
+					<OnLoad>
+						local texture
+						for _, texture in ipairs({ self:GetNormalTexture(), self:GetHighlightTexture(), self:GetPushedTexture() }) do
+							texture:ClearAllPoints()
+							texture:SetPoint("TOPLEFT", -10, 10)
+							texture:SetSize(20, 20)
+						end
+						self.frameLevel = MusicianTrackEditorScrollFrame:GetFrameLevel() + 100
+						self:SetFrameLevel(self.frameLevel)
+					</OnLoad>
+				</Scripts>
+				<NormalTexture file="Interface\ChatFrame\UI-ChatIM-SizeGrabber-Up"/>
+				<HighlightTexture file="Interface\ChatFrame\UI-ChatIM-SizeGrabber-Highlight"/>
+				<PushedTexture file="Interface\ChatFrame\UI-ChatIM-SizeGrabber-Down"/>
+			</Button>
+
 		</Frames>
 
 		<Layers>
@@ -510,6 +558,10 @@
 				MusicianTrackEditorHeaderMute:SetText(Musician.Icons.Mute)
 				MusicianTrackEditorHeaderSolo:SetText(Musician.Icons.Solo)
 			</OnLoad>
+			<OnSizeChanged inherit="append">
+				self:SetMinResize(600, 270)
+				self:SetMaxResize(UIParent:GetWidth() / self:GetScale(), UIParent:GetHeight() / self:GetScale())
+			</OnSizeChanged>
 		</Scripts>
 
 	</Frame>
