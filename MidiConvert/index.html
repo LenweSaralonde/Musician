@@ -3,9 +3,8 @@
 <head>
 	<title>Musician – MIDI Import</title>
 	<meta charset="UTF-8">
-	<script type="text/javascript" src="./js/MidiConvert.js?v=6"></script>
 	<script type="text/javascript" src="./js/base64.js"></script>
-	<script type="text/javascript" src="./js/musician.js?v=13"></script>
+	<script type="text/javascript" src="./js/musician-midi-converter.js?v=1.7.1"></script>
 	<script type="text/javascript" src="./js/locale.js?v=6"></script>
 	<style type="text/css">
 		body {
@@ -280,7 +279,7 @@
 	<div id="PayPal" class="community"><a href="https://musician.lenwe.io/paypal" title="Donate to support the project" target="_blank"><img src="img/paypal-icon.png" alt="PayPal logo"></a></div>
 
 	<script type="text/javascript">
-		document.querySelector("#Version").innerHTML = 'v' + Musician.CONVERTER_VERSION;
+		document.querySelector("#Version").innerHTML = 'v' + MusicianMidiConverter.CONVERTER_VERSION;
 
 		if (!(window.File && window.FileReader && window.FileList && window.Blob)) {
 			document.querySelector("#FileDrop #Text").textContent = "Reading files not supported by this browser";
@@ -320,8 +319,7 @@
 			var reader = new FileReader();
 			reader.onload = function(e){
 				try {
-					var song = MidiConvert.parse(e.target.result);
-					document.querySelector("#ResultsText").value = base64(Musician.PackSong(song, file.name));
+					document.querySelector("#ResultsText").value = base64(MusicianMidiConverter.packSong(e.target.result, file.name));
 					document.querySelector("#Result").className = "visible";
 					document.querySelector("#CopyButton").className = "visible";
 				} catch(e) {
@@ -330,7 +328,7 @@
 					alert(e);
 				}
 			};
-			reader.readAsBinaryString(file);
+			reader.readAsArrayBuffer(file);
 		}
 
 		function copyCode() {

@@ -4,9 +4,18 @@ manual-changelog:
     filename: CHANGELOG.md
     markup-type: markdown
 
-license-output: LICENSE
-
 ignore:
+    # LDoc
     - config.ld
     - doc
+    # GitHub
     - .github
+    # MIDI converter source
+    - MidiConvert/src
+    - package.json
+    - package-lock.json
+    - webpack.config.js
+    - node_modules
+    - *.js.map
+    # Fontello sources
+    - fonts/*.json
