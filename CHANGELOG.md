@@ -1,6 +1,12 @@
 Changelog
 =========
 
+v1.7.5.0
+--------
+* Song editor window can now be resized. #65
+* MIDI converter was entierly rewritten to remove the dependency to ToneJS Midi, fix minor issues and improve performance. #58
+* Fixed held down notes sometimes getting stopped on sustain pedal release in live play mode. #66
+
 v1.7.4.0
 --------
 * Instrument samples can now be played using multiple audio channels to increase polyphony. #60
