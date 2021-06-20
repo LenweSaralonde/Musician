@@ -17,6 +17,7 @@ NOTEON.IS_CHORD_NOTE = 5
 NOTEON.SOURCE = 6
 
 local notesOn = {}
+local sustainedLayers = {}
 local sustainedNotes = {}
 local songStartTime = nil
 local isLiveEnabled = true
@@ -333,6 +334,7 @@ end
 -- @param enable (boolean)
 -- @param layer (int)
 function Musician.Live.SetSustain(enable, layer)
+	sustainedLayers[layer] = enable
 	if enable and sustainedNotes[layer] == nil then
 		-- Create sustained notes container for layer
 		sustainedNotes[layer] = {}
@@ -343,10 +345,12 @@ function Musician.Live.SetSustain(enable, layer)
 			local key = noteOn[NOTEON.KEY]
 			local instrument = noteOn[NOTEON.INSTRUMENT]
 			local isChordNote = noteOn[NOTEON.IS_CHORD_NOTE]
-			Musician.Live.NoteOff(key, layer, instrument, isChordNote, true)
+			local noteOnKey = key .. '-' .. layer .. '-' .. instrument
+			-- Don't stop notes that are still actually on
+			if not(notesOn[noteOnKey]) then
+				Musician.Live.NoteOff(key, layer, instrument, isChordNote, noteOn)
+			end
 		end
-		-- Remove sustained notes container
-		sustainedNotes[layer] = nil
 	end
 end
 
@@ -371,9 +375,9 @@ function Musician.Live.NoteOn(key, layer, instrument, isChordNote, source)
 	end
 
 	-- Layer is sustained and note is already sustained: turn it off then start over
-	if sustainedNotes[layer] ~= nil and sustainedNotes[layer][noteOnKey] ~= nil then
+	if sustainedLayers[layer] and sustainedNotes[layer][noteOnKey] ~= nil then
 		local sustainedNote = sustainedNotes[layer][noteOnKey]
-		Musician.Live.NoteOff(key, layer, instrument, isChordNote, true)
+		Musician.Live.NoteOff(key, layer, instrument, isChordNote, sustainedNote)
 	end
 
 	-- Mute game music and adjust audio settings
@@ -407,27 +411,36 @@ end
 -- @param layer (int)
 -- @param instrument (int)
 -- @param[opt=false] isChordNote (boolean)
--- @param[opt=false] ignoreSustain (boolean) Force note off even is sustain is enabled for this layer
-function Musician.Live.NoteOff(key, layer, instrument, isChordNote, ignoreSustain)
+-- @param[opt=false] sustainedNote (table) Stop this previously sustained note instead of the note on
+function Musician.Live.NoteOff(key, layer, instrument, isChordNote, sustainedNote)
 
 	-- Key is out of range
 	if key < Musician.MIN_KEY or key > Musician.MAX_KEY or instrument == -1 then return end
 
 	local noteOnKey = key .. '-' .. layer .. '-' .. instrument
-	if not(notesOn[noteOnKey]) then return end
+	local noteOn = sustainedNote or notesOn[noteOnKey]
+	if not(noteOn) then return end
 
-	local handle = notesOn[noteOnKey][NOTEON.HANDLE]
-	local noteOnIsChordNote = notesOn[noteOnKey][NOTEON.IS_CHORD_NOTE]
+	local handle = noteOn[NOTEON.HANDLE]
+	local noteOnIsChordNote = noteOn[NOTEON.IS_CHORD_NOTE]
 
 	-- If current note off is from an auto-chord but actual note is not: do nothing
 	if isChordNote and not(noteOnIsChordNote) then
 		return
 	end
 
-	-- Layer is sustained
-	if not(ignoreSustain) and sustainedNotes[layer] ~= nil then
-		sustainedNotes[layer][noteOnKey] = notesOn[noteOnKey]
+	-- Remove note on
+	notesOn[noteOnKey] = nil
+
+	-- Layer is sustained and we're not explicitly stopping a sustained note
+	if sustainedLayers[layer] and not(sustainedNote) then
+		sustainedNotes[layer][noteOnKey] = noteOn
 		return
+	end
+
+	-- Remove sustained note
+	if sustainedNotes[layer] and sustainedNotes[layer][noteOnKey] then
+		sustainedNotes[layer][noteOnKey] = nil
 	end
 
 	-- Unmute game music
@@ -439,10 +452,8 @@ function Musician.Live.NoteOff(key, layer, instrument, isChordNote, ignoreSustai
 	end
 
 	-- Insert note off and trigger event
-	local source = notesOn[noteOnKey][NOTEON.SOURCE]
 	Musician.Live.InsertNote(false, key, layer, instrument)
-	notesOn[noteOnKey] = nil
-	Musician.Live:SendMessage(Musician.Events.LiveNoteOff, key, layer, isChordNote, source)
+	Musician.Live:SendMessage(Musician.Events.LiveNoteOff, key, layer, isChordNote, noteOn[NOTEON.SOURCE])
 
 	-- Send band note message if synchronization is enabled
 	Musician.Live.BandNote(false, key, layer, instrument)
@@ -473,7 +484,7 @@ end
 -- @param onlyForLayer (int)
 function Musician.Live.AllNotesOff(onlyForLayer)
 	-- Set sustain off for layers
-	Musician.Utils.ForEach(sustainedNotes, function(notes, layer)
+	Musician.Utils.ForEach(sustainedLayers, function(enabled, layer)
 		if onlyForLayer == nil or onlyForLayer == layer then
 			Musician.Live.SetSustain(false, layer)
 		end
