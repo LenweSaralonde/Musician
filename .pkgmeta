@@ -10,11 +10,12 @@ ignore:
     - doc
     # GitHub
     - .github
-    # MIDI converter source
+    # MIDI converter Node.js sources
     - MidiConvert/src
-    - package.json
-    - package-lock.json
-    - webpack.config.js
-    - *.js.map
+    - MidiConvert/package.json
+    - MidiConvert/package-lock.json
+    - MidiConvert/webpack.config.js
+    - MidiConvert/js/musician-midi-converter.js.map
     # Fontello sources
-    - fonts/*.json
+    - ui/fonts/musician-icons-fontello-config.json
+    - ui/fonts/musician-percussions-fontello-config.json
