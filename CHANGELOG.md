@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.7.5.1
+--------
+* Fixed checkbox text width in options panel. #67
+* Fixed missing instrument information for MIDI tracks sharing the same channel. #68
+
 v1.7.5.0
 --------
 * Song editor window can now be resized. #65
