@@ -1,6 +1,6 @@
 const parseMidi = require('midi-file').parseMidi;
 
-export const CONVERTER_VERSION = '7.1';
+export const CONVERTER_VERSION = '7.2';
 
 const FILE_HEADER = 'MUS7';
 const MAX_NOTE_DURATION = 6;
@@ -375,8 +375,7 @@ function convertMidi(midiArray, fileName) {
 	 * @returns {object}
 	 */
 	function getTrack(trackIndex = 0, channel = 0) {
-		const instrumentKey = `${trackIndex}-${channel}`;
-		const instrument = instruments.get(instrumentKey) || 0;
+		const instrument = instruments.get(channel) || 0;
 		const trackKey = `${trackIndex}-${channel}-${instrument}`;
 		// For MIDI format 2 files, channels 10 and 11 can be used for percussions
 		const isPercussion = (midi.format === 2) ? (channel === 9 || channel === 10) : (channel === 9);
@@ -414,8 +413,7 @@ function convertMidi(midiArray, fileName) {
 				break;
 
 			case 'programChange':
-				const instrumentKey = `${event.trackIndex}-${event.channel}`;
-				instruments.set(instrumentKey, event.programNumber);
+				instruments.set(event.channel, event.programNumber);
 				break;
 
 			case 'trackName':
