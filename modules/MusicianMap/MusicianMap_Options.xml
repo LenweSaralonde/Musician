@@ -22,7 +22,7 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<CheckButton name="$parentMiniMap" inherits="InterfaceOptionsCheckButtonTemplate">
+			<CheckButton name="$parentMiniMap" inherits="MusicianOptionsCheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentSubText" relativePoint="BOTTOMLEFT" x="0" y="4"/>
 				</Anchors>
@@ -35,7 +35,7 @@
 					</OnLoad>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="$parentWorldMap" inherits="InterfaceOptionsCheckButtonTemplate">
+			<CheckButton name="$parentWorldMap" inherits="MusicianOptionsCheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentMiniMap" relativePoint="BOTTOMLEFT" x="0" y="0"/>
 				</Anchors>

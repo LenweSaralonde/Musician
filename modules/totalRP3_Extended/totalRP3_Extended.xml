@@ -87,7 +87,7 @@
 		<!-- Add to your bag + quantity -->
 
 		<Frames>
-			<CheckButton name="$parentAddToBag" parentKey="addToBag" inherits="InterfaceOptionsCheckButtonTemplate">
+			<CheckButton name="$parentAddToBag" parentKey="addToBag" inherits="MusicianOptionsCheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentPreviewContainer" relativePoint="BOTTOMLEFT" y="-25"/>
 				</Anchors>

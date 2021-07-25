@@ -5,6 +5,7 @@
 	<Include file="MusicianDialogTemplate.xml"/>
 	<Include file="MusicianBasicMessageDialog.xml"/>
 	<Include file="MusicianEditBoxTemplate.xml"/>
+	<Include file="MusicianOptionsCheckButtonTemplate.xml"/>
 	<Include file="MusicianProgressBarTemplate.xml"/>
 	<Include file="MusicianIconButtonTemplate.xml"/>
 	<Include file="MusicianIconTextButtonTemplate.xml"/>

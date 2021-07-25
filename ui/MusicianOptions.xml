@@ -45,7 +45,7 @@
 									</Layer>
 								</Layers>
 								<Frames>
-									<CheckButton name="$parentEnable" inherits="InterfaceOptionsCheckButtonTemplate">
+									<CheckButton name="$parentEnable" inherits="MusicianOptionsCheckButtonTemplate">
 										<Anchors>
 											<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-10"/>
 										</Anchors>
@@ -84,7 +84,7 @@
 									</Layer>
 								</Layers>
 								<Frames>
-									<CheckButton name="$parentMuteGameMusic" inherits="InterfaceOptionsCheckButtonTemplate">
+									<CheckButton name="$parentMuteGameMusic" inherits="MusicianOptionsCheckButtonTemplate">
 										<Anchors>
 											<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-10"/>
 										</Anchors>
@@ -98,7 +98,7 @@
 											</OnClick>
 										</Scripts>
 									</CheckButton>
-									<CheckButton name="$parentMuteInstrumentToys" inherits="InterfaceOptionsCheckButtonTemplate">
+									<CheckButton name="$parentMuteInstrumentToys" inherits="MusicianOptionsCheckButtonTemplate">
 										<Anchors>
 											<Anchor point="TOPLEFT" relativeTo="$parentMuteGameMusic" relativePoint="BOTTOMLEFT" x="0" y="4"/>
 										</Anchors>
@@ -176,7 +176,7 @@
 									</Layer>
 								</Layers>
 								<Frames>
-									<CheckButton name="$parentMaster" inherits="InterfaceOptionsCheckButtonTemplate">
+									<CheckButton name="$parentMaster" inherits="MusicianOptionsCheckButtonTemplate">
 										<Anchors>
 											<Anchor point="TOPLEFT" relativeTo="$parentSubText" relativePoint="BOTTOMLEFT" x="0" y="4"/>
 										</Anchors>
@@ -192,7 +192,7 @@
 											</OnClick>
 										</Scripts>
 									</CheckButton>
-									<CheckButton name="$parentSFX" inherits="InterfaceOptionsCheckButtonTemplate">
+									<CheckButton name="$parentSFX" inherits="MusicianOptionsCheckButtonTemplate">
 										<Anchors>
 											<Anchor point="LEFT" relativeTo="$parentMasterText" relativePoint="RIGHT" x="10" y="0"/>
 											<Anchor point="TOP" relativeTo="$parentMaster" relativePoint="TOP" x="0" y="0"/>
@@ -209,7 +209,7 @@
 											</OnClick>
 										</Scripts>
 									</CheckButton>
-									<CheckButton name="$parentDialog" inherits="InterfaceOptionsCheckButtonTemplate">
+									<CheckButton name="$parentDialog" inherits="MusicianOptionsCheckButtonTemplate">
 										<Anchors>
 											<Anchor point="LEFT" relativeTo="$parentSFXText" relativePoint="RIGHT" x="10" y="0"/>
 											<Anchor point="TOP" relativeTo="$parentSFX" relativePoint="TOP" x="0" y="0"/>

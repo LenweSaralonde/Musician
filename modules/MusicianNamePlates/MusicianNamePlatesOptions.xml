@@ -43,7 +43,7 @@
 				</Scripts>
 			</Frame>
 
-			<CheckButton name="$parentEnable" inherits="InterfaceOptionsCheckButtonTemplate">
+			<CheckButton name="$parentEnable" inherits="MusicianOptionsCheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentSubText" relativePoint="BOTTOMLEFT" x="0" y="4"/>
 				</Anchors>
@@ -119,7 +119,7 @@
 					</OnLoad>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="$parentCinematicMode" inherits="InterfaceOptionsCheckButtonTemplate">
+			<CheckButton name="$parentCinematicMode" inherits="MusicianOptionsCheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentHideNPCs" relativePoint="BOTTOMLEFT" x="-10" y="-6"/>
 				</Anchors>
