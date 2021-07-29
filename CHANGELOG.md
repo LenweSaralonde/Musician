@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.7.5.2
+--------
+* Dummy version bump to force refresh CurseForge's client API.
+
 v1.7.5.1
 --------
 * Fixed checkbox text width in options panel. #67
