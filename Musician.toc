@@ -1,4 +1,4 @@
-## Interface: 90100
+## Interface: 20501
 ## Title: Musician
 ## Author: LenweSaralonde
 ## Version: 1.7.5.2
