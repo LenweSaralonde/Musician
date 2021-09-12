@@ -1,10 +1,11 @@
 const parseMidi = require('midi-file').parseMidi;
 
-export const CONVERTER_VERSION = '7.6';
+export const CONVERTER_VERSION = '8.0';
 
-const FILE_HEADER = 'MUS7';
+const FILE_HEADER = 'MUS8';
 const MAX_NOTE_DURATION = 6;
 const NOTE_DURATION_FPS = 255 / MAX_NOTE_DURATION; // 8-bit
+const MAX_LONG_NOTE_DURATION = 255 * MAX_NOTE_DURATION;
 const NOTE_TIME_FPS = 240;
 const MAX_NOTE_TIME = 65535 / NOTE_TIME_FPS; // 16-bit
 const MODE_DURATION = 0x10;
@@ -528,7 +529,7 @@ export function packSong(midiArray, fileName) {
 		for (const rawNote of rawTrack.notes) {
 			let noteTime = rawNote.time - offset;
 			const noteKey = rawNote.key;
-			const noteDuration = Math.min(rawNote.duration, MAX_NOTE_DURATION);
+			const noteDuration = Math.min(rawNote.duration, MAX_LONG_NOTE_DURATION);
 
 			// Insert note spacers if needed
 			let noteSpacer = '';
@@ -546,12 +547,16 @@ export function packSong(midiArray, fileName) {
 			const adjustedDuration = Math.max(0, noteDuration + noteTime - roundedTime);
 			const packedDuration = Math.floor(adjustedDuration * NOTE_DURATION_FPS);
 
-			// Insert packed note: key (1), time (2), duration (1)
+			// Determine if it's a long note or a short one
+			const isLongNote = adjustedDuration > MAX_NOTE_DURATION && noteKey < 127; // Avoid long notes of the max 127 key to avoid confusion with a spacer
+			const longNoteFlag = isLongNote ? 0x80 : 0x00;
+
+			// Insert packed note: key (1), time (2), duration (1 or 2)
 			notes.push(
 				noteSpacer +
-				packNumber(noteKey, 1) +
+				packNumber(noteKey | longNoteFlag, 1) +
 				packNumber(packedTime, 2) +
-				packNumber(packedDuration, 1)
+				packNumber(packedDuration, isLongNote ? 2 : 1)
 			);
 		}
 		track.notes = notes;

@@ -652,7 +652,7 @@ function Musician.Song:ImportCompressed(compressedData, crop, onComplete)
 	local success, err = pcall(function()
 		-- Get header
 		local header = string.sub(compressedData, 1, #Musician.FILE_HEADER_COMPRESSED)
-		if header ~= Musician.FILE_HEADER_COMPRESSED then
+		if header ~= 'MUZ8' and header ~= 'MUZ7' then
 			error(Musician.Msg.INVALID_MUSIC_CODE)
 		end
 
@@ -745,7 +745,7 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 
 		-- Header (4)
 		local header = readBytes(#Musician.FILE_HEADER)
-		if header ~= Musician.FILE_HEADER then
+		if header ~= 'MUS8' and header ~= 'MUS7' then
 			error(Musician.Msg.INVALID_MUSIC_CODE)
 		end
 
@@ -853,20 +853,24 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 					track = self.tracks[trackIndex]
 				end
 
-				-- Key (1)
-				local key = Musician.Utils.UnpackNumber(readBytes(1, true))
+				-- Key + note type (1)
+				local noteData = Musician.Utils.UnpackNumber(readBytes(1, true))
 
 				-- This is a spacer (key 0xFF)
-				if key == 0xFF then
+				if noteData == 0xFF then
 					trackOffset = trackOffset + 65535 / Musician.NOTE_TIME_FPS -- 16-bit
 				else
+					local key = bit.band(noteData, 0x7F)
+					local noteType = bit.band(noteData, 0x80) == 0x80
+
 					-- Time (2)
 					local time = trackOffset + Musician.Utils.UnpackTime(readBytes(2, true), Musician.NOTE_TIME_FPS)
 
 					-- Note on with duration
 					if self.mode == Musician.Song.MODE_DURATION then
-						-- Duration (1)
-						local duration = Musician.Utils.UnpackTime(readBytes(1, true), Musician.NOTE_DURATION_FPS)
+						-- Duration (1 or 2)
+						local durationBytes = noteType and 2 or 1
+						local duration = Musician.Utils.UnpackTime(readBytes(durationBytes, true), Musician.NOTE_DURATION_FPS)
 
 						-- Update song cropping
 						local endTime = time + duration
@@ -890,8 +894,8 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 
 						-- Insert live note event
 						table.insert(track.notes, {
-							[NOTE.ON] = bit.band(key, 0x80) == 0x80,
-							[NOTE.KEY] = bit.band(key, 0x7F),
+							[NOTE.ON] = noteType,
+							[NOTE.KEY] = key,
 							[NOTE.TIME] = time
 						})
 					end
@@ -1114,17 +1118,23 @@ function Musician.Song:Export(onComplete, progressionFactor)
 				if self.mode == Musician.Song.MODE_DURATION then
 					-- Pack duration
 					local roundedTime = packedTime / Musician.NOTE_TIME_FPS
-					local adjustedDuration = max(0, note[NOTE.DURATION] + noteTime - roundedTime)
+					local adjustedDuration = max(0, min(Musician.MAX_LONG_NOTE_DURATION, note[NOTE.DURATION] + noteTime - roundedTime))
 					local packedDuration = floor(adjustedDuration * Musician.NOTE_DURATION_FPS)
 
-					-- Key (1)
-					notesData = notesData .. Musician.Utils.PackNumber(note[NOTE.KEY], 1)
+					-- Determine if it's a long note or a short one
+					local roundedDuration = packedDuration / Musician.NOTE_DURATION_FPS
+					local isLongNote = roundedDuration > Musician.MAX_NOTE_DURATION and note[NOTE.KEY] < 127
+
+					-- Key and note flag (1)
+					local noteFlag = isLongNote and 0x80 or 0x00
+					notesData = notesData .. Musician.Utils.PackNumber(bit.bor(note[NOTE.KEY], noteFlag), 1)
 
 					-- Time (2)
 					notesData = notesData .. Musician.Utils.PackNumber(packedTime, 2)
 
-					-- Duration (1)
-					notesData = notesData .. Musician.Utils.PackNumber(packedDuration, 1)
+					-- Duration (1 or 2)
+					local durationBytes = isLongNote and 2 or 1
+					notesData = notesData .. Musician.Utils.PackNumber(packedDuration, durationBytes)
 				elseif self.mode == Musician.Song.MODE_LIVE then
 					-- Key on/off event (1)
 					local keyEvent = bit.bor(note[NOTE.ON] and 0x80 or 0x00, bit.band(note[NOTE.KEY], 0x7F))
