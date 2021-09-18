@@ -318,17 +318,17 @@ function calculateNoteOnDurations(events) {
 	for (const event of events) {
 		if (event.type === 'noteOn' || event.type === 'noteOff') {
 			const noteKey = `${event.trackIndex}-${event.channel}-${event.noteNumber}`;
+			const noteOnStack = notesOn.get(noteKey) || [];
 
-			// Stop existing noteOn and set duration
-			const noteOnEvent = notesOn.get(noteKey);
-			if (noteOnEvent) {
-				noteOnEvent.duration = event.time - noteOnEvent.time;
-				notesOn.delete(noteKey);
-			}
-
-			// Insert noteOn
 			if (event.type === 'noteOn') {
-				notesOn.set(noteKey, event);
+				noteOnStack.push(event);
+				notesOn.set(noteKey, noteOnStack);
+			} else {
+				const noteOnEvent = noteOnStack.pop();
+				noteOnEvent.duration = event.time - noteOnEvent.time;
+				if (noteOnStack.length === 0) {
+					notesOn.delete(noteKey);
+				}
 			}
 		}
 	}

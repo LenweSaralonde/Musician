@@ -412,10 +412,12 @@ function Musician.Song:PlayOnFrame(elapsed)
 		end
 
 		-- Stop expired notes currently playing
-		local noteIndex, noteOn
-		for noteIndex, noteOn in pairs(track.notesOn) do
-			if noteOn[NOTEON.ENDTIME] ~= nil and noteOn[NOTEON.ENDTIME] < to then -- Off time is in the past
-				self:NoteOff(track, noteIndex)
+		for noteKey, noteOnStack in pairs(track.notesOn) do
+			for noteIndex = #noteOnStack, 1, -1 do
+				local noteOn = noteOnStack[noteIndex]
+				if noteOn[NOTEON.ENDTIME] ~= nil and noteOn[NOTEON.ENDTIME] < to then -- Off time is in the past
+					self:NoteOff(track, noteKey)
+				end
 			end
 		end
 
@@ -486,9 +488,6 @@ function Musician.Song:NoteOn(track, noteIndex, retries)
 		shouldPlay = false
 	end
 
-	-- The same note cannot be already playing on the same track
-	self:NoteOff(track, key)
-
 	-- Play note sound file
 	local handle
 	if shouldPlay then
@@ -502,11 +501,15 @@ function Musician.Song:NoteOn(track, noteIndex, retries)
 		endTime = self.cursor + duration
 	end
 
-	track.notesOn[key] = {
+	if track.notesOn[key] == nil then
+		track.notesOn[key] = {}
+	end
+	table.insert(track.notesOn[key], {
 		[NOTEON.TIME] = time,
 		[NOTEON.ENDTIME] = endTime,
 		[NOTEON.HANDLE] = handle or 0
-	}
+	})
+
 	track.polyphony = track.polyphony + 1
 	self.polyphony = self.polyphony + 1
 
@@ -524,16 +527,35 @@ function Musician.Song:NoteOff(track, key, audioOnly, decay)
 	end
 
 	if track.notesOn[key] ~= nil then
-		local handle = track.notesOn[key][NOTEON.HANDLE]
-		if handle ~= 0 then
+		local noteOnStack = track.notesOn[key]
+
+		-- Topmost note in the stack
+		local noteOn = noteOnStack[#noteOnStack]
+		if audioOnly then
+			-- If muting audio only, get the topmost note in the stack that still has a handle
+			for index = #noteOnStack, 1, -1 do
+				if noteOnStack[index][NOTEON.HANDLE] ~= nil then
+					noteOn = noteOnStack[index]
+					break
+				end
+			end
+		end
+
+		-- Stop playing the note
+		local handle = noteOn[NOTEON.HANDLE]
+		if handle ~= nil then
 			Musician.Sampler.StopNote(handle, decay)
 			Musician.Song:SendMessage(Musician.Events.NoteOff, self, track, key)
 		end
 
+		-- Remove note from stack or just set the handle to nil if audio only
 		if audioOnly then
-			track.notesOn[key][NOTEON.HANDLE] = 0
+			noteOn[NOTEON.HANDLE] = nil
 		else
-			track.notesOn[key] = nil
+			table.remove(noteOnStack)
+			if #noteOnStack == 0 then
+				track.notesOn[key] = nil
+			end
 			track.polyphony = track.polyphony - 1
 			self.polyphony = self.polyphony - 1
 			Musician.Song:SendMessage(Musician.Events.VisualNoteOff, self, track, key)
@@ -545,9 +567,10 @@ end
 -- @param track (table) Reference to the track
 -- @param audioOnly (boolean)
 function Musician.Song:TrackNotesOff(track, audioOnly)
-	local noteKey, noteOn
-	for noteKey, noteOn in pairs(track.notesOn) do
-		self:NoteOff(track, noteKey, audioOnly)
+	for noteKey, noteOnStack in pairs(track.notesOn) do
+		for index = 1, #noteOnStack do
+			self:NoteOff(track, noteKey, audioOnly)
+		end
 	end
 end
 
@@ -803,6 +826,8 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 		local trackIndex = 1
 		local noteIndex = 1
 		local noteImportingWorker
+		local cropFrom
+		local cropTo
 
 		-- Import notes in a worker
 		noteImportingWorker = function()
@@ -841,6 +866,11 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 						-- Duration (1)
 						local duration = Musician.Utils.UnpackTime(readBytes(1, true), Musician.NOTE_DURATION_FPS)
 
+						-- Update song cropping
+						local endTime = time + duration
+						cropFrom = min(cropFrom or time, time)
+						cropTo = max(cropTo or endTime, endTime)
+
 						-- Insert note with duration
 						table.insert(track.notes, {
 							[NOTE.ON] = true,
@@ -849,6 +879,13 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 							[NOTE.DURATION] = duration
 						})
 					elseif self.mode == Musician.Song.MODE_LIVE then
+						-- Update song cropping
+						if noteType then
+							cropFrom = min(cropFrom or time, time)
+						else
+							cropTo = max(cropTo or time, time)
+						end
+
 						-- Insert live note event
 						table.insert(track.notes, {
 							[NOTE.ON] = bit.band(key, 0x80) == 0x80,
@@ -925,18 +962,8 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 				end
 
 				-- Crop song
-				if crop then
-					self.cropFrom = self.duration
-					self.cropTo = 0
-					for trackIndex, track in pairs(self.tracks) do
-						if #track.notes > 0 then
-							self.cropFrom = min(self.cropFrom, track.notes[1][NOTE.TIME])
-							self.cropTo = max(self.cropTo, track.notes[#track.notes][NOTE.TIME] + track.notes[#track.notes][NOTE.DURATION])
-						end
-					end
-					self.cropFrom = floor(self.cropFrom * 100) / 100
-					self.cropTo = ceil(self.cropTo * 100) / 100
-				end
+				self.cropFrom = floor(cropFrom * 100) / 100
+				self.cropTo = ceil(cropTo * 100) / 100
 				self.cursor = self.cropFrom
 
 				-- CRC32
