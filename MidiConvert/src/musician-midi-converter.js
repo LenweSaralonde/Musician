@@ -323,7 +323,7 @@ function calculateNoteOnDurations(events) {
 			if (event.type === 'noteOn') {
 				noteOnStack.push(event);
 				notesOn.set(noteKey, noteOnStack);
-			} else {
+			} else if (noteOnStack.length > 0) {
 				const noteOnEvent = noteOnStack.pop();
 				noteOnEvent.duration = event.time - noteOnEvent.time;
 				if (noteOnStack.length === 0) {
@@ -365,17 +365,20 @@ function convertMidi(midiArray, fileName) {
 	const duration = events[events.length - 1].time; // Get the last event time as song duration
 	const tracksMap = new Map();
 	const trackNames = {}
-	const instruments = new Map();
+	const instrumentByTrack = new Map();
+	const instrumentByChannel = new Map();
 	const titleParts = [];
 
 	/**
 	 * Create or return existing track matching index and channel
-	 * @param {integer} trackIndex
-	 * @param {integer} channel
+	 * @param {integer} trackIndex MIDI track index
+	 * @param {integer} channel MIDI channel
 	 * @returns {object}
 	 */
 	function getTrack(trackIndex = 0, channel = 0) {
-		const instrument = instruments.get(channel) || 0;
+		const trackInstrument = instrumentByTrack.get(`${channel}-${trackIndex}`);
+		const channelInstrument = instrumentByChannel.get(channel);
+		const instrument = (trackInstrument !== undefined) ? trackInstrument : (channelInstrument || 0);
 		const trackKey = `${trackIndex}-${channel}-${instrument}`;
 		// For MIDI format 2 files, channels 10 and 11 can be used for percussions
 		const isPercussion = (midi.format === 2) ? (channel === 9 || channel === 10) : (channel === 9);
@@ -413,7 +416,8 @@ function convertMidi(midiArray, fileName) {
 				break;
 
 			case 'programChange':
-				instruments.set(event.channel, event.programNumber);
+				instrumentByTrack.set(`${event.channel}-${event.trackIndex}`, event.programNumber);
+				instrumentByChannel.set(event.channel, event.programNumber);
 				break;
 
 			case 'trackName':
