@@ -17,8 +17,10 @@ local NOTEON = {}
 NOTEON.TIME = 1
 NOTEON.KEY = 2
 NOTEON.INSTRUMENT_DATA = 3
-NOTEON.SOUND_HANDLE = 4
-NOTEON.ON_STOP = 5
+NOTEON.SOUND_FILE = 4
+NOTEON.SOUND_HANDLE = 5
+NOTEON.ON_STOP = 6
+NOTEON.LOOP = 7
 
 --- Init sampler engine
 --
@@ -277,29 +279,61 @@ local function playNoteFile(handle, instrumentData, soundFile, tries, onPlay, ch
 	end
 end
 
+--- Trigger a note On
+-- @param handle (int) The note handle returned by PlayNote()
+-- @param loopNote (boolean) The note sample should be looped (long note or live note)
+-- @param isLooped (boolean) The note sample is being looped
+local function playNoteOn(handle, loopNote, isLooped)
+	local noteOn = notesOn[handle]
+
+	local key = noteOn[NOTEON.KEY]
+	local instrumentData = noteOn[NOTEON.INSTRUMENT_DATA]
+
+	if isLooped then
+		StopSound(noteOn[NOTEON.SOUND_HANDLE], instrumentData.crossfade)
+	end
+
+	if loopNote and instrumentData.loop ~= nil then
+		local loop = instrumentData.loop[1] + random() * (instrumentData.loop[2] - instrumentData.loop[1])
+		noteOn[NOTEON.LOOP] = C_Timer.NewTimer(loop, function()
+			playNoteOn(handle, true, true)
+		end)
+	end
+
+	local funcName = isLooped and 'LoopNote' or 'PlayNote'
+	Musician.Utils.Debug(MODULE_NAME, funcName, handle, instrumentData and instrumentData.name, key, loopNote and not(isLooped) and '(looped)' or '')
+
+	-- Play the note file only if it has already been preloaded in the file cache
+	local sampleId = Musician.Sampler.GetSampleId(instrumentData, key)
+	local soundFile = noteOn[NOTEON.SOUND_FILE]
+	if soundFile and Musician.Preloader.IsPreloaded(sampleId) then
+		playNoteFile(handle, instrumentData, soundFile, 0)
+	end
+end
+
 --- Start playing a note
 -- @param instrument (int|string|table) MIDI instrument index, instrument name or instrument data
 -- @param key (int) Note MIDI key
+-- @param loopNote (boolean) The note sample should be looped (long note or live note)
 -- @param[opt] onPlay (function) Called when the note audio starts playing. Args: noteHandle (int)
 -- @param[opt] onStop (function) Called when the note audio is stopped. Args: noteHandle (int), decay (number)
 -- @return noteHandle (int)
-function Musician.Sampler.PlayNote(instrument, key, onPlay, onStop)
+function Musician.Sampler.PlayNote(instrument, key, loopNote, onPlay, onStop)
 	local soundFile, instrumentData = Musician.Sampler.GetSoundFile(instrument, key)
-	local sampleId = Musician.Sampler.GetSampleId(instrumentData, key)
+
+	if soundFile == nil then
+		return nil
+	end
 
 	lastHandleId = lastHandleId + 1
 	notesOn[lastHandleId] = {
 		[NOTEON.TIME] = debugprofilestop(),
 		[NOTEON.INSTRUMENT_DATA] = instrumentData,
+		[NOTEON.SOUND_FILE] = soundFile,
 		[NOTEON.KEY] = key,
 		[NOTEON.ON_STOP] = onStop,
 	}
-	Musician.Utils.Debug(MODULE_NAME, 'PlayNote', lastHandleId, instrumentData and instrumentData.name, key)
-
-	-- Play the note file only if it has already been preloaded in the file cache
-	if soundFile and Musician.Preloader.IsPreloaded(sampleId) then
-		playNoteFile(lastHandleId, instrumentData, soundFile, 0, onPlay)
-	end
+	playNoteOn(lastHandleId, loopNote, false)
 
 	return lastHandleId
 end
@@ -308,7 +342,7 @@ end
 -- @param handle (int) The note handle returned by PlayNote()
 -- @param[opt] decay (number) Override instrument decay
 function Musician.Sampler.StopNote(handle, decay)
-	if not(notesOn[handle]) then
+	if handle == nil or not(notesOn[handle]) then
 		return
 	end
 
@@ -320,6 +354,11 @@ function Musician.Sampler.StopNote(handle, decay)
 
 	if decay == nil and instrumentData then
 		decay = instrumentData.decay
+	end
+
+	-- Cancel note looping
+	if noteOn[NOTEON.LOOP] then
+		noteOn[NOTEON.LOOP]:Cancel()
 	end
 
 	Musician.Utils.Debug(MODULE_NAME, 'StopNote', handle, instrumentData and instrumentData.name, key, soundHandle, decay)
@@ -349,25 +388,6 @@ function Musician.Sampler.StopOldestNote()
 	if minHandle then
 		Musician.Sampler.StopNote(minHandle, 0) -- No decay
 	end
-end
-
---- Return note data
--- @param handle (int) The note handle returned by PlayNote()
--- @return noteOnData (table) Empty table if not valid
-function Musician.Sampler.GetNoteData(handle)
-	if not(notesOn[handle]) then
-		return {}
-	end
-
-	local noteOn = notesOn[handle]
-	return {
-		time = noteOn[NOTEON.TIME],
-		key = noteOn[NOTEON.KEY],
-		instrumentData = noteOn[NOTEON.INSTRUMENT_DATA],
-		soundFile = noteOn[NOTEON.SOUND_FILE],
-		soundHandle = noteOn[NOTEON.SOUND_HANDLE],
-		onStop = noteOn[NOTEON.ON_STOP],
-	}
 end
 
 --- Return sample ID for note and instrument data

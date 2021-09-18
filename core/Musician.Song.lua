@@ -491,7 +491,8 @@ function Musician.Song:NoteOn(track, noteIndex, retries)
 	local handle
 	if shouldPlay then
 		Musician.Song:SendMessage(Musician.Events.NoteOn, self, track, key)
-		handle = Musician.Sampler.PlayNote(track.instrument, key)
+		local loopNote = (duration == nil) or (duration > Musician.MAX_NOTE_DURATION)
+		handle = Musician.Sampler.PlayNote(track.instrument, key, loopNote)
 	end
 
 	-- Add note to notesOn with sound handle and note off time

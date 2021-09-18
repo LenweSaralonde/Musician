@@ -49,6 +49,8 @@ Musician.INSTRUMENTS = {
 		decay = 100,
 		isPercussion = false,
 		midi = 21,
+		loop = {5, 5},
+		crossfade = 100,
 		color = Musician.COLORS.DarkSpringGreen,
 		source = "Safwan Matni Accordion"
 	},
@@ -57,6 +59,8 @@ Musician.INSTRUMENTS = {
 		decay = 100,
 		isPercussion = false,
 		midi = 109,
+		loop = {4, 5},
+		crossfade = 100,
 		color = Musician.COLORS.LightGreen,
 		source = "ERA II Medieval Legends"
 	},
@@ -65,6 +69,8 @@ Musician.INSTRUMENTS = {
 		decay = 75,
 		isPercussion = false,
 		midi = 70,
+		loop = {4, 5},
+		crossfade = 150,
 		color = Musician.COLORS.DarkGreen,
 		source = "Ethan Winer Bassoon"
 	},
@@ -73,6 +79,8 @@ Musician.INSTRUMENTS = {
 		decay = 150,
 		isPercussion = false,
 		midi = 42,
+		loop = {5, 5},
+		crossfade = 150,
 		color = Musician.COLORS.DarkOrange,
 		source = "ERA II Medieval Legends"
 	},
@@ -81,6 +89,8 @@ Musician.INSTRUMENTS = {
 		decay = 150,
 		isPercussion = false,
 		midi = 71,
+		loop = {4, 5},
+		crossfade = 150,
 		color = Musician.COLORS.Green,
 		source = "Mats Helgesson Maestro Clarinet"
 	},
@@ -98,6 +108,8 @@ Musician.INSTRUMENTS = {
 		decay = 100,
 		isPercussion = false,
 		midi = 53,
+		loop = {4, 5},
+		crossfade = 100,
 		color = Musician.COLORS.LightBlue,
 		source = "ERA II Vocal Codex"
 	},
@@ -106,6 +118,8 @@ Musician.INSTRUMENTS = {
 		decay = 100,
 		isPercussion = false,
 		midi = 52,
+		loop = {2.5, 3.5},
+		crossfade = 100,
 		color = Musician.COLORS.Blue,
 		source = "ERA II Vocal Codex"
 	},
@@ -114,6 +128,8 @@ Musician.INSTRUMENTS = {
 		decay = 100,
 		isPercussion = false,
 		midi = 110,
+		loop = {5, 5},
+		crossfade = 100,
 		color = Musician.COLORS.Orange,
 		source = "Lewis E. Pyle Violin"
 	},
@@ -140,6 +156,8 @@ Musician.INSTRUMENTS = {
 		decay = 150,
 		isPercussion = false,
 		midi = 74,
+		loop = {4, 5},
+		crossfade = 150,
 		color = Musician.COLORS.SpringGreen,
 		source = "ERA II Medieval Legends"
 	},
@@ -159,6 +177,8 @@ Musician.INSTRUMENTS = {
 		decay = 150,
 		isPercussion = false,
 		midi = 57,
+		loop = {4, 5},
+		crossfade = 150,
 		color = Musician.COLORS.DarkYellow,
 		source = "ERA II Medieval Legends"
 	},
@@ -178,6 +198,8 @@ Musician.INSTRUMENTS = {
 		decay = 75,
 		isPercussion = false,
 		midi = 56,
+		loop = {4, 5},
+		crossfade = 150,
 		color = Musician.COLORS.Yellow,
 		source = "ERA II Medieval Legends"
 	},
@@ -186,6 +208,8 @@ Musician.INSTRUMENTS = {
 		decay = 150,
 		isPercussion = false,
 		midi = 60,
+		loop = {4, 5},
+		crossfade = 150,
 		color = Musician.COLORS.Brown,
 		source = "ERA II Medieval Legends"
 	},
