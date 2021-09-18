@@ -964,8 +964,8 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 				end
 
 				-- Crop song
-				self.cropFrom = floor(cropFrom * 100) / 100
-				self.cropTo = ceil(cropTo * 100) / 100
+				self.cropFrom = floor((cropFrom or 0) * 100) / 100
+				self.cropTo = ceil((cropTo or 0) * 100) / 100
 				self.cursor = self.cropFrom
 
 				-- CRC32
