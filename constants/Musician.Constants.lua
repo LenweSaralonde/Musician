@@ -158,7 +158,7 @@ Musician.Events.VisualNoteOn = "MusicianVisualNoteOn"
 -- @param key (number) MIDI key of the note
 Musician.Events.VisualNoteOff = "MusicianVisualNoteOff"
 
---- Fired when a note on event is being sent in live mode
+--- Fired when a live note on event is being sent in live mode
 -- @field Musician.Events.LiveNoteOn
 -- @param key (number) MIDI key of the note
 -- @param layer (number) Keyboard layer from Musician.KEYBOARD_LAYER
@@ -167,7 +167,7 @@ Musician.Events.VisualNoteOff = "MusicianVisualNoteOff"
 -- @param source (table) UI component triggering the note
 Musician.Events.LiveNoteOn = "MusicianLiveNoteOn"
 
---- Fired when a note off event is being sent in live mode
+--- Fired when a live note off event is being sent in live mode
 -- @field Musician.Events.LiveNoteOff
 -- @param key (number) MIDI key of the note
 -- @param layer (number) Keyboard layer from Musician.KEYBOARD_LAYER
