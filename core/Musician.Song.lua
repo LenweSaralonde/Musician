@@ -147,6 +147,9 @@ function Musician.Song.create()
 	-- @field mode (int) Song mode
 	self.mode = Musician.Song.MODE_DURATION
 
+	-- @field header (string) Song file header that determines the file format
+	self.header = Musician.FILE_HEADER
+
 	-- @field isLiveStreamingSong (boolean) Song is used for, or results from live streaming from the current player
 	self.isLiveStreamingSong = false
 
@@ -658,7 +661,7 @@ function Musician.Song:ImportCompressed(compressedData, crop, onComplete)
 		end
 
 		local cursor = #Musician.FILE_HEADER_COMPRESSED + 1
-		local uncompressedData = Musician.FILE_HEADER
+		local uncompressedData = string.gsub(header, 'MUZ', 'MUS')
 		local uncompressWorker
 
 		-- Uncompress string in a worker
@@ -749,6 +752,7 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 		if header ~= 'MUS8' and header ~= 'MUS7' then
 			error(Musician.Msg.INVALID_MUSIC_CODE)
 		end
+		self.header = header
 
 		-- Song title (2) + (title length in bytes)
 		local songTitleLength = Musician.Utils.UnpackNumber(readBytes(2))
@@ -1033,7 +1037,7 @@ function Musician.Song:Export(onComplete, progressionFactor)
 	-- ===========
 
 	-- Header (4)
-	data = data .. Musician.FILE_HEADER
+	data = data .. self.header
 
 	-- Song title (2) + (title length in bytes)
 	data = data .. Musician.Utils.PackNumber(#self.name, 2) .. self.name
@@ -1118,8 +1122,9 @@ function Musician.Song:Export(onComplete, progressionFactor)
 				-- Duration mode
 				if self.mode == Musician.Song.MODE_DURATION then
 					-- Pack duration
+					local maxDuration = (self.header < 'MUS8') and Musician.MAX_NOTE_DURATION or Musician.MAX_LONG_NOTE_DURATION
 					local roundedTime = packedTime / Musician.NOTE_TIME_FPS
-					local adjustedDuration = max(0, min(Musician.MAX_LONG_NOTE_DURATION, note[NOTE.DURATION] + noteTime - roundedTime))
+					local adjustedDuration = max(0, min(maxDuration, note[NOTE.DURATION] + noteTime - roundedTime))
 					local packedDuration = floor(adjustedDuration * Musician.NOTE_DURATION_FPS)
 
 					-- Determine if it's a long note or a short one
@@ -1252,7 +1257,7 @@ function Musician.Song:ExportCompressed(onComplete)
 			-- First chunk: Uncompressed header + compressed song title only
 			if compressedData == '' then
 				-- Header
-				compressedData = Musician.FILE_HEADER_COMPRESSED
+				compressedData = string.gsub(self.header, 'MUS', 'MUZ')
 				readBytes(#Musician.FILE_HEADER)
 
 				-- Title
