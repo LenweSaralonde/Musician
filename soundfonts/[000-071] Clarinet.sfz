@@ -20,580 +20,871 @@ amp_velcurve_1=1 // All notes play max velocity
 	key=c0
 	sample=../instruments/clarinet/C0.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99788
+	loop_end=204797
 
 <region>
 	region_label=C#0
 	key=c#0
 	sample=../instruments/clarinet/C#0.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99279
+	loop_end=198509
 
 <region>
 	region_label=D0
 	key=d0
 	sample=../instruments/clarinet/D0.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=98512
+	loop_end=194676
 
 <region>
 	region_label=D#0
 	key=d#0
 	sample=../instruments/clarinet/D#0.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99787
+	loop_end=197359
 
 <region>
 	region_label=E0
 	key=e0
 	sample=../instruments/clarinet/E0.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=98467
+	loop_end=194851
 
 <region>
 	region_label=F0
 	key=f0
 	sample=../instruments/clarinet/F0.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99002
+	loop_end=194016
 
 <region>
 	region_label=F#0
 	key=f#0
 	sample=../instruments/clarinet/F#0.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99167
+	loop_end=194569
 
 <region>
 	region_label=G0
 	key=g0
 	sample=../instruments/clarinet/G0.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99001
+	loop_end=196253
 
 <region>
 	region_label=G#0
 	key=g#0
 	sample=../instruments/clarinet/G#0.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=98542
+	loop_end=195436
 
 <region>
 	region_label=A0
 	key=a0
 	sample=../instruments/clarinet/A0.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99425
+	loop_end=195697
 
 <region>
 	region_label=Bb0
 	key=a#0
 	sample=../instruments/clarinet/Bb0.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99900
+	loop_end=196822
 
 <region>
 	region_label=B0
 	key=b0
 	sample=../instruments/clarinet/B0.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=98579
+	loop_end=195782
 
 <region>
 	region_label=C1
 	key=c1
 	sample=../instruments/clarinet/C1.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99788
+	loop_end=196927
 
 <region>
 	region_label=C#1
 	key=c#1
 	sample=../instruments/clarinet/C#1.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99279
+	loop_end=196061
 
 <region>
 	region_label=D1
 	key=d1
 	sample=../instruments/clarinet/D1.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99714
+	loop_end=195872
 
 <region>
 	region_label=D#1
 	key=d#1
 	sample=../instruments/clarinet/D#1.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99787
+	loop_end=197357
 
 <region>
 	region_label=E1
 	key=e1
 	sample=../instruments/clarinet/E1.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99538
+	loop_end=195914
 
 <region>
 	region_label=F1
 	key=f1
 	sample=../instruments/clarinet/F1.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99002
+	loop_end=196032
 
 <region>
 	region_label=F#1
 	key=f#1
 	sample=../instruments/clarinet/F#1.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99167
+	loop_end=196476
 
 <region>
 	region_label=G1
 	key=g1
 	sample=../instruments/clarinet/G1.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99001
+	loop_end=197152
 
 <region>
 	region_label=G#1
 	key=g#1
 	sample=../instruments/clarinet/G#1.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99391
+	loop_end=197132
 
 <region>
 	region_label=A1
 	key=a1
 	sample=../instruments/clarinet/A1.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99425
+	loop_end=197295
 
 <region>
 	region_label=Bb1
 	key=a#1
 	sample=../instruments/clarinet/Bb1.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99143
+	loop_end=197577
 
 <region>
 	region_label=B1
 	key=b1
 	sample=../instruments/clarinet/B1.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99293
+	loop_end=197920
 
 <region>
 	region_label=C2
 	key=c2
 	sample=../instruments/clarinet/C2.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99114
+	loop_end=197602
 
 <region>
 	region_label=C#2
 	key=c#2
 	sample=../instruments/clarinet/C#2.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99279
+	loop_end=197969
 
 <region>
 	region_label=D2
 	key=d2
 	sample=../instruments/clarinet/D2.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99113
+	loop_end=198275
 
 <region>
 	region_label=D#2
 	key=d#2
 	sample=../instruments/clarinet/D#2.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99220
+	loop_end=197921
 
 <region>
 	region_label=E2
 	key=e2
 	sample=../instruments/clarinet/E2.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99003
+	loop_end=198054
 
 <region>
 	region_label=F2
 	key=f2
 	sample=../instruments/clarinet/F2.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99002
+	loop_end=198557
 
 <region>
 	region_label=F#2
 	key=f#2
 	sample=../instruments/clarinet/F#2.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99167
+	loop_end=198381
 
 <region>
 	region_label=G2
 	key=g2
 	sample=../instruments/clarinet/G2.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99001
+	loop_end=198500
 
 <region>
 	region_label=G#2
 	key=g#2
 	sample=../instruments/clarinet/G#2.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99391
+	loop_end=198404
 
 <region>
 	region_label=A2
 	key=a2
 	sample=../instruments/clarinet/A2.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99425
+	loop_end=197695
 
 <region>
 	region_label=Bb2
 	key=a#2
 	sample=../instruments/clarinet/Bb2.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99143
+	loop_end=198333
 
 <region>
 	region_label=B2
 	key=b2
 	sample=../instruments/clarinet/B2.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99293
+	loop_end=197918
 
 <region>
 	region_label=C3
 	key=c3
 	sample=../instruments/clarinet/C3.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99114
+	loop_end=198612
 
 <region>
 	region_label=C#3
 	key=c#3
 	sample=../instruments/clarinet/C#3.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99279
+	loop_end=197968
 
 <region>
 	region_label=D3
 	key=d3
 	sample=../instruments/clarinet/D3.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99113
+	loop_end=198273
 
 <region>
 	region_label=D#3
 	key=d#3
 	sample=../instruments/clarinet/D#3.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99220
+	loop_end=198654
 
 <region>
 	region_label=E3
 	key=e3
 	sample=../instruments/clarinet/E3.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99270
+	loop_end=198045
 
 <region>
 	region_label=F3
 	key=f3
 	sample=../instruments/clarinet/F3.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99255
+	loop_end=198038
 
 <region>
 	region_label=F#3
 	key=f#3
 	sample=../instruments/clarinet/F#3.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99167
+	loop_end=198069
 
 <region>
 	region_label=G3
 	key=g3
 	sample=../instruments/clarinet/G3.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198449
 
 <region>
 	region_label=G#3
 	key=g#3
 	sample=../instruments/clarinet/G#3.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99179
+	loop_end=198121
 
 <region>
 	region_label=A3
 	key=a3
 	sample=../instruments/clarinet/A3.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99225
+	loop_end=198437
 
 <region>
 	region_label=Bb3
 	key=a#3
 	sample=../instruments/clarinet/Bb3.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99143
+	loop_end=198288
 
 <region>
 	region_label=B3
 	key=b3
 	sample=../instruments/clarinet/B3.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99293
+	loop_end=198418
 
 <region>
 	region_label=C4
 	key=c4
 	sample=../instruments/clarinet/C4.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99283
+	loop_end=198657
 
 <region>
 	region_label=C#4
 	key=c#4
 	sample=../instruments/clarinet/C#4.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99279
+	loop_end=198230
 
 <region>
 	region_label=D4
 	key=d4
 	sample=../instruments/clarinet/D4.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99263
+	loop_end=198279
 
 <region>
 	region_label=D#4
 	key=d#4
 	sample=../instruments/clarinet/D#4.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99220
+	loop_end=198654
 
 <region>
 	region_label=E4
 	key=e4
 	sample=../instruments/clarinet/E4.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99270
+	loop_end=198437
 
 <region>
 	region_label=F4
 	key=f4
 	sample=../instruments/clarinet/F4.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99255
+	loop_end=198582
 
 <region>
 	region_label=F#4
 	key=f#4
 	sample=../instruments/clarinet/F#4.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99167
+	loop_end=198659
 
 <region>
 	region_label=G4
 	key=g4
 	sample=../instruments/clarinet/G4.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198272
 
 <region>
 	region_label=G#4
 	key=g#4
 	sample=../instruments/clarinet/G#4.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99179
+	loop_end=198615
 
 <region>
 	region_label=A4
 	key=a4
 	sample=../instruments/clarinet/A4.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99225
+	loop_end=198288
 
 <region>
 	region_label=Bb4
 	key=a#4
 	sample=../instruments/clarinet/Bb4.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99237
+	loop_end=198647
 
 <region>
 	region_label=B4
 	key=b4
 	sample=../instruments/clarinet/B4.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99204
+	loop_end=198477
 
 <region>
 	region_label=C5
 	key=c5
 	sample=../instruments/clarinet/C5.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99198
+	loop_end=198588
 
 <region>
 	region_label=C#5
 	key=c#5
 	sample=../instruments/clarinet/C#5.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99199
+	loop_end=198626
 
 <region>
 	region_label=D5
 	key=d5
 	sample=../instruments/clarinet/D5.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99188
+	loop_end=198392
 
 <region>
 	region_label=D#5
 	key=d#5
 	sample=../instruments/clarinet/D#5.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99220
+	loop_end=198556
 
 <region>
 	region_label=E5
 	key=e5
 	sample=../instruments/clarinet/E5.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99203
+	loop_end=198602
 
 <region>
 	region_label=F5
 	key=f5
 	sample=../instruments/clarinet/F5.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99255
+	loop_end=198538
 
 <region>
 	region_label=F#5
 	key=f#5
 	sample=../instruments/clarinet/F#5.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198513
 
 <region>
 	region_label=G5
 	key=g5
 	sample=../instruments/clarinet/G5.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198529
 
 <region>
 	region_label=G#5
 	key=g#5
 	sample=../instruments/clarinet/G#5.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99232
+	loop_end=198523
 
 <region>
 	region_label=A5
 	key=a5
 	sample=../instruments/clarinet/A5.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99225
+	loop_end=198439
 
 <region>
 	region_label=Bb5
 	key=a#5
 	sample=../instruments/clarinet/Bb5.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99237
+	loop_end=198481
 
 <region>
 	region_label=B5
 	key=b5
 	sample=../instruments/clarinet/B5.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99204
+	loop_end=198363
 
 <region>
 	region_label=C6
 	key=c6
 	sample=../instruments/clarinet/C6.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99241
+	loop_end=198509
 
 <region>
 	region_label=C#6
 	key=c#6
 	sample=../instruments/clarinet/C#6.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99239
+	loop_end=198364
 
 <region>
 	region_label=D6
 	key=d6
 	sample=../instruments/clarinet/D6.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198406
 
 <region>
 	region_label=D#6
 	key=d#6
 	sample=../instruments/clarinet/D#6.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99220
+	loop_end=198414
 
 <region>
 	region_label=E6
 	key=e6
 	sample=../instruments/clarinet/E6.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99237
+	loop_end=198483
 
 <region>
 	region_label=F6
 	key=f6
 	sample=../instruments/clarinet/F6.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99223
+	loop_end=198487
 
 <region>
 	region_label=F#6
 	key=f#6
 	sample=../instruments/clarinet/F#6.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198402
 
 <region>
 	region_label=G6
 	key=g6
 	sample=../instruments/clarinet/G6.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198433
 
 <region>
 	region_label=G#6
 	key=g#6
 	sample=../instruments/clarinet/G#6.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99232
+	loop_end=198444
 
 <region>
 	region_label=A6
 	key=a6
 	sample=../instruments/clarinet/A6.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99225
+	loop_end=198483
 
 <region>
 	region_label=Bb6
 	key=a#6
 	sample=../instruments/clarinet/Bb6.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99214
+	loop_end=198482
 
 <region>
 	region_label=B6
 	key=b6
 	sample=../instruments/clarinet/B6.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198481
 
 <region>
 	region_label=C7
 	key=c7
 	sample=../instruments/clarinet/C7.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99220
+	loop_end=198490
 
 <region>
 	region_label=C#7
 	key=c#7
 	sample=../instruments/clarinet/C#7.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99219
+	loop_end=198466
 
 <region>
 	region_label=D7
 	key=d7
 	sample=../instruments/clarinet/D7.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198479
 
 <region>
 	region_label=D#7
 	key=d#7
 	sample=../instruments/clarinet/D#7.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99220
+	loop_end=198484
 
 <region>
 	region_label=E7
 	key=e7
 	sample=../instruments/clarinet/E7.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99220
+	loop_end=198432
 
 <region>
 	region_label=F7
 	key=f7
 	sample=../instruments/clarinet/F7.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99223
+	loop_end=198455
 
 <region>
 	region_label=F#7
 	key=f#7
 	sample=../instruments/clarinet/F#7.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198432
 
 <region>
 	region_label=G7
 	key=g7
 	sample=../instruments/clarinet/G7.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198432
 
 <region>
 	region_label=G#7
 	key=g#7
 	sample=../instruments/clarinet/G#7.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99219
+	loop_end=198433
 
 <region>
 	region_label=A7
 	key=a7
 	sample=../instruments/clarinet/A7.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99225
+	loop_end=198459
 
 <region>
 	region_label=Bb7
 	key=a#7
 	sample=../instruments/clarinet/Bb7.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198472
 
 <region>
 	region_label=B7
 	key=b7
 	sample=../instruments/clarinet/B7.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198450
 
 <region>
 	region_label=C8
 	key=c8
 	sample=../instruments/clarinet/C8.ogg
 	ampeg_release=0.6
+	loop_mode=loop_continuous
+	loop_start=99230
+	loop_end=198437
 

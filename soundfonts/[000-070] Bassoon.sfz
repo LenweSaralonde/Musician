@@ -20,580 +20,871 @@ amp_velcurve_1=1 // All notes play max velocity
 	key=c0
 	sample=../instruments/bassoon/C0.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99788
+	loop_end=196735
 
 <region>
 	region_label=C#0
 	key=c#0
 	sample=../instruments/bassoon/C#0.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99279
+	loop_end=203560
 
 <region>
 	region_label=D0
 	key=d0
 	sample=../instruments/bassoon/D0.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=98512
+	loop_end=201727
 
 <region>
 	region_label=D#0
 	key=d#0
 	sample=../instruments/bassoon/D#0.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99787
+	loop_end=197210
 
 <region>
 	region_label=E0
 	key=e0
 	sample=../instruments/bassoon/E0.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=98467
+	loop_end=196872
 
 <region>
 	region_label=F0
 	key=f0
 	sample=../instruments/bassoon/F0.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99002
+	loop_end=202009
 
 <region>
 	region_label=F#0
 	key=f#0
 	sample=../instruments/bassoon/F#0.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99167
+	loop_end=196393
 
 <region>
 	region_label=G0
 	key=g0
 	sample=../instruments/bassoon/G0.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99001
+	loop_end=196190
 
 <region>
 	region_label=G#0
 	key=g#0
 	sample=../instruments/bassoon/G#0.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=98542
+	loop_end=202166
 
 <region>
 	region_label=A0
 	key=a0
 	sample=../instruments/bassoon/A0.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99425
+	loop_end=202045
 
 <region>
 	region_label=Bb0
 	key=a#0
 	sample=../instruments/bassoon/Bb0.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99900
+	loop_end=199812
 
 <region>
 	region_label=B0
 	key=b0
 	sample=../instruments/bassoon/B0.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=98579
+	loop_end=195732
 
 <region>
 	region_label=C1
 	key=c1
 	sample=../instruments/bassoon/C1.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99788
+	loop_end=195545
 
 <region>
 	region_label=C#1
 	key=c#1
 	sample=../instruments/bassoon/C#1.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99279
+	loop_end=201090
 
 <region>
 	region_label=D1
 	key=d1
 	sample=../instruments/bassoon/D1.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99714
+	loop_end=199436
 
 <region>
 	region_label=D#1
 	key=d#1
 	sample=../instruments/bassoon/D#1.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99787
+	loop_end=196175
 
 <region>
 	region_label=E1
 	key=e1
 	sample=../instruments/bassoon/E1.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99538
+	loop_end=195871
 
 <region>
 	region_label=F1
 	key=f1
 	sample=../instruments/bassoon/F1.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99002
+	loop_end=199018
 
 <region>
 	region_label=F#1
 	key=f#1
 	sample=../instruments/bassoon/F#1.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99167
+	loop_end=196430
 
 <region>
 	region_label=G1
 	key=g1
 	sample=../instruments/bassoon/G1.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99001
+	loop_end=196206
 
 <region>
 	region_label=G#1
 	key=g#1
 	sample=../instruments/bassoon/G#1.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99391
+	loop_end=199637
 
 <region>
 	region_label=A1
 	key=a1
 	sample=../instruments/bassoon/A1.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99425
+	loop_end=197257
 
 <region>
 	region_label=Bb1
 	key=a#1
 	sample=../instruments/bassoon/Bb1.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99143
+	loop_end=199799
 
 <region>
 	region_label=B1
 	key=b1
 	sample=../instruments/bassoon/B1.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99293
+	loop_end=197161
 
 <region>
 	region_label=C2
 	key=c2
 	sample=../instruments/bassoon/C2.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99114
+	loop_end=197008
 
 <region>
 	region_label=C#2
 	key=c#2
 	sample=../instruments/bassoon/C#2.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99279
+	loop_end=197407
 
 <region>
 	region_label=D2
 	key=d2
 	sample=../instruments/bassoon/D2.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99113
+	loop_end=197153
 
 <region>
 	region_label=D#2
 	key=d#2
 	sample=../instruments/bassoon/D#2.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99220
+	loop_end=198487
 
 <region>
 	region_label=E2
 	key=e2
 	sample=../instruments/bassoon/E2.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99003
+	loop_end=199116
 
 <region>
 	region_label=F2
 	key=f2
 	sample=../instruments/bassoon/F2.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99002
+	loop_end=198556
 
 <region>
 	region_label=F#2
 	key=f#2
 	sample=../instruments/bassoon/F#2.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99167
+	loop_end=198813
 
 <region>
 	region_label=G2
 	key=g2
 	sample=../instruments/bassoon/G2.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99001
+	loop_end=198452
 
 <region>
 	region_label=G#2
 	key=g#2
 	sample=../instruments/bassoon/G#2.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99391
+	loop_end=198359
 
 <region>
 	region_label=A2
 	key=a2
 	sample=../instruments/bassoon/A2.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99425
+	loop_end=198986
 
 <region>
 	region_label=Bb2
 	key=a#2
 	sample=../instruments/bassoon/Bb2.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99143
+	loop_end=197650
 
 <region>
 	region_label=B2
 	key=b2
 	sample=../instruments/bassoon/B2.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99293
+	loop_end=199040
 
 <region>
 	region_label=C3
 	key=c3
 	sample=../instruments/bassoon/C3.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99114
+	loop_end=198945
 
 <region>
 	region_label=C#3
 	key=c#3
 	sample=../instruments/bassoon/C#3.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99279
+	loop_end=197972
 
 <region>
 	region_label=D3
 	key=d3
 	sample=../instruments/bassoon/D3.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99113
+	loop_end=199031
 
 <region>
 	region_label=D#3
 	key=d#3
 	sample=../instruments/bassoon/D#3.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99220
+	loop_end=197957
 
 <region>
 	region_label=E3
 	key=e3
 	sample=../instruments/bassoon/E3.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99270
+	loop_end=198902
 
 <region>
 	region_label=F3
 	key=f3
 	sample=../instruments/bassoon/F3.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99255
+	loop_end=198090
 
 <region>
 	region_label=F#3
 	key=f#3
 	sample=../instruments/bassoon/F#3.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99167
+	loop_end=198224
 
 <region>
 	region_label=G3
 	key=g3
 	sample=../instruments/bassoon/G3.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198820
 
 <region>
 	region_label=G#3
 	key=g#3
 	sample=../instruments/bassoon/G#3.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99179
+	loop_end=198248
 
 <region>
 	region_label=A3
 	key=a3
 	sample=../instruments/bassoon/A3.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99225
+	loop_end=198815
 
 <region>
 	region_label=Bb3
 	key=a#3
 	sample=../instruments/bassoon/Bb3.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99143
+	loop_end=198223
 
 <region>
 	region_label=B3
 	key=b3
 	sample=../instruments/bassoon/B3.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99293
+	loop_end=198700
 
 <region>
 	region_label=C4
 	key=c4
 	sample=../instruments/bassoon/C4.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99283
+	loop_end=198116
 
 <region>
 	region_label=C#4
 	key=c#4
 	sample=../instruments/bassoon/C#4.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99279
+	loop_end=198600
 
 <region>
 	region_label=D4
 	key=d4
 	sample=../instruments/bassoon/D4.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99263
+	loop_end=198116
 
 <region>
 	region_label=D#4
 	key=d#4
 	sample=../instruments/bassoon/D#4.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99220
+	loop_end=198160
 
 <region>
 	region_label=E4
 	key=e4
 	sample=../instruments/bassoon/E4.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99270
+	loop_end=198156
 
 <region>
 	region_label=F4
 	key=f4
 	sample=../instruments/bassoon/F4.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99255
+	loop_end=198317
 
 <region>
 	region_label=F#4
 	key=f#4
 	sample=../instruments/bassoon/F#4.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99167
+	loop_end=198644
 
 <region>
 	region_label=G4
 	key=g4
 	sample=../instruments/bassoon/G4.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198288
 
 <region>
 	region_label=G#4
 	key=g#4
 	sample=../instruments/bassoon/G#4.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99179
+	loop_end=198626
 
 <region>
 	region_label=A4
 	key=a4
 	sample=../instruments/bassoon/A4.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99225
+	loop_end=198643
 
 <region>
 	region_label=Bb4
 	key=a#4
 	sample=../instruments/bassoon/Bb4.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99237
+	loop_end=198627
 
 <region>
 	region_label=B4
 	key=b4
 	sample=../instruments/bassoon/B4.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99204
+	loop_end=198463
 
 <region>
 	region_label=C5
 	key=c5
 	sample=../instruments/bassoon/C5.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99198
+	loop_end=198646
 
 <region>
 	region_label=C#5
 	key=c#5
 	sample=../instruments/bassoon/C#5.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99199
+	loop_end=198574
 
 <region>
 	region_label=D5
 	key=d5
 	sample=../instruments/bassoon/D5.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99188
+	loop_end=198335
 
 <region>
 	region_label=D#5
 	key=d#5
 	sample=../instruments/bassoon/D#5.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99220
+	loop_end=198555
 
 <region>
 	region_label=E5
 	key=e5
 	sample=../instruments/bassoon/E5.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99203
+	loop_end=198341
 
 <region>
 	region_label=F5
 	key=f5
 	sample=../instruments/bassoon/F5.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99255
+	loop_end=198533
 
 <region>
 	region_label=F#5
 	key=f#5
 	sample=../instruments/bassoon/F#5.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198440
 
 <region>
 	region_label=G5
 	key=g5
 	sample=../instruments/bassoon/G5.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198393
 
 <region>
 	region_label=G#5
 	key=g#5
 	sample=../instruments/bassoon/G#5.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99232
+	loop_end=198538
 
 <region>
 	region_label=A5
 	key=a5
 	sample=../instruments/bassoon/A5.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99225
+	loop_end=198530
 
 <region>
 	region_label=Bb5
 	key=a#5
 	sample=../instruments/bassoon/Bb5.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99237
+	loop_end=198440
 
 <region>
 	region_label=B5
 	key=b5
 	sample=../instruments/bassoon/B5.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99204
+	loop_end=198533
 
 <region>
 	region_label=C6
 	key=c6
 	sample=../instruments/bassoon/C6.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99241
+	loop_end=198356
 
 <region>
 	region_label=C#6
 	key=c#6
 	sample=../instruments/bassoon/C#6.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99239
+	loop_end=198377
 
 <region>
 	region_label=D6
 	key=d6
 	sample=../instruments/bassoon/D6.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198377
 
 <region>
 	region_label=D#6
 	key=d#6
 	sample=../instruments/bassoon/D#6.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99220
+	loop_end=198503
 
 <region>
 	region_label=E6
 	key=e6
 	sample=../instruments/bassoon/E6.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99237
+	loop_end=198381
 
 <region>
 	region_label=F6
 	key=f6
 	sample=../instruments/bassoon/F6.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99223
+	loop_end=198400
 
 <region>
 	region_label=F#6
 	key=f#6
 	sample=../instruments/bassoon/F#6.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198433
 
 <region>
 	region_label=G6
 	key=g6
 	sample=../instruments/bassoon/G6.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198431
 
 <region>
 	region_label=G#6
 	key=g#6
 	sample=../instruments/bassoon/G#6.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99232
+	loop_end=198484
 
 <region>
 	region_label=A6
 	key=a6
 	sample=../instruments/bassoon/A6.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99225
+	loop_end=198443
 
 <region>
 	region_label=Bb6
 	key=a#6
 	sample=../instruments/bassoon/Bb6.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99214
+	loop_end=198435
 
 <region>
 	region_label=B6
 	key=b6
 	sample=../instruments/bassoon/B6.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198452
 
 <region>
 	region_label=C7
 	key=c7
 	sample=../instruments/bassoon/C7.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99220
+	loop_end=198484
 
 <region>
 	region_label=C#7
 	key=c#7
 	sample=../instruments/bassoon/C#7.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99219
+	loop_end=198421
 
 <region>
 	region_label=D7
 	key=d7
 	sample=../instruments/bassoon/D7.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198472
 
 <region>
 	region_label=D#7
 	key=d#7
 	sample=../instruments/bassoon/D#7.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99220
+	loop_end=198439
 
 <region>
 	region_label=E7
 	key=e7
 	sample=../instruments/bassoon/E7.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99220
+	loop_end=198427
 
 <region>
 	region_label=F7
 	key=f7
 	sample=../instruments/bassoon/F7.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99223
+	loop_end=198471
 
 <region>
 	region_label=F#7
 	key=f#7
 	sample=../instruments/bassoon/F#7.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198433
 
 <region>
 	region_label=G7
 	key=g7
 	sample=../instruments/bassoon/G7.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198452
 
 <region>
 	region_label=G#7
 	key=g#7
 	sample=../instruments/bassoon/G#7.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99219
+	loop_end=198455
 
 <region>
 	region_label=A7
 	key=a7
 	sample=../instruments/bassoon/A7.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99225
+	loop_end=198436
 
 <region>
 	region_label=Bb7
 	key=a#7
 	sample=../instruments/bassoon/Bb7.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198447
 
 <region>
 	region_label=B7
 	key=b7
 	sample=../instruments/bassoon/B7.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198446
 
 <region>
 	region_label=C8
 	key=c8
 	sample=../instruments/bassoon/C8.ogg
 	ampeg_release=0.3
+	loop_mode=loop_continuous
+	loop_start=99230
+	loop_end=198429
 

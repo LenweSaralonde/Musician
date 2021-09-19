@@ -20,580 +20,871 @@ amp_velcurve_1=1 // All notes play max velocity
 	key=c0
 	sample=../instruments/male-voice/C0.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=67425
+	loop_end=134840
 
 <region>
 	region_label=C#0
 	key=c#0
 	sample=../instruments/male-voice/C#0.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66186
+	loop_end=137411
 
 <region>
 	region_label=D0
 	key=d0
 	sample=../instruments/male-voice/D0.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=67277
+	loop_end=134526
 
 <region>
 	region_label=D#0
 	key=d#0
 	sample=../instruments/male-voice/D#0.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=65769
+	loop_end=133765
 
 <region>
 	region_label=E0
 	key=e0
 	sample=../instruments/male-voice/E0.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66359
+	loop_end=134809
 
 <region>
 	region_label=F0
 	key=f0
 	sample=../instruments/male-voice/F0.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66675
+	loop_end=131325
 
 <region>
 	region_label=F#0
 	key=f#0
 	sample=../instruments/male-voice/F#0.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66747
+	loop_end=135380
 
 <region>
 	region_label=G0
 	key=g0
 	sample=../instruments/male-voice/G0.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66601
+	loop_end=134982
 
 <region>
 	region_label=G#0
 	key=g#0
 	sample=../instruments/male-voice/G#0.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66261
+	loop_end=134199
 
 <region>
 	region_label=A0
 	key=a0
 	sample=../instruments/male-voice/A0.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=65749
+	loop_end=134696
 
 <region>
 	region_label=Bb0
 	key=a#0
 	sample=../instruments/male-voice/Bb0.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66600
+	loop_end=134685
 
 <region>
 	region_label=B0
 	key=b0
 	sample=../instruments/male-voice/B0.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=65719
+	loop_end=134260
 
 <region>
 	region_label=C1
 	key=c1
 	sample=../instruments/male-voice/C1.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66076
+	loop_end=134836
 
 <region>
 	region_label=C#1
 	key=c#1
 	sample=../instruments/male-voice/C#1.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66186
+	loop_end=134898
 
 <region>
 	region_label=D1
 	key=d1
 	sample=../instruments/male-voice/D1.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66075
+	loop_end=134538
 
 <region>
 	region_label=D#1
 	key=d#1
 	sample=../instruments/male-voice/D#1.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=65769
+	loop_end=134924
 
 <region>
 	region_label=E1
 	key=e1
 	sample=../instruments/male-voice/E1.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66359
+	loop_end=134839
 
 <region>
 	region_label=F1
 	key=f1
 	sample=../instruments/male-voice/F1.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=65665
+	loop_end=134348
 
 <region>
 	region_label=F#1
 	key=f#1
 	sample=../instruments/male-voice/F#1.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=65793
+	loop_end=134431
 
 <region>
 	region_label=G1
 	key=g1
 	sample=../instruments/male-voice/G1.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=65701
+	loop_end=132327
 
 <region>
 	region_label=G#1
 	key=g#1
 	sample=../instruments/male-voice/G#1.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66261
+	loop_end=131723
 
 <region>
 	region_label=A1
 	key=a1
 	sample=../instruments/male-voice/A1.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66551
+	loop_end=132349
 
 <region>
 	region_label=Bb1
 	key=a#1
 	sample=../instruments/male-voice/Bb1.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=65843
+	loop_end=131724
 
 <region>
 	region_label=B1
 	key=b1
 	sample=../instruments/male-voice/B1.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66434
+	loop_end=132182
 
 <region>
 	region_label=C2
 	key=c2
 	sample=../instruments/male-voice/C2.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66076
+	loop_end=132187
 
 <region>
 	region_label=C#2
 	key=c#2
 	sample=../instruments/male-voice/C#2.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66186
+	loop_end=132405
 
 <region>
 	region_label=D2
 	key=d2
 	sample=../instruments/male-voice/D2.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66075
+	loop_end=132182
 
 <region>
 	region_label=D#2
 	key=d#2
 	sample=../instruments/male-voice/D#2.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66336
+	loop_end=132140
 
 <region>
 	region_label=E2
 	key=e2
 	sample=../instruments/male-voice/E2.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66359
+	loop_end=132216
 
 <region>
 	region_label=F2
 	key=f2
 	sample=../instruments/male-voice/F2.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66170
+	loop_end=132377
 
 <region>
 	region_label=F#2
 	key=f#2
 	sample=../instruments/male-voice/F#2.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66270
+	loop_end=132569
 
 <region>
 	region_label=G2
 	key=g2
 	sample=../instruments/male-voice/G2.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66151
+	loop_end=132335
 
 <region>
 	region_label=G#2
 	key=g#2
 	sample=../instruments/male-voice/G#2.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66261
+	loop_end=132133
 
 <region>
 	region_label=A2
 	key=a2
 	sample=../instruments/male-voice/A2.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66150
+	loop_end=132331
 
 <region>
 	region_label=Bb2
 	key=a#2
 	sample=../instruments/male-voice/Bb2.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66221
+	loop_end=132104
 
 <region>
 	region_label=B2
 	key=b2
 	sample=../instruments/male-voice/B2.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66076
+	loop_end=132548
 
 <region>
 	region_label=C3
 	key=c3
 	sample=../instruments/male-voice/C3.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66076
+	loop_end=132525
 
 <region>
 	region_label=C#3
 	key=c#3
 	sample=../instruments/male-voice/C#3.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66186
+	loop_end=132026
 
 <region>
 	region_label=D3
 	key=d3
 	sample=../instruments/male-voice/D3.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66075
+	loop_end=132750
 
 <region>
 	region_label=D#3
 	key=d#3
 	sample=../instruments/male-voice/D#3.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66052
+	loop_end=132107
 
 <region>
 	region_label=E3
 	key=e3
 	sample=../instruments/male-voice/E3.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66091
+	loop_end=132689
 
 <region>
 	region_label=F3
 	key=f3
 	sample=../instruments/male-voice/F3.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66170
+	loop_end=132325
 
 <region>
 	region_label=F#3
 	key=f#3
 	sample=../instruments/male-voice/F#3.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66032
+	loop_end=132022
 
 <region>
 	region_label=G3
 	key=g3
 	sample=../instruments/male-voice/G3.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66151
+	loop_end=132688
 
 <region>
 	region_label=G#3
 	key=g#3
 	sample=../instruments/male-voice/G#3.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66048
+	loop_end=132723
 
 <region>
 	region_label=A3
 	key=a3
 	sample=../instruments/male-voice/A3.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66150
+	loop_end=132056
 
 <region>
 	region_label=Bb3
 	key=a#3
 	sample=../instruments/male-voice/Bb3.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66221
+	loop_end=132008
 
 <region>
 	region_label=B3
 	key=b3
 	sample=../instruments/male-voice/B3.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66076
+	loop_end=131978
 
 <region>
 	region_label=C4
 	key=c4
 	sample=../instruments/male-voice/C4.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66076
+	loop_end=131990
 
 <region>
 	region_label=C#4
 	key=c#4
 	sample=../instruments/male-voice/C#4.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66186
+	loop_end=132198
 
 <region>
 	region_label=D4
 	key=d4
 	sample=../instruments/male-voice/D4.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66075
+	loop_end=132113
 
 <region>
 	region_label=D#4
 	key=d#4
 	sample=../instruments/male-voice/D#4.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66194
+	loop_end=132499
 
 <region>
 	region_label=E4
 	key=e4
 	sample=../instruments/male-voice/E4.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66091
+	loop_end=132401
 
 <region>
 	region_label=F4
 	key=f4
 	sample=../instruments/male-voice/F4.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66170
+	loop_end=132570
 
 <region>
 	region_label=F#4
 	key=f#4
 	sample=../instruments/male-voice/F#4.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66151
+	loop_end=132515
 
 <region>
 	region_label=G4
 	key=g4
 	sample=../instruments/male-voice/G4.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66151
+	loop_end=132176
 
 <region>
 	region_label=G#4
 	key=g#4
 	sample=../instruments/male-voice/G#4.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66155
+	loop_end=132186
 
 <region>
 	region_label=A4
 	key=a4
 	sample=../instruments/male-voice/A4.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66150
+	loop_end=132374
 
 <region>
 	region_label=Bb4
 	key=a#4
 	sample=../instruments/male-voice/Bb4.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66127
+	loop_end=132137
 
 <region>
 	region_label=B4
 	key=b4
 	sample=../instruments/male-voice/B4.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66166
+	loop_end=132214
 
 <region>
 	region_label=C5
 	key=c5
 	sample=../instruments/male-voice/C5.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66160
+	loop_end=132207
 
 <region>
 	region_label=C#5
 	key=c#5
 	sample=../instruments/male-voice/C#5.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66186
+	loop_end=132337
 
 <region>
 	region_label=D5
 	key=d5
 	sample=../instruments/male-voice/D5.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66150
+	loop_end=132265
 
 <region>
 	region_label=D#5
 	key=d#5
 	sample=../instruments/male-voice/D#5.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66123
+	loop_end=132211
 
 <region>
 	region_label=E5
 	key=e5
 	sample=../instruments/male-voice/E5.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66158
+	loop_end=132412
 
 <region>
 	region_label=F5
 	key=f5
 	sample=../instruments/male-voice/F5.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66170
+	loop_end=132364
 
 <region>
 	region_label=F#5
 	key=f#5
 	sample=../instruments/male-voice/F#5.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66151
+	loop_end=132265
 
 <region>
 	region_label=G5
 	key=g5
 	sample=../instruments/male-voice/G5.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66151
+	loop_end=132376
 
 <region>
 	region_label=G#5
 	key=g#5
 	sample=../instruments/male-voice/G#5.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66155
+	loop_end=132377
 
 <region>
 	region_label=A5
 	key=a5
 	sample=../instruments/male-voice/A5.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66150
+	loop_end=132362
 
 <region>
 	region_label=Bb5
 	key=a#5
 	sample=../instruments/male-voice/Bb5.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66127
+	loop_end=132266
 
 <region>
 	region_label=B5
 	key=b5
 	sample=../instruments/male-voice/B5.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66166
+	loop_end=132340
 
 <region>
 	region_label=C6
 	key=c6
 	sample=../instruments/male-voice/C6.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66160
+	loop_end=132368
 
 <region>
 	region_label=C#6
 	key=c#6
 	sample=../instruments/male-voice/C#6.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66146
+	loop_end=132259
 
 <region>
 	region_label=D6
 	key=d6
 	sample=../instruments/male-voice/D6.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66150
+	loop_end=132341
 
 <region>
 	region_label=D#6
 	key=d#6
 	sample=../instruments/male-voice/D#6.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66158
+	loop_end=132387
 
 <region>
 	region_label=E6
 	key=e6
 	sample=../instruments/male-voice/E6.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66158
+	loop_end=132283
 
 <region>
 	region_label=F6
 	key=f6
 	sample=../instruments/male-voice/F6.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66138
+	loop_end=132245
 
 <region>
 	region_label=F#6
 	key=f#6
 	sample=../instruments/male-voice/F#6.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66151
+	loop_end=132358
 
 <region>
 	region_label=G6
 	key=g6
 	sample=../instruments/male-voice/G6.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66151
+	loop_end=132326
 
 <region>
 	region_label=G#6
 	key=g#6
 	sample=../instruments/male-voice/G#6.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66155
+	loop_end=132358
 
 <region>
 	region_label=A6
 	key=a6
 	sample=../instruments/male-voice/A6.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66150
+	loop_end=132296
 
 <region>
 	region_label=Bb6
 	key=a#6
 	sample=../instruments/male-voice/Bb6.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66150
+	loop_end=132272
 
 <region>
 	region_label=B6
 	key=b6
 	sample=../instruments/male-voice/B6.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66143
+	loop_end=132281
 
 <region>
 	region_label=C7
 	key=c7
 	sample=../instruments/male-voice/C7.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66160
+	loop_end=132314
 
 <region>
 	region_label=C#7
 	key=c#7
 	sample=../instruments/male-voice/C#7.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66146
+	loop_end=132266
 
 <region>
 	region_label=D7
 	key=d7
 	sample=../instruments/male-voice/D7.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66150
+	loop_end=132293
 
 <region>
 	region_label=D#7
 	key=d#7
 	sample=../instruments/male-voice/D#7.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66158
+	loop_end=132308
 
 <region>
 	region_label=E7
 	key=e7
 	sample=../instruments/male-voice/E7.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66158
+	loop_end=132307
 
 <region>
 	region_label=F7
 	key=f7
 	sample=../instruments/male-voice/F7.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66154
+	loop_end=132268
 
 <region>
 	region_label=F#7
 	key=f#7
 	sample=../instruments/male-voice/F#7.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66151
+	loop_end=132278
 
 <region>
 	region_label=G7
 	key=g7
 	sample=../instruments/male-voice/G7.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66151
+	loop_end=132306
 
 <region>
 	region_label=G#7
 	key=g#7
 	sample=../instruments/male-voice/G#7.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66155
+	loop_end=132269
 
 <region>
 	region_label=A7
 	key=a7
 	sample=../instruments/male-voice/A7.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66150
+	loop_end=132317
 
 <region>
 	region_label=Bb7
 	key=a#7
 	sample=../instruments/male-voice/Bb7.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66150
+	loop_end=132324
 
 <region>
 	region_label=B7
 	key=b7
 	sample=../instruments/male-voice/B7.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66154
+	loop_end=132313
 
 <region>
 	region_label=C8
 	key=c8
 	sample=../instruments/male-voice/C8.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=66150
+	loop_end=132293
 

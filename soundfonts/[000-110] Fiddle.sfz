@@ -20,580 +20,871 @@ amp_velcurve_1=1 // All notes play max velocity
 	key=c0
 	sample=../instruments/fiddle/C0.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110576
+	loop_end=218342
 
 <region>
 	region_label=C#0
 	key=c#0
 	sample=../instruments/fiddle/C#0.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=109461
+	loop_end=218809
 
 <region>
 	region_label=D0
 	key=d0
 	sample=../instruments/fiddle/D0.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110526
+	loop_end=220943
 
 <region>
 	region_label=D#0
 	key=d#0
 	sample=../instruments/fiddle/D#0.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=111126
+	loop_end=217617
 
 <region>
 	region_label=E0
 	key=e0
 	sample=../instruments/fiddle/E0.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=111311
+	loop_end=220383
 
 <region>
 	region_label=F0
 	key=f0
 	sample=../instruments/fiddle/F0.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=111125
+	loop_end=218115
 
 <region>
 	region_label=F#0
 	key=f#0
 	sample=../instruments/fiddle/F#0.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110609
+	loop_end=219220
 
 <region>
 	region_label=G0
 	key=g0
 	sample=../instruments/fiddle/G0.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=109801
+	loop_end=221310
 
 <region>
 	region_label=G#0
 	key=g#0
 	sample=../instruments/fiddle/G#0.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110435
+	loop_end=219086
 
 <region>
 	region_label=A0
 	key=a0
 	sample=../instruments/fiddle/A0.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110651
+	loop_end=221220
 
 <region>
 	region_label=Bb0
 	key=a#0
 	sample=../instruments/fiddle/Bb0.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110495
+	loop_end=219394
 
 <region>
 	region_label=B0
 	key=b0
 	sample=../instruments/fiddle/B0.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110008
+	loop_end=221361
 
 <region>
 	region_label=C1
 	key=c1
 	sample=../instruments/fiddle/C1.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110576
+	loop_end=223764
 
 <region>
 	region_label=C#1
 	key=c#1
 	sample=../instruments/fiddle/C#1.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110734
+	loop_end=218841
 
 <region>
 	region_label=D1
 	key=d1
 	sample=../instruments/fiddle/D1.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110526
+	loop_end=219767
 
 <region>
 	region_label=D#1
 	key=d#1
 	sample=../instruments/fiddle/D#1.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=109992
+	loop_end=219902
 
 <region>
 	region_label=E1
 	key=e1
 	sample=../instruments/fiddle/E1.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110241
+	loop_end=220399
 
 <region>
 	region_label=F1
 	key=f1
 	sample=../instruments/fiddle/F1.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110115
+	loop_end=219140
 
 <region>
 	region_label=F#1
 	key=f#1
 	sample=../instruments/fiddle/F#1.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110609
+	loop_end=219238
 
 <region>
 	region_label=G1
 	key=g1
 	sample=../instruments/fiddle/G1.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=109801
+	loop_end=219538
 
 <region>
 	region_label=G#1
 	key=g#1
 	sample=../instruments/fiddle/G#1.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110435
+	loop_end=219966
 
 <region>
 	region_label=A1
 	key=a1
 	sample=../instruments/fiddle/A1.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110651
+	loop_end=219652
 
 <region>
 	region_label=Bb1
 	key=a#1
 	sample=../instruments/fiddle/Bb1.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110495
+	loop_end=221711
 
 <region>
 	region_label=B1
 	key=b1
 	sample=../instruments/fiddle/B1.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110008
+	loop_end=221386
 
 <region>
 	region_label=C2
 	key=c2
 	sample=../instruments/fiddle/C2.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110576
+	loop_end=220140
 
 <region>
 	region_label=C#2
 	key=c#2
 	sample=../instruments/fiddle/C#2.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110098
+	loop_end=221389
 
 <region>
 	region_label=D2
 	key=d2
 	sample=../instruments/fiddle/D2.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110526
+	loop_end=220989
 
 <region>
 	region_label=D#2
 	key=d#2
 	sample=../instruments/fiddle/D#2.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=109992
+	loop_end=221620
 
 <region>
 	region_label=E2
 	key=e2
 	sample=../instruments/fiddle/E2.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110241
+	loop_end=220952
 
 <region>
 	region_label=F2
 	key=f2
 	sample=../instruments/fiddle/F2.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110115
+	loop_end=220667
 
 <region>
 	region_label=F#2
 	key=f#2
 	sample=../instruments/fiddle/F#2.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110132
+	loop_end=220196
 
 <region>
 	region_label=G2
 	key=g2
 	sample=../instruments/fiddle/G2.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110251
+	loop_end=219981
 
 <region>
 	region_label=G#2
 	key=g#2
 	sample=../instruments/fiddle/G#2.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110435
+	loop_end=219939
 
 <region>
 	region_label=A2
 	key=a2
 	sample=../instruments/fiddle/A2.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110250
+	loop_end=220015
 
 <region>
 	region_label=Bb2
 	key=a#2
 	sample=../instruments/fiddle/Bb2.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110117
+	loop_end=220156
 
 <region>
 	region_label=B2
 	key=b2
 	sample=../instruments/fiddle/B2.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110365
+	loop_end=219818
 
 <region>
 	region_label=C3
 	key=c3
 	sample=../instruments/fiddle/C3.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110239
+	loop_end=220115
 
 <region>
 	region_label=C#3
 	key=c#3
 	sample=../instruments/fiddle/C#3.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110098
+	loop_end=220178
 
 <region>
 	region_label=D3
 	key=d3
 	sample=../instruments/fiddle/D3.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110226
+	loop_end=220019
 
 <region>
 	region_label=D#3
 	key=d#3
 	sample=../instruments/fiddle/D#3.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110276
+	loop_end=220873
 
 <region>
 	region_label=E3
 	key=e3
 	sample=../instruments/fiddle/E3.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110241
+	loop_end=220254
 
 <region>
 	region_label=F3
 	key=f3
 	sample=../instruments/fiddle/F3.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110367
+	loop_end=220787
 
 <region>
 	region_label=F#3
 	key=f#3
 	sample=../instruments/fiddle/F#3.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110132
+	loop_end=220080
 
 <region>
 	region_label=G3
 	key=g3
 	sample=../instruments/fiddle/G3.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110251
+	loop_end=220112
 
 <region>
 	region_label=G#3
 	key=g#3
 	sample=../instruments/fiddle/G#3.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110222
+	loop_end=220018
 
 <region>
 	region_label=A3
 	key=a3
 	sample=../instruments/fiddle/A3.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110250
+	loop_end=220768
 
 <region>
 	region_label=Bb3
 	key=a#3
 	sample=../instruments/fiddle/Bb3.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110306
+	loop_end=220145
 
 <region>
 	region_label=B3
 	key=b3
 	sample=../instruments/fiddle/B3.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110187
+	loop_end=220307
 
 <region>
 	region_label=C4
 	key=c4
 	sample=../instruments/fiddle/C4.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110239
+	loop_end=220648
 
 <region>
 	region_label=C#4
 	key=c#4
 	sample=../instruments/fiddle/C#4.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110257
+	loop_end=220298
 
 <region>
 	region_label=D4
 	key=d4
 	sample=../instruments/fiddle/D4.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110226
+	loop_end=220203
 
 <region>
 	region_label=D#4
 	key=d#4
 	sample=../instruments/fiddle/D#4.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110276
+	loop_end=220811
 
 <region>
 	region_label=E4
 	key=e4
 	sample=../instruments/fiddle/E4.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110241
+	loop_end=220717
 
 <region>
 	region_label=F4
 	key=f4
 	sample=../instruments/fiddle/F4.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110241
+	loop_end=220258
 
 <region>
 	region_label=F#4
 	key=f#4
 	sample=../instruments/fiddle/F#4.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110252
+	loop_end=220630
 
 <region>
 	region_label=G4
 	key=g4
 	sample=../instruments/fiddle/G4.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110251
+	loop_end=220624
 
 <region>
 	region_label=G#4
 	key=g#4
 	sample=../instruments/fiddle/G#4.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110222
+	loop_end=220416
 
 <region>
 	region_label=A4
 	key=a4
 	sample=../instruments/fiddle/A4.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110250
+	loop_end=220656
 
 <region>
 	region_label=Bb4
 	key=a#4
 	sample=../instruments/fiddle/Bb4.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110211
+	loop_end=220383
 
 <region>
 	region_label=B4
 	key=b4
 	sample=../instruments/fiddle/B4.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110276
+	loop_end=220364
 
 <region>
 	region_label=C5
 	key=c5
 	sample=../instruments/fiddle/C5.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110239
+	loop_end=220608
 
 <region>
 	region_label=C#5
 	key=c#5
 	sample=../instruments/fiddle/C#5.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110257
+	loop_end=220534
 
 <region>
 	region_label=D5
 	key=d5
 	sample=../instruments/fiddle/D5.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110226
+	loop_end=220596
 
 <region>
 	region_label=D#5
 	key=d#5
 	sample=../instruments/fiddle/D#5.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110276
+	loop_end=220348
 
 <region>
 	region_label=E5
 	key=e5
 	sample=../instruments/fiddle/E5.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110241
+	loop_end=220348
 
 <region>
 	region_label=F5
 	key=f5
 	sample=../instruments/fiddle/F5.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110241
+	loop_end=220399
 
 <region>
 	region_label=F#5
 	key=f#5
 	sample=../instruments/fiddle/F#5.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110252
+	loop_end=220406
 
 <region>
 	region_label=G5
 	key=g5
 	sample=../instruments/fiddle/G5.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110251
+	loop_end=220606
 
 <region>
 	region_label=G#5
 	key=g#5
 	sample=../instruments/fiddle/G#5.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110275
+	loop_end=220603
 
 <region>
 	region_label=A5
 	key=a5
 	sample=../instruments/fiddle/A5.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110250
+	loop_end=220412
 
 <region>
 	region_label=Bb5
 	key=a#5
 	sample=../instruments/fiddle/Bb5.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110259
+	loop_end=220587
 
 <region>
 	region_label=B5
 	key=b5
 	sample=../instruments/fiddle/B5.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110231
+	loop_end=220455
 
 <region>
 	region_label=C6
 	key=c6
 	sample=../instruments/fiddle/C6.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110239
+	loop_end=220589
 
 <region>
 	region_label=C#6
 	key=c#6
 	sample=../instruments/fiddle/C#6.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110257
+	loop_end=220471
 
 <region>
 	region_label=D6
 	key=d6
 	sample=../instruments/fiddle/D6.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110263
+	loop_end=220536
 
 <region>
 	region_label=D#6
 	key=d#6
 	sample=../instruments/fiddle/D#6.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110240
+	loop_end=220450
 
 <region>
 	region_label=E6
 	key=e6
 	sample=../instruments/fiddle/E6.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110241
+	loop_end=220548
 
 <region>
 	region_label=F6
 	key=f6
 	sample=../instruments/fiddle/F6.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110241
+	loop_end=220471
 
 <region>
 	region_label=F#6
 	key=f#6
 	sample=../instruments/fiddle/F#6.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110252
+	loop_end=220538
 
 <region>
 	region_label=G6
 	key=g6
 	sample=../instruments/fiddle/G6.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110251
+	loop_end=220449
 
 <region>
 	region_label=G#6
 	key=g#6
 	sample=../instruments/fiddle/G#6.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110249
+	loop_end=220508
 
 <region>
 	region_label=A6
 	key=a6
 	sample=../instruments/fiddle/A6.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110250
+	loop_end=220489
 
 <region>
 	region_label=Bb6
 	key=a#6
 	sample=../instruments/fiddle/Bb6.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110259
+	loop_end=220471
 
 <region>
 	region_label=B6
 	key=b6
 	sample=../instruments/fiddle/B6.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110254
+	loop_end=220537
 
 <region>
 	region_label=C7
 	key=c7
 	sample=../instruments/fiddle/C7.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110260
+	loop_end=220477
 
 <region>
 	region_label=C#7
 	key=c#7
 	sample=../instruments/fiddle/C#7.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110257
+	loop_end=220489
 
 <region>
 	region_label=D7
 	key=d7
 	sample=../instruments/fiddle/D7.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110244
+	loop_end=220482
 
 <region>
 	region_label=D#7
 	key=d#7
 	sample=../instruments/fiddle/D#7.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110258
+	loop_end=220487
 
 <region>
 	region_label=E7
 	key=e7
 	sample=../instruments/fiddle/E7.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110258
+	loop_end=220519
 
 <region>
 	region_label=F7
 	key=f7
 	sample=../instruments/fiddle/F7.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110257
+	loop_end=220470
 
 <region>
 	region_label=F#7
 	key=f#7
 	sample=../instruments/fiddle/F#7.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110252
+	loop_end=220474
 
 <region>
 	region_label=G7
 	key=g7
 	sample=../instruments/fiddle/G7.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110251
+	loop_end=220520
 
 <region>
 	region_label=G#7
 	key=g#7
 	sample=../instruments/fiddle/G#7.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110249
+	loop_end=220470
 
 <region>
 	region_label=A7
 	key=a7
 	sample=../instruments/fiddle/A7.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110250
+	loop_end=220485
 
 <region>
 	region_label=Bb7
 	key=a#7
 	sample=../instruments/fiddle/Bb7.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110247
+	loop_end=220511
 
 <region>
 	region_label=B7
 	key=b7
 	sample=../instruments/fiddle/B7.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110254
+	loop_end=220500
 
 <region>
 	region_label=C8
 	key=c8
 	sample=../instruments/fiddle/C8.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=110250
+	loop_end=220511
 

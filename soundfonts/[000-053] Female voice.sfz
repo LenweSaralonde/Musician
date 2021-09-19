@@ -20,580 +20,871 @@ amp_velcurve_1=1 // All notes play max velocity
 	key=c0
 	sample=../instruments/female-voice/C0.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99788
+	loop_end=196875
 
 <region>
 	region_label=C#0
 	key=c#0
 	sample=../instruments/female-voice/C#0.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99279
+	loop_end=195967
 
 <region>
 	region_label=D0
 	key=d0
 	sample=../instruments/female-voice/D0.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=98512
+	loop_end=196883
 
 <region>
 	region_label=D#0
 	key=d#0
 	sample=../instruments/female-voice/D#0.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99787
+	loop_end=197314
 
 <region>
 	region_label=E0
 	key=e0
 	sample=../instruments/female-voice/E0.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=98467
+	loop_end=194794
 
 <region>
 	region_label=F0
 	key=f0
 	sample=../instruments/female-voice/F0.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99002
+	loop_end=196056
 
 <region>
 	region_label=F#0
 	key=f#0
 	sample=../instruments/female-voice/F#0.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99167
+	loop_end=195795
 
 <region>
 	region_label=G0
 	key=g0
 	sample=../instruments/female-voice/G0.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99001
+	loop_end=196226
 
 <region>
 	region_label=G#0
 	key=g#0
 	sample=../instruments/female-voice/G#0.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=98542
+	loop_end=195383
 
 <region>
 	region_label=A0
 	key=a0
 	sample=../instruments/female-voice/A0.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99425
+	loop_end=197217
 
 <region>
 	region_label=Bb0
 	key=a#0
 	sample=../instruments/female-voice/Bb0.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99900
+	loop_end=196657
 
 <region>
 	region_label=B0
 	key=b0
 	sample=../instruments/female-voice/B0.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=98579
+	loop_end=195728
 
 <region>
 	region_label=C1
 	key=c1
 	sample=../instruments/female-voice/C1.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99788
+	loop_end=196880
 
 <region>
 	region_label=C#1
 	key=c#1
 	sample=../instruments/female-voice/C#1.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99279
+	loop_end=197220
 
 <region>
 	region_label=D1
 	key=d1
 	sample=../instruments/female-voice/D1.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99714
+	loop_end=198177
 
 <region>
 	region_label=D#1
 	key=d#1
 	sample=../instruments/female-voice/D#1.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99787
+	loop_end=197262
 
 <region>
 	region_label=E1
 	key=e1
 	sample=../instruments/female-voice/E1.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99538
+	loop_end=196883
 
 <region>
 	region_label=F1
 	key=f1
 	sample=../instruments/female-voice/F1.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99002
+	loop_end=197964
 
 <region>
 	region_label=F#1
 	key=f#1
 	sample=../instruments/female-voice/F#1.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99167
+	loop_end=198272
 
 <region>
 	region_label=G1
 	key=g1
 	sample=../instruments/female-voice/G1.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99001
+	loop_end=197051
 
 <region>
 	region_label=G#1
 	key=g#1
 	sample=../instruments/female-voice/G#1.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99391
+	loop_end=197891
 
 <region>
 	region_label=A1
 	key=a1
 	sample=../instruments/female-voice/A1.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99425
+	loop_end=197981
 
 <region>
 	region_label=Bb1
 	key=a#1
 	sample=../instruments/female-voice/Bb1.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99143
+	loop_end=197481
 
 <region>
 	region_label=B1
 	key=b1
 	sample=../instruments/female-voice/B1.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99293
+	loop_end=197832
 
 <region>
 	region_label=C2
 	key=c2
 	sample=../instruments/female-voice/C2.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99114
+	loop_end=197492
 
 <region>
 	region_label=C#2
 	key=c#2
 	sample=../instruments/female-voice/C#2.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99279
+	loop_end=197872
 
 <region>
 	region_label=D2
 	key=d2
 	sample=../instruments/female-voice/D2.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99113
+	loop_end=197582
 
 <region>
 	region_label=D#2
 	key=d#2
 	sample=../instruments/female-voice/D#2.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99220
+	loop_end=197819
 
 <region>
 	region_label=E2
 	key=e2
 	sample=../instruments/female-voice/E2.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99003
+	loop_end=197949
 
 <region>
 	region_label=F2
 	key=f2
 	sample=../instruments/female-voice/F2.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99002
+	loop_end=197952
 
 <region>
 	region_label=F#2
 	key=f#2
 	sample=../instruments/female-voice/F#2.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99167
+	loop_end=197798
 
 <region>
 	region_label=G2
 	key=g2
 	sample=../instruments/female-voice/G2.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99001
+	loop_end=197956
 
 <region>
 	region_label=G#2
 	key=g#2
 	sample=../instruments/female-voice/G#2.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99391
+	loop_end=197878
 
 <region>
 	region_label=A2
 	key=a2
 	sample=../instruments/female-voice/A2.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99425
+	loop_end=197992
 
 <region>
 	region_label=Bb2
 	key=a#2
 	sample=../instruments/female-voice/Bb2.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99143
+	loop_end=197854
 
 <region>
 	region_label=B2
 	key=b2
 	sample=../instruments/female-voice/B2.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99293
+	loop_end=198168
 
 <region>
 	region_label=C3
 	key=c3
 	sample=../instruments/female-voice/C3.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99114
+	loop_end=198171
 
 <region>
 	region_label=C#3
 	key=c#3
 	sample=../instruments/female-voice/C#3.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99279
+	loop_end=198178
 
 <region>
 	region_label=D3
 	key=d3
 	sample=../instruments/female-voice/D3.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99113
+	loop_end=198176
 
 <region>
 	region_label=D#3
 	key=d#3
 	sample=../instruments/female-voice/D#3.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99220
+	loop_end=198102
 
 <region>
 	region_label=E3
 	key=e3
 	sample=../instruments/female-voice/E3.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99270
+	loop_end=198217
 
 <region>
 	region_label=F3
 	key=f3
 	sample=../instruments/female-voice/F3.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99255
+	loop_end=198486
 
 <region>
 	region_label=F#3
 	key=f#3
 	sample=../instruments/female-voice/F#3.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99167
+	loop_end=198754
 
 <region>
 	region_label=G3
 	key=g3
 	sample=../instruments/female-voice/G3.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198033
 
 <region>
 	region_label=G#3
 	key=g#3
 	sample=../instruments/female-voice/G#3.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99179
+	loop_end=198498
 
 <region>
 	region_label=A3
 	key=a3
 	sample=../instruments/female-voice/A3.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99225
+	loop_end=198810
 
 <region>
 	region_label=Bb3
 	key=a#3
 	sample=../instruments/female-voice/Bb3.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99143
+	loop_end=198309
 
 <region>
 	region_label=B3
 	key=b3
 	sample=../instruments/female-voice/B3.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99293
+	loop_end=198646
 
 <region>
 	region_label=C4
 	key=c4
 	sample=../instruments/female-voice/C4.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99283
+	loop_end=198577
 
 <region>
 	region_label=C#4
 	key=c#4
 	sample=../instruments/female-voice/C#4.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99279
+	loop_end=198322
 
 <region>
 	region_label=D4
 	key=d4
 	sample=../instruments/female-voice/D4.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99263
+	loop_end=198145
 
 <region>
 	region_label=D#4
 	key=d#4
 	sample=../instruments/female-voice/D#4.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99220
+	loop_end=198696
 
 <region>
 	region_label=E4
 	key=e4
 	sample=../instruments/female-voice/E4.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99270
+	loop_end=198221
 
 <region>
 	region_label=F4
 	key=f4
 	sample=../instruments/female-voice/F4.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99255
+	loop_end=198284
 
 <region>
 	region_label=F#4
 	key=f#4
 	sample=../instruments/female-voice/F#4.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99167
+	loop_end=198420
 
 <region>
 	region_label=G4
 	key=g4
 	sample=../instruments/female-voice/G4.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198272
 
 <region>
 	region_label=G#4
 	key=g#4
 	sample=../instruments/female-voice/G#4.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99179
+	loop_end=198305
 
 <region>
 	region_label=A4
 	key=a4
 	sample=../instruments/female-voice/A4.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99225
+	loop_end=198302
 
 <region>
 	region_label=Bb4
 	key=a#4
 	sample=../instruments/female-voice/Bb4.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99237
+	loop_end=198330
 
 <region>
 	region_label=B4
 	key=b4
 	sample=../instruments/female-voice/B4.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99204
+	loop_end=198412
 
 <region>
 	region_label=C5
 	key=c5
 	sample=../instruments/female-voice/C5.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99198
+	loop_end=198421
 
 <region>
 	region_label=C#5
 	key=c#5
 	sample=../instruments/female-voice/C#5.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99199
+	loop_end=198344
 
 <region>
 	region_label=D5
 	key=d5
 	sample=../instruments/female-voice/D5.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99188
+	loop_end=198323
 
 <region>
 	region_label=D#5
 	key=d#5
 	sample=../instruments/female-voice/D#5.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99220
+	loop_end=198530
 
 <region>
 	region_label=E5
 	key=e5
 	sample=../instruments/female-voice/E5.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99203
+	loop_end=198597
 
 <region>
 	region_label=F5
 	key=f5
 	sample=../instruments/female-voice/F5.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99255
+	loop_end=198459
 
 <region>
 	region_label=F#5
 	key=f#5
 	sample=../instruments/female-voice/F#5.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198382
 
 <region>
 	region_label=G5
 	key=g5
 	sample=../instruments/female-voice/G5.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198491
 
 <region>
 	region_label=G#5
 	key=g#5
 	sample=../instruments/female-voice/G#5.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99232
+	loop_end=198449
 
 <region>
 	region_label=A5
 	key=a5
 	sample=../instruments/female-voice/A5.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99225
+	loop_end=198487
 
 <region>
 	region_label=Bb5
 	key=a#5
 	sample=../instruments/female-voice/Bb5.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99237
+	loop_end=198371
 
 <region>
 	region_label=B5
 	key=b5
 	sample=../instruments/female-voice/B5.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99204
+	loop_end=198489
 
 <region>
 	region_label=C6
 	key=c6
 	sample=../instruments/female-voice/C6.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99241
+	loop_end=198392
 
 <region>
 	region_label=C#6
 	key=c#6
 	sample=../instruments/female-voice/C#6.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99239
+	loop_end=198434
 
 <region>
 	region_label=D6
 	key=d6
 	sample=../instruments/female-voice/D6.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198441
 
 <region>
 	region_label=D#6
 	key=d#6
 	sample=../instruments/female-voice/D#6.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99220
+	loop_end=198406
 
 <region>
 	region_label=E6
 	key=e6
 	sample=../instruments/female-voice/E6.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99237
+	loop_end=198372
 
 <region>
 	region_label=F6
 	key=f6
 	sample=../instruments/female-voice/F6.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99223
+	loop_end=198503
 
 <region>
 	region_label=F#6
 	key=f#6
 	sample=../instruments/female-voice/F#6.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198476
 
 <region>
 	region_label=G6
 	key=g6
 	sample=../instruments/female-voice/G6.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198448
 
 <region>
 	region_label=G#6
 	key=g#6
 	sample=../instruments/female-voice/G#6.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99232
+	loop_end=198407
 
 <region>
 	region_label=A6
 	key=a6
 	sample=../instruments/female-voice/A6.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99225
+	loop_end=198495
 
 <region>
 	region_label=Bb6
 	key=a#6
 	sample=../instruments/female-voice/Bb6.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99214
+	loop_end=198403
 
 <region>
 	region_label=B6
 	key=b6
 	sample=../instruments/female-voice/B6.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198452
 
 <region>
 	region_label=C7
 	key=c7
 	sample=../instruments/female-voice/C7.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99220
+	loop_end=198481
 
 <region>
 	region_label=C#7
 	key=c#7
 	sample=../instruments/female-voice/C#7.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99219
+	loop_end=198460
 
 <region>
 	region_label=D7
 	key=d7
 	sample=../instruments/female-voice/D7.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198435
 
 <region>
 	region_label=D#7
 	key=d#7
 	sample=../instruments/female-voice/D#7.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99220
+	loop_end=198445
 
 <region>
 	region_label=E7
 	key=e7
 	sample=../instruments/female-voice/E7.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99220
+	loop_end=198447
 
 <region>
 	region_label=F7
 	key=f7
 	sample=../instruments/female-voice/F7.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99223
+	loop_end=198455
 
 <region>
 	region_label=F#7
 	key=f#7
 	sample=../instruments/female-voice/F#7.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198446
 
 <region>
 	region_label=G7
 	key=g7
 	sample=../instruments/female-voice/G7.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198460
 
 <region>
 	region_label=G#7
 	key=g#7
 	sample=../instruments/female-voice/G#7.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99219
+	loop_end=198476
 
 <region>
 	region_label=A7
 	key=a7
 	sample=../instruments/female-voice/A7.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99225
+	loop_end=198454
 
 <region>
 	region_label=Bb7
 	key=a#7
 	sample=../instruments/female-voice/Bb7.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198445
 
 <region>
 	region_label=B7
 	key=b7
 	sample=../instruments/female-voice/B7.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99226
+	loop_end=198437
 
 <region>
 	region_label=C8
 	key=c8
 	sample=../instruments/female-voice/C8.ogg
 	ampeg_release=0.4
+	loop_mode=loop_continuous
+	loop_start=99230
+	loop_end=198466
 
