@@ -1,6 +1,6 @@
 const parseMidi = require('midi-file').parseMidi;
 
-export const CONVERTER_VERSION = '7.3';
+export const CONVERTER_VERSION = '7.4';
 
 const FILE_HEADER = 'MUS7';
 const MAX_NOTE_DURATION = 6;
@@ -147,7 +147,25 @@ function processSustain(events) {
 			const noteKey = `${event.channel}-${event.trackIndex}-${event.noteNumber}`;
 			if (event.type === 'noteOn') {
 				notesDown.set(noteKey, event); // The piano key is down
-				eventsWithSustain.push({ ...event }); // Always add noteOn events
+
+				// There is already a noteOff awaiting for this note: insert it first
+				const previousNoteOffEvent = skippedNotesOff.get(noteKey);
+				if (previousNoteOffEvent) {
+					eventsWithSustain.push({
+						deltaTime: event.deltaTime,
+						tick: event.tick,
+						time: event.time,
+						channel: previousNoteOffEvent.channel,
+						noteNumber: previousNoteOffEvent.noteNumber,
+						trackIndex: previousNoteOffEvent.trackIndex,
+						type: 'noteOff',
+						velocity: previousNoteOffEvent.velocity,
+					});
+					skippedNotesOff.delete(noteKey);
+				}
+
+				// Always insert noteOn events
+				eventsWithSustain.push({ ...event });
 			} else { // noteOff
 				notesDown.delete(noteKey); // The piano key is up
 				if (!sustainedChannels[event.channel]) {
