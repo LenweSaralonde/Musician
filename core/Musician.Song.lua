@@ -393,6 +393,16 @@ function Musician.Song:PlayOnFrame(elapsed)
 
 	local track
 	for _, track in pairs(self.tracks) do
+		-- Stop expired notes currently playing
+		for noteKey, noteOnStack in pairs(track.notesOn) do
+			for noteIndex = #noteOnStack, 1, -1 do
+				local noteOn = noteOnStack[noteIndex]
+				if noteOn[NOTEON.ENDTIME] ~= nil and noteOn[NOTEON.ENDTIME] < to then -- Off time is in the past
+					self:NoteOff(track, noteKey, noteIndex)
+				end
+			end
+		end
+
 		-- Notes On and Notes Off
 		while track.notes[track.playIndex] and (track.notes[track.playIndex][NOTE.TIME] < to) do
 			if track.notes[track.playIndex][NOTE.TIME] >= from then
@@ -410,17 +420,6 @@ function Musician.Song:PlayOnFrame(elapsed)
 			end
 			track.playIndex = track.playIndex + 1
 		end
-
-		-- Stop expired notes currently playing
-		for noteKey, noteOnStack in pairs(track.notesOn) do
-			for noteIndex = #noteOnStack, 1, -1 do
-				local noteOn = noteOnStack[noteIndex]
-				if noteOn[NOTEON.ENDTIME] ~= nil and noteOn[NOTEON.ENDTIME] < to then -- Off time is in the past
-					self:NoteOff(track, noteKey)
-				end
-			end
-		end
-
 	end
 
 	Musician.Song:SendMessage(Musician.Events.SongCursor, self)
@@ -498,7 +497,7 @@ function Musician.Song:NoteOn(track, noteIndex, retries)
 	-- Add note to notesOn with sound handle and note off time
 	local endTime = nil
 	if duration ~= nil then
-		endTime = self.cursor + duration
+		endTime = time + duration
 	end
 
 	if track.notesOn[key] == nil then
@@ -519,9 +518,10 @@ end
 --- Stop a note of a track
 -- @param track (table) Reference to the track
 -- @param key (int) Note key
--- @param audioOnly (boolean) Stop note audio only
+-- @param[opt] stackIndex (int) Note on stack index
+-- @param[opt] audioOnly (boolean) Stop note audio only
 -- @param[opt] decay (number) Override instrument decay
-function Musician.Song:NoteOff(track, key, audioOnly, decay)
+function Musician.Song:NoteOff(track, key, stackIndex, audioOnly, decay)
 	if self.mode == Musician.Song.MODE_LIVE then
 		key = key + track.transpose
 	end
@@ -529,10 +529,12 @@ function Musician.Song:NoteOff(track, key, audioOnly, decay)
 	if track.notesOn[key] ~= nil then
 		local noteOnStack = track.notesOn[key]
 
-		-- Topmost note in the stack
-		local noteOn = noteOnStack[#noteOnStack]
-		if audioOnly then
-			-- If muting audio only, get the topmost note in the stack that still has a handle
+		-- Get note on from the stack (topmost by default)
+		local noteOn = noteOnStack[stackIndex or #noteOnStack]
+
+		-- If muting audio only and no specific note stack index is provided,
+		-- get the topmost note in the stack that still has a handle
+		if audioOnly and stackIndex == nil then
 			for index = #noteOnStack, 1, -1 do
 				if noteOnStack[index][NOTEON.HANDLE] ~= nil then
 					noteOn = noteOnStack[index]
@@ -552,7 +554,7 @@ function Musician.Song:NoteOff(track, key, audioOnly, decay)
 		if audioOnly then
 			noteOn[NOTEON.HANDLE] = nil
 		else
-			table.remove(noteOnStack)
+			table.remove(noteOnStack, stackIndex)
 			if #noteOnStack == 0 then
 				track.notesOn[key] = nil
 			end
@@ -568,8 +570,8 @@ end
 -- @param audioOnly (boolean)
 function Musician.Song:TrackNotesOff(track, audioOnly)
 	for noteKey, noteOnStack in pairs(track.notesOn) do
-		for index = 1, #noteOnStack do
-			self:NoteOff(track, noteKey, audioOnly)
+		for index = #noteOnStack, 1, -1 do
+			self:NoteOff(track, noteKey, index, audioOnly)
 		end
 	end
 end
@@ -1100,23 +1102,36 @@ function Musician.Song:Export(onComplete, progressionFactor)
 				end
 				notesData = notesData .. noteSpacer
 
+				-- Pack time
+				local packedTime
+				if note[NOTE.ON] == true or note[NOTE.ON] == nil then
+					packedTime = floor(noteTime * Musician.NOTE_TIME_FPS + .5)
+				else
+					packedTime = floor(noteTime * Musician.NOTE_TIME_FPS)
+				end
+
 				-- Duration mode
 				if self.mode == Musician.Song.MODE_DURATION then
+					-- Pack duration
+					local roundedTime = packedTime / Musician.NOTE_TIME_FPS
+					local adjustedDuration = note[NOTE.DURATION] + noteTime - roundedTime
+					local packedDuration = floor(adjustedDuration * Musician.NOTE_DURATION_FPS)
+
 					-- Key (1)
 					notesData = notesData .. Musician.Utils.PackNumber(note[NOTE.KEY], 1)
 
 					-- Time (2)
-					notesData = notesData .. Musician.Utils.PackTime(noteTime, 2, Musician.NOTE_TIME_FPS)
+					notesData = notesData .. Musician.Utils.PackNumber(packedTime, 2)
 
 					-- Duration (1)
-					notesData = notesData .. Musician.Utils.PackTime(note[NOTE.DURATION], 1, Musician.NOTE_DURATION_FPS)
+					notesData = notesData .. Musician.Utils.PackNumber(packedDuration, 1)
 				elseif self.mode == Musician.Song.MODE_LIVE then
 					-- Key on/off event (1)
 					local keyEvent = bit.bor(note[NOTE.ON] and 0x80 or 0x00, bit.band(note[NOTE.KEY], 0x7F))
 					notesData = notesData .. Musician.Utils.PackNumber(keyEvent, 1)
 
 					-- Time (2)
-					notesData = notesData .. Musician.Utils.PackTime(noteTime, 2, Musician.NOTE_TIME_FPS)
+					notesData = notesData .. Musician.Utils.PackNumber(packedTime, 2)
 				end
 
 				-- Proceed with next note
@@ -1445,21 +1460,36 @@ function Musician.Song:StreamOnFrame(elapsed)
 
 			if track.notes[track.streamIndex][NOTE.TIME] >= from then
 				if not(self:TrackIsMuted(track)) and track.instrument >= 0 and track.instrument <= 255 then
-					local note = Musician.Utils.DeepCopy(track.notes[track.streamIndex])
+					local note = track.notes[track.streamIndex]
 					local key = note[NOTE.KEY] + track.transpose
+					local on = note[NOTE.ON]
+					local time = note[NOTE.TIME]
+					local duration = note[NOTE.DURATION]
 
 					-- Send note if key is within allowed range
 					if key >= Musician.MIN_KEY and key <= Musician.MAX_KEY then
-						note[NOTE.KEY] = key
-						local noteTimeRelative = note[NOTE.TIME] - noteOffset
-						noteOffset = note[NOTE.TIME]
-						note[NOTE.TIME] = noteTimeRelative
-
-						if note[NOTE.DURATION] ~= nil then
-							note[NOTE.DURATION] = note[NOTE.DURATION]
+						local relativeTime = time - noteOffset
+						local roundedRelativeTime
+						if on then
+							roundedRelativeTime = floor(relativeTime * Musician.NOTE_TIME_FPS + .5) / Musician.NOTE_TIME_FPS
+						else
+							roundedRelativeTime = floor(relativeTime * Musician.NOTE_TIME_FPS) / Musician.NOTE_TIME_FPS
 						end
 
-						table.insert(notes, note)
+						local roundedDuration
+						if duration ~= nil then
+							local adjustedDuration = duration + relativeTime - roundedRelativeTime
+							roundedDuration = floor(adjustedDuration * Musician.NOTE_DURATION_FPS) / Musician.NOTE_DURATION_FPS
+						end
+
+						table.insert(notes, {
+							[NOTE.ON] = on,
+							[NOTE.KEY] = key,
+							[NOTE.TIME] = roundedRelativeTime,
+							[NOTE.DURATION] = roundedDuration
+						})
+
+						noteOffset = noteOffset + roundedRelativeTime
 					end
 				end
 			end
