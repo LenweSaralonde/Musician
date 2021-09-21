@@ -77,6 +77,7 @@ local function createLiveSong(player)
 	song.cropTo = STREAM_PADDING
 	song.duration = STREAM_PADDING
 	song.isLiveStreamingSong = true
+	song.notesOnCount = 0
 	return song
 end
 
@@ -319,6 +320,23 @@ function Musician.Live.InsertNote(noteOn, key, layer, instrument)
 	-- Update song bounds
 	liveStreamingSong.cropTo = noteTime + STREAM_PADDING
 	liveStreamingSong.duration = noteTime + STREAM_PADDING
+
+	-- Keep increasing streaming song duration as long as some notes are being held down
+	if noteOn then
+		if liveStreamingSong.notesOnCount == 0 then
+			liveStreamingSong.durationUpdater = C_Timer.NewTicker(liveStreamingSong.chunkDuration, function()
+				liveStreamingSong.cropTo = liveStreamingSong.cropTo + liveStreamingSong.chunkDuration
+				liveStreamingSong.duration = liveStreamingSong.duration + liveStreamingSong.chunkDuration
+			end)
+		end
+		liveStreamingSong.notesOnCount = liveStreamingSong.notesOnCount + 1
+	else
+		liveStreamingSong.notesOnCount = liveStreamingSong.notesOnCount - 1
+		if liveStreamingSong.notesOnCount == 0 and liveStreamingSong.durationUpdater then
+			liveStreamingSong.durationUpdater:Cancel()
+			liveStreamingSong.durationUpdater = nil
+		end
+	end
 
 	-- Send visual note event
 	if not(Musician.Live.IsBandSyncMode() and Musician.Live.IsLiveEnabled()) then

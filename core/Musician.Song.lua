@@ -1579,6 +1579,15 @@ function Musician.Song:PackChunk(chunk)
 			-- Get note time relatively to previous note
 			local noteTime = note[NOTE.TIME]
 
+			-- Get note type and duration
+			local noteType, duration
+			if self.mode == Musician.Song.MODE_DURATION then
+				duration = min(note[NOTE.DURATION], Musician.MAX_LONG_NOTE_DURATION)
+				noteType = duration > Musician.MAX_NOTE_DURATION and note[NOTE.KEY] < 127 -- true for a long note, false for a short one
+			else
+				noteType = note[NOTE.ON] -- Live note on or note off
+			end
+
 			-- Insert spacers if note time exceeds the maximum
 			while noteTime > Musician.MAX_CHUNK_NOTE_TIME do
 				packedNoteData = packedNoteData .. Musician.Utils.PackNumber(255, 1)
@@ -1588,16 +1597,17 @@ function Musician.Song:PackChunk(chunk)
 			-- Note time (1 byte)
 			local packedTime = Musician.Utils.PackTime(noteTime, 1, Musician.NOTE_TIME_FPS)
 
-			-- First bit: note on, the rest: key (C0 is 0) (1 byte)
-			local packedKeyOnOff = Musician.Utils.PackNumber(bit.bor(note[NOTE.ON] and 0x80 or 0x00, bit.band(note[NOTE.KEY] - Musician.C0_INDEX, 0x7F)), 1)
+			-- First bit: type, the rest: key (C0 is 0) (1 byte)
+			local packedKey = Musician.Utils.PackNumber(bit.bor(noteType and 0x80 or 0x00, bit.band(note[NOTE.KEY] - Musician.C0_INDEX, 0x7F)), 1)
 
-			-- Duration (1 byte, MAX_NOTE_DURATION is 255)
+			-- Duration (1 or 2 bytes)
 			local packedDuration = ""
-			if note[NOTE.ON] and self.mode == Musician.Song.MODE_DURATION then
-				packedDuration = Musician.Utils.PackTime(min(note[NOTE.DURATION], Musician.MAX_NOTE_DURATION), 1, Musician.NOTE_DURATION_FPS)
+			if self.mode == Musician.Song.MODE_DURATION then
+				local durationBytes = noteType and 2 or 1
+				packedDuration = Musician.Utils.PackTime(duration, durationBytes, Musician.NOTE_DURATION_FPS)
 			end
 
-			packedNoteData = packedNoteData .. packedKeyOnOff .. packedTime .. packedDuration
+			packedNoteData = packedNoteData .. packedKey .. packedTime .. packedDuration
 		end
 	end
 
@@ -1694,7 +1704,6 @@ function Musician.Song.UnpackChunkData(data)
 		local n, note
 		for t, trackData in pairs(chunk) do
 			for n = 1, trackData[CHUNK.NOTE_COUNT] do
-
 				-- Key, note on/off or spacer (1)
 				local offset = 0
 				local keyByte = Musician.Utils.UnpackNumber(readBytes(1))
@@ -1705,8 +1714,8 @@ function Musician.Song.UnpackChunkData(data)
 					keyByte = Musician.Utils.UnpackNumber(readBytes(1))
 				end
 
-				-- Note on
-				local noteOn = bit.band(keyByte, 0x80) == 0x80
+				-- Note type
+				local noteType = bit.band(keyByte, 0x80) == 0x80
 
 				-- Key
 				local key = bit.band(keyByte, 0x7F) + Musician.C0_INDEX
@@ -1714,19 +1723,23 @@ function Musician.Song.UnpackChunkData(data)
 				-- Time relative to previous note
 				local time = Musician.Utils.UnpackTime(readBytes(1), Musician.NOTE_TIME_FPS) + offset
 
-				-- Note duration
-				local duration = nil
-				if noteOn and mode == Musician.Song.MODE_DURATION then
-					duration = Musician.Utils.UnpackTime(readBytes(1), Musician.NOTE_DURATION_FPS)
+				-- Note duration, note on
+				local duration, noteOn
+				if mode == Musician.Song.MODE_DURATION then
+					local durationBytes = noteType and 2 or 1
+					duration = Musician.Utils.UnpackTime(readBytes(durationBytes), Musician.NOTE_DURATION_FPS)
+					noteOn = true
+				else
+					noteOn = noteType
 				end
 
+				-- Insert decoded note
 				table.insert(chunk[t][CHUNK.NOTES], {
 					[NOTE.ON] = noteOn,
 					[NOTE.KEY] = key,
 					[NOTE.TIME] = time,
 					[NOTE.DURATION] = duration
 				})
-
 			end
 		end
 	end)
