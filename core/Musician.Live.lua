@@ -146,6 +146,26 @@ local function sendVisualNoteEvent(noteOn, key, layer, instrument, player)
 	end
 end
 
+--- Start periodically extending the live song duration
+--
+local function startLiveSongDurationUpdater()
+	if liveStreamingSong.durationUpdater == nil then
+		liveStreamingSong.durationUpdater = C_Timer.NewTicker(liveStreamingSong.chunkDuration, function()
+			liveStreamingSong.cropTo = liveStreamingSong.cropTo + liveStreamingSong.chunkDuration
+			liveStreamingSong.duration = liveStreamingSong.duration + liveStreamingSong.chunkDuration
+		end)
+	end
+end
+
+--- Stop periodically extending the live song duration
+--
+local function stopLiveSongDurationUpdater()
+	if liveStreamingSong.durationUpdater then
+		liveStreamingSong.durationUpdater:Cancel()
+		liveStreamingSong.durationUpdater = nil
+	end
+end
+
 --- Trigger event LiveModeChange when live mode state has changed
 --
 local function liveModeStatusChanged(event, ...)
@@ -153,6 +173,8 @@ local function liveModeStatusChanged(event, ...)
 	if event == Musician.Events.StreamStop then
 		local song = ...
 		if song == liveStreamingSong then
+			Musician.Live.AllNotesOff()
+			stopLiveSongDurationUpdater()
 			liveStreamingSong = nil
 			collectgarbage()
 		end
@@ -324,17 +346,13 @@ function Musician.Live.InsertNote(noteOn, key, layer, instrument)
 	-- Keep increasing streaming song duration as long as some notes are being held down
 	if noteOn then
 		if liveStreamingSong.notesOnCount == 0 then
-			liveStreamingSong.durationUpdater = C_Timer.NewTicker(liveStreamingSong.chunkDuration, function()
-				liveStreamingSong.cropTo = liveStreamingSong.cropTo + liveStreamingSong.chunkDuration
-				liveStreamingSong.duration = liveStreamingSong.duration + liveStreamingSong.chunkDuration
-			end)
+			startLiveSongDurationUpdater()
 		end
 		liveStreamingSong.notesOnCount = liveStreamingSong.notesOnCount + 1
 	else
 		liveStreamingSong.notesOnCount = liveStreamingSong.notesOnCount - 1
-		if liveStreamingSong.notesOnCount == 0 and liveStreamingSong.durationUpdater then
-			liveStreamingSong.durationUpdater:Cancel()
-			liveStreamingSong.durationUpdater = nil
+		if liveStreamingSong.notesOnCount == 0 then
+			stopLiveSongDurationUpdater()
 		end
 	end
 
@@ -396,6 +414,8 @@ function Musician.Live.NoteOn(key, layer, instrument, isChordNote, source)
 	if sustainedLayers[layer] and sustainedNotes[layer][noteOnKey] ~= nil then
 		local sustainedNote = sustainedNotes[layer][noteOnKey]
 		Musician.Live.NoteOff(key, layer, instrument, isChordNote, sustainedNote)
+	else
+		Musician.Live.NoteOff(key, layer, instrument, isChordNote)
 	end
 
 	-- Mute game music and adjust audio settings
