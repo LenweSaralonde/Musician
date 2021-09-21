@@ -527,37 +527,43 @@ export function packSong(midiArray, fileName) {
 		let offset = 0;
 		const notes = [];
 		for (const rawNote of rawTrack.notes) {
-			let noteTime = rawNote.time - offset;
 			const noteKey = rawNote.key;
-			const noteDuration = Math.min(rawNote.duration, MAX_LONG_NOTE_DURATION);
 
-			// Insert note spacers if needed
-			let noteSpacer = '';
-			while (noteTime > MAX_NOTE_TIME) {
-				noteSpacer += packNumber(0xFF, 1); // 0xFF char
-				noteTime -= MAX_NOTE_TIME;
-				offset += MAX_NOTE_TIME;
+			// Ignore notes that are not within the MIDI range
+			// Also ignore notes with key = 127 to avoid notes type 1 being taken for a separator (0xFF).
+			if (noteKey >= 0 && noteKey < 127) {
+				// Get time and duration
+				let noteTime = rawNote.time - offset;
+				const noteDuration = Math.min(rawNote.duration, MAX_LONG_NOTE_DURATION);
+
+				// Insert note spacers if needed
+				let noteSpacer = '';
+				while (noteTime > MAX_NOTE_TIME) {
+					noteSpacer += packNumber(0xFF, 1); // 0xFF char
+					noteTime -= MAX_NOTE_TIME;
+					offset += MAX_NOTE_TIME;
+				}
+
+				// Calculate rounded time based on NOTE_TIME_FPS
+				const packedTime = Math.round(noteTime * NOTE_TIME_FPS);
+				const roundedTime = packedTime / NOTE_TIME_FPS;
+
+				// Calculated rounded duration based on NOTE_DURATION_FPS
+				const adjustedDuration = Math.max(0, noteDuration + noteTime - roundedTime);
+				const packedDuration = Math.floor(adjustedDuration * NOTE_DURATION_FPS);
+
+				// Determine if it's a long note or a short one
+				const isLongNote = adjustedDuration > MAX_NOTE_DURATION && noteKey < 127; // Avoid long notes of the max 127 key to avoid confusion with a spacer
+				const longNoteFlag = isLongNote ? 0x80 : 0x00;
+
+				// Insert packed note: key (1), time (2), duration (1 or 2)
+				notes.push(
+					noteSpacer +
+					packNumber(noteKey | longNoteFlag, 1) +
+					packNumber(packedTime, 2) +
+					packNumber(packedDuration, isLongNote ? 2 : 1)
+				);
 			}
-
-			// Calculate rounded time based on NOTE_TIME_FPS
-			const packedTime = Math.round(noteTime * NOTE_TIME_FPS);
-			const roundedTime = packedTime / NOTE_TIME_FPS;
-
-			// Calculated rounded duration based on NOTE_DURATION_FPS
-			const adjustedDuration = Math.max(0, noteDuration + noteTime - roundedTime);
-			const packedDuration = Math.floor(adjustedDuration * NOTE_DURATION_FPS);
-
-			// Determine if it's a long note or a short one
-			const isLongNote = adjustedDuration > MAX_NOTE_DURATION && noteKey < 127; // Avoid long notes of the max 127 key to avoid confusion with a spacer
-			const longNoteFlag = isLongNote ? 0x80 : 0x00;
-
-			// Insert packed note: key (1), time (2), duration (1 or 2)
-			notes.push(
-				noteSpacer +
-				packNumber(noteKey | longNoteFlag, 1) +
-				packNumber(packedTime, 2) +
-				packNumber(packedDuration, isLongNote ? 2 : 1)
-			);
 		}
 		track.notes = notes;
 

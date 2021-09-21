@@ -1051,32 +1051,24 @@ function Musician.Song:Export(onComplete, progressionFactor)
 	-- Number of tracks (1)
 	data = data .. Musician.Utils.PackNumber(#self.tracks, 1)
 
-	-- Tracks
-	-- ======
+	-- Tracks and notes
+	-- ================
 
-	local track
-	local noteCount = 0
-	for _, track in pairs(self.tracks) do
-		-- Instrument (1)
-		data = data .. Musician.Utils.PackNumber(track.midiInstrument, 1)
-
-		-- Channel (1)
-		data = data .. Musician.Utils.PackNumber(track.channel or 0, 1)
-
-		-- Note count (2)
-		data = data .. Musician.Utils.PackNumber(#track.notes, 2)
-		noteCount = noteCount + #track.notes
-	end
-
-	-- Notes
-	-- =====
-
+	local notesData = ''
 	local exportedNotes = 0
 	local trackOffset = 0
 	local trackIndex = 1
 	local noteIndex = 1
 	local offset = 0
 	local noteExportingWorker
+	local trackNoteCount = {}
+
+	-- Count total amount of notes
+	local noteCount = 0
+	for _, track in pairs(self.tracks) do
+		noteCount = noteCount + #track.notes
+		trackNoteCount[track.index] = 0
+	end
 
 	-- Export notes in a worker
 	noteExportingWorker = function()
@@ -1087,19 +1079,26 @@ function Musician.Song:Export(onComplete, progressionFactor)
 		end
 
 		-- Export some notes
+		local notesDataChunk = ''
+		local trackNotesDataChunkCount = 0
 		local track = self.tracks[trackIndex]
-		local notesData = ''
 		local stopOnNoteCount = min(exportedNotes + EXPORT_NOTE_RATE, noteCount)
 		while exportedNotes < stopOnNoteCount do
 			local note = track.notes[noteIndex]
 
 			-- No more note in this track: skip to next track
 			if note == nil then
+				trackNoteCount[track.index] = trackNoteCount[track.index] + trackNotesDataChunkCount
 				trackIndex = trackIndex + 1
 				track = self.tracks[trackIndex]
+				trackNotesDataChunkCount = 0
 				noteIndex = 1
 				offset = 0
-			else
+
+			-- Ignore notes that are not within the MIDI range
+			-- Also ignore notes with key = 127 to avoid notes type 1 being taken for a separator (0xFF).
+			elseif note[NOTE.KEY] >= 0 and note[NOTE.KEY] < 127 then
+				trackNotesDataChunkCount = trackNotesDataChunkCount + 1
 				local noteTime = note[NOTE.TIME] - offset
 
 				-- Insert note spacers if needed
@@ -1109,7 +1108,7 @@ function Musician.Song:Export(onComplete, progressionFactor)
 					noteTime = noteTime - Musician.MAX_NOTE_TIME
 					offset = offset + Musician.MAX_NOTE_TIME
 				end
-				notesData = notesData .. noteSpacer
+				notesDataChunk = notesDataChunk .. noteSpacer
 
 				-- Pack time
 				local packedTime
@@ -1133,29 +1132,35 @@ function Musician.Song:Export(onComplete, progressionFactor)
 
 					-- Key and note flag (1)
 					local noteFlag = isLongNote and 0x80 or 0x00
-					notesData = notesData .. Musician.Utils.PackNumber(bit.bor(note[NOTE.KEY], noteFlag), 1)
+					notesDataChunk = notesDataChunk .. Musician.Utils.PackNumber(bit.bor(note[NOTE.KEY], noteFlag), 1)
 
 					-- Time (2)
-					notesData = notesData .. Musician.Utils.PackNumber(packedTime, 2)
+					notesDataChunk = notesDataChunk .. Musician.Utils.PackNumber(packedTime, 2)
 
 					-- Duration (1 or 2)
 					local durationBytes = isLongNote and 2 or 1
-					notesData = notesData .. Musician.Utils.PackNumber(packedDuration, durationBytes)
+					notesDataChunk = notesDataChunk .. Musician.Utils.PackNumber(packedDuration, durationBytes)
 				elseif self.mode == Musician.Song.MODE_LIVE then
 					-- Key on/off event (1)
 					local keyEvent = bit.bor(note[NOTE.ON] and 0x80 or 0x00, bit.band(note[NOTE.KEY], 0x7F))
-					notesData = notesData .. Musician.Utils.PackNumber(keyEvent, 1)
+					notesDataChunk = notesDataChunk .. Musician.Utils.PackNumber(keyEvent, 1)
 
 					-- Time (2)
-					notesData = notesData .. Musician.Utils.PackNumber(packedTime, 2)
+					notesDataChunk = notesDataChunk .. Musician.Utils.PackNumber(packedTime, 2)
 				end
+			end
 
-				-- Proceed with next note
+			-- Proceed with the next note
+			if note ~= nil then
 				exportedNotes = exportedNotes + 1
 				noteIndex = noteIndex + 1
 			end
 		end
-		data = data .. notesData
+
+		trackNoteCount[track.index] = trackNoteCount[track.index] + trackNotesDataChunkCount
+
+		notesData = notesData .. notesDataChunk
+
 		if noteCount > 0 then
 			Musician.Song:SendMessage(Musician.Events.SongExportProgress, self, progressionFactor * exportedNotes / noteCount)
 		end
@@ -1163,6 +1168,23 @@ function Musician.Song:Export(onComplete, progressionFactor)
 		-- All notes have been exported
 		if exportedNotes == noteCount then
 			Musician.Worker.Remove(noteExportingWorker)
+
+			-- Add track data
+			local tracksData = ''
+			for _, track in pairs(self.tracks) do
+				-- Instrument (1)
+				tracksData = tracksData .. Musician.Utils.PackNumber(track.midiInstrument, 1)
+
+				-- Channel (1)
+				tracksData = tracksData .. Musician.Utils.PackNumber(track.channel or 0, 1)
+
+				-- Note count (2)
+				tracksData = tracksData .. Musician.Utils.PackNumber(trackNoteCount[track.index], 2)
+			end
+			data = data .. tracksData
+
+			-- Add note data
+			data = data .. notesData
 
 			-- Metadata
 			-- ========
@@ -1583,7 +1605,7 @@ function Musician.Song:PackChunk(chunk)
 			local noteType, duration
 			if self.mode == Musician.Song.MODE_DURATION then
 				duration = min(note[NOTE.DURATION], Musician.MAX_LONG_NOTE_DURATION)
-				noteType = duration > Musician.MAX_NOTE_DURATION and note[NOTE.KEY] < 127 -- true for a long note, false for a short one
+				noteType = duration > Musician.MAX_NOTE_DURATION -- true for a long note, false for a short one
 			else
 				noteType = note[NOTE.ON] -- Live note on or note off
 			end
