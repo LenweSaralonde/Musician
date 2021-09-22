@@ -1114,7 +1114,7 @@ function Musician.Song:Export(onComplete, progressionFactor)
 				if self.mode == Musician.Song.MODE_DURATION then
 					-- Pack duration
 					local roundedTime = packedTime / Musician.NOTE_TIME_FPS
-					local adjustedDuration = note[NOTE.DURATION] + noteTime - roundedTime
+					local adjustedDuration = max(0, note[NOTE.DURATION] + noteTime - roundedTime)
 					local packedDuration = floor(adjustedDuration * Musician.NOTE_DURATION_FPS)
 
 					-- Key (1)
@@ -1478,7 +1478,7 @@ function Musician.Song:StreamOnFrame(elapsed)
 
 						local roundedDuration
 						if duration ~= nil then
-							local adjustedDuration = duration + relativeTime - roundedRelativeTime
+							local adjustedDuration = max(0, duration + relativeTime - roundedRelativeTime)
 							roundedDuration = floor(adjustedDuration * Musician.NOTE_DURATION_FPS) / Musician.NOTE_DURATION_FPS
 						end
 

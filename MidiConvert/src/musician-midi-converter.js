@@ -543,7 +543,7 @@ export function packSong(midiArray, fileName) {
 			const roundedTime = packedTime / NOTE_TIME_FPS;
 
 			// Calculated rounded duration based on NOTE_DURATION_FPS
-			const adjustedDuration = noteDuration + noteTime - roundedTime;
+			const adjustedDuration = Math.max(0, noteDuration + noteTime - roundedTime);
 			const packedDuration = Math.floor(adjustedDuration * NOTE_DURATION_FPS);
 
 			// Insert packed note: key (1), time (2), duration (1)
