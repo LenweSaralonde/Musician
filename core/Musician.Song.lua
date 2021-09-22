@@ -937,10 +937,10 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 					crop = false
 
 					-- cropFrom (4)
-					self.cropFrom = Musician.Utils.UnpackNumber(readBytes(4)) / 100
+					cropFrom = Musician.Utils.UnpackNumber(readBytes(4)) / 100
 
 					-- cropTo (4)
-					self.cropTo = Musician.Utils.UnpackNumber(readBytes(4)) / 100
+					cropTo = Musician.Utils.UnpackNumber(readBytes(4)) / 100
 
 					-- Track settings (optional)
 					-- =========================
