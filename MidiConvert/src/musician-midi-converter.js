@@ -1,6 +1,6 @@
 const parseMidi = require('midi-file').parseMidi;
 
-export const CONVERTER_VERSION = '7.5';
+export const CONVERTER_VERSION = '7.6';
 
 const FILE_HEADER = 'MUS7';
 const MAX_NOTE_DURATION = 6;
