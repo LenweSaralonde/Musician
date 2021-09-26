@@ -246,7 +246,70 @@ Musician.INSTRUMENTS = {
 	},
 	["drumkit"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\drumkit",
-		decay = 150,
+		decay = 100,
+		decayByKey = {
+			[27] = 35,
+			[28] = 211,
+			[29] = 130,
+			[30] = 125,
+			[31] = 141,
+			[32] = 2,
+			[33] = 63,
+			[34] = 1000,
+			[35] = 111,
+			[36] = 99,
+			[37] = 111,
+			[38] = 248,
+			[39] = 169,
+			[40] = 268,
+			[41] = 1000,
+			[42] = 75,
+			[43] = 1000,
+			[44] = 88,
+			[45] = 1000,
+			[46] = 1000,
+			[47] = 1000,
+			[48] = 1000,
+			[49] = 1000,
+			[50] = 1000,
+			[51] = 1000,
+			[52] = 1000,
+			[53] = 1000,
+			[54] = 755,
+			[55] = 1000,
+			[56] = 106,
+			[57] = 1000,
+			[58] = 1000,
+			[59] = 1000,
+			[60] = 238,
+			[61] = 134,
+			[62] = 170,
+			[63] = 1000,
+			[64] = 1000,
+			[65] = 1000,
+			[66] = 1000,
+			[67] = 603,
+			[68] = 894,
+			[69] = 114,
+			[70] = 110,
+			[71] = 486,
+			[72] = 505,
+			[73] = 143,
+			[74] = 276,
+			[75] = 94,
+			[76] = 108,
+			[77] = 145,
+			[78] = 156,
+			[79] = 169,
+			[80] = 89,
+			[81] = 1000,
+			[82] = 60,
+			[83] = 1000,
+			[84] = 1000,
+			[85] = 128,
+			[86] = 248,
+			[87] = 1000,
+		},
 		isPercussion = false,
 		isPlucked = true,
 		midi = 144,
@@ -270,7 +333,7 @@ Musician.INSTRUMENTS = {
 			"Interface\\AddOns\\Musician\\instruments\\frame-drum\\frame-drum-long-G",
 			"Interface\\AddOns\\Musician\\instruments\\frame-drum\\frame-drum-long-G#",
 		},
-		decay = 200,
+		decay = 1000,
 		isPercussion = true,
 		keyMod = -3,
 		midi = 47,
@@ -279,67 +342,67 @@ Musician.INSTRUMENTS = {
 	},
 	["frame-drum-kick-1"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\frame-drum-kick-1",
-		decay = 100,
+		decay = 108,
 		isPercussion = true,
 		source = "Sonic Bloom Frame Drum"
 	},
 	["frame-drum-kick-2"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\frame-drum-kick-2",
-		decay = 100,
+		decay = 93,
 		isPercussion = true,
 		source = "Sonic Bloom Frame Drum"
 	},
 	["frame-drum-snare-1"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\frame-drum-snare-1",
-		decay = 100,
+		decay = 498,
 		isPercussion = true,
 		source = "Loopmasters Frame Drums"
 	},
 	["frame-drum-snare-2"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\frame-drum-snare-2",
-		decay = 100,
+		decay = 498,
 		isPercussion = true,
 		source = "Loopmasters Frame Drums"
 	},
 	["frame-drum-roll-1"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\frame-drum-roll-1",
-		decay = 100,
+		decay = 1000,
 		isPercussion = true,
 		source = "ERA II Medieval Legends"
 	},
 	["frame-drum-roll-2"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\frame-drum-roll-2",
-		decay = 100,
+		decay = 793,
 		isPercussion = true,
 		source = "ERA II Medieval Legends"
 	},
 	["frame-drum-roll-3"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\frame-drum-roll-3",
-		decay = 100,
+		decay = 528,
 		isPercussion = true,
 		source = "ERA II Medieval Legends"
 	},
 	["frame-drum-hit"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\frame-drum-hit",
-		decay = 100,
+		decay = 339,
 		isPercussion = true,
 		source = "ERA II Medieval Legends"
 	},
 	["sticks"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\misc-percussions\\sticks",
-		decay = 100,
+		decay = 99,
 		isPercussion = true,
 		source = "Michael Picher Auxiliary Percussion"
 	},
 	["misc-hit"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\misc-percussions\\misc-hit",
-		decay = 100,
+		decay = 133,
 		isPercussion = true,
 		source = "Loopmasters Frame Drums"
 	},
 	["cajon-hit"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\misc-percussions\\cajon-hit",
-		decay = 100,
+		decay = 323,
 		isPercussion = true,
 		source = "Loopmasters Frame Drums"
 	},
@@ -353,13 +416,13 @@ Musician.INSTRUMENTS = {
 			"Interface\\AddOns\\Musician\\instruments\\claps\\clap-6",
 			"Interface\\AddOns\\Musician\\instruments\\claps\\clap-7",
 		},
-		decay = 100,
+		decay = 150,
 		isPercussion = true,
 		source = "LenweSaralonde Claps"
 	},
 	["tambourine-short"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\tambourine\\tambourine-short",
-		decay = 100,
+		decay = 250,
 		isPercussion = true,
 		source = "Michael Picher Auxiliary Percussion"
 	},
@@ -381,157 +444,157 @@ Musician.INSTRUMENTS = {
 			"Interface\\AddOns\\Musician\\instruments\\tambourine\\tambourine-long-3",
 			"Interface\\AddOns\\Musician\\instruments\\tambourine\\tambourine-long-4",
 		},
-		decay = 250,
+		decay = 300,
 		isPercussion = true,
 		source = "Michael Picher Auxiliary Percussion"
 	},
 	["riq-hit-1"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\tambourine\\riq-hit-1",
-		decay = 100,
+		decay = 753,
 		isPercussion = true,
 		source = "Loopmasters Frame Drums"
 	},
 	["riq-hit-2"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\tambourine\\riq-hit-2",
-		decay = 100,
+		decay = 928,
 		isPercussion = true,
 		source = "Loopmasters Frame Drums"
 	},
 	["riq-hit-3"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\tambourine\\riq-hit-3",
-		decay = 100,
+		decay = 1000,
 		isPercussion = true,
 		source = "Loopmasters Frame Drums"
 	},
 	["riq-hit-4"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\tambourine\\riq-hit-4",
-		decay = 100,
+		decay = 625,
 		isPercussion = true,
 		source = "Loopmasters Frame Drums"
 	},
 	["riq-hit-5"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\tambourine\\riq-hit-5",
-		decay = 100,
+		decay = 1000,
 		isPercussion = true,
 		source = "Loopmasters Frame Drums"
 	},
 	["riq-shake-1"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\tambourine\\riq-shake-1",
-		decay = 100,
+		decay = 572,
 		isPercussion = true,
 		source = "Loopmasters Frame Drums"
 	},
 	["riq-shake-2"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\tambourine\\riq-shake-2",
-		decay = 100,
+		decay = 838,
 		isPercussion = true,
 		source = "Loopmasters Frame Drums"
 	},
 	["bodhran-1"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\bodhran-1",
-		decay = 300,
+		decay = 1000,
 		isPercussion = true,
 		source = "Bosone Bodhran"
 	},
 	["bodhran-2"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\bodhran-2",
-		decay = 300,
+		decay = 1000,
 		isPercussion = true,
 		source = "Bosone Bodhran"
 	},
 	["bodhran-3"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\bodhran-3",
-		decay = 300,
+		decay = 1000,
 		isPercussion = true,
 		source = "Bosone Bodhran"
 	},
 	["bodhran-4"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\bodhran-4",
-		decay = 300,
+		decay = 1000,
 		isPercussion = true,
 		source = "Bosone Bodhran"
 	},
 	["bodhran-5"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\bodhran-5",
-		decay = 300,
+		decay = 1000,
 		isPercussion = true,
 		source = "Bosone Bodhran"
 	},
 	["bodhran-6"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\bodhran-6",
-		decay = 300,
+		decay = 1000,
 		isPercussion = true,
 		source = "Bosone Bodhran"
 	},
 	["barbarian-frame-drum-dead-stroke"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\barbarian-frame-drum-dead-stroke",
-		decay = 100,
+		decay = 317,
 		isPercussion = true,
 		source = "ERA II Medieval Legends"
 	},
 	["barbarian-frame-drum"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\barbarian-frame-drum",
-		decay = 300,
+		decay = 1000,
 		isPercussion = true,
 		source = "ERA II Medieval Legends"
 	},
 	["frame-drum-timbale-1"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\frame-drum-timbale-1",
-		decay = 100,
+		decay = 589,
 		isPercussion = true,
 		source = "Loopmasters Frame Drums"
 	},
 	["frame-drum-timbale-2"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\frame-drum-timbale-2",
-		decay = 100,
+		decay = 758,
 		isPercussion = true,
 		source = "Loopmasters Frame Drums"
 	},
 	["djembe-hi-1"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\djembe\\djembe-hi-1",
-		decay = 100,
+		decay = 650,
 		isPercussion = true,
 		source = "Samplephonics Gambian Percussion"
 	},
 	["djembe-hi-2"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\djembe\\djembe-hi-2",
-		decay = 100,
+		decay = 472,
 		isPercussion = true,
 		source = "Samplephonics Gambian Percussion"
 	},
 	["djembe-hi-3"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\djembe\\djembe-hi-3",
-		decay = 100,
+		decay = 661,
 		isPercussion = true,
 		source = "Samplephonics Gambian Percussion"
 	},
 	["djembe-muted"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\djembe\\djembe-muted",
-		decay = 100,
+		decay = 341,
 		isPercussion = true,
 		source = "Samplephonics Gambian Percussion"
 	},
 	["djembe-bass"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\djembe\\djembe-bass",
-		decay = 100,
+		decay = 498,
 		isPercussion = true,
 		source = "Samplephonics Gambian Percussion"
 	},
 	["claves"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\misc-percussions\\claves",
-		decay = 100,
+		decay = 102,
 		isPercussion = true,
 		source = "Michael Picher Auxiliary Percussion"
 	},
 	["woodblock-hi"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\misc-percussions\\woodblock-hi",
-		decay = 100,
+		decay = 106,
 		isPercussion = true,
 		source = "Michael Picher Auxiliary Percussion"
 	},
 	["woodblock-low"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\misc-percussions\\woodblock-low",
-		decay = 100,
+		decay = 95,
 		isPercussion = true,
 		source = "Michael Picher Auxiliary Percussion"
 	},
@@ -553,31 +616,31 @@ Musician.INSTRUMENTS = {
 			"Interface\\AddOns\\Musician\\instruments\\misc-percussions\\shaker-3",
 			"Interface\\AddOns\\Musician\\instruments\\misc-percussions\\shaker-4",
 		},
-		decay = 100,
+		decay = 400,
 		isPercussion = true,
 		source = "Michael Picher Auxiliary Percussion"
 	},
 	["sleigh-bells"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\misc-percussions\\sleigh-bells",
-		decay = 200,
+		decay = 568,
 		isPercussion = true,
 		source = "Michael Picher Auxiliary Percussion"
 	},
 	["sleigh-bells-shake"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\misc-percussions\\sleigh-bells-shake",
-		decay = 300,
+		decay = 725,
 		isPercussion = true,
 		source = "Michael Picher Auxiliary Percussion"
 	},
 	["metallic-1"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\misc-percussions\\metallic-1",
-		decay = 200,
+		decay = 625,
 		isPercussion = true,
 		source = "Loopmasters Frame Drums"
 	},
 	["metallic-2"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\misc-percussions\\metallic-2",
-		decay = 200,
+		decay = 1000,
 		isPercussion = true,
 		source = "Loopmasters Frame Drums"
 	},

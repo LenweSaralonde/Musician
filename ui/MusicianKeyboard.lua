@@ -765,7 +765,7 @@ function Musician.Keyboard.OnLiveNoteOn(event, key, layer, instrumentData, isCho
 	b = min(1, b + addedLuminance)
 	button.glowColor:SetColorTexture(r, g, b, 1)
 
-	button.volumeMeter:NoteOn(instrumentData)
+	button.volumeMeter:NoteOn(instrumentData, key)
 	button.volumeMeter.gain = isChordNote and .5 or 1 -- Make auto-chord notes dimmer
 	button.volumeMeter.entropy = button.volumeMeter.entropy / 2
 end

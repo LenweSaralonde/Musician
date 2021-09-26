@@ -352,8 +352,13 @@ function Musician.Sampler.StopNote(handle, decay)
 	local onStop = noteOn[NOTEON.ON_STOP]
 	local key = noteOn[NOTEON.KEY]
 
+	-- Get sample decay
 	if decay == nil and instrumentData then
-		decay = instrumentData.decay
+		if instrumentData.decayByKey ~= nil then
+			decay = instrumentData.decayByKey[key] or instrumentData.decay
+		else
+			decay = instrumentData.decay
+		end
 	end
 
 	-- Cancel note looping

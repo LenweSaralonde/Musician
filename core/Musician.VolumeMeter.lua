@@ -47,7 +47,15 @@ end
 
 --- Note on
 -- @param instrument (table) instrument data from Musician.INSTRUMENTS
-function Musician.VolumeMeter:NoteOn(instrument)
+-- @param[opt] key (int) MIDI key number
+function Musician.VolumeMeter:NoteOn(instrument, key)
+
+	local instrumentDecay
+	if instrument.decayByKey ~= nil and key ~= nil then
+		instrumentDecay = instrument.decayByKey[key] or instrument.decay
+	else
+		instrumentDecay = instrument.decay
+	end
 
 	if instrument.isPlucked or instrument.isPercussion then
 		local decay
@@ -65,7 +73,7 @@ function Musician.VolumeMeter:NoteOn(instrument)
 			{ 0, 1 },
 			{ .15, .666 },
 			{ decay, 0 },
-			{ decay + instrument.decay / 1000, 0 },
+			{ decay + instrumentDecay / 1000, 0 },
 		}
 	else
 		local maxDuration = (instrument.loop and Musician.MAX_LONG_NOTE_DURATION or Musician.MAX_NOTE_DURATION) - .5
@@ -73,7 +81,7 @@ function Musician.VolumeMeter:NoteOn(instrument)
 			{ 0, self.level / 3 },
 			{ .075, 1 },
 			{ maxDuration, .75 },
-			{ maxDuration + instrument.decay / 1000, 0 },
+			{ maxDuration + instrumentDecay / 1000, 0 },
 		}
 		self.entropy = .2
 	end
