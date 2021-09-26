@@ -343,6 +343,8 @@ function Musician.Song:Seek(cursor)
 
 	self.cursor = cursor
 	Musician.Song:SendMessage(Musician.Events.SongCursor, self)
+
+	self:ResumeNotes()
 end
 
 --- Resume a song playing
@@ -353,6 +355,34 @@ function Musician.Song:Resume(eventSent)
 	self.playing = true
 	if not(eventSent) then
 		Musician.Song:SendMessage(Musician.Events.SongPlay, self)
+	end
+	self:ResumeNotes()
+end
+
+--- Resume notes after the song was paused
+--
+function Musician.Song:ResumeNotes()
+	if self.playing then
+		for trackIndex, track in pairs(self.tracks) do
+			if track.instrument < 128 then -- Not a percussion instrument
+				local instrumentName = Musician.MIDI_INSTRUMENT_MAPPING[track.instrument]
+				local instrumentData = instrumentName and Musician.INSTRUMENTS[instrumentName]
+				-- Only resume notes for sustained instruments
+				if instrumentData and not(instrumentData.isPercussion) and not(instrumentData.isPlucked) then
+					for noteIndex = track.playIndex - 1, 1, -1 do
+						local time = track.notes[noteIndex][NOTE.TIME]
+						-- No need to seek if the maximum note duration was exceeded
+						if time + track.maxNoteDuration < self.cursor then
+							break
+						end
+						local duration = track.notes[noteIndex][NOTE.DURATION]
+						if duration ~= nil and time + duration > self.cursor then
+							self:NoteOn(track, noteIndex)
+						end
+					end
+				end
+			end
+		end
 	end
 end
 
@@ -455,8 +485,7 @@ end
 --- Play a note
 -- @param track (table) Reference to the track
 -- @param noteIndex (int) Note index
--- @param retries (int) Number of attempts to recover dropped notes
-function Musician.Song:NoteOn(track, noteIndex, retries)
+function Musician.Song:NoteOn(track, noteIndex)
 	local key = track.notes[noteIndex][NOTE.KEY] + track.transpose
 	local time = track.notes[noteIndex][NOTE.TIME]
 	local duration = track.notes[noteIndex][NOTE.DURATION]
@@ -808,6 +837,9 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 			-- Track transposition
 			track.transpose = 0
 
+			-- Maximum note duration
+			track.maxNoteDuration = 0
+
 			-- Notes currently playing
 			track.notesOn = {}
 
@@ -889,6 +921,11 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 							[NOTE.TIME] = time,
 							[NOTE.DURATION] = duration
 						})
+
+						-- Update the max note duration
+						if duration > track.maxNoteDuration then
+							track.maxNoteDuration = duration
+						end
 					elseif self.mode == Musician.Song.MODE_LIVE then
 						-- Update song cropping
 						if noteType then
@@ -1418,18 +1455,19 @@ function Musician.Song:AppendChunk(chunk, mode, songId, chunkDuration, playtimeL
 	for _, trackData in pairs(chunk) do
 		if self.tracks[trackData[CHUNK.TRACK_ID]] == nil then
 			self.tracks[trackData[CHUNK.TRACK_ID]] = {
-				['index'] = trackData[CHUNK.TRACK_ID],
-				['midiInstrument'] = nil,
-				['instrument'] = nil,
-				['notes'] = {},
-				['playIndex'] = 1,
-				['muted'] = false,
-				['solo'] = false,
-				['transpose'] = 0,
-				['notesOn'] = {},
-				['polyphony'] = 0,
-				['channel'] = nil,
-				['name'] = nil
+				index = trackData[CHUNK.TRACK_ID],
+				midiInstrument = nil,
+				instrument = nil,
+				notes = {},
+				playIndex = 1,
+				muted = false,
+				solo = false,
+				transpose = 0,
+				maxNoteDuration = 0,
+				notesOn = {},
+				polyphony = 0,
+				channel = nil,
+				name = nil
 			}
 		end
 
@@ -1457,6 +1495,9 @@ function Musician.Song:AppendChunk(chunk, mode, songId, chunkDuration, playtimeL
 			-- Insert received note if the key is within allowed range
 			if note[NOTE.KEY] >= Musician.MIN_KEY and note[NOTE.KEY] <= Musician.MAX_KEY then
 				table.insert(track.notes, note)
+				if note[NOTE.DURATION] ~= nil and note[NOTE.DURATION] > track.maxNoteDuration then
+					track.maxNoteDuration = note[NOTE.DURATION]
+				end
 			end
 		end
 	end
