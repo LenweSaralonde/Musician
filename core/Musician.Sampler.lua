@@ -301,7 +301,7 @@ local function playNoteOn(handle, loopNote, isLooped)
 	end
 
 	local funcName = isLooped and 'LoopNote' or 'PlayNote'
-	Musician.Utils.Debug(MODULE_NAME, funcName, handle, instrumentData and instrumentData.name, key, loopNote and not(isLooped) and '(looped)' or '')
+	Musician.Utils.Debug(MODULE_NAME, funcName, handle, instrumentData and instrumentData.name, key, noteOn[NOTEON.LOOP] and not(isLooped) and '(looped)' or '')
 
 	-- Play the note file only if it has already been preloaded in the file cache
 	local sampleId = Musician.Sampler.GetSampleId(instrumentData, key)
