@@ -19,581 +19,581 @@ amp_velcurve_1=1 // All notes play max velocity
 	region_label=C0 - Frame drum long C
 	key=c0
 	sample=../instruments/frame-drum/frame-drum-long-C.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=C#0 - Frame drum long C#
 	key=c#0
 	sample=../instruments/frame-drum/frame-drum-long-C#.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=D0 - Frame drum long D
 	key=d0
 	sample=../instruments/frame-drum/frame-drum-long-D.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=D#0 - Frame drum long D#
 	key=d#0
 	sample=../instruments/frame-drum/frame-drum-long-D#.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=E0 - Frame drum long E
 	key=e0
 	sample=../instruments/frame-drum/frame-drum-long-E.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=F0 - Frame drum long F
 	key=f0
 	sample=../instruments/frame-drum/frame-drum-long-F.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=F#0 - Frame drum long F#
 	key=f#0
 	sample=../instruments/frame-drum/frame-drum-long-F#.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=G0 - Frame drum long G
 	key=g0
 	sample=../instruments/frame-drum/frame-drum-long-G.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=G#0 - Frame drum long G#
 	key=g#0
 	sample=../instruments/frame-drum/frame-drum-long-G#.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=A0 - Frame drum long A
 	key=a0
 	sample=../instruments/frame-drum/frame-drum-long-A.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=Bb0 - Frame drum long Bb
 	key=a#0
 	sample=../instruments/frame-drum/frame-drum-long-Bb.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=B0 - Frame drum long B
 	key=b0
 	sample=../instruments/frame-drum/frame-drum-long-B.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=C1 - Frame drum long C
 	key=c1
 	sample=../instruments/frame-drum/frame-drum-long-C.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=C#1 - Frame drum long C#
 	key=c#1
 	sample=../instruments/frame-drum/frame-drum-long-C#.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=D1 - Frame drum long D
 	key=d1
 	sample=../instruments/frame-drum/frame-drum-long-D.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=D#1 - Frame drum long D#
 	key=d#1
 	sample=../instruments/frame-drum/frame-drum-long-D#.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=E1 - Frame drum long E
 	key=e1
 	sample=../instruments/frame-drum/frame-drum-long-E.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=F1 - Frame drum long F
 	key=f1
 	sample=../instruments/frame-drum/frame-drum-long-F.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=F#1 - Frame drum long F#
 	key=f#1
 	sample=../instruments/frame-drum/frame-drum-long-F#.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=G1 - Frame drum long G
 	key=g1
 	sample=../instruments/frame-drum/frame-drum-long-G.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=G#1 - Frame drum long G#
 	key=g#1
 	sample=../instruments/frame-drum/frame-drum-long-G#.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=A1 - Frame drum long A
 	key=a1
 	sample=../instruments/frame-drum/frame-drum-long-A.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=Bb1 - Frame drum long Bb
 	key=a#1
 	sample=../instruments/frame-drum/frame-drum-long-Bb.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=B1 - Frame drum long B
 	key=b1
 	sample=../instruments/frame-drum/frame-drum-long-B.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=C2 - Frame drum long C
 	key=c2
 	sample=../instruments/frame-drum/frame-drum-long-C.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=C#2 - Frame drum long C#
 	key=c#2
 	sample=../instruments/frame-drum/frame-drum-long-C#.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=D2 - Frame drum long D
 	key=d2
 	sample=../instruments/frame-drum/frame-drum-long-D.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=D#2 - Frame drum long D#
 	key=d#2
 	sample=../instruments/frame-drum/frame-drum-long-D#.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=E2 - Frame drum long E
 	key=e2
 	sample=../instruments/frame-drum/frame-drum-long-E.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=F2 - Frame drum long F
 	key=f2
 	sample=../instruments/frame-drum/frame-drum-long-F.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=F#2 - Frame drum long F#
 	key=f#2
 	sample=../instruments/frame-drum/frame-drum-long-F#.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=G2 - Frame drum long G
 	key=g2
 	sample=../instruments/frame-drum/frame-drum-long-G.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=G#2 - Frame drum long G#
 	key=g#2
 	sample=../instruments/frame-drum/frame-drum-long-G#.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=A2 - Frame drum long A
 	key=a2
 	sample=../instruments/frame-drum/frame-drum-long-A.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=Bb2 - Frame drum long Bb
 	key=a#2
 	sample=../instruments/frame-drum/frame-drum-long-Bb.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=B2 - Frame drum long B
 	key=b2
 	sample=../instruments/frame-drum/frame-drum-long-B.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=C3 - Frame drum long C
 	key=c3
 	sample=../instruments/frame-drum/frame-drum-long-C.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=C#3 - Frame drum long C#
 	key=c#3
 	sample=../instruments/frame-drum/frame-drum-long-C#.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=D3 - Frame drum long D
 	key=d3
 	sample=../instruments/frame-drum/frame-drum-long-D.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=D#3 - Frame drum long D#
 	key=d#3
 	sample=../instruments/frame-drum/frame-drum-long-D#.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=E3 - Frame drum long E
 	key=e3
 	sample=../instruments/frame-drum/frame-drum-long-E.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=F3 - Frame drum long F
 	key=f3
 	sample=../instruments/frame-drum/frame-drum-long-F.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=F#3 - Frame drum long F#
 	key=f#3
 	sample=../instruments/frame-drum/frame-drum-long-F#.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=G3 - Frame drum long G
 	key=g3
 	sample=../instruments/frame-drum/frame-drum-long-G.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=G#3 - Frame drum long G#
 	key=g#3
 	sample=../instruments/frame-drum/frame-drum-long-G#.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=A3 - Frame drum long A
 	key=a3
 	sample=../instruments/frame-drum/frame-drum-long-A.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=Bb3 - Frame drum long Bb
 	key=a#3
 	sample=../instruments/frame-drum/frame-drum-long-Bb.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=B3 - Frame drum long B
 	key=b3
 	sample=../instruments/frame-drum/frame-drum-long-B.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=C4 - Frame drum long C
 	key=c4
 	sample=../instruments/frame-drum/frame-drum-long-C.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=C#4 - Frame drum long C#
 	key=c#4
 	sample=../instruments/frame-drum/frame-drum-long-C#.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=D4 - Frame drum long D
 	key=d4
 	sample=../instruments/frame-drum/frame-drum-long-D.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=D#4 - Frame drum long D#
 	key=d#4
 	sample=../instruments/frame-drum/frame-drum-long-D#.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=E4 - Frame drum long E
 	key=e4
 	sample=../instruments/frame-drum/frame-drum-long-E.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=F4 - Frame drum long F
 	key=f4
 	sample=../instruments/frame-drum/frame-drum-long-F.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=F#4 - Frame drum long F#
 	key=f#4
 	sample=../instruments/frame-drum/frame-drum-long-F#.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=G4 - Frame drum long G
 	key=g4
 	sample=../instruments/frame-drum/frame-drum-long-G.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=G#4 - Frame drum long G#
 	key=g#4
 	sample=../instruments/frame-drum/frame-drum-long-G#.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=A4 - Frame drum long A
 	key=a4
 	sample=../instruments/frame-drum/frame-drum-long-A.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=Bb4 - Frame drum long Bb
 	key=a#4
 	sample=../instruments/frame-drum/frame-drum-long-Bb.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=B4 - Frame drum long B
 	key=b4
 	sample=../instruments/frame-drum/frame-drum-long-B.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=C5 - Frame drum long C
 	key=c5
 	sample=../instruments/frame-drum/frame-drum-long-C.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=C#5 - Frame drum long C#
 	key=c#5
 	sample=../instruments/frame-drum/frame-drum-long-C#.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=D5 - Frame drum long D
 	key=d5
 	sample=../instruments/frame-drum/frame-drum-long-D.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=D#5 - Frame drum long D#
 	key=d#5
 	sample=../instruments/frame-drum/frame-drum-long-D#.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=E5 - Frame drum long E
 	key=e5
 	sample=../instruments/frame-drum/frame-drum-long-E.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=F5 - Frame drum long F
 	key=f5
 	sample=../instruments/frame-drum/frame-drum-long-F.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=F#5 - Frame drum long F#
 	key=f#5
 	sample=../instruments/frame-drum/frame-drum-long-F#.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=G5 - Frame drum long G
 	key=g5
 	sample=../instruments/frame-drum/frame-drum-long-G.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=G#5 - Frame drum long G#
 	key=g#5
 	sample=../instruments/frame-drum/frame-drum-long-G#.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=A5 - Frame drum long A
 	key=a5
 	sample=../instruments/frame-drum/frame-drum-long-A.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=Bb5 - Frame drum long Bb
 	key=a#5
 	sample=../instruments/frame-drum/frame-drum-long-Bb.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=B5 - Frame drum long B
 	key=b5
 	sample=../instruments/frame-drum/frame-drum-long-B.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=C6 - Frame drum long C
 	key=c6
 	sample=../instruments/frame-drum/frame-drum-long-C.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=C#6 - Frame drum long C#
 	key=c#6
 	sample=../instruments/frame-drum/frame-drum-long-C#.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=D6 - Frame drum long D
 	key=d6
 	sample=../instruments/frame-drum/frame-drum-long-D.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=D#6 - Frame drum long D#
 	key=d#6
 	sample=../instruments/frame-drum/frame-drum-long-D#.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=E6 - Frame drum long E
 	key=e6
 	sample=../instruments/frame-drum/frame-drum-long-E.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=F6 - Frame drum long F
 	key=f6
 	sample=../instruments/frame-drum/frame-drum-long-F.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=F#6 - Frame drum long F#
 	key=f#6
 	sample=../instruments/frame-drum/frame-drum-long-F#.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=G6 - Frame drum long G
 	key=g6
 	sample=../instruments/frame-drum/frame-drum-long-G.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=G#6 - Frame drum long G#
 	key=g#6
 	sample=../instruments/frame-drum/frame-drum-long-G#.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=A6 - Frame drum long A
 	key=a6
 	sample=../instruments/frame-drum/frame-drum-long-A.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=Bb6 - Frame drum long Bb
 	key=a#6
 	sample=../instruments/frame-drum/frame-drum-long-Bb.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=B6 - Frame drum long B
 	key=b6
 	sample=../instruments/frame-drum/frame-drum-long-B.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=C7 - Frame drum long C
 	key=c7
 	sample=../instruments/frame-drum/frame-drum-long-C.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=C#7 - Frame drum long C#
 	key=c#7
 	sample=../instruments/frame-drum/frame-drum-long-C#.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=D7 - Frame drum long D
 	key=d7
 	sample=../instruments/frame-drum/frame-drum-long-D.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=D#7 - Frame drum long D#
 	key=d#7
 	sample=../instruments/frame-drum/frame-drum-long-D#.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=E7 - Frame drum long E
 	key=e7
 	sample=../instruments/frame-drum/frame-drum-long-E.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=F7 - Frame drum long F
 	key=f7
 	sample=../instruments/frame-drum/frame-drum-long-F.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=F#7 - Frame drum long F#
 	key=f#7
 	sample=../instruments/frame-drum/frame-drum-long-F#.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=G7 - Frame drum long G
 	key=g7
 	sample=../instruments/frame-drum/frame-drum-long-G.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=G#7 - Frame drum long G#
 	key=g#7
 	sample=../instruments/frame-drum/frame-drum-long-G#.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=A7 - Frame drum long A
 	key=a7
 	sample=../instruments/frame-drum/frame-drum-long-A.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=Bb7 - Frame drum long Bb
 	key=a#7
 	sample=../instruments/frame-drum/frame-drum-long-Bb.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=B7 - Frame drum long B
 	key=b7
 	sample=../instruments/frame-drum/frame-drum-long-B.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
 <region>
 	region_label=C8 - Frame drum long C
 	key=c8
 	sample=../instruments/frame-drum/frame-drum-long-C.ogg
-	ampeg_release=0.8
+	ampeg_release=4
 
