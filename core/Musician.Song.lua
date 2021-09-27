@@ -1012,7 +1012,7 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 				-- Crop song
 				self.cropFrom = floor((cropFrom or 0) * 100) / 100
 				self.cropTo = ceil((cropTo or 0) * 100) / 100
-				self.cursor = self.cropFrom
+				self:Seek(self.cropFrom)
 
 				-- CRC32
 				self.crc32 = LibCRC32:getFinalCrc(chunksCrc32)
