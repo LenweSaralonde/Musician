@@ -1547,14 +1547,13 @@ function Musician.Song:StreamOnFrame(elapsed)
 		local noteOffset = from
 		while track.notes[track.streamIndex] and (track.notes[track.streamIndex][NOTE.TIME] < to) and (track.notes[track.streamIndex][NOTE.TIME] <= self.cropTo) do
 			local note = track.notes[track.streamIndex]
-			local noteWillPlay = from <= note[NOTE.TIME]
-			local noteIsPlaying = note[NOTE.DURATION] ~= nil and (note[NOTE.TIME] <= from) and (from <= note[NOTE.TIME] + note[NOTE.DURATION])
-			if noteWillPlay or noteIsPlaying then
+			local on = note[NOTE.ON]
+			local time = note[NOTE.TIME]
+			local duration = note[NOTE.DURATION]
+			local endTime = duration and (time + duration)
+			if from <= time or (duration ~= nil and from <= endTime) then
 				if not(self:TrackIsMuted(track)) and track.instrument >= 0 and track.instrument <= 255 then
 					local key = note[NOTE.KEY] + track.transpose
-					local on = note[NOTE.ON]
-					local time = note[NOTE.TIME]
-					local duration = note[NOTE.DURATION]
 
 					-- Send note if key is within allowed range
 					if key >= Musician.MIN_KEY and key <= Musician.MAX_KEY then
@@ -1567,7 +1566,7 @@ function Musician.Song:StreamOnFrame(elapsed)
 						end
 
 						-- Adjust duration if the note ends after the cropTo point
-						if duration ~= nil and (time + duration > self.cropTo) then
+						if duration ~= nil and endTime > self.cropTo then
 							duration = self.cropTo - time
 						end
 
