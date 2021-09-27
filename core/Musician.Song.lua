@@ -1550,9 +1550,9 @@ function Musician.Song:StreamOnFrame(elapsed)
 						local relativeTime = time - noteOffset
 						local roundedRelativeTime
 						if on then
-							roundedRelativeTime = floor(relativeTime * Musician.NOTE_TIME_FPS + .5) / Musician.NOTE_TIME_FPS
+							roundedRelativeTime = max(0, floor(relativeTime * Musician.NOTE_TIME_FPS + .5) / Musician.NOTE_TIME_FPS)
 						else
-							roundedRelativeTime = floor(relativeTime * Musician.NOTE_TIME_FPS) / Musician.NOTE_TIME_FPS
+							roundedRelativeTime = max(0, floor(relativeTime * Musician.NOTE_TIME_FPS) / Musician.NOTE_TIME_FPS)
 						end
 
 						local roundedDuration
