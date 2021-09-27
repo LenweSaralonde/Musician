@@ -263,71 +263,71 @@ function Musician.Song:Reset()
 	self:Seek(self.cropFrom)
 end
 
---- Seek to position
--- @param cursor (number)
-function Musician.Song:Seek(cursor)
+--- Perform seek within track
+-- @param cursor (number) Position to reach
+-- @param track (table)
+-- @return playIndex (int)
+local function trackSeek(cursor, track)
+	local noteCount = #track.notes
 
-	--- Perform seek within track
-	-- @param cursor (number) Position to reach
-	-- @param track (table)
-	local trackSeek = function(cursor, track)
-		local noteCount = #track.notes
+	if noteCount == 0 then
+		return 0
+	end
 
-		if noteCount == 0 then
-			return
+	-- Cursor is before the first note
+	if cursor <= track.notes[1][NOTE.TIME] then
+		return 1
+		-- Cursor is after the last note
+	elseif cursor > track.notes[noteCount][NOTE.TIME] then
+		return noteCount + 1
+	end
+
+	local from = 1
+	local to = noteCount
+	local index = max(1, min(noteCount, track.playIndex))
+
+	if cursor <= track.notes[index][NOTE.TIME] then
+		to = index
+	else
+		from = index
+	end
+
+	local found = false
+	while not(found) do
+		index = from + floor((to - from) / 2 + .5)
+
+		-- Exact position found! Find first note at exact position
+		while index >= 1 and track.notes[index][NOTE.TIME] == cursor do
+			found = true
+			index = index - 1
 		end
 
-		-- Cursor is before the first note
-		if cursor <= track.notes[1][NOTE.TIME] then
-			track.playIndex = 1
-			return
-			-- Cursor is after the last note
-		elseif cursor > track.notes[noteCount][NOTE.TIME] then
-			track.playIndex = noteCount + 1
-			return
+		if found then
+			return index + 1
 		end
 
-		local from = 1
-		local to = noteCount
-		local index = max(1, min(noteCount, track.playIndex))
+		local previousNoteTime = track.notes[index - 1][NOTE.TIME]
+		local noteTime = track.notes[index][NOTE.TIME]
 
-		if cursor <= track.notes[index][NOTE.TIME] then
+		-- In-between position found
+		if cursor > previousNoteTime and cursor <= noteTime then
+			return index
+		end
+
+		-- Seek before
+		if cursor < noteTime then
 			to = index
-		else
+		else -- Seek after
 			from = index
-		end
-
-		local found = false
-		while not(found) do
-			index = from + floor((to - from) / 2 + .5)
-
-			-- Exact position found! Find first note at exact position
-			while index >= 1 and track.notes[index][NOTE.TIME] == cursor do
-				found = true
-				index = index - 1
-			end
-
-			if found then
-				track.playIndex = index + 1
-				return
-			end
-
-			-- In-between position found
-			if cursor > track.notes[index - 1][NOTE.TIME] and cursor <= track.notes[index][NOTE.TIME] then
-				track.playIndex = index
-				return
-			end
-
-			-- Seek before
-			if cursor < track.notes[index][NOTE.TIME] then
-				to = index
-				-- Seek after
-			else
-				from = index
-			end
 		end
 	end
 
+	return index
+end
+
+--- Seek to position
+-- @param cursor (number)
+function Musician.Song:Seek(cursor)
 	cursor = max(0, min(cursor, self.cropTo))
 
 	if cursor == self.cursor then
@@ -336,9 +336,8 @@ function Musician.Song:Seek(cursor)
 
 	self:SongNotesOff()
 
-	local track
 	for _, track in pairs(self.tracks) do
-		trackSeek(cursor, track)
+		track.playIndex = trackSeek(cursor, track)
 	end
 
 	self.cursor = cursor
@@ -363,22 +362,18 @@ end
 --
 function Musician.Song:ResumeNotes()
 	if self.playing then
-		for trackIndex, track in pairs(self.tracks) do
-			if track.instrument < 128 then -- Not a percussion instrument
-				local instrumentName = Musician.MIDI_INSTRUMENT_MAPPING[track.instrument]
-				local instrumentData = instrumentName and Musician.INSTRUMENTS[instrumentName]
-				-- Only resume notes for sustained instruments
-				if instrumentData and not(instrumentData.isPercussion) and not(instrumentData.isPlucked) then
-					for noteIndex = track.playIndex - 1, 1, -1 do
-						local time = track.notes[noteIndex][NOTE.TIME]
-						-- No need to seek if the maximum note duration was exceeded
-						if time + track.maxNoteDuration < self.cursor then
-							break
-						end
-						local duration = track.notes[noteIndex][NOTE.DURATION]
-						if duration ~= nil and time + duration > self.cursor then
-							self:NoteOn(track, noteIndex)
-						end
+		for _, track in pairs(self.tracks) do
+			-- Only resume notes for sustained instruments
+			if not(Musician.Sampler.IsInstrumentPlucked(track.instrument)) then
+				for noteIndex = track.playIndex - 1, 1, -1 do
+					local time = track.notes[noteIndex][NOTE.TIME]
+					-- No need to seek if the maximum note duration was exceeded
+					if time + track.maxNoteDuration < self.cursor then
+						break
+					end
+					local duration = track.notes[noteIndex][NOTE.DURATION]
+					if duration ~= nil and time + duration > self.cursor then
+						self:NoteOn(track, noteIndex)
 					end
 				end
 			end
@@ -1405,9 +1400,24 @@ function Musician.Song:Stream()
 	-- Stop and reset streaming
 	self:StopStreaming()
 
-	local track
+	-- Init stream indexes
 	for _, track in pairs(self.tracks) do
-		track.streamIndex = nil
+		track.streamIndex = trackSeek(self.cropFrom, track)
+
+		-- Move streamIndex backwards to the earliest playing note (for non-"plucked" instruments)
+		if not(Musician.Sampler.IsInstrumentPlucked(track.instrument)) then
+			for noteIndex = track.streamIndex - 1, 1, -1 do
+				local time = track.notes[noteIndex][NOTE.TIME]
+				-- No need to seek if the maximum note duration was exceeded
+				if time + track.maxNoteDuration < self.cursor then
+					break
+				end
+				local duration = track.notes[noteIndex][NOTE.DURATION]
+				if duration ~= nil and time + duration > self.cursor then
+					track.streamIndex = noteIndex
+				end
+			end
+		end
 	end
 
 	self.timeSinceLastStreamChunk = 0
@@ -1536,10 +1546,11 @@ function Musician.Song:StreamOnFrame(elapsed)
 		local notes = {}
 		local noteOffset = from
 		while track.notes[track.streamIndex] and (track.notes[track.streamIndex][NOTE.TIME] < to) and (track.notes[track.streamIndex][NOTE.TIME] <= self.cropTo) do
-
-			if track.notes[track.streamIndex][NOTE.TIME] >= from then
+			local note = track.notes[track.streamIndex]
+			local noteWillPlay = from <= note[NOTE.TIME]
+			local noteIsPlaying = note[NOTE.DURATION] ~= nil and (note[NOTE.TIME] <= from) and (from <= note[NOTE.TIME] + note[NOTE.DURATION])
+			if noteWillPlay or noteIsPlaying then
 				if not(self:TrackIsMuted(track)) and track.instrument >= 0 and track.instrument <= 255 then
-					local note = track.notes[track.streamIndex]
 					local key = note[NOTE.KEY] + track.transpose
 					local on = note[NOTE.ON]
 					local time = note[NOTE.TIME]
@@ -1547,6 +1558,20 @@ function Musician.Song:StreamOnFrame(elapsed)
 
 					-- Send note if key is within allowed range
 					if key >= Musician.MIN_KEY and key <= Musician.MAX_KEY then
+						-- Already "playing" note: adjust time and duration
+						if time < from then
+							if duration ~= nil then
+								duration = duration - (from - time)
+							end
+							time = from
+						end
+
+						-- Adjust duration if the note ends after the cropTo point
+						if duration ~= nil and (time + duration > self.cropTo) then
+							duration = self.cropTo - time
+						end
+
+						-- Calculate rounded relative time
 						local relativeTime = time - noteOffset
 						local roundedRelativeTime
 						if on then
@@ -1555,12 +1580,14 @@ function Musician.Song:StreamOnFrame(elapsed)
 							roundedRelativeTime = max(0, floor(relativeTime * Musician.NOTE_TIME_FPS) / Musician.NOTE_TIME_FPS)
 						end
 
+						-- Calculate rounded duration
 						local roundedDuration
 						if duration ~= nil then
 							local adjustedDuration = max(0, duration + relativeTime - roundedRelativeTime)
 							roundedDuration = floor(adjustedDuration * Musician.NOTE_DURATION_FPS) / Musician.NOTE_DURATION_FPS
 						end
 
+						-- Insert note in chunk data
 						table.insert(notes, {
 							[NOTE.ON] = on,
 							[NOTE.KEY] = key,

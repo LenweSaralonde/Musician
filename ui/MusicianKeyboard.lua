@@ -1684,10 +1684,8 @@ function Musician.Keyboard.SetSustain(value)
 	local config = Musician.Keyboard.config
 
 	-- Determine if lower and upper instruments are "plucked" like piano, guitar etc.
-	local upperInstrumentName = Musician.Sampler.GetInstrumentName(config.instrument[LAYER.UPPER])
-	local lowerInstrumentName = Musician.Sampler.GetInstrumentName(config.instrument[LAYER.LOWER])
-	local upperIsPlucked = config.instrument[LAYER.UPPER] >= 128 or Musician.INSTRUMENTS[upperInstrumentName] and Musician.INSTRUMENTS[upperInstrumentName].isPlucked or false
-	local lowerIsPlucked = config.instrument[LAYER.LOWER] >= 128 or Musician.INSTRUMENTS[lowerInstrumentName] and Musician.INSTRUMENTS[lowerInstrumentName].isPlucked or false
+	local upperIsPlucked = Musician.Sampler.IsInstrumentPlucked(config.instrument[LAYER.UPPER])
+	local lowerIsPlucked = Musician.Sampler.IsInstrumentPlucked(config.instrument[LAYER.LOWER])
 
 	-- Do not sustain the non-plucked instrument if the other one is plucked
 	if upperIsPlucked ~= lowerIsPlucked then

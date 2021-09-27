@@ -203,6 +203,21 @@ function Musician.Sampler.GetSoundFile(instrument, key)
 	return soundFile, instrumentData, soundFiles
 end
 
+--- Returns true if the provided instrument is "plucked".
+-- @param instrument (int) MIDI instrument ID
+-- @return isPlucked (boolean)
+function Musician.Sampler.IsInstrumentPlucked(instrument)
+	-- Percussions are always plucked
+	if instrument >= 128 then
+		return true
+	end
+
+	-- Melodic instruments
+	local instrumentName = Musician.MIDI_INSTRUMENT_MAPPING[instrument]
+	local instrumentData = instrumentName and Musician.INSTRUMENTS[instrumentName]
+	return instrumentData and (instrumentData.isPercussion or instrumentData.isPlucked) or false
+end
+
 --- Play a note file
 -- Can perform multiple attempts if the sound file could not play
 -- @param handle (int) Sampler note handle
