@@ -1661,7 +1661,7 @@ function Musician.Song:PackChunk(chunk)
 			local packedTime = Musician.Utils.PackTime(noteTime, 1, Musician.NOTE_TIME_FPS)
 
 			-- First bit: type, the rest: key (C0 is 0) (1 byte)
-			local packedKey = Musician.Utils.PackNumber(bit.bor(noteType and 0x80 or 0x00, bit.band(note[NOTE.KEY] - Musician.C0_INDEX, 0x7F)), 1)
+			local packedKey = Musician.Utils.PackNumber(bit.bor(noteType and 0x80 or 0x00, bit.band(note[NOTE.KEY], 0x7F)), 1)
 
 			-- Duration (1 or 2 bytes)
 			local packedDuration = ""
@@ -1781,7 +1781,7 @@ function Musician.Song.UnpackChunkData(data)
 				local noteType = bit.band(keyByte, 0x80) == 0x80
 
 				-- Key
-				local key = bit.band(keyByte, 0x7F) + Musician.C0_INDEX
+				local key = bit.band(keyByte, 0x7F)
 
 				-- Time relative to previous note
 				local time = Musician.Utils.UnpackTime(readBytes(1), Musician.NOTE_TIME_FPS) + offset
