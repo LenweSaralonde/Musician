@@ -1143,42 +1143,35 @@ function Musician.Song:Export(onComplete, progressionFactor)
 				notesDataChunk = notesDataChunk .. noteSpacer
 
 				-- Pack time
-				local packedTime
-				if note[NOTE.ON] == true or note[NOTE.ON] == nil then
-					packedTime = floor(noteTime * Musician.NOTE_TIME_FPS + .5)
-				else
-					packedTime = floor(noteTime * Musician.NOTE_TIME_FPS)
-				end
+				local timeFrames = floor(noteTime * Musician.NOTE_TIME_FPS + .5)
 
 				-- Duration mode
 				if self.mode == Musician.Song.MODE_DURATION then
 					-- Pack duration
-					local maxDuration = (self.header < 'MUS8') and Musician.MAX_NOTE_DURATION or Musician.MAX_LONG_NOTE_DURATION
-					local roundedTime = packedTime / Musician.NOTE_TIME_FPS
-					local adjustedDuration = max(0, min(maxDuration, note[NOTE.DURATION] + noteTime - roundedTime))
-					local packedDuration = floor(adjustedDuration * Musician.NOTE_DURATION_FPS)
+					local maxDuration = self.header == 'MUS8' and note[NOTE.KEY] < 127 and Musician.MAX_LONG_NOTE_DURATION or Musician.MAX_NOTE_DURATION
+					local duration = max(0, min(note[NOTE.DURATION], maxDuration))
+					local durationFrames = floor(duration * Musician.NOTE_DURATION_FPS + .5)
 
 					-- Determine if it's a long note or a short one
-					local roundedDuration = packedDuration / Musician.NOTE_DURATION_FPS
-					local isLongNote = roundedDuration > Musician.MAX_NOTE_DURATION and note[NOTE.KEY] < 127
+					local isLongNote = durationFrames > 0xFF
 
 					-- Key and note flag (1)
 					local noteFlag = isLongNote and 0x80 or 0x00
 					notesDataChunk = notesDataChunk .. Musician.Utils.PackNumber(bit.bor(note[NOTE.KEY], noteFlag), 1)
 
 					-- Time (2)
-					notesDataChunk = notesDataChunk .. Musician.Utils.PackNumber(packedTime, 2)
+					notesDataChunk = notesDataChunk .. Musician.Utils.PackNumber(timeFrames, 2)
 
 					-- Duration (1 or 2)
 					local durationBytes = isLongNote and 2 or 1
-					notesDataChunk = notesDataChunk .. Musician.Utils.PackNumber(packedDuration, durationBytes)
+					notesDataChunk = notesDataChunk .. Musician.Utils.PackNumber(durationFrames, durationBytes)
 				elseif self.mode == Musician.Song.MODE_LIVE then
 					-- Key on/off event (1)
-					local keyEvent = bit.bor(note[NOTE.ON] and 0x80 or 0x00, bit.band(note[NOTE.KEY], 0x7F))
-					notesDataChunk = notesDataChunk .. Musician.Utils.PackNumber(keyEvent, 1)
+					local noteFlag = note[NOTE.ON] and 0x80 or 0x00
+					notesDataChunk = notesDataChunk .. Musician.Utils.PackNumber(bit.bor(note[NOTE.KEY], noteFlag), 1)
 
 					-- Time (2)
-					notesDataChunk = notesDataChunk .. Musician.Utils.PackNumber(packedTime, 2)
+					notesDataChunk = notesDataChunk .. Musician.Utils.PackNumber(timeFrames, 2)
 				end
 			end
 
@@ -1570,31 +1563,19 @@ function Musician.Song:StreamOnFrame(elapsed)
 							duration = self.cropTo - time
 						end
 
-						-- Calculate rounded relative time
+						-- Calculate relative time
 						local relativeTime = time - noteOffset
-						local roundedRelativeTime
-						if on then
-							roundedRelativeTime = max(0, floor(relativeTime * Musician.NOTE_TIME_FPS + .5) / Musician.NOTE_TIME_FPS)
-						else
-							roundedRelativeTime = max(0, floor(relativeTime * Musician.NOTE_TIME_FPS) / Musician.NOTE_TIME_FPS)
-						end
 
-						-- Calculate rounded duration
-						local roundedDuration
-						if duration ~= nil then
-							local adjustedDuration = max(0, duration + relativeTime - roundedRelativeTime)
-							roundedDuration = floor(adjustedDuration * Musician.NOTE_DURATION_FPS) / Musician.NOTE_DURATION_FPS
-						end
 
 						-- Insert note in chunk data
 						table.insert(notes, {
 							[NOTE.ON] = on,
 							[NOTE.KEY] = key,
-							[NOTE.TIME] = roundedRelativeTime,
-							[NOTE.DURATION] = roundedDuration
+							[NOTE.TIME] = relativeTime,
+							[NOTE.DURATION] = duration
 						})
 
-						noteOffset = noteOffset + roundedRelativeTime
+						noteOffset = noteOffset + relativeTime
 					end
 				end
 			end
@@ -1652,7 +1633,6 @@ function Musician.Song:PackChunk(chunk)
 
 	-- Track information: trackId (1), instrumentId (1), note count (2)
 	local packedTrackInfo = ''
-	local trackData
 	for _, trackData in pairs(chunk) do
 		packedTrackInfo = packedTrackInfo .. Musician.Utils.PackNumber(trackData[CHUNK.TRACK_ID], 1)
 		packedTrackInfo = packedTrackInfo .. Musician.Utils.PackNumber(trackData[CHUNK.INSTRUMENT], 1)
@@ -1661,7 +1641,6 @@ function Musician.Song:PackChunk(chunk)
 
 	-- Note information: key on/off or spacer (1), time (1), [duration (1)]
 	local packedNoteData = ''
-	local note
 	for _, trackData in pairs(chunk) do
 		for _, note in pairs(trackData[CHUNK.NOTES]) do
 
@@ -1669,31 +1648,33 @@ function Musician.Song:PackChunk(chunk)
 			local noteTime = note[NOTE.TIME]
 
 			-- Get note type and duration
-			local noteType, duration
+			local noteType, duration, durationFrames
 			if self.mode == Musician.Song.MODE_DURATION then
-				duration = min(note[NOTE.DURATION], Musician.MAX_LONG_NOTE_DURATION)
-				noteType = duration > Musician.MAX_NOTE_DURATION -- true for a long note, false for a short one
+				duration = max(0, min(Musician.MAX_LONG_NOTE_DURATION, note[NOTE.DURATION]))
+				durationFrames = floor(duration * Musician.NOTE_DURATION_FPS + .5)
+				noteType = durationFrames > 0xFF -- true for a long note, false for a short one
 			else
 				noteType = note[NOTE.ON] -- Live note on or note off
 			end
 
 			-- Insert spacers if note time exceeds the maximum
 			while noteTime > Musician.MAX_CHUNK_NOTE_TIME do
-				packedNoteData = packedNoteData .. Musician.Utils.PackNumber(255, 1)
+				packedNoteData = packedNoteData .. Musician.Utils.PackNumber(0xFF, 1)
 				noteTime = noteTime - Musician.MAX_CHUNK_NOTE_TIME
 			end
 
+			-- First bit: type, the rest: key (1 byte)
+			local noteFlag = noteType and 0x80 or 0x00
+			local packedKey = Musician.Utils.PackNumber(bit.bor(noteFlag, note[NOTE.KEY]), 1)
+
 			-- Note time (1 byte)
 			local packedTime = Musician.Utils.PackTime(noteTime, 1, Musician.NOTE_TIME_FPS)
-
-			-- First bit: type, the rest: key (C0 is 0) (1 byte)
-			local packedKey = Musician.Utils.PackNumber(bit.bor(noteType and 0x80 or 0x00, bit.band(note[NOTE.KEY], 0x7F)), 1)
 
 			-- Duration (1 or 2 bytes)
 			local packedDuration = ""
 			if self.mode == Musician.Song.MODE_DURATION then
 				local durationBytes = noteType and 2 or 1
-				packedDuration = Musician.Utils.PackTime(duration, durationBytes, Musician.NOTE_DURATION_FPS)
+				packedDuration = Musician.Utils.PackNumber(durationFrames, durationBytes)
 			end
 
 			packedNoteData = packedNoteData .. packedKey .. packedTime .. packedDuration

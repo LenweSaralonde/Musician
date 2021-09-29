@@ -545,23 +545,23 @@ export function packSong(midiArray, fileName) {
 				}
 
 				// Calculate rounded time based on NOTE_TIME_FPS
-				const packedTime = Math.round(noteTime * NOTE_TIME_FPS);
-				const roundedTime = packedTime / NOTE_TIME_FPS;
+				const timeFrames = Math.round(noteTime * NOTE_TIME_FPS);
+				const roundedTime = timeFrames / NOTE_TIME_FPS;
 
 				// Calculated rounded duration based on NOTE_DURATION_FPS
 				const adjustedDuration = Math.max(0, noteDuration + noteTime - roundedTime);
-				const packedDuration = Math.floor(adjustedDuration * NOTE_DURATION_FPS);
+				const durationFrames = Math.floor(adjustedDuration * NOTE_DURATION_FPS);
 
 				// Determine if it's a long note or a short one
-				const isLongNote = adjustedDuration > MAX_NOTE_DURATION && noteKey < 127; // Avoid long notes of the max 127 key to avoid confusion with a spacer
+				const isLongNote = durationFrames > 0xFF && noteKey < 127; // Avoid long notes of the max 127 key to avoid confusion with a spacer
 				const longNoteFlag = isLongNote ? 0x80 : 0x00;
 
 				// Insert packed note: key (1), time (2), duration (1 or 2)
 				notes.push(
 					noteSpacer +
 					packNumber(noteKey | longNoteFlag, 1) +
-					packNumber(packedTime, 2) +
-					packNumber(packedDuration, isLongNote ? 2 : 1)
+					packNumber(timeFrames, 2) +
+					packNumber(durationFrames, isLongNote ? 2 : 1)
 				);
 			}
 		}
