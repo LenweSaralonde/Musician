@@ -19,8 +19,7 @@ NOTEON.KEY = 2
 NOTEON.INSTRUMENT_DATA = 3
 NOTEON.SOUND_FILE = 4
 NOTEON.SOUND_HANDLE = 5
-NOTEON.ON_STOP = 6
-NOTEON.LOOP = 7
+NOTEON.LOOP = 6
 
 --- Init sampler engine
 --
@@ -224,9 +223,8 @@ end
 -- @param instrumentData (table)
 -- @param soundFile (string) Sample file path
 -- @param tries (int) Number of attempts in case of failures due to limited polyphony
--- @param[opt] onPlay (function) Called when the sound file starts playing
 -- @param[opt] channel (string) Audio channel to use
-local function playNoteFile(handle, instrumentData, soundFile, tries, onPlay, channel)
+local function playNoteFile(handle, instrumentData, soundFile, tries, channel)
 	if not(notesOn[handle]) then
 		return
 	end
@@ -256,11 +254,6 @@ local function playNoteFile(handle, instrumentData, soundFile, tries, onPlay, ch
 			end
 		end
 
-		-- Run callback
-		if onPlay then
-			onPlay(handle)
-		end
-
 		return
 	end
 
@@ -268,7 +261,7 @@ local function playNoteFile(handle, instrumentData, soundFile, tries, onPlay, ch
 	if channel == 'Master' then
 		local nextChannel = audioChannels.SFX and 'SFX' or audioChannels.Dialog and 'Dialog'
 		if nextChannel then
-			playNoteFile(handle, instrumentData, soundFile, tries, onPlay, nextChannel)
+			playNoteFile(handle, instrumentData, soundFile, tries, nextChannel)
 			return
 		end
 	end
@@ -277,7 +270,7 @@ local function playNoteFile(handle, instrumentData, soundFile, tries, onPlay, ch
 	if channel == 'SFX' then
 		local nextChannel = audioChannels.Dialog and 'Dialog'
 		if nextChannel then
-			playNoteFile(handle, instrumentData, soundFile, tries, onPlay, nextChannel)
+			playNoteFile(handle, instrumentData, soundFile, tries, nextChannel)
 			return
 		end
 	end
@@ -289,7 +282,7 @@ local function playNoteFile(handle, instrumentData, soundFile, tries, onPlay, ch
 		Musician.Sampler.StopOldestNote()
 		-- Try again on the next frame
 		C_Timer.After(0, function()
-			playNoteFile(handle, instrumentData, soundFile, tries + 1, onPlay)
+			playNoteFile(handle, instrumentData, soundFile, tries + 1)
 		end)
 	end
 end
@@ -330,10 +323,8 @@ end
 -- @param instrument (int|string|table) MIDI instrument index, instrument name or instrument data
 -- @param key (int) Note MIDI key
 -- @param loopNote (boolean) The note sample should be looped (long note or live note)
--- @param[opt] onPlay (function) Called when the note audio starts playing. Args: noteHandle (int)
--- @param[opt] onStop (function) Called when the note audio is stopped. Args: noteHandle (int), decay (number)
 -- @return noteHandle (int)
-function Musician.Sampler.PlayNote(instrument, key, loopNote, onPlay, onStop)
+function Musician.Sampler.PlayNote(instrument, key, loopNote)
 	local soundFile, instrumentData = Musician.Sampler.GetSoundFile(instrument, key)
 
 	if soundFile == nil then
@@ -346,7 +337,6 @@ function Musician.Sampler.PlayNote(instrument, key, loopNote, onPlay, onStop)
 		[NOTEON.INSTRUMENT_DATA] = instrumentData,
 		[NOTEON.SOUND_FILE] = soundFile,
 		[NOTEON.KEY] = key,
-		[NOTEON.ON_STOP] = onStop,
 	}
 	playNoteOn(lastHandleId, loopNote, false)
 
@@ -364,7 +354,6 @@ function Musician.Sampler.StopNote(handle, decay)
 	local noteOn = notesOn[handle]
 	local soundHandle = noteOn[NOTEON.SOUND_HANDLE]
 	local instrumentData = noteOn[NOTEON.INSTRUMENT_DATA]
-	local onStop = noteOn[NOTEON.ON_STOP]
 	local key = noteOn[NOTEON.KEY]
 
 	-- Get sample decay
@@ -385,9 +374,6 @@ function Musician.Sampler.StopNote(handle, decay)
 
 	if soundHandle then
 		StopSound(soundHandle, decay)
-		if onStop then
-			onStop(handle, decay)
-		end
 	end
 
 	notesOn[handle] = nil
