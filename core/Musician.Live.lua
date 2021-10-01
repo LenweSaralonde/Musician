@@ -116,6 +116,7 @@ local function getLiveTrack(song, layer, instrument)
 		playIndex = 1,
 		muted = false,
 		solo = false,
+		audible = true,
 		transpose = 0,
 		notesOn = {},
 		polyphony = 0
