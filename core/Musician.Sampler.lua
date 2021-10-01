@@ -15,14 +15,13 @@ local PERCUSSION_MIDI = 128
 local FALLBACK_DRUMKIT_MIDI = 128
 
 local NOTEON = {}
-NOTEON.TIME = 1
-NOTEON.KEY = 2
-NOTEON.INSTRUMENT_DATA = 3
-NOTEON.SOUND_FILE = 4
-NOTEON.SOUND_HANDLE = 5
-NOTEON.LOOP = 6
-NOTEON.TRACK = 7
-NOTEON.PLAYER = 8
+NOTEON.KEY = 1
+NOTEON.INSTRUMENT_DATA = 2
+NOTEON.SOUND_FILE = 3
+NOTEON.SOUND_HANDLE = 4
+NOTEON.LOOP = 5
+NOTEON.TRACK = 6
+NOTEON.PLAYER = 7
 
 --- Init sampler engine
 --
@@ -355,9 +354,7 @@ local function playNoteSample(handle, loopNote, isLooped)
 	-- Set sample loop
 	if loopNote and instrumentData.loop ~= nil then
 		local loop = instrumentData.loop[1] + random() * (instrumentData.loop[2] - instrumentData.loop[1])
-		noteOn[NOTEON.LOOP] = C_Timer.NewTimer(loop, function()
-			playNoteSample(handle, true, true)
-		end)
+		noteOn[NOTEON.LOOP] = debugprofilestop() + loop * 1000
 	end
 
 	-- Play the note file only if it has already been preloaded in the file cache
@@ -385,7 +382,6 @@ function Musician.Sampler.PlayNote(instrument, key, loopNote, track, player)
 	end
 
 	local noteOn = {
-		[NOTEON.TIME] = debugprofilestop(),
 		[NOTEON.INSTRUMENT_DATA] = instrumentData,
 		[NOTEON.SOUND_FILE] = soundFile,
 		[NOTEON.KEY] = key,
@@ -428,11 +424,6 @@ local function stopNoteSample(handle, decay)
 		end
 	end
 
-	-- Cancel note looping
-	if noteOn[NOTEON.LOOP] then
-		noteOn[NOTEON.LOOP]:Cancel()
-	end
-
 	-- Stop playing the sample
 	Musician.Utils.Debug(MODULE_NAME, 'stopNoteSample', handle, decay)
 	StopSound(soundHandle, decay)
@@ -473,6 +464,10 @@ function Musician.Sampler.OnUpdate(elapsed)
 			if not(isPlucked) then
 				playNoteSample(handle, noteOn[NOTEON.LOOP] ~= nil, false)
 			end
+
+		-- The note audio should be looped
+		elseif isNotePlaying and noteOn[NOTEON.LOOP] ~= nil and noteOn[NOTEON.LOOP] < debugprofilestop() then
+			playNoteSample(handle, true, true)
 		end
 	end
 end
