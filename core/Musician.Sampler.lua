@@ -328,6 +328,10 @@ local function playSampleFile(handle, instrumentData, soundFile, tries, channel)
 
  	-- Note failed to play due to lack of available polyphony
 	Musician.Utils.Debug(MODULE_NAME, 'Dropped note', handle, "(tries: " .. tries .. ")")
+
+	-- Set a dummy sound handle to avoid the main loop to attempt to play the note on its own
+	notesOn[handle][NOTEON.SOUND_HANDLE] = -1
+
 	if tries < 2 then
 		-- Stop the oldest note to release a polyphony slot
 		Musician.Sampler.StopOldestNote()
