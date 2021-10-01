@@ -465,6 +465,7 @@ end
 function Musician.Registry.UnregisterPlayer(player)
 	player = Musician.Utils.NormalizePlayerName(player)
 	if Musician.Registry.players[player] then
+		wipe(Musician.Registry.players[player])
 		Musician.Registry.players[player] = nil
 		Musician.Registry:SendMessage(Musician.Registry.event.playerUnregistered, player)
 	end

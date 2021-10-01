@@ -1443,6 +1443,7 @@ function Musician.Keyboard.DeleteProgram(program)
 		return
 	end
 
+	wipe(Musician_Settings.keyboardPrograms[program])
 	Musician_Settings.keyboardPrograms[program] = nil
 	loadedProgram = program
 	Musician.Utils.Print(string.gsub(Musician.Msg.PROGRAM_DELETED, '{num}', Musician.Utils.Highlight(program)))

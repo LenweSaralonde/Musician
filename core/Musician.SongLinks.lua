@@ -375,6 +375,7 @@ function Musician.SongLinks.RemoveRequest(playerName)
 
 	if requestedSong == nil then return end
 
+	wipe(requestedSongs[playerName])
 	requestedSongs[playerName] = nil
 
 	if requestedSong.timeoutTimer then

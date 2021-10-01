@@ -555,6 +555,7 @@ function Musician.Song:NoteOff(track, key, stackIndex)
 		end
 
 		-- Remove note from stack
+		wipe(noteOn)
 		table.remove(noteOnStack, stackIndex)
 		if #noteOnStack == 0 then
 			track.notesOn[key] = nil

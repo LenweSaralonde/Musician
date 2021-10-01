@@ -440,6 +440,7 @@ function Musician.Sampler.StopNote(handle, decay)
 
 	Musician.Utils.Debug(MODULE_NAME, 'StopNote', handle, instrumentData and instrumentData.name, key, soundHandle, decay)
 	stopNoteSample(handle, decay)
+	wipe(notesOn[handle])
 	notesOn[handle] = nil
 end
 

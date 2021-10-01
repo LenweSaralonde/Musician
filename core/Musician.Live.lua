@@ -496,6 +496,9 @@ function Musician.Live.NoteOff(key, layer, instrument, isChordNote, sustainedNot
 
 	-- Send band note message if synchronization is enabled
 	Musician.Live.BandNote(false, key, layer, instrument)
+
+	-- Release noteOn memory
+	wipe(noteOn)
 end
 
 --- Send note event in band mode
@@ -684,6 +687,7 @@ function Musician.Live.OnRosterUpdate()
 			syncedBandPlayers[player] = nil
 			bandNotesOn[player] = nil
 			bandSongs[player] = nil
+			collectgarbage()
 			Musician.Live:SendMessage(Musician.Events.LiveBandSync, player, false)
 		end
 	end
@@ -756,6 +760,7 @@ function Musician.Live.OnLiveNote(prefix, message, distribution, sender)
 		-- Stop playing note
 		if handle then
 			C_Timer.After(1/60, function() Musician.Sampler.StopNote(handle) end)
+			wipe(bandNotesOn[sender][noteOnKey])
 			bandNotesOn[sender][noteOnKey] = nil
 		end
 
