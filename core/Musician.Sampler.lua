@@ -7,6 +7,7 @@ local MODULE_NAME = "Sampler"
 Musician.AddModule(MODULE_NAME)
 
 local notesOn = {}
+local playersInRange = {}
 local lastHandleId = 0
 local globalMute = false
 
@@ -20,6 +21,8 @@ NOTEON.INSTRUMENT_DATA = 3
 NOTEON.SOUND_FILE = 4
 NOTEON.SOUND_HANDLE = 5
 NOTEON.LOOP = 6
+NOTEON.TRACK = 7
+NOTEON.PLAYER = 8
 
 --- Init sampler engine
 --
@@ -217,14 +220,63 @@ function Musician.Sampler.IsInstrumentPlucked(instrument)
 	return instrumentData and (instrumentData.isPercussion or instrumentData.isPlucked) or false
 end
 
---- Play a note file
+--- Clear the "player is in range" cache
+--
+local function clearPlayerRangeCache()
+	wipe(playersInRange)
+end
+
+--- Indicates if the the player is in hearing range, using cache
+-- @param player (string)
+-- @return isInRange (boolean)
+local function isPlayerInRange(player)
+	if playersInRange[player] == nil then
+		playersInRange[player] = Musician.Registry.PlayerIsInRange(player)
+	end
+	return playersInRange[player]
+end
+
+--- Indicates if the provided note on should be playing
+-- @param noteOn (table)
+-- @return shouldPlay (boolean)
+local function noteOnShouldPlay(noteOn)
+	local player = noteOn[NOTEON.PLAYER]
+	local track = noteOn[NOTEON.TRACK]
+	local instrumentData = noteOn[NOTEON.INSTRUMENT_DATA]
+
+	local shouldPlay = not(globalMute)
+
+	-- If the note comes from another player while the source song is playing, it should not play.
+	if shouldPlay and player ~= nil and Musician.sourceSong ~= nil and Musician.sourceSong:IsPlaying() then
+		shouldPlay = false
+	end
+
+	-- The track is audible
+	if shouldPlay and track ~= nil then
+		shouldPlay = track.audible
+	end
+
+	-- The player is not muted
+	if shouldPlay and player ~= nil then
+		shouldPlay = not(Musician.PlayerIsMuted(player))
+	end
+
+	-- The player should be in range
+	if shouldPlay and player ~= nil then
+		shouldPlay = isPlayerInRange(player)
+	end
+
+	return shouldPlay
+end
+
+--- Play a sample file
 -- Can perform multiple attempts if the sound file could not play
 -- @param handle (int) Sampler note handle
 -- @param instrumentData (table)
 -- @param soundFile (string) Sample file path
 -- @param tries (int) Number of attempts in case of failures due to limited polyphony
 -- @param[opt] channel (string) Audio channel to use
-local function playNoteFile(handle, instrumentData, soundFile, tries, channel)
+local function playSampleFile(handle, instrumentData, soundFile, tries, channel)
 	if not(notesOn[handle]) then
 		return
 	end
@@ -261,7 +313,7 @@ local function playNoteFile(handle, instrumentData, soundFile, tries, channel)
 	if channel == 'Master' then
 		local nextChannel = audioChannels.SFX and 'SFX' or audioChannels.Dialog and 'Dialog'
 		if nextChannel then
-			playNoteFile(handle, instrumentData, soundFile, tries, nextChannel)
+			playSampleFile(handle, instrumentData, soundFile, tries, nextChannel)
 			return
 		end
 	end
@@ -270,7 +322,7 @@ local function playNoteFile(handle, instrumentData, soundFile, tries, channel)
 	if channel == 'SFX' then
 		local nextChannel = audioChannels.Dialog and 'Dialog'
 		if nextChannel then
-			playNoteFile(handle, instrumentData, soundFile, tries, nextChannel)
+			playSampleFile(handle, instrumentData, soundFile, tries, nextChannel)
 			return
 		end
 	end
@@ -282,18 +334,17 @@ local function playNoteFile(handle, instrumentData, soundFile, tries, channel)
 		Musician.Sampler.StopOldestNote()
 		-- Try again on the next frame
 		C_Timer.After(0, function()
-			playNoteFile(handle, instrumentData, soundFile, tries + 1)
+			playSampleFile(handle, instrumentData, soundFile, tries + 1)
 		end)
 	end
 end
 
---- Trigger a note On
+--- Start playing a note audio sample.
 -- @param handle (int) The note handle returned by PlayNote()
 -- @param loopNote (boolean) The note sample should be looped (long note or live note)
 -- @param isLooped (boolean) The note sample is being looped
-local function playNoteOn(handle, loopNote, isLooped)
+local function playNoteSample(handle, loopNote, isLooped)
 	local noteOn = notesOn[handle]
-
 	local key = noteOn[NOTEON.KEY]
 	local instrumentData = noteOn[NOTEON.INSTRUMENT_DATA]
 
@@ -301,21 +352,20 @@ local function playNoteOn(handle, loopNote, isLooped)
 		StopSound(noteOn[NOTEON.SOUND_HANDLE], instrumentData.crossfade)
 	end
 
+	-- Set sample loop
 	if loopNote and instrumentData.loop ~= nil then
 		local loop = instrumentData.loop[1] + random() * (instrumentData.loop[2] - instrumentData.loop[1])
 		noteOn[NOTEON.LOOP] = C_Timer.NewTimer(loop, function()
-			playNoteOn(handle, true, true)
+			playNoteSample(handle, true, true)
 		end)
 	end
-
-	local funcName = isLooped and 'LoopNote' or 'PlayNote'
-	Musician.Utils.Debug(MODULE_NAME, funcName, handle, instrumentData and instrumentData.name, key, noteOn[NOTEON.LOOP] and not(isLooped) and '(looped)' or '')
 
 	-- Play the note file only if it has already been preloaded in the file cache
 	local sampleId = Musician.Sampler.GetSampleId(instrumentData, key)
 	local soundFile = noteOn[NOTEON.SOUND_FILE]
 	if soundFile and Musician.Preloader.IsPreloaded(sampleId) then
-		playNoteFile(handle, instrumentData, soundFile, 0)
+		Musician.Utils.Debug(MODULE_NAME, 'playNoteSample', handle, soundFile)
+		playSampleFile(handle, instrumentData, soundFile, 0)
 	end
 end
 
@@ -323,43 +373,56 @@ end
 -- @param instrument (int|string|table) MIDI instrument index, instrument name or instrument data
 -- @param key (int) Note MIDI key
 -- @param loopNote (boolean) The note sample should be looped (long note or live note)
--- @return noteHandle (int)
-function Musician.Sampler.PlayNote(instrument, key, loopNote)
+-- @param[opt] track (table) The track the note comes from
+-- @param[opt] player (string) The normalized name of the player who plays the note
+-- @return handle (int)
+-- @return willPlay (boolean)
+function Musician.Sampler.PlayNote(instrument, key, loopNote, track, player)
 	local soundFile, instrumentData = Musician.Sampler.GetSoundFile(instrument, key)
 
 	if soundFile == nil then
-		return nil
+		return nil, false
 	end
 
-	lastHandleId = lastHandleId + 1
-	notesOn[lastHandleId] = {
+	local noteOn = {
 		[NOTEON.TIME] = debugprofilestop(),
 		[NOTEON.INSTRUMENT_DATA] = instrumentData,
 		[NOTEON.SOUND_FILE] = soundFile,
 		[NOTEON.KEY] = key,
+		[NOTEON.TRACK] = track,
+		[NOTEON.PLAYER] = player,
 	}
-	playNoteOn(lastHandleId, loopNote, false)
 
-	return lastHandleId
+	lastHandleId = lastHandleId + 1
+	notesOn[lastHandleId] = noteOn
+
+	Musician.Utils.Debug(MODULE_NAME, 'PlayNote', lastHandleId, instrumentData and instrumentData.name, key, loopNote and '(looped)' or '')
+
+	local willPlay = noteOnShouldPlay(noteOn)
+	if willPlay then
+		playNoteSample(lastHandleId, loopNote, false)
+	end
+
+	return lastHandleId, willPlay
 end
 
---- Stop playing note
+--- Stop playing a note audio sample.
 -- @param handle (int) The note handle returned by PlayNote()
 -- @param[opt] decay (number) Override instrument decay
-function Musician.Sampler.StopNote(handle, decay)
-	if handle == nil or not(notesOn[handle]) then
+local function stopNoteSample(handle, decay)
+	local noteOn = notesOn[handle]
+
+	-- Note sample is not playing
+	local soundHandle = noteOn[NOTEON.SOUND_HANDLE]
+	if soundHandle == nil then
 		return
 	end
 
-	local noteOn = notesOn[handle]
-	local soundHandle = noteOn[NOTEON.SOUND_HANDLE]
-	local instrumentData = noteOn[NOTEON.INSTRUMENT_DATA]
-	local key = noteOn[NOTEON.KEY]
-
 	-- Get sample decay
+	local instrumentData = noteOn[NOTEON.INSTRUMENT_DATA]
 	if decay == nil and instrumentData then
 		if instrumentData.decayByKey ~= nil then
-			decay = instrumentData.decayByKey[key] or instrumentData.decay
+			decay = instrumentData.decayByKey[noteOn[NOTEON.KEY]] or instrumentData.decay
 		else
 			decay = instrumentData.decay
 		end
@@ -370,13 +433,48 @@ function Musician.Sampler.StopNote(handle, decay)
 		noteOn[NOTEON.LOOP]:Cancel()
 	end
 
-	Musician.Utils.Debug(MODULE_NAME, 'StopNote', handle, instrumentData and instrumentData.name, key, soundHandle, decay)
+	-- Stop playing the sample
+	Musician.Utils.Debug(MODULE_NAME, 'stopNoteSample', handle, decay)
+	StopSound(soundHandle, decay)
+	noteOn[NOTEON.SOUND_HANDLE] = nil
+end
 
-	if soundHandle then
-		StopSound(soundHandle, decay)
+--- Stop playing note
+-- @param handle (int) The note handle returned by PlayNote()
+-- @param[opt] decay (number) Override instrument decay
+function Musician.Sampler.StopNote(handle, decay)
+	if handle == nil or not(notesOn[handle]) then
+		return
 	end
 
+	Musician.Utils.Debug(MODULE_NAME, 'StopNote', handle, instrumentData and instrumentData.name, key, soundHandle, decay)
+	stopNoteSample(handle, decay)
 	notesOn[handle] = nil
+end
+
+--- Main on frame update function
+-- @param elapsed (number)
+function Musician.Sampler.OnUpdate(elapsed)
+	clearPlayerRangeCache() -- Refresh in range player status on every frame
+
+	-- Determine notes that should be playing and those that should be stopped
+	for handle, noteOn in pairs(notesOn) do
+		local shouldPlayNote = noteOnShouldPlay(noteOn)
+		local isNotePlaying = noteOn[NOTEON.SOUND_HANDLE] ~= nil
+
+		-- The note audio should be stopped
+		if isNotePlaying and not(shouldPlayNote) then
+			stopNoteSample(handle, decay)
+
+		-- The note audio should be started
+		elseif not(isNotePlaying) and shouldPlayNote then
+			local instrumentData = noteOn[NOTEON.INSTRUMENT_DATA]
+			local isPlucked = instrumentData.midi > 127 or instrumentData.isPercussion or instrumentData.isPlucked
+			if not(isPlucked) then
+				playNoteSample(handle, noteOn[NOTEON.LOOP] ~= nil, false)
+			end
+		end
+	end
 end
 
 --- Stop playing the oldest note to release a polyphony slot
@@ -418,10 +516,6 @@ end
 -- @return willPlay (boolean)
 -- @return soundHandle (int)
 function Musician.Sampler.PlaySoundFile(soundFile, channel)
-	if globalMute then
-		return true, 0 -- Silent note
-	end
-
 	local willPlay, soundHandle
 	pcall(function()
 		willPlay, soundHandle = PlaySoundFile(soundFile, channel)
@@ -433,10 +527,6 @@ end
 -- @param isMuted (boolean)
 function Musician.Sampler.SetMuted(isMuted)
 	globalMute = isMuted
-	local handle
-	for handle in pairs(notesOn) do
-		Musician.Sampler.StopNote(handle, 0)
-	end
 end
 
 --- Return global mute state

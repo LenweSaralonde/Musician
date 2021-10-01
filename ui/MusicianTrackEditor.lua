@@ -368,7 +368,7 @@ function Musician.TrackEditor.OnUpdate(event, elapsed)
 			local width = meterTexture.volumeMeter:GetLevel() * meterTexture.maxWidth
 			meterTexture:SetWidth(width)
 
-			if Musician.sourceSong:TrackIsMuted(track) then
+			if not(track.audible) then
 				meterTexture:SetAlpha(.25)
 			else
 				meterTexture:SetAlpha(1)
@@ -393,8 +393,10 @@ function Musician.TrackEditor.NoteOn(event, song, track, key)
 	if song == Musician.sourceSong then
 		local meterTexture = _G['MusicianTrackEditorTrack' .. track.index].meterTexture
 		local _, instrumentData = Musician.Sampler.GetSoundFile(track.instrument, key)
-		meterTexture.volumeMeter:NoteOn(instrumentData, key)
-		meterTexture:Show()
+		if instrumentData ~= nil then
+			meterTexture.volumeMeter:NoteOn(instrumentData, key)
+			meterTexture:Show()
+		end
 	end
 end
 

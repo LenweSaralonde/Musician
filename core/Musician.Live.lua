@@ -737,7 +737,7 @@ function Musician.Live.OnLiveNote(prefix, message, distribution, sender)
 		-- Play note
 		local sampleId = Musician.Sampler.GetSampleId(instrumentData, key)
 		if not(Musician.PlayerIsMuted(sender)) and Musician.Registry.PlayerIsInRange(sender) then
-			handle = Musician.Sampler.PlayNote(instrumentData, key, true)
+			handle = Musician.Sampler.PlayNote(instrumentData, key, true, nil, sender)
 		end
 
 		-- Insert note on

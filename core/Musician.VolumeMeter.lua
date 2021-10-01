@@ -49,6 +49,7 @@ end
 -- @param instrument (table) instrument data from Musician.INSTRUMENTS
 -- @param[opt] key (int) MIDI key number
 function Musician.VolumeMeter:NoteOn(instrument, key)
+	if instrument == nil then return end
 
 	local instrumentDecay
 	if instrument.decayByKey ~= nil and key ~= nil then

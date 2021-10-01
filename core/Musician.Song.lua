@@ -203,22 +203,20 @@ function Musician.Song:GetProgression()
 	return position / duration
 end
 
+--- Compute the track audible flag after a track was muted or set as solo.
+-- @param song (table)
+-- @param track (table)
+-- @return isMuted (boolean)
+local function computeTrackAudible(song, track)
+	track.audible = not(track.muted or song.soloTracks > 0 and not(track.solo))
+end
+
 --- Mute or unmute track
 -- @param track (table)
 -- @param isMuted (boolean)
 function Musician.Song:SetTrackMuted(track, isMuted)
-	if isMuted then
-		self:TrackNotesOff(track, true)
-	end
-
 	track.muted = isMuted
-end
-
---- Return true if the track is muted
--- @param track (table)
--- @return isMuted (boolean)
-function Musician.Song:TrackIsMuted(track)
-	return track.muted or self.soloTracks > 0 and not(track.solo)
+	computeTrackAudible(self, track)
 end
 
 --- Set/unset track solo
@@ -231,12 +229,9 @@ function Musician.Song:SetTrackSolo(track, isSolo)
 	elseif not(track.solo) and isSolo then
 		track.solo = true
 		self.soloTracks = self.soloTracks + 1
-		local track
-		for _, track in pairs(self.tracks) do
-			if self:TrackIsMuted(track) then
-				self:TrackNotesOff(track, true)
-			end
-		end
+	end
+	for _, track in pairs(self.tracks) do
+		computeTrackAudible(self, track)
 	end
 end
 
@@ -399,12 +394,12 @@ end
 --- Main on frame update function
 -- @param elapsed (number)
 function Musician.Song.OnUpdate(elapsed)
-	Musician.Utils.ForEach(playingSongs, function(song)
+	for _, song in pairs(playingSongs) do
 		song:PlayOnFrame(elapsed)
-	end)
-	Musician.Utils.ForEach(streamingSongs, function(song)
+	end
+	for _, song in pairs(streamingSongs) do
 		song:StreamOnFrame(elapsed)
-	end)
+	end
 end
 
 --- Play notes accordingly to every frame.
@@ -481,17 +476,13 @@ end
 -- @param track (table) Reference to the track
 -- @param noteIndex (int) Note index
 function Musician.Song:NoteOn(track, noteIndex)
-	local key = track.notes[noteIndex][NOTE.KEY] + track.transpose
-	local time = track.notes[noteIndex][NOTE.TIME]
-	local duration = track.notes[noteIndex][NOTE.DURATION]
-	local soundFile, instrumentData = Musician.Sampler.GetSoundFile(track.instrument, key)
-	local playerIsInRange = self.player ~= nil and Musician.Registry.PlayerIsInRange(self.player)
-	if soundFile == nil then
-		return
-	end
+	local note = track.notes[noteIndex]
+	local key = note[NOTE.KEY] + track.transpose
+	local time = note[NOTE.TIME]
+	local duration = note[NOTE.DURATION]
 
 	-- Send notification emote
-	if playerIsInRange and not(self.notified) then
+	if self.player ~= nil and not(self.notified) and Musician.Registry.PlayerIsInRange(self.player) then
 		Musician.Utils.DisplayEmote(self.player, Musician.Registry.GetPlayerGUID(self.player), Musician.Msg.EMOTE_PLAYING_MUSIC)
 		self.notified = true
 	end
@@ -508,18 +499,14 @@ function Musician.Song:NoteOn(track, noteIndex)
 
 	local shouldPlay = true
 
-	-- Do not play note if the source song is playing or if the player is out of range
-	local sourceSongIsPlaying = Musician.sourceSong ~= nil and Musician.sourceSong:IsPlaying()
-	if self.player ~= nil and (sourceSongIsPlaying or not(playerIsInRange)) or self:TrackIsMuted(track) or Musician.PlayerIsMuted(self.player) then
-		shouldPlay = false
-	end
-
 	-- Play note sound file
 	local handle
 	if shouldPlay then
-		Musician.Song:SendMessage(Musician.Events.NoteOn, self, track, key)
 		local loopNote = (duration == nil) or (duration > Musician.MAX_NOTE_DURATION)
-		handle = Musician.Sampler.PlayNote(track.instrument, key, loopNote)
+		handle = Musician.Sampler.PlayNote(track.instrument, key, loopNote, track, self.player)
+		if track.audible then
+			Musician.Song:SendMessage(Musician.Events.NoteOn, self, track, key)
+		end
 	end
 
 	-- Add note to notesOn with sound handle and note off time
@@ -547,9 +534,7 @@ end
 -- @param track (table) Reference to the track
 -- @param key (int) Note key
 -- @param[opt] stackIndex (int) Note on stack index
--- @param[opt] audioOnly (boolean) Stop note audio only
--- @param[opt] decay (number) Override instrument decay
-function Musician.Song:NoteOff(track, key, stackIndex, audioOnly, decay)
+function Musician.Song:NoteOff(track, key, stackIndex)
 	if self.mode == Musician.Song.MODE_LIVE then
 		key = key + track.transpose
 	end
@@ -560,46 +545,32 @@ function Musician.Song:NoteOff(track, key, stackIndex, audioOnly, decay)
 		-- Get note on from the stack (topmost by default)
 		local noteOn = noteOnStack[stackIndex or #noteOnStack]
 
-		-- If muting audio only and no specific note stack index is provided,
-		-- get the topmost note in the stack that still has a handle
-		if audioOnly and stackIndex == nil then
-			for index = #noteOnStack, 1, -1 do
-				if noteOnStack[index][NOTEON.HANDLE] ~= nil then
-					noteOn = noteOnStack[index]
-					break
-				end
-			end
-		end
-
 		-- Stop playing the note
 		local handle = noteOn[NOTEON.HANDLE]
 		if handle ~= nil then
-			Musician.Sampler.StopNote(handle, decay)
+			Musician.Sampler.StopNote(handle)
+		end
+		if track.audible then
 			Musician.Song:SendMessage(Musician.Events.NoteOff, self, track, key)
 		end
 
-		-- Remove note from stack or just set the handle to nil if audio only
-		if audioOnly then
-			noteOn[NOTEON.HANDLE] = nil
-		else
-			table.remove(noteOnStack, stackIndex)
-			if #noteOnStack == 0 then
-				track.notesOn[key] = nil
-			end
-			track.polyphony = track.polyphony - 1
-			self.polyphony = self.polyphony - 1
-			Musician.Song:SendMessage(Musician.Events.VisualNoteOff, self, track, key)
+		-- Remove note from stack
+		table.remove(noteOnStack, stackIndex)
+		if #noteOnStack == 0 then
+			track.notesOn[key] = nil
 		end
+		track.polyphony = track.polyphony - 1
+		self.polyphony = self.polyphony - 1
+		Musician.Song:SendMessage(Musician.Events.VisualNoteOff, self, track, key)
 	end
 end
 
 --- Stop all notes of a track
 -- @param track (table) Reference to the track
--- @param audioOnly (boolean)
-function Musician.Song:TrackNotesOff(track, audioOnly)
+function Musician.Song:TrackNotesOff(track)
 	for noteKey, noteOnStack in pairs(track.notesOn) do
 		for index = #noteOnStack, 1, -1 do
-			self:NoteOff(track, noteKey, index, audioOnly)
+			self:NoteOff(track, noteKey, index)
 		end
 	end
 end
@@ -828,6 +799,9 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 
 			-- Track is solo
 			track.solo = false
+
+			-- Track is audible
+			track.audible = not(track.muted)
 
 			-- Track transposition
 			track.transpose = 0
@@ -1463,6 +1437,7 @@ function Musician.Song:AppendChunk(chunk, mode, songId, chunkDuration, playtimeL
 				instrument = nil,
 				notes = {},
 				playIndex = 1,
+				audible = true,
 				muted = false,
 				solo = false,
 				transpose = 0,
@@ -1545,7 +1520,7 @@ function Musician.Song:StreamOnFrame(elapsed)
 			local duration = note[NOTE.DURATION]
 			local endTime = duration and (time + duration)
 			if from <= time or (duration ~= nil and from <= endTime) then
-				if not(self:TrackIsMuted(track)) and track.instrument >= 0 and track.instrument <= 255 then
+				if track.audible and track.instrument >= 0 and track.instrument <= 255 then
 					local key = note[NOTE.KEY] + track.transpose
 
 					-- Send note if key is within allowed range

@@ -454,6 +454,7 @@ function Musician.OnUpdate(frame, elapsed)
 	Musician.Song.OnUpdate(elapsed)
 	Musician.Preloader.OnUpdate(elapsed)
 	Musician.Worker.OnUpdate(elapsed)
+	Musician.Sampler.OnUpdate(elapsed)
 
 	Musician:SendMessage(Musician.Events.Frame, elapsed)
 end
