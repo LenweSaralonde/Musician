@@ -1,6 +1,15 @@
 Changelog
 =========
 
+v1.8.0.0
+--------
+* Removed 6-second limit for note duration. #59
+* Added sample looping.
+* Properly resume ongoing notes after being muted.
+* Fixed percussion envelopes.
+* Updated for WoW Classic Era 1.14 and BC Classic 2.5.2.
+* Bugfixes and improvements.
+
 v1.7.5.2
 --------
 * Dummy version bump to force refresh CurseForge's client API.
