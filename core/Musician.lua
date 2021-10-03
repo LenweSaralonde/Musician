@@ -720,6 +720,11 @@ function Musician.SetupHooks()
 				if not(Musician.Utils.PlayerIsOnSameRealm(player)) and not(Musician.Utils.PlayerIsInGroup(player)) then
 					msg = Musician.Msg.EMOTE_PLAYING_MUSIC .. " " .. Musician.Utils.Highlight(Musician.Msg.EMOTE_PLAYER_OTHER_REALM, 'FF0000')
 				else
+					-- languageName may not be provided
+					if languageName == nil or languageName == '' then
+						languageName = GetDefaultLanguage()
+					end
+
 					-- Determine if it's a language I'm supposed to understand
 					local isUnderstoodLanguage = false
 					for l = 1, GetNumLanguages() do
