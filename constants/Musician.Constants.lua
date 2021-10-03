@@ -13,7 +13,7 @@ Musician.LOCALIZATION_URL = "https://musician.lenwe.io/localize"
 
 Musician.FILE_HEADER = "MUS8"
 Musician.FILE_HEADER_COMPRESSED = "MUZ8"
-Musician.PROTOCOL_VERSION = 6
+Musician.PROTOCOL_VERSION = 7
 Musician.MAX_NOTE_DURATION = 6
 Musician.NOTE_DURATION_FPS = 255 / Musician.MAX_NOTE_DURATION -- 8-bit
 Musician.MAX_LONG_NOTE_DURATION = 255 * Musician.MAX_NOTE_DURATION
