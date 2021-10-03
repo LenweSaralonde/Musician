@@ -8,6 +8,8 @@ Musician.AddModule(MODULE_NAME)
 
 local gameAccountSelectorFrame
 
+local BOTTOM_FRAME_GAP = 22.5
+
 --- Init
 --
 function Musician.SongLinkImportFrame.Init()
@@ -24,6 +26,13 @@ function Musician.SongLinkImportFrame.Init()
 
 	-- Create WoW game account selector menu frame
 	gameAccountSelectorFrame = CreateFrame("Frame", "MusicianSongLinkImportFrame_GameAccountSelector", UIParent, "MusicianDropDownMenuTooltipTemplate")
+end
+
+local function adjustHeight()
+	local frame = MusicianSongLinkImportFrame
+	local lastElement = select(frame:GetNumChildren(), frame:GetChildren())
+	local actualGap = lastElement:GetBottom() - frame:GetBottom()
+	frame:SetHeight(frame:GetHeight() - actualGap + BOTTOM_FRAME_GAP)
 end
 
 local function startImport(title, playerName)
@@ -111,6 +120,8 @@ local function update(title, playerName)
 		-- Update progression
 		updateProgression(requestingSong.progress)
 	end
+
+	adjustHeight()
 end
 
 --- OnSongLinkClick
