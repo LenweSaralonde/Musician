@@ -1,4 +1,4 @@
-## Interface: 11307
+## Interface: 11400
 ## Title: Musician
 ## Author: LenweSaralonde
 ## Version: 1.7.5.2
@@ -34,7 +34,7 @@ locale\locale.xml
 ui\fonts\Musician.Icons.lua
 ui\fonts\Musician.PercussionIcons.lua
 
-ui\widgets\MusicianWidgets.classic.xml
+ui\widgets\MusicianWidgets.xml
 
 ui\MusicianFrame.xml
 ui\MusicianFrame.lua
