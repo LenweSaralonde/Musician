@@ -1,4 +1,4 @@
-## Interface: 90100
+## Interface: 20502
 ## Title: Musician
 ## Author: LenweSaralonde
 ## Version: 1.8.0.1
@@ -62,4 +62,4 @@ ui\MusicianSongLinkExportFrame.lua
 ui\MusicianSongLinkImportFrame.xml
 ui\MusicianSongLinkImportFrame.lua
 
-modules\modules.xml
+modules\modules.classic.xml
