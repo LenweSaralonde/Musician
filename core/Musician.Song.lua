@@ -382,6 +382,7 @@ function Musician.Song:Stop()
 	if self.willPlayTimer then
 		self.willPlayTimer:Cancel()
 		self.willPlayTimer = nil
+		Musician.Song:SendMessage(Musician.Events.SongStop, self)
 	end
 	if self.playing then
 		removePlayingSong(self)

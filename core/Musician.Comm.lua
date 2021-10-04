@@ -478,9 +478,11 @@ function Musician.Comm.StopSong()
 	if not(Musician.Comm.CanBroadcast()) then return false end
 	if Musician.streamingSong and Musician.streamingSong.streaming or isSongPlaying then
 		Musician.Utils.Debug(MODULE_NAME, "StopSong")
-		Musician.streamingSong:StopStreaming()
-		Musician.streamingSong = nil
-		collectgarbage()
+		if Musician.streamingSong ~= nil then
+			Musician.streamingSong:StopStreaming()
+			Musician.streamingSong = nil
+			collectgarbage()
+		end
 		isStopPending = true
 		Musician.Comm:SendMessage(Musician.Events.CommSendAction, Musician.Comm.action.stop)
 		Musician.Comm.BroadcastCommMessage(Musician.Comm.event.stop, Musician.Comm.event.stop)
