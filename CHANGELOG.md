@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.8.0.1
+--------
+* Fixed annoying LUA errors poping up randomly.
+* Fixed Play/Stop button getting stuck when clicked too fast.
+
 v1.8.0.0
 --------
 * Removed 6-second limit for note duration. #59
