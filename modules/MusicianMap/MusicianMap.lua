@@ -108,8 +108,10 @@ function Musician.Map.OnSongChunk(event, sender, mode, songId, chunkDuration, pl
 	-- Remove player from active player list when the song chunk has expired
 	local timeout = mode == Musician.Song.MODE_DURATION and 3 or 2
 	local timer = C_Timer.NewTimer(timeout, function()
-		wipe(activePlayers[sender])
-		activePlayers[sender] = nil
+		if activePlayers[sender] ~= nil then
+			wipe(activePlayers[sender])
+			activePlayers[sender] = nil
+		end
 		Musician.Map.RemovePlayer(sender)
 	end)
 
