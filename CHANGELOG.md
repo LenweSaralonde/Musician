@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.8.0.2
+--------
+* TOC bump for WoW 9.1.5.
+
 v1.8.0.1
 --------
 * Fixed annoying LUA errors poping up randomly.
