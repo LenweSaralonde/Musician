@@ -52,6 +52,18 @@ Musician.InstrumentToys = {
 			3885824, -- sound/music/shadowlands/mus_90_aw_nocturne_celestial_harp_d.mp3
 		}
 	},
+	{
+		itemId = 188680, -- Winter Veil Chorus Book
+		soundFiles = {
+			568190, -- 	sound/spells/fx_wintersveil_carolingsweater_05.ogg
+			568370, -- 	sound/spells/fx_wintersveil_carolingsweater_04.ogg
+			568584, -- 	sound/spells/fx_wintersveil_carolingsweater_06.ogg
+			568623, -- 	sound/spells/fx_wintersveil_carolingsweater_07.ogg
+			568701, -- 	sound/spells/fx_wintersveil_carolingsweater_03.ogg
+			569399, -- 	sound/spells/fx_wintersveil_carolingsweater_01.ogg
+			569645, -- 	sound/spells/fx_wintersveil_carolingsweater_02.ogg
+		}
+	},
 }
 
 --- Events
