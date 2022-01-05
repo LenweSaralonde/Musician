@@ -29,7 +29,7 @@ How to listen to music
 All you need is to have the add-on installed. Nothing more is required.
 
 * Enable nameplates with **SHIFT+V** (or from the add-on options) to see cool animations on characters playing music and show a 🎵 next to the name of your fellow music addicts.
-* To mute a player, right-click on his/her name or portrait to open the menu then select **Mute**. Do the same to unmute.
+* To mute a player, right-click on their name or portrait to open the menu then select **Mute**. Do the same to unmute.
 * You can also just stop the song being played by clicking the **[Stop]** hyperlink in the player's emote.
 * Right click on the minimap button to enable or disable all the music from the add-on.
 * The characters currently playing music can be shown on the world map and the minimap.
@@ -165,7 +165,7 @@ In addition, the [Total RP Extended](https://www.curseforge.com/wow/addons/total
 Tips and tricks
 ---------------
 * You can preview the song at any moment prior to playing it for other players by clicking the **Preview** button or using the song editor. If another song is playing nearby, it will be muted for you only.
-* If another player has Musician, it will be shown in his/her tooltip. Just hover the other players with your mouse cursor to see who can hear you!
+* If another player has Musician, it will be shown in their tooltip. Just hover the other players with your mouse cursor to see who can hear you!
 * Use toys such as the [\[Blingtron's Circuit Design Tutorial\]](https://www.wowhead.com/item=132518/blingtrons-circuit-design-tutorial) and the [\[Fae Harp\]](https://www.wowhead.com/item=184489/fae-harp) to make your performance visually more immersive! (WoW Retail only)
 * You can add lyrics by combining Musician with the [StoryTeller add-on](https://musician.lenwe.io/storyteller).
 * Load and prepare the next song while the current one is playing to reduce waiting time between songs.
