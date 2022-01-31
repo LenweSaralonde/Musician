@@ -34,7 +34,7 @@ All you need is to have the add-on installed. Nothing more is required.
 * Right click on the minimap button to enable or disable all the music from the add-on.
 * The characters currently playing music can be shown on the world map and the minimap.
 
-![Nameplate animations](./img/nameplates.gif)
+![Nameplate animations](https://raw.githubusercontent.com/LenweSaralonde/Musician/master/img/nameplates.gif)
 
 How to play music
 -----------------
@@ -51,7 +51,7 @@ You can find millions of MIDI files very easily by searching for *MIDI* + *music
 5. Click the **Select all** button then paste the music code in the edit window (*Ctrl+V* or *CMD+V* on Mac).
 6. Click **Play**.
 
-![Main window](./img/main-window.png)
+![Main window](https://raw.githubusercontent.com/LenweSaralonde/Musician/master/img/main-window.png)
 
 ### Save and load songs in game
 Songs can be saved and loaded back in game using the optional add-on [MusicianList](https://musician.lenwe.io/musicianlist).
@@ -61,11 +61,11 @@ Songs can be played in sync as a band, in which each member is playing a differe
 
 To allow synchronized play, all band members should be grouped in the same party or raid and have the same song loaded into Musician.
 
-Use the **Link**/**Export** button ![Link button](./img/link-button.png) to share songs with your band members.
+Use the **Link**/**Export** button ![Link button](https://raw.githubusercontent.com/LenweSaralonde/Musician/master/img/link-button.png) to share songs with your band members.
 
 1. Load the same song as the other members of the band from MIDI, [from the list](https://musician.lenwe.io/musicianlist) or from a song chat link.
 2. Open the **Song Editor** then check **Solo** for the tracks you want to play with your character. Adjust other track settings as you like.
-3. Click the **Play as a band** button ![Play as band button](./img/band-play-button-song.png) when you're done (the green LED starts blinking).
+3. Click the **Play as a band** button ![Play as band button](https://raw.githubusercontent.com/LenweSaralonde/Musician/master/img/band-play-button-song.png) when you're done (the green LED starts blinking).
 4. When every member is ready, the band leader clicks the **Play** button for synchronized start (the green LED turns on).
 5. Song stops playing if the band leader clicks the **Stop** button.
 
@@ -86,7 +86,7 @@ Before using the keyboard for the first time, you have configure it to determine
 
 This process is straightforward and takes approximately 30 seconds to complete, just follow the on-screen instructions.
 
-![Configuration example for the US keyboard](./img/configure-keyboard-us.png)
+![Configuration example for the US keyboard](https://raw.githubusercontent.com/LenweSaralonde/Musician/master/img/configure-keyboard-us.png)
 
 ### The live keyboard
 The live keyboard consists in two layers, **Upper** and **Lower**, respectively the two first and two last rows of your keyboard (or the right and left side, depending on the layout used). Each layer has its own instrument setting so 2 different instruments can be played at the same time or the same instrument can be set to both layers to take advantage of the full keyboard.
@@ -102,12 +102,12 @@ The keyboard settings can be saved in 12 program slots, accessible using the 12 
 * Press **Ctrl** (or **Shift** on Mac) **+** the **Function key** to save the current settings in a program.
 * Press **Delete +** the **Function key** to erase a program.
 
-![The live keyboard](./img/live-keyboard.png)
+![The live keyboard](https://raw.githubusercontent.com/LenweSaralonde/Musician/master/img/live-keyboard.png)
 
 ### Play as a band
 It's possible to play as a band in Live Mode. All the members of the band should be grouped in the same party or raid.
 
-Click the **Play live as a band** button ![Play live as a band button](./img/band-play-button-live.png) on the live keyboard window to turn on the synchronization. In counterpart, this may result in some latency so you won't be able to play fast paced songs in this mode.
+Click the **Play live as a band** button ![Play live as a band button](https://raw.githubusercontent.com/LenweSaralonde/Musician/master/img/band-play-button-live.png) on the live keyboard window to turn on the synchronization. In counterpart, this may result in some latency so you won't be able to play fast paced songs in this mode.
 
 Use the **Solo Mode** if you need to do some adjustments you don't want the other members of the band to hear.
 
@@ -128,13 +128,13 @@ Some basic modifications can be made to the imported song in the song editor, wh
 
 The song editor also shows some information about the tracks (MIDI instrument, start and end points, number of notes…) and the activity while the song is playing. Click the track start or end point timecode to reach it in the timeline.
 
-You can still change the track settings of the song currently playing by clicking the **Synchronize track settings** button ![Synchronize track settings button](./img/synchronize-track-settings-button.png) as long as you have the same song loaded in the editor.
+You can still change the track settings of the song currently playing by clicking the **Synchronize track settings** button ![Synchronize track settings button](https://raw.githubusercontent.com/LenweSaralonde/Musician/master/img/synchronize-track-settings-button.png) as long as you have the same song loaded in the editor.
 
-![Song editor](./img/song-editor.png)
+![Song editor](https://raw.githubusercontent.com/LenweSaralonde/Musician/master/img/song-editor.png)
 
 Share your songs with the other players
 ---------------------------------------
-Songs can be shared with other players as links to be posted into the chat. Click the **Link** or **Export** button ![Link button](./img/link-button.png), set a title and you're done!
+Songs can be shared with other players as links to be posted into the chat. Click the **Link** or **Export** button ![Link button](https://raw.githubusercontent.com/LenweSaralonde/Musician/master/img/link-button.png), set a title and you're done!
 
 The links remain active until you log out or reload the interface.
 
@@ -148,7 +148,7 @@ Cross RP relies on a peer to peer network established by the players who run it 
 
 You can see what realms and factions you're connected to in Musician's options or by mousing over the Cross RP minimap button.
 
-![Cross-faction play with Cross RP](./img/cross-rp.png)
+![Cross-faction play with Cross RP](https://raw.githubusercontent.com/LenweSaralonde/Musician/master/img/cross-rp.png)
 
 Integration with role-playing add-ons
 -------------------------------------
@@ -156,11 +156,11 @@ Musician integrates with role-playing add-ons [Total RP](https://www.curseforge.
 
 [Total RP](https://www.curseforge.com/wow/addons/total-rp-3)'s map scan feature shows players who also have Musician with a 🎵 icon. The icon blinks for players who are currently playing music.
 
-![Total RP map scan](./img/trp-map-scan.png)
+![Total RP map scan](https://raw.githubusercontent.com/LenweSaralonde/Musician/master/img/trp-map-scan.png)
 
 In addition, the [Total RP Extended](https://www.curseforge.com/wow/addons/total-rp-3-extended) plugin allows you to export your songs as sheet music items that can be traded with other players. Click the **Export** button to create one.
 
-![Total RP Extended item export](./img/total-rp-extended-item-export.png)![Total RP Extended item in bag](./img/total-rp-extended-sheet-music-item.png)
+![Total RP Extended item export](https://raw.githubusercontent.com/LenweSaralonde/Musician/master/img/total-rp-extended-item-export.png)![Total RP Extended item in bag](https://raw.githubusercontent.com/LenweSaralonde/Musician/master/img/total-rp-extended-sheet-music-item.png)
 
 Tips and tricks
 ---------------

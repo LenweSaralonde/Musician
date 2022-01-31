@@ -19,3 +19,5 @@ ignore:
     # Fontello sources
     - ui/fonts/musician-icons-fontello-config.json
     - ui/fonts/musician-percussions-fontello-config.json
+    # README.md images
+    - img
