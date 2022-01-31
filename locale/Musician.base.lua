@@ -12,7 +12,7 @@ msg.MIDI_PERCUSSION_NAMES = {}
 Musician.DefaultTranslator = "Google Translate"
 
 Musician.LocalizationTeam = {
-	{ 'de', Musician.DefaultTranslator },
+	{ 'de', "Lyntharia" },
 	{ 'en', "LenweSaralonde" },
 	{ 'es', Musician.DefaultTranslator },
 	{ 'fr', "LenweSaralonde" },
