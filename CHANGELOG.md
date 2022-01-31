@@ -1,6 +1,12 @@
 Changelog
 =========
 
+v1.8.0.4
+--------
+* German translation by Lyntharia.
+* Removed README.md images from add-on package.
+* TOC update for BC Classic 2.5.3.
+
 v1.8.0.3
 --------
 * Mute audio from the Winter Veil Chorus Book instrument toy.
