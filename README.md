@@ -10,8 +10,6 @@ Quick links
 * Additional modules:
   * [Musician List](https://musician.lenwe.io/list) — Save and load your songs in-game.
   * [Musician MIDI](https://musician.lenwe.io/midi) — Play live music using your MIDI keyboard.
-* Extra instruments:
-  * [Musician Piano](https://musician.lenwe.io/piano) — Grand piano, based on the legendary Yamaha C7.
 * [Wiki](https://github.com/LenweSaralonde/Musician/wiki) — Tips and tricks, FAQ and detailed documentation for gamers, developers and music producers.
 * [Bug tracker](https://github.com/LenweSaralonde/Musician/issues) — Report issues
 * [GitHub repo](https://github.com/LenweSaralonde/Musician) — Contribute to the project
@@ -186,6 +184,7 @@ The 18 melodic instruments available are:
 * Recorder (74)
 * Celtic harp (46)
 * Hammered dulcimer (15)
+* Piano (0)
 * Bagpipe (109)
 * Accordion (22)
 * Fiddle (110)
@@ -208,7 +207,7 @@ Percussions:
 * Woodblock (115)
 * Tambourine shake (119)
 
-The other instruments are mapped to the closest-sounding instrument among the ones available (violin → fiddle, piano → dulcimer, guitar → lute etc.).
+The other instruments are mapped to the closest-sounding instrument among the ones available (violin → fiddle, guitar → lute etc.).
 
 The drum kits are replaced by traditional percussions such as a bodhrán (frame drum), a tambourine and a shaker. A standard drum kit is also available for heavy metal songs.
 
