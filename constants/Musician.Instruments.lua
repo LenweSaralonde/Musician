@@ -103,6 +103,15 @@ Musician.INSTRUMENTS = {
 		color = Musician.COLORS.DarkWhite,
 		source = "LABS Dulcimer"
 	},
+	["piano"] = {
+		path = "Interface\\AddOns\\Musician\\instruments\\piano",
+		decay = 200,
+		isPercussion = false,
+		isPlucked = true,
+		midi = 0,
+		color = Musician.COLORS.White,
+		source = "NeoPiano mini"
+	},
 	["female-voice"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\female-voice",
 		decay = 100,
@@ -652,6 +661,7 @@ Musician.INSTRUMENTS_AVAILABLE = {
 	"recorder",
 	"harp",
 	"dulcimer",
+	"piano",
 	"bagpipe",
 	"accordion",
 	"fiddle",

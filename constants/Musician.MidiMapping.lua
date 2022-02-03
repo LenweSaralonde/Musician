@@ -7,12 +7,12 @@ local Instrument = Musician.MIDI_INSTRUMENTS
 -- General MIDI instrument ID mapping to internal instrument ID
 Musician.MIDI_INSTRUMENT_MAPPING = {
 	-- Piano
-	[Instrument.AcousticGrandPiano] = "dulcimer",
-	[Instrument.BrightAcousticPiano] = "dulcimer",
-	[Instrument.ElectricGrandPiano] = "dulcimer",
-	[Instrument.HonkyTonkPiano] = "dulcimer",
-	[Instrument.ElectricPiano1] = "dulcimer",
-	[Instrument.ElectricPiano2] = "dulcimer",
+	[Instrument.AcousticGrandPiano] = "piano",
+	[Instrument.BrightAcousticPiano] = "piano",
+	[Instrument.ElectricGrandPiano] = "piano",
+	[Instrument.HonkyTonkPiano] = "piano",
+	[Instrument.ElectricPiano1] = "piano",
+	[Instrument.ElectricPiano2] = "piano",
 	[Instrument.Harpsichord] = "harp",
 	[Instrument.Clavi] = "harp",
 
