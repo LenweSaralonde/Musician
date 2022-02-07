@@ -1,6 +1,12 @@
 Changelog
 =========
 
+v1.9.0.0
+--------
+*"Piano Man"*
+
+* The piano is now included in the standard instrument list.
+
 v1.8.0.4
 --------
 * German translation by Lyntharia.
