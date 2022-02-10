@@ -1,6 +1,6 @@
 const parseMidi = require('midi-file').parseMidi;
 
-export const CONVERTER_VERSION = '8.0';
+export const CONVERTER_VERSION = '8.1';
 
 const FILE_HEADER = 'MUS8';
 const MAX_NOTE_DURATION = 6;
@@ -10,9 +10,12 @@ const NOTE_TIME_FPS = 240;
 const MAX_NOTE_TIME = 65535 / NOTE_TIME_FPS; // 16-bit
 const MODE_DURATION = 0x10;
 
-const CC_DATA_ENTRY = 0x06;
-const CC_RPN_LSB = 0x64;
-const CC_RPN_MSB = 0x65;
+const DEFAULT_PITCH_BEND_RANGE = 2;
+
+const CC_RPN_FINE = 0x64;
+const CC_RPN_COARSE = 0x65;
+const CC_DATA_ENTRY_COARSE = 0x06;
+const CC_DATA_ENTRY_FINE = 0x26;
 
 /**
  * Pack an integer number into a binary string.
@@ -228,28 +231,46 @@ function processPitchBend(events) {
 	const channelCC = {};
 	const pitchBendValue = {};
 	const pitchBendRange = {};
+	const pitchBendRangeCCTypes = [CC_RPN_COARSE, CC_RPN_FINE, CC_DATA_ENTRY_COARSE, CC_DATA_ENTRY_FINE];
 
-	const pitchBendRangeCCTypes = [CC_DATA_ENTRY, CC_RPN_LSB, CC_RPN_MSB];
+	let isSettingPitchBendRangeCoarse = {};
+	let isSettingPitchBendRangeFine = {};
 
 	for (const event of events) {
 
 		// Control change event for pitch bend range
-		let isPitchBendRangeEvent = false;
+		let newPitchBandRangeValue = null;
+
 		if (event.type === 'controller' && pitchBendRangeCCTypes.includes(event.controllerType)) {
 			if (!channelCC[event.channel]) {
 				channelCC[event.channel] = {};
 			}
 			channelCC[event.channel][event.controllerType] = event.value;
 
-			// Data Entry MSB for pitch bend range change is complete
-			isPitchBendRangeEvent = event.controllerType === CC_DATA_ENTRY && !channelCC[event.channel][CC_RPN_LSB] && channelCC[event.channel][CC_RPN_MSB] === 0;
+			let isPitchBendRangeMessageComplete = false;
+			if (event.controllerType === CC_RPN_COARSE && event.value === 0x00) {
+				isSettingPitchBendRangeCoarse[event.channel] = true;
+			} else if (event.controllerType === CC_RPN_FINE && event.value === 0x00) {
+				isSettingPitchBendRangeFine[event.channel] = true;
+			} else if (event.controllerType === CC_DATA_ENTRY_COARSE && isSettingPitchBendRangeCoarse[event.channel]) {
+				isSettingPitchBendRangeCoarse[event.channel] = false;
+				isPitchBendRangeMessageComplete = true;
+			} else if (event.controllerType === CC_DATA_ENTRY_FINE && isSettingPitchBendRangeFine[event.channel]) {
+				isSettingPitchBendRangeFine[event.channel] = false;
+				isPitchBendRangeMessageComplete = true;
+			}
+
+			// We're done receiving our pitch bend range message
+			if (isPitchBendRangeMessageComplete) {
+				newPitchBandRangeValue = (channelCC[event.channel][CC_DATA_ENTRY_COARSE] || DEFAULT_PITCH_BEND_RANGE) + (channelCC[event.channel][CC_DATA_ENTRY_FINE] || 0) / 100;
+			}
 		}
 
 		// Note events
 		if (event.type === 'noteOn' || event.type === 'noteOff') {
 			// Apply pitch bend note offset to the note event
 			const channelPitchBendValue = pitchBendValue[event.channel] || 0;
-			const channelPitchBendRange = pitchBendRange[event.channel] || 2;
+			const channelPitchBendRange = pitchBendRange[event.channel] || DEFAULT_PITCH_BEND_RANGE;
 			const noteOffset = Math.round(channelPitchBendValue * channelPitchBendRange);
 			const noteNumber = event.noteNumber + noteOffset;
 			eventsWithPitchBend.push({ ...event, noteNumber });
@@ -266,27 +287,24 @@ function processPitchBend(events) {
 			}
 		}
 		// Pitch bend events
-		else if (event.type === 'pitchBend' || isPitchBendRangeEvent) {
+		else if (event.type === 'pitchBend' || newPitchBandRangeValue !== null) {
+			const currentPitchBendValue = (pitchBendValue[event.channel] || 0) * (pitchBendRange[event.channel] || DEFAULT_PITCH_BEND_RANGE);
 
 			// Changing pitch bend range
-			const currentPitchBendRange = pitchBendRange[event.channel] || 2;
-			let newPitchBendRange = currentPitchBendRange;
-			if (isPitchBendRangeEvent) {
-				newPitchBendRange = event.value;
-				pitchBendRange[event.channel] = newPitchBendRange;
+			if (newPitchBandRangeValue !== null) {
+				pitchBendRange[event.channel] = newPitchBandRangeValue;
 			}
 
 			// Changing pitch bend value
-			const currentPitchBendValue = pitchBendValue[event.channel] || 0;
-			let newPitchBendValue = currentPitchBendValue;
 			if (event.type === 'pitchBend') {
-				newPitchBendValue = event.value / 0x2000;
-				pitchBendValue[event.channel] = newPitchBendValue;
+				pitchBendValue[event.channel] = event.value / 0x2000;
 			}
 
+			const newPitchBendValue = (pitchBendValue[event.channel] || 0) * (pitchBendRange[event.channel] || DEFAULT_PITCH_BEND_RANGE);
+
 			// Get current and new note (semitone) offsets
-			const currentNoteOffset = Math.round(currentPitchBendRange * currentPitchBendValue);
-			const newNoteOffset = Math.round(newPitchBendRange * newPitchBendValue);
+			const currentNoteOffset = Math.round(currentPitchBendValue);
+			const newNoteOffset = Math.round(newPitchBendValue);
 
 			// The semitone offset has changed
 			if (currentNoteOffset !== newNoteOffset && notesOn[event.channel]) {
