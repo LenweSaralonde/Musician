@@ -13,3 +13,4 @@ MUSICIAN_MSG.becomeAPatron = "Werden Sie ein Benutzer, der das Projekt unterstü
 MUSICIAN_MSG.donatePayPal = "Spenden Sie, um das Projekt zu unterstützen";
 MUSICIAN_MSG.patreonLink = "Werden Sie ein Benutzer";
 MUSICIAN_MSG.donateLink = "Spenden";
+MUSICIAN_MSG.fromMuseScore = "Das Lied stammt von MuseScore.";

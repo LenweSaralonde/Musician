@@ -13,3 +13,4 @@ MUSICIAN_MSG.becomeAPatron = "Станьте покровителем, чтоб�
 MUSICIAN_MSG.donatePayPal = "Пожертвовать для поддержки проекта";
 MUSICIAN_MSG.patreonLink = "Станьте покровителем";
 MUSICIAN_MSG.donateLink = "Пожертвовать";
+MUSICIAN_MSG.fromMuseScore = "Песня взята из MuseScore.";

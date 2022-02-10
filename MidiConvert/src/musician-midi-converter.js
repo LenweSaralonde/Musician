@@ -1,6 +1,6 @@
 const parseMidi = require('midi-file').parseMidi;
 
-export const CONVERTER_VERSION = '8.1';
+export const CONVERTER_VERSION = '8.2';
 
 const FILE_HEADER = 'MUS8';
 const MAX_NOTE_DURATION = 6;
@@ -11,6 +11,7 @@ const MAX_NOTE_TIME = 65535 / NOTE_TIME_FPS; // 16-bit
 const MODE_DURATION = 0x10;
 
 const DEFAULT_PITCH_BEND_RANGE = 2;
+const MUSESCORE_DEFAULT_PITCH_BEND_RANGE = 12;
 
 const CC_RPN_FINE = 0x64;
 const CC_RPN_COARSE = 0x65;
@@ -222,9 +223,14 @@ function processSustain(events) {
 /**
  * Replace pitch bend events by semitone slides.
  * @param {array} events
+ * @param {object} options
+ * @param {boolean} options.fromMuseScore Fix default pitch bend range for songs imported from MuseScore
  * @returns {array}
  */
-function processPitchBend(events) {
+function processPitchBend(events, options = {}) {
+
+	// Set default pitch bend range to 12 for songs imported from MuseScore
+	const defaultPitchBendRange = options.fromMuseScore ? MUSESCORE_DEFAULT_PITCH_BEND_RANGE : DEFAULT_PITCH_BEND_RANGE;
 
 	const eventsWithPitchBend = [];
 	const notesOn = {};
@@ -237,10 +243,13 @@ function processPitchBend(events) {
 	let isSettingPitchBendRangeFine = {};
 
 	for (const event of events) {
+		// Control change event to reset all controllers
+		if (event.type === 'controller' && event.controllerType === 0x79) {
+			pitchBendRange[event.channel] = defaultPitchBendRange;
+		}
 
 		// Control change event for pitch bend range
 		let newPitchBandRangeValue = null;
-
 		if (event.type === 'controller' && pitchBendRangeCCTypes.includes(event.controllerType)) {
 			if (!channelCC[event.channel]) {
 				channelCC[event.channel] = {};
@@ -262,7 +271,7 @@ function processPitchBend(events) {
 
 			// We're done receiving our pitch bend range message
 			if (isPitchBendRangeMessageComplete) {
-				newPitchBandRangeValue = (channelCC[event.channel][CC_DATA_ENTRY_COARSE] || DEFAULT_PITCH_BEND_RANGE) + (channelCC[event.channel][CC_DATA_ENTRY_FINE] || 0) / 100;
+				newPitchBandRangeValue = (channelCC[event.channel][CC_DATA_ENTRY_COARSE] || defaultPitchBendRange) + (channelCC[event.channel][CC_DATA_ENTRY_FINE] || 0) / 100;
 			}
 		}
 
@@ -270,7 +279,7 @@ function processPitchBend(events) {
 		if (event.type === 'noteOn' || event.type === 'noteOff') {
 			// Apply pitch bend note offset to the note event
 			const channelPitchBendValue = pitchBendValue[event.channel] || 0;
-			const channelPitchBendRange = pitchBendRange[event.channel] || DEFAULT_PITCH_BEND_RANGE;
+			const channelPitchBendRange = pitchBendRange[event.channel] || defaultPitchBendRange;
 			const noteOffset = Math.round(channelPitchBendValue * channelPitchBendRange);
 			const noteNumber = event.noteNumber + noteOffset;
 			eventsWithPitchBend.push({ ...event, noteNumber });
@@ -288,7 +297,7 @@ function processPitchBend(events) {
 		}
 		// Pitch bend events
 		else if (event.type === 'pitchBend' || newPitchBandRangeValue !== null) {
-			const currentPitchBendValue = (pitchBendValue[event.channel] || 0) * (pitchBendRange[event.channel] || DEFAULT_PITCH_BEND_RANGE);
+			const currentPitchBendValue = (pitchBendValue[event.channel] || 0) * (pitchBendRange[event.channel] || defaultPitchBendRange);
 
 			// Changing pitch bend range
 			if (newPitchBandRangeValue !== null) {
@@ -300,7 +309,7 @@ function processPitchBend(events) {
 				pitchBendValue[event.channel] = event.value / 0x2000;
 			}
 
-			const newPitchBendValue = (pitchBendValue[event.channel] || 0) * (pitchBendRange[event.channel] || DEFAULT_PITCH_BEND_RANGE);
+			const newPitchBendValue = (pitchBendValue[event.channel] || 0) * (pitchBendRange[event.channel] || defaultPitchBendRange);
 
 			// Get current and new note (semitone) offsets
 			const currentNoteOffset = Math.round(currentPitchBendValue);
@@ -377,9 +386,10 @@ function calculateNoteOnDurations(events) {
  * Convert MIDI file into a Musician song object.
  * @param {ArrayBuffer} midiArray
  * @param {string} fileName
+ * @param {object} options
  * @returns {object}
  */
-function convertMidi(midiArray, fileName) {
+function convertMidi(midiArray, fileName, options) {
 
 	// Parse binary MIDI file
 	if (midiArray instanceof ArrayBuffer) {
@@ -392,7 +402,7 @@ function convertMidi(midiArray, fileName) {
 	const eventsWithSustain = processSustain(rawEvents);
 
 	// Process pitch bend
-	const eventsWithPitchBend = processPitchBend(eventsWithSustain);
+	const eventsWithPitchBend = processPitchBend(eventsWithSustain, options);
 
 	// Calculate noteOn durations
 	const events = calculateNoteOnDurations(eventsWithPitchBend);
@@ -501,11 +511,12 @@ function convertMidi(midiArray, fileName) {
  * Convert MIDI file into a Musician song file.
  * @param {ArrayBuffer} midiArray
  * @param {string} fileName
+ * @param {object} options
  * @returns {string}
  */
-export function packSong(midiArray, fileName) {
+export function packSong(midiArray, fileName, options) {
 	// Get formatted song
-	const song = convertMidi(midiArray, fileName);
+	const song = convertMidi(midiArray, fileName, options);
 
 	let packedSong = '';
 

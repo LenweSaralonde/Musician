@@ -4,7 +4,7 @@
 	<title>Musician – MIDI Import</title>
 	<meta charset="UTF-8">
 	<script type="text/javascript" src="./js/base64.js"></script>
-	<script type="text/javascript" src="./js/musician-midi-converter.js?v=1.8.1"></script>
+	<script type="text/javascript" src="./js/musician-midi-converter.js?v=1.8.2"></script>
 	<script type="text/javascript" src="./js/locale.js?v=6"></script>
 	<style type="text/css">
 		body {
@@ -67,6 +67,15 @@
 			text-align: center;
 			color: #FFFFFF;
 			overflow: hidden;
+		}
+
+		#Options {
+			text-align: left;
+			padding: 5px;
+		}
+
+		#Options label {
+			margin-left: 5px;
 		}
 
 		#Result {
@@ -243,6 +252,15 @@
 			color: #666;
 		}
 
+		.noselect, label {
+			-webkit-touch-callout: none; /* iOS Safari */
+			-webkit-user-select: none; /* Safari */
+			-khtml-user-select: none; /* Konqueror HTML */
+			-moz-user-select: none; /* Old versions of Firefox */
+			-ms-user-select: none; /* Internet Explorer/Edge */
+			user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+		}
+
 	</style>
 </head>
 <body style="opacity: 0" id="main">
@@ -251,6 +269,9 @@
 		<div id="FileDrop">
 			<input type="file" accept="audio/midi">
 			<div id="Text"></div>
+		</div>
+		<div id="Options">
+			<input type="checkbox" id="FromMuseScore"><label for="FromMuseScore">The song is from MuseScore.</label>
 		</div>
 		<div id="Result">
 			<textarea id="ResultsText" onClick="this.setSelectionRange(0, this.value.length)" readonly></textarea>
@@ -288,7 +309,8 @@
 		if (!(window.File && window.FileReader && window.FileList && window.Blob)) {
 			document.querySelector("#FileDrop #Text").textContent = "Reading files not supported by this browser";
 		} else {
-			var fileDrop = document.querySelector("#FileDrop")
+			var fileDrop = document.querySelector("#FileDrop");
+			var files;
 
 			fileDrop.addEventListener("dragenter", function(){
 				fileDrop.classList.add("Hover");
@@ -302,7 +324,7 @@
 				fileDrop.classList.remove("Hover");
 			});
 
-			document.querySelector("#FileDrop input").addEventListener("change", function(e){
+			function processMidiFile() {
 				document.querySelector("#ResultsText").innerHTML = "";
 				document.querySelector("#ResultsText").value = "";
 				document.querySelector("#Result").className = "";
@@ -310,12 +332,20 @@
 				document.querySelector("#CopyResult").className = "";
 				document.querySelector("#MusicianWindow").className = "";
 
-				var files = e.target.files;
-				if (files.length > 0){
+				if (files && files.length > 0){
 					var file = files[0];
 					document.querySelector("#FileDrop #Text").textContent = file.name;
 					parseFile(file);
 				}
+			}
+
+			document.querySelector("#FileDrop input").addEventListener("change", function(e){
+				files = e.target.files;
+				processMidiFile();
+			});
+
+			document.querySelector("#FromMuseScore").addEventListener("change", function(e){
+				processMidiFile();
 			});
 		}
 
@@ -323,7 +353,8 @@
 			var reader = new FileReader();
 			reader.onload = function(e){
 				try {
-					document.querySelector("#ResultsText").value = base64(MusicianMidiConverter.packSong(e.target.result, file.name));
+					var options = { fromMuseScore: document.querySelector("#FromMuseScore").checked };
+					document.querySelector("#ResultsText").value = base64(MusicianMidiConverter.packSong(e.target.result, file.name, options));
 					document.querySelector("#Result").className = "visible";
 					document.querySelector("#CopyButton").className = "visible";
 				} catch(e) {

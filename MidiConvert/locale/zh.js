@@ -13,3 +13,4 @@ MUSICIAN_MSG.becomeAPatron = "成为Patron并捐赠本项目";
 MUSICIAN_MSG.donatePayPal = "对本项目进行捐赠";
 MUSICIAN_MSG.patreonLink = "成为Patron";
 MUSICIAN_MSG.donateLink = "捐赠";
+MUSICIAN_MSG.fromMuseScore = "歌曲来自 MuseScore。" ;

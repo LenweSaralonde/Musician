@@ -13,3 +13,4 @@ MUSICIAN_MSG.becomeAPatron = "프로젝트를 지원하기 위해 후원자가 �
 MUSICIAN_MSG.donatePayPal = "기부하여 프로젝트 지원";
 MUSICIAN_MSG.patreonLink = "고객이 되십시오";
 MUSICIAN_MSG.donateLink = "기부";
+MUSICIAN_MSG.fromMuseScore = "MuseScore에서 가져온 노래입니다.";
