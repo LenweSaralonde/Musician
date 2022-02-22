@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.9.0.1
+--------
+* Fixed pitch bend range implementation in MIDI converter.
+* TOC bump for WoW 9.2 and WoW Classic 1.14.2.
+
 v1.9.0.0
 --------
 *"Piano Man"*
