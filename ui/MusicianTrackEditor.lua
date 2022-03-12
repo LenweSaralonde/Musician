@@ -53,7 +53,10 @@ function Musician.TrackEditor.Init()
 	end)
 
 	MusicianTrackEditorCursorAt:SetScript("OnEditFocusLost", function(self)
-		Musician.sourceSong:Seek(Musician.Utils.ParseTime(self:GetText()))
+		local cursor = Musician.Utils.ParseTime(self:GetText())
+		cursor = max(Musician.sourceSong.cropFrom, min(cursor, Musician.sourceSong.cropTo))
+		self:SetText(Musician.Utils.FormatTime(cursor))
+		Musician.sourceSong:Seek(cursor)
 	end)
 
 	Musician.TrackEditor:RegisterMessage(Musician.Events.Frame, Musician.TrackEditor.OnUpdate)

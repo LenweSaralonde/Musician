@@ -188,7 +188,7 @@ end
 --- Return true if the song is playing or about to be played (preloading).
 -- @return isPlaying (boolean)
 function Musician.Song:IsPlaying()
-	return self.playing or self.willPlayTimer ~= nil
+	return self.playing
 end
 
 --- Return playing progression
@@ -238,18 +238,13 @@ end
 --- Play song
 -- @param delay (number) Delay in seconds to wait before playing the song
 function Musician.Song:Play(delay)
-	self:Reset()
-
-	if delay then
-		self.willPlayTimer = C_Timer.NewTimer(delay, function()
-			self:Resume(true)
-			self.willPlayTimer = nil
-		end)
-		Musician.Utils.MuteGameMusic()
-		Musician.Song:SendMessage(Musician.Events.SongPlay, self)
-	else
-		self:Resume()
+	if delay == nil then
+		delay = 0
 	end
+
+	self:SongNotesOff()
+	self:Seek(self.cropFrom - delay)
+	self:Resume()
 end
 
 --- Reset song to initial position
@@ -323,7 +318,7 @@ end
 --- Seek to position
 -- @param cursor (number)
 function Musician.Song:Seek(cursor)
-	cursor = max(0, min(cursor, self.cropTo))
+	cursor = min(cursor, self.cropTo)
 
 	if cursor == self.cursor then
 		return
@@ -379,11 +374,6 @@ end
 --- Stop song
 function Musician.Song:Stop()
 	self:SongNotesOff()
-	if self.willPlayTimer then
-		self.willPlayTimer:Cancel()
-		self.willPlayTimer = nil
-		Musician.Song:SendMessage(Musician.Events.SongStop, self)
-	end
 	if self.playing then
 		removePlayingSong(self)
 		self.playing = false

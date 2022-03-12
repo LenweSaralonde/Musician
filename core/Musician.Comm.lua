@@ -400,43 +400,42 @@ function Musician.Comm.ProcessChunk(packedChunk, sender)
 	receivingSong:AppendChunk(chunk, mode, songId, chunkDuration, playtimeLeft, sender)
 
 	-- Play song if not already started
-	if not(receivingSong:IsPlaying()) and not(receivingSong.willPlay) then
+	if not(receivingSong:IsPlaying()) then
 
 		-- Play song with delay to anticipate lag
 		local playDelay = chunkDuration / 2
-		receivingSong.willPlay = true
 		receivingSong:Play(playDelay)
-		receivingSong.playStartTime = debugprofilestop() / 1000
 
-		-- Catch up out-of-sync songs in band play mode due to server lag
-		if mode == Musician.Song.MODE_DURATION then
-			local delayMin = 1 / 60
-			local delayMax = playDelay
-			for _, song in pairs(Musician.songs) do
-				if receivingSong ~= song and song:IsPlaying() and song.playStartTime then
-					-- Consider the songs belong to the same band if they have the same playtime left
-					local songPlaytimeLeft = song.cropTo - song.chunkTime
-
-					-- Calculate synchronization delay
-					local syncDelay = (receivingSong.playStartTime - receivingSong.cursor - song.playStartTime) % chunkDuration
-
-					-- The newly receiving song has same playing time left as the already playing one and is slightly late with it
-					if playtimeLeft == songPlaytimeLeft + song.chunkDuration and syncDelay > delayMin and syncDelay < delayMax then
-						-- Catch up sync delay for the receiving song
-						receivingSong:Seek(syncDelay)
-					-- The newly receiving song has same playing time left as the already playing one and is slightly early with it
-					elseif playtimeLeft == songPlaytimeLeft and syncDelay > delayMax and syncDelay < chunkDuration - delayMin then
-						-- Catch up sync delay for the already playing song
-						song:Seek(song.cursor + chunkDuration - syncDelay)
-						song.playStartTime = song.playStartTime - chunkDuration + syncDelay
-					end
-				end
-			end
-		end
-
+		-- Send event to activate the play button
 		if Musician.Utils.PlayerIsMyself(sender) then
 			isPlayPending = false
 			Musician.Comm:SendMessage(Musician.Events.CommSendActionComplete, Musician.Comm.action.play)
+		end
+
+		-- Resynchronize out-of-sync songs being played in band play mode due to server lag
+		local syncRange = chunkDuration / 2
+		if mode == Musician.Song.MODE_DURATION then
+			for _, song in pairs(Musician.songs) do
+				-- Only compare with currently playing songs other than the one being received
+				if receivingSong ~= song and song:IsPlaying() then
+					-- Get play time left for both songs
+					local receivingSongPlayTimeLeft = receivingSong.cropTo - receivingSong.cursor
+					local songPlayTimeLeft = song.cropTo - song.cursor
+					-- Synchronize songs if their play time left are close, which is the case for songs played in band play mode.
+					if abs(receivingSongPlayTimeLeft - songPlayTimeLeft) < syncRange then
+						-- Calculate delay
+						local delay = (chunkDuration / 2 + receivingSong.cursor - song.cursor) % chunkDuration - chunkDuration / 2
+						-- Adjust playing position to catch up the delay if within the sync range.
+						if -syncRange < delay and delay < 0 then
+							-- delay is negative: receiving song is late
+							receivingSong:Seek(receivingSong.cursor - delay)
+						elseif 0 < delay and delay < syncRange then
+							-- delay is negative: current song is late
+							song:Seek(song.cursor + delay)
+						end
+					end
+				end
+			end
 		end
 	end
 end
