@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.0.2
+--------
+* Improved band play synchronization.
+
 v1.9.0.1
 --------
 * Fixed pitch bend range implementation in MIDI converter.
