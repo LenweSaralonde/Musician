@@ -417,7 +417,7 @@ function Musician.Comm.ProcessChunk(packedChunk, sender)
 		if mode == Musician.Song.MODE_DURATION then
 			for _, song in pairs(Musician.songs) do
 				-- Only compare with currently playing songs other than the one being received
-				if receivingSong ~= song and song:IsPlaying() then
+				if receivingSong ~= song and song:IsPlaying() and song.mode == Musician.Song.MODE_DURATION then
 					-- Get play time left for both songs
 					local receivingSongPlayTimeLeft = receivingSong.cropTo - receivingSong.cursor
 					local songPlayTimeLeft = song.cropTo - song.cursor
