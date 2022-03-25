@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.9.0.3
+--------
+* Added song links support for instance chat.
+* Fixed stopped songs resuming unexpectedly.
+
 v1.9.0.2
 --------
 * Improved band play synchronization.
