@@ -400,7 +400,7 @@ function Musician.Comm.ProcessChunk(packedChunk, sender)
 	receivingSong:AppendChunk(chunk, mode, songId, chunkDuration, playtimeLeft, sender)
 
 	-- Play song if not already started
-	if not(receivingSong:IsPlaying()) then
+	if not(receivingSong:IsPlaying()) and receivingSong.cursor == 0 then
 
 		-- Play song with delay to anticipate lag
 		local playDelay = chunkDuration / 2
