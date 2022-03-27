@@ -378,9 +378,21 @@ end
 
 --- OnSongReceiveSucessful
 -- Show main window when a downloaded song has been successfully imported for playing.
-function MusicianFrame.OnSongReceiveSucessful(event, sender, songData, song)
+function MusicianFrame.OnSongReceiveSucessful(event, sender, songData, song, context)
+	if context ~= Musician then return end
 	local isDataOnly = song == nil
 	if not(isDataOnly) then
+
+		-- Stop previous source song being played
+		if Musician.sourceSong and Musician.sourceSong:IsPlaying() then
+			Musician.sourceSong:Stop()
+		end
+
+		-- Load source song
+		Musician.sourceSong = song
+
+		-- Refresh and show UI
+		Musician.SongLinks:SendMessage(Musician.Events.SourceSongLoaded, song, songData)
 		MusicianFrame:Show()
 	end
 end

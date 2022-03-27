@@ -302,22 +302,26 @@ Musician.Events.LiveBandSync = "MusicianLiveBandSync"
 --- Fired when the song reception process is starting
 -- @field Musician.Events.SongReceiveStart
 -- @param sender (string)
+-- @param[opt] context (table) Reference to the module that initiated the song request.
 Musician.Events.SongReceiveStart = "MusicianSongReceiveStart"
 
 --- Fired when the song reception process is making progress
 -- @field Musician.Events.SongReceiveProgress
 -- @param sender (string)
 -- @param progress (number) Progression between 0 and 1
+-- @param[opt] context (table) Reference to the module that initiated the song request.
 Musician.Events.SongReceiveProgress = "MusicianSongReceiveProgress"
 
 --- Fired when the song reception process is complete, regardless if it failed or not
 -- @field Musician.Events.SongReceiveComplete
 -- @param sender (string)
+-- @param[opt] context (table) Reference to the module that initiated the song request.
 Musician.Events.SongReceiveComplete = "MusicianSongReceiveComplete"
 
 --- Fired when the song reception process has been canceled
 -- @field Musician.Events.SongReceiveCanceled
 -- @param sender (string)
+-- @param[opt] context (table) Reference to the module that initiated the song request.
 Musician.Events.SongReceiveCanceled = "MusicianSongReceiveCanceled"
 
 --- Fired when the song reception process is complete successfully
@@ -325,6 +329,7 @@ Musician.Events.SongReceiveCanceled = "MusicianSongReceiveCanceled"
 -- @param sender (string)
 -- @param songData (string)
 -- @param[opt] song (Musician.Song)
+-- @param[opt] context (table) Reference to the module that initiated the song request.
 Musician.Events.SongReceiveSucessful = "MusicianSongReceiveSucessful"
 
 --- Fired when the song reception process failed
@@ -332,6 +337,7 @@ Musician.Events.SongReceiveSucessful = "MusicianSongReceiveSucessful"
 -- @param sender (string)
 -- @param reason (string)
 -- @param title (string)
+-- @param[opt] context (table) Reference to the module that initiated the song request.
 Musician.Events.SongReceiveFailed = "MusicianSongReceiveFailed"
 
 --- Fired when the user clicks on a song link

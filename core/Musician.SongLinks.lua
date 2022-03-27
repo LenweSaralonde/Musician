@@ -26,6 +26,8 @@ Musician.SongLinks.status.requested = 'requested'
 Musician.SongLinks.status.downloading = 'downloading'
 Musician.SongLinks.status.importing = 'importing'
 
+Musician.SongLinks.supportsContext = true
+
 local sharedSongs = {}
 local sendingSongs = {}
 local requestedSongs = {}
@@ -330,12 +332,13 @@ end
 -- @param title (string)
 -- @param playerName (string)
 -- @param[opt=false] dataOnly (boolean)
-function Musician.SongLinks.RequestSong(title, playerName, dataOnly)
+-- @param[opt] context (table) Reference to the module that initiated the song request.
+function Musician.SongLinks.RequestSong(title, playerName, dataOnly, context)
 	playerName = Musician.Utils.NormalizePlayerName(playerName)
 
 	-- Song is already being requested
 	if requestedSongs[playerName] ~= nil then
-		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveFailed, playerName, Musician.SongLinks.errors.alreadyRequested, title)
+		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveFailed, playerName, Musician.SongLinks.errors.alreadyRequested, title, context)
 		return
 	end
 
@@ -344,13 +347,14 @@ function Musician.SongLinks.RequestSong(title, playerName, dataOnly)
 		if requestedSongs[playerName] == nil then return end
 		debug("Timed out after", REQUEST_TIMEOUT, playerName, title)
 		Musician.SongLinks.RemoveRequest(playerName)
-		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveComplete, playerName)
-		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveFailed, playerName, Musician.SongLinks.errors.timeout, title)
+		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveComplete, playerName, context)
+		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveFailed, playerName, Musician.SongLinks.errors.timeout, title, context)
 	end
 
 	-- Add song request
 	requestedSongs[playerName] = {
 		title = title,
+		context = context,
 		status = Musician.SongLinks.status.requested,
 		total = nil,
 		downloaded = 0,
@@ -361,7 +365,7 @@ function Musician.SongLinks.RequestSong(title, playerName, dataOnly)
 		timeoutTimer = C_Timer.NewTimer(REQUEST_TIMEOUT, onTimeout)
 	}
 
-	Musician.SongLinks:SendMessage(Musician.Events.SongReceiveStart, playerName)
+	Musician.SongLinks:SendMessage(Musician.Events.SongReceiveStart, playerName, context)
 
 	-- Send song request to player
 	debugComm(true, Musician.SongLinks.event.requestSong, playerName, title)
@@ -377,7 +381,6 @@ function Musician.SongLinks.RemoveRequest(playerName)
 
 	if requestedSong == nil then return end
 
-	wipe(requestedSongs[playerName])
 	requestedSongs[playerName] = nil
 
 	if requestedSong.timeoutTimer then
@@ -387,15 +390,18 @@ function Musician.SongLinks.RemoveRequest(playerName)
 	if requestedSong.status == Musician.SongLinks.status.importing then
 		requestedSong.song:CancelImport()
 	end
+
+	wipe(requestedSong)
 end
 
 --- Cancel a song download request
 -- @param playerName (string)
 function Musician.SongLinks.CancelRequest(playerName)
 	playerName = Musician.Utils.NormalizePlayerName(playerName)
+	local context = requestedSongs[playerName] and requestedSongs[playerName].context or nil
 	Musician.SongLinks.RemoveRequest(playerName)
-	Musician.SongLinks:SendMessage(Musician.Events.SongReceiveComplete, playerName)
-	Musician.SongLinks:SendMessage(Musician.Events.SongReceiveCanceled, playerName)
+	Musician.SongLinks:SendMessage(Musician.Events.SongReceiveComplete, playerName, context)
+	Musician.SongLinks:SendMessage(Musician.Events.SongReceiveCanceled, playerName, context)
 end
 
 --- OnRequestSong
@@ -412,9 +418,10 @@ function Musician.SongLinks.OnSongError(prefix, message, distribution, sender)
 	sender = Musician.Utils.NormalizePlayerName(sender)
 	local errorCode, title = string.match(message, "^([^ ]+) (.*)")
 	debugComm(false, Musician.SongLinks.event.songError, sender, errorCode, title)
+	local context = requestedSongs[sender] and requestedSongs[sender].context or nil
 	Musician.SongLinks.RemoveRequest(sender)
-	Musician.SongLinks:SendMessage(Musician.Events.SongReceiveComplete, sender)
-	Musician.SongLinks:SendMessage(Musician.Events.SongReceiveFailed, sender, errorCode, title)
+	Musician.SongLinks:SendMessage(Musician.Events.SongReceiveComplete, sender, context)
+	Musician.SongLinks:SendMessage(Musician.Events.SongReceiveFailed, sender, errorCode, title, context)
 end
 
 --- Send song to another player by title
@@ -518,7 +525,7 @@ function Musician.SongLinks.OnSongData(event, prefix, message, distribution, sen
 		progress = receivingProgressionRatio
 	end
 	requestedSong.progress = progress
-	Musician.SongLinks:SendMessage(Musician.Events.SongReceiveProgress, sender, progress)
+	Musician.SongLinks:SendMessage(Musician.Events.SongReceiveProgress, sender, progress, requestedSong.context)
 end
 
 --- OnSongImportProgress
@@ -526,10 +533,12 @@ end
 function Musician.SongLinks.OnSongImportProgress(event, song, importProgress)
 	if song.sender then
 		local totalProgress = RECEIVING_PROGRESSION_RATIO + (1 - RECEIVING_PROGRESSION_RATIO) * importProgress
-		if requestedSongs[sender] then
-			requestedSongs[sender].progress = totalProgress
+		local context
+		if requestedSongs[song.sender] then
+			requestedSongs[song.sender].progress = totalProgress
+			context = requestedSongs[song.sender].context
 		end
-		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveProgress, song.sender, totalProgress)
+		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveProgress, song.sender, totalProgress, context)
 	end
 end
 
@@ -542,6 +551,7 @@ function Musician.SongLinks.OnSongReceived(prefix, message, distribution, sender
 
 	if requestedSong == nil then return end
 
+	local context = requestedSongs[sender].context
 	local dataLength, encodedData = string.match(message, "^([0-9]+) (.*)")
 	local songData
 	if Musician.Utils.IsBattleNetID(sender) then
@@ -553,9 +563,9 @@ function Musician.SongLinks.OnSongReceived(prefix, message, distribution, sender
 	-- Data only
 	if requestedSong.dataOnly then
 		Musician.SongLinks.RemoveRequest(sender)
-		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveComplete, sender)
+		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveComplete, sender, context)
 		debug("Song downloading complete (data only)", requestedSong.title)
-		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveSucessful, sender, songData)
+		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveSucessful, sender, songData, nil, context)
 		return
 	end
 
@@ -570,26 +580,14 @@ function Musician.SongLinks.OnSongReceived(prefix, message, distribution, sender
 	local title = requestedSong.title
 	song:ImportCompressed(songData, false, function(success)
 		Musician.SongLinks.RemoveRequest(sender)
-		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveComplete, sender)
-
-		-- Import failed
-		if not(success) then
+		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveComplete, sender, context)
+		if success then
+			debug("Song downloading complete", song.name)
+			Musician.SongLinks:SendMessage(Musician.Events.SongReceiveSucessful, sender, songData, song, context)
+		else
 			debug("Song downloading failed")
-			Musician.SongLinks:SendMessage(Musician.Events.SongReceiveFailed, sender, Musician.SongLinks.errors.importingFailed, title)
-			return
+			Musician.SongLinks:SendMessage(Musician.Events.SongReceiveFailed, sender, Musician.SongLinks.errors.importingFailed, title, context)
 		end
-
-		-- Stop previous source song being played
-		if Musician.sourceSong and Musician.sourceSong:IsPlaying() then
-			Musician.sourceSong:Stop()
-		end
-
-		Musician.sourceSong = song
-
-		debug("Song downloading complete", song.name)
-		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveSucessful, sender, songData, song)
-		Musician.SongLinks:SendMessage(Musician.Events.SourceSongLoaded, song, songData)
-
 		song = nil
 		collectgarbage()
 	end)

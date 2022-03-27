@@ -16,7 +16,8 @@ function Musician.SongLinkImportFrame.Init()
 	Musician.SongLinkImportFrame:RegisterMessage(Musician.Events.SongLink, Musician.SongLinkImportFrame.OnSongLinkClick)
 
 	-- Print an error message if an import error occurred
-	Musician.SongLinkImportFrame:RegisterMessage(Musician.Events.SongReceiveFailed, function(event, sender, reason, title)
+	Musician.SongLinkImportFrame:RegisterMessage(Musician.Events.SongReceiveFailed, function(event, sender, reason, title, context)
+		if context ~= Musician then return end
 		sender = Musician.Utils.NormalizePlayerName(sender)
 		local msg = Musician.Msg.LINKS_ERROR[reason] or ''
 		msg = string.gsub(msg, '{player}', Musician.Utils.FormatPlayerName(sender))
@@ -37,7 +38,7 @@ end
 
 local function startImport(title, playerName)
 	if not(Musician.SongLinks.GetRequestingSong(playerName)) then
-		Musician.SongLinks.RequestSong(title, playerName)
+		Musician.SongLinks.RequestSong(title, playerName, false, Musician)
 	end
 end
 
@@ -192,7 +193,8 @@ function Musician.SongLinkImportFrame.ShowImportFrame(title, playerName)
 	end
 
 	-- Start import
-	Musician.SongLinkImportFrame:RegisterMessage(Musician.Events.SongReceiveStart, function(event, sender)
+	Musician.SongLinkImportFrame:RegisterMessage(Musician.Events.SongReceiveStart, function(event, sender, context)
+		if context ~= Musician then return end
 		sender = Musician.Utils.NormalizePlayerName(sender)
 		if sender ~= playerName then return end
 		update(title, playerName)
@@ -200,14 +202,16 @@ function Musician.SongLinkImportFrame.ShowImportFrame(title, playerName)
 	end)
 
 	-- Update import progression
-	Musician.SongLinkImportFrame:RegisterMessage(Musician.Events.SongReceiveProgress, function(event, sender, progress)
+	Musician.SongLinkImportFrame:RegisterMessage(Musician.Events.SongReceiveProgress, function(event, sender, progress, context)
+		if context ~= Musician then return end
 		sender = Musician.Utils.NormalizePlayerName(sender)
 		if sender ~= playerName then return end
 		updateProgression(progress)
 	end)
 
 	-- Hide popup when complete
-	Musician.SongLinkImportFrame:RegisterMessage(Musician.Events.SongReceiveComplete, function(event, sender)
+	Musician.SongLinkImportFrame:RegisterMessage(Musician.Events.SongReceiveComplete, function(event, sender, context)
+		if context ~= Musician then return end
 		sender = Musician.Utils.NormalizePlayerName(sender)
 		if sender ~= playerName then return end
 		frame:Hide()
