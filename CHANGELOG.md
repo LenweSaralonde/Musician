@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.9.0.4
+--------
+* Added keyboard bindings.
+* Fixed nameplate icon showing in double with Plater.
+
 v1.9.0.3
 --------
 * Added song links support for instance chat.
