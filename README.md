@@ -202,7 +202,7 @@ The 18 melodic instruments available are:
 
 Percussions:
 * Traditional percussion set (drum kit 0)
-* Standard drum set (drumm kit 16)
+* Standard drum set (drum kit 16)
 * War drums (47 Timpani)
 * Woodblock (115)
 * Tambourine shake (119)
