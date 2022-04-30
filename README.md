@@ -2,7 +2,7 @@ Musician
 ========
 For the first time in World of Warcraft, your character can literally become a bard!
 
-Play music for you and the other players, from MIDI files or live, using 18 instruments and 2 percussion sets from various styles: medieval, celtic, folk, tribal and heavy metal. 🤘
+Play music for you and the other players, from MIDI files or live, using 22 instruments and 2 percussion sets from various styles: medieval, celtic, folk, tribal and heavy metal. 🤘
 
 Quick links
 -----------
@@ -202,7 +202,7 @@ The 18 melodic instruments available are:
 
 Percussions:
 * Traditional percussion set (drum kit 0)
-* Standard drum set (drumm kit 16)
+* Standard drum set (drum kit 16)
 * War drums (47 Timpani)
 * Woodblock (115)
 * Tambourine shake (119)
