@@ -249,7 +249,6 @@ function processPitchBend(events, options = {}) {
 		}
 
 		// Control change event for pitch bend range
-		let newPitchBandRangeValue = null;
 		if (event.type === 'controller' && pitchBendRangeCCTypes.includes(event.controllerType)) {
 			if (!channelCC[event.channel]) {
 				channelCC[event.channel] = {};
@@ -270,8 +269,10 @@ function processPitchBend(events, options = {}) {
 			}
 
 			// We're done receiving our pitch bend range message
-			if (isPitchBendRangeMessageComplete) {
-				newPitchBandRangeValue = (channelCC[event.channel][CC_DATA_ENTRY_COARSE] || defaultPitchBendRange) + (channelCC[event.channel][CC_DATA_ENTRY_FINE] || 0) / 100;
+			if (isPitchBendRangeMessageComplete &&
+				(channelCC[event.channel][CC_RPN_COARSE] || 0x00) === 0x00 &&
+				(channelCC[event.channel][CC_RPN_FINE] || 0x00) === 0x00) {
+				pitchBendRange[event.channel] = (channelCC[event.channel][CC_DATA_ENTRY_COARSE] || defaultPitchBendRange) + (channelCC[event.channel][CC_DATA_ENTRY_FINE] || 0) / 100;
 			}
 		}
 
@@ -296,13 +297,8 @@ function processPitchBend(events, options = {}) {
 			}
 		}
 		// Pitch bend events
-		else if (event.type === 'pitchBend' || newPitchBandRangeValue !== null) {
+		else if (event.type === 'pitchBend') {
 			const currentPitchBendValue = (pitchBendValue[event.channel] || 0) * (pitchBendRange[event.channel] || defaultPitchBendRange);
-
-			// Changing pitch bend range
-			if (newPitchBandRangeValue !== null) {
-				pitchBendRange[event.channel] = newPitchBandRangeValue;
-			}
 
 			// Changing pitch bend value
 			if (event.type === 'pitchBend') {
