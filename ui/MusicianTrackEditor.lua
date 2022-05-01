@@ -394,7 +394,9 @@ end
 -- @param key (number)
 function Musician.TrackEditor.NoteOn(event, song, track, key)
 	if song == Musician.sourceSong then
-		local meterTexture = _G['MusicianTrackEditorTrack' .. track.index].meterTexture
+		local meter = _G['MusicianTrackEditorTrack' .. track.index]
+		if not(meter) then return end
+		local meterTexture = meter.meterTexture
 		local _, instrumentData = Musician.Sampler.GetSoundFile(track.instrument, key)
 		if instrumentData ~= nil then
 			meterTexture.volumeMeter:NoteOn(instrumentData, key)
@@ -412,7 +414,9 @@ function Musician.TrackEditor.NoteOff(event, song, track, key)
 	if song == Musician.sourceSong then
 		-- Stop if all notes of the track are off
 		if track.polyphony == 0 then
-			local meterTexture = _G['MusicianTrackEditorTrack' .. track.index].meterTexture
+			local meter = _G['MusicianTrackEditorTrack' .. track.index]
+			if not(meter) then return end
+			local meterTexture = meter.meterTexture
 			meterTexture.volumeMeter:NoteOff()
 		end
 	end
