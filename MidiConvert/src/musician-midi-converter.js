@@ -1,6 +1,6 @@
 const parseMidi = require('midi-file').parseMidi;
 
-export const CONVERTER_VERSION = '8.2';
+export const CONVERTER_VERSION = '8.3';
 
 const FILE_HEADER = 'MUS8';
 const MAX_NOTE_DURATION = 6;
