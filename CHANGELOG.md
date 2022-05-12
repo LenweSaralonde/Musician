@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v1.9.0.5
+--------
+* Fixed standard nameplates not showing up even when "Show nameplates when the UI is hidden." is checked. #80
+* Fixed Tidy Plates support.
+* Fixed RPN messages for pitch bend range in MIDI converter.
+* Fixed a rare LUA error when a song is previewed too early.
+
 v1.9.0.4
 --------
 * Added keyboard bindings.
