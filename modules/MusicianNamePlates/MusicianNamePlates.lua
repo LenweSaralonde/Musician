@@ -454,15 +454,19 @@ function Musician.NamePlates.UpdateNamePlateCinematicMode(namePlate)
 		end
 	end
 
-	-- Show or hide the nameplate
-	if not(Musician_Settings.cinematicModeNamePlates) and Musician_Settings.cinematicMode then
-		if not(UIParentIsVisible) then
-			namePlate:Hide()
-		else
-			namePlate:Show()
-		end
-	elseif not(Musician_Settings.cinematicMode) then
-		namePlate:SetShown(UIParentIsVisible)
+	-- Set nameplate visibility
+	if Musician_Settings.cinematicMode and not(UIParentIsVisible) then
+		Musician.NamePlates.SetNamePlateShown(namePlate, Musician_Settings.cinematicModeNamePlates)
+	end
+end
+
+--- Set the player nameplate visibility in cinematic mode.
+-- @param namePlate (Frame)
+-- @param isShown (boolean)
+function Musician.NamePlates.SetNamePlateShown(namePlate, isShown)
+	namePlate:SetShown(isShown)
+	if namePlate.UnitFrame and namePlate.UnitFrame.name then
+		namePlate.UnitFrame.name:SetShown(isShown)
 	end
 end
 
