@@ -6,6 +6,7 @@
 	<Include file="Plater\Plater.xml"/>
 	<Include file="Kui_Nameplates\Kui_Nameplates.xml"/>
 	<Include file="TidyPlates\TidyPlates.xml"/>
+	<Include file="TidyPlates_ThreatPlates\TidyPlates_ThreatPlates.xml"/>
 	<Include file="NeatPlates\NeatPlates.xml"/>
 	<Include file="ElvUI\ElvUI.xml"/>
 	<Include file="MusicianExtras\MusicianExtras.xml"/>
