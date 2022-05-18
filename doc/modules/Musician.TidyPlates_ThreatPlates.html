@@ -32,7 +32,7 @@
 
 <h2>Contents</h2>
 <ul>
-<li><a href="#Class_Musician_VolumeMeter">Class Musician.VolumeMeter </a></li>
+<li><a href="#Functions">Functions</a></li>
 </ul>
 
 
@@ -79,10 +79,10 @@
   <li><a href="../modules/Musician.TRP3.html">Musician.TRP3</a></li>
   <li><a href="../modules/Musician.TRP3.Options.html">Musician.TRP3.Options</a></li>
   <li><a href="../modules/Musician.TidyPlates.html">Musician.TidyPlates</a></li>
-  <li><a href="../modules/Musician.TidyPlates_ThreatPlates.html">Musician.TidyPlates_ThreatPlates</a></li>
+  <li><strong>Musician.TidyPlates_ThreatPlates</strong></li>
   <li><a href="../modules/Musician.TrackEditor.html">Musician.TrackEditor</a></li>
   <li><a href="../modules/Musician.Utils.html">Musician.Utils</a></li>
-  <li><strong>Musician.VolumeMeter</strong></li>
+  <li><a href="../modules/Musician.VolumeMeter.html">Musician.VolumeMeter</a></li>
   <li><a href="../modules/Musician.Widgets.html">Musician.Widgets</a></li>
   <li><a href="../modules/Musician.Worker.html">Musician.Worker</a></li>
   <li><a href="../modules/MusicianButton.html">MusicianButton</a></li>
@@ -93,32 +93,16 @@
 
 <div id="content">
 
-<h1>Module <code>Musician.VolumeMeter</code></h1>
-<p>Simulate a volume meter for visual feedback</p>
+<h1>Module <code>Musician.TidyPlates_ThreatPlates</code></h1>
+<p>TidyPlates_ThreatPlates integration</p>
 <p></p>
 
 
-<h2><a href="#Class_Musician_VolumeMeter">Class Musician.VolumeMeter </a></h2>
+<h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#Musician.VolumeMeter:AddElapsed">Musician.VolumeMeter:AddElapsed (elapsed)</a></td>
-	<td class="summary">Add elapsed seconds after previous frame</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Musician.VolumeMeter:GetLevel">Musician.VolumeMeter:GetLevel ()</a></td>
-	<td class="summary">Get current level</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Musician.VolumeMeter:NoteOff">Musician.VolumeMeter:NoteOff ()</a></td>
-	<td class="summary">Note off</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Musician.VolumeMeter:NoteOn">Musician.VolumeMeter:NoteOn (instrument[, key])</a></td>
-	<td class="summary">Note on</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Musician.VolumeMeter:Reset">Musician.VolumeMeter:Reset ()</a></td>
-	<td class="summary">Reset</td>
+	<td class="name" nowrap><a href="#Musician.TidyPlates_ThreatPlates:OnEnable">Musician.TidyPlates_ThreatPlates:OnEnable ()</a></td>
+	<td class="summary">OnEnable</td>
 	</tr>
 </table>
 
@@ -126,95 +110,15 @@
 <br/>
 
 
-    <h2 class="section-header has-description"><a name="Class_Musician_VolumeMeter"></a>Class Musician.VolumeMeter </h2>
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
 
-          <div class="section-description">
-          Volume meter
-          </div>
     <dl class="function">
     <dt>
-    <a name = "Musician.VolumeMeter:AddElapsed"></a>
-    <strong>Musician.VolumeMeter:AddElapsed (elapsed)</strong>
+    <a name = "Musician.TidyPlates_ThreatPlates:OnEnable"></a>
+    <strong>Musician.TidyPlates_ThreatPlates:OnEnable ()</strong>
     </dt>
     <dd>
-    Add elapsed seconds after previous frame
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">elapsed</span>
-         (number)
-        </li>
-    </ul>
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Musician.VolumeMeter:GetLevel"></a>
-    <strong>Musician.VolumeMeter:GetLevel ()</strong>
-    </dt>
-    <dd>
-    Get current level
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-        level (number)
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Musician.VolumeMeter:NoteOff"></a>
-    <strong>Musician.VolumeMeter:NoteOff ()</strong>
-    </dt>
-    <dd>
-    Note off
-
-
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Musician.VolumeMeter:NoteOn"></a>
-    <strong>Musician.VolumeMeter:NoteOn (instrument[, key])</strong>
-    </dt>
-    <dd>
-    Note on
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">instrument</span>
-         (table) instrument data from Musician.INSTRUMENTS
-        </li>
-        <li><span class="parameter">key</span>
-         (int) MIDI key number
-         (<em>optional</em>)
-        </li>
-    </ul>
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Musician.VolumeMeter:Reset"></a>
-    <strong>Musician.VolumeMeter:Reset ()</strong>
-    </dt>
-    <dd>
-    Reset
+    OnEnable
 
 
 
