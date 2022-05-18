@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.0.6
+--------
+* Restored TidyPlates_ThreatPlates support (different as TidyPlates).
+
 v1.9.0.5
 --------
 * Fixed standard nameplates not showing up even when "Show nameplates when the UI is hidden." is checked. #80
