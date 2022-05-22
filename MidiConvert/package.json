@@ -1,6 +1,6 @@
 {
 	"name": "musician-midi-converter",
-	"version": "1.8.3",
+	"version": "1.8.4",
 	"description": "Convert binary MIDI into MUS format for Musician",
 	"main": "js/musician-midi-converter.js",
 	"module": "src/musician-midi-converter.js",
