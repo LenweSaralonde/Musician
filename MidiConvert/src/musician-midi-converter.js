@@ -1,4 +1,4 @@
-const parseMidi = require('midi-file').parseMidi;
+const parseMidi = require('./lib/midi-file/index').parseMidi;
 
 export const CONVERTER_VERSION = '8.3';
 
