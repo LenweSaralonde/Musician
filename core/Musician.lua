@@ -543,6 +543,36 @@ function Musician.SetupHooks()
 	-- Player dropdown menus
 	--
 
+	-- Handle actions in player dropdown menus
+	--
+
+	local function playerDropdownOnClick(self)
+		local dropdownMenu = self.arg1
+		local button = self.value
+		local isPlayer = dropdownMenu and (dropdownMenu.unit and UnitIsPlayer(dropdownMenu.unit) or dropdownMenu.chatTarget)
+		local player
+
+		if isPlayer then
+			if dropdownMenu.chatTarget then
+				player = Musician.Utils.NormalizePlayerName(dropdownMenu.chatTarget)
+			else
+				if dropdownMenu.server then
+					player = dropdownMenu.name .. '-' .. dropdownMenu.server
+				else
+					player = Musician.Utils.NormalizePlayerName(dropdownMenu.name)
+				end
+			end
+
+			if button == "MUSICIAN_MUTE" then
+				Musician.MutePlayer(player, true)
+			elseif button == "MUSICIAN_UNMUTE" then
+				Musician.MutePlayer(player, false)
+			elseif button == "MUSICIAN_STOP" then
+				Musician.StopPlayerSong(player)
+			end
+		end
+	end
+
 	-- Add player dropdown menu options
 	--
 
@@ -612,42 +642,12 @@ function Musician.SetupHooks()
 					local info = UIDropDownMenu_CreateInfo()
 					info.text = item.text
 					info.isTitle = item.isTitle
-					info.func = UnitPopup_OnClick
+					info.func = playerDropdownOnClick
 					info.notCheckable = true
 					info.value = item.value
 					info.arg1 = dropdownMenu
 					UIDropDownMenu_AddButton(info)
 				end
-			end
-		end
-	end)
-
-	-- Handle actions in player dropdown menus
-	--
-
-	hooksecurefunc("UnitPopup_OnClick", function(self)
-		local dropdownMenu = self.arg1
-		local button = self.value
-		local isPlayer = dropdownMenu and (dropdownMenu.unit and UnitIsPlayer(dropdownMenu.unit) or dropdownMenu.chatTarget)
-		local player
-
-		if isPlayer then
-			if dropdownMenu.chatTarget then
-				player = Musician.Utils.NormalizePlayerName(dropdownMenu.chatTarget)
-			else
-				if dropdownMenu.server then
-					player = dropdownMenu.name .. '-' .. dropdownMenu.server
-				else
-					player = Musician.Utils.NormalizePlayerName(dropdownMenu.name)
-				end
-			end
-
-			if button == "MUSICIAN_MUTE" then
-				Musician.MutePlayer(player, true)
-			elseif button == "MUSICIAN_UNMUTE" then
-				Musician.MutePlayer(player, false)
-			elseif button == "MUSICIAN_STOP" then
-				Musician.StopPlayerSong(player)
 			end
 		end
 	end)
