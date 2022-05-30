@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.0.7
+--------
+* Updated for WoW patch 9.2.5.
+
 v1.9.0.6
 --------
 * Restored TidyPlates_ThreatPlates support (different as TidyPlates).
