@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.0.8
+--------
+* Fixed nameplates not showing up when leaving cinematic mode.
+
 v1.9.0.7
 --------
 * Updated for WoW patch 9.2.5.
