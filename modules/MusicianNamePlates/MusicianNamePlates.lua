@@ -464,7 +464,7 @@ end
 -- @param isShown (boolean)
 function Musician.NamePlates.SetNamePlateShown(namePlate, isShown)
 	namePlate:SetShown(isShown)
-	if namePlate.UnitFrame and namePlate.UnitFrame.name then
+	if namePlate.UnitFrame and namePlate.UnitFrame.name and UnitIsPlayer(namePlate.namePlateUnitToken) then
 		namePlate.UnitFrame.name:SetShown(isShown)
 	end
 end
