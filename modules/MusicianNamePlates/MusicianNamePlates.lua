@@ -455,9 +455,8 @@ function Musician.NamePlates.UpdateNamePlateCinematicMode(namePlate)
 	end
 
 	-- Set nameplate visibility
-	if Musician_Settings.cinematicMode and not(UIParentIsVisible) then
-		Musician.NamePlates.SetNamePlateShown(namePlate, Musician_Settings.cinematicModeNamePlates)
-	end
+	local isNamePlateVisible = UIParentIsVisible or not(UIParentIsVisible) and Musician_Settings.cinematicMode and Musician_Settings.cinematicModeNamePlates
+	Musician.NamePlates.SetNamePlateShown(namePlate, isNamePlateVisible)
 end
 
 --- Set the player nameplate visibility in cinematic mode.
