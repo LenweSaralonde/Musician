@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.0.9
+--------
+* Fixed NPCs nameplates showing incorrect names. #81
+
 v1.9.0.8
 --------
 * Fixed nameplates not showing up when leaving cinematic mode.
