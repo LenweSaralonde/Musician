@@ -320,7 +320,7 @@ function Musician.NamePlates.UpdateNamePlate(namePlate)
 
 	if not(namePlate:IsForbidden()) and isPlayerOrFriendly and not(UnitIsUnit(unitToken, "player")) then
 
-		local healthBarIsVisible, classificationFrameIsVisible, levelFrameIsVisible
+		local healthBarIsVisible, classificationFrameIsVisible, levelFrameIsVisible, raidTargetFrameIsVisible
 
 		local isInCombat = UnitAffectingCombat(namePlate.namePlateUnitToken)
 		local health = UnitHealth(namePlate.namePlateUnitToken)
@@ -331,16 +331,19 @@ function Musician.NamePlates.UpdateNamePlate(namePlate)
 			healthBarIsVisible = true
 			classificationFrameIsVisible = true
 			levelFrameIsVisible = true
+			raidTargetFrameIsVisible = true
 		else
 			healthBarIsVisible = false
 			classificationFrameIsVisible = false
 			levelFrameIsVisible = false
+			raidTargetFrameIsVisible = false
 		end
 
 		if GetCVarBool("nameplateShowOnlyNames") then
 			healthBarIsVisible = false
 			classificationFrameIsVisible = false
 			levelFrameIsVisible = false
+			raidTargetFrameIsVisible = false
 		end
 
 		if healthBarIsVisible ~= namePlate.UnitFrame.healthBar:IsVisible() then
@@ -348,6 +351,9 @@ function Musician.NamePlates.UpdateNamePlate(namePlate)
 		end
 		if namePlate.UnitFrame.ClassificationFrame and classificationFrameIsVisible ~= namePlate.UnitFrame.ClassificationFrame:IsVisible() then
 			namePlate.UnitFrame.ClassificationFrame:SetShown(classificationFrameIsVisible)
+		end
+		if namePlate.UnitFrame.RaidTargetFrame and levelFrameIsVisible ~= namePlate.UnitFrame.RaidTargetFrame:IsVisible() then
+			namePlate.UnitFrame.RaidTargetFrame:SetShown(levelFrameIsVisible)
 		end
 		if namePlate.UnitFrame.LevelFrame and levelFrameIsVisible ~= namePlate.UnitFrame.LevelFrame:IsVisible() then
 			namePlate.UnitFrame.LevelFrame:SetShown(classificationFrameIsVisible)
