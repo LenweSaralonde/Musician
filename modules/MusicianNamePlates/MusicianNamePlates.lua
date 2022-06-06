@@ -7,9 +7,8 @@ local MODULE_NAME = "NamePlates"
 Musician.AddModule(MODULE_NAME)
 
 -- WoW Classic polyfills
-local C_CVar = _G["C_CVar"] or {
-	GetCVarBool = GetCVarBool
-}
+local GetCVar = (C_CVar and C_CVar.GetCVar or GetCVar)
+local GetCVarBool = (C_CVar and C_CVar.GetCVarBool or GetCVarBool)
 
 local playerNamePlates = {}
 local namePlatePlayers = {}
@@ -266,7 +265,7 @@ function Musician.NamePlates.OnNamePlateNotesFrameUpdate(animatedNotesFrame, ela
 
 		-- Get current zoom level
 		local cameraZoom = GetCameraZoom()
-		local cameraOffset = (C_CVar and C_CVar.GetCVar or GetCVar)("test_cameraOverShoulder")
+		local cameraOffset = GetCVar("test_cameraOverShoulder")
 
 		-- Zoom level changed
 		if animatedNotesFrame.zoomTo ~= cameraZoom or animatedNotesFrame.cameraOffset ~= cameraOffset then
@@ -487,7 +486,8 @@ function Musician.NamePlates.AddNoteIcon(namePlate, textElement, append)
 	local player = UnitIsPlayer(namePlate.namePlateUnitToken) and Musician.Utils.NormalizePlayerName(GetUnitName(namePlate.namePlateUnitToken, true))
 	local isEnemy = namePlate.namePlateUnitToken and UnitIsEnemy('player', namePlate.namePlateUnitToken)
 	local isTarget = namePlate.namePlateUnitToken and UnitIsUnit(namePlate.namePlateUnitToken, 'target')
-	local isNameVisible = isTarget or tonumber(GetCVar(isEnemy and 'UnitNameEnemyPlayerName' or 'UnitNameFriendlyPlayerName')) ~= 0
+	local isWoWClassic = WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE
+	local isNameVisible = isTarget or isWoWClassic or GetCVarBool(isEnemy and 'UnitNameEnemyPlayerName' or 'UnitNameFriendlyPlayerName')
 	local iconPlaceholder = Musician.Utils.GetChatIcon("")
 
 	if player and isNameVisible and not(Musician.Utils.PlayerIsMyself(player)) and Musician_Settings.showNamePlateIcon and Musician.Registry.PlayerIsRegistered(player) then
@@ -667,7 +667,7 @@ function Musician.NamePlates.InitTipsAndTricks()
 	if Musician_Settings.namePlatesHintShown then return end
 
 	-- Already enabled
-	local nameplatesEnabled = C_CVar.GetCVarBool("nameplateShowAll") and C_CVar.GetCVarBool("nameplateShowFriends")
+	local nameplatesEnabled = GetCVarBool("nameplateShowAll") and GetCVarBool("nameplateShowFriends")
 	if nameplatesEnabled then
 		Musician_Settings.namePlatesHintShown = true
 		return
