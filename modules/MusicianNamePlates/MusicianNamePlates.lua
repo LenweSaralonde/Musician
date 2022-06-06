@@ -485,9 +485,12 @@ function Musician.NamePlates.AddNoteIcon(namePlate, textElement, append)
 	end
 
 	local player = UnitIsPlayer(namePlate.namePlateUnitToken) and Musician.Utils.NormalizePlayerName(GetUnitName(namePlate.namePlateUnitToken, true))
+	local isEnemy = namePlate.namePlateUnitToken and UnitIsEnemy('player', namePlate.namePlateUnitToken)
+	local isTarget = namePlate.namePlateUnitToken and UnitIsUnit(namePlate.namePlateUnitToken, 'target')
+	local isNameVisible = isTarget or tonumber(GetCVar(isEnemy and 'UnitNameEnemyPlayerName' or 'UnitNameFriendlyPlayerName')) ~= 0
 	local iconPlaceholder = Musician.Utils.GetChatIcon("")
 
-	if player and not(Musician.Utils.PlayerIsMyself(player)) and Musician_Settings.showNamePlateIcon and Musician.Registry.PlayerIsRegistered(player) then
+	if player and isNameVisible and not(Musician.Utils.PlayerIsMyself(player)) and Musician_Settings.showNamePlateIcon and Musician.Registry.PlayerIsRegistered(player) then
 		local nameString = textElement:GetText()
 		if nameString == nil then
 			return
