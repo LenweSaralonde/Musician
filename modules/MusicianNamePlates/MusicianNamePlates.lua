@@ -475,6 +475,13 @@ function Musician.NamePlates.UpdateNoteIcon(namePlate)
 	Musician.NamePlates.AddNoteIcon(namePlate, namePlate.UnitFrame.name)
 end
 
+--- Returns true when the note icon container should be rendered
+-- @param textElement (FontString)
+-- @param isVisible (boolean) True when the note icon container is visible
+function Musician.NamePlates.ShouldRenderNoteIcon(textElement)
+	return textElement:IsVisible()
+end
+
 --- Add note icon in nameplate's textElement, if needed
 -- @param namePlate (Frame)
 -- @param textElement (FontString)
@@ -490,13 +497,11 @@ function Musician.NamePlates.AddNoteIcon(namePlate, textElement, append)
 	end
 
 	local player = UnitIsPlayer(namePlate.namePlateUnitToken) and Musician.Utils.NormalizePlayerName(GetUnitName(namePlate.namePlateUnitToken, true))
-	local isEnemy = namePlate.namePlateUnitToken and UnitIsEnemy('player', namePlate.namePlateUnitToken)
-	local isTarget = namePlate.namePlateUnitToken and UnitIsUnit(namePlate.namePlateUnitToken, 'target')
-	local isWoWClassic = WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE
-	local isNameVisible = isTarget or isWoWClassic or GetCVarBool(isEnemy and 'UnitNameEnemyPlayerName' or 'UnitNameFriendlyPlayerName')
+	local isNameVisible = Musician.NamePlates.ShouldRenderNoteIcon(textElement)
+	local hasNoteIcon = player and not(Musician.Utils.PlayerIsMyself(player)) and Musician_Settings.showNamePlateIcon and Musician.Registry.PlayerIsRegistered(player)
 	local iconPlaceholder = Musician.Utils.GetChatIcon("")
 
-	if player and isNameVisible and not(Musician.Utils.PlayerIsMyself(player)) and Musician_Settings.showNamePlateIcon and Musician.Registry.PlayerIsRegistered(player) then
+	if hasNoteIcon and isNameVisible then
 		local nameString = textElement:GetText()
 		if nameString == nil then
 			return

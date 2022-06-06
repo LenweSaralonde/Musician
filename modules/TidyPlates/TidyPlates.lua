@@ -13,6 +13,11 @@ function Musician.TidyPlates:OnEnable()
 	if TidyPlates then
 		Musician.Utils.Debug(MODULE_NAME, "TidyPlates detected.")
 
+		-- Always render the note icon
+		Musician.NamePlates.ShouldRenderNoteIcon = function(textElement)
+			return true
+		end
+
 		-- Add note icon
 		hooksecurefunc(Musician.NamePlates, "UpdateNoteIcon", function(namePlate, player)
 			if namePlate.extended and namePlate.extended.visual and namePlate.extended.visual.name then
