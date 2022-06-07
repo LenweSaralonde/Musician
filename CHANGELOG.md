@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.9.0.10
+---------
+* Fixed nameplate note icons still showing when the player name is hidden. #80
+* Fixed nameplate raid icons not hiding when health bars are hidden.
+
 v1.9.0.9
 --------
 * Fixed NPCs nameplates showing incorrect names. #81
