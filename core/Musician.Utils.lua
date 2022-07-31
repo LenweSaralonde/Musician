@@ -847,7 +847,12 @@ end
 -- @return ellipsisText (string)
 function Musician.Utils.Ellipsis(text, maxBytes)
 	if #text > maxBytes then
-		local ellipsis = (maxBytes > 3) and '…' or ''
+		local ellipsis = '…'
+		if #ellipsis > maxBytes then
+			return '' -- The ellipsis doesn't fit
+		elseif #ellipsis == maxBytes then
+			return ellipsis -- Only the ellipsis fits
+		end
 		local cursor = maxBytes - #ellipsis
 		local characterCount = strlenutf8(string.sub(text, 1, cursor))
 
