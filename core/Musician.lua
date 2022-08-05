@@ -43,7 +43,11 @@ function Musician:OnInitialize()
 	local defaultCharacterSettings = {
 		framePosition = {},
 		minimap = {
-			minimapPos = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and 177 or WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC and 197 or 154,
+			minimapPos =
+				LE_EXPANSION_LEVEL_CURRENT == 0 and 177 or -- Classic Era
+				LE_EXPANSION_LEVEL_CURRENT == 1 and 197 or -- BC
+				LE_EXPANSION_LEVEL_CURRENT == 2 and 149 or -- WotLK
+				154, -- Retail
 			hide = false
 		},
 	}

@@ -66,6 +66,12 @@ local function debugComm(out, event, source, message, ...)
 	Musician.Utils.Debug(MODULE_NAME, prefix, event, source, message, ...)
 end
 
+--- Indicates whenever the communication channel should be used.
+-- @return (boolean)
+local function useCommChannel()
+	return WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
+end
+
 --- Initialize communication
 --
 function Musician.Comm.Init()
@@ -227,7 +233,7 @@ function Musician.Comm.BroadcastCommMessage(message, type, groupType)
 		Musician.Comm:SendCommMessage(groupType, message, groupChatType, nil, "ALERT")
 	end
 
-	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+	if useCommChannel() then
 		if Musician.Comm.ChannelIsReady() then
 			debugComm(true, type, "CHANNEL " .. Musician.Comm.GetChannel(), message)
 			Musician.Comm:SendCommMessage(type, message, "CHANNEL", Musician.Comm.GetChannel(), "ALERT")
@@ -253,13 +259,13 @@ end
 --- Return true if the communication channel is ready
 -- @return isReady (boolean)
 function Musician.Comm.ChannelIsReady()
-	return WOW_PROJECT_ID == WOW_PROJECT_MAINLINE and Musician.Comm.GetChannel() ~= nil
+	return useCommChannel() and Musician.Comm.GetChannel() ~= nil
 end
 
 --- Return true if the player can broadcast via the channel or the group chat
 -- @return canBroadcast (boolean)
 function Musician.Comm.CanBroadcast()
-	return WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE or Musician.Comm.ChannelIsReady() or Musician.Comm.GetGroupChatType() ~= nil
+	return not(useCommChannel()) or Musician.Comm.ChannelIsReady() or Musician.Comm.GetGroupChatType() ~= nil
 end
 
 --- Return true if the player can play music
@@ -325,7 +331,7 @@ function Musician.Comm.StreamCompressedSongChunk(compressedChunk)
 	if not(Musician.Comm.CanPlay()) then return false end
 
 	local serializedChunk
-	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+	if useCommChannel() then
 		serializedChunk = LibDeflate:EncodeForWoWAddonChannel(compressedChunk)
 	else
 		serializedChunk = Musician.Utils.Base64Encode(compressedChunk) -- LibDeflate:EncodeForWoWAddonChannel fails over YELL
@@ -449,7 +455,7 @@ function Musician.Comm.OnChunk(prefix, message, distribution, sender)
 
 	-- Rejecting channel chunks if the sender is also sending group chunks
 	local isGroup
-	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+	if useCommChannel() then
 		isGroup = distribution ~= 'CHANNEL'
 	else
 		isGroup = distribution == 'PARTY' or distribution == 'RAID' or distribution == 'INSTANCE_CHAT'
@@ -461,7 +467,7 @@ function Musician.Comm.OnChunk(prefix, message, distribution, sender)
 	end
 
 	local packedChunk
-	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+	if useCommChannel() then
 		packedChunk = LibDeflate:DecompressDeflate(LibDeflate:DecodeForWoWAddonChannel(message))
 	else
 		packedChunk = LibDeflate:DecompressDeflate(Musician.Utils.Base64Decode(message)) -- LibDeflate:DecodeForWoWAddonChannel fails over YELL
