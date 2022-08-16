@@ -1,6 +1,12 @@
 Changelog
 =========
 
+v1.9.1.0
+--------
+* Added support for Wrath of the Lich King Classic.
+* Updated for WoW Retail patch 9.2.7.
+* Minor bugfixes and improvements.
+
 v1.9.0.10
 ---------
 * Fixed nameplate note icons still showing when the player name is hidden. #80
