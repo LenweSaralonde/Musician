@@ -1,0 +1,31 @@
+name: Feature request
+description: Suggest a new feature for the project.
+title: "[Feature] "
+labels: [
+  "enhancement",
+  "backlog"
+]
+body:
+  - type: textarea
+    id: overview
+    attributes:
+      label: "Overview"
+      description: Please give a brief overview (1-2 sentences) of what you would like to see added.
+      placeholder: I'd really love it if the add-on would be able to...
+    validations:
+      required: true
+  - type: textarea
+    id: implementation
+    attributes:
+      label: "Implementation"
+      description: Describe how you would like to see this feature implemented.
+      placeholder: When I go to the config options, I would like something in a menu so I can do some other thing.
+    validations:
+      required: true
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: "Additional context"
+      description: Add any other context or screenshots about the feature request here.
+    validations:
+      required: false

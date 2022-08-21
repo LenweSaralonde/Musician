@@ -1,0 +1,101 @@
+name: Report a bug
+description: Create a full bug report to help us fix this issue.
+title: "[Bug] "
+labels: [
+  "bug",
+  "backlog"
+]
+body:
+  - type: markdown
+    attributes:
+      value: "*NOTE: Please disable all the other add-ons and make sure all the add-ons involved have been updated to their latest version then try to reproduce your issue. Bugs can sometimes be caused by conflicts with other add-ons and/or outdated versions. Otherwise, your bug ticket will be rejected.*"
+  - type: textarea
+    id: description
+    attributes:
+      label: "Description"
+      description: Please enter an explicit description of your issue.
+      placeholder: Short and explicit description of your incident...
+    validations:
+      required: true
+  - type: textarea
+    id: reprod
+    attributes:
+      label: "Reproduction steps"
+      description: Please enter the steps to reproduce your issue.
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: "Actual behavior"
+      description: A clear and concise description of what actually happened.
+      placeholder: The feature is doing this.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: "Expected behavior"
+      description: A clear and concise description of what you expected to happen.
+      placeholder: |
+        The feature should be doing that.
+    validations:
+      required: true
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: "Screenshots"
+      description: If applicable, add screenshots to help explain your problem.
+    validations:
+      required: false
+  - type: dropdown
+    id: wow-flavor
+    attributes:
+      label: "World of Warcraft flavor"
+      description: WoW flavor (Retail, Classic...).
+      multiple: false
+      options:
+        - Retail
+        - Wrath of the Lich King Classic
+        - Burning Crusade Classic
+        - Classic Era
+        - Other (PTR, beta...)
+    validations:
+      required: true
+  - type: input
+    id: wow-version
+    attributes:
+      label: "World of Warcraft version"
+      description: Version of the WoW Client.
+      placeholder: 9.2.7.45114
+    validations:
+      required: true
+  - type: input
+    id: addon-version
+    attributes:
+      label: "Add-on version"
+      description: Version of the add-on.
+      placeholder: 1.9.1.0
+    validations:
+      required: true
+  - type: dropdown
+    id: validation
+    attributes:
+      label: "Have you tried disabling all your other add-ons to ensure only this add-on causes the issue?"
+      multiple: false
+      options:
+        - 'Yes'
+        - 'No'
+    validations:
+      required: true
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: "Additional context"
+      description: Add any other context about the problem here.
+    validations:
+      required: false
