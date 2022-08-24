@@ -13,6 +13,7 @@ local FULL_PROMO_EMOTE_COOLDOWN = 10 * 60 -- Cooldown in seconds for the full pr
 local isGameMusicMuted = false
 local fullPromoEmoteLastSeen
 local overrideNextFullPromoEmote = false
+local debugStartTime = debugprofilestop()
 
 local GetCVar = (C_CVar and C_CVar.GetCVar or GetCVar)
 local GetCVarNumber = function(cvar)
@@ -29,12 +30,17 @@ end
 -- @param module (string)
 -- @param ... (string)
 function Musician.Utils.Debug(module, ...)
+	local prompt = "[|cFFFFFF00Musician DEBUG|r]"
+	local time = debugprofilestop() - debugStartTime
+	local s = floor(time / 1000)
+	local ms = floor(time % 1000)
+	local timeCode = "|cFFA0A0A0" .. Musician.Utils.PaddingZeros(s, 5) .. '.' .. Musician.Utils.PaddingZeros(ms, 3) .. "|r"
 	if module ~= nil then
 		if Musician_Settings.debug[module] then
-			print("[|cFFFFFF00Musician DEBUG|r]", module, ...)
+			print(prompt, timeCode, "|cFFFFFF00" .. module .. "|r", ...)
 		end
 	else
-		print("[|cFFFFFF00Musician DEBUG|r]", ...)
+		print(prompt, timeCode, ...)
 	end
 end
 
