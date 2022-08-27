@@ -11,7 +11,7 @@ local LibDeflate = LibStub:GetLibrary("LibDeflate")
 Musician.CrossRP.isReady = false
 
 local streamingSongId
-local chunkId
+local currentChunkId
 local receivedChunkIds = {}
 local foreigners = {} -- All players having Musician + CrossRP found on other bands
 local queriedPlayers = {}
@@ -62,7 +62,7 @@ end
 local function safeCall(func, ...)
 	local result = { pcall (func, ...) }
 	local success = table.remove(result, 1)
-	if not(success) then 
+	if not(success) then
 		return nil
 	end
 	return unpack(result)
@@ -226,8 +226,8 @@ function Musician.CrossRP.Init()
 
 	-- Handle cross realm promo emotes
 	--
-	Musician.CrossRP:RegisterMessage(Musician.Events.PromoEmote, function(event, isPromoEmoteSuccessful, msg, fullPlayerName, ...)
-		local languageName, channelName, playerName2, pflag, zoneChannelID, channelIndex, channelBaseName, unused, lineID = ...
+	Musician.CrossRP:RegisterMessage(Musician.Events.PromoEmote, function(event, isPromoEmoteSuccessful, _, fullPlayerName, ...)
+		local _, _, _, _, _, _, _, _, lineID = ...
 
 		if not(Musician.Utils.PlayerIsOnSameRealm(fullPlayerName)) and not(Musician.Utils.PlayerIsInGroup(fullPlayerName)) then
 			if not(isPromoEmoteSuccessful) then
@@ -241,7 +241,7 @@ function Musician.CrossRP.Init()
 
 	-- Scan nearby foreingers on each frame
 	--
-	Musician.CrossRP:RegisterMessage(Musician.Events.Frame, function(event, elapsed)
+	Musician.CrossRP:RegisterMessage(Musician.Events.Frame, function(event)
 
 		-- foreigners list is empty
 		if #foreigners == 0 then
@@ -260,7 +260,6 @@ function Musician.CrossRP.Init()
 		local scansToDo = math.ceil(FOREIGNERS_SCAN_MAX_TIME / scansPerMs)
 
 		-- Perform scan
-		local myBand = Musician.CrossRP.GetBandFromUnit("player")
 		if foreignerScanIndex == nil then foreignerScanIndex = 1 end
 		local scans = 0
 		local startTime = debugprofilestop()
@@ -378,7 +377,6 @@ function Musician.CrossRP.GetBroadcastDestination()
 
 	local myBand = Musician.CrossRP.GetBandFromUnit("player")
 	local destination = {}
-	local band
 	for band, _ in pairs(activeBands) do
 		if not(Musician.CrossRP.IsDestLinked(band, myBand)) then
 			table.insert(destination, band)
@@ -440,8 +438,7 @@ end
 --- Process a received version number from a Hello or a Query message
 -- @param source (string)
 -- @param message (string)
--- @param complete (boolean)
-function Musician.CrossRP.OnHelloOrQuery(source, message, complete)
+function Musician.CrossRP.OnHelloOrQuery(source, message)
 
 	local player = Musician.CrossRP.DestToFullname(source)
 	local type, rawData = message:match("^(%S+) (.*)")
@@ -481,19 +478,19 @@ function Musician.CrossRP.StreamCompressedSongChunk(compressedChunk)
 	-- Get chunk ID
 	if streamingSongId ~= Musician.streamingSong:GetId() then
 		streamingSongId = Musician.streamingSong:GetId()
-		chunkId = 0
+		currentChunkId = 0
 	else
-		chunkId = chunkId + 1
+		currentChunkId = currentChunkId + 1
 	end
 
 	-- Pack chunk ID (2)
-	local packedChunkId = Musician.Utils.PackNumber(chunkId, 2)
+	local packedChunkId = Musician.Utils.PackNumber(currentChunkId, 2)
 
 	-- Serialize data
 	local serializedData = LibDeflate:EncodeForWoWChatChannel(packedChunkId .. compressedChunk)
 
 	-- Send chunk
-	debug(true, Musician.CrossRP.event.chunk, destination, streamingSongId, chunkId, #(Musician.CrossRP.event.chunk .. " " .. serializedData))
+	debug(true, Musician.CrossRP.event.chunk, destination, streamingSongId, currentChunkId, #(Musician.CrossRP.event.chunk .. " " .. serializedData))
 	Musician.CrossRP.Send(
 		destination,
 		{ Musician.CrossRP.event.chunk, serializedData },
@@ -573,8 +570,7 @@ end
 --- Process a received music stop
 -- @param source (string)
 -- @param message (string)
--- @param complete (boolean)
-function Musician.CrossRP.OnSongStop(source, message, complete)
+function Musician.CrossRP.OnSongStop(source, message)
 
 	local myBand = Musician.CrossRP.GetBandFromUnit("player")
 	local player = Musician.CrossRP.DestToFullname(source)

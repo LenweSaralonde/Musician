@@ -71,7 +71,6 @@ function Musician.About.OnShow()
 
 	-- Instrument sources
 	local sampleSources = {}
-	local instrument
 	for _, instrument in pairs(Musician.INSTRUMENTS) do
 		if instrument.source and sampleSources[instrument.source] == nil then
 			table.insert(sampleSources, instrument.source)

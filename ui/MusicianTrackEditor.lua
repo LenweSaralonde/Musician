@@ -9,7 +9,6 @@ Musician.AddModule(MODULE_NAME)
 Musician.TrackEditor.MAX_NOTE_DURATION = 6
 
 local NOTE = Musician.Song.Indexes.NOTE
-local NOTEON = Musician.Song.Indexes.NOTEON
 
 --- Init
 --
@@ -79,7 +78,6 @@ function Musician.TrackEditor.OnLoad()
 
 	-- Get tracks
 	local trackCount = #Musician.sourceSong.tracks
-	local trackIndex
 	for trackIndex = 1, trackCount, 1 do
 		Musician.TrackEditor.CreateTrackWidget(trackIndex)
 	end
@@ -94,7 +92,7 @@ function Musician.TrackEditor.OnLoad()
 	MusicianTrackEditor:SetHeight(headerHeight + 32 * min(maxRows, max(minRows, trackCount)))
 
 	-- Hide unused tracks
-	trackIndex = trackCount + 1
+	local trackIndex = trackCount + 1
 	while _G['MusicianTrackEditorTrack' .. trackIndex] ~= nil do
 		_G['MusicianTrackEditorTrack' .. trackIndex]:Hide()
 		trackIndex = trackIndex + 1
@@ -211,7 +209,7 @@ function Musician.TrackEditor.CreateTrackWidget(trackIndex)
 	trackFrame.meterTexture.volumeMeter:Reset()
 
 	-- Track name
-	local trackName = ""
+	local trackName
 	if track.name ~= nil and track.name ~= "" then
 		trackName = track.name
 	else
@@ -269,15 +267,14 @@ function Musician.TrackEditor.InitTransposeDropdown(dropdown, trackIndex)
 		MSA_DropDownMenu_SetText(dropdown, transposeValues[index])
 	end
 
-	dropdown.OnClick = function(self, arg1, arg2, checked)
+	dropdown.OnClick = function(self, arg1)
 		dropdown.SetIndex(arg1)
 	end
 
-	dropdown.GetItems = function(frame, level, menuList)
+	dropdown.GetItems = function(frame)
 		local info = MSA_DropDownMenu_CreateInfo()
 		info.func = dropdown.OnClick
 
-		local index, label
 		for index, label in pairs(transposeValues) do
 			info.text = label
 			info.arg1 = index
@@ -348,7 +345,6 @@ end
 function Musician.TrackEditor.Synchronize()
 	if not(isSourceSongStreaming()) then return end
 
-	local trackIndex, sourceTrack
 	for trackIndex, sourceTrack in pairs(Musician.sourceSong.tracks) do
 		local streamingTrack = Musician.streamingSong.tracks[trackIndex]
 		streamingTrack.instrument = sourceTrack.instrument
@@ -362,7 +358,6 @@ end
 --
 function Musician.TrackEditor.OnUpdate(event, elapsed)
 	if Musician.sourceSong then
-		local track
 		-- Update track activity meters
 		for _, track in pairs(Musician.sourceSong.tracks) do
 			local meterTexture = _G['MusicianTrackEditorTrack' .. track.index].meterTexture
@@ -409,8 +404,7 @@ end
 -- @param event (string)
 -- @param song (Musician.Song)
 -- @param track (table)
--- @param key (number)
-function Musician.TrackEditor.NoteOff(event, song, track, key)
+function Musician.TrackEditor.NoteOff(event, song, track)
 	if song == Musician.sourceSong then
 		-- Stop if all notes of the track are off
 		if track.polyphony == 0 then

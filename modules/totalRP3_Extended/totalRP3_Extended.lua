@@ -6,6 +6,8 @@ Musician.TRP3E = LibStub("AceAddon-3.0"):NewAddon("Musician.TRP3E", "AceEvent-3.
 local MODULE_NAME = "TRP3E"
 Musician.AddModule(MODULE_NAME)
 
+local LibBase64 = LibStub:GetLibrary("LibBase64")
+
 Musician.TRP3E.ID_PREFIX = 'Musician_'
 Musician.TRP3E.WORKFLOW_NAME = 'ImportIntoMusician'
 Musician.TRP3E.VARIABLE_NAME = 'SongData'
@@ -83,11 +85,11 @@ local function initLocaleDropdown()
 		MSA_DropDownMenu_SetText(dropdown, localeValues[index][2])
 	end
 
-	dropdown.OnClick = function(self, arg1, arg2, checked)
+	dropdown.OnClick = function(self, arg1)
 		dropdown.SetValue(arg1)
 	end
 
-	dropdown.GetItems = function(frame, level, menuList)
+	dropdown.GetItems = function(frame)
 		local info = MSA_DropDownMenu_CreateInfo()
 		info.func = dropdown.OnClick
 		for _, value in pairs(localeValues) do
@@ -223,7 +225,7 @@ function Musician.TRP3E.InitUI()
 		Musician.sourceSong = song
 		collectgarbage()
 
-		Musician.TRP3E:SendMessage(Musician.Events.SourceSongLoaded, song, songData)
+		Musician.TRP3E:SendMessage(Musician.Events.SourceSongLoaded, song)
 		MusicianFrame:Show()
 	end)
 end
@@ -232,7 +234,7 @@ end
 -- @param infoId (string)
 -- @return slotButtons (table)
 function Musician.TRP3E.GetSlotButtons(infoId)
-	slotButtons = {}
+	local slotButtons = {}
 	for _, containerFrame in pairs({ TRP3_InventoryPage.Main, unpack(containerFrames) }) do
 		for _, slotButton in pairs(containerFrame.slots) do
 			if slotButton.info and slotButton.info.id == infoId then
@@ -265,7 +267,7 @@ local function createItem(song, locale, icon, quantity)
 			Musician.TRP3E:SendMessage(Musician.TRP3E.Event.CreateProgress, song, (1 - BASE64ENCODE_PROGRESSION_RATIO) + progression * BASE64ENCODE_PROGRESSION_RATIO)
 
 			local cursorTo = min(#songData, cursor + BASE64_CONVERT_RATE - 1)
-			encodedSongData = encodedSongData .. Musician.Utils.Base64Encode(string.sub(songData, cursor, cursorTo))
+			encodedSongData = encodedSongData .. LibBase64:enc(string.sub(songData, cursor, cursorTo))
 			cursor = cursorTo + 1
 
 			if cursorTo == #songData then
@@ -289,7 +291,7 @@ local function injectUIData()
 	local title = frame.songTitle:GetText()
 	local locale = frame.locale.value
 	local icon = frame.preview.selectedIcon
-	local ID, object, isExisting = Musician.TRP3E.GetSheetMusicItem(title, locale, icon)
+	local _, object, isExisting = Musician.TRP3E.GetSheetMusicItem(title, locale, icon)
 	if isExisting then -- Return a copy in case the item already exists to avoid updating it
 		object = Musician.Utils.DeepCopy(object)
 	end
@@ -305,7 +307,7 @@ end
 
 local function updateHint()
 	local frame = MusicianTRPEExportFrame
-	local objectID, object, isExisting = Musician.TRP3E.GetSheetMusicItem(frame.songTitle:GetText())
+	local _, _, isExisting = Musician.TRP3E.GetSheetMusicItem(frame.songTitle:GetText())
 
 	if isExisting then
 		frame.hint:SetText(Musician.Msg.TRPE_EXPORT_WINDOW_HINT_EXISTING)
@@ -339,7 +341,7 @@ function Musician.TRP3E.ShowExportFrame()
 		end
 
 		-- Retrieve existing item data
-		local objectID, object = Musician.TRP3E.GetSheetMusicItem(sharedSong.name)
+		local _, object = Musician.TRP3E.GetSheetMusicItem(sharedSong.name)
 
 		-- Song title
 
@@ -396,7 +398,7 @@ function Musician.TRP3E.ShowExportFrame()
 
 		-- Set events
 
-		Musician.TRP3E:RegisterMessage(Musician.TRP3E.Event.CreateStart, function(event, song)
+		Musician.TRP3E:RegisterMessage(Musician.TRP3E.Event.CreateStart, function(event)
 			exporting = true
 			frame.exportItemButton:Disable()
 			frame.songTitle:Disable()
@@ -409,14 +411,14 @@ function Musician.TRP3E.ShowExportFrame()
 			frame.hint:Hide()
 		end)
 
-		Musician.TRP3E:RegisterMessage(Musician.TRP3E.Event.CreateProgress, function(event, song, progress)
+		Musician.TRP3E:RegisterMessage(Musician.TRP3E.Event.CreateProgress, function(event, _, progress)
 			frame.progressBar:SetProgress(progress)
 			local percentageText = floor(progress * 100)
 			local progressText = string.gsub(Musician.Msg.TRPE_EXPORT_WINDOW_PROGRESS, '{progress}', percentageText)
 			frame.progressText:SetText(progressText)
 		end)
 
-		Musician.TRP3E:RegisterMessage(Musician.TRP3E.Event.CreateComplete, function(event, song)
+		Musician.TRP3E:RegisterMessage(Musician.TRP3E.Event.CreateComplete, function(event, _)
 			frame.progressBar:Hide()
 			frame.progressText:Hide()
 			frame.hint:Show()
@@ -491,7 +493,7 @@ local function importSong(encodedSongData, infoId)
 		Musician.TRP3E:SendMessage(Musician.TRP3E.Event.LoadProgress, infoId, progression * BASE64DECODE_PROGRESSION_RATIO)
 
 		local cursorTo = min(#encodedSongData, cursor + BASE64_CONVERT_RATE * 4 - 1)
-		songData = songData .. Musician.Utils.Base64Decode(string.sub(encodedSongData, cursor, cursorTo))
+		songData = songData .. LibBase64:dec(string.sub(encodedSongData, cursor, cursorTo))
 		cursor = cursorTo + 1
 
 		if cursorTo >= #encodedSongData then
@@ -672,8 +674,8 @@ function Musician.TRP3E.GetSheetMusicItem(title, locale, icon)
 
 	-- Find existing sheet music item by title
 	for ID, object in pairs(TRP3_DB.global) do
-		for locale, _ in pairs(Musician.Locale) do
-			local itemName = string.gsub(Musician.Utils.GetMsg('TRPE_ITEM_NAME', locale), '{title}', title)
+		for aLocale, _ in pairs(Musician.Locale) do
+			local itemName = string.gsub(Musician.Utils.GetMsg('TRPE_ITEM_NAME', aLocale), '{title}', title)
 			if Musician.TRP3E.IsMusicianId(ID) and object.BA.NA == itemName then
 				return ID, object, true
 			end
@@ -689,7 +691,7 @@ end
 -- @param object (table)
 -- @param title (string) Song title
 -- @param locale (string) Item locale
-function updateItemStrings(object, title, locale)
+local function updateItemStrings(object, title, locale)
 	object.BA.NA = string.gsub(Musician.Utils.GetMsg('TRPE_ITEM_NAME', locale), '{title}', title)
 	object.BA.LE = Musician.Utils.GetMsg('TRPE_ITEM_TOOLTIP_SHEET_MUSIC', locale)
 	object.NT = string.gsub(Musician.Utils.GetMsg('TRPE_ITEM_NOTES', locale), '{url}', Musician.URL)

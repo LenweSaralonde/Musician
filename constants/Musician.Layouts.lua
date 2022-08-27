@@ -127,8 +127,7 @@ end
 
 local function getPercussionScale(scale)
 	local shiftedScale = {}
-	local k, v
-	for k, v in pairs(scale) do
+	for _, v in pairs(scale) do
 		table.insert(shiftedScale, v - 15)
 	end
 	return shiftedScale
@@ -165,7 +164,6 @@ Musician.PianoLayout = {
 Musician.HorizontalLayouts = {}
 Musician.VerticalLayouts = {}
 
-local mode
 for _, mode in pairs(MODES) do
 	if mode[2] then
 		table.insert(Musician.HorizontalLayouts, getHorizontalScale(unpack(mode)))

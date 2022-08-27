@@ -27,7 +27,6 @@ NOTEON.PLAYER = 7
 --
 function Musician.Sampler.Init()
 	-- Augment instrument data
-	local instrumentName, instrumentData
 	for instrumentName, instrumentData in pairs(Musician.INSTRUMENTS) do
 		-- Set instrument name
 		instrumentData.name = instrumentName
@@ -58,14 +57,12 @@ end
 -- @param noteName (string) from Musician.NOTE_NAMES
 -- @return key (int)
 function Musician.Sampler.NoteKey(noteName)
-	local octave, note
-
 	for note in string.gmatch(noteName, "[A-Z#]+") do
-		for octave in string.gmatch(noteName, "-?%d+") do
+		local octave = string.match(noteName, "-?%d+")
+		if octave then
 			return Musician.C0_INDEX + octave * 12 + Musician.NOTE_IDS[note]
 		end
 	end
-
 	return nil
 end
 
@@ -157,10 +154,9 @@ function Musician.Sampler.GetSoundFile(instrument, key)
 		return nil
 	end
 
-	local soundPaths, soundPath
+	local soundPaths
 	-- Use regions
 	if instrumentData.regions ~= nil then
-		local region
 		soundPaths = {}
 		for _, region in pairs(instrumentData.regions) do
 			local hiKey = region.hiKey - 12 + Musician.C0_INDEX
@@ -181,7 +177,6 @@ function Musician.Sampler.GetSoundFile(instrument, key)
 	local noteName = Musician.Sampler.NoteName(key)
 
 	local soundFiles = {}
-	local i, soundPath
 	for i, soundPath in pairs(soundPaths) do
 		local soundFile = soundPath
 		if not(instrumentData.isPercussion) then
@@ -241,8 +236,6 @@ end
 local function noteOnShouldPlay(noteOn)
 	local player = noteOn[NOTEON.PLAYER]
 	local track = noteOn[NOTEON.TRACK]
-	local instrumentData = noteOn[NOTEON.INSTRUMENT_DATA]
-
 	local shouldPlay = not(globalMute)
 
 	-- If the note comes from another player while the source song is playing, it should not play.
@@ -326,7 +319,7 @@ local function playSampleFile(handle, instrumentData, soundFile, tries, channel)
 		end
 	end
 
- 	-- Note failed to play due to lack of available polyphony
+	-- Note failed to play due to lack of available polyphony
 	Musician.Utils.Debug(MODULE_NAME, 'Dropped note', handle, "(tries: " .. tries .. ")")
 
 	-- Set a dummy sound handle to avoid the main loop to attempt to play the note on its own
@@ -442,15 +435,20 @@ function Musician.Sampler.StopNote(handle, decay)
 		return
 	end
 
-	Musician.Utils.Debug(MODULE_NAME, 'StopNote', handle, instrumentData and instrumentData.name, key, soundHandle, decay)
+	local noteOn = notesOn[handle]
+	local key = noteOn[NOTEON.KEY]
+	local instrumentData = noteOn[NOTEON.INSTRUMENT_DATA]
+	Musician.Utils.Debug(MODULE_NAME, 'StopNote', handle, instrumentData and instrumentData.name, key)
+
 	stopNoteSample(handle, decay)
+
 	wipe(notesOn[handle])
 	notesOn[handle] = nil
 end
 
 --- Main on frame update function
--- @param elapsed (number)
-function Musician.Sampler.OnUpdate(elapsed)
+--
+function Musician.Sampler.OnUpdate()
 	clearPlayerRangeCache() -- Refresh in range player status on every frame
 
 	-- Determine notes that should be playing and those that should be stopped
@@ -460,7 +458,7 @@ function Musician.Sampler.OnUpdate(elapsed)
 
 		-- The note audio should be stopped
 		if isNotePlaying and not(shouldPlayNote) then
-			stopNoteSample(handle, decay)
+			stopNoteSample(handle)
 
 		-- The note audio should be started
 		elseif not(isNotePlaying) and shouldPlayNote then
@@ -483,7 +481,7 @@ function Musician.Sampler.StopOldestNote()
 
 	Musician.Utils.Debug(MODULE_NAME, 'StopOldestNote')
 
-	local handle, noteOn, minHandle
+	local minHandle
 	for handle, noteOn in pairs(notesOn) do
 		if noteOn[NOTEON.SOUND_HANDLE] and (minHandle == nil or handle < minHandle) then
 			minHandle = handle

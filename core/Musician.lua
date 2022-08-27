@@ -84,13 +84,13 @@ function Musician:OnInitialize()
 
 	-- Automatically mute game music
 	C_Timer.NewTicker(0.5, function() Musician.Utils.MuteGameMusic() end)
-	local muteGameMusic = function(...)
+	local muteGameMusic = function()
 		C_Timer.After(1, function()
 			Musician.Utils.MuteGameMusic(true)
 		end)
 	end
 	Musician:RegisterEvent("PLAYER_ENTERING_WORLD", muteGameMusic)
-	hooksecurefunc('SetCVar', function(cvar, value)
+	hooksecurefunc('SetCVar', function(cvar)
 		if cvar == 'Sound_EnableMusic' then
 			muteGameMusic()
 		end
@@ -206,7 +206,7 @@ function Musician.GetCommands()
 			"test", "testplay", "playtest"
 		},
 		text = Musician.Msg.COMMAND_PREVIEW_PLAY,
-		func = function(arg)
+		func = function()
 			if Musician.sourceSong then
 				if Musician.sourceSong:IsPlaying() then
 					Musician.sourceSong:Stop()
@@ -225,7 +225,7 @@ function Musician.GetCommands()
 			"teststop", "stoptest"
 		},
 		text = Musician.Msg.COMMAND_PREVIEW_STOP,
-		func = function(arg)
+		func = function()
 			if Musician.sourceSong and Musician.sourceSong:IsPlaying() then
 				Musician.sourceSong:Stop()
 			end
@@ -304,7 +304,6 @@ end
 function Musician.Help()
 	Musician.Utils.Print(Musician.Msg.COMMAND_LIST_TITLE)
 
-	local row
 	for _, row in pairs(Musician.GetCommands()) do
 
 		local params = ""
@@ -362,8 +361,8 @@ function Musician.RunCommandLine(commandLine)
 				end
 			else
 				if state then
-					for _, module in ipairs(Musician.modules) do
-						Musician_Settings.debug[module] = true
+					for _, moduleName in ipairs(Musician.modules) do
+						Musician_Settings.debug[moduleName] = true
 					end
 					Musician.Utils.Debug(nil, "Debug mode enabled for all modules.")
 				else
@@ -374,7 +373,6 @@ function Musician.RunCommandLine(commandLine)
 		end
 	})
 
-	local row, command
 	for _, row in pairs(commands) do
 		for _, command in pairs(row.command) do
 			if cmd == command then
@@ -434,8 +432,7 @@ end
 --- Handle successful source import
 -- @param event (string)
 -- @param song (Musician.Song)
--- @param data (string)
-function Musician.OnSourceImportSuccessful(event, song, data)
+function Musician.OnSourceImportSuccessful(event, song)
 	if song ~= Musician.importingSong then return end
 
 	-- Stop previous source song being played
@@ -447,7 +444,7 @@ function Musician.OnSourceImportSuccessful(event, song, data)
 	Musician.importingSong = nil
 	collectgarbage()
 
-	Musician:SendMessage(Musician.Events.SourceSongLoaded, song, data)
+	Musician:SendMessage(Musician.Events.SourceSongLoaded, song)
 end
 
 --- Handle failed source import
@@ -507,7 +504,7 @@ function Musician.SetupHooks()
 	-- Hyperlinks
 	--
 
-	hooksecurefunc("ChatFrame_OnHyperlinkShow", function(self, link, text, button)
+	hooksecurefunc("ChatFrame_OnHyperlinkShow", function(self, link)
 		local args = { strsplit(':', link) }
 		if args[1] == "musician" then
 			-- Stop current song for player
@@ -580,7 +577,7 @@ function Musician.SetupHooks()
 	-- Add player dropdown menu options
 	--
 
-	hooksecurefunc("UnitPopup_ShowMenu", function(dropdownMenu, which, unit, name, userData)
+	hooksecurefunc("UnitPopup_ShowMenu", function(dropdownMenu, which)
 		if UIDROPDOWNMENU_MENU_LEVEL == 1 and (which == "PARTY" or which == "PLAYER" or which == "RAID_PLAYER" or which == "FRIEND" or which == "FRIEND_OFFLINE" or which == "TARGET") then
 			local isPlayer = dropdownMenu.unit and UnitIsPlayer(dropdownMenu.unit) or dropdownMenu.chatTarget
 			local isMyself = false
@@ -640,7 +637,6 @@ function Musician.SetupHooks()
 				UIDropDownMenu_AddSeparator(1)
 			end
 
-			local item
 			for _, item in pairs(items) do
 				if item.visible then
 					local info = UIDropDownMenu_CreateInfo()
@@ -684,18 +680,15 @@ function Musician.SetupHooks()
 
 		local fullPlayerName = Musician.Utils.NormalizePlayerName(player)
 
-		local isPromoEmote = false
-		local isFullPromoEmote = false
-		local isPromoEmoteSuccessful = false
-
 		-- "Player is playing music."
-		isPromoEmote, isFullPromoEmote = Musician.Utils.HasPromoEmote(msg)
+		local isPromoEmote, isFullPromoEmote = Musician.Utils.HasPromoEmote(msg)
 		if isFullPromoEmote then
 			Musician.Utils.ResetFullPromoEmoteCooldown()
 		end
 
 		-- Process promo emote
 		if isPromoEmote then
+			local isPromoEmoteSuccessful
 
 			-- Music is loaded and actually playing
 			if Musician.songs[fullPlayerName] ~= nil and Musician.songs[fullPlayerName]:IsPlaying() then

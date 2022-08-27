@@ -32,9 +32,7 @@ Musician.NamePlates.Options.SetCVarBool = setCVarBool
 function Musician.NamePlates.Options.Init()
 	-- Refresh panel when CVar changed
 	MusicianOptionsPanelUnitNamePlates:RegisterEvent("CVAR_UPDATE")
-	MusicianOptionsPanelUnitNamePlates:SetScript("OnEvent", function(event, ...)
-		Musician.NamePlates.Options.RefreshCheckboxes()
-	end)
+	MusicianOptionsPanelUnitNamePlates:SetScript("OnEvent", Musician.NamePlates.Options.RefreshCheckboxes)
 end
 hooksecurefunc(Musician.Options, "Init", Musician.NamePlates.Options.Init)
 

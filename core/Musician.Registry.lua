@@ -142,7 +142,7 @@ function Musician.Registry.Init()
 
 			-- Display the number of players online
 			local playerCount = 0
-			for player, _ in pairs(Musician.Registry.players) do
+			for _, _ in pairs(Musician.Registry.players) do
 				playerCount = playerCount + 1
 			end
 
@@ -222,8 +222,8 @@ function Musician.Registry.FetchPlayers()
 		ListChannelByName(Musician.CHANNEL)
 
 		-- The request may not work on the first attempt so try again every second until it succeeds
- 		Musician.Registry.listChannelsRetryTimer = C_Timer.NewTicker(1, function()
- 			ListChannelByName(Musician.CHANNEL)
+		Musician.Registry.listChannelsRetryTimer = C_Timer.NewTicker(1, function()
+			ListChannelByName(Musician.CHANNEL)
 		end)
 	end
 end
@@ -287,7 +287,7 @@ function Musician.Registry.PlayerIsInRange(player)
 
 	-- Range check
 	player = Musician.Utils.NormalizePlayerName(player)
-	local posY, posX, posZ, instanceID = Musician.Utils.GetPlayerPosition()
+	local posY, posX, posZ, _ = Musician.Utils.GetPlayerPosition()
 	local pp = Musician.Registry.players[player]
 	return Musician.LISTENING_RADIUS ^ 2 > (pp.posY - posY) ^ 2 + (pp.posX - posX) ^ 2 + (pp.posZ - posZ) ^ 2
 end
@@ -336,7 +336,7 @@ end
 function Musician.Registry.UpdateTooltipInfo(tooltip, player, fontSize)
 
 	-- Reposition line if it's not in the last position
-	local repositionLine = function(tooltip, line, i)
+	local repositionLine = function(line, i)
 		if i ~= tooltip:NumLines() then
 			line:SetText("")
 			Musician.Registry.UpdateTooltipInfo(tooltip, player, fontSize)
@@ -350,21 +350,20 @@ function Musician.Registry.UpdateTooltipInfo(tooltip, player, fontSize)
 	end
 
 	local tooltipName = tooltip:GetName()
-	local line
 	local i = 1
 	while _G[tooltipName .. 'TextRight' .. i] do
 		local line = _G[tooltipName .. 'TextRight' .. i]
 
 		-- Info text is already present: no update needed
 		if line:GetText() == infoText then
-			repositionLine(tooltip, line, i)
+			repositionLine(line, i)
 			return
 		end
 
 		-- Default is already present: update it by the detailed info text
 		if line:GetText() == Musician.Msg.PLAYER_TOOLTIP then
 			line:SetText(infoText)
-			repositionLine(tooltip, line, i)
+			repositionLine(line, i)
 			return
 		end
 
@@ -508,8 +507,7 @@ end
 function Musician.Registry.ExtractVersionAndProtocol(versionAndProtocol)
 	versionAndProtocol = string.gsub(versionAndProtocol, "%s.+", "")
 	local versionParts = { string.split('.', versionAndProtocol) }
-	local protocol = Musician.PROTOCOL_VERSION
-
+	local protocol
 	local majorVersion = tonumber(versionParts[1]) or 0
 	local minorVersion = tonumber(versionParts[2]) or 0
 
@@ -564,7 +562,7 @@ function Musician.Registry.NotifyNewVersion(otherVersion)
 
 		-- Display message with fanfare sound
 		if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-			local _, handle = PlaySound(67788, 'Master')
+			PlaySound(67788, 'Master')
 		else
 			PlaySoundFile("Interface\\AddOns\\Musician\\ui\\sound\\fx_flute_mylunesmelody_short.ogg")
 		end

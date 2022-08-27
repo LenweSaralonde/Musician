@@ -143,14 +143,15 @@ end
 -- @param player (string)
 -- @return playerLink (string)
 function Musician.Utils.GetPlayerLink(player)
-	local player, realm = strsplit('-', Musician.Utils.NormalizePlayerName(player), 2)
+	local simplePlayerName, realm = strsplit('-', Musician.Utils.NormalizePlayerName(player), 2)
 	local _, myRealm = strsplit('-', Musician.Utils.NormalizePlayerName(UnitName("player")), 2)
 
+	local displayPlayerName = simplePlayerName
 	if myRealm ~= realm then
-		player = player .. "-" .. realm
+		displayPlayerName = simplePlayerName .. "-" .. realm
 	end
 
-	return Musician.Utils.GetLink('player', player, player)
+	return Musician.Utils.GetLink('player', displayPlayerName, displayPlayerName)
 end
 
 --- Get player full name with realm slug or Battle.net account name if a Battle.net game account ID is provided.
@@ -224,9 +225,8 @@ function Musician.Utils.GetBattleNetAccount(accountID)
 		if accountInfo == nil then return {} end
 	else
 		local presenceID, accountName, battleTag, isBattleTagPresence,
-			characterName, bnetIDGameAccount, client, isOnline, lastOnline,
-			isAFK, isDND, messageText, noteText, isRIDFriend, messageTime,
-			canSoR, isReferAFriend, canSummonFriend = BNGetFriendInfoByID(accountID)
+			_, _, _, isOnline, lastOnline,
+			isAFK, isDND, messageText, _, _, messageTime = BNGetFriendInfoByID(accountID)
 		if presenceID == nil then return {} end
 		accountInfo = {
 			bnetAccountID = presenceID, -- Unique numeric identifier for the friend's Battle.net account during this session
@@ -257,8 +257,8 @@ end
 -- @return gameAccountInfo (table)
 local function formatClassicGameAccountInfo(...)
 	local hasFocus, characterName, client, realmName, realmID, faction,
-	race, class, guild, zoneName, level, gameText, broadcastText, broadcastTime,
-	canSoR, bnetIDGameAccount, presenceID, unknown, unknown, characterGUID, wowProjectID, wowClassicRealm = ...
+	race, class, _, zoneName, level, gameText, _, _,
+	_, bnetIDGameAccount, _, _, _, characterGUID, wowProjectID = ...
 
 	if characterName == nil then return {} end
 
@@ -365,25 +365,25 @@ end
 -- @param playerGUID (string)
 -- @param message (string)
 function Musician.Utils.DisplayEmote(player, playerGUID, message)
-	local player, realm = strsplit('-', Musician.Utils.NormalizePlayerName(player), 2)
+	local simplePlayerName, realm = strsplit('-', Musician.Utils.NormalizePlayerName(player), 2)
 	local _, myRealm = strsplit('-', Musician.Utils.NormalizePlayerName(UnitName("player")), 2)
-	local fullPlayerName = player .. "-" .. realm
+	local fullPlayerName = simplePlayerName .. "-" .. realm
 
+	local displayPlayerName = player
 	if myRealm ~= realm then
-		player = fullPlayerName
+		displayPlayerName = fullPlayerName
 	end
 
 	if playerGUID then
-		ChatFrame_OnEvent(DEFAULT_CHAT_FRAME, "CHAT_MSG_EMOTE", message, fullPlayerName, '', '', player, '', nil, nil, nil, nil, 0, playerGUID)
+		ChatFrame_OnEvent(DEFAULT_CHAT_FRAME, "CHAT_MSG_EMOTE", message, fullPlayerName, '', '', displayPlayerName, '', nil, nil, nil, nil, 0, playerGUID)
 	else
-		ChatFrame_OnEvent(DEFAULT_CHAT_FRAME, "CHAT_MSG_EMOTE", message, fullPlayerName, '', '', player, '')
+		ChatFrame_OnEvent(DEFAULT_CHAT_FRAME, "CHAT_MSG_EMOTE", message, fullPlayerName, '', '', displayPlayerName, '')
 	end
 end
 
 --- Remove a chat message by its line ID
 -- @param lineID (int)
 function Musician.Utils.RemoveChatMessage(lineID)
-	local i
 	for i = 1, NUM_CHAT_WINDOWS do
 		local chatFrame = _G["ChatFrame" .. i]
 		if chatFrame then
@@ -411,9 +411,8 @@ function Musician.Utils.PackNumber(num, bytes)
 	local m = num
 	local b
 	local packed = ''
-	local i
 
-	for i = 1, bytes do
+	for _ = 1, bytes do
 		b = m % 256
 		m = (m - b) / 256
 		packed = string.char(b) .. packed
@@ -428,56 +427,11 @@ end
 function Musician.Utils.UnpackNumber(data)
 	local num = 0
 
-	local i
 	for i = 1, #data do
 		num = num * 256 + string.byte(data:sub(i, i))
 	end
 
 	return num
-end
-
-local base64chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
-
---- Decode base 64 string
--- Lua 5.1+ base64 v3.0 (c) 2009 by Alex Kloss <alexthkloss@web.de>
--- licensed under the terms of the LGPL2
--- http://lua-users.org/wiki/BaseSixtyFour
--- @param data (string)
--- @return str (string)
-function Musician.Utils.Base64Decode(data)
-	local b=base64chars
-	data = string.gsub(data, '[^'..b..'=]', '')
-	return (data:gsub('.', function(x)
-		if (x == '=') then return '' end
-		local r,f='',(b:find(x)-1)
-		for i=6,1,-1 do r=r..(f%2^i-f%2^(i-1)>0 and '1' or '0') end
-		return r;
-	end):gsub('%d%d%d?%d?%d?%d?%d?%d?', function(x)
-		if (#x ~= 8) then return '' end
-		local c=0
-		for i=1,8 do c=c+(x:sub(i,i)=='1' and 2^(8-i) or 0) end
-		return string.char(c)
-	end))
-end
-
---- Encode base 64 string
--- Lua 5.1+ base64 v3.0 (c) 2009 by Alex Kloss <alexthkloss@web.de>
--- licensed under the terms of the LGPL2
--- http://lua-users.org/wiki/BaseSixtyFour
--- @param data (string)
--- @return string
-function Musician.Utils.Base64Encode(data)
-	local b=base64chars
-	return ((data:gsub('.', function(x)
-		local r,b='',x:byte()
-		for i=8,1,-1 do r=r..(b%2^i-b%2^(i-1)>0 and '1' or '0') end
-		return r;
-	end)..'0000'):gsub('%d%d%d?%d?%d?%d?', function(x)
-		if (#x < 6) then return '' end
-		local c=0
-		for i=1,6 do c=c+(x:sub(i,i)=='1' and 2^(6-i) or 0) end
-		return b:sub(c+1,c+1)
-	end)..({ '', '==', '=' })[#data%3+1])
 end
 
 --- Pack a time or duration in seconds into a string
@@ -516,7 +470,7 @@ end
 --- Pack player position into a 18-byte chunk string
 -- @return data (string)
 function Musician.Utils.PackPlayerPosition()
-	local posY, posX, posZ, instanceID = Musician.Utils.GetPlayerPosition()
+	local posY, posX, _, instanceID = Musician.Utils.GetPlayerPosition()
 
 	-- Only set (0, 0) as integer coordinates when posX and posY exactly equal 0,
 	-- meaning the coordinates could not be retrieved (for example in a dungeon).
@@ -572,7 +526,6 @@ end
 -- @return isPlaying (boolean)
 function Musician.Utils.SongIsPlaying()
 	local playingSongs = Musician.Song.GetPlayingSongs()
-	local song
 	for _, song in pairs(playingSongs) do
 		if song:IsAudible() then
 			return true
@@ -830,7 +783,6 @@ function Musician.Utils.PlayerIsOnSameRealm(playerName)
 	end
 
 	-- Is on a connected realm
-	local realm
 	for _, realm in pairs(GetAutoCompleteRealms()) do
 		if realm == playerRealm then
 			return true
@@ -911,8 +863,7 @@ end
 -- @return hasPromoEmote (boolean)
 -- @return isFullPromoEmote (boolean) true if the emote contains the part invinting other players to install Musician
 function Musician.Utils.HasPromoEmote(message)
-	local lang
-	for lang, locale in pairs(Musician.Locale) do
+	for _, locale in pairs(Musician.Locale) do
 		if locale.EMOTE_PLAYING_MUSIC ~= nil and string.find(message, locale.EMOTE_PLAYING_MUSIC, 1, true) == 1 then
 			local isFullPromoEmote = string.find(message, locale.EMOTE_PROMO, 1, true) ~= nil
 			return true, isFullPromoEmote
@@ -975,7 +926,6 @@ function Musician.Utils.VersionCompare(versionA, versionB)
 	local countA = #partsA
 	local countB = #partsB
 
-	local i
 	for i = 1, min(countA, countB) do
 		local a = tonumber(partsA[i]) or 0
 		local b = tonumber(partsB[i]) or 0
@@ -1034,12 +984,13 @@ end
 -- @return seconds (number)
 function Musician.Utils.ParseTime(timestamp)
 	local parts = {string.split(':', timestamp)}
-	local m, s, cs
+
+	local m
 
 	if #parts >= 2 then
 		m = string.match(parts[#parts - 1], "(%d*)")
 	end
-	s, _, cs = string.match(parts[#parts], "(%d*)(%.?)(%d*)")
+	local s, _, cs = string.match(parts[#parts], "(%d*)(%.?)(%d*)")
 
 	local time = 0
 
@@ -1085,7 +1036,6 @@ function Musician.Utils.DeepCopy(orig)
 	local copy
 	if orig_type == 'table' then
 		copy = {}
-		local orig_key, orig_value
 		for orig_key, orig_value in next, orig, nil do
 			copy[Musician.Utils.DeepCopy(orig_key)] = Musician.Utils.DeepCopy(orig_value)
 		end
@@ -1103,7 +1053,6 @@ end
 function Musician.Utils.DeepMerge(merged, orig)
 	local orig_type = type(orig)
 	if orig_type == 'table' then
-		local orig_key, orig_value
 		for orig_key, orig_value in next, orig, nil do
 			merged[orig_key] = Musician.Utils.DeepMerge(merged[orig_key], orig_value)
 		end
@@ -1118,7 +1067,6 @@ end
 -- @return flipped (table)
 function Musician.Utils.FlipTable(orig)
 	local flipped = {}
-	local key, value
 	for key, value in pairs(orig) do
 		flipped[value] = key
 	end
@@ -1166,11 +1114,11 @@ function Musician.Utils.SetFontStringTextFixedSize(fontString, text)
 		-- Measure expected font height
 		fontString:SetScale(1)
 		fontString:SetText('0')
-		_, fontString.expectedFontHeight = fontString:GetFont()
+		fontString.expectedFontHeight = select(2, fontString:GetFont())
 
 		-- Store points at 1:1 scale
 		fontString.unscaledPoints = {}
-		local numPoints, i = fontString:GetNumPoints()
+		local numPoints = fontString:GetNumPoints()
 		for i = 1, numPoints do
 			fontString.unscaledPoints[i] = { fontString:GetPoint(i) }
 		end
@@ -1189,8 +1137,7 @@ function Musician.Utils.SetFontStringTextFixedSize(fontString, text)
 
 	fontString:SetScale(scale)
 
-	local i, pointArgs
-	for i, pointArgs in pairs(fontString.unscaledPoints) do
+	for _, pointArgs in pairs(fontString.unscaledPoints) do
 		local point, relativeTo, relativePoint, xOfs, yOfs = unpack(pointArgs)
 		fontString:SetPoint(point, relativeTo, relativePoint, xOfs / scale, yOfs / scale)
 	end
@@ -1222,7 +1169,6 @@ end
 function Musician.Utils.ForEach(list, func)
 	-- Make a shallow copy of the table to avoid issues if an element is removed in the process
 	local listCopy = Musician.Utils.ShallowCopy(list)
-	local key, value
 	for key, value in pairs(listCopy) do
 		func(value, key, list)
 	end

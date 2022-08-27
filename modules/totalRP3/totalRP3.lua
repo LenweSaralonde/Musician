@@ -93,12 +93,11 @@ end
 
 --- OnSongChunk
 --
-function Musician.TRP3.OnSongChunk(event, sender, mode, songId, chunkDuration, playtimeLeft, posY, posX, posZ, instanceID, guid)
+function Musician.TRP3.OnSongChunk(event, sender)
 	local now = GetTime()
 
 	playersPlayingMusic[sender] = now
 
-	local playerName, time
 	for playerName, time in pairs(playersPlayingMusic) do
 		if time + IS_PLAYING_TIMEOUT < now then
 			playersPlayingMusic[playerName] = nil
@@ -155,13 +154,12 @@ function Musician.TRP3.HookPlayerMap()
 			TRP3_PlayerMapPinMixin.Decorate = function(self, displayData, ...)
 
 				local newDisplayData = Mixin({}, displayData)
-				local isPlayingMusic = false
 
 				-- Append note icon to player name and replace pin texture by a musical note
 				if Musician_Settings.trp3MapScan and displayData.musicianIsRegistered then
 					local icon
 
-					isPlayingMusic = Musician.TRP3.IsPlayingMusic(displayData.musicianPlayer)
+					local isPlayingMusic = Musician.TRP3.IsPlayingMusic(displayData.musicianPlayer)
 					if isPlayingMusic then
 						icon = Musician.Utils.GetChatIcon(Musician.IconImages.Note, 1, .82, 0)
 					else

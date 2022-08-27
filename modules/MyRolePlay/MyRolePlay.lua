@@ -35,7 +35,7 @@ end
 --- Hook MyRolePlay player tooltip
 --
 function Musician.MyRolePlay.HookTooltip()
-	hooksecurefunc(mrp, "UpdateTooltip", function(self, player, unit, context)
+	hooksecurefunc(mrp, "UpdateTooltip", function(self, player)
 		player = Musician.Utils.NormalizePlayerName(player)
 		Musician.Registry.UpdateTooltipInfo(GameTooltip, player, 10)
 	end)

@@ -51,7 +51,6 @@ local function createKeyboard()
 	MusicianKeyboardConfigKeyboard:SetWidth(15 * KEY_SIZE)
 
 	-- Create keys
-	local row, col, rowKeys, key
 	for row, rowKeys in pairs(Musician.KEYBOARD) do
 		local x = 0
 		for col, key in pairs(rowKeys) do
@@ -115,7 +114,6 @@ end
 --- Reset configurator with actually saved values.
 --
 function Musician.KeyboardConfig.Reset()
-	local key
 	keysTodo = 0
 	keysDone = 0
 	for _, key in pairs(Musician.KEYBOARD_KEY) do
@@ -146,7 +144,6 @@ end
 --- Clear keyboard configuration and start over.
 --
 function Musician.KeyboardConfig.Clear()
-	local key
 	keysTodo = 0
 	keysDone = 0
 	for _, key in pairs(Musician.KEYBOARD_KEY) do
@@ -204,7 +201,7 @@ end
 
 --- OnKeyDown
 --
-function Musician.KeyboardConfig.Button_OnKeyDown(self, keyValue, arg)
+function Musician.KeyboardConfig.Button_OnKeyDown(self, keyValue)
 	if selectedKeyButton then
 		if keyValue == "ESCAPE" then
 			Musician.KeyboardConfig.UnselectKeyBinding()
@@ -308,7 +305,7 @@ end
 
 --- Key bindings OnClick
 --
-function Musician.KeyboardConfig.Key_OnClick(self, button, down)
+function Musician.KeyboardConfig.Key_OnClick(self)
 	if selectedKeyButton and selectedKeyButton == self then
 		Musician.KeyboardConfig.UnselectKeyBinding()
 	else
@@ -326,16 +323,14 @@ function Musician.KeyboardConfig.SelectKeyBinding(key)
 	selectedKeyButton = button
 	Musician.KeyboardConfig.UpdateHint()
 
-	local point, relativeTo, relativePoint, xOfs, yOfs
-
 	MusicianKeyboardConfigNextKeyButton:SetParent(button)
-	point, relativeTo, relativePoint, xOfs, yOfs = MusicianKeyboardConfigNextKeyButton:GetPoint(1)
-	MusicianKeyboardConfigNextKeyButton:SetPoint(point, selectedKeyButton, relativePoint, xOfs, yOfs)
+	local nextPoint, _, nextRelativePoint, nextXOfs, nextYOfs = MusicianKeyboardConfigNextKeyButton:GetPoint(1)
+	MusicianKeyboardConfigNextKeyButton:SetPoint(nextPoint, selectedKeyButton, nextRelativePoint, nextXOfs, nextYOfs)
 	MusicianKeyboardConfigNextKeyButton:Show()
 
 	MusicianKeyboardConfigClearKeyButton:SetParent(button)
-	point, relativeTo, relativePoint, xOfs, yOfs = MusicianKeyboardConfigClearKeyButton:GetPoint(1)
-	MusicianKeyboardConfigClearKeyButton:SetPoint(point, selectedKeyButton, relativePoint, xOfs, yOfs)
+	local clearPoint, _, clearRelativePoint, clearXOfs, clearYOfs = MusicianKeyboardConfigClearKeyButton:GetPoint(1)
+	MusicianKeyboardConfigClearKeyButton:SetPoint(clearPoint, selectedKeyButton, clearRelativePoint, clearXOfs, clearYOfs)
 	MusicianKeyboardConfigClearKeyButton:Show()
 end
 

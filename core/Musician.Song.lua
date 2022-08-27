@@ -8,6 +8,7 @@ Musician.AddModule(MODULE_NAME)
 
 local LibCRC32 = LibStub:GetLibrary("LibCRC32")
 local LibDeflate = LibStub:GetLibrary("LibDeflate")
+local LibBase64 = LibStub:GetLibrary("LibBase64")
 
 Musician.Song.__index = Musician.Song
 
@@ -230,8 +231,8 @@ function Musician.Song:SetTrackSolo(track, isSolo)
 		track.solo = true
 		self.soloTracks = self.soloTracks + 1
 	end
-	for _, track in pairs(self.tracks) do
-		computeTrackAudible(self, track)
+	for _, t in pairs(self.tracks) do
+		computeTrackAudible(self, t)
 	end
 end
 
@@ -405,7 +406,6 @@ function Musician.Song:PlayOnFrame(elapsed)
 	local to = self.cursor + elapsed
 	self.cursor = to
 
-	local track
 	for _, track in pairs(self.tracks) do
 		-- Stop expired notes currently playing
 		for noteKey, noteOnStack in pairs(track.notesOn) do
@@ -460,7 +460,7 @@ function Musician.Song:IsAudible()
 	if not(self.player) then return true end
 
 	-- Played by another player who is in range and not muted
-	return Musician.Registry.PlayerIsInRange(self.player) and not(Musician.PlayerIsMuted(player))
+	return Musician.Registry.PlayerIsInRange(self.player) and not(Musician.PlayerIsMuted(self.player))
 end
 
 --- Play a note
@@ -569,7 +569,6 @@ end
 
 --- Stop all notes of the song
 function Musician.Song:SongNotesOff()
-	local track
 	for _, track in pairs(self.tracks) do
 		self:TrackNotesOff(track)
 	end
@@ -610,7 +609,7 @@ function Musician.Song:ImportFromBase64(base64data, crop, onComplete)
 
 		-- Decode some chunks
 		local cursorTo = min(#base64data, cursor + IMPORT_CONVERT_RATE * 4 - 1)
-		decodedData = decodedData .. Musician.Utils.Base64Decode(string.sub(base64data, cursor, cursorTo))
+		decodedData = decodedData .. LibBase64:dec(string.sub(base64data, cursor, cursorTo))
 		cursor = cursorTo + 1
 
 		-- Decoding is complete: import data
@@ -640,7 +639,7 @@ function Musician.Song:ImportCompressed(compressedData, crop, onComplete)
 	end
 	self.importing = true
 
-	local success, err = pcall(function()
+	local success = pcall(function()
 		-- Get header
 		local header = string.sub(compressedData, 1, #Musician.FILE_HEADER_COMPRESSED)
 		if header ~= 'MUZ8' and header ~= 'MUZ7' then
@@ -707,7 +706,7 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 		return
 	end
 
-	local success, err = pcall(function()
+	local success = pcall(function()
 		self.importing = true
 
 		if previousProgression == nil then
@@ -761,7 +760,6 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 		local trackCount = Musician.Utils.UnpackNumber(readBytes(1, true))
 
 		-- Track information: instrument (1), channel (1), number of notes (2)
-		local track, trackIndex
 		self.tracks = {}
 		for trackIndex = 1, trackCount do
 			local track = {}
@@ -872,7 +870,9 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 
 						-- Update song cropping
 						local endTime = time + duration
-						cropFrom = min(cropFrom or time, time)
+						if crop then
+							cropFrom = min(cropFrom or time, time)
+						end
 						cropTo = max(cropTo or endTime, endTime)
 
 						-- Insert note with duration
@@ -890,7 +890,9 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 					elseif self.mode == Musician.Song.MODE_LIVE then
 						-- Update song cropping
 						if noteType then
-							cropFrom = min(cropFrom or time, time)
+							if crop then
+								cropFrom = min(cropFrom or time, time)
+							end
 						else
 							cropTo = max(cropTo or time, time)
 						end
@@ -931,7 +933,7 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 				-- ===============
 
 				-- Track names (2) + (title length in bytes)
-				for trackIndex, track in pairs(self.tracks) do
+				for _, track in pairs(self.tracks) do
 					local trackNameLength = Musician.Utils.UnpackNumber(readBytes(2))
 					track.name = readBytes(trackNameLength)
 				end
@@ -941,7 +943,6 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 
 					-- Song settings (optional)
 					-- ========================
-					crop = false
 
 					-- cropFrom (4)
 					cropFrom = Musician.Utils.UnpackNumber(readBytes(4)) / 100
@@ -952,7 +953,7 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 					-- Track settings (optional)
 					-- =========================
 
-					for trackIndex, track in pairs(self.tracks) do
+					for _, track in pairs(self.tracks) do
 						-- Track options (1)
 						local trackOptions = Musician.Utils.UnpackNumber(readBytes(1))
 						local hasInstrument = bit.band(trackOptions, Musician.Song.TRACK_OPTION_HAS_INSTRUMENT) ~= 0
@@ -985,7 +986,7 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 				-- Import is complete!
 				self.importing = false
 				Musician.Song:SendMessage(Musician.Events.SongImportComplete, self)
-				Musician.Song:SendMessage(Musician.Events.SongImportSucessful, self, data)
+				Musician.Song:SendMessage(Musician.Events.SongImportSucessful, self)
 				if onComplete then
 					onComplete(true)
 				end
@@ -1054,7 +1055,6 @@ function Musician.Song:Export(onComplete, progressionFactor)
 
 	local notesData = ''
 	local exportedNotes = 0
-	local trackOffset = 0
 	local trackIndex = 1
 	local noteIndex = 1
 	local offset = 0
@@ -1162,15 +1162,15 @@ function Musician.Song:Export(onComplete, progressionFactor)
 
 			-- Add track data
 			local tracksData = ''
-			for _, track in pairs(self.tracks) do
+			for _, t in pairs(self.tracks) do
 				-- Instrument (1)
-				tracksData = tracksData .. Musician.Utils.PackNumber(track.midiInstrument, 1)
+				tracksData = tracksData .. Musician.Utils.PackNumber(t.midiInstrument, 1)
 
 				-- Channel (1)
-				tracksData = tracksData .. Musician.Utils.PackNumber(track.channel or 0, 1)
+				tracksData = tracksData .. Musician.Utils.PackNumber(t.channel or 0, 1)
 
 				-- Note count (2)
-				tracksData = tracksData .. Musician.Utils.PackNumber(trackNoteCount[track.index], 2)
+				tracksData = tracksData .. Musician.Utils.PackNumber(trackNoteCount[t.index], 2)
 			end
 			data = data .. tracksData
 
@@ -1183,8 +1183,8 @@ function Musician.Song:Export(onComplete, progressionFactor)
 			local metadata = ''
 
 			-- Track names (2) + (title length in bytes)
-			for _, track in pairs(self.tracks) do
-				local trackName = track.name or ''
+			for _, t in pairs(self.tracks) do
+				local trackName = t.name or ''
 				metadata = metadata .. Musician.Utils.PackNumber(#trackName, 2) .. trackName
 			end
 
@@ -1200,22 +1200,21 @@ function Musician.Song:Export(onComplete, progressionFactor)
 			-- Track settings
 			-- ==============
 
-			local track
-			for _, track in pairs(self.tracks) do
+			for _, t in pairs(self.tracks) do
 
 				-- Track options (1)
-				local hasInstrument = (track.instrument ~= -1) and Musician.Song.TRACK_OPTION_HAS_INSTRUMENT or 0
-				local muted = track.muted and Musician.Song.TRACK_OPTION_MUTED or 0
-				local solo = track.solo and Musician.Song.TRACK_OPTION_SOLO or 0
+				local hasInstrument = (t.instrument ~= -1) and Musician.Song.TRACK_OPTION_HAS_INSTRUMENT or 0
+				local muted = t.muted and Musician.Song.TRACK_OPTION_MUTED or 0
+				local solo = t.solo and Musician.Song.TRACK_OPTION_SOLO or 0
 				local trackOptions = bit.bor(hasInstrument, muted, solo)
 				metadata = metadata .. Musician.Utils.PackNumber(trackOptions, 1)
 
 				-- Instrument (1)
-				local instrument = hasInstrument and track.instrument or 0
+				local instrument = hasInstrument and t.instrument or 0
 				metadata = metadata .. Musician.Utils.PackNumber(instrument, 1)
 
 				-- Transpose (1)
-				metadata = metadata .. Musician.Utils.PackNumber(track.transpose + 127, 1)
+				metadata = metadata .. Musician.Utils.PackNumber(t.transpose + 127, 1)
 			end
 
 			-- Append metadata
@@ -1335,7 +1334,6 @@ end
 function Musician.Song:Clone()
 
 	local song = Musician.Song.create()
-	local key, value
 
 	for key, value in pairs(self) do
 		song[key] = Musician.Utils.DeepCopy(value)
@@ -1350,7 +1348,7 @@ end
 
 --- Stream song
 function Musician.Song:Stream()
-	Musician.Utils.Debug(MODULE_NAME, "Stream", self.name, self)
+	Musician.Utils.Debug(MODULE_NAME, "Stream", self.name)
 
 	-- Stop song if playing
 	removePlayingSong(self)
@@ -1393,7 +1391,7 @@ end
 --- Stop streaming song
 function Musician.Song:StopStreaming()
 	if not(self.streaming) then return end
-	Musician.Utils.Debug(MODULE_NAME, "StopStreaming", wasStreaming, self.name, self)
+	Musician.Utils.Debug(MODULE_NAME, "StopStreaming", self.name)
 	removeStreamingSong(self)
 	self.streaming = false
 
@@ -1420,7 +1418,6 @@ function Musician.Song:AppendChunk(chunk, mode, songId, chunkDuration, playtimeL
 	self.cropTo = max(self.cropTo, self.chunkTime + playtimeLeft)
 	self.duration = ceil(self.cropTo)
 
-	local trackData
 	for _, trackData in pairs(chunk) do
 		if self.tracks[trackData[CHUNK.TRACK_ID]] == nil then
 			self.tracks[trackData[CHUNK.TRACK_ID]] = {
@@ -1456,7 +1453,6 @@ function Musician.Song:AppendChunk(chunk, mode, songId, chunkDuration, playtimeL
 		end
 
 		local noteOffset = self.chunkTime
-		local note
 		for _, note in pairs(trackData[CHUNK.NOTES]) do
 			note[NOTE.TIME] = note[NOTE.TIME] + noteOffset
 			noteOffset = note[NOTE.TIME]
@@ -1496,7 +1492,6 @@ function Musician.Song:StreamOnFrame(elapsed)
 
 	local chunk = {}
 
-	local track
 	for _, track in pairs(self.tracks) do
 		if track.streamIndex == nil then
 			track.streamIndex = 1
@@ -1564,7 +1559,6 @@ function Musician.Song:StreamOnFrame(elapsed)
 
 	self.streamPosition = to
 
-	local player = Musician.Utils.NormalizePlayerName(UnitName("player"))
 	local packedChunk = self:PackChunk(chunk)
 
 	Musician.Comm.StreamSongChunk(packedChunk)
@@ -1707,7 +1701,7 @@ end
 function Musician.Song.UnpackChunkData(data)
 
 	-- Get header data
-	local mode, songId, chunkDuration, playtimeLeft, position, trackCount, headerLength = Musician.Song.UnpackChunkHeader(data)
+	local mode, _, _, _, _, trackCount, headerLength = Musician.Song.UnpackChunkHeader(data)
 
 	-- Failed to decode header
 	if mode == nil then
@@ -1723,8 +1717,7 @@ function Musician.Song.UnpackChunkData(data)
 
 		-- Track information: trackId (1), instrumentId (1), note count (2)
 		chunk = {}
-		local t, trackData
-		for t = 1, trackCount do
+		for _ = 1, trackCount do
 			local trackId = Musician.Utils.UnpackNumber(readBytes(1))
 			local instrument = Musician.Utils.UnpackNumber(readBytes(1))
 			local noteCount = Musician.Utils.UnpackNumber(readBytes(2))
@@ -1738,9 +1731,8 @@ function Musician.Song.UnpackChunkData(data)
 		end
 
 		-- Note information: key on/off or spacer (1), time (1), [duration (1)]
-		local n, note
 		for t, trackData in pairs(chunk) do
-			for n = 1, trackData[CHUNK.NOTE_COUNT] do
+			for _ = 1, trackData[CHUNK.NOTE_COUNT] do
 				-- Key, note on/off or spacer (1)
 				local offset = 0
 				local keyByte = Musician.Utils.UnpackNumber(readBytes(1))
@@ -1809,9 +1801,7 @@ function Musician.Song:ConvertToLive()
 		return
 	end
 
-	local track
 	for _, track in pairs(self.tracks) do
-		local note
 		for _, note in pairs(track.notes) do
 			if note[NOTE.DURATION] then
 				table.insert(track.notes, {

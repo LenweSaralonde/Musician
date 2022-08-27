@@ -7,6 +7,7 @@ local MODULE_NAME = "Comm"
 Musician.AddModule(MODULE_NAME)
 
 local LibDeflate = LibStub:GetLibrary("LibDeflate")
+local LibBase64 = LibStub:GetLibrary("LibBase64")
 
 Musician.Comm.event = {}
 Musician.Comm.event.stop = "MusicianStop"
@@ -205,7 +206,7 @@ function Musician.Comm.JoinChannel()
 
 	-- Channel status changed
 	Musician.Comm:RegisterEvent("CHAT_MSG_CHANNEL_NOTICE", function(event, ...)
-		local text, _, _, _, _, _, _, channelIndex, channelName = ...
+		local text, _, _, _, _, _, _, _, channelName = ...
 
 		-- Make sure the communication channel remains on top when a new channel has been joined.
 		if text == 'YOU_CHANGED' or text == 'YOU_JOINED' then
@@ -273,8 +274,6 @@ function Musician.Comm.GetGroupChatType()
 	local inLFG = IsInGroup(LE_PARTY_CATEGORY_INSTANCE)
 	local inLFR = IsInRaid(LE_PARTY_CATEGORY_INSTANCE)
 	local inBattleground = inRaid and inInstance and instanceType == "pvp"
-	local chatType
-	local channel
 
 	if isF2P and inRaid then
 		return nil -- Disable raid broadcasting for trial accounts
@@ -405,7 +404,7 @@ function Musician.Comm.StreamCompressedSongChunk(compressedChunk)
 	if useCommChannel() then
 		serializedChunk = LibDeflate:EncodeForWoWAddonChannel(compressedChunk)
 	else
-		serializedChunk = Musician.Utils.Base64Encode(compressedChunk) -- LibDeflate:EncodeForWoWAddonChannel fails over YELL
+		serializedChunk = LibBase64:enc(compressedChunk) -- LibDeflate:EncodeForWoWAddonChannel fails over YELL
 	end
 
 	-- Calculate used bandwidth
@@ -541,7 +540,7 @@ function Musician.Comm.OnChunk(prefix, message, distribution, sender)
 	if useCommChannel() then
 		packedChunk = LibDeflate:DecompressDeflate(LibDeflate:DecodeForWoWAddonChannel(message))
 	else
-		packedChunk = LibDeflate:DecompressDeflate(Musician.Utils.Base64Decode(message)) -- LibDeflate:DecodeForWoWAddonChannel fails over YELL
+		packedChunk = LibDeflate:DecompressDeflate(LibBase64:dec(message)) -- LibDeflate:DecodeForWoWAddonChannel fails over YELL
 	end
 
 	Musician.Comm.ProcessChunk(packedChunk, sender, isGroup)
@@ -590,14 +589,11 @@ end
 function Musician.Comm.GetReadyBandPlayers()
 	if not(Musician.sourceSong) then return {} end
 	local readyPlayers = {}
-	local player, playerCrc32
-
 	for player, playerCrc32 in pairs(readyBandPlayers) do
 		if playerCrc32 == currentSongCrc32 then
 			table.insert(readyPlayers, player)
 		end
 	end
-
 	return readyPlayers
 end
 
@@ -633,9 +629,9 @@ function Musician.Comm.OnBandReadyQuery(prefix, message, distribution, sender)
 	-- Send ready message in return
 	local groupChatType = Musician.Comm.GetGroupChatType()
 	if isBandPlayReady and groupChatType then
-		local message = tostring(currentSongCrc32)
-		debugComm(true, Musician.Comm.event.bandReady, groupChatType, message)
-		Musician.Comm:SendCommMessage(Musician.Comm.event.bandReady, message, groupChatType, nil, "ALERT")
+		local readyMessage = tostring(currentSongCrc32)
+		debugComm(true, Musician.Comm.event.bandReady, groupChatType, readyMessage)
+		Musician.Comm:SendCommMessage(Musician.Comm.event.bandReady, readyMessage, groupChatType, nil, "ALERT")
 	end
 
 	-- If the player was ready before, it's obvious that it's no longer the case so remove it
@@ -659,7 +655,6 @@ end
 --
 function Musician.Comm.OnRosterUpdate(event)
 	-- Remove players from readyBandPlayers who are no longer in the group
-	local player, songCrc32
 	local isUpdated = false
 	for player, songCrc32 in pairs(readyBandPlayers) do
 		if not(Musician.Utils.PlayerIsInGroup(player)) then
@@ -865,7 +860,7 @@ function Musician.Comm.OnBandStop(prefix, message, distribution, sender)
 
 	if not(Musician.Utils.PlayerIsInGroup(sender)) then return end
 
-	songCrc32 = tonumber(message)
+	local songCrc32 = tonumber(message)
 
 	if not(isBandPlayReady) then return end
 	if not(Musician.Comm.IsSongPlaying()) then return false end
@@ -905,7 +900,6 @@ function Musician.Comm.OnSongStop(event, song)
 	end
 
 	-- Remove player from ready band members
-	local wasReady = not(not(readyBandPlayers[player]))
 	readyBandPlayers[player] = nil
 
 	Musician.Comm:SendMessage(Musician.Events.BandReadyPlayersUpdated)

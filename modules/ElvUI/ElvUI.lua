@@ -23,7 +23,7 @@ function Musician.ElvUI:OnEnable()
 
 		Musician.Utils.Debug(MODULE_NAME, "ElvUI detected.")
 
-		local E, L, V, P, G = unpack(ElvUI) --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
+		local E, _, _, _, _ = unpack(ElvUI) --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 		local NP = E:GetModule("NamePlates")
 
 		if NP.Update_Tags == nil or NP.SetupTarget == nil or NP.StyleFilterUpdate == nil then
@@ -38,8 +38,8 @@ function Musician.ElvUI:OnEnable()
 
 		-- Update nameplate when player is registered
 		Musician.ElvUI:RegisterMessage(Musician.Registry.event.playerRegistered, function(event, player)
-			local player = Musician.Utils.NormalizePlayerName(player)
-			local namePlate = Musician.NamePlates.playerNamePlates[player]
+			local fullPlayerName = Musician.Utils.NormalizePlayerName(player)
+			local namePlate = Musician.NamePlates.playerNamePlates[fullPlayerName]
 			if not(namePlate) then return end
 			local namePlateName = namePlate:GetName()
 			local ElvNamePlate = _G["ElvNP_" .. namePlateName]

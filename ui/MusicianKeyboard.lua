@@ -109,7 +109,6 @@ end
 -- @param[opt] blinkTime (number)
 -- @param[opt=false] isDeleting (boolean) True when deleting the program
 local function updateFunctionKeysLEDs(blinkTime, isDeleting)
-	local key
 	for _, key in pairs(FunctionKeys) do
 		local program = ProgramKeys[key]
 		local button = getFunctionKeyButton(key)
@@ -139,7 +138,6 @@ end
 --- Update function key buttons
 --
 local function updateFunctionKeys()
-	local key
 	for _, key in pairs(FunctionKeys) do
 		local label
 		if Musician.Keyboard.IsSavingProgram() then
@@ -182,7 +180,6 @@ local function generateKeys()
 	MusicianKeyboardKeys:SetWidth(15 * KEY_SIZE)
 
 	-- Create keys
-	local row, col, rowKeys, key
 	for row, rowKeys in pairs(Musician.KEYBOARD) do
 		for col, key in pairs(rowKeys) do
 			local button = CreateFrame("Button", "$parent" .. key .. "Button", MusicianKeyboardKeys, "MusicianKeyboardKeyTemplate")
@@ -197,7 +194,6 @@ local function generateKeys()
 	end
 
 	-- Create function keys
-	local keyX = 0
 	for col, key in pairs(FunctionKeys) do
 		local button = CreateFrame("Button", "$parent" .. key .. "Button", MusicianKeyboardProgramKeys, "MusicianProgramKeyTemplate")
 		extendButton(button)
@@ -230,7 +226,6 @@ local function setKeys()
 	}
 
 	-- Set keyboard keys
-	local row, col, rowKeys, key
 	for row, rowKeys in pairs(Musician.KEYBOARD) do
 		local cursorX = 0
 		for col, key in pairs(rowKeys) do
@@ -257,7 +252,6 @@ local function setKeys()
 				local noteName = ""
 				local percussionIcon = ""
 				local percussionIconNumber = ""
-				local isPercussion = false
 
 				if keyValue then
 					keyValueName = Musician.KeyboardUtils.GetKeyValueName(keyValue)
@@ -266,7 +260,7 @@ local function setKeys()
 				if keyData ~= nil and keyData[2] >= Musician.MIN_KEY and keyData[2] <= Musician.MAX_KEY and not(Musician.DISABLED_KEYS[key]) and Musician.KeyboardUtils.GetKeyValue(key) then
 					local instrumentName = Musician.Sampler.GetInstrumentName(config.instrument[keyData[1]])
 					local r, g, b = unpack(Musician.INSTRUMENTS[instrumentName].color)
-					isPercussion = config.instrument[keyData[1]] >= 128
+					local isPercussion = config.instrument[keyData[1]] >= 128
 
 					if not(isPercussion) then
 						noteName = Musician.Sampler.NoteName(keyData[2])
@@ -383,9 +377,8 @@ local function setKeys()
 	-- Set function keys
 	local functionKeyWidth = (MusicianKeyboardProgramKeys:GetWidth() - MusicianKeyboardProgramKeysWriteProgram:GetWidth() - MusicianKeyboardProgramKeysDeleteProgram:GetWidth()) / 12
 	local keyX = 0
-	for col, key in pairs(FunctionKeys) do
+	for _, key in pairs(FunctionKeys) do
 		local button = getFunctionKeyButton(key)
-		local keyValueName = Musician.KeyboardUtils.GetKeyName(key)
 		local keyValue = Musician.KeyboardUtils.GetKeyValue(key)
 
 		button.keyValue = keyValue
@@ -423,9 +416,7 @@ local function initLayouts()
 	}
 
 	layouts = {}
-	local collection
 	for _, collection in pairs(layoutCollections) do
-		local layout
 		for _, layout in pairs(collection) do
 			table.insert(layouts, layout)
 			layout.index = #layouts
@@ -454,7 +445,6 @@ local function initLayoutDropdown()
 	}
 	table.insert(menu, verticalMenu)
 
-	local layout
 	for _, layout in pairs(Musician.HorizontalLayouts) do
 		table.insert(horizontalMenu.menuList, {
 			text = Musician.Msg.KEYBOARD_LAYOUTS[layout.name] or layout.name,
@@ -473,8 +463,7 @@ local function initLayoutDropdown()
 	MSA_DropDownMenu_Initialize(dropdown, function(self, level, menuList)
 		local info = MSA_DropDownMenu_CreateInfo()
 		if (level or 1) == 1 then
-			local index, row
-			for index, row in pairs(menu) do
+			for _, row in pairs(menu) do
 				info.text = row.text
 				info.isTitle = row.value and row.value.scale == nil
 				info.notCheckable = false
@@ -487,8 +476,7 @@ local function initLayoutDropdown()
 			end
 		else
 			info.func = self.SetValue
-			local index, row
-			for index, row in pairs(menuList) do
+			for _, row in pairs(menuList) do
 				info.text = row.text
 				info.isTitle = row.value.scale == nil
 				info.notCheckable = info.isTitle
@@ -518,13 +506,12 @@ end
 local function initBaseKeyDropdown()
 	local dropdown = MusicianKeyboardControlsMainBaseKeyDropdown
 
-	MSA_DropDownMenu_Initialize(dropdown, function(self, level, menuList)
+	MSA_DropDownMenu_Initialize(dropdown, function(self)
 		local info = MSA_DropDownMenu_CreateInfo()
 		info.func = self.SetValue
 
-		local key, name
 		for key = 0, 11, 1 do
-			name = Musician.NOTE_NAMES[key]
+			local name = Musician.NOTE_NAMES[key]
 			info.text = name
 			info.arg1 = key
 			info.checked = key == Musician.Keyboard.config.baseKey
@@ -548,7 +535,6 @@ local function initLayerControls(layer)
 	local config = Musician.Keyboard.config
 	local instrument = config.instrument[layer]
 	local dropdownTooltipText
-	local layout = layouts[config.layout]
 
 	if layer == LAYER.LOWER then
 		dropdownTooltipText = Musician.Msg.CHANGE_LOWER_INSTRUMENT
@@ -557,8 +543,8 @@ local function initLayerControls(layer)
 	end
 
 	-- Instrument selector
-	_G[varNamePrefix .. "Instrument"].OnChange = function(instrument)
-		Musician.Keyboard.SetInstrument(layer, instrument)
+	_G[varNamePrefix .. "Instrument"].OnChange = function(newInstrument)
+		Musician.Keyboard.SetInstrument(layer, newInstrument)
 	end
 	_G[varNamePrefix .. "Instrument"].SetValue(instrument)
 	_G[varNamePrefix .. "Instrument"].tooltipText = dropdownTooltipText
@@ -638,7 +624,6 @@ local function enableLayerControls(layer, enable)
 	local controlNames = { "ShiftRight", "ShiftLeft", "ShiftUp", "ShiftDown", "ShiftReset", "PowerChords" }
 	local layerVarName = "MusicianKeyboardControls" .. LayerNames[layer]
 
-	local controlName
 	for _, controlName in pairs(controlNames) do
 		if enable then
 			_G[layerVarName .. controlName]:Enable()
@@ -732,7 +717,6 @@ function Musician.Keyboard.OnFrame(event, elapsed)
 	end
 
 	-- Key glow
-	local buttons, button
 	for _, buttons in pairs(noteButtons) do
 		for _, button in pairs(buttons) do
 			button.volumeMeter:AddElapsed(elapsed)
@@ -910,7 +894,6 @@ end
 --
 local function refreshKeyboard()
 
-	local layer, refresh
 	for layer, refresh in pairs(modifiedLayers) do
 		if refresh then
 			Musician.Keyboard.ResetButtons(layer)
@@ -947,7 +930,6 @@ function Musician.Keyboard.ResetButtons(onlyForLayer)
 	local layers = (onlyForLayer ~= nil) and { onlyForLayer } or { LAYER.LOWER, LAYER.UPPER }
 
 	if noteButtons then
-		local button, layer
 		for _, layer in pairs(layers) do
 			for _, button in pairs(noteButtons[layer]) do
 				Musician.Keyboard.SetButtonState(button, button.mouseDown or button.keyDown)
@@ -1128,7 +1110,7 @@ function Musician.Keyboard.BuildMapping()
 		local isPercussion = config.instrument[layer] >= 128
 		local transpose = not(isPercussion) and config.baseKey or 0
 
-		for index, key in pairs(keyboardMapping) do
+		for _, key in pairs(keyboardMapping) do
 			local scaleNote = scale[scaleIndex % #scale + 1]
 			if scaleNote ~= -1 then
 				local octave = floor(scaleIndex / #scale)
@@ -1511,7 +1493,6 @@ function Musician.Keyboard.EnableDemoMode(upperTrackIndex, lowerTrackIndex, doKe
 		refreshKeyboard()
 		if config.demoTrackMapping then
 			local mappings = {}
-			local layer, trackIndex
 			for layer, trackIndex in pairs(config.demoTrackMapping) do
 				local mapping = Musician.Msg.DEMO_MODE_MAPPING
 				mapping = string.gsub(mapping, "{layer}", Musician.Utils.Highlight(Musician.Msg.LAYERS[layer]))
@@ -1550,7 +1531,6 @@ function Musician.Keyboard.ConfigureDemo(doKeyboardRefresh)
 
 	-- Set instrument and power chords
 	if config.demoTrackMapping and song then
-		local layer, trackIndex
 		for layer, trackIndex in pairs(config.demoTrackMapping) do
 			local track = song.tracks[trackIndex]
 			if track ~= nil then
@@ -1560,7 +1540,6 @@ function Musician.Keyboard.ConfigureDemo(doKeyboardRefresh)
 	end
 
 	-- Enable or disable instrument and power chords controls
-	local layer, layerName
 	for layer, layerName in pairs(LayerNames) do
 		local layerVarName = "MusicianKeyboardControls" .. layerName
 		if config.demoTrackMapping and config.demoTrackMapping[layer] then
@@ -1587,7 +1566,6 @@ function Musician.Keyboard.OnNoteOn(event, song, track, key)
 	Musician.Keyboard.ConfigureDemo()
 
 	local _, instrument = Musician.Sampler.GetSoundFile(track.instrument, key)
-	local layer, trackIndex
 	for layer, trackIndex in pairs(config.demoTrackMapping) do
 		if trackIndex == track.index then
 			local button = noteButtons[layer] and noteButtons[layer][key]
@@ -1610,7 +1588,6 @@ function Musician.Keyboard.OnNoteOff(event, song, track, key)
 		return
 	end
 
-	local layer, trackIndex
 	for layer, trackIndex in pairs(config.demoTrackMapping) do
 		if trackIndex == track.index then
 			local button = noteButtons[layer] and noteButtons[layer][key]
@@ -1653,7 +1630,6 @@ function Musician.Keyboard.UpdateBandSyncButton()
 		button.count:Show()
 
 		local playerNames = {}
-		local playerName
 		for _, playerName in ipairs(players) do
 			table.insert(playerNames, "– " .. Musician.Utils.FormatPlayerName(playerName))
 		end

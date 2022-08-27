@@ -148,7 +148,6 @@ local function animateNotes(animatedNotesFrame, elapsed)
 	animatedNotesFrame.notesAddedDuringFrame = {}
 
 	-- Animate notes
-	local noteFrame
 	local children = { animatedNotesFrame:GetChildren() }
 	for _, noteFrame in ipairs(children) do
 		noteFrame.animationParams[PARAM.PROGRESSION] = noteFrame.animationParams[PARAM.PROGRESSION] + elapsed
@@ -187,6 +186,7 @@ local function addNote(animatedNotesFrame, song, track, key)
 	local _, instrument = Musician.Sampler.GetSoundFile(track.instrument, key)
 	local orientation = Musician.Utils.GetRandomArgument(1, -1)
 	local x, y, isPercussion
+	local noteSymbold
 
 	-- Not a percussion
 	if track.instrument < 128 and not(instrument and instrument.isPercussion) then
@@ -352,8 +352,8 @@ function Musician.NamePlates.UpdateNamePlate(namePlate)
 		if namePlate.UnitFrame.ClassificationFrame and classificationFrameIsVisible ~= namePlate.UnitFrame.ClassificationFrame:IsVisible() then
 			namePlate.UnitFrame.ClassificationFrame:SetShown(classificationFrameIsVisible)
 		end
-		if namePlate.UnitFrame.RaidTargetFrame and levelFrameIsVisible ~= namePlate.UnitFrame.RaidTargetFrame:IsVisible() then
-			namePlate.UnitFrame.RaidTargetFrame:SetShown(levelFrameIsVisible)
+		if namePlate.UnitFrame.RaidTargetFrame and raidTargetFrameIsVisible ~= namePlate.UnitFrame.RaidTargetFrame:IsVisible() then
+			namePlate.UnitFrame.RaidTargetFrame:SetShown(raidTargetFrameIsVisible)
 		end
 		if namePlate.UnitFrame.LevelFrame and levelFrameIsVisible ~= namePlate.UnitFrame.LevelFrame:IsVisible() then
 			namePlate.UnitFrame.LevelFrame:SetShown(classificationFrameIsVisible)
@@ -367,7 +367,6 @@ end
 --- Update all nameplates
 --
 function Musician.NamePlates.UpdateAll()
-	local namePlate
 	for _, namePlate in pairs(C_NamePlate.GetNamePlates()) do
 		Musician.NamePlates.UpdateNamePlate(namePlate)
 	end
@@ -429,9 +428,9 @@ end
 -- @param event (string)
 -- @param player (string)
 function Musician.NamePlates.OnPlayerRegistered(event, player)
-	local player = Musician.Utils.NormalizePlayerName(player)
-	if not(playerNamePlates[player]) then return end
-	Musician.NamePlates.AttachNamePlate(playerNamePlates[player], player, event)
+	local fullPlayerName = Musician.Utils.NormalizePlayerName(player)
+	if not(playerNamePlates[fullPlayerName]) then return end
+	Musician.NamePlates.AttachNamePlate(playerNamePlates[fullPlayerName], fullPlayerName, event)
 end
 
 --- Hide nameplates in cinematic mode if nameplates are not enabled in this mode
@@ -477,7 +476,6 @@ end
 
 --- Returns true when the note icon container should be rendered
 -- @param textElement (FontString)
--- @param isVisible (boolean) True when the note icon container is visible
 function Musician.NamePlates.ShouldRenderNoteIcon(textElement)
 	return textElement:IsVisible()
 end
@@ -513,7 +511,7 @@ function Musician.NamePlates.AddNoteIcon(namePlate, textElement, append)
 			nameString = string.sub(nameString, 1, from - 1) .. string.sub(nameString, to + 1, #nameString)
 			nameString = string.gsub(nameString, '%s+', ' ')
 			nameString = strtrim(nameString)
-			from, to = nil, nil
+			from = nil
 		end
 
 		-- Add icon placeholder if not found or previously removed

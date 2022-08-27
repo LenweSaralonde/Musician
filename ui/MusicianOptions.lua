@@ -35,7 +35,7 @@ function Musician.Options.SetupCheckbox(checkbox, labelText, dependantControl, d
 	labelElement:SetText(labelText)
 	checkbox:SetHitRectInsets(0, -labelElement:GetWidth(), 0, 0)
 	checkbox.type = CONTROLTYPE_CHECKBOX
-	checkbox.SetValue = function(checkbox, value) checkbox.newValue = value end
+	checkbox.SetValue = function(self, value) self.newValue = value end
 	checkbox.Disable = function (self)
 		getmetatable(self).__index.Disable(self)
 		_G[self:GetName().."Text"]:SetTextColor(GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b)
@@ -109,7 +109,6 @@ function Musician.Options.RefreshAudioSettings()
 	if checked == 0 then
 		-- Check SFX if none
 		audioChannels.SFX = true
-		checked = 1
 	end
 
 	-- Set checkboxes
@@ -151,7 +150,6 @@ function Musician.Options.UpdateSize()
 
 	local relativeFrame = MusicianOptionsPanelSubText
 	local height = 0
-	local child
 	for _, child in ipairs({ panel:GetChildren() }) do
 		if child:IsVisible() then
 			child:ClearAllPoints()

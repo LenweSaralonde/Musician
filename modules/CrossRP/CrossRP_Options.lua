@@ -40,7 +40,6 @@ end
 -- @return {table}
 function Musician.CrossRP.Options.GetActiveBandStrings()
 	local status = Musician.CrossRP.GetNetworkStatus()
-	local item
 
 	local bands = {}
 
@@ -68,6 +67,6 @@ hooksecurefunc(Musician.Options, "Cancel", function()
 	MusicianOptionsPanelCrossRPImage:Hide()
 end)
 
-hooksecurefunc(Musician.Options, "Save", function(fromButton)
+hooksecurefunc(Musician.Options, "Save", function()
 	MusicianOptionsPanelCrossRPImage:Hide()
 end)

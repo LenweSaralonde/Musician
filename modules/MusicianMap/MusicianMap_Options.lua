@@ -54,7 +54,7 @@ end)
 
 --- Save values
 --
-function Musician.Map.Options.Save(fromButton)
+function Musician.Map.Options.Save()
 	Musician.Map.SetWorldMapTracking(MusicianOptionsPanelMapWorldMap:GetChecked())
 	Musician.Map.SetMiniMapTracking(MusicianOptionsPanelMapMiniMap:GetChecked())
 end

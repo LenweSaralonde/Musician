@@ -14,7 +14,7 @@ function Musician.KuiNamePlates:OnEnable()
 
 		Musician.Utils.Debug(MODULE_NAME, "Kui Nameplates detected.")
 
-		hooksecurefunc(Musician.NamePlates, "UpdateNoteIcon", function(namePlate, player)
+		hooksecurefunc(Musician.NamePlates, "UpdateNoteIcon", function(namePlate)
 			if namePlate.kui and namePlate.kui.NameText then
 				Musician.NamePlates.AddNoteIcon(namePlate, namePlate.kui.NameText)
 			end

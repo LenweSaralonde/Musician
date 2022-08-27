@@ -10,7 +10,6 @@ local sourceBuffer
 local sourceBufferCharIndex
 
 local isCommActionPending = false
-local readyBandPlayPlayers = {}
 
 MusicianFrame.bandPlayReadyPlayers = {}
 
@@ -156,7 +155,7 @@ end
 -- @param isEnabled (boolean)
 -- @param isPlaying (boolean)
 function MusicianFrame.UpdatePlayButton()
-	isEnabled = Musician.sourceSong and Musician.Comm.CanPlay() and not(isCommActionPending)
+	local isEnabled = Musician.sourceSong and Musician.Comm.CanPlay() and not(isCommActionPending)
 
 	-- This may happen on trial accounts in raid mode
 	if IsInGroup() and (Musician.Comm.GetGroupChatType() == nil) then
@@ -175,16 +174,14 @@ end
 
 --- OnCommChannelUpdate
 -- @param event (string)
--- @param isConnected (boolean)
-function MusicianFrame.OnCommChannelUpdate(event, isConnected)
+function MusicianFrame.OnCommChannelUpdate(event)
 	MusicianFrame.UpdatePlayButton()
 	MusicianFrame.UpdateBandPlayButton()
 end
 
 --- OnCommSendAction
 -- @param event (string)
--- @param action (string)
-function MusicianFrame.OnCommSendAction(event, action)
+function MusicianFrame.OnCommSendAction(event)
 	local isComplete = event == Musician.Events.CommSendActionComplete
 	isCommActionPending = not(isComplete)
 	MusicianFrame.UpdatePlayButton()
@@ -335,7 +332,6 @@ function MusicianFrame.UpdateBandPlayButton()
 		MusicianFrameBandPlayButton.count:Show()
 
 		local playerNames = {}
-		local playerName
 		for _, playerName in ipairs(players) do
 			table.insert(playerNames, "– " .. Musician.Utils.FormatPlayerName(playerName))
 		end
@@ -378,7 +374,7 @@ end
 
 --- OnSongReceiveSucessful
 -- Show main window when a downloaded song has been successfully imported for playing.
-function MusicianFrame.OnSongReceiveSucessful(event, sender, songData, song, context)
+function MusicianFrame.OnSongReceiveSucessful(event, _, _, song, context)
 	if context ~= Musician then return end
 	local isDataOnly = song == nil
 	if not(isDataOnly) then
@@ -392,7 +388,7 @@ function MusicianFrame.OnSongReceiveSucessful(event, sender, songData, song, con
 		Musician.sourceSong = song
 
 		-- Refresh and show UI
-		Musician.SongLinks:SendMessage(Musician.Events.SourceSongLoaded, song, songData)
+		Musician.SongLinks:SendMessage(Musician.Events.SourceSongLoaded, song)
 		MusicianFrame:Show()
 	end
 end

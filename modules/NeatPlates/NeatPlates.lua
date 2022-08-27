@@ -14,12 +14,12 @@ function Musician.NeatPlates:OnEnable()
 		Musician.Utils.Debug(MODULE_NAME, "NeatPlates detected.")
 
 		-- Always render the note icon
-		Musician.NamePlates.ShouldRenderNoteIcon = function(textElement)
+		Musician.NamePlates.ShouldRenderNoteIcon = function()
 			return true
 		end
 
 		-- Add note icon
-		hooksecurefunc(Musician.NamePlates, "UpdateNoteIcon", function(namePlate, player)
+		hooksecurefunc(Musician.NamePlates, "UpdateNoteIcon", function(namePlate)
 			if namePlate.extended and namePlate.extended.visual and namePlate.extended.visual.name then
 				Musician.NamePlates.AddNoteIcon(namePlate, namePlate.extended.visual.name)
 			end

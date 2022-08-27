@@ -4,7 +4,6 @@
 MusicianButton = LibStub("AceAddon-3.0"):NewAddon("MusicianButton", "AceEvent-3.0")
 
 local icon = LibStub("LibDBIcon-1.0")
-local menuFrame
 
 local MUSICIAN_ICON = "Interface\\AddOns\\Musician\\ui\\textures\\button-unmuted"
 local MUSICIAN_ICON_MUTED = "Interface\\AddOns\\Musician\\ui\\textures\\button-muted"
@@ -30,7 +29,7 @@ function MusicianButton.Init()
 
 	-- Create menu frame
 	local buttonFrame = icon:GetMinimapButton("Musician")
-	menuFrame = CreateFrame("Frame", "MusicianButton_Menu", UIParent, "MusicianDropDownMenuTooltipTemplate")
+	CreateFrame("Frame", "MusicianButton_Menu", UIParent, "MusicianDropDownMenuTooltipTemplate")
 
 	-- Hourglass icon for preloading
 	local hourglass = buttonFrame:CreateTexture(nil, "OVERLAY", nil, 7)
@@ -230,8 +229,7 @@ end
 function MusicianButton.OpenMenu()
 	local menu = MusicianButton.GetMenu()
 	local indent = "     "
-	local i, row
-	for i, row in pairs(menu) do
+	for _, row in pairs(menu) do
 		if not(row.isTitle) then
 			row.text = indent .. row.text
 		end

@@ -36,7 +36,6 @@ local shouldMuteGameMusic = false
 local isBandSyncMode = false
 local playingLiveTimer
 local syncedBandPlayers = {}
-local syncedBandPlayers = {}
 local bandSongs = {}
 local bandNotesOn = {}
 
@@ -377,7 +376,6 @@ function Musician.Live.SetSustain(enable, layer)
 		sustainedNotes[layer] = {}
 	elseif not(enable) and sustainedNotes[layer] ~= nil then
 		-- Turn off all sustained notes
-		local noteOn
 		for _, noteOn in pairs(sustainedNotes[layer]) do
 			local key = noteOn[NOTEON.KEY]
 			local instrument = noteOn[NOTEON.INSTRUMENT]
@@ -402,7 +400,7 @@ function Musician.Live.NoteOn(key, layer, instrument, isChordNote, source)
 	-- Key is out of range
 	if key < Musician.MIN_KEY or key > Musician.MAX_KEY or instrument == -1 then return end
 
-	local soundFile, instrumentData = Musician.Sampler.GetSoundFile(instrument, key)
+	local _, instrumentData = Musician.Sampler.GetSoundFile(instrument, key)
 
 	local noteOnKey = key .. '-' .. layer .. '-' .. instrument
 
@@ -512,10 +510,10 @@ function Musician.Live.BandNote(noteOn, key, layer, instrument)
 	-- Key is out of range
 	if key < Musician.MIN_KEY or key > Musician.MAX_KEY then return end
 
-	local noteOn = noteOn and "ON" or "OFF"
+	local noteOnCode = noteOn and "ON" or "OFF"
 	local posY, posX, posZ, instanceID = Musician.Utils.GetPlayerPosition()
 	local guid = UnitGUID("player")
-	local message = strjoin(" ", noteOn, key, layer, instrument, posY, posX, posZ, instanceID, guid)
+	local message = strjoin(" ", noteOnCode, key, layer, instrument, posY, posX, posZ, instanceID, guid)
 	local groupChatType = Musician.Comm.GetGroupChatType()
 
 	debug(true, Musician.Live.event.note, groupChatType, message)
@@ -526,15 +524,14 @@ end
 -- @param onlyForLayer (int)
 function Musician.Live.AllNotesOff(onlyForLayer)
 	-- Set sustain off for layers
-	Musician.Utils.ForEach(sustainedLayers, function(enabled, layer)
+	Musician.Utils.ForEach(sustainedLayers, function(_, layer)
 		if onlyForLayer == nil or onlyForLayer == layer then
 			Musician.Live.SetSustain(false, layer)
 		end
 	end)
 
 	-- Turn off notes
-	local noteOnKey, note
-	for noteOnKey, note in pairs(notesOn) do
+	for _, note in pairs(notesOn) do
 		local layer = note[NOTEON.LAYER]
 		local key = note[NOTEON.KEY]
 		local instrument = note[NOTEON.INSTRUMENT]
@@ -562,12 +559,9 @@ end
 -- @return readyPlayers (table)
 function Musician.Live.GetSyncedBandPlayers()
 	local readyPlayers = {}
-	local player
-
 	for player, _ in pairs(syncedBandPlayers) do
 		table.insert(readyPlayers, player)
 	end
-
 	return readyPlayers
 end
 
@@ -641,9 +635,9 @@ function Musician.Live.OnBandSyncQuery(prefix, message, distribution, sender)
 	-- Send sync message in return
 	local groupChatType = Musician.Comm.GetGroupChatType()
 	if isBandSyncMode and groupChatType then
-		local message = tostring(true)
-		debug(true, Musician.Live.event.bandSync, groupChatType, message)
-		Musician.Live:SendCommMessage(Musician.Live.event.bandSync, message, groupChatType, nil, "ALERT")
+		local bandSyncMessage = tostring(true)
+		debug(true, Musician.Live.event.bandSync, groupChatType, bandSyncMessage)
+		Musician.Live:SendCommMessage(Musician.Live.event.bandSync, bandSyncMessage, groupChatType, nil, "ALERT")
 	end
 
 	-- If the player was synced before, remove it
@@ -667,14 +661,12 @@ end
 --
 function Musician.Live.OnRosterUpdate()
 	-- Remove players from syncedBandPlayers who are no longer in the group
-	local player
 	for player, _ in pairs(syncedBandPlayers) do
 		if not(Musician.Utils.PlayerIsInGroup(player)) then
 
 			-- Stop all player notes
 			if bandNotesOn[player] then
-				local noteOnKey, noteData
-				for noteOnKey, noteData in pairs(bandNotesOn[player]) do
+				for _, noteData in pairs(bandNotesOn[player]) do
 					local handle, layer, key, instrument = unpack(noteData)
 					if handle then
 						Musician.Sampler.StopNote(handle, 0)
@@ -740,7 +732,6 @@ function Musician.Live.OnLiveNote(prefix, message, distribution, sender)
 		end
 
 		-- Play note
-		local sampleId = Musician.Sampler.GetSampleId(instrumentData, key)
 		if not(Musician.PlayerIsMuted(sender)) and Musician.Registry.PlayerIsInRange(sender) then
 			handle = Musician.Sampler.PlayNote(instrumentData, key, true, nil, sender)
 		end

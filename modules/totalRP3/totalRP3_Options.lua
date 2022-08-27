@@ -54,7 +54,7 @@ end)
 
 --- Save values
 --
-function Musician.TRP3.Options.Save(fromButton)
+function Musician.TRP3.Options.Save()
 	Musician_Settings.trp3MapScan = MusicianOptionsPanelTRP3MapScan:GetChecked()
 end
 hooksecurefunc(Musician.Options, "Save", Musician.TRP3.Options.Save)

@@ -44,7 +44,6 @@ function Musician.Preloader.Init()
 	preloadedSamples = 0
 
 	-- Count total samples
-	local instrumentName, key
 	local sampleIds = {}
 	for key = Musician.MIN_KEY, Musician.MAX_KEY do
 		for _, instrumentName in pairs(Musician.INSTRUMENTS_AVAILABLE) do
@@ -67,11 +66,10 @@ end
 function Musician.Preloader.QuickPreload()
 	Musician.Utils.Debug(MODULE_NAME, "quick preloading started.")
 
-	local quickPreloadingTime = 0
 	local startTime = debugprofilestop()
 	while not(preloaded) do
 		Musician.Preloader.PreloadNext()
-		quickPreloadingTime = debugprofilestop() - startTime
+		local quickPreloadingTime = debugprofilestop() - startTime
 		-- Quick preloading takes longer than 15 seconds: abort it
 		if quickPreloadingTime > 15000 then
 			quickPreloading = false
@@ -156,12 +154,12 @@ end
 -- @return hasSample (boolean)
 -- @return preloadTime (number) in seconds
 function Musician.Preloader.PreloadNote(instrument, key)
-	local soundFile, instrumentData, soundFiles = Musician.Sampler.GetSoundFile(instrument, key)
+	local _, instrumentData, soundFiles = Musician.Sampler.GetSoundFile(instrument, key)
 	local sampleId = Musician.Sampler.GetSampleId(instrumentData, key)
 	local hasSample = false
 	local count = 0
 	local startTime = debugprofilestop()
-	for i, soundFile in pairs(soundFiles) do
+	for _, soundFile in pairs(soundFiles) do
 		local play, handle
 		play, handle = Musician.Sampler.PlaySoundFile(soundFile, 'Master')
 		if play then

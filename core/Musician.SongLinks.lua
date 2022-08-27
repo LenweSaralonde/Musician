@@ -7,6 +7,7 @@ local MODULE_NAME = "SongLinks"
 Musician.AddModule(MODULE_NAME)
 
 local LibDeflate = LibStub:GetLibrary("LibDeflate")
+local LibBase64 = LibStub:GetLibrary("LibBase64")
 
 Musician.SongLinks.event = {}
 Musician.SongLinks.event.song = "MusicianSong"
@@ -140,7 +141,7 @@ function Musician.SongLinks.Init()
 		if event == 'CHAT_MSG_WHISPER_INFORM' or event == 'CHAT_MSG_BN_WHISPER_INFORM' then
 			player = UnitName('player')
 		elseif event == 'CHAT_MSG_BN_WHISPER' then
-			local _, _, playerName2, _, _, _, _, _, _, _, bnSenderID = ...
+			local _, _, _, _, _, _, _, _, _, _, bnSenderID = ...
 			player = tonumber(bnSenderID)
 		end
 		msg = Musician.SongLinks.ChatLinksToHyperlinks(msg, player)
@@ -151,7 +152,7 @@ function Musician.SongLinks.Init()
 	end
 
 	-- Hyperlink hooks
-	hooksecurefunc("ChatFrame_OnHyperlinkShow", function(self, link, text, button)
+	hooksecurefunc("ChatFrame_OnHyperlinkShow", function(self, link, text)
 		local args = { strsplit(':', link) }
 		if args[1] == HYPERLINK_PREFIX and not(IsModifiedClick("CHATLINK")) then
 			-- Extract player name
@@ -255,7 +256,7 @@ end
 -- @return text (string)
 function Musician.SongLinks.ChatLinksToChatBubble(msg)
 	local capturePattern = '%[' .. CHAT_LINK_PREFIX .. '<?([^>:]*)>?: ([^%]]*)%]'
-	return string.gsub(msg, capturePattern, function(playerArg, titleArg)
+	return string.gsub(msg, capturePattern, function(_, titleArg)
 		local text = Musician.Msg.LINKS_CHAT_BUBBLE
 		text = string.gsub(text, '{note}', Musician.Utils.GetChatIcon(Musician.IconImages.Note))
 		text = string.gsub(text, '{title}', Musician.Utils.RemoveHighlight(titleArg)) -- Remove text coloring added by other addons such as Total RP
@@ -265,7 +266,7 @@ end
 
 --- OnChatBubbleMsg
 -- Replace chat links in chat bubbles
-function Musician.SongLinks.OnChatBubbleMsg(event, msg, player)
+function Musician.SongLinks.OnChatBubbleMsg(event)
 	C_Timer.After(0, function()
 		local bubbles = C_ChatBubbles.GetAllChatBubbles()
 		for _, bubble in pairs(bubbles) do
@@ -467,7 +468,7 @@ function Musician.SongLinks.SendSongData(title, playerName, songData)
 	if Musician.Utils.IsBattleNetID(playerName) then
 		-- Encode in base 64 for sending through Battle.net
 		-- Base64 encoding overhead is less important than EncodeForWoWChatChannel()
-		encodedData = Musician.Utils.Base64Encode(songData)
+		encodedData = LibBase64:enc(songData)
 	else
 		encodedData = LibDeflate:EncodeForWoWAddonChannel(songData)
 	end
@@ -505,7 +506,7 @@ function Musician.SongLinks.OnSongData(event, prefix, message, distribution, sen
 	-- Get progression from chunks
 	local control, data = string.match(message, "^([\001-\009])(.*)")
 	local receivingProgressionRatio = requestedSong.dataOnly and 1 or RECEIVING_PROGRESSION_RATIO
-	local progression
+	local progress
 	if control then
 		if control == MSG_MULTI_FIRST then
 			requestedSong.status = Musician.SongLinks.status.downloading
@@ -552,10 +553,10 @@ function Musician.SongLinks.OnSongReceived(prefix, message, distribution, sender
 	if requestedSong == nil then return end
 
 	local context = requestedSongs[sender].context
-	local dataLength, encodedData = string.match(message, "^([0-9]+) (.*)")
+	local _, encodedData = string.match(message, "^([0-9]+) (.*)")
 	local songData
 	if Musician.Utils.IsBattleNetID(sender) then
-		songData = Musician.Utils.Base64Decode(encodedData)
+		songData = LibBase64:dec(encodedData)
 	else
 		songData = LibDeflate:DecodeForWoWAddonChannel(encodedData)
 	end

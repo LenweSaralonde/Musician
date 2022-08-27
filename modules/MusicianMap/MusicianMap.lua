@@ -7,7 +7,6 @@ local MODULE_NAME = "Map"
 Musician.AddModule(MODULE_NAME)
 
 local HereBeDragons_Pins = LibStub("HereBeDragons-Pins-2.0")
-local HereBeDragons = LibStub("HereBeDragons-2.0")
 
 local PIN_TEMPLATE_WORLD_MAP = 'MusicianWorldMapPinTemplate'
 local PIN_TEMPLATE_MINI_MAP = 'MusicianMiniMapPinTemplate'
@@ -92,7 +91,7 @@ end
 
 --- OnSongChunk
 -- Handler for Musician.Events.SongChunk
-function Musician.Map.OnSongChunk(event, sender, mode, songId, chunkDuration, playtimeLeft, posY, posX, posZ, instanceID, guid)
+function Musician.Map.OnSongChunk(event, sender, mode, _, _, _, posY, posX, _, instanceID)
 	sender = Musician.Utils.NormalizePlayerName(sender)
 
 	-- Ignore myself
@@ -116,7 +115,7 @@ function Musician.Map.OnSongChunk(event, sender, mode, songId, chunkDuration, pl
 	end)
 
 	-- Verify map ID
-	local uiMapID, mapX, mapY = worldToMapCoordinates(instanceID, posX, posY)
+	local uiMapID = worldToMapCoordinates(instanceID, posX, posY)
 	if uiMapID == nil then
 		return
 	end
@@ -315,7 +314,7 @@ function Musician.Map.HookMiniMapTracking()
 		end
 	end
 
-	hooksecurefunc('SetTracking', function(id, on, ...)
+	hooksecurefunc('SetTracking', function(id, on)
 		if id == hookedGetNumTrackingTypes() + 1 then
 			Musician.Map.SetMiniMapTracking(on)
 		end
@@ -349,7 +348,7 @@ function Musician.Map.HookWorldMapTracking()
 				info.keepShownOnClick = true
 				info.text = Musician.Msg.MAP_TRACKING_OPTION_ACTIVE_MUSICIANS
 				info.checked = Musician.Map.GetWorldMapTracking()
-				info.func = function(self, id, unused, on)
+				info.func = function(_, _, _, on)
 					Musician.Map.SetWorldMapTracking(on)
 				end
 				UIDropDownMenu_AddButton(info)

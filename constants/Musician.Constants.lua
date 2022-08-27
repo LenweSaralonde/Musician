@@ -226,7 +226,6 @@ Musician.Events.SongImportComplete = "MusicianSongImportComplete"
 --- Fired when the song importing process is complete successfully
 -- @field Musician.Events.SongImportSucessful
 -- @param song (Musician.Song)
--- @param data (string) Raw binary song data
 Musician.Events.SongImportSucessful = "MusicianSongImportSucessful"
 
 --- Fired when the song importing process failed
@@ -253,7 +252,6 @@ Musician.Events.SongExportComplete = "MusicianSongExportComplete"
 --- Fired when the source song Musician.sourceSong has been successfully loaded
 -- @field Musician.Events.SourceSongLoaded
 -- @param song (Musician.Song)
--- @param data (string) Raw binary song data
 Musician.Events.SourceSongLoaded = "MusicianSourceSongLoaded"
 
 --- Fired when a "promo" emote has been received and filtered in the chat
