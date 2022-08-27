@@ -72,6 +72,38 @@ local function useCommChannel()
 	return WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 end
 
+--- Set the delay before joining the communication channel.
+-- @param duration (number) in seconds
+local function delayCommChannelJoin(duration)
+	Musician.Utils.Debug(MODULE_NAME, "Will join the communication channel again in", duration, "second(s).")
+	joinChannelAfter = GetTime() + duration
+end
+
+--- Return true if the channel list is ready for the communication channel to join.
+-- @return isReady (boolean)
+local function isChannelListReady()
+	-- The channel list is empty
+	if select('#', GetChannelList()) == 0 then
+		return false
+	end
+
+	-- Find gaps in the channel list
+	local hasGaps = false
+	local previousIndex = 0
+	for index = 1, MAX_WOW_CHAT_CHANNELS do
+		if (C_ChatInfo.GetChannelShortcut(index) or "") ~= "" then
+			if index ~= previousIndex + 1 then
+				hasGaps = true
+				break
+			end
+			previousIndex = index
+		end
+	end
+
+	-- Consider the channel list is ready if there is no gap
+	return not(hasGaps)
+end
+
 --- Initialize communication
 --
 function Musician.Comm.Init()
@@ -106,6 +138,7 @@ end
 --- Function executed when the communication channel has been successfullly joined
 --
 local function onChannelJoined()
+	Musician.Utils.Debug(MODULE_NAME, "Communication channel successfully joined.")
 	Musician.Registry.playersFetched = false
 	Musician.Registry.SendHello()
 	Musician.Registry.FetchPlayers()
@@ -115,31 +148,51 @@ end
 --- Function executed when failed to join the channel
 -- @param reason (string)
 local function onChannelFailed(reason)
+	Musician.Utils.Debug(MODULE_NAME, "Failed to join the communication channel:", reason)
 	Musician.Comm:SendMessage(Musician.Events.CommChannelUpdate, false)
 	if reason == WRONG_PASSWORD then
-		joinChannelAfter = GetTime() + 300 -- Try again in 5 minutes
+		delayCommChannelJoin(300) -- Try again in 5 minutes
 	else
-		joinChannelAfter = GetTime() + 10 -- Try again in 10 seconds
+		delayCommChannelJoin(10) -- Try again in 10 seconds
 	end
 end
 
 --- Function executed when leaving the channel
 --
 local function onChannelLeft()
+	Musician.Utils.Debug(MODULE_NAME, "Communication channel left.")
 	Musician.Comm:SendMessage(Musician.Events.CommChannelUpdate, false)
-	joinChannelAfter = nil -- Rejoin ASAP
+	delayCommChannelJoin(0) -- Rejoin ASAP
 end
+
+--- Swap channels by index, without losing the color association on Retail.
+local swapChannelsByIndex = ChatConfigChannelSettings_SwapChannelsByIndex or C_ChatInfo.SwapChatChannelsByChannelIndex
 
 --- Reorder channels the keep the communication channel at the end of the list
 --
 local function reorderChannels()
-	local index
-	for index = 1, MAX_WOW_CHAT_CHANNELS - 1 do
-		local _, channelName = GetChannelName(index)
-		if channelName == Musician.CHANNEL then
-			(SwapChatChannelByLocalID or C_ChatInfo.SwapChatChannelsByChannelIndex)(index, index + 1)
+	local commChannelIndex = Musician.Comm.GetChannel()
+	if commChannelIndex == nil then return end
+
+	-- Get the index of the last channel
+	local lastChannelIndex = 0
+	for index = commChannelIndex, MAX_WOW_CHAT_CHANNELS do
+		if (C_ChatInfo.GetChannelShortcut(index) or "") ~= "" then
+			lastChannelIndex = index
 		end
 	end
+
+	-- No need to reorder, the communication channel is already the last one
+	if commChannelIndex == lastChannelIndex then
+		Musician.Utils.Debug(MODULE_NAME, "reorderChannels", "Communication channel already in last position.")
+		return
+	end
+
+	-- Bubble the communication channel up to the last position
+	for index = commChannelIndex, lastChannelIndex - 1 do
+		swapChannelsByIndex(index, index + 1)
+	end
+	Musician.Utils.Debug(MODULE_NAME, "reorderChannels", "Changed communication channel position from", commChannelIndex, "to", lastChannelIndex)
 end
 
 --- Join the communication channel and keep it joined
@@ -148,46 +201,64 @@ function Musician.Comm.JoinChannel()
 	-- Channel joiner already active
 	if Musician.Comm.channelJoiner ~= nil then return end
 
-	-- Keep communication channel on top every time a channel is joined or left
-	Musician.Comm:RegisterEvent("CHANNEL_UI_UPDATE", reorderChannels)
+	Musician.Utils.Debug(MODULE_NAME, "JoinChannel")
 
 	-- Channel status changed
 	Musician.Comm:RegisterEvent("CHAT_MSG_CHANNEL_NOTICE", function(event, ...)
-		local text, _, _, _, _, _, _, _, channelName = ...
+		local text, _, _, _, _, _, _, channelIndex, channelName = ...
+
+		-- Make sure the communication channel remains on top when a new channel has been joined.
+		if text == 'YOU_CHANGED' or text == 'YOU_JOINED' then
+			reorderChannels()
+		end
+
+		-- Something insteresting happened for the communication channel
 		if channelName == Musician.CHANNEL then
 			-- Successfully joined channed
 			if text == 'YOU_CHANGED' or text == 'YOU_JOINED' then
-				onChannelJoined(text)
+				onChannelJoined()
 			-- Something went wrong
 			elseif text == 'WRONG_PASSWORD' or text == 'BANNED' then
 				onChannelFailed(text)
 			-- Left channel
 			elseif text == 'YOU_LEFT' then
-				onChannelLeft(text)
+				onChannelLeft()
 			end
-		end
-
-		-- Reorder channels when a new channel has been joined
-		if text == 'YOU_CHANGED' or text == 'YOU_JOINED' then
-			reorderChannels()
 		end
 	end)
 
+	local canJoinWhenNotReady = false
+
 	-- Channel is already joined
 	if Musician.Comm.GetChannel() ~= nil then
-		onChannelJoined()
+		Musician.Utils.Debug(MODULE_NAME, "Communication channel already joined.")
 		reorderChannels()
-	else
-		JoinTemporaryChannel(Musician.CHANNEL, Musician.PASSWORD)
+		onChannelJoined()
 	end
 
-	-- Keep the channel joined
-	Musician.Comm.channelJoiner = C_Timer.NewTicker(1, function()
+	-- Allow to join the communication channel even if the channel list is not ready
+	-- after 10 seconds.
+	C_Timer.After(10, function()
+		canJoinWhenNotReady = true
 		if Musician.Comm.GetChannel() == nil then
-			if joinChannelAfter == nil or joinChannelAfter <= GetTime() then
-				joinChannelAfter = nil
-				JoinTemporaryChannel(Musician.CHANNEL, Musician.PASSWORD)
-			end
+			Musician.Utils.Debug(MODULE_NAME, "Allowing to join communication channel with incomplete channel list.")
+		end
+	end)
+
+	-- Join the channel and keep it joined
+	Musician.Comm.channelJoiner = C_Timer.NewTicker(1, function()
+		-- Channel is already joined
+		if Musician.Comm.GetChannel() ~= nil then return end
+
+		-- The joining process has been delayed
+		if joinChannelAfter ~= nil and joinChannelAfter > GetTime() then return end
+
+		-- Attempt to join if the channel list is ready (has channels and no gap)
+		-- or if allowed to join despite the channel list not being ready
+		if canJoinWhenNotReady or isChannelListReady() then
+			joinChannelAfter = nil
+			Musician.Utils.Debug(MODULE_NAME, "Joining the communication channel:", Musician.CHANNEL)
+			JoinTemporaryChannel(Musician.CHANNEL, Musician.PASSWORD)
 		end
 	end)
 end
