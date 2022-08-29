@@ -516,7 +516,7 @@ end
 -- @param button (string)
 function Musician.OnHyperlinkClick(self, link, text, button)
 	local args = { strsplit(':', link) }
-	if args[1] == "musician" then
+	if args[1] == "musician" and not(IsModifiedClick("CHATLINK")) then
 		-- Stop current song for player
 		if args[2] == "stop" then
 			PlaySound(80)
@@ -558,7 +558,7 @@ function Musician.SetupHooks()
 	-- Hyperlinks
 	--
 
-	-- Set hyperlink handler to the chat
+	-- Set hyperlink handler to the chat frames
 	hooksecurefunc("ChatFrame_OnHyperlinkShow", Musician.OnHyperlinkClick)
 	hooksecurefunc("ChatFrame_OnLoad", function(self)
 		self:HookScript("OnHyperlinkEnter", Musician.OnHyperlinkEnter)
@@ -572,13 +572,23 @@ function Musician.SetupHooks()
 		chatFrameIndex = chatFrameIndex + 1
 	end
 
-	-- Block custom hyperlinks
-	local HookedSetHyperlink = ItemRefTooltip.SetHyperlink
+	-- Block clicks on custom hyperlinks
+	-- Not hooking SetItemRef directly to avoid tainting.
+	local hookedSetHyperlink = ItemRefTooltip.SetHyperlink
 	function ItemRefTooltip:SetHyperlink(link, ...)
-		if (link and link:sub(0, 8) == "musician") then
+		if (link and strsplit(':', link) == "musician") then
 			return
 		end
-		return HookedSetHyperlink(self, link, ...)
+		return hookedSetHyperlink(self, link, ...)
+	end
+
+	-- Block modified clicks on custom hyperlinks
+	local hookedHandleModifiedItemClick = HandleModifiedItemClick
+	function HandleModifiedItemClick(link, itemLocation, ...)
+		if string.match(link, '|Hmusician:[^|]+|h') then
+			return false
+		end
+		return hookedHandleModifiedItemClick(link, itemLocation, ...)
 	end
 
 	-- Player dropdown menus

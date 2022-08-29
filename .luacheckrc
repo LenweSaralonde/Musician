@@ -124,6 +124,7 @@ stds.wow = {
 			}
 		},
 
+		"HandleModifiedItemClick",
 		"SlashCmdList",
 		"GetPlayerLink",
 		"SubstituteChatMessageBeforeSend",

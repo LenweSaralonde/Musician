@@ -165,12 +165,12 @@ function Musician.SongLinks.Init()
 			Musician.SongLinks:SendMessage(Musician.Events.SongLink, title, player)
 		end
 	end)
-	local HookedSetHyperlink = ItemRefTooltip.SetHyperlink
+	local hookedSetHyperlink = ItemRefTooltip.SetHyperlink
 	function ItemRefTooltip:SetHyperlink(link, ...)
 		if (link and link:sub(0, #HYPERLINK_PREFIX) == HYPERLINK_PREFIX) then
 			return
 		end
-		return HookedSetHyperlink(self, link, ...)
+		return hookedSetHyperlink(self, link, ...)
 	end
 end
 
