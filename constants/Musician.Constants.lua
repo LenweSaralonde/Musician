@@ -6,7 +6,7 @@ Musician.PASSWORD = "TrustMeIMAMusician"
 
 Musician.URL = "https://musician.lenwe.io"
 Musician.CONVERTER_URL = "https://musician.lenwe.io/import"
-Musician.DISCORD_URL = "https://musician.lenwe.io/discord"
+Musician.DISCORD_URL = "https://discord.gg/ypfpGxK"
 Musician.PATREON_URL = "https://musician.lenwe.io/patreon"
 Musician.PAYPAL_URL = "https://musician.lenwe.io/paypal"
 Musician.LOCALIZATION_URL = "https://musician.lenwe.io/localize"
