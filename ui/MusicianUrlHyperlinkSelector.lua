@@ -79,7 +79,7 @@ function MusicianUrlHyperlinkSelectorMixin:OnLoad()
 			shortcut = "Ctrl+C"
 		end
 		local tooltipText = string.gsub(Musician.Msg.TOOLTIP_COPY_URL, '{shortcut}', Musician.Utils.Highlight(shortcut))
-		GameTooltip:SetOwner(MusicianUrlHyperlinkSelector, "ANCHOR_BOTTOM")
+		GameTooltip:SetOwner(MusicianUrlHyperlinkSelector, "ANCHOR_TOP")
 		GameTooltipTextLeft1:SetFontObject(font)
 		GameTooltipTextRight1:SetFontObject(font)
 		GameTooltip:SetText(tooltipText, font:GetTextColor())
