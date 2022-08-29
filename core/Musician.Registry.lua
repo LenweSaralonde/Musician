@@ -557,7 +557,7 @@ function Musician.Registry.NotifyNewVersion(otherVersion)
 		newVersionNotified = true
 
 		local msg = Musician.Msg.NEW_VERSION
-		msg = string.gsub(msg, '{url}', Musician.Utils.Highlight(Musician.URL, '00FFFF'))
+		msg = string.gsub(msg, '{url}', Musician.Utils.GetUrlLink(Musician.URL))
 		msg = string.gsub(msg, '{version}', Musician.Utils.Highlight(theirVersion))
 
 		-- Display message with fanfare sound
@@ -575,7 +575,7 @@ function Musician.Registry.NotifyNewVersion(otherVersion)
 		newProtocolNotified = true
 
 		local msg = Musician.Msg.NEW_PROTOCOL_VERSION
-		msg = string.gsub(msg, '{url}', Musician.Utils.Highlight(Musician.URL, '00FFFF'))
+		msg = string.gsub(msg, '{url}', Musician.Utils.GetUrlLink(Musician.URL))
 		msg = string.gsub(msg, '{version}', Musician.Utils.Highlight(theirVersion))
 		msg = string.gsub(msg, '{protocol}', Musician.Utils.Highlight(theirProtocol))
 

@@ -114,9 +114,6 @@
 					<Anchors>
 						<Anchor point="LEFT" x="68" y="-4" />
 					</Anchors>
-					<OnHyperlinkClick>
-						ChatFrame_OnHyperlinkShow(DEFAULT_CHAT_FRAME, link, text, button)
-					</OnHyperlinkClick>
 				</FontString>
 				<Texture name="$parentMeter" parentKey="meterTexture" alphaMode="ADD">
 					<Size x="32" y="5"/>
@@ -208,8 +205,7 @@
 
 		<Scripts>
 			<OnLoad>
-				self:SetHyperlinksEnabled(true)
-				self:SetScript("OnHyperlinkClick", InlineHyperlinkFrame_OnClick)
+				Musician.EnableHyperlinks(self)
 			</OnLoad>
 		</Scripts>
 	</Frame>

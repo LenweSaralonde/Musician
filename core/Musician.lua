@@ -497,6 +497,60 @@ function Musician.PlayerIsMuted(playerName)
 	return Musician_Settings.mutedPlayers[playerName] == true
 end
 
+--- Hyperlink mouse enter handler
+--
+function Musician.OnHyperlinkEnter(...)
+	Musician.UrlHyperlinkSelector.OnHyperlinkEnter(...)
+end
+
+--- Hyperlink mouse leave handler
+--
+function Musician.OnHyperlinkLeave(...)
+	Musician.UrlHyperlinkSelector.OnHyperlinkLeave(...)
+end
+
+--- Hyperlink click handler
+-- @param self (Frame)
+-- @param link (string)
+-- @param text (string)
+-- @param button (string)
+function Musician.OnHyperlinkClick(self, link, text, button)
+	local args = { strsplit(':', link) }
+	if args[1] == "musician" then
+		-- Stop current song for player
+		if args[2] == "stop" then
+			PlaySound(80)
+			Musician.StopPlayerSong(args[3])
+		-- Mute player
+		elseif args[2] == "mute" then
+			PlaySound(80)
+			Musician.MutePlayer(args[3], true)
+		-- Unmute player
+		elseif args[2] == "unmute" then
+			PlaySound(80)
+			Musician.MutePlayer(args[3], false)
+		-- Open options panel
+		elseif args[2] == "options" then
+			Musician.Options.Show()
+		-- Seek source song
+		elseif args[2] == "seek" and Musician.sourceSong ~= nil then
+			Musician.sourceSong:Seek(args[3])
+		-- Open URL
+		elseif args[2] == "url" then
+			Musician.UrlHyperlinkSelector.OnHyperlinkClick(self, link, text, button)
+		end
+	end
+end
+
+--- Enable hyperlinks support on frame
+-- @param frame (Frame)
+function Musician.EnableHyperlinks(self)
+	self:SetHyperlinksEnabled(true)
+	self:HookScript("OnHyperlinkClick", Musician.OnHyperlinkClick)
+	self:HookScript("OnHyperlinkEnter", Musician.OnHyperlinkEnter)
+	self:HookScript("OnHyperlinkLeave", Musician.OnHyperlinkLeave)
+end
+
 --- Setup hooks
 --
 function Musician.SetupHooks()
@@ -504,38 +558,24 @@ function Musician.SetupHooks()
 	-- Hyperlinks
 	--
 
-	hooksecurefunc("ChatFrame_OnHyperlinkShow", function(self, link)
-		local args = { strsplit(':', link) }
-		if args[1] == "musician" then
-			-- Stop current song for player
-			if args[2] == "stop" then
-				PlaySound(80)
-				Musician.StopPlayerSong(args[3])
-			-- Mute player
-			elseif args[2] == "mute" then
-				PlaySound(80)
-				Musician.MutePlayer(args[3], true)
-			-- Unmute player
-			elseif args[2] == "unmute" then
-				PlaySound(80)
-				Musician.MutePlayer(args[3], false)
-			-- Open options panel
-			elseif args[2] == "options" then
-				Musician.Options.Show()
-			end
-		end
+	-- Set hyperlink handler to the chat
+	hooksecurefunc("ChatFrame_OnHyperlinkShow", Musician.OnHyperlinkClick)
+	hooksecurefunc("ChatFrame_OnLoad", function(self)
+		self:HookScript("OnHyperlinkEnter", Musician.OnHyperlinkEnter)
+		self:HookScript("OnHyperlinkLeave", Musician.OnHyperlinkLeave)
 	end)
+	local chatFrameIndex = 1
+	while _G['ChatFrame' .. chatFrameIndex] ~= nil do
+		local chatFrame = _G['ChatFrame' .. chatFrameIndex]
+		chatFrame:HookScript("OnHyperlinkEnter", Musician.OnHyperlinkEnter)
+		chatFrame:HookScript("OnHyperlinkLeave", Musician.OnHyperlinkLeave)
+		chatFrameIndex = chatFrameIndex + 1
+	end
 
+	-- Block custom hyperlinks
 	local HookedSetHyperlink = ItemRefTooltip.SetHyperlink
 	function ItemRefTooltip:SetHyperlink(link, ...)
 		if (link and link:sub(0, 8) == "musician") then
-			local args = { strsplit(':', link) }
-
-			-- Seek source song
-			if args[2] == "seek" and Musician.sourceSong ~= nil then
-				Musician.sourceSong:Seek(args[3])
-			end
-
 			return
 		end
 		return HookedSetHyperlink(self, link, ...)

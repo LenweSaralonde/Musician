@@ -120,6 +120,9 @@ msg.PLAYER_TOOLTIP_VERSION_OUTDATED = " (當前版本已過期)"
 msg.PLAYER_TOOLTIP_VERSION_INCOMPATIBLE = " (當前版本不兼容)"
 msg.PLAYER_TOOLTIP_PRELOADING = "音效預載中……({progress})"
 
+--- URL hyperlinks tooltip
+msg.TOOLTIP_COPY_URL = "按 {shortcut} 複製。"
+
 --- Song import
 msg.INVALID_MUSIC_CODE = "音樂代碼無效。"
 msg.PLAY_A_SONG = "播放音樂"

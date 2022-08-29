@@ -120,6 +120,9 @@ msg.PLAYER_TOOLTIP_VERSION_OUTDATED = " (시대에 뒤쳐진)"
 msg.PLAYER_TOOLTIP_VERSION_INCOMPATIBLE = " (호환 불가)"
 msg.PLAYER_TOOLTIP_PRELOADING = "소리 미리로드 중… ({progress})"
 
+--- URL hyperlinks tooltip
+msg.TOOLTIP_COPY_URL = "{shortcut}를 눌러 복사합니다."
+
 --- Song import
 msg.INVALID_MUSIC_CODE = "잘못된 음악 코드입니다."
 msg.PLAY_A_SONG = "노래 재생"

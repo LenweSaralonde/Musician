@@ -120,6 +120,9 @@ msg.PLAYER_TOOLTIP_VERSION_OUTDATED = " (Outdated)"
 msg.PLAYER_TOOLTIP_VERSION_INCOMPATIBLE = " (INCOMPATIBLE)"
 msg.PLAYER_TOOLTIP_PRELOADING = "Preloading sounds… ({progress})"
 
+--- URL hyperlinks tooltip
+msg.TOOLTIP_COPY_URL = "Press {shortcut} to copy."
+
 --- Song import
 msg.INVALID_MUSIC_CODE = "Invalid music code."
 msg.PLAY_A_SONG = "Play a song"

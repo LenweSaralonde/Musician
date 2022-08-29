@@ -139,6 +139,16 @@ function Musician.Utils.GetLink(command, text, ...)
 	return "|H" .. strjoin(':', command, ... ) .. "|h" .. text .. "|h"
 end
 
+--- Remove hyperlinks from text
+-- @param textWithLinks (string)
+-- @return text (string)
+function Musician.Utils.RemoveLinks(textWithLinks)
+	local text = textWithLinks
+	text = string.gsub(text, '|H[^|]+|h', '')
+	text = string.gsub(text, '|h', '')
+	return text
+end
+
 --- Get player hyperlink
 -- @param player (string)
 -- @return playerLink (string)
@@ -152,6 +162,13 @@ function Musician.Utils.GetPlayerLink(player)
 	end
 
 	return Musician.Utils.GetLink('player', displayPlayerName, displayPlayerName)
+end
+
+--- Get URL hyperlink
+-- @param url (string)
+-- @return urlLink (string)
+function Musician.Utils.GetUrlLink(url)
+	return Musician.Utils.Highlight("[" .. Musician.Utils.GetLink('musician', url, 'url') .. "]", "00FFFF")
 end
 
 --- Get player full name with realm slug or Battle.net account name if a Battle.net game account ID is provided.

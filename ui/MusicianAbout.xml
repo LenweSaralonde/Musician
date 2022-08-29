@@ -98,5 +98,11 @@
 				</FontString>
 			</Layer>
 		</Layers>
+
+		<Scripts>
+			<OnLoad inherit="prepend">
+				Musician.EnableHyperlinks(self)
+			</OnLoad>
+		</Scripts>
 	</Frame>
 </Ui>

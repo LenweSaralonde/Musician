@@ -37,5 +37,10 @@
 				<HighlightFont style="DialogButtonHighlightText"/>
 			</Button>
 		</Frames>
+		<Scripts>
+			<OnLoad inherit="prepend">
+				Musician.EnableHyperlinks(self)
+			</OnLoad>
+		</Scripts>
 	</Frame>
 </Ui>

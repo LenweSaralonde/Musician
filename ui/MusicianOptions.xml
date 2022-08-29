@@ -255,9 +255,11 @@
 						</Frames>
 						<Scripts>
 							<OnLoad>
+								Musician.EnableHyperlinks(self)
+
 								MusicianOptionsPanelTitle:SetText(Musician.Msg.OPTIONS_TITLE)
 
-								local subText = string.gsub(Musician.Msg.OPTIONS_SUB_TEXT, "{url}", Musician.Utils.Highlight(Musician.DISCORD_URL, "00FFFF"))
+								local subText = string.gsub(Musician.Msg.OPTIONS_SUB_TEXT, "{url}", Musician.Utils.GetUrlLink(Musician.DISCORD_URL))
 								MusicianOptionsPanelSubText:SetText(subText)
 
 								MusicianOptionsPanelUnitEmoteTitle:SetText(Musician.Msg.OPTIONS_CATEGORY_EMOTE)

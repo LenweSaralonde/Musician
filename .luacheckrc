@@ -24,7 +24,10 @@ ignore = {
 	"212/distribution",
 
 	-- Ignore Live play handler variables.
-	"212/isChordNote"
+	"212/isChordNote",
+
+	-- Ignore unused link. This would popup for hyperlink handlers
+	"212/link",
 };
 
 globals = {
@@ -352,6 +355,7 @@ stds.wow = {
 			fields = {
 				"HookScript",
 				"GetUnit",
+				"GetOwner",
 				"SetOwner",
 				"SetText",
 				"Show",
@@ -362,6 +366,13 @@ stds.wow = {
 		GameTooltipTextLeft1 = {
 			fields = {
 				"GetText",
+				"SetFontObject",
+			}
+		},
+		GameTooltipTextRight1 = {
+			fields = {
+				"GetText",
+				"SetFontObject",
 			}
 		},
 
@@ -393,6 +404,7 @@ stds.wow = {
 		"GameFontHighlight",
 		"GameFontNormalSmall",
 		"GameFontDisableSmall",
+		"GameTooltipTextSmall",
 
 		-- Global Constants
 		"LE_PARTY_CATEGORY_INSTANCE",
