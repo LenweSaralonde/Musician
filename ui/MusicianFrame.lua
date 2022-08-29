@@ -136,7 +136,8 @@ function MusicianFrame.GetDefaultText()
 	local shortcut
 
 	if IsMacClient() then
-		shortcut = "Cmd+V"
+		local r, g, b = MusicianFrameSource:GetTextColor()
+		shortcut = "cmd" .. Musician.Utils.GetChatIcon(Musician.IconImages.Cmd, r, g, b) .. "+V"
 	else
 		shortcut = "Ctrl+V"
 	end

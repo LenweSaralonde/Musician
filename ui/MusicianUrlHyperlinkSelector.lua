@@ -16,6 +16,16 @@ local isCtrlPressed = false
 --
 MusicianUrlHyperlinkSelectorMixin = {}
 
+--- Indicates if provided key is the Ctrl or Cmd key based on the current OS.
+-- @param key (string)
+-- @return isCtrl (boolean)
+local function isCtrlKey(key)
+	if IsMacClient() then
+		return key == "LMETA" or key == "RMETA"
+	end
+	return key == "LCTRL" or key == "RCTRL"
+end
+
 --- OnLoad handler
 --
 function MusicianUrlHyperlinkSelectorMixin:OnLoad()
@@ -34,9 +44,7 @@ function MusicianUrlHyperlinkSelectorMixin:OnLoad()
 
 	-- Close the selector when a CTRL+C is registered
 	editBox:SetScript("OnKeyDown", function(_, key)
-		if not(IsMacClient()) and (key == "LCTRL" or key == "RCTRL") or
-		   IsMacClient() and (key == "LMETA" or key == "RMETA")
-		then
+		if isCtrlKey(key) then
 			isCtrlPressed = true
 		end
 		if isCtrlPressed and key == "C" then
@@ -44,7 +52,7 @@ function MusicianUrlHyperlinkSelectorMixin:OnLoad()
 		end
 	end)
 	editBox:SetScript("OnKeyUp", function(_, key)
-		if key == "LCTRL" or key == "RCTRL" then
+		if isCtrlKey(key) then
 			isCtrlPressed = false
 		end
 	end)
@@ -63,12 +71,18 @@ function MusicianUrlHyperlinkSelectorMixin:OnLoad()
 
 	-- Show tooltip on focus
 	editBox:SetScript("OnEditFocusGained", function()
-		local shortcut = IsMacClient() and "Cmd + C" or "Ctrl + C"
-		local tooltipText = string.gsub(Musician.Msg.TOOLTIP_COPY_URL, '{shortcut}', shortcut)
+		local font = GameFontNormalSmall
+		local shortcut
+		if IsMacClient() then
+			shortcut = "cmd" .. Musician.Utils.GetChatIcon(Musician.IconImages.Cmd, 1, 1, 1) .. "+C"
+		else
+			shortcut = "Ctrl+C"
+		end
+		local tooltipText = string.gsub(Musician.Msg.TOOLTIP_COPY_URL, '{shortcut}', Musician.Utils.Highlight(shortcut))
 		GameTooltip:SetOwner(MusicianUrlHyperlinkSelector, "ANCHOR_BOTTOM")
-		GameTooltipTextLeft1:SetFontObject(GameTooltipTextSmall)
-		GameTooltipTextRight1:SetFontObject(GameTooltipTextSmall)
-		GameTooltip:SetText(tooltipText, GameTooltipTextSmall:GetTextColor())
+		GameTooltipTextLeft1:SetFontObject(font)
+		GameTooltipTextRight1:SetFontObject(font)
+		GameTooltip:SetText(tooltipText, font:GetTextColor())
 		GameTooltip:Show()
 	end)
 
