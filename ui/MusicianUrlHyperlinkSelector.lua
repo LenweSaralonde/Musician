@@ -48,6 +48,7 @@ function MusicianUrlHyperlinkSelectorMixin:OnLoad()
 			isCtrlPressed = true
 		end
 		if isCtrlPressed and key == "C" then
+			PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
 			self:Hide()
 		end
 	end)
