@@ -28,6 +28,20 @@ function MusicianUrlHyperlinkSelectorMixin:OnLoad()
 
 	local editBox = self.editBox
 
+	-- Create tooltip
+	self.tooltip = CreateFrame("GameTooltip", "MusicianUrlHyperlinkSelectorMixinTooltip", nil, "SharedTooltipTemplate")
+	local tooltip = self.tooltip
+	local font = GameFontNormalSmall
+	local shortcut
+	if IsMacClient() then
+		shortcut = "cmd" .. Musician.Utils.GetChatIcon(Musician.IconImages.Cmd, 1, 1, 1) .. "+C"
+	else
+		shortcut = "Ctrl+C"
+	end
+	local tooltipText = string.gsub(Musician.Msg.TOOLTIP_COPY_URL, '{shortcut}', Musician.Utils.Highlight(shortcut))
+	tooltip.TextLeft1:SetFontObject(font)
+	tooltip.TextRight1:SetFontObject(font)
+
 	-- Close on escape
 	editBox:SetScript("OnEscapePressed", function()
 		self:Hide()
@@ -60,26 +74,14 @@ function MusicianUrlHyperlinkSelectorMixin:OnLoad()
 
 	-- Show tooltip on focus
 	editBox:SetScript("OnEditFocusGained", function()
-		local font = GameFontNormalSmall
-		local shortcut
-		if IsMacClient() then
-			shortcut = "cmd" .. Musician.Utils.GetChatIcon(Musician.IconImages.Cmd, 1, 1, 1) .. "+C"
-		else
-			shortcut = "Ctrl+C"
-		end
-		local tooltipText = string.gsub(Musician.Msg.TOOLTIP_COPY_URL, '{shortcut}', Musician.Utils.Highlight(shortcut))
-		GameTooltip:SetOwner(MusicianUrlHyperlinkSelector, "ANCHOR_TOP")
-		GameTooltipTextLeft1:SetFontObject(font)
-		GameTooltipTextRight1:SetFontObject(font)
-		GameTooltip:SetText(tooltipText, font:GetTextColor())
-		GameTooltip:Show()
+		tooltip:SetOwner(self, "ANCHOR_TOP")
+		tooltip:SetText(tooltipText, font:GetTextColor())
+		tooltip:Show()
 	end)
 
 	-- Hide tooltip on hide
 	self:SetScript("OnHide", function()
-		if GameTooltip:GetOwner() == self then
-			GameTooltip:Hide()
-		end
+		tooltip:Hide()
 	end)
 end
 
