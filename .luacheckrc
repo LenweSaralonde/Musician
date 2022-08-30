@@ -336,6 +336,7 @@ stds.wow = {
 		"IsMouseButtonDown",
 		"IsShiftKeyDown",
 		"IsControlKeyDown",
+		"IsMetaKeyDown",
 		"IsAltKeyDown",
 		"InterfaceOptions_AddCategory",
 		"BlizzardOptionsPanel_RegisterControl",

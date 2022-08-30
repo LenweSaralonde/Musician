@@ -9,21 +9,17 @@ Musician.AddModule(MODULE_NAME)
 --- Currently active URL hyperlink
 local currentHyperlink
 
---- Ctrl key is pressed
-local isCtrlPressed = false
-
 --- Main frame mixin
 --
 MusicianUrlHyperlinkSelectorMixin = {}
 
---- Indicates if provided key is the Ctrl or Cmd key based on the current OS.
--- @param key (string)
+--- Indicates if Ctrl or Cmd key is down, depending on the current OS.
 -- @return isCtrl (boolean)
-local function isCtrlKey(key)
+local function isCtrlKeyDown()
 	if IsMacClient() then
-		return key == "LMETA" or key == "RMETA"
+		return IsMetaKeyDown()
 	end
-	return key == "LCTRL" or key == "RCTRL"
+	return IsControlKeyDown()
 end
 
 --- OnLoad handler
@@ -44,17 +40,9 @@ function MusicianUrlHyperlinkSelectorMixin:OnLoad()
 
 	-- Close the selector when a CTRL+C is registered
 	editBox:SetScript("OnKeyDown", function(_, key)
-		if isCtrlKey(key) then
-			isCtrlPressed = true
-		end
-		if isCtrlPressed and key == "C" then
+		if isCtrlKeyDown() and key == "C" then
 			PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
 			self:Hide()
-		end
-	end)
-	editBox:SetScript("OnKeyUp", function(_, key)
-		if isCtrlKey(key) then
-			isCtrlPressed = false
 		end
 	end)
 
@@ -149,7 +137,4 @@ function Musician.UrlHyperlinkSelector.OnHyperlinkClick(self, link, text)
 	selector:Show()
 	editBox:HighlightText()
 	editBox:SetFocus()
-
-	-- Reset Ctrl key status
-	isCtrlPressed = false
 end
