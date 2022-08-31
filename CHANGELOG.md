@@ -1,6 +1,12 @@
 Changelog
 =========
 
+v1.9.1.1
+--------
+* Fixed chat channel colors and order getting swapped when joining the communication channel. #83
+* Added hyperlinks to URLs that can be selected and copied to the clipboard. #85
+* Minor bugfixes and improvements.
+
 v1.9.1.0
 --------
 * Added support for Wrath of the Lich King Classic.
