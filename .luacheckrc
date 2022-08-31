@@ -365,6 +365,12 @@ stds.wow = {
 			}
 		},
 
+		GameTooltipTextLeft1 = {
+			fields = {
+				"GetText",
+			}
+		},
+
 		DEFAULT_CHAT_FRAME = {
 			fields = {
 				"AddMessage",
