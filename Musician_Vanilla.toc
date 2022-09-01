@@ -22,6 +22,7 @@ core\Musician.Live.lua
 core\Musician.VolumeMeter.lua
 
 constants\Musician.Constants.lua
+constants\Musician.Events.lua
 constants\Musician.Instruments.lua
 constants\Musician.Midi.lua
 constants\Musician.MidiMapping.lua
