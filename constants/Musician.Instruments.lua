@@ -1,6 +1,30 @@
 --- Instrument definitions
 -- @module Musician.Instruments
 
+--- Available instrument colors
+-- @table Musician.COLORS
+-- @field Red (table)
+-- @field DarkMagenta (table)
+-- @field LightOrange (table)
+-- @field Orange (table)
+-- @field DarkOrange (table)
+-- @field LightGreen (table)
+-- @field Green (table)
+-- @field DarkGreen (table)
+-- @field LightBlue (table)
+-- @field SpringGreen (table)
+-- @field DarkSpringGreen (table)
+-- @field Pink (table)
+-- @field White (table)
+-- @field DarkWhite (table)
+-- @field Yellow (table)
+-- @field DarkYellow (table)
+-- @field Brown (table)
+-- @field Blue (table)
+-- @field Purple (table)
+-- @field Tan (table)
+-- @field DarkTan (table)
+-- @field Gray (table)
 Musician.COLORS = {
 	Red = {0.77, 0.12, 0.23},
 	DarkMagenta = {0.64, 0.19, 0.79},
@@ -26,19 +50,101 @@ Musician.COLORS = {
 	Gray = {0.6, 0.6, 0.6},
 }
 
---- Instruments table. The key is the internal instrument ID (string) and each value is a table having the following attribues:
--- @field[opt] color (table) Color {r, g, b} from Musician.COLORS
--- @field[opt] name (string) Same as the instrument id (automatically generated)
--- @field[opt] midi (int) General MIDI instrument ID (0-127). For percussions, midi is its MIDI ID + 128
--- @field[opt] decay (number) Decay duration in seconds
--- @field[opt] isPlucked (boolean) True for plucked instruments such as guitar, piano etc. Used for visualization only.
--- @field[opt] path (string) Path to the instrument melodic samples directory.
--- @field[opt] regions (table) Tables of path, lokey and hikey (inclusive) in replacement of path allowing picking melodic samples from multiple directories according to the MIDI key range defined by lokey and hikey.
--- @field[opt] isPercussion (boolean) Act as a percussion instrument using the single sample file (without extension) from path or picked from pathList using keyMod or roundRobin methods
--- @field[opt] pathList (table) List of file paths to be chosen using keyMod or roundRobin (without extension)
--- @field[opt] keyMod (int) Plays nth sample file from pathList modulo the MIDI key number
--- @field[opt] roundRobin (boolean) Plays sample file from pathList using round robin
--- @field[opt] source (string) Credits to author, software, library etc used to create the instrument. Displayed in the "About" window.
+--- Instruments table. The key is the internal instrument ID (string) and each value is a table having the following attribues (all are optional):
+--
+--  color (table) Color {r, g, b} from Musician.COLORS
+--
+--  name (string) Same as the instrument id (automatically generated)
+--
+--  midi (int) General MIDI instrument ID (0-127). For percussions, midi is its MIDI ID + 128
+--
+--  decay (number) Decay duration in seconds
+--
+--  isPlucked (boolean) True for plucked instruments such as guitar, piano etc. Used for visualization only.
+--
+--  path (string) Path to the instrument melodic samples directory.
+--
+--  regions (table) Tables of path, lokey and hikey (inclusive) in replacement of path allowing picking melodic samples from multiple directories according to the MIDI key range defined by lokey and hikey.
+--
+--  isPercussion (boolean) Act as a percussion instrument using the single sample file (without extension) from path or picked from pathList using keyMod or roundRobin methods
+--
+--  pathList (table) List of file paths to be chosen using keyMod or roundRobin (without extension)
+--
+--  keyMod (int) Plays nth sample file from pathList modulo the MIDI key number
+--
+--  roundRobin (boolean) Plays sample file from pathList using round robin
+--
+--  source (string) Credits to author, software, library etc used to create the instrument. Displayed in the "About" window.
+-- @table Musician.INSTRUMENTS
+-- @field none (table)
+-- @field accordion (table)
+-- @field bagpipe (table)
+-- @field bassoon (table)
+-- @field viola_da_gamba (table)
+-- @field clarinet (table)
+-- @field dulcimer (table)
+-- @field piano (table)
+-- @field female_voice (table)
+-- @field male_voice (table)
+-- @field fiddle (table)
+-- @field harp (table)
+-- @field lute (table)
+-- @field recorder (table)
+-- @field sackbut (table)
+-- @field trumpet (table)
+-- @field war_horn (table)
+-- @field distortion_guitar (table)
+-- @field clean_guitar (table)
+-- @field bass_guitar (table)
+-- @field percussions (table)
+-- @field drumkit (table)
+-- @field war_drum (table)
+-- @field frame_drum_kick_1 (table)
+-- @field frame_drum_kick_2 (table)
+-- @field frame_drum_snare_1 (table)
+-- @field frame_drum_snare_2 (table)
+-- @field frame_drum_roll_1 (table)
+-- @field frame_drum_roll_2 (table)
+-- @field frame_drum_roll_3 (table)
+-- @field frame_drum_hit (table)
+-- @field sticks (table)
+-- @field misc_hit (table)
+-- @field cajon_hit (table)
+-- @field clap (table)
+-- @field tambourine_short (table)
+-- @field tambourine_shake (table)
+-- @field tambourine_long (table)
+-- @field riq_hit_1 (table)
+-- @field riq_hit_2 (table)
+-- @field riq_hit_3 (table)
+-- @field riq_hit_4 (table)
+-- @field riq_hit_5 (table)
+-- @field riq_shake_1 (table)
+-- @field riq_shake_2 (table)
+-- @field bodhran_1 (table)
+-- @field bodhran_2 (table)
+-- @field bodhran_3 (table)
+-- @field bodhran_4 (table)
+-- @field bodhran_5 (table)
+-- @field bodhran_6 (table)
+-- @field barbarian_frame_drum_dead_stroke (table)
+-- @field barbarian_frame_drum (table)
+-- @field frame_drum_timbale_1 (table)
+-- @field frame_drum_timbale_2 (table)
+-- @field djembe_hi_1 (table)
+-- @field djembe_hi_2 (table)
+-- @field djembe_hi_3 (table)
+-- @field djembe_muted (table)
+-- @field djembe_bass (table)
+-- @field claves (table)
+-- @field woodblock_hi (table)
+-- @field woodblock_low (table)
+-- @field woodblock (table)
+-- @field shaker (table)
+-- @field sleigh_bells (table)
+-- @field sleigh_bells_shake (table)
+-- @field metallic_1 (table)
+-- @field metallic_2 (table)
 Musician.INSTRUMENTS = {
 	["none"] = {
 		midi = -1,
@@ -74,7 +180,7 @@ Musician.INSTRUMENTS = {
 		color = Musician.COLORS.DarkGreen,
 		source = "Ethan Winer Bassoon"
 	},
-	["viola-da-gamba"] = {
+	["viola_da_gamba"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\viola-da-gamba",
 		decay = 150,
 		isPercussion = false,
@@ -112,7 +218,7 @@ Musician.INSTRUMENTS = {
 		color = Musician.COLORS.White,
 		source = "NeoPiano mini"
 	},
-	["female-voice"] = {
+	["female_voice"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\female-voice",
 		decay = 100,
 		isPercussion = false,
@@ -122,7 +228,7 @@ Musician.INSTRUMENTS = {
 		color = Musician.COLORS.LightBlue,
 		source = "ERA II Vocal Codex"
 	},
-	["male-voice"] = {
+	["male_voice"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\male-voice",
 		decay = 100,
 		isPercussion = false,
@@ -212,7 +318,7 @@ Musician.INSTRUMENTS = {
 		color = Musician.COLORS.Yellow,
 		source = "ERA II Medieval Legends"
 	},
-	["war-horn"] = {
+	["war_horn"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\war-horn",
 		decay = 150,
 		isPercussion = false,
@@ -222,7 +328,7 @@ Musician.INSTRUMENTS = {
 		color = Musician.COLORS.Brown,
 		source = "ERA II Medieval Legends"
 	},
-	["distortion-guitar"] = {
+	["distortion_guitar"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\distortion-guitar",
 		decay = 75,
 		isPercussion = false,
@@ -231,7 +337,7 @@ Musician.INSTRUMENTS = {
 		color = Musician.COLORS.DarkMagenta,
 		source = "DirectGuitar 2.0"
 	},
-	["clean-guitar"] = {
+	["clean_guitar"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\clean-guitar",
 		decay = 75,
 		isPercussion = false,
@@ -240,7 +346,7 @@ Musician.INSTRUMENTS = {
 		color = Musician.COLORS.Pink,
 		source = "DirectGuitar 2.0"
 	},
-	["bass-guitar"] = {
+	["bass_guitar"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\bass-guitar",
 		decay = 75,
 		isPercussion = false,
@@ -327,7 +433,7 @@ Musician.INSTRUMENTS = {
 	},
 
 	-- Percussion
-	["war-drum"] = {
+	["war_drum"] = {
 		pathList = {
 			"Interface\\AddOns\\Musician\\instruments\\frame-drum\\frame-drum-long-A",
 			"Interface\\AddOns\\Musician\\instruments\\frame-drum\\frame-drum-long-Bb",
@@ -349,49 +455,49 @@ Musician.INSTRUMENTS = {
 		color = Musician.COLORS.DarkTan,
 		source = "Kstnbass Frame Drum"
 	},
-	["frame-drum-kick-1"] = {
+	["frame_drum_kick_1"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\frame-drum-kick-1",
 		decay = 108,
 		isPercussion = true,
 		source = "Sonic Bloom Frame Drum"
 	},
-	["frame-drum-kick-2"] = {
+	["frame_drum_kick_2"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\frame-drum-kick-2",
 		decay = 93,
 		isPercussion = true,
 		source = "Sonic Bloom Frame Drum"
 	},
-	["frame-drum-snare-1"] = {
+	["frame_drum_snare_1"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\frame-drum-snare-1",
 		decay = 498,
 		isPercussion = true,
 		source = "Loopmasters Frame Drums"
 	},
-	["frame-drum-snare-2"] = {
+	["frame_drum_snare_2"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\frame-drum-snare-2",
 		decay = 498,
 		isPercussion = true,
 		source = "Loopmasters Frame Drums"
 	},
-	["frame-drum-roll-1"] = {
+	["frame_drum_roll_1"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\frame-drum-roll-1",
 		decay = 1000,
 		isPercussion = true,
 		source = "ERA II Medieval Legends"
 	},
-	["frame-drum-roll-2"] = {
+	["frame_drum_roll_2"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\frame-drum-roll-2",
 		decay = 793,
 		isPercussion = true,
 		source = "ERA II Medieval Legends"
 	},
-	["frame-drum-roll-3"] = {
+	["frame_drum_roll_3"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\frame-drum-roll-3",
 		decay = 528,
 		isPercussion = true,
 		source = "ERA II Medieval Legends"
 	},
-	["frame-drum-hit"] = {
+	["frame_drum_hit"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\frame-drum-hit",
 		decay = 339,
 		isPercussion = true,
@@ -403,13 +509,13 @@ Musician.INSTRUMENTS = {
 		isPercussion = true,
 		source = "Michael Picher Auxiliary Percussion"
 	},
-	["misc-hit"] = {
+	["misc_hit"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\misc-percussions\\misc-hit",
 		decay = 133,
 		isPercussion = true,
 		source = "Loopmasters Frame Drums"
 	},
-	["cajon-hit"] = {
+	["cajon_hit"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\misc-percussions\\cajon-hit",
 		decay = 323,
 		isPercussion = true,
@@ -429,13 +535,13 @@ Musician.INSTRUMENTS = {
 		isPercussion = true,
 		source = "LenweSaralonde Claps"
 	},
-	["tambourine-short"] = {
+	["tambourine_short"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\tambourine\\tambourine-short",
 		decay = 250,
 		isPercussion = true,
 		source = "Michael Picher Auxiliary Percussion"
 	},
-	["tambourine-shake"] = {
+	["tambourine_shake"] = {
 		pathList = {
 			"Interface\\AddOns\\Musician\\instruments\\tambourine\\tambourine-shake-1",
 			"Interface\\AddOns\\Musician\\instruments\\tambourine\\tambourine-shake-2",
@@ -446,7 +552,7 @@ Musician.INSTRUMENTS = {
 		color = Musician.COLORS.DarkTan,
 		source = "Michael Picher Auxiliary Percussion"
 	},
-	["tambourine-long"] = {
+	["tambourine_long"] = {
 		pathList = {
 			"Interface\\AddOns\\Musician\\instruments\\tambourine\\tambourine-long-1",
 			"Interface\\AddOns\\Musician\\instruments\\tambourine\\tambourine-long-2",
@@ -457,133 +563,133 @@ Musician.INSTRUMENTS = {
 		isPercussion = true,
 		source = "Michael Picher Auxiliary Percussion"
 	},
-	["riq-hit-1"] = {
+	["riq_hit_1"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\tambourine\\riq-hit-1",
 		decay = 753,
 		isPercussion = true,
 		source = "Loopmasters Frame Drums"
 	},
-	["riq-hit-2"] = {
+	["riq_hit_2"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\tambourine\\riq-hit-2",
 		decay = 928,
 		isPercussion = true,
 		source = "Loopmasters Frame Drums"
 	},
-	["riq-hit-3"] = {
+	["riq_hit_3"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\tambourine\\riq-hit-3",
 		decay = 1000,
 		isPercussion = true,
 		source = "Loopmasters Frame Drums"
 	},
-	["riq-hit-4"] = {
+	["riq_hit_4"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\tambourine\\riq-hit-4",
 		decay = 625,
 		isPercussion = true,
 		source = "Loopmasters Frame Drums"
 	},
-	["riq-hit-5"] = {
+	["riq_hit_5"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\tambourine\\riq-hit-5",
 		decay = 1000,
 		isPercussion = true,
 		source = "Loopmasters Frame Drums"
 	},
-	["riq-shake-1"] = {
+	["riq_shake_1"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\tambourine\\riq-shake-1",
 		decay = 572,
 		isPercussion = true,
 		source = "Loopmasters Frame Drums"
 	},
-	["riq-shake-2"] = {
+	["riq_shake_2"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\tambourine\\riq-shake-2",
 		decay = 838,
 		isPercussion = true,
 		source = "Loopmasters Frame Drums"
 	},
-	["bodhran-1"] = {
+	["bodhran_1"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\bodhran-1",
 		decay = 1000,
 		isPercussion = true,
 		source = "Bosone Bodhran"
 	},
-	["bodhran-2"] = {
+	["bodhran_2"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\bodhran-2",
 		decay = 1000,
 		isPercussion = true,
 		source = "Bosone Bodhran"
 	},
-	["bodhran-3"] = {
+	["bodhran_3"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\bodhran-3",
 		decay = 1000,
 		isPercussion = true,
 		source = "Bosone Bodhran"
 	},
-	["bodhran-4"] = {
+	["bodhran_4"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\bodhran-4",
 		decay = 1000,
 		isPercussion = true,
 		source = "Bosone Bodhran"
 	},
-	["bodhran-5"] = {
+	["bodhran_5"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\bodhran-5",
 		decay = 1000,
 		isPercussion = true,
 		source = "Bosone Bodhran"
 	},
-	["bodhran-6"] = {
+	["bodhran_6"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\bodhran-6",
 		decay = 1000,
 		isPercussion = true,
 		source = "Bosone Bodhran"
 	},
-	["barbarian-frame-drum-dead-stroke"] = {
+	["barbarian_frame_drum_dead_stroke"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\barbarian-frame-drum-dead-stroke",
 		decay = 317,
 		isPercussion = true,
 		source = "ERA II Medieval Legends"
 	},
-	["barbarian-frame-drum"] = {
+	["barbarian_frame_drum"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\barbarian-frame-drum",
 		decay = 1000,
 		isPercussion = true,
 		source = "ERA II Medieval Legends"
 	},
-	["frame-drum-timbale-1"] = {
+	["frame_drum_timbale_1"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\frame-drum-timbale-1",
 		decay = 589,
 		isPercussion = true,
 		source = "Loopmasters Frame Drums"
 	},
-	["frame-drum-timbale-2"] = {
+	["frame_drum_timbale_2"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\frame-drum\\frame-drum-timbale-2",
 		decay = 758,
 		isPercussion = true,
 		source = "Loopmasters Frame Drums"
 	},
-	["djembe-hi-1"] = {
+	["djembe_hi_1"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\djembe\\djembe-hi-1",
 		decay = 650,
 		isPercussion = true,
 		source = "Samplephonics Gambian Percussion"
 	},
-	["djembe-hi-2"] = {
+	["djembe_hi_2"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\djembe\\djembe-hi-2",
 		decay = 472,
 		isPercussion = true,
 		source = "Samplephonics Gambian Percussion"
 	},
-	["djembe-hi-3"] = {
+	["djembe_hi_3"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\djembe\\djembe-hi-3",
 		decay = 661,
 		isPercussion = true,
 		source = "Samplephonics Gambian Percussion"
 	},
-	["djembe-muted"] = {
+	["djembe_muted"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\djembe\\djembe-muted",
 		decay = 341,
 		isPercussion = true,
 		source = "Samplephonics Gambian Percussion"
 	},
-	["djembe-bass"] = {
+	["djembe_bass"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\djembe\\djembe-bass",
 		decay = 498,
 		isPercussion = true,
@@ -595,13 +701,13 @@ Musician.INSTRUMENTS = {
 		isPercussion = true,
 		source = "Michael Picher Auxiliary Percussion"
 	},
-	["woodblock-hi"] = {
+	["woodblock_hi"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\misc-percussions\\woodblock-hi",
 		decay = 106,
 		isPercussion = true,
 		source = "Michael Picher Auxiliary Percussion"
 	},
-	["woodblock-low"] = {
+	["woodblock_low"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\misc-percussions\\woodblock-low",
 		decay = 95,
 		isPercussion = true,
@@ -629,25 +735,25 @@ Musician.INSTRUMENTS = {
 		isPercussion = true,
 		source = "Michael Picher Auxiliary Percussion"
 	},
-	["sleigh-bells"] = {
+	["sleigh_bells"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\misc-percussions\\sleigh-bells",
 		decay = 568,
 		isPercussion = true,
 		source = "Michael Picher Auxiliary Percussion"
 	},
-	["sleigh-bells-shake"] = {
+	["sleigh_bells_shake"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\misc-percussions\\sleigh-bells-shake",
 		decay = 725,
 		isPercussion = true,
 		source = "Michael Picher Auxiliary Percussion"
 	},
-	["metallic-1"] = {
+	["metallic_1"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\misc-percussions\\metallic-1",
 		decay = 625,
 		isPercussion = true,
 		source = "Loopmasters Frame Drums"
 	},
-	["metallic-2"] = {
+	["metallic_2"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\misc-percussions\\metallic-2",
 		decay = 1000,
 		isPercussion = true,
@@ -665,24 +771,24 @@ Musician.INSTRUMENTS_AVAILABLE = {
 	"bagpipe",
 	"accordion",
 	"fiddle",
-	"viola-da-gamba",
-	"female-voice",
-	"male-voice",
+	"viola_da_gamba",
+	"female_voice",
+	"male_voice",
 	"trumpet",
 	"sackbut",
-	"war-horn",
+	"war_horn",
 	"clarinet",
 	"bassoon",
 
-	"distortion-guitar",
-	"clean-guitar",
-	"bass-guitar",
+	"distortion_guitar",
+	"clean_guitar",
+	"bass_guitar",
 
 	"percussions",
 	"drumkit",
-	"war-drum",
+	"war_drum",
 	"woodblock",
-	"tambourine-shake",
+	"tambourine_shake",
 
 	"none",
 }
