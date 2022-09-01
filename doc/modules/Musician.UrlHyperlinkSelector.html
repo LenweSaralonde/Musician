@@ -79,10 +79,10 @@
   <li><a href="../modules/Musician.TRP3.html">Musician.TRP3</a></li>
   <li><a href="../modules/Musician.TRP3.html">Musician.TRP3</a></li>
   <li><a href="../modules/Musician.TRP3.Options.html">Musician.TRP3.Options</a></li>
-  <li><strong>Musician.TidyPlates</strong></li>
+  <li><a href="../modules/Musician.TidyPlates.html">Musician.TidyPlates</a></li>
   <li><a href="../modules/Musician.TidyPlates_ThreatPlates.html">Musician.TidyPlates_ThreatPlates</a></li>
   <li><a href="../modules/Musician.TrackEditor.html">Musician.TrackEditor</a></li>
-  <li><a href="../modules/Musician.UrlHyperlinkSelector.html">Musician.UrlHyperlinkSelector</a></li>
+  <li><strong>Musician.UrlHyperlinkSelector</strong></li>
   <li><a href="../modules/Musician.Utils.html">Musician.Utils</a></li>
   <li><a href="../modules/Musician.VolumeMeter.html">Musician.VolumeMeter</a></li>
   <li><a href="../modules/Musician.Widgets.html">Musician.Widgets</a></li>
@@ -95,16 +95,28 @@
 
 <div id="content">
 
-<h1>Module <code>Musician.TidyPlates</code></h1>
-<p>TidyPlates integration</p>
+<h1>Module <code>Musician.UrlHyperlinkSelector</code></h1>
+<p>URL Hyperlink selector</p>
 <p></p>
 
 
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#Musician.TidyPlates:OnEnable">Musician.TidyPlates:OnEnable ()</a></td>
-	<td class="summary">OnEnable</td>
+	<td class="name" nowrap><a href="#Musician.UrlHyperlinkSelector.OnHyperlinkClick">Musician.UrlHyperlinkSelector.OnHyperlinkClick (self, link, text)</a></td>
+	<td class="summary">Hyperlink click handler</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.UrlHyperlinkSelector.OnHyperlinkEnter">Musician.UrlHyperlinkSelector.OnHyperlinkEnter (self, link, text, fontstring, x, y, width, height)</a></td>
+	<td class="summary">Hyperlink mouse enter handler</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.UrlHyperlinkSelector.OnHyperlinkLeave">Musician.UrlHyperlinkSelector.OnHyperlinkLeave (self)</a></td>
+	<td class="summary">Hyperlink mouse leave handler</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicianUrlHyperlinkSelectorMixin:OnLoad">MusicianUrlHyperlinkSelectorMixin:OnLoad ()</a></td>
+	<td class="summary">OnLoad handler</td>
 	</tr>
 </table>
 
@@ -116,11 +128,98 @@
 
     <dl class="function">
     <dt>
-    <a name = "Musician.TidyPlates:OnEnable"></a>
-    <strong>Musician.TidyPlates:OnEnable ()</strong>
+    <a name = "Musician.UrlHyperlinkSelector.OnHyperlinkClick"></a>
+    <strong>Musician.UrlHyperlinkSelector.OnHyperlinkClick (self, link, text)</strong>
     </dt>
     <dd>
-    OnEnable
+    Hyperlink click handler
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+         (Frame)
+        </li>
+        <li><span class="parameter">link</span>
+         (string)
+        </li>
+        <li><span class="parameter">text</span>
+         (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.UrlHyperlinkSelector.OnHyperlinkEnter"></a>
+    <strong>Musician.UrlHyperlinkSelector.OnHyperlinkEnter (self, link, text, fontstring, x, y, width, height)</strong>
+    </dt>
+    <dd>
+    Hyperlink mouse enter handler
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+         (Frame)
+        </li>
+        <li><span class="parameter">link</span>
+         (string)
+        </li>
+        <li><span class="parameter">text</span>
+         (string)
+        </li>
+        <li><span class="parameter">fontstring</span>
+         (FontString)
+        </li>
+        <li><span class="parameter">x</span>
+         (number)
+        </li>
+        <li><span class="parameter">y</span>
+         (number)
+        </li>
+        <li><span class="parameter">width</span>
+         (number)
+        </li>
+        <li><span class="parameter">height</span>
+         (number)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.UrlHyperlinkSelector.OnHyperlinkLeave"></a>
+    <strong>Musician.UrlHyperlinkSelector.OnHyperlinkLeave (self)</strong>
+    </dt>
+    <dd>
+    Hyperlink mouse leave handler
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">self</span>
+         (Frame)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicianUrlHyperlinkSelectorMixin:OnLoad"></a>
+    <strong>MusicianUrlHyperlinkSelectorMixin:OnLoad ()</strong>
+    </dt>
+    <dd>
+    OnLoad handler
 
 
 

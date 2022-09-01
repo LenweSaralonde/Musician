@@ -46,6 +46,7 @@
   <li><a href="../modules/Musician.CrossRP.html">Musician.CrossRP</a></li>
   <li><a href="../modules/Musician.CrossRP.Options.html">Musician.CrossRP.Options</a></li>
   <li><a href="../modules/Musician.ElvUI.html">Musician.ElvUI</a></li>
+  <li><a href="../modules/Musician.Events.html">Musician.Events</a></li>
   <li><a href="../modules/Musician.Extras.html">Musician.Extras</a></li>
   <li><a href="../modules/Musician.Frame.html">Musician.Frame</a></li>
   <li><a href="../modules/Musician.Icons.html">Musician.Icons</a></li>
@@ -81,6 +82,7 @@
   <li><a href="../modules/Musician.TidyPlates.html">Musician.TidyPlates</a></li>
   <li><a href="../modules/Musician.TidyPlates_ThreatPlates.html">Musician.TidyPlates_ThreatPlates</a></li>
   <li><a href="../modules/Musician.TrackEditor.html">Musician.TrackEditor</a></li>
+  <li><a href="../modules/Musician.UrlHyperlinkSelector.html">Musician.UrlHyperlinkSelector</a></li>
   <li><a href="../modules/Musician.Utils.html">Musician.Utils</a></li>
   <li><a href="../modules/Musician.VolumeMeter.html">Musician.VolumeMeter</a></li>
   <li><a href="../modules/Musician.Widgets.html">Musician.Widgets</a></li>
@@ -101,6 +103,10 @@
 <h2><a href="#Tables">Tables</a></h2>
 <table class="function_list">
 	<tr>
+	<td class="name" nowrap><a href="#Musician.COLORS">Musician.COLORS</a></td>
+	<td class="summary">Available instrument colors</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#Musician.INSTRUMENTS">Musician.INSTRUMENTS</a></td>
 	<td class="summary">Instruments table.</td>
 	</tr>
@@ -118,62 +124,316 @@
 
     <dl class="function">
     <dt>
-    <a name = "Musician.INSTRUMENTS"></a>
-    <strong>Musician.INSTRUMENTS</strong>
+    <a name = "Musician.COLORS"></a>
+    <strong>Musician.COLORS</strong>
     </dt>
     <dd>
-    Instruments table.  The key is the internal instrument ID (string) and each value is a table having the following attribues:
+    Available instrument colors
 
 
     <h3>Fields:</h3>
     <ul>
-        <li><span class="parameter">color</span>
-         (table) Color {r, g, b} from Musician.COLORS
-         (<em>optional</em>)
+        <li><span class="parameter">Red</span>
+         (table)
         </li>
-        <li><span class="parameter">name</span>
-         (string) Same as the instrument id (automatically generated)
-         (<em>optional</em>)
+        <li><span class="parameter">DarkMagenta</span>
+         (table)
         </li>
-        <li><span class="parameter">midi</span>
-         (int) General MIDI instrument ID (0-127). For percussions, midi is its MIDI ID + 128
-         (<em>optional</em>)
+        <li><span class="parameter">LightOrange</span>
+         (table)
         </li>
-        <li><span class="parameter">decay</span>
-         (number) Decay duration in seconds
-         (<em>optional</em>)
+        <li><span class="parameter">Orange</span>
+         (table)
         </li>
-        <li><span class="parameter">isPlucked</span>
-         (boolean) True for plucked instruments such as guitar, piano etc. Used for visualization only.
-         (<em>optional</em>)
+        <li><span class="parameter">DarkOrange</span>
+         (table)
         </li>
-        <li><span class="parameter">path</span>
-         (string) Path to the instrument melodic samples directory.
-         (<em>optional</em>)
+        <li><span class="parameter">LightGreen</span>
+         (table)
         </li>
-        <li><span class="parameter">regions</span>
-         (table) Tables of path, lokey and hikey (inclusive) in replacement of path allowing picking melodic samples from multiple directories according to the MIDI key range defined by lokey and hikey.
-         (<em>optional</em>)
+        <li><span class="parameter">Green</span>
+         (table)
         </li>
-        <li><span class="parameter">isPercussion</span>
-         (boolean) Act as a percussion instrument using the single sample file (without extension) from path or picked from pathList using keyMod or roundRobin methods
-         (<em>optional</em>)
+        <li><span class="parameter">DarkGreen</span>
+         (table)
         </li>
-        <li><span class="parameter">pathList</span>
-         (table) List of file paths to be chosen using keyMod or roundRobin (without extension)
-         (<em>optional</em>)
+        <li><span class="parameter">LightBlue</span>
+         (table)
         </li>
-        <li><span class="parameter">keyMod</span>
-         (int) Plays nth sample file from pathList modulo the MIDI key number
-         (<em>optional</em>)
+        <li><span class="parameter">SpringGreen</span>
+         (table)
         </li>
-        <li><span class="parameter">roundRobin</span>
-         (boolean) Plays sample file from pathList using round robin
-         (<em>optional</em>)
+        <li><span class="parameter">DarkSpringGreen</span>
+         (table)
         </li>
-        <li><span class="parameter">source</span>
-         (string) Credits to author, software, library etc used to create the instrument. Displayed in the "About" window.
-         (<em>optional</em>)
+        <li><span class="parameter">Pink</span>
+         (table)
+        </li>
+        <li><span class="parameter">White</span>
+         (table)
+        </li>
+        <li><span class="parameter">DarkWhite</span>
+         (table)
+        </li>
+        <li><span class="parameter">Yellow</span>
+         (table)
+        </li>
+        <li><span class="parameter">DarkYellow</span>
+         (table)
+        </li>
+        <li><span class="parameter">Brown</span>
+         (table)
+        </li>
+        <li><span class="parameter">Blue</span>
+         (table)
+        </li>
+        <li><span class="parameter">Purple</span>
+         (table)
+        </li>
+        <li><span class="parameter">Tan</span>
+         (table)
+        </li>
+        <li><span class="parameter">DarkTan</span>
+         (table)
+        </li>
+        <li><span class="parameter">Gray</span>
+         (table)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.INSTRUMENTS"></a>
+    <strong>Musician.INSTRUMENTS</strong>
+    </dt>
+    <dd>
+    Instruments table.  The key is the internal instrument ID (string) and each value is a table having the following attribues (all are optional):
+<p>  color (table) Color {r, g, b} from Musician.COLORS
+<p>  name (string) Same as the instrument id (automatically generated)
+<p>  midi (int) General MIDI instrument ID (0-127). For percussions, midi is its MIDI ID + 128
+<p>  decay (number) Decay duration in seconds
+<p>  isPlucked (boolean) True for plucked instruments such as guitar, piano etc. Used for visualization only.
+<p>  path (string) Path to the instrument melodic samples directory.
+<p>  regions (table) Tables of path, lokey and hikey (inclusive) in replacement of path allowing picking melodic samples from multiple directories according to the MIDI key range defined by lokey and hikey.
+<p>  isPercussion (boolean) Act as a percussion instrument using the single sample file (without extension) from path or picked from pathList using keyMod or roundRobin methods
+<p>  pathList (table) List of file paths to be chosen using keyMod or roundRobin (without extension)
+<p>  keyMod (int) Plays nth sample file from pathList modulo the MIDI key number
+<p>  roundRobin (boolean) Plays sample file from pathList using round robin
+<p>  source (string) Credits to author, software, library etc used to create the instrument. Displayed in the "About" window.
+
+
+    <h3>Fields:</h3>
+    <ul>
+        <li><span class="parameter">none</span>
+         (table)
+        </li>
+        <li><span class="parameter">accordion</span>
+         (table)
+        </li>
+        <li><span class="parameter">bagpipe</span>
+         (table)
+        </li>
+        <li><span class="parameter">bassoon</span>
+         (table)
+        </li>
+        <li><span class="parameter">viola_da_gamba</span>
+         (table)
+        </li>
+        <li><span class="parameter">clarinet</span>
+         (table)
+        </li>
+        <li><span class="parameter">dulcimer</span>
+         (table)
+        </li>
+        <li><span class="parameter">piano</span>
+         (table)
+        </li>
+        <li><span class="parameter">female_voice</span>
+         (table)
+        </li>
+        <li><span class="parameter">male_voice</span>
+         (table)
+        </li>
+        <li><span class="parameter">fiddle</span>
+         (table)
+        </li>
+        <li><span class="parameter">harp</span>
+         (table)
+        </li>
+        <li><span class="parameter">lute</span>
+         (table)
+        </li>
+        <li><span class="parameter">recorder</span>
+         (table)
+        </li>
+        <li><span class="parameter">sackbut</span>
+         (table)
+        </li>
+        <li><span class="parameter">trumpet</span>
+         (table)
+        </li>
+        <li><span class="parameter">war_horn</span>
+         (table)
+        </li>
+        <li><span class="parameter">distortion_guitar</span>
+         (table)
+        </li>
+        <li><span class="parameter">clean_guitar</span>
+         (table)
+        </li>
+        <li><span class="parameter">bass_guitar</span>
+         (table)
+        </li>
+        <li><span class="parameter">percussions</span>
+         (table)
+        </li>
+        <li><span class="parameter">drumkit</span>
+         (table)
+        </li>
+        <li><span class="parameter">war_drum</span>
+         (table)
+        </li>
+        <li><span class="parameter">frame_drum_kick_1</span>
+         (table)
+        </li>
+        <li><span class="parameter">frame_drum_kick_2</span>
+         (table)
+        </li>
+        <li><span class="parameter">frame_drum_snare_1</span>
+         (table)
+        </li>
+        <li><span class="parameter">frame_drum_snare_2</span>
+         (table)
+        </li>
+        <li><span class="parameter">frame_drum_roll_1</span>
+         (table)
+        </li>
+        <li><span class="parameter">frame_drum_roll_2</span>
+         (table)
+        </li>
+        <li><span class="parameter">frame_drum_roll_3</span>
+         (table)
+        </li>
+        <li><span class="parameter">frame_drum_hit</span>
+         (table)
+        </li>
+        <li><span class="parameter">sticks</span>
+         (table)
+        </li>
+        <li><span class="parameter">misc_hit</span>
+         (table)
+        </li>
+        <li><span class="parameter">cajon_hit</span>
+         (table)
+        </li>
+        <li><span class="parameter">clap</span>
+         (table)
+        </li>
+        <li><span class="parameter">tambourine_short</span>
+         (table)
+        </li>
+        <li><span class="parameter">tambourine_shake</span>
+         (table)
+        </li>
+        <li><span class="parameter">tambourine_long</span>
+         (table)
+        </li>
+        <li><span class="parameter">riq_hit_1</span>
+         (table)
+        </li>
+        <li><span class="parameter">riq_hit_2</span>
+         (table)
+        </li>
+        <li><span class="parameter">riq_hit_3</span>
+         (table)
+        </li>
+        <li><span class="parameter">riq_hit_4</span>
+         (table)
+        </li>
+        <li><span class="parameter">riq_hit_5</span>
+         (table)
+        </li>
+        <li><span class="parameter">riq_shake_1</span>
+         (table)
+        </li>
+        <li><span class="parameter">riq_shake_2</span>
+         (table)
+        </li>
+        <li><span class="parameter">bodhran_1</span>
+         (table)
+        </li>
+        <li><span class="parameter">bodhran_2</span>
+         (table)
+        </li>
+        <li><span class="parameter">bodhran_3</span>
+         (table)
+        </li>
+        <li><span class="parameter">bodhran_4</span>
+         (table)
+        </li>
+        <li><span class="parameter">bodhran_5</span>
+         (table)
+        </li>
+        <li><span class="parameter">bodhran_6</span>
+         (table)
+        </li>
+        <li><span class="parameter">barbarian_frame_drum_dead_stroke</span>
+         (table)
+        </li>
+        <li><span class="parameter">barbarian_frame_drum</span>
+         (table)
+        </li>
+        <li><span class="parameter">frame_drum_timbale_1</span>
+         (table)
+        </li>
+        <li><span class="parameter">frame_drum_timbale_2</span>
+         (table)
+        </li>
+        <li><span class="parameter">djembe_hi_1</span>
+         (table)
+        </li>
+        <li><span class="parameter">djembe_hi_2</span>
+         (table)
+        </li>
+        <li><span class="parameter">djembe_hi_3</span>
+         (table)
+        </li>
+        <li><span class="parameter">djembe_muted</span>
+         (table)
+        </li>
+        <li><span class="parameter">djembe_bass</span>
+         (table)
+        </li>
+        <li><span class="parameter">claves</span>
+         (table)
+        </li>
+        <li><span class="parameter">woodblock_hi</span>
+         (table)
+        </li>
+        <li><span class="parameter">woodblock_low</span>
+         (table)
+        </li>
+        <li><span class="parameter">woodblock</span>
+         (table)
+        </li>
+        <li><span class="parameter">shaker</span>
+         (table)
+        </li>
+        <li><span class="parameter">sleigh_bells</span>
+         (table)
+        </li>
+        <li><span class="parameter">sleigh_bells_shake</span>
+         (table)
+        </li>
+        <li><span class="parameter">metallic_1</span>
+         (table)
+        </li>
+        <li><span class="parameter">metallic_2</span>
+         (table)
         </li>
     </ul>
 
@@ -216,13 +476,13 @@
         <li><span class="parameter">fiddle</span>
 
         </li>
-        <li><span class="parameter">viola-da-gamba</span>
+        <li><span class="parameter">viola_da_gamba</span>
 
         </li>
-        <li><span class="parameter">female-voice</span>
+        <li><span class="parameter">female_voice</span>
 
         </li>
-        <li><span class="parameter">male-voice</span>
+        <li><span class="parameter">male_voice</span>
 
         </li>
         <li><span class="parameter">trumpet</span>
@@ -231,7 +491,7 @@
         <li><span class="parameter">sackbut</span>
 
         </li>
-        <li><span class="parameter">war-horn</span>
+        <li><span class="parameter">war_horn</span>
 
         </li>
         <li><span class="parameter">clarinet</span>
@@ -240,13 +500,13 @@
         <li><span class="parameter">bassoon</span>
 
         </li>
-        <li><span class="parameter">distortion-guitar</span>
+        <li><span class="parameter">distortion_guitar</span>
 
         </li>
-        <li><span class="parameter">clean-guitar</span>
+        <li><span class="parameter">clean_guitar</span>
 
         </li>
-        <li><span class="parameter">bass-guitar</span>
+        <li><span class="parameter">bass_guitar</span>
 
         </li>
         <li><span class="parameter">percussions</span>
@@ -255,13 +515,13 @@
         <li><span class="parameter">drumkit</span>
 
         </li>
-        <li><span class="parameter">war-drum</span>
+        <li><span class="parameter">war_drum</span>
 
         </li>
         <li><span class="parameter">woodblock</span>
 
         </li>
-        <li><span class="parameter">tambourine-shake</span>
+        <li><span class="parameter">tambourine_shake</span>
 
         </li>
         <li><span class="parameter">none</span>
@@ -281,7 +541,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2022-08-27 20:01:14 </i>
+<i style="float:right;">Last updated 2022-09-01 16:12:40 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
