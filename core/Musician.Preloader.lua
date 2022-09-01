@@ -166,6 +166,8 @@ function Musician.Preloader.PreloadNote(instrument, key)
 			hasSample = true
 			count = count + 1
 			StopSound(handle, 0)
+		else
+			Musician.Utils.Debug(MODULE_NAME, "Missing sample file:", soundFile)
 		end
 	end
 	Musician.Preloader.AddPreloaded(sampleId)
