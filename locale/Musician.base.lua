@@ -19,7 +19,7 @@ Musician.LocalizationTeam = {
 	{ 'it', Musician.DefaultTranslator },
 	{ 'ko', Musician.DefaultTranslator },
 	{ 'pt', Musician.DefaultTranslator },
-	{ 'ru', Musician.DefaultTranslator, "ToxaAveNCR" },
+	{ 'ru', "MalyDupek" },
 	{ 'tw', Musician.DefaultTranslator },
 	{ 'zh', "Grayson Blackclaw" },
 }
