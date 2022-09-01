@@ -6,11 +6,10 @@ Musician.UrlHyperlinkSelector = LibStub("AceAddon-3.0"):NewAddon("Musician.UrlHy
 local MODULE_NAME = "Musician.UrlHyperlinkSelector"
 Musician.AddModule(MODULE_NAME)
 
---- Currently active URL hyperlink
+-- Currently active URL hyperlink
 local currentHyperlink
 
---- Main frame mixin
---
+-- Main frame mixin
 MusicianUrlHyperlinkSelectorMixin = {}
 
 --- Indicates if Ctrl or Cmd key is down, depending on the current OS.

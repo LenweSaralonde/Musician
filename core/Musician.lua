@@ -543,7 +543,7 @@ function Musician.OnHyperlinkClick(self, link, text, button)
 end
 
 --- Enable hyperlinks support on frame
--- @param frame (Frame)
+-- @param self (Frame)
 function Musician.EnableHyperlinks(self)
 	self:SetHyperlinksEnabled(true)
 	self:HookScript("OnHyperlinkClick", Musician.OnHyperlinkClick)
