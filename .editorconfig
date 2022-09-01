@@ -1,0 +1,24 @@
+# EditorConfig is awesome: http://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+# Indent with tabs by default.
+# Enforce UTF-8 to avoid localization issues.
+[*]
+end_of_line = unset
+charset = utf-8
+indent_style = tab
+indent_size = 4
+trim_trailing_whitespace = true
+insert_final_newline = unset
+
+# CurseForge's .pkgmeta file has to be indented with spaces
+[.pkgmeta]
+indent_style = space
+indent_size = 4
+
+# .github YAML
+[*.yml]
+indent_style = space
+indent_size = 2
