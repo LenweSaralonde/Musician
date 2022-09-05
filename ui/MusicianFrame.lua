@@ -240,7 +240,7 @@ function Musician.Frame.OnCommSendAction(event)
 	Musician.Frame.UpdateBandPlayButton()
 end
 
---- OnCommSendAction
+--- OnSongPlayOrStop
 -- @param event (string)
 -- @param song (Musician.Song)
 function Musician.Frame.OnSongPlayOrStop(event, song)

@@ -103,6 +103,16 @@ function MusicianButton.GetMenu()
 		isTitle = true
 	})
 
+	-- Open player
+
+	table.insert(menu, {
+		notCheckable = true,
+		text = Musician.Msg.MENU_OPEN_PLAYER,
+		func = function()
+			MusicianPlayer:Show()
+		end
+	})
+
 	-- Import a song
 
 	table.insert(menu, {

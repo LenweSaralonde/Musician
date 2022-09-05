@@ -68,6 +68,7 @@ function Musician:OnInitialize()
 	Musician.SongLinks.Init()
 	Musician.SetupHooks()
 
+	Musician.Player.Init()
 	Musician.Frame.Init()
 	MusicianButton.Init()
 	Musician.SongLinkImportFrame.Init()

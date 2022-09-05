@@ -34,6 +34,7 @@ msg.UNMUTE = "Unmute"
 
 --- Minimap button menu
 msg.MENU_TITLE = "Musician"
+msg.MENU_OPEN_PLAYER = "Open player"
 msg.MENU_IMPORT_SONG = "Import and play a song"
 msg.MENU_PLAY = "Play"
 msg.MENU_STOP = "Stop"
