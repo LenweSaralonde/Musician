@@ -79,6 +79,7 @@ read_globals = {
 	"LibStub",
 
 	"MSA_DropDownMenu_Initialize",
+	"MSA_DropDownMenu_SetWidth",
 	"MSA_ToggleDropDownMenu",
 	"MSA_DropDownMenu_AddButton",
 	"MSA_DropDownMenu_SetText",

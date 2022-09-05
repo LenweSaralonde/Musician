@@ -1,61 +1,9 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<!-- Instrument dropdown -->
-	<Frame name="MusicianInstrumentDropdownTemplate" inherits="MusicianDropDownMenuTooltipTemplate" virtual="true">
+	<Script file="MusicianInstrumentDropdownTemplate.lua"/>
+	<Frame name="MusicianInstrumentDropdownTemplate" inherits="MusicianDropDownMenuTooltipTemplate" virtual="true" mixin="MusicianInstrumentDropdownTemplateMixin">
 		<Scripts>
-			<OnLoad inherit="prepend">
-				MSA_DropDownMenu_SetWidth(self, 115)
-				local dropdown = self
-
-				dropdown.value = nil
-
-				dropdown.UpdateValue = function(value)
-					local originalMidiId = value
-					local instrumentId = Musician.Sampler.GetInstrumentName(originalMidiId)
-					local midiId = Musician.INSTRUMENTS[instrumentId].midi
-					local instrumentName = Musician.Msg.INSTRUMENT_NAMES[instrumentId]
-					dropdown.value = midiId
-					dropdown.midiId = midiId
-					dropdown.instrumentId = instrumentId
-
-					if Musician.INSTRUMENTS[instrumentId].color ~= nil then
-						local r, g, b = unpack(Musician.INSTRUMENTS[instrumentId].color)
-						instrumentName = Musician.Utils.GetColorCode(unpack(Musician.INSTRUMENTS[instrumentId].color)) .. instrumentName .. "|r"
-					end
-
-					MSA_DropDownMenu_SetText(dropdown, instrumentName)
-				end
-
-				dropdown.SetValue = function(value)
-					dropdown.UpdateValue(value)
-
-					if dropdown.OnChange then
-						dropdown.OnChange(dropdown.midiId, dropdown.instrumentId)
-					end
-				end
-
-				dropdown.OnClick = function(self, arg1, arg2, checked)
-					dropdown.SetValue(arg1)
-				end
-
-				dropdown.GetItems = function(frame, level, menuList)
-					local info = MSA_DropDownMenu_CreateInfo()
-					info.func = dropdown.OnClick
-
-					local instrumentId
-					for _, instrumentId in pairs(Musician.INSTRUMENTS_AVAILABLE) do
-						local midiId = Musician.INSTRUMENTS[instrumentId].midi
-						info.text = Musician.Msg.INSTRUMENT_NAMES[instrumentId]
-						info.arg1 = midiId
-						info.checked = dropdown.value == midiId
-						if Musician.INSTRUMENTS[instrumentId].color ~= nil then
-							info.colorCode = Musician.Utils.GetColorCode(unpack(Musician.INSTRUMENTS[instrumentId].color))
-						end
-						MSA_DropDownMenu_AddButton(info)
-					end
-				end
-
-				MSA_DropDownMenu_Initialize(dropdown, dropdown.GetItems)
-			</OnLoad>
+			<OnLoad inherit="prepend" method="OnLoad" />
 		</Scripts>
 	</Frame>
 </Ui>
