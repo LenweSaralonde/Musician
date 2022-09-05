@@ -231,6 +231,10 @@
 				<HitRectInsets>
 					<AbsInset left="0" right="0" top="0" bottom="0"/>
 				</HitRectInsets>
+				<ThumbTexture parentKey="Thumb" name="$parentThumb" file="Interface\Buttons\UI-SliderBar-Button-Horizontal">
+					<TexCoords left="0.375" right="0.625" />
+					<Size x="8" y="32"/>
+				</ThumbTexture>
 				<Scripts>
 					<OnMouseDown>
 						self.dragging = true
