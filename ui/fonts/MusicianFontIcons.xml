@@ -1,5 +1,6 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<!-- Icon fonts -->
+	<Script file="Musician.Icons.lua" />
 	<Font name="MusicianFontIconsNormal" inherits="GameFontNormal" font="Interface\AddOns\Musician\ui\fonts\musician-icons.ttf" height="12" virtual="true" />
 	<Font name="MusicianFontIconsHighlight" inherits="GameFontHighlight" font="Interface\AddOns\Musician\ui\fonts\musician-icons.ttf" height="12" virtual="true" />
 	<Font name="MusicianFontIconsDisable" inherits="GameFontDisable" font="Interface\AddOns\Musician\ui\fonts\musician-icons.ttf" height="12" virtual="true" />

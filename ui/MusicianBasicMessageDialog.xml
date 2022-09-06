@@ -1,6 +1,7 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<!-- Basic message dialog -->
-	<Frame name="MusicianBasicMessageDialog" toplevel="true" frameStrata="DIALOG" hidden="true">
+	<Script file="MusicianBasicMessageDialog.lua" />
+	<Frame name="MusicianBasicMessageDialog" toplevel="true" frameStrata="DIALOG" mixin="MusicianBasicMessageDialogMixin" hidden="true">
 		<Size x="384" y="128"/>
 		<Anchors>
 			<Anchor point="CENTER"/>
@@ -19,16 +20,11 @@
 		</Layers>
 		<Frames>
 			<Frame parentKey="Border" inherits="DialogBorderTemplate"/>
-			<Button name="$parentButton">
+			<Button parentKey="button" name="$parentButton">
 				<Size x="128" y="32"/>
 				<Anchors>
 					<Anchor point="BOTTOM" x="0" y="16"/>
 				</Anchors>
-				<Scripts>
-					<OnClick>
-						self:GetParent():Hide()
-					</OnClick>
-				</Scripts>
 				<NormalTexture inherits="DialogButtonNormalTexture"/>
 				<PushedTexture inherits="DialogButtonPushedTexture"/>
 				<HighlightTexture inherits="DialogButtonHighlightTexture"/>
@@ -38,9 +34,7 @@
 			</Button>
 		</Frames>
 		<Scripts>
-			<OnLoad inherit="prepend">
-				Musician.EnableHyperlinks(self)
-			</OnLoad>
+			<OnLoad inherit="prepend" method="OnLoad" />
 		</Scripts>
 	</Frame>
 </Ui>
