@@ -1,6 +1,7 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<!-- Band play button -->
-	<Button name="MusicianBandPlayButtonTemplate" inherits="MusicianLEDTextButtonTemplate" virtual="true">
+	<Script file="MusicianBandPlayButtonTemplate.lua" />
+	<Button name="MusicianBandPlayButtonTemplate" inherits="MusicianLEDTextButtonTemplate" mixin="MusicianBandPlayButtonTemplateMixin" virtual="true">
 		<Size x="64" y="22" />
 		<NormalFont style="MusicianFontIconsNormal" />
 		<HighlightFont style="MusicianFontIconsHighlight" />
@@ -19,59 +20,14 @@
 						<FontString name="$parentText" parentKey="text" inherits="GameFontBlackTiny2" text="0" setAllPoints="true" />
 					</Layer>
 				</Layers>
-				<Scripts>
-					<OnLoad>
-						self.texture:SetVertexColor(1, .82, 0)
-					</OnLoad>
-				</Scripts>
 			</Frame>
 		</Frames>
 		<Scripts>
-			<OnLoad inherit="append">
-				self.SetChecked = function(self, checked)
-					self.checked = checked
-					if checked then
-						self.led:SetAlpha(1)
-					else
-						self.led:SetAlpha(0)
-					end
-				end
-
-				self.SetBlinking = function(self, blinking)
-					self.blinking = blinking
-					self.blinkTime = 0
-					self:SetChecked(self.checked)
-				end
-
-				self.SetTooltipText = function(self, text)
-					self.tooltipText = text
-					if self.mouseOver then
-						GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-						GameTooltip_SetTitle(GameTooltip, self.tooltipText)
-						GameTooltip:Show()
-					end
-				end
-
-				self.tooltipText = Musician.Msg.PLAY_IN_BAND
-				self:SetText(Musician.Icons.BandPlay)
-				self.led:SetVertexColor(.33, 1, 0, 1)
-				self:SetChecked(false)
-			</OnLoad>
-			<OnUpdate>
-				if self.checked and self.blinking then
-					self.blinkTime = self.blinkTime + elapsed
-					self.led:SetAlpha(abs(1 - 2 * (4 * self.blinkTime % 1)))
-				end
-			</OnUpdate>
-			<OnClick inherit="append">
-				PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
-			</OnClick>
-			<OnEnter inherit="append">
-				self.mouseOver = true
-			</OnEnter>
-			<OnLeave inherit="append">
-				self.mouseOver = false
-			</OnLeave>
+			<OnLoad inherit="append" method="OnLoad" />
+			<OnUpdate method="OnUpdate" />
+			<OnClick inherit="append" method="OnClick" />
+			<OnEnter inherit="append" method="OnEnter" />
+			<OnLeave inherit="append" method="OnLeave" />
 		</Scripts>
 	</Button>
 </Ui>
