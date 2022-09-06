@@ -1,5 +1,5 @@
 --- Dialog template mixin
--- @module MusicianDialogTemplate
+-- @module MusicianDialogTemplateMixin
 
 MusicianDialogTemplateMixin = {}
 

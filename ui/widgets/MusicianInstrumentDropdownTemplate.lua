@@ -1,12 +1,6 @@
---- Instrument dropdown template
--- @module Musician.InstrumentDropdownTemplate
+--- Instrument dropdown template mixin
+-- @module MusicianInstrumentDropdownTemplateMixin
 
-Musician.InstrumentDropdownTemplate = LibStub("AceAddon-3.0"):NewAddon("Musician.InstrumentDropdownTemplate")
-
-local MODULE_NAME = "Musician.InstrumentDropdownTemplate"
-Musician.AddModule(MODULE_NAME)
-
--- Widget mixin
 MusicianInstrumentDropdownTemplateMixin = {}
 
 --- OnLoad handler
