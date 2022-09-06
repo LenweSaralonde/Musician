@@ -1,34 +1,11 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<!-- Animated image -->
-	<Frame name="MusicianAnimatedImageTemplate" inherits="MusicianImageTemplate" virtual="true">
+	<Script file="MusicianAnimatedImageTemplate.lua" />
+	<Frame name="MusicianAnimatedImageTemplate" inherits="MusicianImageTemplate" mixin="MusicianAnimatedImageTemplateMixin" virtual="true">
 		<Scripts>
-			<OnLoad inherit="prepend">
-				self.width = 1024
-				self.height = 1024
-				self.tileWidth = 128
-				self.tileHeight = 128
-				self.fps = 30
-			</OnLoad>
-			<OnShow inherit="prepend">
-				self.frame = 0
-				self.elapsed = 0
-			</OnShow>
-			<OnUpdate>
-				local frameW = self.tileWidth / self.width
-				local frameH = self.tileHeight / self.height
-
-				local framesX = floor(self.width / self.tileWidth)
-				local framesY = floor(self.height / self.tileHeight)
-				local frames = framesX * framesY
-
-				self.elapsed = self.elapsed + elapsed
-				self.frame = floor(self.fps * (self.elapsed % (frames / self.fps)))
-
-				local row = math.floor(self.frame / framesX)
-				local col = self.frame % framesX
-
-				self.texture:SetTexCoord(col * frameW, (col + 1) * frameW, row * frameH, (row + 1) * frameH)
-			</OnUpdate>
+			<OnLoad inherit="prepend" method="OnLoad" />
+			<OnShow inherit="prepend" method="OnShow" />
+			<OnUpdate method="OnUpdate" />
 		</Scripts>
 	</Frame>
 </Ui>
