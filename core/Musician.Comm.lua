@@ -34,6 +34,8 @@ local isStopPending = false
 local isBandActionPending = false
 
 local joinChannelAfter
+local joinWithoutPassword = false
+local chatChannelPasswordStaticPopupDialog = StaticPopupDialogs["CHAT_CHANNEL_PASSWORD"]
 
 local isBandPlayReady = false
 local readyBandPlayers = {}
@@ -75,9 +77,21 @@ end
 
 --- Set the delay before joining the communication channel.
 -- @param duration (number) in seconds
-local function delayCommChannelJoin(duration)
-	Musician.Utils.Debug(MODULE_NAME, "Will join the communication channel again in", duration, "second(s).")
+-- @param[opt] withoutPassword (boolean) join without using password
+local function delayCommChannelJoin(duration, withoutPassword)
+	Musician.Utils.Debug(MODULE_NAME, "Will join the communication channel again in", duration, "second(s).", withoutPassword and "(no password)" or "")
+	joinWithoutPassword = withoutPassword or false
 	joinChannelAfter = GetTime() + duration
+end
+
+--- Disable the chat channel password popup
+-- @param isJoining (boolean)
+local function disableChannelPasswordPopup(isJoining)
+	if isJoining and not(StaticPopup_Visible("CHAT_CHANNEL_PASSWORD")) then
+		StaticPopupDialogs["CHAT_CHANNEL_PASSWORD"] = nil
+	else
+		StaticPopupDialogs["CHAT_CHANNEL_PASSWORD"] = chatChannelPasswordStaticPopupDialog
+	end
 end
 
 --- Return true if the channel list is ready for the communication channel to join.
@@ -144,6 +158,7 @@ local function onChannelJoined()
 	Musician.Registry.SendHello()
 	Musician.Registry.FetchPlayers()
 	Musician.Comm:SendMessage(Musician.Events.CommChannelUpdate, true)
+	disableChannelPasswordPopup(false)
 end
 
 --- Function executed when failed to join the channel
@@ -151,11 +166,16 @@ end
 local function onChannelFailed(reason)
 	Musician.Utils.Debug(MODULE_NAME, "Failed to join the communication channel:", reason)
 	Musician.Comm:SendMessage(Musician.Events.CommChannelUpdate, false)
-	if reason == WRONG_PASSWORD then
-		delayCommChannelJoin(300) -- Try again in 5 minutes
+	if reason == 'WRONG_PASSWORD' then
+		if not(joinWithoutPassword) then
+			delayCommChannelJoin(0, true) -- Try again now without password, since it could have been accidentally unset
+		else
+			delayCommChannelJoin(300) -- Try again in 5 minutes
+		end
 	else
 		delayCommChannelJoin(10) -- Try again in 10 seconds
 	end
+	disableChannelPasswordPopup(false)
 end
 
 --- Function executed when leaving the channel
@@ -213,7 +233,7 @@ function Musician.Comm.JoinChannel()
 			reorderChannels()
 		end
 
-		-- Something insteresting happened for the communication channel
+		-- Something interesting happened for the communication channel
 		if channelName == Musician.CHANNEL then
 			-- Successfully joined channed
 			if text == 'YOU_CHANGED' or text == 'YOU_JOINED' then
@@ -257,9 +277,19 @@ function Musician.Comm.JoinChannel()
 		-- Attempt to join if the channel list is ready (has channels and no gap)
 		-- or if allowed to join despite the channel list not being ready
 		if canJoinWhenNotReady or isChannelListReady() then
+
+			-- Don't join if currently showing the password popup for the channel
+			local _, passwordPopup = StaticPopup_Visible("CHAT_CHANNEL_PASSWORD")
+			if passwordPopup and passwordPopup.text and passwordPopup.text.text_arg1 == Musician.CHANNEL then
+				return
+			end
+
+			-- Join channel
+
 			joinChannelAfter = nil
 			Musician.Utils.Debug(MODULE_NAME, "Joining the communication channel:", Musician.CHANNEL)
-			JoinTemporaryChannel(Musician.CHANNEL, Musician.PASSWORD)
+			disableChannelPasswordPopup(true)
+			JoinTemporaryChannel(Musician.CHANNEL, not(joinWithoutPassword) and Musician.PASSWORD or nil)
 		end
 	end)
 end

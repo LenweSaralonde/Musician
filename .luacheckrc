@@ -131,6 +131,7 @@ stds.wow = {
 		"SubstituteChatMessageBeforeSend",
 		"GetNumTrackingTypes",
 		"GetTrackingInfo",
+		"StaticPopupDialogs",
 	},
 
 	-- Globals that we access.
@@ -270,6 +271,7 @@ stds.wow = {
 		"InCombatLockdown",
 		"GetChannelName",
 		"ListChannelByName",
+		"StaticPopup_Visible",
 		"UnitIsDead",
 		"UnitIsGhost",
 		"UnitName",
@@ -408,7 +410,6 @@ stds.wow = {
 		"LE_EXPANSION_LEVEL_CURRENT",
 		"MAX_WOW_CHAT_CHANNELS",
 		"UIDROPDOWNMENU_MENU_LEVEL",
-		"WRONG_PASSWORD",
 		"RED_FONT_COLOR",
 		"ORANGE_FONT_COLOR",
 		"NORMAL_FONT_COLOR",
