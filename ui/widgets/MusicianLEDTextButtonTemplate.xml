@@ -25,8 +25,8 @@
 		</ButtonText>
 		<Scripts>
 			<OnLoad inherit="append" function="MusicianLEDTextButtonTemplate_OnLoad" />
-			<OnMouseDown function="MusicianLEDTextButtonTemplate_OnMouseDown" />
-			<OnMouseUp function="MusicianLEDTextButtonTemplate_OnMouseUp" />
+			<OnMouseDown inherit="append" function="MusicianLEDTextButtonTemplate_OnMouseDown" />
+			<OnMouseUp inherit="append" function="MusicianLEDTextButtonTemplate_OnMouseUp" />
 		</Scripts>
 	</Button>
 </Ui>
