@@ -83,10 +83,12 @@ read_globals = {
 	"MSA_ToggleDropDownMenu",
 	"MSA_DropDownMenu_AddButton",
 	"MSA_DropDownMenu_SetText",
+	"MSA_DropDownMenu_Create",
 	"MSA_DropDownMenu_CreateInfo",
 	"MSA_DropDownMenu_EnableDropDown",
 	"MSA_DropDownMenu_DisableDropDown",
 	"MSA_CloseDropDownMenus",
+	"MSA_DropDownMenu_OnHide",
 	"MSA_DropDownList1",
 	"MSA_DropDownList2",
 

@@ -3,7 +3,7 @@
 	<Script file="MusicianInstrumentDropdownTemplate.lua" />
 	<Frame name="MusicianInstrumentDropdownTemplate" inherits="MusicianDropDownMenuTooltipTemplate" mixin="MusicianInstrumentDropdownTemplateMixin" virtual="true">
 		<Scripts>
-			<OnLoad inherit="prepend" method="OnLoad" />
+			<OnLoad method="OnLoad" />
 		</Scripts>
 	</Frame>
 </Ui>

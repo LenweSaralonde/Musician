@@ -1,30 +1,12 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<!-- Dropdown menu with tooltip -->
-	<Frame name="MusicianDropDownMenuTooltipTemplate" virtual="true">
+	<Script file="MusicianDropDownMenuTooltipTemplate.lua" />
+	<Frame name="MusicianDropDownMenuTooltipTemplate" mixin="MusicianDropDownMenuTooltipTemplateMixin" virtual="true">
 		<Scripts>
-			<OnLoad>
-				MSA_DropDownMenu_Create(self, self:GetParent())
-			</OnLoad>
-			<OnKeyDown inherit="append">
-				if _G["MSA_DropDownList1"]:IsShown() and key == "ESCAPE" then
-					self:SetPropagateKeyboardInput(false)
-					MSA_DropDownMenu_OnHide(self)
-				else
-					self:SetPropagateKeyboardInput(true)
-				end
-			</OnKeyDown>
-			<OnEnter>
-				if(self.tooltipText ~= nil) then
-					GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-					GameTooltip_SetTitle(GameTooltip, self.tooltipText)
-					GameTooltip:Show()
-				end
-			</OnEnter>
-			<OnLeave>
-				if(self.tooltipText ~= nil) then
-					GameTooltip:Hide()
-				end
-			</OnLeave>
+			<OnLoad method="OnLoad" />
+			<OnKeyDown method="OnKeyDown" />
+			<OnEnter method="OnEnter" />
+			<OnLeave method="OnLeave" />
 		</Scripts>
 	</Frame>
 </Ui>
