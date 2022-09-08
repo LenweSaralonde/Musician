@@ -1,18 +1,14 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<!-- Tips and tricks window buttons -->
+	<Script file="MusicianTipsAndTricksButtonTemplates.lua" />
 
 	<!-- Cancel button -->
 	<Button name="MusicianTipsAndTricksCancelButtonTemplate" inherits="UIMenuButtonStretchTemplate" level="OVERLAY" virtual="true">
 		<Size y="30" x="30" />
 		<ButtonText name="$parentText" parentKey="Text" />
 		<Scripts>
-			<OnLoad>
-				self:SetWidth(self.Text:GetStringWidth() + 24)
-				self:GetHighlightTexture():SetTexCoord(0, 1, 0.2086, 0.5659)
-			</OnLoad>
-			<OnClick>
-				Musician_UIPanelCloseButton_OnClick(self)
-			</OnClick>
+			<OnLoad function="MusicianTipsAndTricksCancelButtonTemplate_OnLoad" />
+			<OnClick function="MusicianTipsAndTricksCancelButtonTemplate_OnClick" />
 		</Scripts>
 	</Button>
 
@@ -35,14 +31,8 @@
 		<HighlightFont style="GameFontHighlightHuge"/>
 		<DisabledFont style="GameFontDisableHuge"/>
 		<Scripts>
-			<OnLoad>
-				self.background:SetDrawLayer("BACKGROUND", -8)
-				self:SetWidth(max(128, self.Text:GetStringWidth() + 40))
-				self:GetHighlightTexture():SetTexCoord(0, 1, 0.2086, 0.5659)
-			</OnLoad>
-			<OnClick>
-				Musician_UIPanelCloseButton_OnClick(self)
-			</OnClick>
+			<OnLoad function="MusicianTipsAndTricksOkButtonTemplate_OnLoad" />
+			<OnClick function="MusicianTipsAndTricksOkButtonTemplate_OnClick" />
 		</Scripts>
 	</Button>
 </Ui>

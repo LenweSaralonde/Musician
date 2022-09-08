@@ -1,5 +1,6 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<!-- Standard button with LED -->
+	<Script file="MusicianLEDTextButtonTemplate.lua" />
 	<Button name="MusicianLEDTextButtonTemplate" inherits="UIPanelButtonTemplate" virtual="true">
 		<Layers>
 			<Layer level="OVERLAY">
@@ -23,24 +24,9 @@
 			</Anchors>
 		</ButtonText>
 		<Scripts>
-			<OnLoad inherit="append">
-				self.ledOff:SetDrawLayer("OVERLAY", 1)
-				self.led:SetDrawLayer("OVERLAY", 2)
-				self.led:SetAlpha(0)
-				self.oldPoint = { self.ledOff:GetPoint() }
-			</OnLoad>
-			<OnMouseDown inherit="append">
-				if self:IsEnabled() then
-					local point, relativeTo, relativePoint, x, y = unpack(self.oldPoint)
-					local ox, oy = self:GetPushedTextOffset()
-					self.ledOff:SetPoint(point, relativeTo, relativePoint, x + ox, y + oy)
-				end
-			</OnMouseDown>
-			<OnMouseUp inherit="append">
-				if self:IsEnabled() then
-					self.ledOff:SetPoint(unpack(self.oldPoint))
-				end
-			</OnMouseUp>
+			<OnLoad inherit="append" function="MusicianLEDTextButtonTemplate_OnLoad" />
+			<OnMouseDown function="MusicianLEDTextButtonTemplate_OnMouseDown" />
+			<OnMouseUp function="MusicianLEDTextButtonTemplate_OnMouseUp" />
 		</Scripts>
 	</Button>
 </Ui>
