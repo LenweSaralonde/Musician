@@ -48,7 +48,6 @@ ui\MusicianTrackEditor.lua
 ui\MusicianButton.lua
 
 ui\MusicianKeyboard.xml
-ui\MusicianKeyboard.lua
 
 ui\MusicianKeyboardConfig.xml
 ui\MusicianKeyboardConfig.lua

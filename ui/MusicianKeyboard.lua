@@ -688,7 +688,7 @@ function Musician.Keyboard.Init()
 	updateFunctionKeys()
 
 	-- Show or hide keyboard according to last settings
-	MusicianKeyboard.showKeyboard(Musician_Settings.keyboardVisible)
+	MusicianKeyboard:showKeyboard(Musician_Settings.keyboardVisible)
 
 	-- Update band sync button
 	Musician.Keyboard.UpdateBandSyncButton()
@@ -1673,4 +1673,181 @@ function Musician.Keyboard.SetSustain(value)
 		Musician.Live.SetSustain(value, LAYER.UPPER)
 		Musician.Live.SetSustain(value, LAYER.LOWER)
 	end
+end
+
+--- Keyboard key template OnLoad
+--
+function MusicianKeyboardKeyTemplate_OnLoad(self)
+	self.background:SetDrawLayer("BACKGROUND", -8)
+	self.subTextPoint = { self.subText:GetPoint() }
+end
+
+--- Keyboard key template OnSizeChanged
+--
+function MusicianKeyboardKeyTemplate_OnSizeChanged(self, w, h)
+	self.glowColor:SetAlpha(0)
+	self.background:SetWidth(w - 7)
+	self.background:SetHeight(h - 7)
+	self.glowColor:SetWidth(w * 1.75)
+	self.glowColor:SetHeight(h * 1.75)
+	self:SetHighlightTexture(nil)
+	self.subText:SetWidth(self:GetWidth())
+end
+
+--- Program key action template OnLoad
+--
+function MusicianProgramKeyActionTemplate_OnLoad(self)
+	self.Text:SetPoint('CENTER', 1.5, 0)
+	self.led:Hide()
+	self.ledOff:Hide()
+end
+
+--- Layer template OnLoad
+--
+function MusicianLayerTemplate_OnLoad(self)
+	self.shiftUp:SetText(Musician.Icons.UpBig)
+	self.shiftDown:SetText(Musician.Icons.DownBig)
+	self.shiftLeft:SetText(Musician.Icons.LeftBig)
+	self.shiftRight:SetText(Musician.Icons.RightBig)
+	self.shiftReset:SetText(Musician.Icons.Reset)
+	self.powerChordsBolt:SetText(Musician.Icons.Bolt)
+	self.powerChordsLabel:SetText(Musician.Msg.POWER_CHORDS)
+	self.powerChordsHorns:SetText(Musician.Icons.SignOfHorns)
+	local powerChordsLabelWidth = 12 + self.powerChordsBolt:GetWidth() + self.powerChordsLabel:GetWidth() + self.powerChordsHorns:GetWidth()
+	self.powerChordsCheckbox:SetHitRectInsets(0, -powerChordsLabelWidth, 0, 0)
+end
+
+--- Layer template instrument OnLoad
+--
+function MusicianLayerTemplateInstrument_OnLoad(self)
+	MSA_DropDownMenu_SetWidth(self, 150)
+end
+
+--- Layer template instrument power chords OnLoad
+--
+function MusicianLayerTemplateInstrumentPowerChords_OnLoad(self)
+	self.tooltipText = Musician.Msg.POWER_CHORDS
+end
+
+-- Main mixin
+
+MusicianKeyboardMixin = {}
+
+--- Show or hide the keyboard
+-- @param visible (boolean)
+function MusicianKeyboardMixin:showKeyboard(visible)
+	if visible == nil then
+		visible = not(self.keys:IsVisible())
+	end
+
+	if visible then
+		self:SetHeight(410)
+		self.keys:Show()
+		self.toggleKeyboardButton:SetText(Musician.Icons.Up ..  Musician.Icons.Blank .. Musician.Icons.PianoKeys)
+		self.toggleKeyboardButton.tooltipText = Musician.Msg.HIDE_KEYBOARD
+	else
+		self.keys:Hide()
+		self:SetHeight(410 - self.keys:GetHeight() - 10)
+		self.toggleKeyboardButton:SetText(Musician.Icons.Down ..  Musician.Icons.Blank .. Musician.Icons.PianoKeys)
+		self.toggleKeyboardButton.tooltipText = Musician.Msg.SHOW_KEYBOARD
+	end
+
+	Musician_Settings.keyboardVisible = visible
+end
+
+--- OnLoad
+--
+function MusicianKeyboardMixin:OnLoad()
+	-- Keyboard config button
+	self.keyboardConfigButton:SetText(Musician.Icons.Cog .. Musician.Icons.Blank .. Musician.Icons.Keyboard)
+	self.keyboardConfigButton.tooltipText = Musician.Msg.CONFIGURE_KEYBOARD
+	self.keyboardConfigButton:HookScript("OnClick", function()
+		self:Hide()
+		MusicianKeyboardConfig:Show()
+	end)
+
+	-- Band sync button
+	self.bandSyncButton.count:SetPoint("CENTER", self.bandSyncButton, "TOPRIGHT", -4, -4)
+	self.bandSyncButton.tooltipText = Musician.Msg.LIVE_SYNC
+	self.bandSyncButton:HookScript("OnClick", function()
+		Musician.Live.ToggleBandSyncMode()
+	end)
+
+	-- Keyboard toggle button
+	self.toggleKeyboardButton:SetText(Musician.Icons.Down ..  Musician.Icons.Blank .. Musician.Icons.PianoKeys)
+	self.toggleKeyboardButton.tooltipText = Musician.Msg.HIDE_KEYBOARD
+	self.toggleKeyboardButton:HookScript("OnMouseDown", function()
+		PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
+	end)
+	self.toggleKeyboardButton:HookScript("OnClick", function()
+		self:showKeyboard()
+	end)
+
+	-- Live mode button
+	self.liveModeButton:SetText(Musician.Msg.LIVE_MODE)
+	self.liveModeButton.led:SetVertexColor(.33, 1, 0, 1)
+
+	-- Write program button
+	local writeProgramButton = self.programKeys.writeProgramButton
+	writeProgramButton:SetText(Musician.Icons.Save)
+	local controlKey = IsMacClient() and KEY.ShiftLeft or KEY.ControlLeft -- Use Shift instead of Ctrl on MacOS
+	writeProgramButton.tooltipText = string.gsub(Musician.Msg.WRITE_PROGRAM, "{key}", Musician.Msg.FIXED_KEY_NAMES[controlKey])
+	local writeProgramToggleButton = self.programKeys.writeProgramToggleButton
+	writeProgramToggleButton:SetFrameLevel(writeProgramButton:GetFrameLevel() + 1) -- Move the invisible toggle button over the write program button
+	-- Forward mouse actions from the invisible toggle button to the write program button
+	writeProgramToggleButton:HookScript("OnEnter", function(_, ...)
+		writeProgramButton:LockHighlight()
+		ExecuteFrameScript(writeProgramButton, "OnEnter", ...)
+	end)
+	writeProgramToggleButton:HookScript("OnLeave", function(_, ...)
+		writeProgramButton:UnlockHighlight()
+		ExecuteFrameScript(writeProgramButton, "OnLeave", ...)
+	end)
+	writeProgramToggleButton:HookScript("OnMouseDown", function()
+		Musician.Keyboard.SetDeletingProgram(false)
+		Musician.Keyboard.SetSavingProgram(not(Musician.Keyboard.IsSavingProgram()))
+	end)
+
+	-- Delete program button
+	local deleteProgramButton = self.programKeys.deleteProgramButton
+	deleteProgramButton:SetText(Musician.Icons.Trash)
+	deleteProgramButton.tooltipText = string.gsub(Musician.Msg.DELETE_PROGRAM, "{key}", Musician.Msg.FIXED_KEY_NAMES[KEY.Delete])
+	local deleteProgramToggleButton = self.programKeys.deleteProgramToggleButton
+	deleteProgramToggleButton:SetFrameLevel(deleteProgramButton:GetFrameLevel() + 1) -- Move the invisible toggle button over the delete program button
+	-- Forward mouse actions from the invisible toggle button to the delete program button
+	deleteProgramToggleButton:HookScript("OnEnter", function(_, ...)
+		deleteProgramButton:LockHighlight()
+		ExecuteFrameScript(deleteProgramButton, "OnEnter", ...)
+	end)
+	deleteProgramToggleButton:HookScript("OnLeave", function(_, ...)
+		deleteProgramButton:UnlockHighlight()
+		ExecuteFrameScript(deleteProgramButton, "OnLeave", ...)
+	end)
+	deleteProgramToggleButton:HookScript("OnMouseDown", function()
+		Musician.Keyboard.SetDeletingProgram((not(Musician.Keyboard.IsDeletingProgram())))
+		Musician.Keyboard.SetSavingProgram(false)
+	end)
+
+	-- Keyboard mode and key
+	self.controls.main.title:SetText(Musician.Msg.KEYBOARD_LAYOUT)
+	MSA_DropDownMenu_SetWidth(self.controls.main.layoutDropdown, 130)
+	MSA_DropDownMenu_SetWidth(self.controls.main.baseKeyDropdown, 40)
+
+	-- Layer names
+	self.controls.lower.layerName:SetText(Musician.Msg.LAYERS[Musician.KEYBOARD_LAYER.LOWER])
+	self.controls.upper.layerName:SetText(Musician.Msg.LAYERS[Musician.KEYBOARD_LAYER.UPPER])
+end
+
+--- OnShow
+--
+function MusicianKeyboardMixin:OnShow()
+	self:SetScale(1)
+end
+
+--- OnHide
+--
+function MusicianKeyboardMixin:OnHide()
+	-- Reset write and delete program buttons on hide
+	Musician.Keyboard.SetSavingProgram(false)
+	Musician.Keyboard.SetDeletingProgram(false)
 end

@@ -1,5 +1,7 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 
+	<Script file="MusicianKeyboard.lua" />
+
 	<!-- Keyboard key template -->
 
 	<Button name="MusicianKeyboardKeyTemplate" inherits="UIMenuButtonStretchTemplate" virtual="true">
@@ -57,24 +59,13 @@
 				<Anchor point="CENTER" x="0" y="9"/>
 			</Anchors>
 		</ButtonText>
-		<Scripts>
-			<OnLoad>
-				self.background:SetDrawLayer("BACKGROUND", -8)
-				self.subTextPoint = { self.subText:GetPoint() }
-			</OnLoad>
-			<OnSizeChanged>
-				self.glowColor:SetAlpha(0)
-				self.background:SetWidth(w - 7)
-				self.background:SetHeight(h - 7)
-				self.glowColor:SetWidth(w * 1.75)
-				self.glowColor:SetHeight(h * 1.75)
-				self:SetHighlightTexture(nil)
-				self.subText:SetWidth(self:GetWidth())
-			</OnSizeChanged>
-		</Scripts>
 		<NormalFont style="GameFontHighlightLarge"/>
 		<DisabledFont style="GameFontDisableLarge"/>
 		<HighlightFont style="GameFontHighlightLarge"/>
+		<Scripts>
+			<OnLoad function="MusicianKeyboardKeyTemplate_OnLoad" />
+			<OnSizeChanged function="MusicianKeyboardKeyTemplate_OnSizeChanged" />
+		</Scripts>
 	</Button>
 
 	<!-- Program key template -->
@@ -89,16 +80,12 @@
 				<Anchor point="CENTER" x="0" />
 			</Anchors>
 		</ButtonText>
-		<Scripts>
-			<OnLoad inherit="append">
-				self.Text:SetPoint('CENTER', 1.5, 0)
-				self.led:Hide()
-				self.ledOff:Hide()
-			</OnLoad>
-		</Scripts>
 		<NormalFont style="MusicianFontIconsNormal"/>
 		<HighlightFont style="MusicianFontIconsHighlight"/>
 		<DisabledFont style="MusicianFontIconsDisable"/>
+		<Scripts>
+			<OnLoad inherit="append" function="MusicianProgramKeyActionTemplate_OnLoad" />
+		</Scripts>
 	</Button>
 
 	<!-- Square button template -->
@@ -128,9 +115,7 @@
 					<Anchor point="TOPLEFT" x="-18" relativePoint="BOTTOMLEFT" relativeTo="$parentLayerName" />
 				</Anchors>
 				<Scripts>
-					<OnLoad inherit="prepend">
-						MSA_DropDownMenu_SetWidth(self, 150)
-					</OnLoad>
+					<OnLoad inherit="prepend" function="MusicianLayerTemplateInstrument_OnLoad" />
 				</Scripts>
 			</Frame>
 
@@ -169,9 +154,7 @@
 					<Anchor point="TOPLEFT" x="16" y="0" relativeTo="$parentInstrument" relativePoint="BOTTOMLEFT" />
 				</Anchors>
 				<Scripts>
-					<OnLoad>
-						self.tooltipText = Musician.Msg.POWER_CHORDS
-					</OnLoad>
+					<OnLoad function="MusicianLayerTemplateInstrumentPowerChords_OnLoad" />
 				</Scripts>
 			</CheckButton>
 		</Frames>
@@ -197,55 +180,18 @@
 		</Layers>
 
 		<Scripts>
-			<OnLoad>
-				self.shiftUp:SetText(Musician.Icons.UpBig)
-				self.shiftDown:SetText(Musician.Icons.DownBig)
-				self.shiftLeft:SetText(Musician.Icons.LeftBig)
-				self.shiftRight:SetText(Musician.Icons.RightBig)
-				self.shiftReset:SetText(Musician.Icons.Reset)
-				self.powerChordsBolt:SetText(Musician.Icons.Bolt)
-				self.powerChordsLabel:SetText(Musician.Msg.POWER_CHORDS)
-				self.powerChordsHorns:SetText(Musician.Icons.SignOfHorns)
-				local powerChordsLabelWidth = 12 + self.powerChordsBolt:GetWidth() + self.powerChordsLabel:GetWidth() + self.powerChordsHorns:GetWidth()
-				self.powerChordsCheckbox:SetHitRectInsets(0, -powerChordsLabelWidth, 0, 0)
-			</OnLoad>
+			<OnLoad function="MusicianLayerTemplate_OnLoad" />
 		</Scripts>
 
 	</Frame>
 
 	<!-- Main frame -->
 
-	<Frame name="MusicianKeyboard" inherits="MusicianDialogTemplate" enableKeyboard="true">
+	<Frame name="MusicianKeyboard" inherits="MusicianDialogTemplate" mixin="MusicianKeyboardMixin" enableKeyboard="true">
 		<Scripts>
-			<OnHide inherit="append">
-				-- Reset write program button on hide
-				Musician.Keyboard.SetSavingProgram(false)
-				Musician.Keyboard.SetDeletingProgram(false)
-			</OnHide>
-			<OnLoad inherit="prepend">
-				MusicianKeyboard.showKeyboard = function(visible)
-					if visible == nil then
-						visible = not(MusicianKeyboardKeys:IsVisible())
-					end
-
-					if visible then
-						MusicianKeyboard:SetHeight(410)
-						MusicianKeyboardKeys:Show()
-						MusicianKeyboardToggleKeyboardButton:SetText(Musician.Icons.Up ..  Musician.Icons.Blank .. Musician.Icons.PianoKeys)
-						MusicianKeyboardToggleKeyboardButton.tooltipText = Musician.Msg.HIDE_KEYBOARD
-					else
-						MusicianKeyboardKeys:Hide()
-						MusicianKeyboard:SetHeight(410 - MusicianKeyboardKeys:GetHeight() - 10)
-						MusicianKeyboardToggleKeyboardButton:SetText(Musician.Icons.Down ..  Musician.Icons.Blank .. Musician.Icons.PianoKeys)
-						MusicianKeyboardToggleKeyboardButton.tooltipText = Musician.Msg.SHOW_KEYBOARD
-					end
-
-					Musician_Settings.keyboardVisible = visible
-				end
-			</OnLoad>
-			<OnShow inherit="append">
-				self:SetScale(1)
-			</OnShow>
+			<OnLoad inherit="prepend" method="OnLoad" />
+			<OnShow inherit="append" method="OnShow" />
+			<OnHide inherit="append" method="OnHide" />
 		</Scripts>
 
 		<Size x="790" y="410" />
@@ -273,164 +219,76 @@
 
 		<Frames>
 
-			<Button name="$parentKeyboardConfigButton" inherits="MusicianIconButtonTemplate">
+			<Button name="$parentKeyboardConfigButton" parentKey="keyboardConfigButton" inherits="MusicianIconButtonTemplate">
 				<Size x="48" y="24" />
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT" y="-20" x="20"  />
 				</Anchors>
-				<Scripts>
-					<OnLoad>
-						self:SetText(Musician.Icons.Cog .. Musician.Icons.Blank .. Musician.Icons.Keyboard)
-						self.tooltipText = Musician.Msg.CONFIGURE_KEYBOARD
-					</OnLoad>
-					<OnClick>
-						MusicianKeyboard:Hide()
-						MusicianKeyboardConfig:Show()
-					</OnClick>
-				</Scripts>
 			</Button>
 
-			<Button name="$parentBandSyncButton" inherits="MusicianBandPlayButtonTemplate">
+			<Button name="$parentBandSyncButton" parentKey="bandSyncButton" inherits="MusicianBandPlayButtonTemplate">
 				<Anchors>
 					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentKeyboardConfigButton" />
 				</Anchors>
-				<Scripts>
-					<OnClick inherit="append">
-						Musician.Live.ToggleBandSyncMode()
-					</OnClick>
-					<OnLoad inherit="append">
-						self.count:SetPoint("CENTER", self, "TOPRIGHT", -4, -4)
-						self.tooltipText = Musician.Msg.LIVE_SYNC
-					</OnLoad>
-				</Scripts>
 			</Button>
 
-			<Button name="$parentToggleKeyboardButton" inherits="MusicianIconButtonTemplate">
+			<Button name="$parentToggleKeyboardButton" parentKey="toggleKeyboardButton" inherits="MusicianIconButtonTemplate">
 				<Size x="48" y="24" />
 				<Anchors>
 					<Anchor point="TOPRIGHT" relativeTo="$parent" relativePoint="TOPRIGHT" y="-20" x="-20"  />
 				</Anchors>
-				<Scripts>
-					<OnLoad>
-						self:SetText(Musician.Icons.Down ..  Musician.Icons.Blank .. Musician.Icons.PianoKeys)
-						self.tooltipText = Musician.Msg.HIDE_KEYBOARD
-					</OnLoad>
-					<OnMouseDown>
-						PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
-					</OnMouseDown>
-					<OnClick>
-						MusicianKeyboard.showKeyboard()
-					</OnClick>
-				</Scripts>
 			</Button>
 
-			<Button name="$parentLiveModeButton" inherits="MusicianLEDTextButtonTemplate">
+			<Button name="$parentLiveModeButton" parentKey="liveModeButton" inherits="MusicianLEDTextButtonTemplate">
 				<Size x="105" y="24" />
 				<Anchors>
 					<Anchor point="RIGHT" relativeTo="$parentToggleKeyboardButton" relativePoint="LEFT" />
 				</Anchors>
-				<Scripts>
-					<OnLoad inherit="append">
-						self:SetText(Musician.Msg.LIVE_MODE)
-						self.led:SetVertexColor(.33, 1, 0, 1)
-					</OnLoad>
-				</Scripts>
 			</Button>
 
-			<Frame name="$parentProgramKeys">
+			<Frame name="$parentProgramKeys" parentKey="programKeys">
 				<Size x="750" y="24" />
 				<Anchors>
 					<Anchor point="TOP" relativeTo="$parent" relativePoint="TOP" y="-50" />
 				</Anchors>
 
 				<Frames>
-					<Button name="$parentWriteProgram" inherits="MusicianProgramKeyActionTemplate">
+					<Button name="$parentWriteProgram" parentKey="writeProgramButton" inherits="MusicianProgramKeyActionTemplate">
 						<Size x="48" y="24" />
 						<Anchors>
 							<Anchor point="TOPRIGHT" relativeTo="$parent" relativePoint="TOPRIGHT" />
 						</Anchors>
-						<Scripts>
-							<OnLoad inherit="append">
-								self:SetText(Musician.Icons.Save)
-								local KEY = Musician.KEYBOARD_KEY
-								local controlKey = IsMacClient() and KEY.ShiftLeft or KEY.ControlLeft -- Use Shift instead of Ctrl on MacOS
-								self.tooltipText = string.gsub(Musician.Msg.WRITE_PROGRAM, "{key}", Musician.Msg.FIXED_KEY_NAMES[controlKey])
-							</OnLoad>
-						</Scripts>
 					</Button>
-					<Button name="$parentWriteProgramToggle" alpha="0">
+					<Button name="$parentWriteProgramToggle" parentKey="writeProgramToggleButton" alpha="0">
 						<Anchors>
 							<Anchor point="TOPRIGHT" relativeTo="$parentWriteProgram" />
 							<Anchor point="BOTTOMLEFT" relativeTo="$parentWriteProgram" />
 						</Anchors>
-						<Scripts>
-							<OnLoad>
-								self.button = MusicianKeyboardProgramKeysWriteProgram
-								self:SetFrameLevel(self.button:GetFrameLevel() + 1)
-							</OnLoad>
-							<OnEnter>
-								self.button:LockHighlight()
-								ExecuteFrameScript(self.button, "OnEnter", motion)
-							</OnEnter>
-							<OnLeave>
-								self.button:UnlockHighlight()
-								ExecuteFrameScript(self.button, "OnLeave", motion)
-							</OnLeave>
-							<OnMouseDown>
-								Musician.Keyboard.SetDeletingProgram(false)
-								Musician.Keyboard.SetSavingProgram(not(Musician.Keyboard.IsSavingProgram()))
-							</OnMouseDown>
-						</Scripts>
 					</Button>
 
-					<Button name="$parentDeleteProgram" inherits="MusicianProgramKeyActionTemplate">
+					<Button name="$parentDeleteProgram" parentKey="deleteProgramButton" inherits="MusicianProgramKeyActionTemplate">
 						<Size x="26" y="24" />
 						<Anchors>
 							<Anchor point="RIGHT" relativeTo="$parentWriteProgram" relativePoint="LEFT" />
 						</Anchors>
-						<Scripts>
-							<OnLoad inherit="append">
-								self:SetText(Musician.Icons.Trash)
-								local KEY = Musician.KEYBOARD_KEY
-								self.tooltipText = string.gsub(Musician.Msg.DELETE_PROGRAM, "{key}", Musician.Msg.FIXED_KEY_NAMES[KEY.Delete])
-							</OnLoad>
-						</Scripts>
 					</Button>
-					<Button name="$parentDeleteProgramToggle" alpha="0">
+					<Button name="$parentDeleteProgramToggle" parentKey="deleteProgramToggleButton" alpha="0">
 						<Anchors>
 							<Anchor point="TOPRIGHT" relativeTo="$parentDeleteProgram" />
 							<Anchor point="BOTTOMLEFT" relativeTo="$parentDeleteProgram" />
 						</Anchors>
-						<Scripts>
-							<OnLoad>
-								self.button = MusicianKeyboardProgramKeysDeleteProgram
-								self:SetFrameLevel(self.button:GetFrameLevel() + 1)
-							</OnLoad>
-							<OnEnter>
-								self.button:LockHighlight()
-								ExecuteFrameScript(self.button, "OnEnter", motion)
-							</OnEnter>
-							<OnLeave>
-								self.button:UnlockHighlight()
-								ExecuteFrameScript(self.button, "OnLeave", motion)
-							</OnLeave>
-							<OnMouseDown>
-								Musician.Keyboard.SetDeletingProgram((not(Musician.Keyboard.IsDeletingProgram())))
-								Musician.Keyboard.SetSavingProgram(false)
-							</OnMouseDown>
-						</Scripts>
 					</Button>
 				</Frames>
 
 			</Frame>
 
-			<Frame name="$parentKeys">
+			<Frame name="$parentKeys" parentKey="keys">
 				<Anchors>
 					<Anchor point="TOP" relativeTo="$parentProgramKeys" relativePoint="BOTTOM" y="-10" />
 				</Anchors>
 			</Frame>
 
-			<Frame name="$parentControls">
+			<Frame name="$parentControls" parentKey="controls">
 				<Size x="750" y="92" />
 				<Anchors>
 					<Anchor point="BOTTOM" relativeTo="$parent" relativePoint="BOTTOM" y="10"  />
@@ -438,17 +296,11 @@
 
 				<Frames>
 
-					<Frame name="$parentMain">
+					<Frame name="$parentMain" parentKey="main">
 						<Size x="200" y="92" />
 						<Anchors>
 							<Anchor point="TOP" relativeTo="$parent" relativePoint="TOP" />
 						</Anchors>
-
-						<Scripts>
-							<OnLoad>
-								self.title:SetText(Musician.Msg.KEYBOARD_LAYOUT)
-							</OnLoad>
-						</Scripts>
 
 						<Layers>
 							<Layer level="OVERLAY">
@@ -462,50 +314,30 @@
 						</Layers>
 
 						<Frames>
-							<Frame name="$parentLayoutDropdown" inherits="MusicianDropDownMenuTooltipTemplate">
+							<Frame name="$parentLayoutDropdown" parentKey="layoutDropdown" inherits="MusicianDropDownMenuTooltipTemplate">
 								<Anchors>
 									<Anchor point="TOPLEFT" x="-18" relativePoint="BOTTOMLEFT" relativeTo="$parentTitle" />
 								</Anchors>
-								<Scripts>
-									<OnLoad inherit="prepend">
-										MSA_DropDownMenu_SetWidth(self, 130)
-									</OnLoad>
-								</Scripts>
 							</Frame>
 
-							<Frame name="$parentBaseKeyDropdown" inherits="MusicianDropDownMenuTooltipTemplate">
+							<Frame name="$parentBaseKeyDropdown" parentKey="baseKeyDropdown" inherits="MusicianDropDownMenuTooltipTemplate">
 								<Anchors>
 									<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentLayoutDropdown" x="-32" />
 								</Anchors>
-								<Scripts>
-									<OnLoad inherit="prepend">
-										MSA_DropDownMenu_SetWidth(self, 40)
-									</OnLoad>
-								</Scripts>
 							</Frame>
 						</Frames>
 					</Frame>
 
-					<Frame name="$parentLower" inherits="MusicianLayerTemplate" virtual="true">
+					<Frame name="$parentLower" parentKey="lower" inherits="MusicianLayerTemplate" virtual="true">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent" />
 						</Anchors>
-						<Scripts>
-							<OnLoad inherit="prepend">
-								self.layerName:SetText(Musician.Msg.LAYERS[Musician.KEYBOARD_LAYER.LOWER])
-							</OnLoad>
-						</Scripts>
 					</Frame>
 
-					<Frame name="$parentUpper" inherits="MusicianLayerTemplate" virtual="true">
+					<Frame name="$parentUpper" parentKey="upper" inherits="MusicianLayerTemplate" virtual="true">
 						<Anchors>
 							<Anchor point="TOPRIGHT" relativePoint="TOPRIGHT" relativeTo="$parent" />
 						</Anchors>
-						<Scripts>
-							<OnLoad inherit="prepend">
-								self.layerName:SetText(Musician.Msg.LAYERS[Musician.KEYBOARD_LAYER.UPPER])
-							</OnLoad>
-						</Scripts>
 					</Frame>
 
 				</Frames>
