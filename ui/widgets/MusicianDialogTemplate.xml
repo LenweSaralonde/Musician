@@ -63,7 +63,7 @@
 			<OnLoad method="OnLoad" />
 			<OnDragStart method="OnDragStart" />
 			<OnDragStop method="OnDragStop" />
-			<OnKeyDown inherit="append" method="OnKeyDown" />
+			<OnKeyDown method="OnKeyDown" />
 			<OnShow method="OnShow" />
 			<OnHide method="OnHide" />
 		</Scripts>

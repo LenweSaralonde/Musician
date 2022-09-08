@@ -1,5 +1,5 @@
---- Band play button template mixin
--- @module MusicianBandPlayButtonTemplateMixin
+--- Band play button template
+-- @module MusicianBandPlayButtonTemplate
 
 MusicianBandPlayButtonTemplateMixin = {}
 
