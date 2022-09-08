@@ -57,7 +57,6 @@ ui\MusicianOptions.lua
 ui\MusicianOptions.xml
 
 ui\MusicianAbout.xml
-ui\MusicianAbout.lua
 
 ui\MusicianSongLinkExportFrame.xml
 ui\MusicianSongLinkExportFrame.lua

@@ -1,5 +1,8 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
-	<Frame name="MusicianAbout" inherits="MusicianDialogTemplate">
+
+	<Script file="MusicianAbout.lua" />
+
+	<Frame name="MusicianAbout" inherits="MusicianDialogTemplate" mixin="MusicianAboutMixin">
 
 		<Size x="480" y="180" />
 
@@ -100,9 +103,7 @@
 		</Layers>
 
 		<Scripts>
-			<OnLoad inherit="prepend">
-				Musician.EnableHyperlinks(self)
-			</OnLoad>
+			<OnLoad inherit="prepend" method="OnLoad" />
 		</Scripts>
 	</Frame>
 </Ui>

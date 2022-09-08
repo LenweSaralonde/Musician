@@ -6,6 +6,8 @@ Musician.About = LibStub("AceAddon-3.0"):NewAddon("Musician.About")
 local MODULE_NAME = "MusicianAbout"
 Musician.AddModule(MODULE_NAME)
 
+MusicianAboutMixin = {}
+
 local function highlightUrl(text, url)
 	return string.gsub(text, "{url}", Musician.Utils.GetUrlLink(url))
 end
@@ -15,6 +17,12 @@ local function randomizeHighlight(coloredList, list, color)
 	while #list > 0 do
 		table.insert(coloredList, Musician.Utils.Highlight(table.remove(list, random(1, #list)), color))
 	end
+end
+
+--- OnLoad
+--
+function MusicianAboutMixin:OnLoad()
+	Musician.EnableHyperlinks(self)
 end
 
 --- Init
