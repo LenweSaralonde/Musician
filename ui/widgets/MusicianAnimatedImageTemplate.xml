@@ -3,8 +3,8 @@
 	<Script file="MusicianAnimatedImageTemplate.lua" />
 	<Frame name="MusicianAnimatedImageTemplate" inherits="MusicianImageTemplate" mixin="MusicianAnimatedImageTemplateMixin" virtual="true">
 		<Scripts>
-			<OnLoad inherit="prepend" method="OnLoad" />
-			<OnShow inherit="prepend" method="OnShow" />
+			<OnLoad method="OnLoad" />
+			<OnShow method="OnShow" />
 			<OnUpdate method="OnUpdate" />
 		</Scripts>
 	</Frame>

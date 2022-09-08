@@ -1,11 +1,12 @@
---- Animated image template mixin
--- @module MusicianAnimatedImageTemplateMixin
+--- Animated image template
+-- @module MusicianAnimatedImageTemplate
 
 MusicianAnimatedImageTemplateMixin = {}
 
 --- OnLoad
 --
 function MusicianAnimatedImageTemplateMixin:OnLoad()
+	MusicianImageTemplateMixin.OnLoad(self)
 	self.width = 1024
 	self.height = 1024
 	self.tileWidth = 128
@@ -16,6 +17,7 @@ end
 --- OnShow
 --
 function MusicianAnimatedImageTemplateMixin:OnShow()
+	MusicianImageTemplateMixin.OnShow(self)
 	self.frame = 0
 	self.elapsed = 0
 end

@@ -1,19 +1,11 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<!-- Still image -->
-	<Frame name="MusicianImageTemplate" virtual="true">
+	<Script file="MusicianImageTemplate.lua" />
+	<Frame name="MusicianImageTemplate" mixin="MusicianImageTemplateMixin" virtual="true">
 		<Scripts>
-			<OnLoad>
-				self.texture = self:CreateTexture(nil, "ARTWORK", nil, 7)
-				self.texture:SetAllPoints(self)
-				self:Hide()
-				self.textureFile = 1
-			</OnLoad>
-			<OnShow>
-				self.texture:SetTexture(self.textureFile)
-			</OnShow>
-			<OnHide>
-				self.texture:SetTexture(1)
-			</OnHide>
+			<OnLoad method="OnLoad" />
+			<OnShow method="OnShow" />
+			<OnHide method="OnHide" />
 		</Scripts>
 	</Frame>
 </Ui>
