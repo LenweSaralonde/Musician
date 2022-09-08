@@ -23,11 +23,11 @@
 			</Frame>
 		</Frames>
 		<Scripts>
-			<OnLoad inherit="append" method="OnLoad" />
-			<OnUpdate method="OnUpdate" />
-			<OnClick inherit="append" method="OnClick" />
-			<OnEnter inherit="append" method="OnEnter" />
-			<OnLeave inherit="append" method="OnLeave" />
+			<OnLoad inherit="append" function="MusicianBandPlayButtonTemplate_OnLoad" />
+			<OnUpdate function="MusicianBandPlayButtonTemplate_OnUpdate" />
+			<OnClick inherit="append" function="MusicianBandPlayButtonTemplate_OnClick" />
+			<OnEnter inherit="append" function="MusicianBandPlayButtonTemplate_OnEnter" />
+			<OnLeave inherit="append" function="MusicianBandPlayButtonTemplate_OnLeave" />
 		</Scripts>
 	</Button>
 </Ui>

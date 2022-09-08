@@ -1,17 +1,15 @@
 --- Dropdown menu with tooltip template
 -- @module MusicianDropDownMenuTooltipTemplate
 
-MusicianDropDownMenuTooltipTemplateMixin = {}
-
 --- OnLoad
 --
-function MusicianDropDownMenuTooltipTemplateMixin:OnLoad()
+function MusicianDropDownMenuTooltipTemplate_OnLoad(self)
 	MSA_DropDownMenu_Create(self, self:GetParent())
 end
 
 --- OnKeyDown
 -- @param key (string)
-function MusicianDropDownMenuTooltipTemplateMixin:OnKeyDown(key)
+function MusicianDropDownMenuTooltipTemplate_OnKeyDown(self, key)
 	if MSA_DropDownList1:IsShown() and key == "ESCAPE" then
 		self:SetPropagateKeyboardInput(false)
 		MSA_DropDownMenu_OnHide(self)
@@ -22,7 +20,7 @@ end
 
 --- OnEnter
 --
-function MusicianDropDownMenuTooltipTemplateMixin:OnEnter()
+function MusicianDropDownMenuTooltipTemplate_OnEnter(self)
 	if (self.tooltipText ~= nil) then
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
 		GameTooltip_SetTitle(GameTooltip, self.tooltipText)
@@ -32,7 +30,7 @@ end
 
 --- OnLeave
 --
-function MusicianDropDownMenuTooltipTemplateMixin:OnLeave()
+function MusicianDropDownMenuTooltipTemplate_OnLeave(self)
 	if (self.tooltipText ~= nil) then
 		GameTooltip:Hide()
 	end

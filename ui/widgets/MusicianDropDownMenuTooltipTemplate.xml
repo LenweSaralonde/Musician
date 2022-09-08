@@ -1,12 +1,12 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<!-- Dropdown menu with tooltip -->
 	<Script file="MusicianDropDownMenuTooltipTemplate.lua" />
-	<Frame name="MusicianDropDownMenuTooltipTemplate" mixin="MusicianDropDownMenuTooltipTemplateMixin" virtual="true">
+	<Frame name="MusicianDropDownMenuTooltipTemplate" virtual="true">
 		<Scripts>
-			<OnLoad method="OnLoad" />
-			<OnKeyDown method="OnKeyDown" />
-			<OnEnter method="OnEnter" />
-			<OnLeave method="OnLeave" />
+			<OnLoad function="MusicianDropDownMenuTooltipTemplate_OnLoad" />
+			<OnKeyDown function="MusicianDropDownMenuTooltipTemplate_OnKeyDown" />
+			<OnEnter function="MusicianDropDownMenuTooltipTemplate_OnEnter" />
+			<OnLeave function="MusicianDropDownMenuTooltipTemplate_OnLeave" />
 		</Scripts>
 	</Frame>
 </Ui>

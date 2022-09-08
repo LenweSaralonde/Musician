@@ -3,43 +3,6 @@
 
 MusicianBandPlayButtonTemplateMixin = {}
 
---- OnLoad
---
-function MusicianBandPlayButtonTemplateMixin:OnLoad()
-	self.tooltipText = Musician.Msg.PLAY_IN_BAND
-	self:SetText(Musician.Icons.BandPlay)
-	self.led:SetVertexColor(.33, 1, 0, 1)
-	self:SetChecked(false)
-	self.count.texture:SetVertexColor(1, .82, 0)
-end
-
---- OnUpdate
--- @param elapsed (number)
-function MusicianBandPlayButtonTemplateMixin:OnUpdate(elapsed)
-	if self.checked and self.blinking then
-		self.blinkTime = self.blinkTime + elapsed
-		self.led:SetAlpha(abs(1 - 2 * (4 * self.blinkTime % 1)))
-	end
-end
-
---- OnClick
---
-function MusicianBandPlayButtonTemplateMixin:OnClick()
-	PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
-end
-
---- OnEnter
---
-function MusicianBandPlayButtonTemplateMixin:OnEnter()
-	self.mouseOver = true
-end
-
---- OnLeave
---
-function MusicianBandPlayButtonTemplateMixin:OnLeave()
-	self.mouseOver = false
-end
-
 --- Set the button checked
 -- @param checked (boolean)
 function MusicianBandPlayButtonTemplateMixin:SetChecked(checked)
@@ -70,3 +33,39 @@ function MusicianBandPlayButtonTemplateMixin:SetTooltipText(text)
 	end
 end
 
+--- OnLoad
+--
+function MusicianBandPlayButtonTemplate_OnLoad(self)
+	self.tooltipText = Musician.Msg.PLAY_IN_BAND
+	self:SetText(Musician.Icons.BandPlay)
+	self.led:SetVertexColor(.33, 1, 0, 1)
+	self:SetChecked(false)
+	self.count.texture:SetVertexColor(1, .82, 0)
+end
+
+--- OnUpdate
+-- @param elapsed (number)
+function MusicianBandPlayButtonTemplate_OnUpdate(self, elapsed)
+	if self.checked and self.blinking then
+		self.blinkTime = self.blinkTime + elapsed
+		self.led:SetAlpha(abs(1 - 2 * (4 * self.blinkTime % 1)))
+	end
+end
+
+--- OnClick
+--
+function MusicianBandPlayButtonTemplate_OnClick(self)
+	PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
+end
+
+--- OnEnter
+--
+function MusicianBandPlayButtonTemplate_OnEnter(self)
+	self.mouseOver = true
+end
+
+--- OnLeave
+--
+function MusicianBandPlayButtonTemplate_OnLeave(self)
+	self.mouseOver = false
+end

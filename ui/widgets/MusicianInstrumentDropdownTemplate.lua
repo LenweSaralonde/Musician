@@ -1,13 +1,9 @@
 --- Instrument dropdown template
 -- @module MusicianInstrumentDropdownTemplate
 
-MusicianInstrumentDropdownTemplateMixin = {}
-
 --- OnLoad handler
 --
-function MusicianInstrumentDropdownTemplateMixin:OnLoad()
-
-	MusicianDropDownMenuTooltipTemplateMixin.OnLoad(self)
+function MusicianInstrumentDropdownTemplate_OnLoad(self)
 
 	MSA_DropDownMenu_SetWidth(self, 115)
 

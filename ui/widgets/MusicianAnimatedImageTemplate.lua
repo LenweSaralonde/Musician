@@ -1,12 +1,9 @@
 --- Animated image template
 -- @module MusicianAnimatedImageTemplate
 
-MusicianAnimatedImageTemplateMixin = {}
-
 --- OnLoad
 --
-function MusicianAnimatedImageTemplateMixin:OnLoad()
-	MusicianImageTemplateMixin.OnLoad(self)
+function MusicianAnimatedImageTemplate_OnLoad(self)
 	self.width = 1024
 	self.height = 1024
 	self.tileWidth = 128
@@ -16,15 +13,14 @@ end
 
 --- OnShow
 --
-function MusicianAnimatedImageTemplateMixin:OnShow()
-	MusicianImageTemplateMixin.OnShow(self)
+function MusicianAnimatedImageTemplate_OnShow(self)
 	self.frame = 0
 	self.elapsed = 0
 end
 
 --- OnUpdate
 -- @param elapsed (number)
-function MusicianAnimatedImageTemplateMixin:OnUpdate(elapsed)
+function MusicianAnimatedImageTemplate_OnUpdate(self, elapsed)
 	local frameW = self.tileWidth / self.width
 	local frameH = self.tileHeight / self.height
 

@@ -1,11 +1,11 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<!-- Still image -->
 	<Script file="MusicianImageTemplate.lua" />
-	<Frame name="MusicianImageTemplate" mixin="MusicianImageTemplateMixin" virtual="true">
+	<Frame name="MusicianImageTemplate" virtual="true">
 		<Scripts>
-			<OnLoad method="OnLoad" />
-			<OnShow method="OnShow" />
-			<OnHide method="OnHide" />
+			<OnLoad function="MusicianImageTemplate_OnLoad" />
+			<OnShow function="MusicianImageTemplate_OnShow" />
+			<OnHide function="MusicianImageTemplate_OnHide" />
 		</Scripts>
 	</Frame>
 </Ui>

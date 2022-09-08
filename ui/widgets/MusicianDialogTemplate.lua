@@ -15,27 +15,27 @@ end
 
 --- OnLoad
 --
-function MusicianDialogTemplateMixin:OnLoad()
+function MusicianDialogTemplate_OnLoad(self)
 	Musician.RestoreFramePosition(self)
 	self:RegisterForDrag("LeftButton")
 end
 
 --- OnDragStart
 --
-function MusicianDialogTemplateMixin:OnDragStart()
+function MusicianDialogTemplate_OnDragStart(self)
 	self:StartMoving()
 end
 
 --- OnDragStop
 --
-function MusicianDialogTemplateMixin:OnDragStop()
+function MusicianDialogTemplate_OnDragStop(self)
 	self:StopMovingOrSizing()
 	Musician.SaveFramePosition(self)
 end
 
 --- OnKeyDown
 -- @param key (string)
-function MusicianDialogTemplateMixin:OnKeyDown(key)
+function MusicianDialogTemplate_OnKeyDown(self, key)
 	if self:IsShown() and key == "ESCAPE" and not(self.noEscape) then
 		self:SetPropagateKeyboardInput(false)
 		self:Hide()
@@ -46,12 +46,12 @@ end
 
 --- OnShow
 --
-function MusicianDialogTemplateMixin:OnShow()
+function MusicianDialogTemplate_OnShow(self)
 	PlaySound(SOUNDKIT.IG_QUEST_LIST_OPEN)
 end
 
 --- OnHide
 --
-function MusicianDialogTemplateMixin:OnHide()
+function MusicianDialogTemplate_OnHide(self)
 	PlaySound(SOUNDKIT.IG_QUEST_LIST_CLOSE)
 end
