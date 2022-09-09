@@ -51,7 +51,6 @@ ui\MusicianKeyboard.xml
 
 ui\MusicianKeyboardConfig.xml
 
-ui\MusicianOptions.lua
 ui\MusicianOptions.xml
 
 ui\MusicianAbout.xml

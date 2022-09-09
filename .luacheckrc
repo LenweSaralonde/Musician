@@ -348,6 +348,9 @@ stds.wow = {
 		"BlizzardOptionsPanel_SetupDependentControl",
 		"InterfaceOptionsFrame_Show",
 		"InterfaceOptionsFrame_OpenToCategory",
+		"InlineHyperlinkFrame_OnEnter",
+		"InlineHyperlinkFrame_OnLeave",
+		"InlineHyperlinkFrame_OnClick",
 
 		-- Global Mixins and UI Objects
 
@@ -396,6 +399,12 @@ stds.wow = {
 			}
 		},
 
+		Item = {
+			fields = {
+				"CreateFromItemID"
+			}
+		},
+
 		"UIParent",
 		"WorldFrame",
 		"WorldMapFrame",
@@ -426,6 +435,9 @@ stds.wow = {
 		"NUM_CHAT_WINDOWS",
 		"CONTROLTYPE_CHECKBOX",
 		"SOUNDKIT",
+		"MASTER_VOLUME",
+		"SOUND_VOLUME",
+		"DIALOG_VOLUME",
 		"UNKNOWN",
 		"PI",
 	},

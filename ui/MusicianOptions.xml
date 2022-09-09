@@ -1,5 +1,7 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 
+	<Script file="MusicianOptions.lua" />
+
 	<Frame name="MusicianOptionsPanelContainer" hidden="true">
 		<Frames>
 			<ScrollFrame name="MusicianOptionsPanelScrollFrame" inherits="UIPanelScrollFrameTemplate">
@@ -49,21 +51,11 @@
 										<Anchors>
 											<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-10"/>
 										</Anchors>
-										<Scripts>
-											<OnLoad>
-												Musician.Options.SetupCheckbox(self, Musician.Msg.OPTIONS_ENABLE_EMOTE_LABEL)
-											</OnLoad>
-										</Scripts>
 									</CheckButton>
 									<CheckButton name="$parentEnablePromo" inherits="InterfaceOptionsSmallCheckButtonTemplate">
 										<Anchors>
 											<Anchor point="TOPLEFT" relativeTo="$parentEnable" relativePoint="BOTTOMLEFT" x="10" y="4"/>
 										</Anchors>
-										<Scripts>
-											<OnLoad>
-												Musician.Options.SetupCheckbox(self, Musician.Msg.OPTIONS_ENABLE_EMOTE_PROMO_LABEL, _G[self:GetParent():GetName().."Enable"])
-											</OnLoad>
-										</Scripts>
 									</CheckButton>
 								</Frames>
 							</Frame>
@@ -88,65 +80,11 @@
 										<Anchors>
 											<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-10"/>
 										</Anchors>
-										<Scripts>
-											<OnLoad>
-												Musician.Options.SetupCheckbox(self, Musician.Msg.OPTIONS_AUTO_MUTE_GAME_MUSIC_LABEL)
-											</OnLoad>
-											<OnClick inherit="append">
-												Musician_Settings.muteGameMusic = self:GetChecked()
-												Musician.Utils.MuteGameMusic(true)
-											</OnClick>
-										</Scripts>
 									</CheckButton>
 									<CheckButton name="$parentMuteInstrumentToys" inherits="MusicianOptionsCheckButtonTemplate">
 										<Anchors>
 											<Anchor point="TOPLEFT" relativeTo="$parentMuteGameMusic" relativePoint="BOTTOMLEFT" x="0" y="4"/>
 										</Anchors>
-										<Scripts>
-											<OnLoad>
-												if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-													local label = string.gsub(Musician.Msg.OPTIONS_MUTE_INSTRUMENT_TOYS_LABEL, '{icons}', '')
-													Musician.Options.SetupCheckbox(self, label)
-
-													local itemIcons = {}
-													for itemIndex, itemRow in pairs(Musician.InstrumentToys) do
-														table.insert(itemIcons, '')
-													end
-
-													local loadedItems = 0
-													for itemIndex, itemRow in pairs(Musician.InstrumentToys) do
-														local item = Item:CreateFromItemID(itemRow.itemId)
-														item:ContinueOnItemLoad(function()
-															local fontHeight = self.Text:GetLineHeight() * 1.5
-															local itemString = string.match(item:GetItemLink(), "item[%-?%d:]+")
-															local itemIcon = item:GetItemIcon()
-															local textureString = '|T' .. itemIcon .. ':' .. fontHeight .. '|t'
-															local itemLink = '|H' .. itemString .. '|h' .. textureString .. '|h'
-
-															loadedItems = loadedItems + 1
-															itemIcons[itemIndex] = itemLink
-															if loadedItems == #Musician.InstrumentToys then
-																local strIcons = strjoin(" ", unpack(itemIcons))
-																label = string.gsub(Musician.Msg.OPTIONS_MUTE_INSTRUMENT_TOYS_LABEL, '{icons}', strIcons)
-																self.Text:SetText(label)
-																self:SetHyperlinksEnabled(true)
-																self.tooltipFrame = GameTooltip
-																self:SetScript("OnHyperlinkEnter", InlineHyperlinkFrame_OnEnter)
-																self:SetScript("OnHyperlinkLeave", InlineHyperlinkFrame_OnLeave)
-																self:SetScript("OnHyperlinkClick", InlineHyperlinkFrame_OnClick)
-															end
-														end)
-													end
-												else
-													self:Hide()
-													MusicianOptionsPanelIntegration:SetHeight(50)
-												end
-											</OnLoad>
-											<OnClick inherit="append">
-												Musician_Settings.muteInstrumentToys = self:GetChecked()
-												Musician.Utils.SetInstrumentToysMuted(Musician_Settings.muteInstrumentToys)
-											</OnClick>
-										</Scripts>
 									</CheckButton>
 								</Frames>
 							</Frame>
@@ -180,70 +118,27 @@
 										<Anchors>
 											<Anchor point="TOPLEFT" relativeTo="$parentSubText" relativePoint="BOTTOMLEFT" x="0" y="4"/>
 										</Anchors>
-										<Scripts>
-											<OnLoad>
-												local label = string.gsub(Musician.Msg.OPTIONS_AUDIO_CHANNELS_CHANNEL_POLYPHONY, '{channel}', MASTER_VOLUME)
-												label = string.gsub(label, '{polyphony}', '30')
-												Musician.Options.SetupCheckbox(self, label)
-											</OnLoad>
-											<OnClick inherit="append">
-												Musician_Settings.audioChannels.Master = self:GetChecked()
-												Musician.Options.RefreshAudioSettings()
-											</OnClick>
-										</Scripts>
 									</CheckButton>
 									<CheckButton name="$parentSFX" inherits="MusicianOptionsCheckButtonTemplate">
 										<Anchors>
 											<Anchor point="LEFT" relativeTo="$parentMasterText" relativePoint="RIGHT" x="10" y="0"/>
 											<Anchor point="TOP" relativeTo="$parentMaster" relativePoint="TOP" x="0" y="0"/>
 										</Anchors>
-										<Scripts>
-											<OnLoad>
-												local label = string.gsub(Musician.Msg.OPTIONS_AUDIO_CHANNELS_CHANNEL_POLYPHONY, '{channel}', SOUND_VOLUME)
-												label = string.gsub(label, '{polyphony}', '15')
-												Musician.Options.SetupCheckbox(self, label)
-											</OnLoad>
-											<OnClick inherit="append">
-												Musician_Settings.audioChannels.SFX = self:GetChecked()
-												Musician.Options.RefreshAudioSettings()
-											</OnClick>
-										</Scripts>
 									</CheckButton>
 									<CheckButton name="$parentDialog" inherits="MusicianOptionsCheckButtonTemplate">
 										<Anchors>
 											<Anchor point="LEFT" relativeTo="$parentSFXText" relativePoint="RIGHT" x="10" y="0"/>
 											<Anchor point="TOP" relativeTo="$parentSFX" relativePoint="TOP" x="0" y="0"/>
 										</Anchors>
-										<Scripts>
-											<OnLoad>
-												local label = string.gsub(Musician.Msg.OPTIONS_AUDIO_CHANNELS_CHANNEL_POLYPHONY, '{channel}', DIALOG_VOLUME)
-												label = string.gsub(label, '{polyphony}', '20')
-												Musician.Options.SetupCheckbox(self, label)
-											</OnLoad>
-											<OnClick inherit="append">
-												Musician_Settings.audioChannels.Dialog = self:GetChecked()
-												Musician.Options.RefreshAudioSettings()
-											</OnClick>
-										</Scripts>
 									</CheckButton>
 									<CheckButton name="$parentAutoAdjust" inherits="InterfaceOptionsSmallCheckButtonTemplate">
 										<Anchors>
 											<Anchor point="TOPLEFT" relativeTo="$parentMaster" relativePoint="BOTTOMLEFT" x="10" y="4"/>
 										</Anchors>
-										<Scripts>
-											<OnLoad>
-												Musician.Options.SetupCheckbox(self, Musician.Msg.OPTIONS_AUDIO_CHANNELS_AUTO_ADJUST_CONFIG)
-											</OnLoad>
-											<OnClick inherit="append">
-												Musician_Settings.autoAdjustAudioSettings = self:GetChecked()
-												Musician.Options.RefreshAudioSettings()
-											</OnClick>
-										</Scripts>
 									</CheckButton>
 								</Frames>
 								<Layers>
 									<Layer level="ARTWORK">
-
 										<FontString name="$parentPolyphony" inherits="GameFontNormal" nonspacewrap="true" maxLines="3" justifyH="LEFT" justifyV="TOP">
 											<Anchors>
 												<Anchor point="LEFT" relativeTo="$parentDialogText" relativePoint="RIGHT" x="36" y="0" />
@@ -253,22 +148,6 @@
 								</Layers>
 							</Frame>
 						</Frames>
-						<Scripts>
-							<OnLoad>
-								Musician.EnableHyperlinks(self)
-
-								MusicianOptionsPanelTitle:SetText(Musician.Msg.OPTIONS_TITLE)
-
-								local subText = string.gsub(Musician.Msg.OPTIONS_SUB_TEXT, "{url}", Musician.Utils.GetUrlLink(Musician.DISCORD_URL))
-								MusicianOptionsPanelSubText:SetText(subText)
-
-								MusicianOptionsPanelUnitEmoteTitle:SetText(Musician.Msg.OPTIONS_CATEGORY_EMOTE)
-								MusicianOptionsPanelIntegrationTitle:SetText(Musician.Msg.OPTIONS_INTEGRATION_OPTIONS_TITLE)
-
-								MusicianOptionsPanelAudioChannelsTitle:SetText(Musician.Msg.OPTIONS_AUDIO_CHANNELS_TITLE)
-								MusicianOptionsPanelAudioChannelsSubText:SetText(Musician.Msg.OPTIONS_AUDIO_CHANNELS_HINT)
-							</OnLoad>
-						</Scripts>
 					</Frame>
 				</ScrollChild>
 			</ScrollFrame>
