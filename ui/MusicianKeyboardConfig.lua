@@ -92,6 +92,18 @@ function Musician.KeyboardConfig.Init()
 	MusicianKeyboardConfig:SetScript("OnKeyDown", Musician.KeyboardConfig.Button_OnKeyDown)
 	MusicianKeyboardConfig:SetScript("OnShow", Musician.KeyboardConfig.OnShow)
 	MusicianKeyboardConfig:SetScript("OnHide", Musician.KeyboardConfig.OnHide)
+
+	MusicianKeyboardConfig.startOverButton:HookScript("OnClick", Musician.KeyboardConfig.Clear)
+
+	MusicianKeyboardConfig.saveButton:HookScript("OnClick", Musician.KeyboardConfig.Save)
+
+	MusicianKeyboardConfig.nextKeyButton:SetText(Musician.Icons.Right)
+	MusicianKeyboardConfig.nextKeyButton.tooltipText = Musician.Msg.NEXT_KEY
+	MusicianKeyboardConfig.nextKeyButton:HookScript("OnClick", Musician.KeyboardConfig.SelectNextKeyBinding)
+
+	MusicianKeyboardConfig.clearKeyButton:SetScale(0.75)
+	MusicianKeyboardConfig.clearKeyButton.tooltipText = Musician.Msg.CLEAR_KEY
+	MusicianKeyboardConfig.clearKeyButton:HookScript("OnClick", Musician.KeyboardConfig.ClearSelectedKeyBinding)
 end
 
 --- OnShow
@@ -383,4 +395,26 @@ function Musician.KeyboardConfig.UpdateHint()
 	else
 		MusicianKeyboardConfigHint:SetText(Musician.Msg.CONFIGURE_KEYBOARD_HINT)
 	end
+end
+
+--- Key template OnClick
+--
+function MusicianKeyboardConfigKeyTemplate_OnClick(self, button, down)
+	Musician.KeyboardConfig.Key_OnClick(self, button, down)
+end
+
+--- Key template OnLoad
+--
+function MusicianKeyboardConfigKeyTemplate_OnLoad(self)
+	self.background:SetDrawLayer("BACKGROUND", -8)
+end
+
+--- Key template OnSizeChanged
+--
+function MusicianKeyboardConfigKeyTemplate_OnSizeChanged(self, w, h)
+	self.background:SetWidth(w - 7)
+	self.background:SetHeight(h - 7)
+	self.selectedHighlight:SetWidth(w)
+	self.selectedHighlight:SetHeight(h * 2)
+	self:GetHighlightTexture():SetTexCoord(0, 1, 0.2086, 0.5659)
 end

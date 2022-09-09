@@ -1,5 +1,7 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 
+	<Script file="MusicianKeyboardConfig.lua" />
+
 	<!-- Keyboard key template -->
 
 	<Button name="MusicianKeyboardConfigKeyTemplate" inherits="UIMenuButtonStretchTemplate" virtual="true">
@@ -22,19 +24,9 @@
 			</Layer>
 		</Layers>
 		<Scripts>
-			<OnClick>
-				Musician.KeyboardConfig.Key_OnClick(self, button, down)
-			</OnClick>
-			<OnLoad inherit="prepend">
-				self.background:SetDrawLayer("BACKGROUND", -8)
-			</OnLoad>
-			<OnSizeChanged>
-				self.background:SetWidth(w - 7)
-				self.background:SetHeight(h - 7)
-				self.selectedHighlight:SetWidth(w)
-				self.selectedHighlight:SetHeight(h * 2)
-				self:GetHighlightTexture():SetTexCoord(0, 1, 0.2086, 0.5659)
-			</OnSizeChanged>
+			<OnClick function="MusicianKeyboardConfigKeyTemplate_OnClick" />
+			<OnLoad inherit="prepend" function="MusicianKeyboardConfigKeyTemplate_OnLoad" />
+			<OnSizeChanged function="MusicianKeyboardConfigKeyTemplate_OnSizeChanged" />
 		</Scripts>
 		<NormalFont style="GameFontHighlight"/>
 		<DisabledFont style="GameFontDisable"/>
@@ -49,72 +41,44 @@
 		<Size x="800" y="400" />
 
 		<Frames>
-			<Frame name="$parentKeyboard">
+			<Frame name="$parentKeyboard" parentKey="keyboard">
 				<Anchors>
 					<Anchor point="TOP" y="-85" relativePoint="TOP" relativeTo="$parent" />
 				</Anchors>
 			</Frame>
 
-			<Button name="$parentStartOverButton" inherits="UIPanelButtonTemplate">
+			<Button name="$parentStartOverButton" parentKey="startOverButton" inherits="UIPanelButtonTemplate">
 				<Size x="150" y="20" />
 				<Anchors>
 					<Anchor point="RIGHT" x="-10" y="40" relativePoint="BOTTOM" />
 				</Anchors>
-				<Scripts>
-					<OnClick>
-						Musician.KeyboardConfig.Clear()
-					</OnClick>
-				</Scripts>
 			</Button>
 
-			<Button name="$parentSaveButton" inherits="UIPanelButtonTemplate">
+			<Button name="$parentSaveButton" parentKey="saveButton" inherits="UIPanelButtonTemplate">
 				<Size x="150" y="20" />
 				<Anchors>
 					<Anchor point="LEFT" x="10" y="40" relativePoint="BOTTOM" />
 				</Anchors>
-				<Scripts>
-					<OnClick>
-						Musician.KeyboardConfig.Save()
-					</OnClick>
-				</Scripts>
 			</Button>
 
-			<Button name="$parentNextKeyButton" inherits="MusicianIconButtonTemplate" hidden="true">
+			<Button name="$parentNextKeyButton" parentKey="nextKeyButton" inherits="MusicianIconButtonTemplate" hidden="true">
 				<Size x="24" y="24" />
 				<Anchors>
 					<Anchor point="LEFT" x="-3" relativePoint="RIGHT" />
 				</Anchors>
-				<Scripts>
-					<OnClick inherit="append">
-						Musician.KeyboardConfig.SelectNextKeyBinding()
-					</OnClick>
-					<OnLoad>
-						self:SetText(Musician.Icons.Right)
-						self.tooltipText = Musician.Msg.NEXT_KEY
-					</OnLoad>
-				</Scripts>
 			</Button>
 
-			<Button name="$parentClearKeyButton" inherits="UIPanelButtonTemplate" hidden="true" text="x">
+			<Button name="$parentClearKeyButton" parentKey="clearKeyButton" inherits="UIPanelButtonTemplate" hidden="true" text="x">
 				<Size x="24" y="24" />
 				<Anchors>
 					<Anchor point="TOPRIGHT" x="8" y="8" relativePoint="TOPRIGHT" />
 				</Anchors>
-				<Scripts>
-					<OnClick inherit="append">
-						Musician.KeyboardConfig.ClearSelectedKeyBinding()
-					</OnClick>
-					<OnLoad>
-						self:SetScale(0.75)
-						self.tooltipText = Musician.Msg.CLEAR_KEY
-					</OnLoad>
-				</Scripts>
 			</Button>
 		</Frames>
 
 		<Layers>
 			<Layer level="BACKGROUND">
-				<FontString name="$parentTitle" inherits="GameFontNormalLarge">
+				<FontString name="$parentTitle" parentKey="title" inherits="GameFontNormalLarge">
 					<Anchors>
 						<Anchor point="TOP">
 							<Offset>
@@ -124,7 +88,7 @@
 					</Anchors>
 				</FontString>
 
-				<FontString name="$parentHint" inherits="GameFontNormal" justifyH="CENTER" justifyV="CENTER">
+				<FontString name="$parentHint" parentKey="hint" inherits="GameFontNormal" justifyH="CENTER" justifyV="CENTER">
 					<Size y="50" />
 					<Anchors>
 						<Anchor point="BOTTOM" relativePoint="TOP" relativeTo="$parentKeyboard" />
