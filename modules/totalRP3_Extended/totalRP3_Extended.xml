@@ -36,14 +36,6 @@
 					<Anchor point="LEFT" x="32" />
 					<Anchor point="RIGHT" x="-32" />
 				</Anchors>
-				<Scripts>
-					<OnEnterPressed>
-						self:GetParent().createItem()
-					</OnEnterPressed>
-					<OnEscapePressed>
-						self:GetParent():Hide()
-					</OnEscapePressed>
-				</Scripts>
 			</EditBox>
 		</Frames>
 
@@ -64,11 +56,6 @@
 				<Anchors>
 					<Anchor point="LEFT" relativeTo="$parentLocaleLabel" relativePoint="RIGHT" x="-10" y="-4" />
 				</Anchors>
-				<Scripts>
-					<OnLoad inherit="prepend">
-						MSA_DropDownMenu_SetWidth(self, 80)
-					</OnLoad>
-				</Scripts>
 			</Frame>
 		</Frames>
 
@@ -91,23 +78,6 @@
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentPreviewContainer" relativePoint="BOTTOMLEFT" y="-25"/>
 				</Anchors>
-				<Scripts>
-					<OnLoad inherit="append">
-						Musician.Options.SetupCheckbox(self, Musician.Msg.TRPE_EXPORT_WINDOW_ADD_TO_BAG)
-						self.onChange = function()
-							local frame = self:GetParent()
-							if self:GetChecked() then
-								frame.quantity:Enable()
-							else
-								frame.quantity:Disable()
-							end
-						end
-						hooksecurefunc(self, 'SetChecked', self.onChange)
-					</OnLoad>
-					<OnClick inherit="append">
-						self.onChange()
-					</OnClick>
-				</Scripts>
 			</CheckButton>
 		</Frames>
 		<Layers>
@@ -126,17 +96,6 @@
 					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentQuantityLabel" x="15" />
 					<Anchor point="RIGHT" relativePoint="RIGHT" relativeTo="$parentQuantityLabel" x="35" />
 				</Anchors>
-				<Scripts>
-					<OnEditFocusGained>
-						self:HighlightText(0)
-					</OnEditFocusGained>
-					<OnEnterPressed>
-						self:GetParent().createItem()
-					</OnEnterPressed>
-					<OnEscapePressed>
-						self:GetParent():Hide()
-					</OnEscapePressed>
-				</Scripts>
 			</EditBox>
 		</Frames>
 
@@ -166,11 +125,6 @@
 				<Anchors>
 					<Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$parentProgressBar" y="-10" />
 				</Anchors>
-				<Scripts>
-					<OnClick inherit="append">
-						self:GetParent().createItem()
-					</OnClick>
-				</Scripts>
 			</Button>
 		</Frames>
 		<Layers>
@@ -185,15 +139,6 @@
 				</FontString>
 			</Layer>
 		</Layers>
-
-		<Scripts>
-			<OnLoad inherit="prepend">
-				self.title:SetText(Musician.Msg.TRPE_EXPORT_WINDOW_TITLE)
-				self.songTitleLabel:SetText(Musician.Msg.LINK_EXPORT_WINDOW_SONG_TITLE_LABEL)
-				self.localeLabel:SetText(Musician.Msg.TRPE_EXPORT_WINDOW_LOCALE)
-				self.quantityLabel:SetText(Musician.Msg.TRPE_EXPORT_WINDOW_QUANTITY)
-			</OnLoad>
-		</Scripts>
 	</Frame>
 
 </Ui>

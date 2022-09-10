@@ -178,24 +178,10 @@ function Musician.TRP3E.InitUI()
 		Musician.Utils.EasyMenu(menu, menuFrame, "cursor", 0 , 0, "MENU")
 	end)
 
-	-- Create preview widget in item export window
+	-- Initialize item export frame
 	--
 
-	local frame = MusicianTRPEExportFrame
-	frame.preview = CreateFrame('Button', frame:GetName() .. 'Preview', frame.previewContainer, 'TRP3_QuestButtonTemplate')
-	frame.preview:SetAllPoints(frame.previewContainer)
-	frame.preview.Disable = function(self)
-		getmetatable(self).__index.Disable(self)
-		self.Name:SetTextColor(GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b)
-		self.InfoText:SetTextColor(GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b)
-	end
-	frame.preview.Enable = function(self)
-		getmetatable(self).__index.Enable(self)
-		local nameFontObject = self.Name:GetFontObject()
-		self.Name:SetTextColor(nameFontObject:GetTextColor())
-		local infoTextFontObject = self.InfoText:GetFontObject()
-		self.InfoText:SetTextColor(infoTextFontObject:GetTextColor())
-	end
+	Musician.TRP3E.InitExportFrame()
 
 	-- Init item locale dropdown
 	--
@@ -313,6 +299,73 @@ local function updateHint()
 		frame.hint:SetText(Musician.Msg.TRPE_EXPORT_WINDOW_HINT_EXISTING)
 	else
 		frame.hint:SetText(Musician.Msg.TRPE_EXPORT_WINDOW_HINT_NEW)
+	end
+end
+
+--- Initialize the TRP item export frame
+--
+function Musician.TRP3E.InitExportFrame()
+	local frame = MusicianTRPEExportFrame
+
+	-- Main title
+	frame.title:SetText(Musician.Msg.TRPE_EXPORT_WINDOW_TITLE)
+
+	-- Song title
+	frame.songTitleLabel:SetText(Musician.Msg.LINK_EXPORT_WINDOW_SONG_TITLE_LABEL)
+	frame.songTitle:SetScript("OnEnterPressed", function()
+		frame.createItem()
+	end)
+	frame.songTitle:SetScript("OnEscapePressed", function()
+		frame:Hide()
+	end)
+
+	-- Locale
+	frame.localeLabel:SetText(Musician.Msg.TRPE_EXPORT_WINDOW_LOCALE)
+	MSA_DropDownMenu_SetWidth(frame.locale, 80)
+
+	-- Add to bag checkbox
+	Musician.Options.SetupCheckbox(frame.addToBag, Musician.Msg.TRPE_EXPORT_WINDOW_ADD_TO_BAG)
+	local addToBagOnChange = function()
+		if frame.addToBag:GetChecked() then
+			frame.quantity:Enable()
+		else
+			frame.quantity:Disable()
+		end
+	end
+	hooksecurefunc(frame.addToBag, 'SetChecked', addToBagOnChange)
+	frame.addToBag:HookScript("OnClick", addToBagOnChange)
+
+	-- Quantity edit box
+	frame.quantityLabel:SetText(Musician.Msg.TRPE_EXPORT_WINDOW_QUANTITY)
+	frame.quantity:SetScript("OnEditFocusGained", function(self)
+		self:HighlightText(0)
+	end)
+	frame.quantity:SetScript("OnEnterPressed", function()
+		frame.createItem()
+	end)
+	frame.quantity:SetScript("OnEscapePressed", function()
+		frame:Hide()
+	end)
+
+	-- Export item button
+	frame.exportItemButton:HookScript("OnClick", function()
+		frame.createItem()
+	end)
+
+	-- Preview widget
+	frame.preview = CreateFrame('Button', frame:GetName() .. 'Preview', frame.previewContainer, 'TRP3_QuestButtonTemplate')
+	frame.preview:SetAllPoints(frame.previewContainer)
+	frame.preview.Disable = function(self)
+		getmetatable(self).__index.Disable(self)
+		self.Name:SetTextColor(GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b)
+		self.InfoText:SetTextColor(GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b)
+	end
+	frame.preview.Enable = function(self)
+		getmetatable(self).__index.Enable(self)
+		local nameFontObject = self.Name:GetFontObject()
+		self.Name:SetTextColor(nameFontObject:GetTextColor())
+		local infoTextFontObject = self.InfoText:GetFontObject()
+		self.InfoText:SetTextColor(infoTextFontObject:GetTextColor())
 	end
 end
 
