@@ -1,4 +1,5 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="CrossRP_Options.lua"/>
 	<Frame name="MusicianOptionsPanelCrossRP" parent="MusicianOptionsPanel">
 		<Size>
 			<AbsDimension x="580" y="200"/>
@@ -29,18 +30,10 @@
 				<Size>
 					<AbsDimension x="341.333333" y="170.666667" />
 				</Size>
-				<Scripts>
-					<OnLoad inherit="prepend">
-						self.textureFile = "Interface\\AddOns\\Musician\\ui\\textures\\cross-rp.blp"
-					</OnLoad>
-				</Scripts>
 			</Frame>
 		</Frames>
 		<Scripts>
-			<OnLoad>
-				MusicianOptionsPanelCrossRPTitle:SetText(Musician.Msg.OPTIONS_CROSS_RP_TITLE)
-				MusicianOptionsPanelCrossRPSubText:SetText(Musician.Msg.OPTIONS_CROSS_RP_SUB_TEXT)
-			</OnLoad>
+			<OnLoad function="MusicianOptionsPanelCrossRP_OnLoad" />
 		</Scripts>
 	</Frame>
 </Ui>

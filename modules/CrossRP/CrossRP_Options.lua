@@ -70,3 +70,11 @@ end)
 hooksecurefunc(Musician.Options, "Save", function()
 	MusicianOptionsPanelCrossRPImage:Hide()
 end)
+
+--- OnLoad
+--
+function MusicianOptionsPanelCrossRP_OnLoad(self)
+	MusicianOptionsPanelCrossRPTitle:SetText(Musician.Msg.OPTIONS_CROSS_RP_TITLE)
+	MusicianOptionsPanelCrossRPSubText:SetText(Musician.Msg.OPTIONS_CROSS_RP_SUB_TEXT)
+	MusicianOptionsPanelCrossRPImage.textureFile = "Interface\\AddOns\\Musician\\ui\\textures\\cross-rp.blp"
+end

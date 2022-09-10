@@ -7,14 +7,6 @@
 				<Anchors>
 					<Anchor point="BOTTOM" y="10" />
 				</Anchors>
-				<Scripts>
-					<OnLoad inherit="append">
-						self:SetText(Musician.Msg.TIPS_AND_TRICKS_CROSS_RP_OK)
-					</OnLoad>
-					<OnClick inherit="append">
-						Musician_Settings.crossRP_HintShown = true
-					</OnClick>
-				</Scripts>
 			</Button>
 
 			<Frame name="$parentImage" parentKey="image" inherits="MusicianImageTemplate">
@@ -24,11 +16,6 @@
 				<Size>
 					<AbsDimension x="512" y="256" />
 				</Size>
-				<Scripts>
-					<OnLoad inherit="prepend">
-						self.textureFile = "Interface\\AddOns\\Musician\\ui\\textures\\cross-rp.blp"
-					</OnLoad>
-				</Scripts>
 			</Frame>
 
 			<Frame name="$parentOverlayText" parentKey="overlayText">
@@ -45,15 +32,5 @@
 				</Layers>
 			</Frame>
 		</Frames>
-
-		<Scripts>
-			<OnShow inherit="prepend">
-				self.image:Show()
-			</OnShow>
-			<OnLoad>
-				self.title:SetText(Musician.Msg.TIPS_AND_TRICKS_CROSS_RP_TITLE)
-				self.overlayText.text:SetText(Musician.Msg.TIPS_AND_TRICKS_CROSS_RP_TEXT)
-			</OnLoad>
-		</Scripts>
 	</Frame>
 </Ui>

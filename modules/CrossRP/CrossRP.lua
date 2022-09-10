@@ -598,6 +598,20 @@ function Musician.CrossRP.InitTipsAndTricks()
 		return
 	end
 
+	-- Init window text, buttons and image
+	MusicianCrossRP_TipsAndTricks.title:SetText(Musician.Msg.TIPS_AND_TRICKS_CROSS_RP_TITLE)
+	MusicianCrossRP_TipsAndTricks.overlayText.text:SetText(Musician.Msg.TIPS_AND_TRICKS_CROSS_RP_TEXT)
+	MusicianCrossRP_TipsAndTricks:SetScript("OnShow", function(self)
+		self.image:Show()
+	end)
+
+	MusicianCrossRP_TipsAndTricks.okButton:SetText(Musician.Msg.TIPS_AND_TRICKS_CROSS_RP_OK)
+	MusicianCrossRP_TipsAndTricks.okButton:HookScript("OnClick", function()
+		Musician_Settings.crossRP_HintShown = true
+	end)
+
+	MusicianCrossRP_TipsAndTricks.image.textureFile = "Interface\\AddOns\\Musician\\ui\\textures\\cross-rp.blp"
+
 	-- Add tip
 	Musician.AddTipsAndTricks(function()
 		MusicianCrossRP_TipsAndTricks:Show()
