@@ -33,6 +33,98 @@ function Musician.NamePlates.Options.Init()
 	-- Refresh panel when CVar changed
 	MusicianOptionsPanelUnitNamePlates:RegisterEvent("CVAR_UPDATE")
 	MusicianOptionsPanelUnitNamePlates:SetScript("OnEvent", Musician.NamePlates.Options.RefreshCheckboxes)
+
+	-- Section title and text
+	MusicianOptionsPanelUnitNamePlatesTitle:SetText(Musician.Msg.OPTIONS_CATEGORY_NAMEPLATES)
+	MusicianOptionsPanelUnitNamePlatesSubText:SetText(Musician.Msg.OPTIONS_CATEGORY_NAMEPLATES_SUB_TEXT)
+
+	-- Animated demo image
+	MusicianOptionsPanelUnitNamePlatesImage.fps = 30
+	MusicianOptionsPanelUnitNamePlatesImage.width = 1024
+	MusicianOptionsPanelUnitNamePlatesImage.height = 1024
+	MusicianOptionsPanelUnitNamePlatesImage.tileWidth = 128
+	MusicianOptionsPanelUnitNamePlatesImage.tileHeight = 256
+	MusicianOptionsPanelUnitNamePlatesImage.textureFile = "Interface\\AddOns\\Musician\\ui\\textures\\nameplates-demo.blp"
+
+	-- Enable checkbox
+	Musician.Options.SetupCheckbox(
+		MusicianOptionsPanelUnitNamePlatesEnable,
+		Musician.Msg.OPTIONS_ENABLE_NAMEPLATES)
+	MusicianOptionsPanelUnitNamePlatesEnable:HookScript("OnClick", function(self)
+		local showAll = InterfaceOptionsNamesPanelUnitNameplatesShowAll
+		local enemies = InterfaceOptionsNamesPanelUnitNameplatesEnemies
+		local friends = InterfaceOptionsNamesPanelUnitNameplatesFriends
+
+		-- Check all 3 boxes when enabling nameplates
+		if self:GetChecked() then
+			showAll:SetChecked(true)
+			ExecuteFrameScript(showAll, "OnClick", "LeftButton")
+
+			enemies:SetChecked(true)
+			ExecuteFrameScript(enemies, "OnClick", "LeftButton")
+
+			friends:SetChecked(true)
+			ExecuteFrameScript(friends, "OnClick", "LeftButton")
+
+			-- Do not stack nameplates
+			InterfaceOptionsNamesPanelUnitNameplatesMotionDropDown:SetValue(0)
+
+		-- Only uncheck "show all" when disabling
+		else
+			showAll:SetChecked(false)
+			ExecuteFrameScript(showAll, "OnClick", "LeftButton")
+		end
+	end)
+
+	-- Show icon checkbox
+	Musician.Options.SetupCheckbox(
+		MusicianOptionsPanelUnitNamePlatesShowIcon,
+		string.gsub(Musician.Msg.OPTIONS_SHOW_NAMEPLATE_ICON, '{icon}', Musician.Utils.GetChatIcon(Musician.IconImages.Note)),
+		MusicianOptionsPanelUnitNamePlatesEnable)
+	MusicianOptionsPanelUnitNamePlatesShowIcon:HookScript("OnClick", function()
+		Musician.NamePlates.Options.Save(true)
+	end)
+
+	-- Hide nameplate bars checkbox
+	Musician.Options.SetupCheckbox(
+		MusicianOptionsPanelUnitNamePlatesHideNamePlateBars,
+		Musician.Msg.OPTIONS_HIDE_HEALTH_BARS,
+		MusicianOptionsPanelUnitNamePlatesEnable)
+	MusicianOptionsPanelUnitNamePlatesHideNamePlateBars:HookScript("OnClick", function()
+		Musician.NamePlates.Options.Save(true)
+	end)
+
+	-- Hide NPCs checkbox
+	Musician.Options.SetupCheckbox(
+		MusicianOptionsPanelUnitNamePlatesHideNPCs,
+		 Musician.Msg.OPTIONS_HIDE_NPC_NAMEPLATES,
+		 MusicianOptionsPanelUnitNamePlatesEnable)
+	MusicianOptionsPanelUnitNamePlatesHideNPCs:HookScript("OnClick", function()
+		Musician.NamePlates.Options.Save(true)
+	end)
+
+	-- Cinematic mode checkbox
+	Musician.Options.SetupCheckbox(
+		MusicianOptionsPanelUnitNamePlatesCinematicMode,
+		Musician.NamePlates.Options.GetCinematicModeLabel(),
+		MusicianOptionsPanelUnitNamePlatesEnable)
+	MusicianOptionsPanelUnitNamePlatesCinematicMode:HookScript("OnClick", function()
+		Musician.NamePlates.Options.Save(true)
+	end)
+	MusicianOptionsPanelUnitNamePlatesCinematicMode:HookScript("OnShow", function(self)
+		_G[self:GetName().."Text"]:SetText(Musician.NamePlates.Options.GetCinematicModeLabel())
+		self:SetHitRectInsets(0, -_G[self:GetName().."Text"]:GetWidth(), 0, 0)
+	end)
+
+	-- Cinematic mode nameplates checkbox
+	Musician.Options.SetupCheckbox(
+		MusicianOptionsPanelUnitNamePlatesCinematicModeNamePlates,
+		Musician.Msg.OPTIONS_NAMEPLATES_CINEMATIC_MODE,
+		MusicianOptionsPanelUnitNamePlatesEnable,
+		MusicianOptionsPanelUnitNamePlatesCinematicMode)
+	MusicianOptionsPanelUnitNamePlatesCinematicModeNamePlates:HookScript("OnClick", function()
+		Musician.NamePlates.Options.Save(true)
+	end)
 end
 hooksecurefunc(Musician.Options, "Init", Musician.NamePlates.Options.Init)
 

@@ -1,4 +1,5 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="MusicianNamePlatesOptions.lua"/>
 	<Frame name="MusicianOptionsPanelUnitNamePlates" parent="MusicianOptionsPanel">
 		<Size>
 			<AbsDimension x="580" y="194"/>
@@ -31,133 +32,38 @@
 					<!-- Original size: 160 x 256 -->
 					<AbsDimension x="106.666667" y="170.666667"/>
 				</Size>
-				<Scripts>
-					<OnLoad inherit="prepend">
-						self.fps = 30
-						self.width = 1024
-						self.height = 1024
-						self.tileWidth = 128
-						self.tileHeight = 256
-						self.textureFile = "Interface\\AddOns\\Musician\\ui\\textures\\nameplates-demo.blp"
-					</OnLoad>
-				</Scripts>
 			</Frame>
 
 			<CheckButton name="$parentEnable" inherits="MusicianOptionsCheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentSubText" relativePoint="BOTTOMLEFT" x="0" y="4"/>
 				</Anchors>
-				<Scripts>
-					<OnLoad>
-						Musician.Options.SetupCheckbox(self, Musician.Msg.OPTIONS_ENABLE_NAMEPLATES)
-						self:HookScript("OnClick", function()
-							local showAll = InterfaceOptionsNamesPanelUnitNameplatesShowAll
-							local enemies = InterfaceOptionsNamesPanelUnitNameplatesEnemies
-							local friends = InterfaceOptionsNamesPanelUnitNameplatesFriends
-
-							-- Check all 3 boxes when enabling nameplates
-							if self:GetChecked() then
-								showAll:SetChecked(true)
-								ExecuteFrameScript(showAll, "OnClick", "LeftButton")
-
-								enemies:SetChecked(true)
-								ExecuteFrameScript(enemies, "OnClick", "LeftButton")
-
-								friends:SetChecked(true)
-								ExecuteFrameScript(friends, "OnClick", "LeftButton")
-
-								-- Do not stack nameplates
-								InterfaceOptionsNamesPanelUnitNameplatesMotionDropDown:SetValue(0)
-
-							-- Only uncheck "show all" when disabling
-							else
-								showAll:SetChecked(false)
-								ExecuteFrameScript(showAll, "OnClick", "LeftButton")
-							end
-						end)
-					</OnLoad>
-				</Scripts>
 			</CheckButton>
 			<CheckButton name="$parentShowIcon" inherits="InterfaceOptionsSmallCheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentEnable" relativePoint="BOTTOMLEFT" x="10" y="4"/>
 				</Anchors>
-				<Scripts>
-					<OnLoad>
-						local label = Musician.Msg.OPTIONS_SHOW_NAMEPLATE_ICON
-						label = string.gsub(label, '{icon}', Musician.Utils.GetChatIcon(Musician.IconImages.Note))
-						Musician.Options.SetupCheckbox(self, label, _G[self:GetParent():GetName().."Enable"])
-						self:HookScript("OnClick", function()
-							Musician.NamePlates.Options.Save(true)
-						end)
-					</OnLoad>
-				</Scripts>
 			</CheckButton>
 			<CheckButton name="$parentHideNamePlateBars" inherits="InterfaceOptionsSmallCheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentShowIcon" relativePoint="BOTTOMLEFT" x="0" y="4"/>
 				</Anchors>
-				<Scripts>
-					<OnLoad>
-						Musician.Options.SetupCheckbox(self, Musician.Msg.OPTIONS_HIDE_HEALTH_BARS, _G[self:GetParent():GetName().."Enable"])
-						self:HookScript("OnClick", function()
-							Musician.NamePlates.Options.Save(true)
-						end)
-					</OnLoad>
-				</Scripts>
 			</CheckButton>
 			<CheckButton name="$parentHideNPCs" inherits="InterfaceOptionsSmallCheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentHideNamePlateBars" relativePoint="BOTTOMLEFT" x="0" y="4"/>
 				</Anchors>
-				<Scripts>
-					<OnLoad>
-						Musician.Options.SetupCheckbox(self, Musician.Msg.OPTIONS_HIDE_NPC_NAMEPLATES, _G[self:GetParent():GetName().."Enable"])
-						self:HookScript("OnClick", function()
-							Musician.NamePlates.Options.Save(true)
-						end)
-					</OnLoad>
-				</Scripts>
 			</CheckButton>
 			<CheckButton name="$parentCinematicMode" inherits="MusicianOptionsCheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentHideNPCs" relativePoint="BOTTOMLEFT" x="-10" y="-6"/>
 				</Anchors>
-				<Scripts>
-					<OnLoad>
-						Musician.Options.SetupCheckbox(self, Musician.NamePlates.Options.GetCinematicModeLabel(), _G[self:GetParent():GetName().."Enable"])
-						self:HookScript("OnClick", function()
-							Musician.NamePlates.Options.Save(true)
-						end)
-					</OnLoad>
-					<OnShow inherit="prepend">
-						_G[self:GetName().."Text"]:SetText(Musician.NamePlates.Options.GetCinematicModeLabel())
-						self:SetHitRectInsets(0, -_G[self:GetName().."Text"]:GetWidth(), 0, 0)
-					</OnShow>
-				</Scripts>
 			</CheckButton>
 			<CheckButton name="$parentCinematicModeNamePlates" inherits="InterfaceOptionsSmallCheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentCinematicMode" relativePoint="BOTTOMLEFT" x="10" y="4"/>
 				</Anchors>
-				<Scripts>
-					<OnLoad>
-						Musician.Options.SetupCheckbox(
-							self, Musician.Msg.OPTIONS_NAMEPLATES_CINEMATIC_MODE,
-							_G[self:GetParent():GetName().."Enable"],
-							_G[self:GetParent():GetName().."CinematicMode"])
-						self:HookScript("OnClick", function()
-							Musician.NamePlates.Options.Save(true)
-						end)
-					</OnLoad>
-				</Scripts>
 			</CheckButton>
 		</Frames>
-		<Scripts>
-			<OnLoad>
-				MusicianOptionsPanelUnitNamePlatesTitle:SetText(Musician.Msg.OPTIONS_CATEGORY_NAMEPLATES)
-				MusicianOptionsPanelUnitNamePlatesSubText:SetText(Musician.Msg.OPTIONS_CATEGORY_NAMEPLATES_SUB_TEXT)
-			</OnLoad>
-		</Scripts>
 	</Frame>
 </Ui>
