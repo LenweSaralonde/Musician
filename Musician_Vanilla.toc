@@ -58,7 +58,6 @@ ui\MusicianAbout.xml
 ui\MusicianSongLinkExportFrame.xml
 
 ui\MusicianSongLinkImportFrame.xml
-ui\MusicianSongLinkImportFrame.lua
 
 ui\MusicianUrlHyperlinkSelector.xml
 

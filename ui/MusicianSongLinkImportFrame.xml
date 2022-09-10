@@ -1,6 +1,7 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 
-	<Frame name="MusicianSongLinkImportFrame" inherits="MusicianDialogTemplate">
+	<Script file="MusicianSongLinkImportFrame.lua" />
+	<Frame name="MusicianSongLinkImportFrame" inherits="MusicianDialogTemplate" mixin="MusicianSongLinkImportFrameMixin">
 		<Size x="360" y="152" />
 		<Layers>
 			<Layer level="BACKGROUND">
@@ -41,22 +42,12 @@
 				<Anchors>
 					<Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$parentProgressBar" y="-10" />
 				</Anchors>
-				<Scripts>
-					<OnClick inherit="append">
-						self:GetParent().startImport()
-					</OnClick>
-				</Scripts>
 			</Button>
 			<Button name="$parentCancelImportButton" inherits="UIPanelButtonTemplate" level="OVERLAY" parentKey="cancelImportButton">
 				<Size x="200" y="24" />
 				<Anchors>
 					<Anchor point="TOP" relativeTo="$parentImportButton" />
 				</Anchors>
-				<Scripts>
-					<OnClick inherit="append">
-						self:GetParent().cancelImport()
-					</OnClick>
-				</Scripts>
 			</Button>
 		</Frames>
 
@@ -74,14 +65,7 @@
 		</Layers>
 
 		<Scripts>
-			<OnLoad inherit="append">
-				-- Allow posting player hyperlinks
-				self:SetHyperlinksEnabled(true)
-				self:SetScript("OnHyperlinkClick", InlineHyperlinkFrame_OnClick)
-
-				self.cancelImportButton:SetText(Musician.Msg.LINK_IMPORT_WINDOW_CANCEL_IMPORT_BUTTON)
-				self.importButton:SetText(Musician.Msg.LINK_IMPORT_WINDOW_IMPORT_BUTTON)
-			</OnLoad>
+			<OnLoad inherit="append" method="OnLoad" />
 		</Scripts>
 
 	</Frame>

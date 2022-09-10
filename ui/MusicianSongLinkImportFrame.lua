@@ -221,3 +221,25 @@ function Musician.SongLinkImportFrame.ShowImportFrame(title, playerName)
 
 	frame:Show()
 end
+
+-- Main mixin
+MusicianSongLinkImportFrameMixin = {}
+
+--- OnLoad
+--
+function MusicianSongLinkImportFrameMixin:OnLoad()
+	-- Allow posting player hyperlinks
+	self:SetHyperlinksEnabled(true)
+	self:SetScript("OnHyperlinkClick", InlineHyperlinkFrame_OnClick)
+
+	self.cancelImportButton:SetText(Musician.Msg.LINK_IMPORT_WINDOW_CANCEL_IMPORT_BUTTON)
+	self.importButton:SetText(Musician.Msg.LINK_IMPORT_WINDOW_IMPORT_BUTTON)
+
+	self.importButton:HookScript("OnClick", function()
+		self.startImport()
+	end)
+
+	self.cancelImportButton:HookScript("OnClick", function()
+		self.cancelImport()
+	end)
+end
