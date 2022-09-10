@@ -13,35 +13,148 @@ local NOTE = Musician.Song.Indexes.NOTE
 --- Init
 --
 function Musician.TrackEditor.Init()
-
-	MusicianTrackEditor:SetClampedToScreen(true)
-
-	-- Init texts
+	-- Register events
 	Musician.TrackEditor:RegisterMessage(Musician.Events.SongCursor, Musician.TrackEditor.UpdateCursor)
 	Musician.TrackEditor:RegisterMessage(Musician.Events.SongPlay, Musician.TrackEditor.UpdateButtons)
 	Musician.TrackEditor:RegisterMessage(Musician.Events.SongStop, Musician.TrackEditor.UpdateButtons)
+	Musician.TrackEditor:RegisterMessage(Musician.Events.Frame, Musician.TrackEditor.OnUpdate)
+	Musician.TrackEditor:RegisterMessage(Musician.Events.VisualNoteOn, Musician.TrackEditor.NoteOn)
+	Musician.TrackEditor:RegisterMessage(Musician.Events.VisualNoteOff, Musician.TrackEditor.NoteOff)
+	Musician.TrackEditor:RegisterMessage(Musician.Events.SourceSongLoaded, Musician.TrackEditor.OnLoad)
+	Musician.TrackEditor:RegisterMessage(Musician.Events.StreamStart, Musician.TrackEditor.UpdateSyncButton)
+	Musician.TrackEditor:RegisterMessage(Musician.Events.StreamStop, Musician.TrackEditor.UpdateSyncButton)
 
+	-- Main frame settings
+	MusicianTrackEditor:SetClampedToScreen(true)
+	MusicianTrackEditor:HookScript("OnSizeChanged", function(self)
+		self:SetMinResize(600, 270)
+		self:SetMaxResize(UIParent:GetWidth() / self:GetScale(), UIParent:GetHeight() / self:GetScale())
+	end)
+
+	-- Set text labels
 	MusicianTrackEditorTitle:SetText(Musician.Msg.SONG_EDITOR)
 	MusicianTrackEditorHeaderTrackId:SetText(Musician.Msg.HEADER_NUMBER)
-	MusicianTrackEditorHeaderInstrument:SetText(Musician.Msg.HEADER_INSTRUMENT)
+	MusicianTrackEditorHeaderMute:SetText(Musician.Icons.Mute)
+	MusicianTrackEditorHeaderSolo:SetText(Musician.Icons.Solo)
 	MusicianTrackEditorHeaderTranspose:SetText(Musician.Msg.HEADER_OCTAVE)
+	MusicianTrackEditorHeaderInstrument:SetText(Musician.Msg.HEADER_INSTRUMENT)
 
-	MusicianTrackEditorCropFromTitle:SetText(Musician.Msg.MARKER_FROM)
-	MusicianTrackEditorCropFrom.tooltipText = Musician.Msg.SET_CROP_FROM
-	MusicianTrackEditorCropToTitle:SetText(Musician.Msg.MARKER_TO)
-	MusicianTrackEditorCropTo.tooltipText = Musician.Msg.SET_CROP_TO
+	-- Resize button
+	local resizeButton = MusicianTrackEditorResizeButton
+	for _, texture in ipairs({ resizeButton:GetNormalTexture(), resizeButton:GetHighlightTexture(), resizeButton:GetPushedTexture() }) do
+		texture:ClearAllPoints()
+		texture:SetPoint("TOPLEFT", -10, 10)
+		texture:SetSize(20, 20)
+	end
+	resizeButton.frameLevel = MusicianTrackEditorScrollFrame:GetFrameLevel() + 100
+	resizeButton:SetFrameLevel(resizeButton.frameLevel)
+	resizeButton:SetScript("OnMouseDown", function(self)
+		self:SetButtonState("PUSHED", true)
+		self:GetHighlightTexture():Hide()
+		MusicianTrackEditor:StartSizing("BOTTOMRIGHT")
+	end)
+	resizeButton:SetScript("OnMouseUp", function(self)
+		self:SetButtonState("NORMAL", false)
+		self:GetHighlightTexture():Show()
+		MusicianTrackEditor:StopMovingOrSizing()
+	end)
 
+	-- Scroll frame
+	MusicianTrackEditorScrollFrame:HookScript("OnScrollRangeChanged", function(self)
+		-- Workaround to fix the gap in the scroll height
+		C_Timer.After(.0001, function()
+			local range = max(0, MusicianTrackEditorTrackContainer:GetHeight() - self:GetHeight() - 2)
+			self.ScrollBar:SetMinMaxValues(0, range)
+			ScrollFrame_OnScrollRangeChanged(self, 0, range)
+		end)
+	end)
+	MusicianTrackEditorScrollFrame:HookScript("OnSizeChanged", function(self)
+		MusicianTrackEditorTrackContainer:SetWidth(self:GetWidth())
+	end)
+
+	-- Slider
+	MusicianTrackEditorSourceSongSlider:SetScript("OnMouseDown", function(self)
+		self.dragging = true
+	end)
+	MusicianTrackEditorSourceSongSlider:SetScript("OnMouseUp", function(self)
+		self.dragging = false
+		if Musician.sourceSong then
+			Musician.sourceSong:Seek(self:GetValue() - .001)
+		end
+	end)
+
+	-- Play button
+	MusicianTrackEditorPlayButton:SetScript("OnClick", function()
+		if Musician.sourceSong:IsPlaying() then
+			Musician.sourceSong:Stop()
+		else
+			if Musician.sourceSong.cursor >= Musician.sourceSong.cropTo then
+				Musician.sourceSong:Seek(Musician.sourceSong.cropFrom)
+			end
+			Musician.sourceSong:Resume()
+		end
+	end)
+
+	-- Previous button
+	MusicianTrackEditorPrevButton:SetText(Musician.Icons.FastBw)
 	MusicianTrackEditorPrevButton.tooltipText = Musician.Msg.JUMP_PREV
-	MusicianTrackEditorNextButton.tooltipText = Musician.Msg.JUMP_NEXT
-	MusicianTrackEditorGoToStartButton.tooltipText = Musician.Msg.GO_TO_START
-	MusicianTrackEditorGoToEndButton.tooltipText = Musician.Msg.GO_TO_END
-	MusicianTrackEditorSetCropFromButton.tooltipText = Musician.Msg.SET_CROP_FROM
-	MusicianTrackEditorSetCropToButton.tooltipText = Musician.Msg.SET_CROP_TO
+	MusicianTrackEditorPrevButton:SetScript("OnClick", function()
+		Musician.sourceSong:Seek(max(Musician.sourceSong.cropFrom, Musician.sourceSong.cursor - 10))
+	end)
 
+	-- Next button
+	MusicianTrackEditorNextButton:SetText(Musician.Icons.FastFw)
+	MusicianTrackEditorNextButton.tooltipText = Musician.Msg.JUMP_NEXT
+	MusicianTrackEditorNextButton:SetScript("OnClick", function()
+		Musician.sourceSong:Seek(min(Musician.sourceSong.cropTo, Musician.sourceSong.cursor + 10))
+	end)
+
+	-- Go to start button
+	MusicianTrackEditorGoToStartButton:SetText(Musician.Icons.ToStart)
+	MusicianTrackEditorGoToStartButton.tooltipText = Musician.Msg.GO_TO_START
+	MusicianTrackEditorGoToStartButton:SetScript("OnClick", function()
+		Musician.sourceSong:Seek(Musician.sourceSong.cropFrom)
+	end)
+
+	-- Go to end button
+	MusicianTrackEditorGoToEndButton:SetText(Musician.Icons.ToEnd)
+	MusicianTrackEditorGoToEndButton.tooltipText = Musician.Msg.GO_TO_END
+	MusicianTrackEditorGoToEndButton:SetScript("OnClick", function()
+		Musician.sourceSong:Seek(Musician.sourceSong.cropTo)
+	end)
+
+	-- Crop from button
+	MusicianTrackEditorSetCropFromButton:SetText(Musician.Icons.InPoint)
+	MusicianTrackEditorSetCropFromButton.tooltipText = Musician.Msg.SET_CROP_FROM
+	MusicianTrackEditorSetCropFromButton:SetScript("OnClick", function()
+		Musician.TrackEditor.SetCropFrom(Musician.sourceSong.cursor)
+	end)
+
+	-- Crop to button
+	MusicianTrackEditorSetCropToButton.tooltipText = Musician.Msg.SET_CROP_TO
+	MusicianTrackEditorSetCropToButton:SetText(Musician.Icons.OutPoint)
+	MusicianTrackEditorSetCropToButton:SetScript("OnClick", function()
+		Musician.TrackEditor.SetCropTo(Musician.sourceSong.cursor)
+	end)
+
+	-- Sync button
+	MusicianTrackEditorSynchronizeButton:SetText(Musician.Icons.Reset)
+	MusicianTrackEditorSynchronizeButton.tooltipText = Musician.Msg.SYNCHRONIZE_TRACKS
+	Musician.TrackEditor.UpdateSyncButton()
+	MusicianTrackEditorSynchronizeButton:SetScript("OnClick", Musician.TrackEditor.Synchronize)
+
+	-- Crop from edit box
+	MusicianTrackEditorCropFromTitle:SetText(Musician.Msg.MARKER_FROM)
+	MusicianTrackEditorCropFromTitle:SetJustifyH('LEFT')
+	MusicianTrackEditorCropFrom.tooltipText = Musician.Msg.SET_CROP_FROM
 	MusicianTrackEditorCropFrom:SetScript("OnEditFocusLost", function(self)
 		Musician.TrackEditor.SetCropFrom(Musician.Utils.ParseTime(self:GetText()))
 	end)
 
+	-- Crop to edit box
+	MusicianTrackEditorCropToTitle:SetText(Musician.Msg.MARKER_TO)
+	MusicianTrackEditorCropToTitle:SetJustifyH('RIGHT')
+	MusicianTrackEditorCropTo.tooltipText = Musician.Msg.SET_CROP_TO
 	MusicianTrackEditorCropTo:SetScript("OnEditFocusLost", function(self)
 		local cropTo = Musician.Utils.ParseTime(self:GetText())
 		if cropTo == 0 then
@@ -51,21 +164,13 @@ function Musician.TrackEditor.Init()
 		end
 	end)
 
+	-- Cursor position edit box
 	MusicianTrackEditorCursorAt:SetScript("OnEditFocusLost", function(self)
 		local cursor = Musician.Utils.ParseTime(self:GetText())
 		cursor = max(Musician.sourceSong.cropFrom, min(cursor, Musician.sourceSong.cropTo))
 		self:SetText(Musician.Utils.FormatTime(cursor))
 		Musician.sourceSong:Seek(cursor)
 	end)
-
-	Musician.TrackEditor:RegisterMessage(Musician.Events.Frame, Musician.TrackEditor.OnUpdate)
-	Musician.TrackEditor:RegisterMessage(Musician.Events.VisualNoteOn, Musician.TrackEditor.NoteOn)
-	Musician.TrackEditor:RegisterMessage(Musician.Events.VisualNoteOff, Musician.TrackEditor.NoteOff)
-	Musician.TrackEditor:RegisterMessage(Musician.Events.SourceSongLoaded, Musician.TrackEditor.OnLoad)
-
-	Musician.TrackEditor:RegisterMessage(Musician.Events.StreamStart, Musician.TrackEditor.UpdateSyncButton)
-	Musician.TrackEditor:RegisterMessage(Musician.Events.StreamStop, Musician.TrackEditor.UpdateSyncButton)
-	Musician.TrackEditor.UpdateSyncButton()
 end
 
 --- Song loaded handler
@@ -414,4 +519,24 @@ function Musician.TrackEditor.NoteOff(event, song, track)
 			meterTexture.volumeMeter:NoteOff()
 		end
 	end
+end
+
+--- Time edit box template OnLoad
+--
+function MusicianTimeEditBoxTemplate_OnLoad(self)
+	self:HookScript("OnEscapePressed", function()
+		self:ClearFocus()
+	end)
+	self:HookScript("OnKeyUp", function(_, key)
+		if key == "ENTER" then
+			self:ClearFocus()
+		end
+	end)
+end
+
+--- Track template OnLoad
+--
+function MusicianTrackTemplate_OnLoad(self)
+	MSA_DropDownMenu_SetWidth(self.transposeDropdown, 40)
+	Musician.EnableHyperlinks(self)
 end

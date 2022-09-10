@@ -1,5 +1,7 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 
+	<Script file="MusicianTrackEditor.lua" />
+
 	<!-- Edit box with timecode template -->
 
 	<EditBox name="MusicianTimeEditBoxTemplate" inherits="InputBoxTemplate" letters="8" historyLines="0" autofocus="false" virtual="true">
@@ -16,12 +18,7 @@
 			</Layer>
 		</Layers>
 		<Scripts>
-			<OnEscapePressed>self:ClearFocus()</OnEscapePressed>
-			<OnKeyUp>
-				if key == "ENTER" then
-					self:ClearFocus()
-				end
-			</OnKeyUp>
+			<OnLoad inherit="prepend" function="MusicianTimeEditBoxTemplate_OnLoad" />
 		</Scripts>
 	</EditBox>
 
@@ -194,19 +191,12 @@
 				<Anchors>
 					<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentInstrumentDropdown" x="32" />
 				</Anchors>
-				<Scripts>
-					<OnLoad inherit="prepend">
-						MSA_DropDownMenu_SetWidth(self, 40)
-					</OnLoad>
-				</Scripts>
 			</Frame>
 
 		</Frames>
 
 		<Scripts>
-			<OnLoad>
-				Musician.EnableHyperlinks(self)
-			</OnLoad>
+			<OnLoad function="MusicianTrackTemplate_OnLoad" />
 		</Scripts>
 	</Frame>
 
@@ -235,22 +225,6 @@
 					<TexCoords left="0.375" right="0.625" />
 					<Size x="8" y="32"/>
 				</ThumbTexture>
-				<Scripts>
-					<OnMouseDown>
-						self.dragging = true
-					</OnMouseDown>
-					<OnMouseUp>
-						self.dragging = false
-						if Musician.sourceSong then
-							Musician.sourceSong:Seek(self:GetValue() - .001)
-						end
-					</OnMouseUp>
-					<OnUpdate>
-						if self.dragging then
-							Musician.TrackEditor.UpdateCursor(nil, Musician.sourceSong)
-						end
-					</OnUpdate>
-				</Scripts>
 			</Slider>
 
 			<!-- Timecode inputs -->
@@ -259,9 +233,6 @@
 				<Anchors>
 					<Anchor point="TOPLEFT" x="5" y="0" relativeTo="$parentSourceSongSlider" relativePoint="BOTTOMLEFT" />
 				</Anchors>
-				<Scripts>
-					<OnLoad>MusicianTrackEditorCropFromTitle:SetJustifyH('LEFT')</OnLoad>
-				</Scripts>
 			</EditBox>
 
 			<EditBox name="$parentCursorAt" inherits="MusicianTimeEditBoxTemplate">
@@ -274,11 +245,6 @@
 				<Anchors>
 					<Anchor point="TOPRIGHT" x="0" y="0" relativeTo="$parentSourceSongSlider" relativePoint="BOTTOMRIGHT" />
 				</Anchors>
-				<Scripts>
-					<OnLoad>
-						MusicianTrackEditorCropToTitle:SetJustifyH('RIGHT')
-					</OnLoad>
-				</Scripts>
 			</EditBox>
 
 			<!-- Player buttons -->
@@ -288,18 +254,6 @@
 				<Anchors>
 					<Anchor point="BOTTOM" x="0" y="0" relativePoint="TOP" relativeTo="$parentSourceSongSlider" />
 				</Anchors>
-				<Scripts>
-					<OnClick>
-						if Musician.sourceSong:IsPlaying() then
-							Musician.sourceSong:Stop()
-						else
-							if Musician.sourceSong.cursor >= Musician.sourceSong.cropTo then
-								Musician.sourceSong:Seek(Musician.sourceSong.cropFrom)
-							end
-							Musician.sourceSong:Resume()
-						end
-					</OnClick>
-				</Scripts>
 			</Button>
 
 			<Button name="$parentPrevButton" inherits="MusicianIconButtonTemplate">
@@ -307,11 +261,6 @@
 				<Anchors>
 					<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentPlayButton" />
 				</Anchors>
-				<Scripts>
-					<OnClick>
-						Musician.sourceSong:Seek(max(Musician.sourceSong.cropFrom, Musician.sourceSong.cursor - 10))
-					</OnClick>
-				</Scripts>
 			</Button>
 
 			<Button name="$parentNextButton" inherits="MusicianIconButtonTemplate">
@@ -319,11 +268,6 @@
 				<Anchors>
 					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentPlayButton" />
 				</Anchors>
-				<Scripts>
-					<OnClick>
-						Musician.sourceSong:Seek(min(Musician.sourceSong.cropTo, Musician.sourceSong.cursor + 10))
-					</OnClick>
-				</Scripts>
 			</Button>
 
 			<Button name="$parentGoToStartButton" inherits="MusicianIconButtonTemplate">
@@ -331,11 +275,6 @@
 				<Anchors>
 					<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentPrevButton" />
 				</Anchors>
-				<Scripts>
-					<OnClick>
-						Musician.sourceSong:Seek(Musician.sourceSong.cropFrom)
-					</OnClick>
-				</Scripts>
 			</Button>
 
 			<Button name="$parentGoToEndButton" inherits="MusicianIconButtonTemplate" hidden="true">
@@ -343,11 +282,6 @@
 				<Anchors>
 					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentNextButton" />
 				</Anchors>
-				<Scripts>
-					<OnClick>
-						Musician.sourceSong:Seek(Musician.sourceSong.cropTo)
-					</OnClick>
-				</Scripts>
 			</Button>
 
 			<Button name="$parentSetCropFromButton" inherits="MusicianIconButtonTemplate">
@@ -355,11 +289,6 @@
 				<Anchors>
 					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentGoToEndButton" />
 				</Anchors>
-				<Scripts>
-					<OnClick>
-						Musician.TrackEditor.SetCropFrom(Musician.sourceSong.cursor)
-					</OnClick>
-				</Scripts>
 			</Button>
 
 			<Button name="$parentSetCropToButton" inherits="MusicianIconButtonTemplate">
@@ -367,11 +296,6 @@
 				<Anchors>
 					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentSetCropFromButton" />
 				</Anchors>
-				<Scripts>
-					<OnClick>
-						Musician.TrackEditor.SetCropTo(Musician.sourceSong.cursor)
-					</OnClick>
-				</Scripts>
 			</Button>
 
 			<Button name="$parentSynchronizeButton" inherits="MusicianIconButtonTemplate">
@@ -379,11 +303,6 @@
 				<Anchors>
 					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentSetCropToButton" x="20" />
 				</Anchors>
-				<Scripts>
-					<OnClick>
-						Musician.TrackEditor.Synchronize()
-					</OnClick>
-				</Scripts>
 			</Button>
 
 			<!-- Track list -->
@@ -421,19 +340,6 @@
 						</Texture>
 					</Layer>
 				</Layers>
-				<Scripts>
-					<OnScrollRangeChanged inherit="append">
-						-- Workaround to fix the gap in the scroll height
-						C_Timer.After(.0001, function()
-							local range = max(0, MusicianTrackEditorTrackContainer:GetHeight() - self:GetHeight() - 2)
-							self.ScrollBar:SetMinMaxValues(0, range)
-							ScrollFrame_OnScrollRangeChanged(self, 0, range)
-						end)
-					</OnScrollRangeChanged>
-					<OnSizeChanged inherit="append">
-						MusicianTrackEditorTrackContainer:SetWidth(self:GetWidth())
-					</OnSizeChanged>
-				</Scripts>
 				<ScrollChild>
 					<Frame name="MusicianTrackEditorTrackContainer">
 						<Size x="585" y="0"/>
@@ -458,31 +364,6 @@
 				<Anchors>
 					<Anchor point="BOTTOMRIGHT" x="3" y="-3"/>
 				</Anchors>
-				<Scripts>
-					<OnMouseDown>
-						self:SetButtonState("PUSHED", true)
-						self:GetHighlightTexture():Hide()
-						local window = self:GetParent()
-						window:StartSizing("BOTTOMRIGHT")
-					</OnMouseDown>
-					<OnMouseUp>
-						self:SetButtonState("NORMAL", false)
-						self:GetHighlightTexture():Show()
-						local window = self:GetParent()
-						window:StopMovingOrSizing()
-						FCF_SavePositionAndDimensions(window)
-					</OnMouseUp>
-					<OnLoad>
-						local texture
-						for _, texture in ipairs({ self:GetNormalTexture(), self:GetHighlightTexture(), self:GetPushedTexture() }) do
-							texture:ClearAllPoints()
-							texture:SetPoint("TOPLEFT", -10, 10)
-							texture:SetSize(20, 20)
-						end
-						self.frameLevel = MusicianTrackEditorScrollFrame:GetFrameLevel() + 100
-						self:SetFrameLevel(self.frameLevel)
-					</OnLoad>
-				</Scripts>
 				<NormalTexture file="Interface\ChatFrame\UI-ChatIM-SizeGrabber-Up"/>
 				<HighlightTexture file="Interface\ChatFrame\UI-ChatIM-SizeGrabber-Highlight"/>
 				<PushedTexture file="Interface\ChatFrame\UI-ChatIM-SizeGrabber-Down"/>
@@ -544,25 +425,5 @@
 
 			</Layer>
 		</Layers>
-
-		<Scripts>
-			<OnLoad inherit="prepend">
-				MusicianTrackEditorPrevButton:SetText(Musician.Icons.FastBw)
-				MusicianTrackEditorNextButton:SetText(Musician.Icons.FastFw)
-				MusicianTrackEditorGoToStartButton:SetText(Musician.Icons.ToStart)
-				MusicianTrackEditorGoToEndButton:SetText(Musician.Icons.ToEnd)
-				MusicianTrackEditorSetCropFromButton:SetText(Musician.Icons.InPoint)
-				MusicianTrackEditorSetCropToButton:SetText(Musician.Icons.OutPoint)
-				MusicianTrackEditorSynchronizeButton:SetText(Musician.Icons.Reset)
-				MusicianTrackEditorSynchronizeButton.tooltipText = Musician.Msg.SYNCHRONIZE_TRACKS
-				MusicianTrackEditorHeaderMute:SetText(Musician.Icons.Mute)
-				MusicianTrackEditorHeaderSolo:SetText(Musician.Icons.Solo)
-			</OnLoad>
-			<OnSizeChanged inherit="append">
-				self:SetMinResize(600, 270)
-				self:SetMaxResize(UIParent:GetWidth() / self:GetScale(), UIParent:GetHeight() / self:GetScale())
-			</OnSizeChanged>
-		</Scripts>
-
 	</Frame>
 </Ui>

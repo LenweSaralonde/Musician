@@ -42,7 +42,6 @@ ui\MusicianBasicMessageDialog.xml
 ui\MusicianFrame.xml
 
 ui\MusicianTrackEditor.xml
-ui\MusicianTrackEditor.lua
 
 ui\MusicianButton.lua
 

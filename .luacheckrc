@@ -353,6 +353,7 @@ stds.wow = {
 		"InlineHyperlinkFrame_OnEnter",
 		"InlineHyperlinkFrame_OnLeave",
 		"InlineHyperlinkFrame_OnClick",
+		"ScrollFrame_OnScrollRangeChanged",
 
 		-- Global Mixins and UI Objects
 
