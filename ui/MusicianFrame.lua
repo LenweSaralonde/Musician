@@ -14,8 +14,7 @@ local isCommActionPending = false
 --- Init
 --
 function Musician.Frame.Init()
-	MusicianFrame:SetClampedToScreen(true)
-
+	-- Register events
 	Musician.Frame:RegisterMessage(Musician.Events.CommChannelUpdate, Musician.Frame.OnCommChannelUpdate)
 	Musician.Frame:RegisterMessage(Musician.Events.CommSendAction, Musician.Frame.OnCommSendAction)
 	Musician.Frame:RegisterMessage(Musician.Events.CommSendActionComplete, Musician.Frame.OnCommSendAction)
@@ -38,25 +37,83 @@ function Musician.Frame.Init()
 	Musician.Frame:RegisterEvent("PLAYER_ALIVE", Musician.Frame.OnCommChannelUpdate)
 	Musician.Frame:RegisterEvent("PLAYER_UNGHOST", Musician.Frame.OnCommChannelUpdate)
 
-	MusicianFrameTrackEditorButton:Disable()
-	MusicianFrameLinkButton:Disable()
-	MusicianFrameTestButton:SetText(Musician.Msg.TEST_SONG)
-	MusicianFrameTestButton:SetEnabled(false)
-	MusicianFramePlayButton:SetText(Musician.Msg.PLAY)
-	Musician.Frame.UpdatePlayButton()
-	Musician.Frame.UpdateBandPlayButton()
-	Musician.Frame.Clear()
+	-- Main frame settings
+	MusicianFrame.noEscape = true
+	MusicianFrame:SetClampedToScreen(true)
+	MusicianFrame:ClearAllPoints()
+	local defaultY = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE and 93 or 126
+	MusicianFrame:SetPoint('RIGHT', UIParent, 'RIGHT', 0, defaultY)
 
+	-- Main title
+	MusicianFrameTitle:SetText(Musician.Msg.PLAY_A_SONG)
+
+	-- Song source
 	MusicianFrameSource:SetMaxBytes(512)
 	MusicianFrameSource:SetScript("OnTextChanged", Musician.Frame.OnSourceChanged)
 	MusicianFrameSource:SetScript("OnChar", function(self, c)
 		sourceBuffer[sourceBufferCharIndex] = c
 		sourceBufferCharIndex = sourceBufferCharIndex + 1
 	end)
-
+	MusicianFrameSource:SetScript("OnMouseUp", function()
+		MusicianFrameSource:SetFocus()
+	end)
+	MusicianFrameSource:SetScript("OnEditFocusGained", function()
+		MusicianFrameSource:HighlightText(0)
+	end)
+	MusicianFrameSource:SetScript("OnEscapePressed", function()
+		MusicianFrameSource:ClearFocus()
+	end)
+	MusicianFrameScrollFrame:SetScript("OnMouseUp", function()
+		MusicianFrameSource:SetFocus()
+	end)
 	MusicianFrameTextBackgroundLoadingProgressBar:Hide()
+	Musician.Frame.Clear()
+
+	-- Reduce source text size in Chinese
+	if Musician.Msg == Musician.Locale.zh then
+		local w, h = MusicianFrameSource:GetSize()
+		local scale = .75
+		MusicianFrameSource:SetScale(scale)
+		MusicianFrameSource:SetSize(w / scale, h / scale)
+	end
+
+	-- Clear song source button
+	MusicianFrameClearButton:SetText(Musician.Icons.Edit)
+	MusicianFrameClearButton:SetFrameLevel(MusicianFrameSource:GetFrameLevel() + 1000)
+	MusicianFrameClearButton.tooltipText = Musician.Msg.SELECT_ALL
+	MusicianFrameClearButton:HookScript("OnClick", function()
+		Musician.Frame.Clear(true)
+	end)
+
+	-- Preview button
+	MusicianFrameTestButton:SetText(Musician.Msg.TEST_SONG)
+	MusicianFrameTestButton.icon:SetText(Musician.Icons.Headphones)
+	MusicianFrameTestButton:SetEnabled(false)
 	MusicianFrameTestButtonProgressBar:Hide()
+	MusicianFrameTestButton:HookScript("OnClick", Musician.Frame.TogglePreviewSong)
+
+	-- Play button
+	MusicianFramePlayButton:SetText(Musician.Msg.PLAY)
+	MusicianFramePlayButton.icon:SetText(Musician.Icons.Speaker)
 	MusicianFramePlayButtonProgressBar:Hide()
+	Musician.Frame.UpdatePlayButton()
+	MusicianFramePlayButton:HookScript("OnClick", Musician.Comm.TogglePlaySong)
+
+	-- Track editor button
+	MusicianFrameTrackEditorButton:Disable()
+	MusicianFrameTrackEditorButton:SetText(Musician.Msg.EDIT)
+	MusicianFrameTrackEditorButton.icon:SetText(Musician.Icons.Sliders2)
+	MusicianFrameTrackEditorButton:HookScript("OnClick", Musician.ShowTrackEditor)
+
+	-- Link button
+	MusicianFrameLinkButton:Disable()
+	MusicianFrameLinkButton:SetText(Musician.Msg.LINKS_LINK_BUTTON)
+	MusicianFrameLinkButton.icon:SetText(Musician.Icons.Export)
+	MusicianFrameLinkButton:HookScript("OnClick", Musician.SongLinkExportFrame.Show)
+
+	-- Band play button
+	Musician.Frame.UpdateBandPlayButton()
+	MusicianFrameBandPlayButton:HookScript("OnClick", Musician.Comm.ToggleBandPlayReady)
 end
 
 --- Set focus to import field

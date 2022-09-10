@@ -16,121 +16,51 @@
 			</Layer>
 		</Layers>
 
-		<Scripts>
-			<OnLoad inherit="prepend">
-				self.noEscape = true
-				MusicianFrameTitle:SetText(Musician.Msg.PLAY_A_SONG)
-			</OnLoad>
-		</Scripts>
-
 		<Frames>
 
-			<Button name="$parentTrackEditorButton" inherits="MusicianIconTextButtonTemplate" level="OVERLAY">
+			<Button name="$parentTrackEditorButton" parentKey="trackEditorButton" inherits="MusicianIconTextButtonTemplate" level="OVERLAY">
 				<Size x="70" y="22" />
 				<Anchors>
 					<Anchor point="TOPLEFT" x="10" y="-10" relativePoint="TOPLEFT" />
 				</Anchors>
-				<Scripts>
-					<OnLoad>
-						self:SetText(Musician.Msg.EDIT)
-						self.icon:SetText(Musician.Icons.Sliders2)
-					</OnLoad>
-					<OnClick>
-						Musician.ShowTrackEditor()
-					</OnClick>
-				</Scripts>
 			</Button>
 
-			<Button name="$parentLinkButton" inherits="MusicianIconTextButtonTemplate" level="OVERLAY">
+			<Button name="$parentLinkButton" parentKey="linkButton" inherits="MusicianIconTextButtonTemplate" level="OVERLAY">
 				<Size x="70" y="22" />
 				<Anchors>
 					<Anchor point="TOPRIGHT" x="-10" y="-10" relativePoint="TOPRIGHT" />
 				</Anchors>
-				<Scripts>
-					<OnLoad>
-						self:SetText(Musician.Msg.LINKS_LINK_BUTTON)
-						self.icon:SetText(Musician.Icons.Export)
-					</OnLoad>
-					<OnClick>
-						Musician.SongLinkExportFrame.Show()
-					</OnClick>
-				</Scripts>
 			</Button>
 
-			<Button name="$parentTestButton" inherits="MusicianIconTextProgressBarButtonTemplate">
+			<Button name="$parentTestButton" parentKey="testButton" inherits="MusicianIconTextProgressBarButtonTemplate">
 				<Size x="120" y="22" />
 				<Anchors>
 					<Anchor point="BOTTOMLEFT" x="10" y="10" relativePoint="BOTTOMLEFT" />
 				</Anchors>
-				<Scripts>
-					<OnLoad>
-						self.icon:SetText(Musician.Icons.Headphones)
-					</OnLoad>
-					<OnClick>
-						Musician.Frame.TogglePreviewSong()
-					</OnClick>
-				</Scripts>
 			</Button>
 
-			<Button name="$parentPlayButton" inherits="MusicianIconTextProgressBarButtonTemplate">
+			<Button name="$parentPlayButton" parentKey="playButton" inherits="MusicianIconTextProgressBarButtonTemplate">
 				<Size x="120" y="22" />
 				<Anchors>
 					<Anchor point="BOTTOMRIGHT" x="-10" y="10" relativePoint="BOTTOMRIGHT" />
 				</Anchors>
-				<Scripts>
-					<OnLoad>
-						self.icon:SetText(Musician.Icons.Speaker)
-					</OnLoad>
-					<OnClick>
-						Musician.Comm.TogglePlaySong()
-					</OnClick>
-				</Scripts>
 			</Button>
 
-			<Button name="$parentBandPlayButton" inherits="MusicianBandPlayButtonTemplate" hidden="true">
+			<Button name="$parentBandPlayButton" parentKey="bandPlayButton" inherits="MusicianBandPlayButtonTemplate" hidden="true">
 				<Anchors>
 					<Anchor point="BOTTOM" y="10" />
 				</Anchors>
-				<Scripts>
-					<OnClick inherit="append">
-						Musician.Comm.ToggleBandPlayReady()
-					</OnClick>
-				</Scripts>
 			</Button>
 
-			<ScrollFrame name="$parentScrollFrame">
+			<ScrollFrame name="$parentScrollFrame" parentKey="scrollFrame">
 				<Size x="290" y="90" />
 				<Anchors>
 					<Anchor point="TOPLEFT" x="15" y="-36" relativePoint="TOPLEFT" />
 				</Anchors>
 
-				<Scripts>
-					<OnMouseUp>
-						MusicianFrameSource:SetFocus()
-					</OnMouseUp>
-				</Scripts>
-
 				<ScrollChild>
 					<EditBox name="MusicianFrameSource" multiLine="true" autoFocus="false" countInvisibleLetters="false">
 						<Size x="290" y="90"/>
-						<Scripts>
-							<OnMouseUp>
-								MusicianFrameSource:SetFocus()
-							</OnMouseUp>
-							<OnEditFocusGained>
-								MusicianFrameSource:HighlightText(0)
-							</OnEditFocusGained>
-							<OnEscapePressed>MusicianFrameSource:ClearFocus()</OnEscapePressed>
-							<OnLoad>
-								-- Reduce source text size in Chinese
-								if Musician.Msg == Musician.Locale.zh then
-									local w, h = self:GetSize()
-									local scale = .75
-									self:SetScale(scale)
-									self:SetSize(w / scale, h / scale)
-								end
-							</OnLoad>
-						</Scripts>
 						<FontString inherits="GameFontHighlightSmall"/>
 					</EditBox>
 				</ScrollChild>
@@ -154,7 +84,7 @@
 				</Layers>
 			</Frame>
 
-			<Button name="$parentClearButton" inherits="MusicianIconButtonTemplate" level="OVERLAY">
+			<Button name="$parentClearButton" parentKey="clearButton" inherits="MusicianIconButtonTemplate" level="OVERLAY">
 				<Size x="24" y="24" />
 				<Anchors>
 					<Anchor point="BOTTOMRIGHT" x="-5" y="5" relativePoint="BOTTOMRIGHT" relativeTo="$parentTextBackground" />
@@ -164,26 +94,8 @@
 						<Anchor point="CENTER" x="1" y="-1"/>
 					</Anchors>
 				</ButtonText>
-				<Scripts>
-					<OnLoad>
-						self:SetText(Musician.Icons.Edit)
-						self:SetFrameLevel(MusicianFrameSource:GetFrameLevel() + 1000)
-						self.tooltipText = Musician.Msg.SELECT_ALL
-					</OnLoad>
-					<OnClick>
-						Musician.Frame.Clear(true)
-					</OnClick>
-				</Scripts>
 			</Button>
 
 		</Frames>
-
-		<Scripts>
-			<OnLoad inherit="prepend">
-				self:ClearAllPoints()
-				local defaultY = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE and 93 or 126
-				self:SetPoint('RIGHT', UIParent, 'RIGHT', 0, defaultY)
-			</OnLoad>
-		</Scripts>
 	</Frame>
 </Ui>
