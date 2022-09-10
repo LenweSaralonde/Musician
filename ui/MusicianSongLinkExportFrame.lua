@@ -17,7 +17,7 @@ local function postLink(sharedSong)
 	local name = Musician.Utils.NormalizeSongName(frame.songTitle:GetText())
 	sharedSong.name = name
 	if sharedSong == Musician.sourceSong then
-		MusicianFrame.Clear()
+		Musician.Frame.Clear()
 	end
 	ChatEdit_LinkItem(nil, Musician.SongLinks.GetHyperlink(name))
 

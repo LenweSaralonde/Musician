@@ -40,7 +40,6 @@ ui\widgets\MusicianWidgets.xml
 ui\MusicianBasicMessageDialog.xml
 
 ui\MusicianFrame.xml
-ui\MusicianFrame.lua
 
 ui\MusicianTrackEditor.xml
 ui\MusicianTrackEditor.lua

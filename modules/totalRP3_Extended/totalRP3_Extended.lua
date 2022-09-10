@@ -334,7 +334,7 @@ function Musician.TRP3E.ShowExportFrame()
 
 			sharedSong.name = title
 			if sharedSong == Musician.sourceSong then
-				MusicianFrame.Clear()
+				Musician.Frame.Clear()
 			end
 
 			createItem(sharedSong, locale, icon, quantity)

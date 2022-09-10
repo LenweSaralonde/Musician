@@ -1,4 +1,7 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+
+	<Script file="MusicianFrame.lua" />
+
 	<Frame name="MusicianFrame" inherits="MusicianDialogTemplateNoAnchor">
 
 		<Size x="320" y="160" />
@@ -33,7 +36,7 @@
 						self.icon:SetText(Musician.Icons.Sliders2)
 					</OnLoad>
 					<OnClick>
-						MusicianFrame.TrackEditor()
+						Musician.ShowTrackEditor()
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -64,7 +67,7 @@
 						self.icon:SetText(Musician.Icons.Headphones)
 					</OnLoad>
 					<OnClick>
-						MusicianFrame.TogglePreviewSong()
+						Musician.Frame.TogglePreviewSong()
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -168,7 +171,7 @@
 						self.tooltipText = Musician.Msg.SELECT_ALL
 					</OnLoad>
 					<OnClick>
-						MusicianFrame.Clear(true)
+						Musician.Frame.Clear(true)
 					</OnClick>
 				</Scripts>
 			</Button>

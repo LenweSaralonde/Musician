@@ -67,7 +67,7 @@ function Musician:OnInitialize()
 	Musician.SongLinks.Init()
 	Musician.SetupHooks()
 
-	MusicianFrame.Init()
+	Musician.Frame.Init()
 	MusicianButton.Init()
 	Musician.SongLinkImportFrame.Init()
 	Musician.TrackEditor.Init()
@@ -166,6 +166,14 @@ function Musician.InitLocale(languageCode, languageName, localeCode, ...)
 	return msg
 end
 
+--- Show the song editor
+--
+function Musician.ShowTrackEditor()
+	if Musician.sourceSong then
+		MusicianTrackEditor:Show()
+	end
+end
+
 --- Get command definitions
 -- @return commands (table)
 function Musician.GetCommands()
@@ -237,7 +245,7 @@ function Musician.GetCommands()
 	table.insert(commands, {
 		command = { "edit", "tracks" },
 		text = Musician.Msg.COMMAND_SONG_EDITOR,
-		func = MusicianFrame.TrackEditor
+		func = Musician.ShowTrackEditor
 	})
 
 	-- Show live keyboard
