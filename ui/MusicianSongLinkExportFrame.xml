@@ -1,15 +1,16 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 
-	<Frame name="MusicianSongLinkExportFrame" inherits="MusicianDialogTemplate">
+	<Script file="MusicianSongLinkExportFrame.lua" />
+	<Frame name="MusicianSongLinkExportFrame" inherits="MusicianDialogTemplate" mixin="MusicianSongLinkExportFrameMixin">
 		<Size x="360" y="179" />
 		<Layers>
 			<Layer level="BACKGROUND">
-				<FontString name="$parentTitle" inherits="GameFontNormal">
+				<FontString name="$parentTitle" parentKey="title" inherits="GameFontNormal">
 					<Anchors>
 						<Anchor point="TOP" y="-20" />
 					</Anchors>
 				</FontString>
-				<FontString name="$parentSongTitleLabel" inherits="GameFontNormalLeft">
+				<FontString name="$parentSongTitleLabel" parentKey="songTitleLabel" inherits="GameFontNormalLeft">
 					<Anchors>
 						<Anchor point="TOP" relativeTo="$parentTitle" relativePoint="BOTTOM" y="-7" />
 						<Anchor point="LEFT" x="25" />
@@ -26,14 +27,6 @@
 					<Anchor point="LEFT" x="32" />
 					<Anchor point="RIGHT" x="-32" />
 				</Anchors>
-				<Scripts>
-					<OnEnterPressed>
-						self:GetParent().postLink()
-					</OnEnterPressed>
-					<OnEscapePressed>
-						self:GetParent():Hide()
-					</OnEscapePressed>
-				</Scripts>
 			</EditBox>
 		</Frames>
 
@@ -62,19 +55,6 @@
 				<Anchors>
 					<Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$parentProgressBar" y="-10" />
 				</Anchors>
-				<Scripts>
-					<OnClick inherit="append">
-						self:GetParent().postLink()
-					</OnClick>
-					<OnEnter inherit="append">
-						-- Prevent the chat edit box from being closed when the button is clicked
-						self.chatEditOnFocusLost = ChatEdit_OnEditFocusLost
-						ChatEdit_OnEditFocusLost = function() end
-					</OnEnter>
-					<OnLeave inherit="append">
-						ChatEdit_OnEditFocusLost = self.chatEditOnFocusLost
-					</OnLeave>
-				</Scripts>
 			</Button>
 		</Frames>
 
@@ -92,10 +72,7 @@
 		</Layers>
 
 		<Scripts>
-			<OnLoad inherit="prepend">
-				MusicianSongLinkExportFrameTitle:SetText(Musician.Msg.LINK_EXPORT_WINDOW_TITLE)
-				MusicianSongLinkExportFrameSongTitleLabel:SetText(Musician.Msg.LINK_EXPORT_WINDOW_SONG_TITLE_LABEL)
-			</OnLoad>
+			<OnLoad inherit="prepend" method="OnLoad" />
 		</Scripts>
 
 	</Frame>

@@ -134,6 +134,7 @@ stds.wow = {
 		"GetNumTrackingTypes",
 		"GetTrackingInfo",
 		"StaticPopupDialogs",
+		"ChatEdit_OnEditFocusLost",
 	},
 
 	-- Globals that we access.
@@ -328,6 +329,7 @@ stds.wow = {
 		"ChatFrame_OnEvent",
 		"SendChatMessage",
 		"ChatEdit_LinkItem",
+		"ChatEdit_GetActiveWindow",
 		"CreateVector2D",
 		"MiniMapTracking_Update",
 		"CreateFromMixins",

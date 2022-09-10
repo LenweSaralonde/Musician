@@ -20,9 +20,20 @@ local function postLink(sharedSong)
 		MusicianFrame.Clear()
 	end
 	ChatEdit_LinkItem(nil, Musician.SongLinks.GetHyperlink(name))
+
+	-- Focus the chat edit box on WoW Classic (it's not done by default)
+	if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then
+		local activeWindow = ChatEdit_GetActiveWindow()
+		if activeWindow then
+			activeWindow:SetFocus()
+		end
+	end
+
 	Musician.SongLinks.AddSong(sharedSong, name, onExportComplete)
 end
 
+--- Show the export frame
+--
 function Musician.SongLinkExportFrame.Show()
 	if not(Musician.sourceSong) then return end
 
@@ -84,4 +95,38 @@ function Musician.SongLinkExportFrame.Show()
 	end
 
 	frame:Show()
+end
+
+-- Main mixin
+
+MusicianSongLinkExportFrameMixin = {}
+
+--- OnLoad
+--
+function MusicianSongLinkExportFrameMixin:OnLoad()
+	self.title:SetText(Musician.Msg.LINK_EXPORT_WINDOW_TITLE)
+	self.songTitleLabel:SetText(Musician.Msg.LINK_EXPORT_WINDOW_SONG_TITLE_LABEL)
+
+	-- Song title edit box
+	self.songTitle:SetScript("OnEnterPressed", function()
+		self.postLink()
+	end)
+	self.songTitle:SetScript("OnEscapePressed", function()
+		self:Hide()
+	end)
+	-- Prevent the chat edit box from being closed when the link EditBox is focused on WoW Classic
+	if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then
+		local chatEditOnFocusLost = ChatEdit_OnEditFocusLost
+		self.songTitle:HookScript("OnEnter", function()
+			ChatEdit_OnEditFocusLost = function() end
+		end)
+		self.songTitle:HookScript("OnLeave", function()
+			ChatEdit_OnEditFocusLost = chatEditOnFocusLost
+		end)
+	end
+
+	-- Post link button
+	self.postLinkButton:HookScript("OnClick", function()
+		self.postLink()
+	end)
 end
