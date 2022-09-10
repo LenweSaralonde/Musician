@@ -59,3 +59,20 @@ function Musician.Map.Options.Save()
 	Musician.Map.SetMiniMapTracking(MusicianOptionsPanelMapMiniMap:GetChecked())
 end
 hooksecurefunc(Musician.Options, "Save", Musician.Map.Options.Save)
+
+--- OnLoad
+--
+function MusicianOptionsPanelMap_OnLoad(self)
+	MusicianOptionsPanelMapTitle:SetText(Musician.Msg.MAP_OPTIONS_TITLE)
+	MusicianOptionsPanelMapSubText:SetText(Musician.Msg.MAP_OPTIONS_SUB_TEXT)
+
+	Musician.Options.SetupCheckbox(MusicianOptionsPanelMapMiniMap, Musician.Msg.MAP_OPTIONS_MINI_MAP)
+	MusicianOptionsPanelMapMiniMap:HookScript("OnClick", function()
+		Musician.Map.Options.Save(true)
+	end)
+
+	Musician.Options.SetupCheckbox(MusicianOptionsPanelMapWorldMap, Musician.Msg.MAP_OPTIONS_WORLD_MAP)
+	MusicianOptionsPanelMapWorldMap:HookScript("OnClick", function()
+		Musician.Map.Options.Save(true)
+	end)
+end

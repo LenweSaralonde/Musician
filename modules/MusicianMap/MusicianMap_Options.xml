@@ -1,4 +1,5 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="MusicianMap_Options.lua"/>
 	<Frame name="MusicianOptionsPanelMap" parent="MusicianOptionsPanel">
 		<Size>
 			<AbsDimension x="580" y="96"/>
@@ -26,34 +27,15 @@
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentSubText" relativePoint="BOTTOMLEFT" x="0" y="4"/>
 				</Anchors>
-				<Scripts>
-					<OnLoad>
-						Musician.Options.SetupCheckbox(self, Musician.Msg.MAP_OPTIONS_MINI_MAP)
-						self:HookScript("OnClick", function()
-							Musician.Map.Options.Save(true)
-						end)
-					</OnLoad>
-				</Scripts>
 			</CheckButton>
 			<CheckButton name="$parentWorldMap" inherits="MusicianOptionsCheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentMiniMap" relativePoint="BOTTOMLEFT" x="0" y="0"/>
 				</Anchors>
-				<Scripts>
-					<OnLoad>
-						Musician.Options.SetupCheckbox(self, Musician.Msg.MAP_OPTIONS_WORLD_MAP)
-						self:HookScript("OnClick", function()
-							Musician.Map.Options.Save(true)
-						end)
-					</OnLoad>
-				</Scripts>
 			</CheckButton>
 		</Frames>
 		<Scripts>
-			<OnLoad>
-				MusicianOptionsPanelMapTitle:SetText(Musician.Msg.MAP_OPTIONS_TITLE)
-				MusicianOptionsPanelMapSubText:SetText(Musician.Msg.MAP_OPTIONS_SUB_TEXT)
-			</OnLoad>
+			<OnLoad function="MusicianOptionsPanelMap_OnLoad" />
 		</Scripts>
 	</Frame>
 </Ui>
