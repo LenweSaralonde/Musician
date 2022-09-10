@@ -109,6 +109,7 @@ read_globals = {
 	"TRP3_CharacterTooltip",
 	"TRP3_BlizzardNamePlates",
 	"TRP3_PlayerMapPinMixin",
+	"TRP3_NAMEPLATES_ADDON",
 
 	"TRP3_InventoryPage",
 	"TRP3_ItemTooltip",

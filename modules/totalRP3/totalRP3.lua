@@ -74,6 +74,13 @@ function Musician.TRP3.HookNamePlates()
 				Musician.NamePlates.UpdateNoteIcon(namePlate)
 			end
 		end)
+		-- Force refreshing the nameplates on TRP side when leaving the cinematic mode
+		-- to avoid player names showing in NPCs nameplates.
+		UIParent:HookScript("OnShow", function()
+			if TRP3_NAMEPLATES_ADDON == "Blizzard_NamePlates" then
+				TRP3_BlizzardNamePlates:UpdateAllNamePlates()
+			end
+		end)
 	end
 end
 
