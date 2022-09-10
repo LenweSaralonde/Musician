@@ -58,3 +58,18 @@ function Musician.TRP3.Options.Save()
 	Musician_Settings.trp3MapScan = MusicianOptionsPanelTRP3MapScan:GetChecked()
 end
 hooksecurefunc(Musician.Options, "Save", Musician.TRP3.Options.Save)
+
+--- OnLoad
+--
+function MusicianOptionsPanelTRP3_OnLoad()
+	MusicianOptionsPanelTRP3Title:SetText(Musician.Msg.OPTIONS_TRP3)
+
+	-- Map scan checkbox
+	Musician.Options.SetupCheckbox(
+		MusicianOptionsPanelTRP3MapScan,
+		string.gsub(Musician.Msg.OPTIONS_TRP3_MAP_SCAN, "{icon}", Musician.Utils.GetChatIcon(Musician.IconImages.Note)),
+		nil)
+	MusicianOptionsPanelTRP3MapScan:HookScript("OnClick", function()
+		Musician.TRP3.Options.Save(true)
+	end)
+end

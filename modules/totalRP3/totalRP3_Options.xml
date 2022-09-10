@@ -1,4 +1,5 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="totalRP3_Options.lua"/>
 	<Frame name="MusicianOptionsPanelTRP3" parent="MusicianOptionsPanel">
 		<Size>
 			<AbsDimension x="580" y="48"/>
@@ -17,21 +18,10 @@
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-10"/>
 				</Anchors>
-				<Scripts>
-					<OnLoad>
-						local label = string.gsub(Musician.Msg.OPTIONS_TRP3_MAP_SCAN, "{icon}", Musician.Utils.GetChatIcon(Musician.IconImages.Note))
-						Musician.Options.SetupCheckbox(self, label, _G[self:GetParent():GetName().."Enable"])
-						self:HookScript("OnClick", function()
-							Musician.TRP3.Options.Save(true)
-						end)
-					</OnLoad>
-				</Scripts>
 			</CheckButton>
 		</Frames>
 		<Scripts>
-			<OnLoad>
-				MusicianOptionsPanelTRP3Title:SetText(Musician.Msg.OPTIONS_TRP3)
-			</OnLoad>
+			<OnLoad function="MusicianOptionsPanelTRP3_OnLoad" />
 		</Scripts>
 	</Frame>
 </Ui>
