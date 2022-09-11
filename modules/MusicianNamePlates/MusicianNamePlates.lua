@@ -675,12 +675,45 @@ function Musician.NamePlates.InitTipsAndTricks()
 	-- Already shown
 	if Musician_Settings.namePlatesHintShown then return end
 
+	-- Title
+	MusicianNamePlatesTipsAndTricks.title:SetText(Musician.Msg.TIPS_AND_TRICKS_NAMEPLATES_TITLE)
+
+	-- Text
+	local text = string.gsub(Musician.Msg.TIPS_AND_TRICKS_NAMEPLATES_TEXT, '{icon}', Musician.Utils.GetChatIcon(Musician.IconImages.Note))
+	MusicianNamePlatesTipsAndTricks.text:SetPoint("LEFT", 180, 0)
+	MusicianNamePlatesTipsAndTricks.text:SetPoint("BOTTOM", MusicianNamePlatesTipsAndTricks.okButton, "TOP")
+	MusicianNamePlatesTipsAndTricks.text:SetText(text)
+
 	-- Already enabled
 	local nameplatesEnabled = GetCVarBool("nameplateShowAll") and GetCVarBool("nameplateShowFriends")
 	if nameplatesEnabled then
 		Musician_Settings.namePlatesHintShown = true
 		return
 	end
+
+	-- Cancel button
+	MusicianNamePlatesTipsAndTricksCancelButton:SetText(Musician.Msg.TIPS_AND_TRICKS_NAMEPLATES_CANCEL)
+	MusicianNamePlatesTipsAndTricksCancelButton:HookScript("OnClick", function()
+		Musician_Settings.namePlatesHintShown = true
+	end)
+
+	-- OK button
+	MusicianNamePlatesTipsAndTricksOKButton:SetText(Musician.Msg.TIPS_AND_TRICKS_NAMEPLATES_OK)
+	MusicianNamePlatesTipsAndTricksOKButton:HookScript("OnClick", function()
+		Musician.NamePlates.Options.Defaults()
+		Musician_Settings.namePlatesHintShown = true
+	end)
+
+	-- Animated image
+	MusicianNamePlatesTipsAndTricksImage.fps = 30
+	MusicianNamePlatesTipsAndTricksImage.width = 1024
+	MusicianNamePlatesTipsAndTricksImage.height = 1024
+	MusicianNamePlatesTipsAndTricksImage.tileHeight = 256
+	MusicianNamePlatesTipsAndTricksImage.tileWidth = 128
+	MusicianNamePlatesTipsAndTricksImage.textureFile = "Interface\\AddOns\\Musician\\ui\\textures\\nameplates-demo.blp"
+	MusicianNamePlatesTipsAndTricks:HookScript("OnShow", function(self)
+		self.image:Show()
+	end)
 
 	-- Add tip
 	Musician.AddTipsAndTricks(function()

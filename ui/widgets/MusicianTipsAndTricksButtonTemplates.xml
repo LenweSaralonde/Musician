@@ -7,9 +7,12 @@
 		<Size y="30" x="30" />
 		<ButtonText name="$parentText" parentKey="Text" />
 		<Scripts>
-			<OnLoad function="MusicianTipsAndTricksCancelButtonTemplate_OnLoad" />
-			<OnClick function="MusicianTipsAndTricksCancelButtonTemplate_OnClick" />
+			<OnLoad inherit="prepend" function="MusicianTipsAndTricksCancelButtonTemplate_OnLoad" />
+			<OnClick inherit="prepend" function="MusicianTipsAndTricksCancelButtonTemplate_OnClick" />
 		</Scripts>
+		<HighlightTexture file="Interface\AddOns\Musician\ui\textures\button-glow.blp" alphaMode="ADD" alpha=".2">
+			<TexCoords top=".2" left=".25" right=".75" bottom=".8"/>
+		</HighlightTexture>
 	</Button>
 
 	<!-- OK button -->
@@ -31,8 +34,11 @@
 		<HighlightFont style="GameFontHighlightHuge"/>
 		<DisabledFont style="GameFontDisableHuge"/>
 		<Scripts>
-			<OnLoad function="MusicianTipsAndTricksOkButtonTemplate_OnLoad" />
-			<OnClick function="MusicianTipsAndTricksOkButtonTemplate_OnClick" />
+			<OnLoad inherit="prepend" function="MusicianTipsAndTricksOkButtonTemplate_OnLoad" />
+			<OnClick inherit="prepend" function="MusicianTipsAndTricksOkButtonTemplate_OnClick" />
 		</Scripts>
+		<HighlightTexture file="Interface\AddOns\Musician\ui\textures\button-glow.blp" alphaMode="ADD" alpha=".2">
+			<TexCoords top=".2" left=".25" right=".75" bottom=".8"/>
+		</HighlightTexture>
 	</Button>
 </Ui>

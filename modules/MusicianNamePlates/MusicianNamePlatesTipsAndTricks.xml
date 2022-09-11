@@ -6,29 +6,12 @@
 				<Anchors>
 					<Anchor point="BOTTOM" y="10" relativePoint="BOTTOM" relativeTo="$parent" />
 				</Anchors>
-				<Scripts>
-					<OnLoad inherit="append">
-						self:SetText(Musician.Msg.TIPS_AND_TRICKS_NAMEPLATES_CANCEL)
-					</OnLoad>
-					<OnClick inherit="append">
-						Musician_Settings.namePlatesHintShown = true
-					</OnClick>
-				</Scripts>
 			</Button>
 
 			<Button name="$parentOKButton" parentKey="okButton" inherits="MusicianTipsAndTricksOkButtonTemplate">
 				<Anchors>
 					<Anchor point="BOTTOM" y="10" relativePoint="TOP" relativeTo="$parentCancelButton" />
 				</Anchors>
-				<Scripts>
-					<OnLoad inherit="append">
-						self:SetText(Musician.Msg.TIPS_AND_TRICKS_NAMEPLATES_OK)
-					</OnLoad>
-					<OnClick inherit="append">
-						Musician.NamePlates.Options.Defaults()
-						Musician_Settings.namePlatesHintShown = true
-					</OnClick>
-				</Scripts>
 			</Button>
 
 			<Frame name="$parentImage" inherits="MusicianAnimatedImageTemplate" parentKey="image">
@@ -39,31 +22,7 @@
 					<!-- Original size: 160 x 256 -->
 					<AbsDimension x="106.666667" y="170.666667"/>
 				</Size>
-				<Scripts>
-					<OnLoad inherit="prepend">
-						self.fps = 30
-						self.width = 1024
-						self.height = 1024
-						self.tileHeight = 256
-						self.tileWidth = 128
-						self.textureFile = "Interface\\AddOns\\Musician\\ui\\textures\\nameplates-demo.blp"
-					</OnLoad>
-				</Scripts>
 			</Frame>
 		</Frames>
-
-		<Scripts>
-			<OnShow inherit="prepend">
-				self.image:Show()
-			</OnShow>
-			<OnLoad>
-				self.title:SetText(Musician.Msg.TIPS_AND_TRICKS_NAMEPLATES_TITLE)
-
-				local text = string.gsub(Musician.Msg.TIPS_AND_TRICKS_NAMEPLATES_TEXT, '{icon}', Musician.Utils.GetChatIcon(Musician.IconImages.Note))
-				self.text:SetPoint("LEFT", 180, 0)
-				self.text:SetPoint("BOTTOM", self.okButton, "TOP")
-				self.text:SetText(text)
-			</OnLoad>
-		</Scripts>
 	</Frame>
 </Ui>
