@@ -16,23 +16,26 @@ local oldSettings = {}
 --- Set a boolean CVar
 -- @param name (string)
 -- @param value (string)
-local function setCVarBool(name, value)
+local function SetCVarSafe(name, value)
 	if InCombatLockdown() then
-		C_Timer.After(1, function() setCVarBool(name, value) end)
+		C_Timer.After(1, function() SetCVarSafe(name, value) end)
 		return
 	end
 
-	SetCVar(name, value and "1" or "0")
+	SetCVar(name, value, "Musician.NamePlates.Options")
 end
-
-Musician.NamePlates.Options.SetCVarBool = setCVarBool
 
 --- Options panel initialization
 --
 function Musician.NamePlates.Options.Init()
-	-- Refresh panel when CVar changed
-	MusicianOptionsPanelUnitNamePlates:RegisterEvent("CVAR_UPDATE")
-	MusicianOptionsPanelUnitNamePlates:SetScript("OnEvent", Musician.NamePlates.Options.RefreshCheckboxes)
+	-- Refresh panel when CVar was changed externally
+	hooksecurefunc(C_CVar, "SetCVar", function(name, _, eventName)
+		if eventName ~= "Musician.NamePlates.Options" then
+			if name == "nameplateShowAll" or name == "nameplateShowFriends" or name == "nameplateShowFriendlyNPCs" then
+				Musician.NamePlates.Options.RefreshCheckboxes()
+			end
+		end
+	end)
 
 	-- Section title and text
 	MusicianOptionsPanelUnitNamePlatesTitle:SetText(Musician.Msg.OPTIONS_CATEGORY_NAMEPLATES)
@@ -51,17 +54,30 @@ function Musician.NamePlates.Options.Init()
 		MusicianOptionsPanelUnitNamePlatesEnable,
 		Musician.Msg.OPTIONS_ENABLE_NAMEPLATES)
 	MusicianOptionsPanelUnitNamePlatesEnable:HookScript("OnClick", function(self)
-		if self:GetChecked() then
-			-- Enable nameplates for everyone
-			setCVarBool("nameplateShowAll", true)
-			setCVarBool("nameplateShowEnemies", true)
-			setCVarBool("nameplateShowFriends", true)
+		-- Enable nameplates
+		SetCVarSafe("nameplateShowAll", self:GetChecked())
+		if InterfaceOptionsNamesPanelUnitNameplatesShowAll then
+			InterfaceOptionsNamesPanelUnitNameplatesShowAll:SetChecked(self:GetChecked())
+			ExecuteFrameScript(InterfaceOptionsNamesPanelUnitNameplatesShowAll, "OnClick", "LeftButton")
+		end
 
-			-- Do not stack nameplates
-			SetCVar("nameplateMotion", 0)
-		else
-			-- Only uncheck "show all" when disabling
-			setCVarBool("nameplateShowAll", false)
+		-- Enable more settings when nameplates are enabled to make sure they are always visible
+		if self:GetChecked() then
+			-- Enable nameplates for friends and enemies and disable nameplate motion.
+			SetCVarSafe("nameplateShowFriends", true)
+			SetCVarSafe("nameplateShowEnemies", true)
+			SetCVarSafe("nameplateMotion", 0)
+			if InterfaceOptionsNamesPanelUnitNameplatesFriends then
+				InterfaceOptionsNamesPanelUnitNameplatesFriends:SetChecked(true)
+				ExecuteFrameScript(InterfaceOptionsNamesPanelUnitNameplatesFriends, "OnClick", "LeftButton")
+			end
+			if InterfaceOptionsNamesPanelUnitNameplatesEnemies then
+				InterfaceOptionsNamesPanelUnitNameplatesEnemies:SetChecked(true)
+				ExecuteFrameScript(InterfaceOptionsNamesPanelUnitNameplatesEnemies, "OnClick", "LeftButton")
+			end
+			if InterfaceOptionsNamesPanelUnitNameplatesMotionDropDown then
+				InterfaceOptionsNamesPanelUnitNameplatesMotionDropDown:SetValue(0)
+			end
 		end
 	end)
 
@@ -133,7 +149,7 @@ end
 function Musician.NamePlates.Options.Defaults()
 	MusicianOptionsPanelUnitNamePlatesEnable:SetChecked(true)
 	ExecuteFrameScript(MusicianOptionsPanelUnitNamePlatesEnable, "OnClick", "LeftButton")
-	setCVarBool("nameplateShowFriendlyNPCs", false)
+	SetCVarSafe("nameplateShowFriendlyNPCs", false)
 	Musician_Settings = Mixin(Musician_Settings, Musician.NamePlates.Options.GetDefaults())
 end
 hooksecurefunc(Musician.Options, "Defaults", Musician.NamePlates.Options.Defaults)
@@ -150,27 +166,8 @@ function Musician.NamePlates.Options.RefreshCheckboxes()
 	MusicianOptionsPanelUnitNamePlatesShowIcon:SetChecked(showIcon)
 	MusicianOptionsPanelUnitNamePlatesHideNamePlateBars:SetChecked(hideNamePlateBars)
 	MusicianOptionsPanelUnitNamePlatesHideNPCs:SetChecked(hideNPCs)
-
-	if enable then -- SetEnabled() can't be used here since Enable and Disable are extended
-		MusicianOptionsPanelUnitNamePlatesShowIcon:Enable()
-		MusicianOptionsPanelUnitNamePlatesHideNamePlateBars:Enable()
-		MusicianOptionsPanelUnitNamePlatesHideNPCs:Enable()
-		MusicianOptionsPanelUnitNamePlatesCinematicMode:Enable()
-	else
-		MusicianOptionsPanelUnitNamePlatesShowIcon:Disable()
-		MusicianOptionsPanelUnitNamePlatesHideNamePlateBars:Disable()
-		MusicianOptionsPanelUnitNamePlatesHideNPCs:Disable()
-		MusicianOptionsPanelUnitNamePlatesCinematicMode:Disable()
-	end
-
 	MusicianOptionsPanelUnitNamePlatesCinematicMode:SetChecked(Musician_Settings.cinematicMode)
 	MusicianOptionsPanelUnitNamePlatesCinematicModeNamePlates:SetChecked(Musician_Settings.cinematicModeNamePlates)
-
-	if Musician_Settings.cinematicMode and enable then
-		MusicianOptionsPanelUnitNamePlatesCinematicModeNamePlates:Enable()
-	else
-		MusicianOptionsPanelUnitNamePlatesCinematicModeNamePlates:Disable()
-	end
 end
 
 --- Get text label for cinematic mode
@@ -209,7 +206,7 @@ hooksecurefunc(Musician.Options, "Refresh", Musician.NamePlates.Options.Refresh)
 -- Restore previous values on cancel
 --
 hooksecurefunc(Musician.Options, "Cancel", function()
-	setCVarBool("nameplateShowFriendlyNPCs", oldSettings.nameplateShowFriendlyNPCs)
+	SetCVarSafe("nameplateShowFriendlyNPCs", oldSettings.nameplateShowFriendlyNPCs)
 	Musician_Settings.showNamePlateIcon = oldSettings.showNamePlateIcon
 	Musician_Settings.hideNamePlateBars = oldSettings.hideNamePlateBars
 	Musician_Settings.cinematicMode = oldSettings.cinematicMode
@@ -221,7 +218,7 @@ end)
 --- Save values
 --
 function Musician.NamePlates.Options.Save(fromButton)
-	setCVarBool("nameplateShowFriendlyNPCs", not(MusicianOptionsPanelUnitNamePlatesHideNPCs:GetChecked()))
+	SetCVarSafe("nameplateShowFriendlyNPCs", not(MusicianOptionsPanelUnitNamePlatesHideNPCs:GetChecked()))
 	Musician_Settings.showNamePlateIcon = MusicianOptionsPanelUnitNamePlatesShowIcon:GetChecked()
 	Musician_Settings.hideNamePlateBars = MusicianOptionsPanelUnitNamePlatesHideNamePlateBars:GetChecked()
 	Musician_Settings.cinematicMode = MusicianOptionsPanelUnitNamePlatesCinematicMode:GetChecked()

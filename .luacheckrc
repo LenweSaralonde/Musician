@@ -416,6 +416,30 @@ stds.wow = {
 			}
 		},
 
+		InterfaceOptionsNamesPanelUnitNameplatesShowAll = {
+			fields = {
+				"SetChecked"
+			}
+		},
+
+		InterfaceOptionsNamesPanelUnitNameplatesEnemies = {
+			fields = {
+				"SetChecked"
+			}
+		},
+
+		InterfaceOptionsNamesPanelUnitNameplatesFriends = {
+			fields = {
+				"SetChecked"
+			}
+		},
+
+		InterfaceOptionsNamesPanelUnitNameplatesMotionDropDown = {
+			fields = {
+				"SetValue"
+			}
+		},
+
 		"UIParent",
 		"WorldFrame",
 		"WorldMapFrame",
