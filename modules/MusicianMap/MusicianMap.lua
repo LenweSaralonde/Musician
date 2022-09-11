@@ -170,7 +170,7 @@ end
 --- Update the minimap tracking
 --
 function Musician.Map.MinimapTrackingUpdate()
-	if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+	if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and MiniMapTracking_Update then
 		MiniMapTracking_Update()
 	end
 end
@@ -295,13 +295,25 @@ end
 --- Hook tracking options for the minimap
 --
 function Musician.Map.HookMiniMapTracking()
-	local hookedGetNumTrackingTypes = GetNumTrackingTypes
-	GetNumTrackingTypes = function(...)
+
+	-- GetNumTrackingTypes
+
+	local hookedGetNumTrackingTypes
+	local GetNumTrackingTypesHook = function(...)
 		return hookedGetNumTrackingTypes(...) + 1
 	end
+	if C_Minimap and C_Minimap.GetNumTrackingTypes then
+		hookedGetNumTrackingTypes = C_Minimap.GetNumTrackingTypes
+		C_Minimap.GetNumTrackingTypes = GetNumTrackingTypesHook
+	else
+		hookedGetNumTrackingTypes = GetNumTrackingTypes
+		GetNumTrackingTypes = GetNumTrackingTypesHook
+	end
 
-	local hookedGetTrackingInfo = GetTrackingInfo
-	GetTrackingInfo = function(id, ...)
+	-- GetTrackingInfo
+
+	local hookedGetTrackingInfo
+	local GetTrackingInfoHook = function(id, ...)
 		if id == hookedGetNumTrackingTypes() + 1 then
 			local name = Musician.Msg.MAP_TRACKING_OPTION_ACTIVE_MUSICIANS
 			local texture = Musician.IconImages.Note
@@ -313,16 +325,49 @@ function Musician.Map.HookMiniMapTracking()
 			return hookedGetTrackingInfo(id, ...)
 		end
 	end
+	if C_Minimap and C_Minimap.GetTrackingInfo then
+		hookedGetTrackingInfo = C_Minimap.GetTrackingInfo
+		C_Minimap.GetTrackingInfo = GetTrackingInfoHook
+	else
+		hookedGetTrackingInfo = GetTrackingInfo
+		GetTrackingInfo = GetTrackingInfoHook
+	end
 
-	hooksecurefunc('SetTracking', function(id, on)
+	-- MiniMapTracking_FilterIsVisible
+
+	if MiniMapTracking_FilterIsVisible then
+		local hookedMiniMapTracking_FilterIsVisible = MiniMapTracking_FilterIsVisible
+		MiniMapTracking_FilterIsVisible = function(id)
+			if id == hookedGetNumTrackingTypes() + 1 then
+				return true
+			end
+			return hookedMiniMapTracking_FilterIsVisible(id)
+		end
+	end
+
+	-- SetTracking
+
+	local SetTrackingHook = function(id, on)
 		if id == hookedGetNumTrackingTypes() + 1 then
 			Musician.Map.SetMiniMapTracking(on)
 		end
-	end)
+	end
+	if C_Minimap and C_Minimap.SetTracking then
+		hooksecurefunc(C_Minimap, 'SetTracking', SetTrackingHook)
+	else
+		hooksecurefunc('SetTracking', SetTrackingHook)
+	end
 
-	hooksecurefunc('ClearAllTracking', function()
+	-- ClearAllTracking
+
+	local ClearAllTrackingHook = function()
 		Musician.Map.SetMiniMapTracking(false)
-	end)
+	end
+	if C_Minimap and C_Minimap.ClearAllTracking then
+		hooksecurefunc(C_Minimap, 'ClearAllTracking', ClearAllTrackingHook)
+	else
+		hooksecurefunc('ClearAllTracking', ClearAllTrackingHook)
+	end
 end
 
 --- Hook tracking options for the world map

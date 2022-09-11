@@ -2,7 +2,7 @@
 	<Script file="MusicianWidgets.lua"/>
 	<Include file="MusicianDialogTemplate.xml"/>
 	<Include file="MusicianEditBoxTemplate.xml"/>
-	<Include file="MusicianOptionsCheckButtonTemplate.xml"/>
+	<Include file="MusicianCheckButtonTemplates.xml"/>
 	<Include file="MusicianProgressBarTemplate.xml"/>
 	<Include file="MusicianIconButtonTemplate.xml"/>
 	<Include file="MusicianIconTextButtonTemplate.xml"/>
@@ -12,7 +12,6 @@
 	<Include file="MusicianEditBoxBackdropTemplate.xml"/>
 	<Include file="MusicianDropDownMenuTooltipTemplate.xml"/>
 	<Include file="MusicianInstrumentDropdownTemplate.xml"/>
-	<Include file="MusicianOptionsSmallCheckButtonTemplate.xml"/>
 	<Include file="MusicianImageTemplate.xml"/>
 	<Include file="MusicianAnimatedImageTemplate.xml"/>
 	<Include file="MusicianTipsAndTricksTemplate.xml"/>

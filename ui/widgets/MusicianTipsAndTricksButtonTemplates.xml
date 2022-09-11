@@ -3,7 +3,7 @@
 	<Script file="MusicianTipsAndTricksButtonTemplates.lua" />
 
 	<!-- Cancel button -->
-	<Button name="MusicianTipsAndTricksCancelButtonTemplate" inherits="UIMenuButtonStretchTemplate" level="OVERLAY" virtual="true">
+	<Button name="MusicianTipsAndTricksCancelButtonTemplate" inherits="UIMenuButtonStretchTemplate" virtual="true">
 		<Size y="30" x="30" />
 		<ButtonText name="$parentText" parentKey="Text" />
 		<Scripts>
@@ -13,7 +13,7 @@
 	</Button>
 
 	<!-- OK button -->
-	<Button name="MusicianTipsAndTricksOkButtonTemplate" inherits="UIMenuButtonStretchTemplate" level="OVERLAY" virtual="true">
+	<Button name="MusicianTipsAndTricksOkButtonTemplate" inherits="UIMenuButtonStretchTemplate" virtual="true">
 		<Size y="44" x="44" />
 		<Layers>
 			<Layer level="BACKGROUND">

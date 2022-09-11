@@ -47,12 +47,12 @@
 									</Layer>
 								</Layers>
 								<Frames>
-									<CheckButton name="$parentEnable" inherits="MusicianOptionsCheckButtonTemplate">
+									<CheckButton name="$parentEnable" inherits="MusicianOptionCheckButtonTemplate">
 										<Anchors>
 											<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-10"/>
 										</Anchors>
 									</CheckButton>
-									<CheckButton name="$parentEnablePromo" inherits="InterfaceOptionsSmallCheckButtonTemplate">
+									<CheckButton name="$parentEnablePromo" inherits="MusicianSubOptionCheckButtonTemplate">
 										<Anchors>
 											<Anchor point="TOPLEFT" relativeTo="$parentEnable" relativePoint="BOTTOMLEFT" x="10" y="4"/>
 										</Anchors>
@@ -76,12 +76,12 @@
 									</Layer>
 								</Layers>
 								<Frames>
-									<CheckButton name="$parentMuteGameMusic" inherits="MusicianOptionsCheckButtonTemplate">
+									<CheckButton name="$parentMuteGameMusic" inherits="MusicianOptionCheckButtonTemplate">
 										<Anchors>
 											<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-10"/>
 										</Anchors>
 									</CheckButton>
-									<CheckButton name="$parentMuteInstrumentToys" inherits="MusicianOptionsCheckButtonTemplate">
+									<CheckButton name="$parentMuteInstrumentToys" inherits="MusicianOptionCheckButtonTemplate">
 										<Anchors>
 											<Anchor point="TOPLEFT" relativeTo="$parentMuteGameMusic" relativePoint="BOTTOMLEFT" x="0" y="4"/>
 										</Anchors>
@@ -114,24 +114,24 @@
 									</Layer>
 								</Layers>
 								<Frames>
-									<CheckButton name="$parentMaster" inherits="MusicianOptionsCheckButtonTemplate">
+									<CheckButton name="$parentMaster" inherits="MusicianOptionCheckButtonTemplate">
 										<Anchors>
 											<Anchor point="TOPLEFT" relativeTo="$parentSubText" relativePoint="BOTTOMLEFT" x="0" y="4"/>
 										</Anchors>
 									</CheckButton>
-									<CheckButton name="$parentSFX" inherits="MusicianOptionsCheckButtonTemplate">
+									<CheckButton name="$parentSFX" inherits="MusicianOptionCheckButtonTemplate">
 										<Anchors>
 											<Anchor point="LEFT" relativeTo="$parentMasterText" relativePoint="RIGHT" x="10" y="0"/>
 											<Anchor point="TOP" relativeTo="$parentMaster" relativePoint="TOP" x="0" y="0"/>
 										</Anchors>
 									</CheckButton>
-									<CheckButton name="$parentDialog" inherits="MusicianOptionsCheckButtonTemplate">
+									<CheckButton name="$parentDialog" inherits="MusicianOptionCheckButtonTemplate">
 										<Anchors>
 											<Anchor point="LEFT" relativeTo="$parentSFXText" relativePoint="RIGHT" x="10" y="0"/>
 											<Anchor point="TOP" relativeTo="$parentSFX" relativePoint="TOP" x="0" y="0"/>
 										</Anchors>
 									</CheckButton>
-									<CheckButton name="$parentAutoAdjust" inherits="InterfaceOptionsSmallCheckButtonTemplate">
+									<CheckButton name="$parentAutoAdjust" inherits="MusicianSubOptionCheckButtonTemplate">
 										<Anchors>
 											<Anchor point="TOPLEFT" relativeTo="$parentMaster" relativePoint="BOTTOMLEFT" x="10" y="4"/>
 										</Anchors>

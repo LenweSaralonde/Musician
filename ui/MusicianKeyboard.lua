@@ -1690,7 +1690,6 @@ function MusicianKeyboardKeyTemplate_OnSizeChanged(self, w, h)
 	self.background:SetHeight(h - 7)
 	self.glowColor:SetWidth(w * 1.75)
 	self.glowColor:SetHeight(h * 1.75)
-	self:SetHighlightTexture(nil)
 	self.subText:SetWidth(self:GetWidth())
 end
 

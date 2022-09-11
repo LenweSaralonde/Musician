@@ -170,12 +170,12 @@
 		</Layers>
 
 		<Frames>
-			<CheckButton name="$parentMute" parentKey="muteCheckbox" inherits="MusicianOptionsSmallCheckButtonTemplate" >
+			<CheckButton name="$parentMute" parentKey="muteCheckbox" inherits="MusicianSmallCheckButtonTemplate" >
 				<Anchors>
 					<Anchor point="LEFT" x="32" y="9" />
 				</Anchors>
 			</CheckButton>
-			<CheckButton name="$parentSolo" parentKey="soloCheckbox" inherits="MusicianOptionsSmallCheckButtonTemplate" >
+			<CheckButton name="$parentSolo" parentKey="soloCheckbox" inherits="MusicianSmallCheckButtonTemplate" >
 				<Anchors>
 					<Anchor point="LEFT" x="48" y="9" />
 				</Anchors>

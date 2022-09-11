@@ -18,14 +18,14 @@
 
 		<Frames>
 
-			<Button name="$parentTrackEditorButton" parentKey="trackEditorButton" inherits="MusicianIconTextButtonTemplate" level="OVERLAY">
+			<Button name="$parentTrackEditorButton" parentKey="trackEditorButton" inherits="MusicianIconTextButtonTemplate">
 				<Size x="70" y="22" />
 				<Anchors>
 					<Anchor point="TOPLEFT" x="10" y="-10" relativePoint="TOPLEFT" />
 				</Anchors>
 			</Button>
 
-			<Button name="$parentLinkButton" parentKey="linkButton" inherits="MusicianIconTextButtonTemplate" level="OVERLAY">
+			<Button name="$parentLinkButton" parentKey="linkButton" inherits="MusicianIconTextButtonTemplate">
 				<Size x="70" y="22" />
 				<Anchors>
 					<Anchor point="TOPRIGHT" x="-10" y="-10" relativePoint="TOPRIGHT" />
@@ -84,7 +84,7 @@
 				</Layers>
 			</Frame>
 
-			<Button name="$parentClearButton" parentKey="clearButton" inherits="MusicianIconButtonTemplate" level="OVERLAY">
+			<Button name="$parentClearButton" parentKey="clearButton" inherits="MusicianIconButtonTemplate">
 				<Size x="24" y="24" />
 				<Anchors>
 					<Anchor point="BOTTOMRIGHT" x="-5" y="5" relativePoint="BOTTOMRIGHT" relativeTo="$parentTextBackground" />

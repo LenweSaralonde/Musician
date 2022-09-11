@@ -62,6 +62,9 @@
 		<NormalFont style="GameFontHighlightLarge"/>
 		<DisabledFont style="GameFontDisableLarge"/>
 		<HighlightFont style="GameFontHighlightLarge"/>
+		<HighlightTexture file="Interface\AddOns\Musician\ui\textures\button-glow.blp" alphaMode="ADD" alpha=".2">
+			<TexCoords top=".2" left=".2" right=".8" bottom=".8"/>
+		</HighlightTexture>
 		<Scripts>
 			<OnLoad function="MusicianKeyboardKeyTemplate_OnLoad" />
 			<OnSizeChanged function="MusicianKeyboardKeyTemplate_OnSizeChanged" />
@@ -149,7 +152,7 @@
 				</Anchors>
 			</Button>
 
-			<CheckButton name="$parentPowerChords" parentKey="powerChordsCheckbox" inherits="MusicianOptionsSmallCheckButtonTemplate" >
+			<CheckButton name="$parentPowerChords" parentKey="powerChordsCheckbox" inherits="MusicianSmallCheckButtonTemplate" >
 				<Anchors>
 					<Anchor point="TOPLEFT" x="16" y="0" relativeTo="$parentInstrument" relativePoint="BOTTOMLEFT" />
 				</Anchors>

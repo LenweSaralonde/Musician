@@ -37,13 +37,13 @@
 					<Anchor point="RIGHT" x="-25" />
 				</Anchors>
 			</Frame>
-			<Button name="$parentImportButton" inherits="UIPanelButtonTemplate" level="OVERLAY" parentKey="importButton">
+			<Button name="$parentImportButton" inherits="UIPanelButtonTemplate" parentKey="importButton">
 				<Size x="200" y="24" />
 				<Anchors>
 					<Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$parentProgressBar" y="-10" />
 				</Anchors>
 			</Button>
-			<Button name="$parentCancelImportButton" inherits="UIPanelButtonTemplate" level="OVERLAY" parentKey="cancelImportButton">
+			<Button name="$parentCancelImportButton" inherits="UIPanelButtonTemplate" parentKey="cancelImportButton">
 				<Size x="200" y="24" />
 				<Anchors>
 					<Anchor point="TOP" relativeTo="$parentImportButton" />

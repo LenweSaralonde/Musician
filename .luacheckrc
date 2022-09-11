@@ -128,12 +128,22 @@ stds.wow = {
 			}
 		},
 
+		C_Minimap = {
+			fields = {
+				"GetNumTrackingTypes",
+				"GetTrackingInfo",
+				"SetTracking",
+				"ClearAllTracking",
+			}
+		},
+
 		"HandleModifiedItemClick",
 		"SlashCmdList",
 		"GetPlayerLink",
 		"SubstituteChatMessageBeforeSend",
 		"GetNumTrackingTypes",
 		"GetTrackingInfo",
+		"MiniMapTracking_FilterIsVisible",
 		"StaticPopupDialogs",
 		"ChatEdit_OnEditFocusLost",
 	},
@@ -335,7 +345,6 @@ stds.wow = {
 		"MiniMapTracking_Update",
 		"CreateFromMixins",
 		"CompactUnitFrame_UpdateWidgetsOnlyMode",
-		"BindingButtonTemplate_SetSelected",
 		"GetCameraZoom",
 		"SetInWorldUIVisibility",
 		"ExecuteFrameScript",
@@ -347,8 +356,6 @@ stds.wow = {
 		"IsMetaKeyDown",
 		"IsAltKeyDown",
 		"InterfaceOptions_AddCategory",
-		"BlizzardOptionsPanel_RegisterControl",
-		"BlizzardOptionsPanel_SetupDependentControl",
 		"InterfaceOptionsFrame_Show",
 		"InterfaceOptionsFrame_OpenToCategory",
 		"InlineHyperlinkFrame_OnEnter",
@@ -409,30 +416,6 @@ stds.wow = {
 			}
 		},
 
-		InterfaceOptionsNamesPanelUnitNameplatesShowAll = {
-			fields = {
-				"SetChecked"
-			}
-		},
-
-		InterfaceOptionsNamesPanelUnitNameplatesEnemies = {
-			fields = {
-				"SetChecked"
-			}
-		},
-
-		InterfaceOptionsNamesPanelUnitNameplatesFriends = {
-			fields = {
-				"SetChecked"
-			}
-		},
-
-		InterfaceOptionsNamesPanelUnitNameplatesMotionDropDown = {
-			fields = {
-				"SetValue"
-			}
-		},
-
 		"UIParent",
 		"WorldFrame",
 		"WorldMapFrame",
@@ -461,10 +444,10 @@ stds.wow = {
 		"WOW_PROJECT_MAINLINE",
 		"WOW_PROJECT_CLASSIC",
 		"NUM_CHAT_WINDOWS",
-		"CONTROLTYPE_CHECKBOX",
 		"SOUNDKIT",
 		"MASTER_VOLUME",
 		"SOUND_VOLUME",
+		"FX_VOLUME",
 		"DIALOG_VOLUME",
 		"UNKNOWN",
 		"PI",

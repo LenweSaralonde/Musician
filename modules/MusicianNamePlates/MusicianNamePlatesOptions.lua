@@ -51,28 +51,17 @@ function Musician.NamePlates.Options.Init()
 		MusicianOptionsPanelUnitNamePlatesEnable,
 		Musician.Msg.OPTIONS_ENABLE_NAMEPLATES)
 	MusicianOptionsPanelUnitNamePlatesEnable:HookScript("OnClick", function(self)
-		local showAll = InterfaceOptionsNamesPanelUnitNameplatesShowAll
-		local enemies = InterfaceOptionsNamesPanelUnitNameplatesEnemies
-		local friends = InterfaceOptionsNamesPanelUnitNameplatesFriends
-
-		-- Check all 3 boxes when enabling nameplates
 		if self:GetChecked() then
-			showAll:SetChecked(true)
-			ExecuteFrameScript(showAll, "OnClick", "LeftButton")
-
-			enemies:SetChecked(true)
-			ExecuteFrameScript(enemies, "OnClick", "LeftButton")
-
-			friends:SetChecked(true)
-			ExecuteFrameScript(friends, "OnClick", "LeftButton")
+			-- Enable nameplates for everyone
+			setCVarBool("nameplateShowAll", true)
+			setCVarBool("nameplateShowEnemies", true)
+			setCVarBool("nameplateShowFriends", true)
 
 			-- Do not stack nameplates
-			InterfaceOptionsNamesPanelUnitNameplatesMotionDropDown:SetValue(0)
-
-		-- Only uncheck "show all" when disabling
+			SetCVar("nameplateMotion", 0)
 		else
-			showAll:SetChecked(false)
-			ExecuteFrameScript(showAll, "OnClick", "LeftButton")
+			-- Only uncheck "show all" when disabling
+			setCVarBool("nameplateShowAll", false)
 		end
 	end)
 
@@ -112,8 +101,8 @@ function Musician.NamePlates.Options.Init()
 		Musician.NamePlates.Options.Save(true)
 	end)
 	MusicianOptionsPanelUnitNamePlatesCinematicMode:HookScript("OnShow", function(self)
-		_G[self:GetName().."Text"]:SetText(Musician.NamePlates.Options.GetCinematicModeLabel())
-		self:SetHitRectInsets(0, -_G[self:GetName().."Text"]:GetWidth(), 0, 0)
+		self.Text:SetText(Musician.NamePlates.Options.GetCinematicModeLabel())
+		self:SetHitRectInsets(0, -self.Text:GetWidth(), 0, 0)
 	end)
 
 	-- Cinematic mode nameplates checkbox
@@ -189,7 +178,8 @@ end
 function Musician.NamePlates.Options.GetCinematicModeLabel()
 	local binding = GetBindingKey("TOGGLEUI")
 	if binding then
-		return string.gsub(Musician.Msg.OPTIONS_CINEMATIC_MODE, '{binding}', binding)
+		local label = string.gsub(Musician.Msg.OPTIONS_CINEMATIC_MODE, '{binding}', binding)
+		return label
 	else
 		return Musician.Msg.OPTIONS_CINEMATIC_MODE_NO_BINDING
 	end

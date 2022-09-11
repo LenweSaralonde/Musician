@@ -22,14 +22,12 @@ end
 --- Enable checkbox OnLoad
 --
 function MusicianTipsAndTricksTemplateEnableTipsAndTricks_OnLoad(self)
-	_G[self:GetName().."Text"]:SetText(Musician.Msg.TIPS_AND_TRICKS_ENABLE)
-	self:SetHitRectInsets(0, -_G[self:GetName().."Text"]:GetWidth(), 0, 0)
+	self.Text:SetText(Musician.Msg.TIPS_AND_TRICKS_ENABLE)
+	self:SetHitRectInsets(0, -self.Text:GetWidth(), 0, 0)
 end
 
-MusicianTipsAndTricksTemplateEnableTipsAndTricksMixin = {}
-
---- Enable checkbox SetValue
+--- Enable checkbox OnClick
 --
-function MusicianTipsAndTricksTemplateEnableTipsAndTricksMixin:SetValue(value)
-	Musician_Settings.enableTipsAndTricks = value == 1
+function MusicianTipsAndTricksTemplateEnableTipsAndTricks_OnClick(self)
+	Musician_Settings.enableTipsAndTricks = self:GetChecked()
 end

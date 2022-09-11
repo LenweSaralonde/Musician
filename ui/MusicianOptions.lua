@@ -51,7 +51,7 @@ function Musician.Options.Init()
 	MusicianOptionsPanelAudioChannelsTitle:SetText(Musician.Msg.OPTIONS_AUDIO_CHANNELS_TITLE)
 	MusicianOptionsPanelAudioChannelsSubText:SetText(Musician.Msg.OPTIONS_AUDIO_CHANNELS_HINT)
 	Musician.Options.SetupSoundChannelCheckbox(MusicianOptionsPanelAudioChannelsMaster, MASTER_VOLUME, 'Master', 30)
-	Musician.Options.SetupSoundChannelCheckbox(MusicianOptionsPanelAudioChannelsSFX, SOUND_VOLUME, 'SFX', 15)
+	Musician.Options.SetupSoundChannelCheckbox(MusicianOptionsPanelAudioChannelsSFX, FX_VOLUME or SOUND_VOLUME, 'SFX', 15)
 	Musician.Options.SetupSoundChannelCheckbox(MusicianOptionsPanelAudioChannelsDialog, DIALOG_VOLUME, 'Dialog', 20)
 	Musician.Options.SetupCheckbox(MusicianOptionsPanelAudioChannelsAutoAdjust, Musician.Msg.OPTIONS_AUDIO_CHANNELS_AUTO_ADJUST_CONFIG)
 	MusicianOptionsPanelAudioChannelsAutoAdjust:HookScript("OnClick", function(self)
@@ -60,43 +60,52 @@ function Musician.Options.Init()
 	end)
 end
 
+--- Enable or disable the checkbox based on the dependant controls status
+-- @param checkbox (CheckButton)
+local function computeDependantControls(checkbox)
+	local isEnabled = true
+	for _, dependantControl in pairs(checkbox.dependantControls) do
+		if not(dependantControl:GetChecked()) then
+			isEnabled = false
+		end
+	end
+
+	if isEnabled then
+		checkbox:Enable()
+	else
+		checkbox:Disable()
+	end
+end
+
 --- Set up an option checkbox
 -- @param checkbox (CheckButton)
 -- @param labelText (string)
 -- @param[opt] dependantControl (CheckButton)
 -- @param[opt] dependantControl2 (CheckButton)
-function Musician.Options.SetupCheckbox(checkbox, labelText, dependantControl, dependantControl2)
-	local labelElement = _G[checkbox:GetName().."Text"]
+-- @param[opt] dependantControln... (CheckButton)
+function Musician.Options.SetupCheckbox(checkbox, labelText, ...)
+	local labelElement = checkbox.Text
 	labelElement:SetText(labelText)
 	checkbox:SetHitRectInsets(0, -labelElement:GetWidth(), 0, 0)
-	checkbox.type = CONTROLTYPE_CHECKBOX
-	checkbox.SetValue = function(self, value) self.newValue = value end
-	checkbox.Disable = function (self)
-		getmetatable(self).__index.Disable(self)
-		_G[self:GetName().."Text"]:SetTextColor(GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b)
-	end
-	checkbox.Enable = function (self)
-		getmetatable(self).__index.Enable(self)
-		local text = _G[self:GetName().."Text"]
-		local fontObject = text:GetFontObject()
-		text:SetTextColor(fontObject:GetTextColor())
-	end
 
-	BlizzardOptionsPanel_RegisterControl(checkbox, checkbox:GetParent():GetParent())
-
-	if dependantControl then
-		BlizzardOptionsPanel_SetupDependentControl(dependantControl, checkbox)
-		if dependantControl2 then
-			BlizzardOptionsPanel_SetupDependentControl(dependantControl2, checkbox)
-		end
+	checkbox.dependantControls = {...}
+	for _, dependantControl in pairs(checkbox.dependantControls) do
+		dependantControl:HookScript("OnClick", function()
+			computeDependantControls(checkbox)
+		end)
+		hooksecurefunc(dependantControl, "SetChecked", function()
+			computeDependantControls(checkbox)
+		end)
 	end
 end
 
 --- Show Musician's option panel
 --
 function Musician.Options.Show()
-	InterfaceOptionsFrame_Show() -- This one has to be opened first
-	InterfaceOptionsFrame_OpenToCategory(MusicianOptionsPanelContainer)
+	if InterfaceOptionsFrame_Show then
+		InterfaceOptionsFrame_Show() -- This one has to be opened first
+	end
+	InterfaceOptionsFrame_OpenToCategory("Musician")
 end
 
 function Musician.Options.Refresh()

@@ -8,13 +8,14 @@
 		</Anchors>
 		<Frames>
 			<Frame inherits="ShadowOverlaySmallTemplate" setAllPoints="true" />
-			<CheckButton name="$parentEnableTipsAndTricks" parentKey="enableCheckbox" inherits="InterfaceOptionsSmallCheckButtonTemplate" mixin="MusicianTipsAndTricksTemplateEnableTipsAndTricksMixin">
+			<CheckButton name="$parentEnableTipsAndTricks" parentKey="enableCheckbox" inherits="MusicianSmallCheckButtonTemplate">
 				<Anchors>
 					<Anchor point="BOTTOMLEFT" relativeTo="$parent" x="10" y="10"/>
 				</Anchors>
 				<Scripts>
-					<OnShow function="MusicianTipsAndTricksTemplateEnableTipsAndTricks_OnShow" />
-					<OnLoad function="MusicianTipsAndTricksTemplateEnableTipsAndTricks_OnLoad" />
+					<OnShow inherit="prepend" function="MusicianTipsAndTricksTemplateEnableTipsAndTricks_OnShow" />
+					<OnLoad inherit="prepend" function="MusicianTipsAndTricksTemplateEnableTipsAndTricks_OnLoad" />
+					<OnClick inherit="prepend" function="MusicianTipsAndTricksTemplateEnableTipsAndTricks_OnClick" />
 				</Scripts>
 			</CheckButton>
 		</Frames>

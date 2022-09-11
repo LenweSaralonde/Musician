@@ -83,6 +83,17 @@ local function createKeyboard()
 	end
 end
 
+--- Highlight a selected key button.
+-- @param keyBindingButton (Button)
+-- @param isSelected (boolean)
+local function setSelectedKey(keyButton, isSelected)
+	if isSelected then
+		keyButton.background:SetColorTexture(1, 1, 0, 1)
+	else
+		keyButton.background:SetColorTexture(.1, .1, .1, 1)
+	end
+end
+
 --- Initialize keyboard configurator.
 --
 function Musician.KeyboardConfig.Init()
@@ -331,7 +342,7 @@ function Musician.KeyboardConfig.SelectKeyBinding(key)
 	Musician.KeyboardConfig.UnselectKeyBinding()
 	local button = getKeyButton(key)
 	PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
-	BindingButtonTemplate_SetSelected(button, true)
+	setSelectedKey(button, true)
 	selectedKeyButton = button
 	Musician.KeyboardConfig.UpdateHint()
 
@@ -350,7 +361,7 @@ end
 --
 function Musician.KeyboardConfig.UnselectKeyBinding()
 	if selectedKeyButton then
-		BindingButtonTemplate_SetSelected(selectedKeyButton, false)
+		setSelectedKey(selectedKeyButton, false)
 		selectedKeyButton = nil
 		Musician.KeyboardConfig.UpdateHint()
 		MusicianKeyboardConfigNextKeyButton:Hide()
@@ -414,7 +425,4 @@ end
 function MusicianKeyboardConfigKeyTemplate_OnSizeChanged(self, w, h)
 	self.background:SetWidth(w - 7)
 	self.background:SetHeight(h - 7)
-	self.selectedHighlight:SetWidth(w)
-	self.selectedHighlight:SetHeight(h * 2)
-	self:GetHighlightTexture():SetTexCoord(0, 1, 0.2086, 0.5659)
 end

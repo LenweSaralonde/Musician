@@ -34,32 +34,32 @@
 				</Size>
 			</Frame>
 
-			<CheckButton name="$parentEnable" inherits="MusicianOptionsCheckButtonTemplate">
+			<CheckButton name="$parentEnable" inherits="MusicianOptionCheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentSubText" relativePoint="BOTTOMLEFT" x="0" y="4"/>
 				</Anchors>
 			</CheckButton>
-			<CheckButton name="$parentShowIcon" inherits="InterfaceOptionsSmallCheckButtonTemplate">
+			<CheckButton name="$parentShowIcon" inherits="MusicianSubOptionCheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentEnable" relativePoint="BOTTOMLEFT" x="10" y="4"/>
 				</Anchors>
 			</CheckButton>
-			<CheckButton name="$parentHideNamePlateBars" inherits="InterfaceOptionsSmallCheckButtonTemplate">
+			<CheckButton name="$parentHideNamePlateBars" inherits="MusicianSubOptionCheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentShowIcon" relativePoint="BOTTOMLEFT" x="0" y="4"/>
 				</Anchors>
 			</CheckButton>
-			<CheckButton name="$parentHideNPCs" inherits="InterfaceOptionsSmallCheckButtonTemplate">
+			<CheckButton name="$parentHideNPCs" inherits="MusicianSubOptionCheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentHideNamePlateBars" relativePoint="BOTTOMLEFT" x="0" y="4"/>
 				</Anchors>
 			</CheckButton>
-			<CheckButton name="$parentCinematicMode" inherits="MusicianOptionsCheckButtonTemplate">
+			<CheckButton name="$parentCinematicMode" inherits="MusicianOptionCheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentHideNPCs" relativePoint="BOTTOMLEFT" x="-10" y="-6"/>
 				</Anchors>
 			</CheckButton>
-			<CheckButton name="$parentCinematicModeNamePlates" inherits="InterfaceOptionsSmallCheckButtonTemplate">
+			<CheckButton name="$parentCinematicModeNamePlates" inherits="MusicianSubOptionCheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentCinematicMode" relativePoint="BOTTOMLEFT" x="10" y="4"/>
 				</Anchors>

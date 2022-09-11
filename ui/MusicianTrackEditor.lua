@@ -27,8 +27,13 @@ function Musician.TrackEditor.Init()
 	-- Main frame settings
 	MusicianTrackEditor:SetClampedToScreen(true)
 	MusicianTrackEditor:HookScript("OnSizeChanged", function(self)
-		self:SetMinResize(600, 270)
-		self:SetMaxResize(UIParent:GetWidth() / self:GetScale(), UIParent:GetHeight() / self:GetScale())
+		local width, height = self:GetSize()
+		local minWidth, minHeight = 600, 270
+		local maxWidth, maxHeight = UIParent:GetWidth() / self:GetScale(), UIParent:GetHeight() / self:GetScale()
+		self:SetSize(
+			max(minWidth, min(maxWidth, width)),
+			max(minHeight, min(maxHeight, height))
+		)
 	end)
 
 	-- Set text labels

@@ -50,7 +50,7 @@
 					<Anchor point="RIGHT" x="-25" />
 				</Anchors>
 			</Frame>
-			<Button name="$parentPostLinkButton" inherits="UIPanelButtonTemplate" level="OVERLAY" parentKey="postLinkButton">
+			<Button name="$parentPostLinkButton" inherits="UIPanelButtonTemplate" parentKey="postLinkButton">
 				<Size x="200" y="24" />
 				<Anchors>
 					<Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$parentProgressBar" y="-10" />

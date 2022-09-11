@@ -15,13 +15,6 @@
 					<Color a="1" r="0.1" g="0.1" b="0.1" />
 				</Texture>
 			</Layer>
-			<Layer level="OVERLAY">
-				<Texture parentKey="selectedHighlight" file="Interface\Buttons\UI-Silver-Button-Select" alphaMode="ADD" hidden="true">
-					<Anchors>
-						<Anchor point="CENTER" x="0" y="-12"/>
-					</Anchors>
-				</Texture>
-			</Layer>
 		</Layers>
 		<Scripts>
 			<OnClick function="MusicianKeyboardConfigKeyTemplate_OnClick" />
@@ -31,6 +24,9 @@
 		<NormalFont style="GameFontHighlight"/>
 		<DisabledFont style="GameFontDisable"/>
 		<HighlightFont style="GameFontHighlight"/>
+		<HighlightTexture file="Interface\AddOns\Musician\ui\textures\button-glow.blp" alphaMode="ADD" alpha=".2">
+			<TexCoords top=".2" left=".2" right=".8" bottom=".8"/>
+		</HighlightTexture>
 	</Button>
 
 

@@ -74,7 +74,7 @@
 		<!-- Add to your bag + quantity -->
 
 		<Frames>
-			<CheckButton name="$parentAddToBag" parentKey="addToBag" inherits="MusicianOptionsCheckButtonTemplate">
+			<CheckButton name="$parentAddToBag" parentKey="addToBag" inherits="MusicianOptionCheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentPreviewContainer" relativePoint="BOTTOMLEFT" y="-25"/>
 				</Anchors>
@@ -120,7 +120,7 @@
 					<Anchor point="RIGHT" x="-25" />
 				</Anchors>
 			</Frame>
-			<Button name="$parentExportItemButton" inherits="UIPanelButtonTemplate" level="OVERLAY" parentKey="exportItemButton">
+			<Button name="$parentExportItemButton" inherits="UIPanelButtonTemplate" parentKey="exportItemButton">
 				<Size x="200" y="24" />
 				<Anchors>
 					<Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$parentProgressBar" y="-10" />

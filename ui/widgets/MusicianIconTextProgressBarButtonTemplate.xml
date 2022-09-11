@@ -13,6 +13,8 @@
 				</Texture>
 			</Layer>
 		</Layers>
-		<OnLoad function="MusicianIconTextProgressBarButtonTemplate_OnLoad" />
+		<Scripts>
+			<OnLoad function="MusicianIconTextProgressBarButtonTemplate_OnLoad" />
+		</Scripts>
 	</Button>
 </Ui>
