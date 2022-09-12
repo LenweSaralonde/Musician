@@ -11,9 +11,13 @@ local C_CVar = _G["C_CVar"] or {
 	GetCVarBool = GetCVarBool
 }
 
+-- Previous settings to be restored restore when Cancel is pressed
 local oldSettings = {}
 
---- Set a boolean CVar
+-- True when a CVar is being set by SetCVarSafe
+local isSettingCVar = false
+
+--- Set a CVar (can be safely used in combat and doesn't refresh checkboxes)
 -- @param name (string)
 -- @param value (string)
 local function SetCVarSafe(name, value)
@@ -21,19 +25,26 @@ local function SetCVarSafe(name, value)
 		C_Timer.After(1, function() SetCVarSafe(name, value) end)
 		return
 	end
-
-	SetCVar(name, value, "Musician.NamePlates.Options")
+	isSettingCVar = true
+	SetCVar(name, value)
 end
 
 --- Options panel initialization
 --
 function Musician.NamePlates.Options.Init()
-	-- Refresh panel when CVar was changed externally
-	hooksecurefunc(C_CVar, "SetCVar", function(name, _, eventName)
-		if eventName ~= "Musician.NamePlates.Options" then
-			if name == "nameplateShowAll" or name == "nameplateShowFriends" or name == "nameplateShowFriendlyNPCs" then
-				Musician.NamePlates.Options.RefreshCheckboxes()
+	-- Refresh relevant panel elements when a CVar was changed externally
+	hooksecurefunc(C_CVar, "SetCVar", function(name)
+		if isSettingCVar then
+			isSettingCVar = false
+			return
+		end
+		if name == "nameplateShowAll" or name == "nameplateShowFriends" then
+			MusicianOptionsPanelUnitNamePlatesEnable:SetChecked(C_CVar.GetCVarBool("nameplateShowAll") and C_CVar.GetCVarBool("nameplateShowFriends"))
+			if MusicianOptionsPanelUnitNamePlatesEnable:IsVisible() then
+				ExecuteFrameScript(MusicianOptionsPanelUnitNamePlatesEnable, "OnClick", "LeftButton")
 			end
+		elseif name == "nameplateShowFriendlyNPCs" then
+			MusicianOptionsPanelUnitNamePlatesHideNPCs:SetChecked(not(C_CVar.GetCVarBool("nameplateShowFriendlyNPCs")))
 		end
 	end)
 
@@ -157,15 +168,10 @@ hooksecurefunc(Musician.Options, "Defaults", Musician.NamePlates.Options.Default
 --- Refresh checkboxes based on actual values
 --
 function Musician.NamePlates.Options.RefreshCheckboxes()
-	local enable = C_CVar.GetCVarBool("nameplateShowAll") and C_CVar.GetCVarBool("nameplateShowFriends")
-	local showIcon = Musician_Settings.showNamePlateIcon
-	local hideNamePlateBars = Musician_Settings.hideNamePlateBars
-	local hideNPCs = not(C_CVar.GetCVarBool("nameplateShowFriendlyNPCs"))
-
-	MusicianOptionsPanelUnitNamePlatesEnable:SetChecked(enable)
-	MusicianOptionsPanelUnitNamePlatesShowIcon:SetChecked(showIcon)
-	MusicianOptionsPanelUnitNamePlatesHideNamePlateBars:SetChecked(hideNamePlateBars)
-	MusicianOptionsPanelUnitNamePlatesHideNPCs:SetChecked(hideNPCs)
+	MusicianOptionsPanelUnitNamePlatesEnable:SetChecked(C_CVar.GetCVarBool("nameplateShowAll") and C_CVar.GetCVarBool("nameplateShowFriends"))
+	MusicianOptionsPanelUnitNamePlatesShowIcon:SetChecked(Musician_Settings.showNamePlateIcon)
+	MusicianOptionsPanelUnitNamePlatesHideNamePlateBars:SetChecked(Musician_Settings.hideNamePlateBars)
+	MusicianOptionsPanelUnitNamePlatesHideNPCs:SetChecked(not(C_CVar.GetCVarBool("nameplateShowFriendlyNPCs")))
 	MusicianOptionsPanelUnitNamePlatesCinematicMode:SetChecked(Musician_Settings.cinematicMode)
 	MusicianOptionsPanelUnitNamePlatesCinematicModeNamePlates:SetChecked(Musician_Settings.cinematicModeNamePlates)
 end
@@ -185,7 +191,6 @@ end
 --- Refresh panel and store old values
 --
 function Musician.NamePlates.Options.Refresh()
-
 	local binding = GetBindingKey("TOGGLEUI")
 	if binding then
 		MusicianOptionsPanelUnitNamePlatesCinematicModeText:SetText(Musician.NamePlates.Options.GetCinematicModeLabel())
@@ -205,7 +210,7 @@ hooksecurefunc(Musician.Options, "Refresh", Musician.NamePlates.Options.Refresh)
 
 -- Restore previous values on cancel
 --
-hooksecurefunc(Musician.Options, "Cancel", function()
+function Musician.NamePlates.Options.Cancel()
 	SetCVarSafe("nameplateShowFriendlyNPCs", oldSettings.nameplateShowFriendlyNPCs)
 	Musician_Settings.showNamePlateIcon = oldSettings.showNamePlateIcon
 	Musician_Settings.hideNamePlateBars = oldSettings.hideNamePlateBars
@@ -213,7 +218,8 @@ hooksecurefunc(Musician.Options, "Cancel", function()
 	Musician_Settings.cinematicModeNamePlates = oldSettings.cinematicModeNamePlates
 	Musician.NamePlates.UpdateAll()
 	MusicianOptionsPanelUnitNamePlatesImage:Hide()
-end)
+end
+hooksecurefunc(Musician.Options, "Cancel", Musician.NamePlates.Options.Cancel)
 
 --- Save values
 --
