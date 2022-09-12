@@ -7,6 +7,6 @@
 	</Binding>
 	<Binding name="MUSICIANKEYBOARD" category="ADDONS">
 		MusicianFrameSource:ClearFocus()
-		MusicianKeyboard:Toggle()
+		Musician.Keyboard.Show()
 	</Binding>
 </Bindings>
