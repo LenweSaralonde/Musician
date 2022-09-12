@@ -2,7 +2,7 @@
 
 	<Script file="MusicianAbout.lua" />
 
-	<Frame name="MusicianAbout" inherits="MusicianDialogTemplate" mixin="MusicianAboutMixin">
+	<Frame name="MusicianAbout" inherits="MusicianDialogTemplate">
 
 		<Size x="480" y="180" />
 
@@ -101,9 +101,5 @@
 				</FontString>
 			</Layer>
 		</Layers>
-
-		<Scripts>
-			<OnLoad inherit="prepend" method="OnLoad" />
-		</Scripts>
 	</Frame>
 </Ui>
