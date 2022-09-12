@@ -34,7 +34,7 @@ function MusicianBandPlayButtonTemplateMixin:SetTooltipText(text)
 end
 
 --- OnLoad
---
+-- @param self (Frame)
 function MusicianBandPlayButtonTemplate_OnLoad(self)
 	self.tooltipText = Musician.Msg.PLAY_IN_BAND
 	self:SetText(Musician.Icons.BandPlay)
@@ -44,6 +44,7 @@ function MusicianBandPlayButtonTemplate_OnLoad(self)
 end
 
 --- OnUpdate
+-- @param self (Frame)
 -- @param elapsed (number)
 function MusicianBandPlayButtonTemplate_OnUpdate(self, elapsed)
 	if self.checked and self.blinking then
@@ -54,18 +55,18 @@ end
 
 --- OnClick
 --
-function MusicianBandPlayButtonTemplate_OnClick(self)
+function MusicianBandPlayButtonTemplate_OnClick()
 	PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
 end
 
 --- OnEnter
---
+-- @param self (Frame)
 function MusicianBandPlayButtonTemplate_OnEnter(self)
 	self.mouseOver = true
 end
 
 --- OnLeave
---
+-- @param self (Frame)
 function MusicianBandPlayButtonTemplate_OnLeave(self)
 	self.mouseOver = false
 end

@@ -84,7 +84,7 @@ local function createKeyboard()
 end
 
 --- Highlight a selected key button.
--- @param keyBindingButton (Button)
+-- @param keyButton (Button)
 -- @param isSelected (boolean)
 local function setSelectedKey(keyButton, isSelected)
 	if isSelected then

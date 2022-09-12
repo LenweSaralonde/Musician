@@ -14,26 +14,27 @@ function MusicianDialogTemplateMixin:Toggle()
 end
 
 --- OnLoad
---
+-- @param self (Frame)
 function MusicianDialogTemplate_OnLoad(self)
 	Musician.RestoreFramePosition(self)
 	self:RegisterForDrag("LeftButton")
 end
 
 --- OnDragStart
---
+-- @param self (Frame)
 function MusicianDialogTemplate_OnDragStart(self)
 	self:StartMoving()
 end
 
 --- OnDragStop
---
+-- @param self (Frame)
 function MusicianDialogTemplate_OnDragStop(self)
 	self:StopMovingOrSizing()
 	Musician.SaveFramePosition(self)
 end
 
 --- OnKeyDown
+-- @param self (Frame)
 -- @param key (string)
 function MusicianDialogTemplate_OnKeyDown(self, key)
 	if self:IsShown() and key == "ESCAPE" and not(self.noEscape) then
@@ -46,12 +47,12 @@ end
 
 --- OnShow
 --
-function MusicianDialogTemplate_OnShow(self)
+function MusicianDialogTemplate_OnShow()
 	PlaySound(SOUNDKIT.IG_QUEST_LIST_OPEN)
 end
 
 --- OnHide
 --
-function MusicianDialogTemplate_OnHide(self)
+function MusicianDialogTemplate_OnHide()
 	PlaySound(SOUNDKIT.IG_QUEST_LIST_CLOSE)
 end

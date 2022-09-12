@@ -2,12 +2,13 @@
 -- @module MusicianDropDownMenuTooltipTemplate
 
 --- OnLoad
---
+-- @param self (Frame)
 function MusicianDropDownMenuTooltipTemplate_OnLoad(self)
 	MSA_DropDownMenu_Create(self, self:GetParent())
 end
 
 --- OnKeyDown
+-- @param self (Frame)
 -- @param key (string)
 function MusicianDropDownMenuTooltipTemplate_OnKeyDown(self, key)
 	if MSA_DropDownList1:IsShown() and key == "ESCAPE" then
@@ -19,7 +20,7 @@ function MusicianDropDownMenuTooltipTemplate_OnKeyDown(self, key)
 end
 
 --- OnEnter
---
+-- @param self (Frame)
 function MusicianDropDownMenuTooltipTemplate_OnEnter(self)
 	if (self.tooltipText ~= nil) then
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
@@ -29,7 +30,7 @@ function MusicianDropDownMenuTooltipTemplate_OnEnter(self)
 end
 
 --- OnLeave
---
+-- @param self (Frame)
 function MusicianDropDownMenuTooltipTemplate_OnLeave(self)
 	if (self.tooltipText ~= nil) then
 		GameTooltip:Hide()
