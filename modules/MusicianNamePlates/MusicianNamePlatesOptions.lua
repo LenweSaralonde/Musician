@@ -17,6 +17,10 @@ local oldSettings = {}
 -- True when a CVar is being set by SetCVarSafe
 local isSettingCVar = false
 
+-- Disable the SetCVar hook when true
+-- This is needed when setting several CVars within the same action
+local disableSetCVarHook = false
+
 --- Set a CVar (can be safely used in combat and doesn't refresh checkboxes)
 -- @param name (string)
 -- @param value (string)
@@ -27,6 +31,7 @@ local function SetCVarSafe(name, value)
 	end
 	isSettingCVar = true
 	SetCVar(name, value)
+	isSettingCVar = false
 end
 
 --- Options panel initialization
@@ -34,8 +39,7 @@ end
 function Musician.NamePlates.Options.Init()
 	-- Refresh relevant panel elements when a CVar was changed externally
 	hooksecurefunc(C_CVar, "SetCVar", function(name)
-		if isSettingCVar then
-			isSettingCVar = false
+		if disableSetCVarHook or isSettingCVar then
 			return
 		end
 		if name == "nameplateShowAll" or name == "nameplateShowFriends" then
@@ -66,6 +70,7 @@ function Musician.NamePlates.Options.Init()
 		Musician.Msg.OPTIONS_ENABLE_NAMEPLATES)
 	MusicianOptionsPanelUnitNamePlatesEnable:HookScript("OnClick", function(self)
 		-- Enable nameplates
+		disableSetCVarHook = true
 		SetCVarSafe("nameplateShowAll", self:GetChecked())
 		if InterfaceOptionsNamesPanelUnitNameplatesShowAll then
 			InterfaceOptionsNamesPanelUnitNameplatesShowAll:SetChecked(self:GetChecked())
@@ -90,6 +95,7 @@ function Musician.NamePlates.Options.Init()
 				InterfaceOptionsNamesPanelUnitNameplatesMotionDropDown:SetValue(0)
 			end
 		end
+		disableSetCVarHook = false
 	end)
 
 	-- Show icon checkbox
