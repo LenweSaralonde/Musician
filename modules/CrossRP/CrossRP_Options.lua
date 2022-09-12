@@ -73,7 +73,7 @@ end)
 
 --- OnLoad
 --
-function MusicianOptionsPanelCrossRP_OnLoad(self)
+function MusicianOptionsPanelCrossRP_OnLoad()
 	MusicianOptionsPanelCrossRPTitle:SetText(Musician.Msg.OPTIONS_CROSS_RP_TITLE)
 	MusicianOptionsPanelCrossRPSubText:SetText(Musician.Msg.OPTIONS_CROSS_RP_SUB_TEXT)
 	MusicianOptionsPanelCrossRPImage.textureFile = "Interface\\AddOns\\Musician\\ui\\textures\\cross-rp.blp"

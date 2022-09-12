@@ -2,7 +2,7 @@
 -- @module MusicianInstrumentDropdownTemplate
 
 --- OnLoad handler
---
+-- @param self (Frame)
 function MusicianInstrumentDropdownTemplate_OnLoad(self)
 
 	MSA_DropDownMenu_SetWidth(self, 115)

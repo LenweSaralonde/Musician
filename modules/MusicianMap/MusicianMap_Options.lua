@@ -62,7 +62,7 @@ hooksecurefunc(Musician.Options, "Save", Musician.Map.Options.Save)
 
 --- OnLoad
 --
-function MusicianOptionsPanelMap_OnLoad(self)
+function MusicianOptionsPanelMap_OnLoad()
 	MusicianOptionsPanelMapTitle:SetText(Musician.Msg.MAP_OPTIONS_TITLE)
 	MusicianOptionsPanelMapSubText:SetText(Musician.Msg.MAP_OPTIONS_SUB_TEXT)
 

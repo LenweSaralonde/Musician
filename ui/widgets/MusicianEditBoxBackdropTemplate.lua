@@ -2,7 +2,7 @@
 -- @module MusicianEditBoxBackdropTemplate
 
 --- OnLoad
---
+-- @param self (Frame)
 function MusicianEditBoxBackdropTemplate_OnLoad(self)
 	self:SetBackdrop({
 		bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
