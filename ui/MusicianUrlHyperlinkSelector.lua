@@ -64,7 +64,8 @@ function MusicianUrlHyperlinkSelectorMixin:OnLoad()
 		editBox.readonlyText = text
 	end)
 	editBox:SetScript("OnChar", function()
-		editBox:SetText(editBox.readonlyText)
+		-- Call native editBox SetText(), ignoring the hook
+		getmetatable(editBox).__index.SetText(editBox, editBox.readonlyText)
 		editBox:HighlightText()
 	end)
 	editBox:SetScript("OnCursorChanged", function()
