@@ -145,11 +145,15 @@ end
 -- @param elapsed (number)
 local function animateNotes(animatedNotesFrame, elapsed)
 	-- Empty the table of notes added during the frame
-	animatedNotesFrame.notesAddedDuringFrame = {}
+	wipe(animatedNotesFrame.notesAddedDuringFrame)
 
 	-- Animate notes
-	local children = { animatedNotesFrame:GetChildren() }
-	for _, noteFrame in ipairs(children) do
+	local numChildren = animatedNotesFrame:GetNumChildren()
+
+	if numChildren == 0 then return end
+
+	for childIndex = numChildren, 1, -1 do
+		local noteFrame = select(childIndex, animatedNotesFrame:GetChildren())
 		noteFrame.animationParams[PARAM.PROGRESSION] = noteFrame.animationParams[PARAM.PROGRESSION] + elapsed
 
 		local duration = NOTES_ANIMATION_DURATION
@@ -164,6 +168,7 @@ local function animateNotes(animatedNotesFrame, elapsed)
 		if position >= 1 then
 			renderAnimatedNote(noteFrame, 1)
 			removeNote(noteFrame)
+			numChildren = numChildren - 1
 		else
 			renderAnimatedNote(noteFrame, position)
 		end
