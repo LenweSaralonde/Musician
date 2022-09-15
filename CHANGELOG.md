@@ -1,6 +1,18 @@
 Changelog
 =========
 
+v1.9.2.0
+--------
+* Rearranged UI code to improve maintainability.
+* Added WoW 10.0 support.
+* Fixed Russian localization by MalyDupek.
+* Added API version for third party add-ons.
+* Hide chat password popup for the comm channel. #86
+* Fixed song editor cursor bounds.
+* Fixed song links in chat bubbles on Classic.
+* Fixed nameplate bug with TRP3 in cinematic mode.
+* Minor bugfixes and improvements.
+
 v1.9.1.1
 --------
 * Fixed chat channel colors and order getting swapped when joining the communication channel. #83
