@@ -17,6 +17,8 @@
 			<OnClick function="MusicianCheckButtonTemplate_OnClick" />
 			<OnEnable function="MusicianCheckButtonTemplate_OnEnable" />
 			<OnDisable function="MusicianCheckButtonTemplate_OnDisable" />
+			<OnEnter function="MusicianCheckButtonTemplate_OnEnter" />
+			<OnLeave function="MusicianCheckButtonTemplate_OnLeave" />
 		</Scripts>
 	</CheckButton>
 
