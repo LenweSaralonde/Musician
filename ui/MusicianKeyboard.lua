@@ -940,6 +940,27 @@ function Musician.Keyboard.ResetButtons(onlyForLayer)
 	end
 end
 
+--- Reset all the keyboard keys
+--
+function Musician.Keyboard.ResetAllKeys()
+	for _, rowKeys in pairs(Musician.KEYBOARD) do
+		for _, key in pairs(rowKeys) do
+			local button = getKeyButton(key)
+			Musician.Keyboard.SetButtonState(button, false)
+			button.mouseDown = false
+			button.keyDown = false
+			button.volumeMeter:Reset()
+			button.glowColor:SetAlpha(0)
+		end
+	end
+	for _, key in pairs(FunctionKeys) do
+		local button = getFunctionKeyButton(key)
+		Musician.Keyboard.SetButtonState(button, false)
+		button.mouseDown = false
+		button.keyDown = false
+	end
+end
+
 --- Key up/down handler, from physical or on-screen keyboard
 -- @param keyValue (string)
 -- @param down (boolean)
@@ -1846,7 +1867,13 @@ end
 --- OnHide
 --
 function MusicianKeyboardMixin:OnHide()
-	-- Reset write and delete program buttons on hide
+	-- Stop all notes and remove sustain
+	Musician.Keyboard.ResetAllKeys()
+	Musician.Live.SetSustain(false, Musician.KEYBOARD_LAYER.LOWER)
+	Musician.Live.SetSustain(false, Musician.KEYBOARD_LAYER.UPPER)
+	Musician.Live.AllNotesOff()
+
+	-- Reset write and delete program buttons
 	Musician.Keyboard.SetSavingProgram(false)
 	Musician.Keyboard.SetDeletingProgram(false)
 end
