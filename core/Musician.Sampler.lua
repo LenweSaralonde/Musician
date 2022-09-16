@@ -11,6 +11,8 @@ local playersInRange = {}
 local lastHandleId = 0
 local globalMute = false
 
+local SAMPLE_FILE_EXT = ".ogg"
+
 local PERCUSSION_MIDI = 128
 local FALLBACK_DRUMKIT_MIDI = 128
 
@@ -36,9 +38,17 @@ function Musician.Sampler.Init()
 			instrumentData.midi = PERCUSSION_MIDI
 		end
 
-		-- Initialize round robin
 		if instrumentData.pathList ~= nil then
-			instrumentData.roundRobin = 1
+			-- Initialize sound files list
+			instrumentData.soundFiles = {}
+			for _, path in pairs(instrumentData.pathList) do
+				table.insert(instrumentData.soundFiles, path .. SAMPLE_FILE_EXT)
+			end
+
+			-- Initialize round robin
+			if instrumentData.keyMod == nil then
+				instrumentData.roundRobin = 1
+			end
 		end
 	end
 end
@@ -122,9 +132,9 @@ end
 -- and all other suitable sound file paths for randomization.
 -- @param instrument (int|string|table) MIDI instrument index, instrument name or instrument data
 -- @param key (int) MIDI key
--- @return filePath (string) file path to be played
--- @return instrumentData (table) from Musician.INSTRUMENTS
--- @return soundFiles (table) all suitable file paths for this instrument and note
+-- @return soundFile (string|nil) file path to be played
+-- @return instrumentData (table|nil) from Musician.INSTRUMENTS
+-- @return soundFiles (table|nil) all possible file paths for this instrument and note, when applicable
 function Musician.Sampler.GetSoundFile(instrument, key)
 
 	if instrument == nil or key == nil then return nil end
@@ -154,49 +164,41 @@ function Musician.Sampler.GetSoundFile(instrument, key)
 		return nil
 	end
 
-	local soundPaths
-	-- Use regions
-	if instrumentData.regions ~= nil then
-		soundPaths = {}
-		for _, region in pairs(instrumentData.regions) do
-			local hiKey = region.hiKey - 12 + Musician.C0_INDEX
-			local loKey = region.loKey - 12 + Musician.C0_INDEX
-			if key >= loKey and key <= hiKey then
-				table.insert(soundPaths, region.path)
-			end
-		end
-
-	-- Use path list with round robin
-	elseif instrumentData.pathList ~= nil then
-		soundPaths = instrumentData.pathList
-	-- Use single path
-	else
-		soundPaths = { instrumentData.path }
-	end
-
 	local noteName = Musician.Sampler.NoteName(key)
 
-	local soundFiles = {}
-	for i, soundPath in pairs(soundPaths) do
-		local soundFile = soundPath
+	if instrumentData.regions ~= nil then
+		-- Use regions
+		for _, region in pairs(instrumentData.regions) do
+			if key >= region.loKey and key <= region.hiKey then
+				local soundFile = region.path
+				if not(instrumentData.isPercussion) then
+					soundFile = soundFile .. '\\' .. noteName
+				end
+				soundFile = soundFile .. SAMPLE_FILE_EXT
+				return soundFile, instrumentData
+			end
+		end
+		return nil, instrumentData
+	elseif instrumentData.pathList ~= nil then
+		-- Use path list
+		local soundFile
+		if instrumentData.keyMod ~= nil then
+			-- Use key modulo
+			soundFile = instrumentData.soundFiles[(key - instrumentData.keyMod) % #instrumentData.soundFiles + 1]
+		else
+			-- Use round robin
+			soundFile = instrumentData.soundFiles[instrumentData.roundRobin]
+		end
+		return soundFile, instrumentData, instrumentData.soundFiles
+	else
+		-- Use single path
+		local soundFile = instrumentData.path
 		if not(instrumentData.isPercussion) then
 			soundFile = soundFile .. '\\' .. noteName
 		end
-		soundFiles[i] = soundFile .. ".ogg"
+		soundFile = soundFile .. SAMPLE_FILE_EXT
+		return soundFile, instrumentData
 	end
-
-	if #soundFiles == 1 then
-		return soundFiles[1], instrumentData, soundFiles
-	end
-
-	local soundFile
-	if instrumentData.keyMod ~= nil then
-		soundFile = soundFiles[(key - instrumentData.keyMod) % #soundFiles + 1]
-	else
-		soundFile = soundFiles[instrumentData.roundRobin]
-	end
-
-	return soundFile, instrumentData, soundFiles
 end
 
 --- Returns true if the provided instrument is "plucked".
@@ -282,7 +284,7 @@ local function playSampleFile(handle, instrumentData, soundFile, tries, channel)
 		end
 	end
 
-	local willPlay, soundHandle = Musician.Sampler.PlaySoundFile(soundFile, channel)
+	local willPlay, soundHandle = PlaySoundFile(soundFile, channel)
 
 	-- Note sound file will play
 	if willPlay then
@@ -290,7 +292,7 @@ local function playSampleFile(handle, instrumentData, soundFile, tries, channel)
 		notesOn[handle][NOTEON.SOUND_HANDLE] = soundHandle
 
 		-- Increment instrument round robin
-		if instrumentData.pathList ~= nil then
+		if instrumentData.roundRobin ~= nil then
 			if instrumentData.roundRobin >= #instrumentData.pathList then
 				instrumentData.roundRobin = 1
 			else
@@ -506,19 +508,6 @@ function Musician.Sampler.GetSampleId(instrumentData, key)
 	else
 		return instrumentData.name .. '-' .. key
 	end
-end
-
---- Safely play a sound file, even if the sound file does not exist.
--- @param soundFile (string)
--- @param channel (string)
--- @return willPlay (boolean)
--- @return soundHandle (int)
-function Musician.Sampler.PlaySoundFile(soundFile, channel)
-	local willPlay, soundHandle
-	pcall(function()
-		willPlay, soundHandle = PlaySoundFile(soundFile, channel)
-	end)
-	return willPlay, soundHandle
 end
 
 --- Set global mute state

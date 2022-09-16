@@ -139,7 +139,7 @@ function Musician.Preloader.PreloadNext()
 				end
 
 				-- Start a new cycle at lower rate to maintain the samples in cache
-				Musician.Preloader.preloadedSamples = {}
+				wipe(Musician.Preloader.preloadedSamples)
 				preloadedSamples = 0
 				keyCursor = Musician.MIN_KEY
 				averageLoadingTime = DEFAULT_LOADING_TIME
@@ -154,22 +154,42 @@ end
 -- @return hasSample (boolean)
 -- @return preloadTime (number) in seconds
 function Musician.Preloader.PreloadNote(instrument, key)
-	local _, instrumentData, soundFiles = Musician.Sampler.GetSoundFile(instrument, key)
-	local sampleId = Musician.Sampler.GetSampleId(instrumentData, key)
-	local hasSample = false
-	local count = 0
 	local startTime = debugprofilestop()
-	for _, soundFile in pairs(soundFiles) do
-		local play, handle
-		play, handle = Musician.Sampler.PlaySoundFile(soundFile, 'Master')
+	local count = 0
+	local hasSample = false
+
+	local soundFile, instrumentData, soundFiles = Musician.Sampler.GetSoundFile(instrument, key)
+	local sampleId = Musician.Sampler.GetSampleId(instrumentData, key)
+
+	if soundFiles ~= nil then
+		-- Multiple files
+		for _, soundFileItem in pairs(soundFiles) do
+			local play, handle = PlaySoundFile(soundFileItem, 'Master')
+			if play then
+				hasSample = true
+				count = count + 1
+				StopSound(handle, 0)
+			else
+				Musician.Utils.Debug(MODULE_NAME, "Sample file not found for", instrumentData.name, key, soundFileItem)
+			end
+		end
+
+	elseif soundFile ~= nil then
+		-- Single file
+		local play, handle = PlaySoundFile(soundFile, 'Master')
 		if play then
 			hasSample = true
 			count = count + 1
 			StopSound(handle, 0)
 		else
-			Musician.Utils.Debug(MODULE_NAME, "Missing sample file:", soundFile)
+			Musician.Utils.Debug(MODULE_NAME, "Sample file not found for", instrumentData.name, key, soundFile)
 		end
+
+	else
+		-- No file
+		Musician.Utils.Debug(MODULE_NAME, "No sample file for", instrumentData.name, key)
 	end
+
 	Musician.Preloader.AddPreloaded(sampleId)
 
 	local preloadTime = 0
