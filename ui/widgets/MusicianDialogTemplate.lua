@@ -16,7 +16,6 @@ end
 --- OnLoad
 -- @param self (Frame)
 function MusicianDialogTemplate_OnLoad(self)
-	Musician.RestoreFramePosition(self)
 	self:RegisterForDrag("LeftButton")
 end
 
@@ -30,7 +29,6 @@ end
 -- @param self (Frame)
 function MusicianDialogTemplate_OnDragStop(self)
 	self:StopMovingOrSizing()
-	Musician.SaveFramePosition(self)
 end
 
 --- OnKeyDown

@@ -62,7 +62,6 @@ function Musician.TrackEditor.Init()
 		self:SetButtonState("NORMAL", false)
 		self:GetHighlightTexture():Show()
 		MusicianTrackEditor:StopMovingOrSizing()
-		Musician.SaveFramePosition(MusicianTrackEditor)
 	end)
 
 	-- Scroll frame

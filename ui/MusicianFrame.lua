@@ -40,9 +40,13 @@ function Musician.Frame.Init()
 	-- Main frame settings
 	MusicianFrame.noEscape = true
 	MusicianFrame:SetClampedToScreen(true)
-	MusicianFrame:ClearAllPoints()
-	local defaultY = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE and 93 or 126
-	MusicianFrame:SetPoint('RIGHT', UIParent, 'RIGHT', 0, defaultY)
+
+	-- Set default frame position
+	if not(MusicianFrame:IsUserPlaced()) then
+		MusicianFrame:ClearAllPoints()
+		local defaultY = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE and 93 or 126
+		MusicianFrame:SetPoint('RIGHT', UIParent, 'RIGHT', 0, defaultY)
+	end
 
 	-- Main title
 	MusicianFrameTitle:SetText(Musician.Msg.PLAY_A_SONG)
