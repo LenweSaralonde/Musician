@@ -809,13 +809,6 @@ function Musician.Utils.PlayerIsOnSameRealm(playerName)
 	return false
 end
 
---- Return true if the player whose GUID is provided is visible (loaded) by the game client
--- @param guid (string)
--- @return isVisible (boolean)
-function Musician.Utils.PlayerGuidIsVisible(guid)
-	return guid and C_PlayerInfo.IsConnected(PlayerLocation:CreateFromGUID(guid))
-end
-
 --- Shortens the UTF-8 text with ellipsis if its size in bytes is longer than specified
 -- @param text (string)
 -- @param maxBytes (int)

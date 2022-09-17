@@ -60,12 +60,11 @@ end
 --- Safely call a function and return its values. Return nil in case of error.
 -- @param func (function)
 local function safeCall(func, ...)
-	local result = { pcall (func, ...) }
-	local success = table.remove(result, 1)
+	local success, r0, r1, r2, r3, r4, r5, r6, r7, r8, r9 = pcall(func, ...)
 	if not(success) then
 		return nil
 	end
-	return unpack(result)
+	return r0, r1, r2, r3, r4, r5, r6, r7, r8, r9
 end
 
 --- Wrap CrossRP protocol functions that may fire errors when improper parameters are provided such as unknown realm
@@ -245,7 +244,7 @@ function Musician.CrossRP.Init()
 
 		-- foreigners list is empty
 		if #foreigners == 0 then
-			activeBands = {}
+			wipe(activeBands)
 			return
 		end
 
@@ -266,19 +265,22 @@ function Musician.CrossRP.Init()
 		while (scans < #foreigners) and (scans < scansToDo) do
 			local player = foreigners[foreignerScanIndex]
 			local playerData = Musician.Registry.players[player]
-			local guid = playerData.guid
-			local band = playerData.crossRpBand
 
 			-- Player has CrossRP attributes, is not in my group and is visible (connected)
-			if guid and not(Musician.Utils.PlayerIsInGroup(player)) and Musician.Utils.PlayerGuidIsVisible(guid) then
-				foreignerScanActiveBands[band] = true
+			if playerData.playerLocation and not(Musician.Utils.PlayerIsInGroup(player)) and C_PlayerInfo.IsConnected(playerData.playerLocation) then
+				foreignerScanActiveBands[playerData.crossRpBand] = true
 			end
 
 			-- Scan is complete
 			if foreignerScanIndex == #foreigners then
+				-- Refresh active bands table using the fresh scan result
+				wipe(activeBands)
+				for band, isActive in pairs(foreignerScanActiveBands) do
+					activeBands[band] = isActive
+				end
+				-- Reset scan for the next iteration
 				foreignerScanIndex = 1
-				activeBands = foreignerScanActiveBands
-				foreignerScanActiveBands = {}
+				wipe(foreignerScanActiveBands)
 			else
 				foreignerScanIndex = foreignerScanIndex + 1
 			end
