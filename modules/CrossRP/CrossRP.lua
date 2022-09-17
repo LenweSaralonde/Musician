@@ -267,7 +267,7 @@ function Musician.CrossRP.Init()
 			local playerData = Musician.Registry.players[player]
 
 			-- Player has CrossRP attributes, is not in my group and is visible (connected)
-			if playerData.playerLocation and not(Musician.Utils.PlayerIsInGroup(player)) and C_PlayerInfo.IsConnected(playerData.playerLocation) then
+			if playerData.location and not(Musician.Utils.PlayerIsInGroup(player)) and C_PlayerInfo.IsConnected(playerData.location) then
 				foreignerScanActiveBands[playerData.crossRpBand] = true
 			end
 
@@ -411,8 +411,7 @@ function Musician.CrossRP.RegisterPlayerFromSource(source, guid)
 		end
 
 		if guid then
-			playerData.guid = guid
-			playerData.playerLocation = { guid = guid }
+			playerData.location = { guid = guid }
 		end
 	end
 end

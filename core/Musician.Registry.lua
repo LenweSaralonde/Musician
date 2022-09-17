@@ -242,8 +242,7 @@ function Musician.Registry.UpdatePlayerPositionAndGUID(player, posY, posX, posZ,
 	Musician.Registry.players[player].posX = posX
 	Musician.Registry.players[player].posZ = posZ
 	Musician.Registry.players[player].instanceID = instanceID
-	Musician.Registry.players[player].guid = guid
-	Musician.Registry.players[player].playerLocation = { guid = guid } -- Do not create an actual PlayerLocation to save memory
+	Musician.Registry.players[player].location = { guid = guid } -- Do not create an actual PlayerLocation to save memory
 end
 
 --- Return true if the player is in loading range
@@ -263,7 +262,7 @@ function Musician.Registry.PlayerIsInLoadingRange(player)
 	end
 
 	-- Player is not "connected" (in the same shard and phase and close enough to interact with the character)
-	if not(C_PlayerInfo.IsConnected(Musician.Registry.players[player].playerLocation)) then
+	if not(C_PlayerInfo.IsConnected(Musician.Registry.players[player].location)) then
 		return false
 	end
 
@@ -296,8 +295,9 @@ end
 -- @param player (string)
 -- @return guid (string)
 function Musician.Registry.GetPlayerGUID(player)
-	if Musician.Registry.players[player] ~= nil then
-		return Musician.Registry.players[player].guid
+	local playerData = Musician.Registry.players[player]
+	if playerData ~= nil and playerData.location then
+		return playerData.location.guid
 	end
 
 	return nil
