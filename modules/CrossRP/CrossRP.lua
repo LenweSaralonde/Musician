@@ -412,6 +412,7 @@ function Musician.CrossRP.RegisterPlayerFromSource(source, guid)
 
 		if guid then
 			playerData.guid = guid
+			playerData.playerLocation = { guid = guid }
 		end
 	end
 end
