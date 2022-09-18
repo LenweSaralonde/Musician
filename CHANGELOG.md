@@ -1,6 +1,12 @@
 Changelog
 =========
 
+v1.9.2.1
+--------
+* Fixed memory leaks.
+* Fixed held notes not being stopped when closing the live keyboard.
+* Minor bugfixes and improvements.
+
 v1.9.2.0
 --------
 * Rearranged UI code to improve maintainability.
