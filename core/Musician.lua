@@ -586,7 +586,7 @@ function Musician.SetupHooks()
 	-- Not hooking SetItemRef directly to avoid tainting.
 	local hookedSetHyperlink = ItemRefTooltip.SetHyperlink
 	function ItemRefTooltip:SetHyperlink(link, ...)
-		if (link and strsplit(':', link) == "musician") then
+		if link and strsplit(':', link) == "musician" then
 			return
 		end
 		return hookedSetHyperlink(self, link, ...)
@@ -595,7 +595,7 @@ function Musician.SetupHooks()
 	-- Block modified clicks on custom hyperlinks
 	local hookedHandleModifiedItemClick = HandleModifiedItemClick
 	function HandleModifiedItemClick(link, itemLocation, ...)
-		if string.match(link, '|Hmusician:[^|]+|h') then
+		if link and string.match(link, '|Hmusician:[^|]+|h') then
 			return false
 		end
 		return hookedHandleModifiedItemClick(link, itemLocation, ...)

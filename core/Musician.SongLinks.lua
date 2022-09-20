@@ -167,7 +167,7 @@ function Musician.SongLinks.Init()
 	end)
 	local hookedSetHyperlink = ItemRefTooltip.SetHyperlink
 	function ItemRefTooltip:SetHyperlink(link, ...)
-		if (link and link:sub(0, #HYPERLINK_PREFIX) == HYPERLINK_PREFIX) then
+		if link and link:sub(0, #HYPERLINK_PREFIX) == HYPERLINK_PREFIX then
 			return
 		end
 		return hookedSetHyperlink(self, link, ...)
