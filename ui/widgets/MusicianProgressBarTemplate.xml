@@ -1,9 +1,11 @@
-<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.blizzard.com/wow/ui/">
 	<!-- Progress bar -->
 	<Script file="MusicianProgressBarTemplate.lua" />
 	<Frame name="MusicianProgressBarTemplate" mixin="MusicianProgressBarTemplateMixin" virtual="true">
 		<Size>
-			<AbsDimension y="10"/>
+			<AbsDimension y="10" />
 		</Size>
 		<Layers>
 			<Layer level="BACKGROUND">

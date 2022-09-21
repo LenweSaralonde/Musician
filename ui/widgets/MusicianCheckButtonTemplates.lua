@@ -23,7 +23,7 @@ end
 --- OnEnter
 --
 function MusicianCheckButtonTemplate_OnEnter(self)
-	if(self.tooltipText ~= nil) then
+	if self.tooltipText ~= nil then
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
 		GameTooltip_SetTitle(GameTooltip, self.tooltipText)
 		GameTooltip:Show()
@@ -33,7 +33,7 @@ end
 --- OnLeave
 --
 function MusicianCheckButtonTemplate_OnLeave(self)
-	if(self.tooltipText ~= nil) then
+	if self.tooltipText ~= nil then
 		GameTooltip:Hide()
 	end
 end

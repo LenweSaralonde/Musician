@@ -1,17 +1,19 @@
-<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.blizzard.com/wow/ui/">
 
 	<Script file="MusicianCheckButtonTemplates.lua" />
 
 	<!-- Common check button template -->
 
 	<CheckButton name="MusicianCheckButtonArtTemplate" virtual="true">
-		<NormalTexture file="Interface\Buttons\UI-CheckBox-Up"/>
-		<PushedTexture file="Interface\Buttons\UI-CheckBox-Down"/>
-		<HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD"/>
-		<CheckedTexture file="Interface\Buttons\UI-CheckBox-Check"/>
-		<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled"/>
+		<NormalTexture file="Interface\Buttons\UI-CheckBox-Up" />
+		<PushedTexture file="Interface\Buttons\UI-CheckBox-Down" />
+		<HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD" />
+		<CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
+		<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled" />
 		<HitRectInsets>
-			<AbsInset left="0" right="0" top="0" bottom="0"/>
+			<AbsInset left="0" right="0" top="0" bottom="0" />
 		</HitRectInsets>
 		<Scripts>
 			<OnClick function="MusicianCheckButtonTemplate_OnClick" />
@@ -26,16 +28,16 @@
 
 	<CheckButton name="MusicianSmallCheckButtonTemplate" virtual="true" inherits="MusicianCheckButtonArtTemplate">
 		<Size>
-			<AbsDimension x="16" y="16"/>
+			<AbsDimension x="16" y="16" />
 		</Size>
 		<Layers>
 			<Layer level="ARTWORK">
 				<FontString name="$parentText" inherits="GameFontHighlightSmall" parentKey="Text">
 					<Anchors>
-						<Anchor point="LEFT" relativePoint="RIGHT" x="0" y="1"/>
+						<Anchor point="LEFT" relativePoint="RIGHT" x="0" y="1" />
 					</Anchors>
 					<Scripts>
-						<OnLoad function="MusicianCheckButtonTemplate_SetParentKeyAlias"/>
+						<OnLoad function="MusicianCheckButtonTemplate_SetParentKeyAlias" />
 					</Scripts>
 				</FontString>
 			</Layer>
@@ -46,16 +48,16 @@
 
 	<CheckButton name="MusicianOptionCheckButtonTemplate" virtual="true" inherits="MusicianCheckButtonArtTemplate">
 		<Size>
-			<AbsDimension x="26" y="26"/>
+			<AbsDimension x="26" y="26" />
 		</Size>
 		<Layers>
 			<Layer level="ARTWORK">
 				<FontString name="$parentText" inherits="GameFontHighlightLeft" parentKey="Text">
 					<Anchors>
-						<Anchor point="LEFT" relativePoint="RIGHT" x="-2" y="0"/>
+						<Anchor point="LEFT" relativePoint="RIGHT" x="-2" y="0" />
 					</Anchors>
 					<Scripts>
-						<OnLoad function="MusicianCheckButtonTemplate_SetParentKeyAlias"/>
+						<OnLoad function="MusicianCheckButtonTemplate_SetParentKeyAlias" />
 					</Scripts>
 				</FontString>
 			</Layer>
@@ -66,16 +68,16 @@
 
 	<CheckButton name="MusicianSubOptionCheckButtonTemplate" virtual="true" inherits="MusicianCheckButtonArtTemplate">
 		<Size>
-			<AbsDimension x="26" y="26"/>
+			<AbsDimension x="26" y="26" />
 		</Size>
 		<Layers>
 			<Layer level="ARTWORK">
 				<FontString name="$parentText" inherits="GameFontHighlightSmall" parentKey="Text">
 					<Anchors>
-						<Anchor point="LEFT" relativePoint="RIGHT" x="0" y="1"/>
+						<Anchor point="LEFT" relativePoint="RIGHT" x="0" y="1" />
 					</Anchors>
 					<Scripts>
-						<OnLoad function="MusicianCheckButtonTemplate_SetParentKeyAlias"/>
+						<OnLoad function="MusicianCheckButtonTemplate_SetParentKeyAlias" />
 					</Scripts>
 				</FontString>
 			</Layer>

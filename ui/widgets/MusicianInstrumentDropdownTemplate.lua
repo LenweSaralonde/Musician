@@ -19,7 +19,8 @@ function MusicianInstrumentDropdownTemplate_OnLoad(self)
 		self.instrumentId = instrumentId
 
 		if Musician.INSTRUMENTS[instrumentId].color ~= nil then
-			instrumentName = Musician.Utils.GetColorCode(unpack(Musician.INSTRUMENTS[instrumentId].color)) .. instrumentName .. "|r"
+			instrumentName = Musician.Utils.GetColorCode(unpack(Musician.INSTRUMENTS[instrumentId].color)) ..
+				instrumentName .. "|r"
 		end
 
 		MSA_DropDownMenu_SetText(self, instrumentName)

@@ -33,7 +33,7 @@ end
 --
 function MusicianIconTextButtonTemplate_OnMouseDown(self)
 	if self:IsEnabled() then
-		if not(self.icon.oldPoint) then
+		if not self.icon.oldPoint then
 			local point, _, _, x, y = self.icon:GetPoint(1)
 			self.icon.oldPoint = point
 			self.icon.oldX = x

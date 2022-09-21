@@ -1,4 +1,6 @@
-<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.blizzard.com/wow/ui/">
 	<!-- Tips and tricks window -->
 	<Script file="MusicianTipsAndTricksTemplate.lua" />
 	<Frame name="MusicianTipsAndTricksTemplate" inherits="GlowBoxTemplate" hidden="true" virtual="true">
@@ -10,7 +12,7 @@
 			<Frame inherits="ShadowOverlaySmallTemplate" setAllPoints="true" />
 			<CheckButton name="$parentEnableTipsAndTricks" parentKey="enableCheckbox" inherits="MusicianSmallCheckButtonTemplate">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parent" x="10" y="10"/>
+					<Anchor point="BOTTOMLEFT" relativeTo="$parent" x="10" y="10" />
 				</Anchors>
 				<Scripts>
 					<OnShow inherit="prepend" function="MusicianTipsAndTricksTemplateEnableTipsAndTricks_OnShow" />
@@ -23,9 +25,9 @@
 			<Layer level="ARTWORK">
 				<FontString name="$parentTitle" parentKey="title" inherits="GameFontNormalShadowHuge2" justifyH="CENTER" justifyV="TOP">
 					<Anchors>
-						<Anchor point="TOP" y="-16"/>
-						<Anchor point="LEFT" x="10"/>
-						<Anchor point="RIGHT" x="-10"/>
+						<Anchor point="TOP" y="-16" />
+						<Anchor point="LEFT" x="10" />
+						<Anchor point="RIGHT" x="-10" />
 					</Anchors>
 				</FontString>
 				<FontString name="$parentText" parentKey="text" inherits="GameFontHighlightLarge" justifyH="LEFT" justifyV="MIDDLE">
@@ -33,8 +35,8 @@
 					<Anchors>
 						<Anchor point="TOP" relativeTo="$parentTitle" relativePoint="BOTTOM" />
 						<Anchor point="BOTTOM" y="30" />
-						<Anchor point="LEFT" x="30"/>
-						<Anchor point="RIGHT" x="-30"/>
+						<Anchor point="LEFT" x="30" />
+						<Anchor point="RIGHT" x="-30" />
 					</Anchors>
 				</FontString>
 			</Layer>

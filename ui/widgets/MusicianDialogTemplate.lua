@@ -35,7 +35,7 @@ end
 -- @param self (Frame)
 -- @param key (string)
 function MusicianDialogTemplate_OnKeyDown(self, key)
-	if self:IsShown() and key == "ESCAPE" and not(self.noEscape) then
+	if self:IsShown() and key == "ESCAPE" and not self.noEscape then
 		self:SetPropagateKeyboardInput(false)
 		self:Hide()
 	else
