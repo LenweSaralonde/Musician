@@ -26,4 +26,3 @@ function Musician.TidyPlates_ThreatPlates:OnEnable()
 		end)
 	end
 end
-

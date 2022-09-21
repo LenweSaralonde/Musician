@@ -35,14 +35,14 @@ local exporting = false
 local importingIDs = {}
 local importingSlotButtons = {}
 
-local containerFrames = { }
+local containerFrames = {}
 
 -- OnInitialize
 --
 function Musician.TRP3E:OnInitialize()
 	-- Register all item container frames such as bags as soon as they are created
 	hooksecurefunc('CreateFrame', function(frameType, name)
-		if frameType == 'Frame' and name and type(name) == 'string' and string.sub(name, 1, 14) == 'TRP3_Container'  then
+		if frameType == 'Frame' and name and type(name) == 'string' and string.sub(name, 1, 14) == 'TRP3_Container' then
 			table.insert(containerFrames, _G[name])
 		end
 	end)
@@ -66,7 +66,7 @@ local function initLocaleDropdown()
 		table.insert(localeValues, { locale, msg.LOCALE_NAME or locale })
 	end
 
-	table.sort(localeValues, function (a, b)
+	table.sort(localeValues, function(a, b)
 		return a[2] < b[2]
 	end)
 
@@ -136,7 +136,10 @@ local function setCooldown(infoId, progress)
 	-- Cleanup unused cooldowns
 	for _, containerFrame in pairs({ TRP3_InventoryPage.Main, unpack(containerFrames) }) do
 		for _, slot in pairs(containerFrame.slots) do
-			if slot.MusicianCooldown and (not(slot.info) or importingSlotButtons[slot.info.id] == nil) and slot.MusicianCooldown:IsPaused() then
+			if slot.MusicianCooldown and
+				(not slot.info or importingSlotButtons[slot.info.id] == nil) and
+				slot.MusicianCooldown:IsPaused()
+			then
 				slot.MusicianCooldown:Clear()
 			end
 		end
@@ -175,7 +178,7 @@ function Musician.TRP3E.InitUI()
 			},
 		}
 		local menuFrame = CreateFrame("Frame", "MusicianTRPE_ExportMenu", UIParent, "MusicianDropDownMenuTooltipTemplate")
-		Musician.Utils.EasyMenu(menu, menuFrame, "cursor", 0 , 0, "MENU")
+		Musician.Utils.EasyMenu(menu, menuFrame, "cursor", 0, 0, "MENU")
 	end)
 
 	-- Initialize item export frame
@@ -201,7 +204,7 @@ function Musician.TRP3E.InitUI()
 	Musician.TRP3E:RegisterMessage(Musician.TRP3E.Event.LoadComplete, function(event, infoId, song, success)
 		setCooldown(infoId, nil)
 
-		if not(success) then return end
+		if not success then return end
 
 		-- Stop previous source song being played
 		if Musician.sourceSong and Musician.sourceSong:IsPlaying() then
@@ -239,7 +242,8 @@ local function createItem(song, locale, icon, quantity)
 
 	Musician.TRP3E:RegisterMessage(Musician.Events.SongExportProgress, function(event, exportedSong, progress)
 		if exportedSong ~= song then return end
-		Musician.TRP3E:SendMessage(Musician.TRP3E.Event.CreateProgress, exportedSong, progress * (1 - BASE64ENCODE_PROGRESSION_RATIO))
+		Musician.TRP3E:SendMessage(Musician.TRP3E.Event.CreateProgress, exportedSong,
+			progress * (1 - BASE64ENCODE_PROGRESSION_RATIO))
 	end)
 
 	song:ExportCompressed(function(songData)
@@ -250,7 +254,8 @@ local function createItem(song, locale, icon, quantity)
 		local base64EncodeWorker
 		base64EncodeWorker = function()
 			local progression = min(1, cursor / #songData)
-			Musician.TRP3E:SendMessage(Musician.TRP3E.Event.CreateProgress, song, (1 - BASE64ENCODE_PROGRESSION_RATIO) + progression * BASE64ENCODE_PROGRESSION_RATIO)
+			Musician.TRP3E:SendMessage(Musician.TRP3E.Event.CreateProgress, song,
+				(1 - BASE64ENCODE_PROGRESSION_RATIO) + progression * BASE64ENCODE_PROGRESSION_RATIO)
 
 			local cursorTo = min(#songData, cursor + BASE64_CONVERT_RATE - 1)
 			encodedSongData = encodedSongData .. LibBase64:enc(string.sub(songData, cursor, cursorTo))
@@ -372,11 +377,11 @@ end
 --- Show the TRP item export frame
 --
 function Musician.TRP3E.ShowExportFrame()
-	if not(Musician.sourceSong) then return end
+	if not Musician.sourceSong then return end
 
 	local frame = MusicianTRPEExportFrame
 
-	if not(exporting) then
+	if not exporting then
 		local sharedSong = Musician.sourceSong
 
 		frame.createItem = function()
@@ -424,7 +429,8 @@ function Musician.TRP3E.ShowExportFrame()
 			TRP3_ItemTooltip:Hide()
 		end)
 		frame.preview:SetScript('OnClick', function(self)
-			TRP3_API.popup.showPopup(TRP3_API.popup.ICONS, { parent = frame, point = "LEFT", parentPoint = "RIGHT" }, { onIconSelected })
+			TRP3_API.popup.showPopup(TRP3_API.popup.ICONS, { parent = frame, point = "LEFT", parentPoint = "RIGHT" },
+				{ onIconSelected })
 		end)
 
 		-- Add to bag and quantity
@@ -521,7 +527,9 @@ function Musician.TRP3E.FilterTooltip(tooltip)
 		local textRight = _G[tooltip:GetName() .. 'TextRight' .. i]
 		if textRight and textRight:GetText() then
 			for _, msg in pairs(Musician.Locale) do
-				if msg.TRPE_ITEM_TOOLTIP_REQUIRES_MUSICIAN ~= nil and string.find(textRight:GetText(), msg.TRPE_ITEM_TOOLTIP_REQUIRES_MUSICIAN, 1, true) ~= nil then
+				if msg.TRPE_ITEM_TOOLTIP_REQUIRES_MUSICIAN ~= nil and
+					string.find(textRight:GetText(), msg.TRPE_ITEM_TOOLTIP_REQUIRES_MUSICIAN, 1, true) ~= nil
+				then
 					textRight:SetText('')
 					return
 				end
@@ -607,7 +615,11 @@ function Musician.TRP3E.RegisterHooks()
 					if type(STrow.e) == 'table' then
 						for _, eRow in pairs(STrow.e) do
 							-- Song data variable has been found
-							if eRow.id == 'var_object' and eRow.args[1] == 'w' and eRow.args[2] == '[=]' and eRow.args[3] == Musician.TRP3E.VARIABLE_NAME then
+							if eRow.id == 'var_object' and
+								eRow.args[1] == 'w' and
+								eRow.args[2] == '[=]' and
+								eRow.args[3] == Musician.TRP3E.VARIABLE_NAME
+							then
 								-- Launch import
 								importSong(eRow.args[4], infoId)
 								return 0 -- success
@@ -626,7 +638,8 @@ function Musician.TRP3E.RegisterHooks()
 
 	Musician.TRP3E:RegisterMessage(Musician.Events.SongImportProgress, function(event, song, progress)
 		if song.TRP3ItemID == nil then return end
-		Musician.TRP3E:SendMessage(Musician.TRP3E.Event.LoadProgress, song.TRP3ItemID, BASE64DECODE_PROGRESSION_RATIO + progress * (1 - BASE64DECODE_PROGRESSION_RATIO))
+		Musician.TRP3E:SendMessage(Musician.TRP3E.Event.LoadProgress, song.TRP3ItemID,
+			BASE64DECODE_PROGRESSION_RATIO + progress * (1 - BASE64DECODE_PROGRESSION_RATIO))
 	end)
 
 	-- Add a reference to the TRP3 tab panel for tab container frames
@@ -856,7 +869,8 @@ function Musician.TRP3E.GetWorkflow(encodedSongData, locale)
 					{
 						id = 'text',
 						args = {
-							string.gsub(Musician.Utils.GetMsg('TRPE_ITEM_MUSICIAN_NOT_FOUND', locale), '{url}', Musician.Utils.Highlight(Musician.URL, '00FFFF')),
+							string.gsub(Musician.Utils.GetMsg('TRPE_ITEM_MUSICIAN_NOT_FOUND', locale), '{url}',
+								Musician.Utils.Highlight(Musician.URL, '00FFFF')),
 							1,
 						},
 					},
@@ -869,7 +883,7 @@ function Musician.TRP3E.GetWorkflow(encodedSongData, locale)
 				e = {
 					{
 						id = 'sound_id_self',
-						args = { 'SFX',	Musician.TRP3E.ITEM_ERROR_SOUND },
+						args = { 'SFX', Musician.TRP3E.ITEM_ERROR_SOUND },
 					},
 				},
 				t = 'list',
@@ -900,4 +914,3 @@ function Musician.TRP3E.NormalizeTitle(title)
 
 	return title
 end
-

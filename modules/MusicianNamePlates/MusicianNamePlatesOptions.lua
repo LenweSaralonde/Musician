@@ -43,12 +43,13 @@ function Musician.NamePlates.Options.Init()
 			return
 		end
 		if name == "nameplateShowAll" or name == "nameplateShowFriends" then
-			MusicianOptionsPanelUnitNamePlatesEnable:SetChecked(C_CVar.GetCVarBool("nameplateShowAll") and C_CVar.GetCVarBool("nameplateShowFriends"))
+			MusicianOptionsPanelUnitNamePlatesEnable:SetChecked(C_CVar.GetCVarBool("nameplateShowAll") and
+				C_CVar.GetCVarBool("nameplateShowFriends"))
 			if MusicianOptionsPanelUnitNamePlatesEnable:IsVisible() then
 				ExecuteFrameScript(MusicianOptionsPanelUnitNamePlatesEnable, "OnClick", "LeftButton")
 			end
 		elseif name == "nameplateShowFriendlyNPCs" then
-			MusicianOptionsPanelUnitNamePlatesHideNPCs:SetChecked(not(C_CVar.GetCVarBool("nameplateShowFriendlyNPCs")))
+			MusicianOptionsPanelUnitNamePlatesHideNPCs:SetChecked(not C_CVar.GetCVarBool("nameplateShowFriendlyNPCs"))
 		end
 	end)
 
@@ -119,8 +120,8 @@ function Musician.NamePlates.Options.Init()
 	-- Hide NPCs checkbox
 	Musician.Options.SetupCheckbox(
 		MusicianOptionsPanelUnitNamePlatesHideNPCs,
-		 Musician.Msg.OPTIONS_HIDE_NPC_NAMEPLATES,
-		 MusicianOptionsPanelUnitNamePlatesEnable)
+		Musician.Msg.OPTIONS_HIDE_NPC_NAMEPLATES,
+		MusicianOptionsPanelUnitNamePlatesEnable)
 	MusicianOptionsPanelUnitNamePlatesHideNPCs:HookScript("OnClick", function()
 		Musician.NamePlates.Options.Save(true)
 	end)
@@ -148,6 +149,7 @@ function Musician.NamePlates.Options.Init()
 		Musician.NamePlates.Options.Save(true)
 	end)
 end
+
 hooksecurefunc(Musician.Options, "Init", Musician.NamePlates.Options.Init)
 
 --- Return default options
@@ -169,15 +171,17 @@ function Musician.NamePlates.Options.Defaults()
 	SetCVarSafe("nameplateShowFriendlyNPCs", false)
 	Musician_Settings = Mixin(Musician_Settings, Musician.NamePlates.Options.GetDefaults())
 end
+
 hooksecurefunc(Musician.Options, "Defaults", Musician.NamePlates.Options.Defaults)
 
 --- Refresh checkboxes based on actual values
 --
 function Musician.NamePlates.Options.RefreshCheckboxes()
-	MusicianOptionsPanelUnitNamePlatesEnable:SetChecked(C_CVar.GetCVarBool("nameplateShowAll") and C_CVar.GetCVarBool("nameplateShowFriends"))
+	MusicianOptionsPanelUnitNamePlatesEnable:SetChecked(C_CVar.GetCVarBool("nameplateShowAll") and
+		C_CVar.GetCVarBool("nameplateShowFriends"))
 	MusicianOptionsPanelUnitNamePlatesShowIcon:SetChecked(Musician_Settings.showNamePlateIcon)
 	MusicianOptionsPanelUnitNamePlatesHideNamePlateBars:SetChecked(Musician_Settings.hideNamePlateBars)
-	MusicianOptionsPanelUnitNamePlatesHideNPCs:SetChecked(not(C_CVar.GetCVarBool("nameplateShowFriendlyNPCs")))
+	MusicianOptionsPanelUnitNamePlatesHideNPCs:SetChecked(not C_CVar.GetCVarBool("nameplateShowFriendlyNPCs"))
 	MusicianOptionsPanelUnitNamePlatesCinematicMode:SetChecked(Musician_Settings.cinematicMode)
 	MusicianOptionsPanelUnitNamePlatesCinematicModeNamePlates:SetChecked(Musician_Settings.cinematicModeNamePlates)
 end
@@ -212,6 +216,7 @@ function Musician.NamePlates.Options.Refresh()
 	Musician.NamePlates.Options.RefreshCheckboxes()
 	MusicianOptionsPanelUnitNamePlatesImage:Show()
 end
+
 hooksecurefunc(Musician.Options, "Refresh", Musician.NamePlates.Options.Refresh)
 
 -- Restore previous values on cancel
@@ -225,19 +230,21 @@ function Musician.NamePlates.Options.Cancel()
 	Musician.NamePlates.UpdateAll()
 	MusicianOptionsPanelUnitNamePlatesImage:Hide()
 end
+
 hooksecurefunc(Musician.Options, "Cancel", Musician.NamePlates.Options.Cancel)
 
 --- Save values
 --
 function Musician.NamePlates.Options.Save(fromButton)
-	SetCVarSafe("nameplateShowFriendlyNPCs", not(MusicianOptionsPanelUnitNamePlatesHideNPCs:GetChecked()))
+	SetCVarSafe("nameplateShowFriendlyNPCs", not MusicianOptionsPanelUnitNamePlatesHideNPCs:GetChecked())
 	Musician_Settings.showNamePlateIcon = MusicianOptionsPanelUnitNamePlatesShowIcon:GetChecked()
 	Musician_Settings.hideNamePlateBars = MusicianOptionsPanelUnitNamePlatesHideNamePlateBars:GetChecked()
 	Musician_Settings.cinematicMode = MusicianOptionsPanelUnitNamePlatesCinematicMode:GetChecked()
 	Musician_Settings.cinematicModeNamePlates = MusicianOptionsPanelUnitNamePlatesCinematicModeNamePlates:GetChecked()
 	Musician.NamePlates.UpdateAll()
-	if not(fromButton) then
+	if not fromButton then
 		MusicianOptionsPanelUnitNamePlatesImage:Hide()
 	end
 end
+
 hooksecurefunc(Musician.Options, "Save", Musician.NamePlates.Options.Save)

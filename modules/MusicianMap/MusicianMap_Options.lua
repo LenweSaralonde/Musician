@@ -25,6 +25,7 @@ function Musician.Map.Options.Defaults()
 	Musician.Map.SetMiniMapTracking(defaults.miniMap)
 	Musician.Map.Options.RefreshCheckboxes()
 end
+
 hooksecurefunc(Musician.Options, "Defaults", Musician.Map.Options.Defaults)
 
 --- Refresh checkboxes based on actual values
@@ -43,6 +44,7 @@ function Musician.Map.Options.Refresh()
 	}
 	Musician.Map.Options.RefreshCheckboxes()
 end
+
 hooksecurefunc(Musician.Options, "Refresh", Musician.Map.Options.Refresh)
 
 -- Restore previous values on cancel
@@ -58,6 +60,7 @@ function Musician.Map.Options.Save()
 	Musician.Map.SetWorldMapTracking(MusicianOptionsPanelMapWorldMap:GetChecked())
 	Musician.Map.SetMiniMapTracking(MusicianOptionsPanelMapMiniMap:GetChecked())
 end
+
 hooksecurefunc(Musician.Options, "Save", Musician.Map.Options.Save)
 
 --- OnLoad

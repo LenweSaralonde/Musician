@@ -22,6 +22,7 @@ function Musician.TRP3.Options.Defaults()
 	Musician_Settings = Mixin(Musician_Settings, Musician.TRP3.Options.GetDefaults())
 	Musician.TRP3.Options.RefreshCheckboxes()
 end
+
 hooksecurefunc(Musician.Options, "Defaults", Musician.TRP3.Options.Defaults)
 
 --- Refresh checkboxes based on actual values
@@ -39,11 +40,12 @@ function Musician.TRP3.Options.Refresh()
 	Musician.TRP3.Options.RefreshCheckboxes()
 
 	-- Hide block if TRP3 is not enabled
-	if not(TRP3_API) then
+	if not TRP3_API then
 		MusicianOptionsPanelTRP3:Hide()
 		Musician.Options.UpdateSize()
 	end
 end
+
 hooksecurefunc(Musician.Options, "Refresh", Musician.TRP3.Options.Refresh)
 
 -- Restore previous values on cancel
@@ -57,6 +59,7 @@ end)
 function Musician.TRP3.Options.Save()
 	Musician_Settings.trp3MapScan = MusicianOptionsPanelTRP3MapScan:GetChecked()
 end
+
 hooksecurefunc(Musician.Options, "Save", Musician.TRP3.Options.Save)
 
 --- OnLoad

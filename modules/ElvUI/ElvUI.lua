@@ -40,14 +40,13 @@ function Musician.ElvUI:OnEnable()
 		Musician.ElvUI:RegisterMessage(Musician.Registry.event.playerRegistered, function(event, player)
 			local fullPlayerName = Musician.Utils.NormalizePlayerName(player)
 			local namePlate = Musician.NamePlates.playerNamePlates[fullPlayerName]
-			if not(namePlate) then return end
+			if not namePlate then return end
 			local namePlateName = namePlate:GetName()
 			local ElvNamePlate = _G["ElvNP_" .. namePlateName]
-			if not(ElvNamePlate) then return end
+			if not ElvNamePlate then return end
 			Musician.NamePlates.AddNoteIcon(namePlate, ElvNamePlate.Name)
 		end)
 
 		Musician.Utils.Debug(MODULE_NAME, "ElvUI module initialized.")
 	end
 end
-

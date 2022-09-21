@@ -22,10 +22,10 @@ if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then
 end
 
 local NOTES_TEXTURE_COORDS = {
-	{0, 0.5, 0, 0.5},
-	{0.5, 1, 0, 0.5},
-	{0, 0.5, 0.5, 1},
-	{0.5, 1, 0.5, 1},
+	{ 0, 0.5, 0, 0.5 },
+	{ 0.5, 1, 0, 0.5 },
+	{ 0, 0.5, 0.5, 1 },
+	{ 0.5, 1, 0.5, 1 },
 }
 local NOTES_ANIMATION_HEIGHT = 220
 local NOTES_ANIMATION_WIDTH = 110
@@ -99,7 +99,7 @@ end
 -- @param noteFrame (Frame)
 -- @param position (number) 0-1
 local function renderAnimatedNote(noteFrame, position)
-	if not(noteFrame:IsVisible()) then return end
+	if not noteFrame:IsVisible() then return end
 
 	local speed = noteFrame.animationParams[PARAM.SPEED]
 	local isPercussion = noteFrame.animationParams[PARAM.IS_PERCUSSION]
@@ -108,7 +108,7 @@ local function renderAnimatedNote(noteFrame, position)
 	local x, y
 	local width = noteFrame:GetParent():GetWidth()
 	local height = noteFrame:GetParent():GetHeight()
-	if not(isPercussion) then
+	if not isPercussion then
 		local theta, distance
 		theta = noteFrame.animationParams[PARAM.X] * (1 - position / 2) * ANIMATION_ANGLE_RANGE / 2
 		theta = min(80, max(-80, theta))
@@ -184,7 +184,7 @@ local function addNote(animatedNotesFrame, song, track, key)
 	-- New song: reset center key
 	if animatedNotesFrame.songId ~= song:GetId() then
 		animatedNotesFrame.songId = song:GetId()
-		animatedNotesFrame.centerKey = {72, 1}
+		animatedNotesFrame.centerKey = { 72, 1 }
 	end
 
 	-- Set initial data
@@ -194,7 +194,7 @@ local function addNote(animatedNotesFrame, song, track, key)
 	local noteSymbold
 
 	-- Not a percussion
-	if track.instrument < 128 and not(instrument and instrument.isPercussion) then
+	if track.instrument < 128 and not (instrument and instrument.isPercussion) then
 		-- Avoid duplicates during the same frame
 		if animatedNotesFrame.notesAddedDuringFrame[key] then return end
 
@@ -221,7 +221,7 @@ local function addNote(animatedNotesFrame, song, track, key)
 
 	-- Get a released note frame or create a new one
 	local noteFrame = table.remove(releasedNoteFrames)
-	if not(noteFrame) then
+	if not noteFrame then
 		noteFrame = CreateFrame("Frame")
 		noteFrame:SetFrameStrata("BACKGROUND")
 		noteFrame.texture = noteFrame:CreateTexture(nil, "BACKGROUND", nil, -8)
@@ -323,14 +323,14 @@ function Musician.NamePlates.UpdateNamePlate(namePlate)
 	local unitToken = namePlate.namePlateUnitToken
 	local isPlayerOrFriendly = unitToken and (UnitIsFriend(unitToken, "player") or UnitIsPlayer(unitToken))
 
-	if not(namePlate:IsForbidden()) and isPlayerOrFriendly and not(UnitIsUnit(unitToken, "player")) then
+	if not namePlate:IsForbidden() and isPlayerOrFriendly and not UnitIsUnit(unitToken, "player") then
 
 		local healthBarIsVisible, classificationFrameIsVisible, levelFrameIsVisible, raidTargetFrameIsVisible
 
 		local isInCombat = UnitAffectingCombat(namePlate.namePlateUnitToken)
 		local health = UnitHealth(namePlate.namePlateUnitToken)
 		local healthMax = UnitHealthMax(namePlate.namePlateUnitToken)
-		local showHealthBar = not(Musician_Settings.hideNamePlateBars)
+		local showHealthBar = not Musician_Settings.hideNamePlateBars
 
 		if isInCombat or (health < healthMax) or showHealthBar then
 			healthBarIsVisible = true
@@ -354,7 +354,8 @@ function Musician.NamePlates.UpdateNamePlate(namePlate)
 		if healthBarIsVisible ~= namePlate.UnitFrame.healthBar:IsVisible() then
 			namePlate.UnitFrame.healthBar:SetShown(healthBarIsVisible)
 		end
-		if namePlate.UnitFrame.ClassificationFrame and classificationFrameIsVisible ~= namePlate.UnitFrame.ClassificationFrame:IsVisible() then
+		if namePlate.UnitFrame.ClassificationFrame and
+			classificationFrameIsVisible ~= namePlate.UnitFrame.ClassificationFrame:IsVisible() then
 			namePlate.UnitFrame.ClassificationFrame:SetShown(classificationFrameIsVisible)
 		end
 		if namePlate.UnitFrame.RaidTargetFrame and raidTargetFrameIsVisible ~= namePlate.UnitFrame.RaidTargetFrame:IsVisible() then
@@ -417,7 +418,7 @@ end
 -- @param event (string)
 -- @param unitToken (string)
 function Musician.NamePlates.OnNamePlateRemoved(event, unitToken)
-	if not(UnitIsPlayer(unitToken)) then return end
+	if not UnitIsPlayer(unitToken) then return end
 
 	-- Detach nameplate and remove references
 	local player = namePlatePlayers[unitToken]
@@ -434,7 +435,7 @@ end
 -- @param player (string)
 function Musician.NamePlates.OnPlayerRegistered(event, player)
 	local fullPlayerName = Musician.Utils.NormalizePlayerName(player)
-	if not(playerNamePlates[fullPlayerName]) then return end
+	if not playerNamePlates[fullPlayerName] then return end
 	Musician.NamePlates.AttachNamePlate(playerNamePlates[fullPlayerName], fullPlayerName, event)
 end
 
@@ -447,9 +448,9 @@ function Musician.NamePlates.UpdateNamePlateCinematicMode(namePlate)
 	local UIParentIsVisible = UIParent:IsVisible()
 
 	-- Attach animated notes frame to WorldFrame if hiding nameplates in cinematic mode
-	if not(Musician_Settings.cinematicModeNamePlates) and Musician_Settings.cinematicMode then
+	if not Musician_Settings.cinematicModeNamePlates and Musician_Settings.cinematicMode then
 		local parent, scale
-		if not(UIParentIsVisible) then
+		if not UIParentIsVisible then
 			parent = WorldFrame
 			scale = namePlate:GetScale()
 		else
@@ -464,7 +465,8 @@ function Musician.NamePlates.UpdateNamePlateCinematicMode(namePlate)
 	end
 
 	-- Set nameplate visibility
-	if not(Musician_Settings.cinematicModeNamePlates) and Musician_Settings.cinematicMode or not(Musician_Settings.cinematicMode) then
+	if not Musician_Settings.cinematicModeNamePlates and Musician_Settings.cinematicMode or
+		not Musician_Settings.cinematicMode then
 		if UIParentIsVisible then
 			namePlate:Show()
 		else
@@ -499,9 +501,11 @@ function Musician.NamePlates.AddNoteIcon(namePlate, textElement, append)
 		end)
 	end
 
-	local player = UnitIsPlayer(namePlate.namePlateUnitToken) and Musician.Utils.NormalizePlayerName(GetUnitName(namePlate.namePlateUnitToken, true))
+	local player = UnitIsPlayer(namePlate.namePlateUnitToken) and
+		Musician.Utils.NormalizePlayerName(GetUnitName(namePlate.namePlateUnitToken, true))
 	local isNameVisible = Musician.NamePlates.ShouldRenderNoteIcon(textElement)
-	local hasNoteIcon = player and not(Musician.Utils.PlayerIsMyself(player)) and Musician_Settings.showNamePlateIcon and Musician.Registry.PlayerIsRegistered(player)
+	local hasNoteIcon = player and not Musician.Utils.PlayerIsMyself(player) and Musician_Settings.showNamePlateIcon and
+		Musician.Registry.PlayerIsRegistered(player)
 	local iconPlaceholder = Musician.Utils.GetChatIcon("")
 
 	if hasNoteIcon and isNameVisible then
@@ -512,7 +516,7 @@ function Musician.NamePlates.AddNoteIcon(namePlate, textElement, append)
 
 		-- Icon placeholder is present but not at the right position: remove it
 		local from, to = string.find(nameString, iconPlaceholder, 1, true)
-		if append and to and to ~= nameString or not(append) and from and from ~= 1 then
+		if append and to and to ~= nameString or not append and from and from ~= 1 then
 			nameString = string.sub(nameString, 1, from - 1) .. string.sub(nameString, to + 1, #nameString)
 			nameString = string.gsub(nameString, '%s+', ' ')
 			nameString = strtrim(nameString)
@@ -587,10 +591,10 @@ function Musician.NamePlates.AttachNamePlate(namePlate, player, event)
 
 	Musician.NamePlates.UpdateNamePlate(namePlate)
 
-	if not(Musician.Registry.PlayerIsRegistered(player)) then return end
+	if not Musician.Registry.PlayerIsRegistered(player) then return end
 
 	-- Create or show animated notes frames
-	if not(namePlate.musicianAnimatedNotesFrame) then
+	if not namePlate.musicianAnimatedNotesFrame then
 		namePlate.musicianAnimatedNotesFrame = CreateFrame("Frame")
 		namePlate.musicianAnimatedNotesFrame:SetFrameStrata("BACKGROUND")
 		namePlate.musicianAnimatedNotesFrame:SetParent(namePlate)
@@ -615,7 +619,7 @@ end
 -- @param namePlate (Frame)
 function Musician.NamePlates.DetachNamePlate(namePlate)
 
-	if not(namePlate.musicianAnimatedNotesFrame) then return end
+	if not namePlate.musicianAnimatedNotesFrame then return end
 
 	-- Hide animated notes frame
 	namePlate.musicianAnimatedNotesFrame:Hide()
@@ -653,10 +657,10 @@ end
 -- @param track (table)
 -- @param key (Number)
 function Musician.NamePlates.OnNoteOn(event, song, track, key)
-	if not(track.audible) then return end
-	if not(song.player) and song ~= Musician.streamingSong then return end
+	if not track.audible then return end
+	if not song.player and song ~= Musician.streamingSong then return end
 
-	if song ~= Musician.streamingSong and not(Musician.Utils.PlayerIsMyself(song.player)) then
+	if song ~= Musician.streamingSong and not Musician.Utils.PlayerIsMyself(song.player) then
 		local namePlate = playerNamePlates[song.player]
 		if namePlate and namePlate.musicianAnimatedNotesFrame then
 			addNote(namePlate.musicianAnimatedNotesFrame, song, track, key)
@@ -669,7 +673,7 @@ end
 --- OnSetUIVisibility
 -- @param isVisible (boolean)
 function Musician.NamePlates.OnSetUIVisibility(isVisible)
-	if isVisible or not(isVisible) and Musician_Settings.cinematicMode then
+	if isVisible or not isVisible and Musician_Settings.cinematicMode then
 		SetInWorldUIVisibility(true)
 	end
 end
@@ -684,7 +688,8 @@ function Musician.NamePlates.InitTipsAndTricks()
 	MusicianNamePlatesTipsAndTricks.title:SetText(Musician.Msg.TIPS_AND_TRICKS_NAMEPLATES_TITLE)
 
 	-- Text
-	local text = string.gsub(Musician.Msg.TIPS_AND_TRICKS_NAMEPLATES_TEXT, '{icon}', Musician.Utils.GetChatIcon(Musician.IconImages.Note))
+	local text = string.gsub(Musician.Msg.TIPS_AND_TRICKS_NAMEPLATES_TEXT, '{icon}',
+		Musician.Utils.GetChatIcon(Musician.IconImages.Note))
 	MusicianNamePlatesTipsAndTricks.text:SetPoint("LEFT", 180, 0)
 	MusicianNamePlatesTipsAndTricks.text:SetPoint("BOTTOM", MusicianNamePlatesTipsAndTricks.okButton, "TOP")
 	MusicianNamePlatesTipsAndTricks.text:SetText(text)

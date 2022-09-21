@@ -66,7 +66,7 @@ end
 --- Hook TRP player nameplates (standard)
 --
 function Musician.TRP3.HookNamePlates()
-	if not(Musician.NamePlates) then return end
+	if not Musician.NamePlates then return end
 	if TRP3_BlizzardNamePlates and TRP3_BlizzardNamePlates.UpdateNamePlate then
 		Musician.Utils.Debug(MODULE_NAME, "Adding nameplate support.")
 		hooksecurefunc(TRP3_BlizzardNamePlates, "UpdateNamePlate", function(self, namePlate)
@@ -88,7 +88,7 @@ end
 -- @param player (string)
 -- @return (boolean)
 function Musician.TRP3.IsPlayingMusic(player)
-	if not(playersPlayingMusic[player]) then return false end
+	if not playersPlayingMusic[player] then return false end
 
 	if playersPlayingMusic[player] + IS_PLAYING_TIMEOUT < GetTime() then
 		playersPlayingMusic[player] = nil
@@ -125,7 +125,7 @@ function Musician.TRP3.HookPlayerMap()
 			TRP3_PlayerMapPinMixin.GetDisplayDataFromPoiInfo = function(self, poiInfo, ...)
 				local displayData = TRP3_PlayerMapPinMixin_GetDisplayDataFromPoiInfo(self, poiInfo, ...)
 
-				if not(Musician_Settings.trp3MapScan) then return displayData end
+				if not Musician_Settings.trp3MapScan then return displayData end
 
 				local sender = poiInfo.sender
 				displayData.musicianIsRegistered = Musician.Registry.PlayerIsRegistered(sender)

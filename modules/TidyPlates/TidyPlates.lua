@@ -36,4 +36,3 @@ function Musician.TidyPlates:OnEnable()
 		end)
 	end
 end
-

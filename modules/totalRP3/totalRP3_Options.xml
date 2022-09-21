@@ -1,8 +1,10 @@
-<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
-	<Script file="totalRP3_Options.lua"/>
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="totalRP3_Options.lua" />
 	<Frame name="MusicianOptionsPanelTRP3" parent="MusicianOptionsPanel">
 		<Size>
-			<AbsDimension x="580" y="48"/>
+			<AbsDimension x="580" y="48" />
 		</Size>
 		<Layers>
 			<Layer level="ARTWORK">
@@ -16,7 +18,7 @@
 		<Frames>
 			<CheckButton name="$parentMapScan" inherits="MusicianOptionCheckButtonTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-10"/>
+					<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-10" />
 				</Anchors>
 			</CheckButton>
 		</Frames>

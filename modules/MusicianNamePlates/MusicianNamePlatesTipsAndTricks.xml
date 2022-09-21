@@ -1,5 +1,6 @@
-<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
-
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.blizzard.com/wow/ui/">
 	<Frame name="MusicianNamePlatesTipsAndTricks" inherits="MusicianTipsAndTricksTemplate">
 		<Frames>
 			<Button name="$parentCancelButton" parentKey="cancelButton" inherits="MusicianTipsAndTricksCancelButtonTemplate">
@@ -20,7 +21,7 @@
 				</Anchors>
 				<Size>
 					<!-- Original size: 160 x 256 -->
-					<AbsDimension x="106.666667" y="170.666667"/>
+					<AbsDimension x="106.666667" y="170.666667" />
 				</Size>
 			</Frame>
 		</Frames>

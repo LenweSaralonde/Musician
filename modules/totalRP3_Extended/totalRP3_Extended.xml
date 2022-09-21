@@ -1,5 +1,8 @@
-<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
-	<Script file="totalRP3_Extended.lua"/>
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.blizzard.com/wow/ui/">
+
+	<Script file="totalRP3_Extended.lua" />
 
 	<Frame name="MusicianTRPEExportFrame" inherits="MusicianDialogTemplate">
 		<Size x="360" y="316" />
@@ -20,7 +23,7 @@
 
 		<Layers>
 			<Layer level="BACKGROUND">
-				<FontString name="$parentSongTitleLabel"  parentKey="songTitleLabel" inherits="GameFontNormalLeft">
+				<FontString name="$parentSongTitleLabel" parentKey="songTitleLabel" inherits="GameFontNormalLeft">
 					<Anchors>
 						<Anchor point="TOP" relativeTo="$parentTitle" relativePoint="BOTTOM" y="-7" />
 						<Anchor point="LEFT" x="25" />
@@ -76,7 +79,7 @@
 		<Frames>
 			<CheckButton name="$parentAddToBag" parentKey="addToBag" inherits="MusicianOptionCheckButtonTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentPreviewContainer" relativePoint="BOTTOMLEFT" y="-25"/>
+					<Anchor point="TOPLEFT" relativeTo="$parentPreviewContainer" relativePoint="BOTTOMLEFT" y="-25" />
 				</Anchors>
 			</CheckButton>
 		</Frames>

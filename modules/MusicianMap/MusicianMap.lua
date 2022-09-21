@@ -211,19 +211,19 @@ function Musician.Map.UpdateWorldMapPin(player, posX, posY, instanceID)
 	if uiMapID then
 		local position = CreateVector2D(mapX, mapY)
 
-		-- Create a new pin
 		if worldMapPlayerPins[player] == nil then
+			-- Create a new pin
 			worldMapPlayerPins[player] = map:AcquirePin(PIN_TEMPLATE_WORLD_MAP, {
 				player = player,
 				name = Musician.Utils.FormatPlayerName(player),
 				position = position
 			})
-		-- Update pin position
 		else
+			-- Update pin position
 			worldMapPlayerPins[player]:SetPosition(position:GetXY())
 		end
-	-- Position is invalid: remove existing pin
 	else
+		-- Position is invalid: remove existing pin
 		Musician.Map.RemoveWorldMapPin(player)
 	end
 end
