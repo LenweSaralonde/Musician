@@ -3,6 +3,7 @@
 ## Author: LenweSaralonde
 ## Version: 1.9.2.1
 ## Notes: Listen to and perform music with your character
+## OptionalDeps: CrossRP, ElvUI, Kui_Nameplates, MyRolePlay, NeatPlates, Plater, TidyPlates, TidyPlates_ThreatPlates, totalRP3, totalRP3_Extended
 ## SavedVariables: Musician_Settings
 ## SavedVariablesPerCharacter: Musician_CharacterSettings
 
