@@ -22,7 +22,8 @@ function Musician.KeyboardUtils.Init()
 		Musician_Settings.keyboardIsConfigured[os] = false
 	end
 
-	Musician_Settings.keyboardMapping[os] = Musician.Utils.DeepMerge(Musician.KeyboardUtils.GetEmptyMapping(), Musician_Settings.keyboardMapping[os])
+	Musician_Settings.keyboardMapping[os] = Musician.Utils.DeepMerge(Musician.KeyboardUtils.GetEmptyMapping(),
+		Musician_Settings.keyboardMapping[os])
 	keyValues = Musician.KeyboardUtils.GetReverseMapping()
 end
 

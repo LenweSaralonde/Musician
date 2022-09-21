@@ -201,7 +201,7 @@ function Musician.Live.Init()
 	Musician.Live:RegisterEvent("PLAYER_ALIVE", liveModeStatusChanged)
 	Musician.Live:RegisterEvent("PLAYER_UNGHOST", liveModeStatusChanged)
 
-	if not(IsLoggedIn()) then
+	if not IsLoggedIn() then
 		Musician.Live:RegisterEvent("PLAYER_LOGIN", Musician.Live.OnGroupJoined)
 	else
 		Musician.Live.OnGroupJoined()
@@ -272,12 +272,12 @@ end
 -- @return canStream (boolean)
 function Musician.Live.CanStream()
 	-- Communication not yet ready
-	if not(Musician.Comm.CanPlay()) then
+	if not Musician.Comm.CanPlay() then
 		return false
 	end
 
 	-- Actually streaming a song that is not the live streaming song
-	if Musician.streamingSong and Musician.streamingSong.streaming and not(Musician.streamingSong.isLiveStreamingSong) then
+	if Musician.streamingSong and Musician.streamingSong.streaming and not Musician.streamingSong.isLiveStreamingSong then
 		return false
 	end
 
@@ -305,7 +305,7 @@ function Musician.Live.CreateLiveSong()
 	end
 
 	streamingStartTimer = C_Timer.NewTimer(CHUNK_DURATION * 1.05, function()
-		if Musician.streamingSong and not(Musician.streamingSong.streaming) and Musician.streamingSong.isLiveStreamingSong then
+		if Musician.streamingSong and not Musician.streamingSong.streaming and Musician.streamingSong.isLiveStreamingSong then
 			liveStreamingSong:Stream()
 		end
 		streamingStartTimer = nil
@@ -320,7 +320,7 @@ end
 function Musician.Live.InsertNote(noteOn, key, layer, instrument)
 
 	-- Do nothing if live mode is not enabled or can't stream
-	if not(Musician.Live.CanStream()) or not(Musician.Live.IsLiveEnabled()) then
+	if not Musician.Live.CanStream() or not Musician.Live.IsLiveEnabled() then
 		return
 	end
 
@@ -357,7 +357,7 @@ function Musician.Live.InsertNote(noteOn, key, layer, instrument)
 	end
 
 	-- Send visual note event
-	if not(Musician.Live.IsBandSyncMode() and Musician.Live.IsLiveEnabled()) then
+	if not (Musician.Live.IsBandSyncMode() and Musician.Live.IsLiveEnabled()) then
 		if noteOn then
 			Musician.Live:SendMessage(Musician.Events.VisualNoteOn, liveStreamingSong, track, key)
 		else
@@ -374,7 +374,7 @@ function Musician.Live.SetSustain(enable, layer)
 	if enable and sustainedNotes[layer] == nil then
 		-- Create sustained notes container for layer
 		sustainedNotes[layer] = {}
-	elseif not(enable) and sustainedNotes[layer] ~= nil then
+	elseif not enable and sustainedNotes[layer] ~= nil then
 		-- Turn off all sustained notes
 		for _, noteOn in pairs(sustainedNotes[layer]) do
 			local key = noteOn[NOTEON.KEY]
@@ -382,7 +382,7 @@ function Musician.Live.SetSustain(enable, layer)
 			local isChordNote = noteOn[NOTEON.IS_CHORD_NOTE]
 			local noteOnKey = key .. '-' .. layer .. '-' .. instrument
 			-- Don't stop notes that are still actually on
-			if not(notesOn[noteOnKey]) then
+			if not notesOn[noteOnKey] then
 				Musician.Live.NoteOff(key, layer, instrument, isChordNote, noteOn)
 			end
 		end
@@ -405,7 +405,7 @@ function Musician.Live.NoteOn(key, layer, instrument, isChordNote, source)
 	local noteOnKey = key .. '-' .. layer .. '-' .. instrument
 
 	-- This is an auto-chord note but a higher priority note actually exists: do nothing
-	if isChordNote and notesOn[noteOnKey] and not(notesOn[noteOnKey][NOTEON.IS_CHORD_NOTE]) then
+	if isChordNote and notesOn[noteOnKey] and not notesOn[noteOnKey][NOTEON.IS_CHORD_NOTE] then
 		return
 	end
 
@@ -423,7 +423,7 @@ function Musician.Live.NoteOn(key, layer, instrument, isChordNote, source)
 
 	-- Play note
 	local handle = 0
-	if not(Musician.Live.IsBandSyncMode() and Musician.Live.IsLiveEnabled()) then
+	if not (Musician.Live.IsBandSyncMode() and Musician.Live.IsLiveEnabled()) then
 		handle = Musician.Sampler.PlayNote(instrumentData, key, true)
 	end
 
@@ -456,13 +456,13 @@ function Musician.Live.NoteOff(key, layer, instrument, isChordNote, sustainedNot
 
 	local noteOnKey = key .. '-' .. layer .. '-' .. instrument
 	local noteOn = sustainedNote or notesOn[noteOnKey]
-	if not(noteOn) then return end
+	if not noteOn then return end
 
 	local handle = noteOn[NOTEON.HANDLE]
 	local noteOnIsChordNote = noteOn[NOTEON.IS_CHORD_NOTE]
 
 	-- If current note off is from an auto-chord but actual note is not: do nothing
-	if isChordNote and not(noteOnIsChordNote) then
+	if isChordNote and not noteOnIsChordNote then
 		return
 	end
 
@@ -470,7 +470,7 @@ function Musician.Live.NoteOff(key, layer, instrument, isChordNote, sustainedNot
 	notesOn[noteOnKey] = nil
 
 	-- Layer is sustained and we're not explicitly stopping a sustained note
-	if sustainedLayers[layer] and not(sustainedNote) then
+	if sustainedLayers[layer] and not sustainedNote then
 		sustainedNotes[layer][noteOnKey] = noteOn
 		return
 	end
@@ -505,7 +505,7 @@ end
 -- @param layer (int)
 -- @param instrument (int)
 function Musician.Live.BandNote(noteOn, key, layer, instrument)
-	if not(Musician.Live.IsBandSyncMode() and Musician.Live.IsLiveEnabled()) then return end
+	if not (Musician.Live.IsBandSyncMode() and Musician.Live.IsLiveEnabled()) then return end
 
 	-- Key is out of range
 	if key < Musician.MIN_KEY or key > Musician.MAX_KEY then return end
@@ -568,7 +568,7 @@ end
 --- Set sync mode
 -- @param enabled (boolean)
 function Musician.Live.ToggleBandSyncMode()
-	Musician.Live.SetBandSyncMode(not(isBandSyncMode))
+	Musician.Live.SetBandSyncMode(not isBandSyncMode)
 end
 
 --- Set band sync mode
@@ -591,7 +591,7 @@ function Musician.Live.OnBandSync(prefix, message, distribution, sender)
 	sender = Musician.Utils.NormalizePlayerName(sender)
 	debug(false, prefix, sender .. "(" .. distribution .. ")", message)
 
-	if not(Musician.Utils.PlayerIsInGroup(sender)) then return end
+	if not Musician.Utils.PlayerIsInGroup(sender) then return end
 
 	local isSynced = message == "true"
 
@@ -600,7 +600,7 @@ function Musician.Live.OnBandSync(prefix, message, distribution, sender)
 	end
 
 	-- Add/remove player in sync band members
-	local wasSynced = not(not(syncedBandPlayers[sender]))
+	local wasSynced = not not syncedBandPlayers[sender]
 	syncedBandPlayers[sender] = isSynced or nil
 
 	-- Trigger local event if sync status have changed
@@ -630,7 +630,7 @@ function Musician.Live.OnBandSyncQuery(prefix, message, distribution, sender)
 	sender = Musician.Utils.NormalizePlayerName(sender)
 	debug(false, prefix, sender .. "(" .. distribution .. ")", message)
 
-	if not(Musician.Utils.PlayerIsInGroup(sender)) then return end
+	if not Musician.Utils.PlayerIsInGroup(sender) then return end
 
 	-- Send sync message in return
 	local groupChatType = Musician.Comm.GetGroupChatType()
@@ -662,7 +662,7 @@ end
 function Musician.Live.OnRosterUpdate()
 	-- Remove players from syncedBandPlayers who are no longer in the group
 	for player, _ in pairs(syncedBandPlayers) do
-		if not(Musician.Utils.PlayerIsInGroup(player)) then
+		if not Musician.Utils.PlayerIsInGroup(player) then
 
 			-- Stop all player notes
 			if bandNotesOn[player] then
@@ -691,7 +691,7 @@ function Musician.Live.OnLiveNote(prefix, message, distribution, sender)
 	sender = Musician.Utils.NormalizePlayerName(sender)
 	debug(false, prefix, sender .. "(" .. distribution .. ")", message)
 
-	if not(Musician.Utils.PlayerIsInGroup(sender)) then return end
+	if not Musician.Utils.PlayerIsInGroup(sender) then return end
 
 	local noteOn, key, layer, instrument, posY, posX, posZ, instanceID, guid = message:match("^(%S+) (%S+) (%S+) (%S+) (%S+) (%S+) (%S+) (%S+) (.*)")
 	noteOn = noteOn == "ON"
@@ -711,8 +711,9 @@ function Musician.Live.OnLiveNote(prefix, message, distribution, sender)
 
 	local noteOnKey = key .. '-' .. layer .. '-' .. instrument
 
-	-- Note on
 	if noteOn then
+		-- Note on
+
 		local handle
 		local soundFile, instrumentData = Musician.Sampler.GetSoundFile(instrument, key)
 		if soundFile == nil then return end
@@ -732,7 +733,7 @@ function Musician.Live.OnLiveNote(prefix, message, distribution, sender)
 		end
 
 		-- Play note
-		if not(Musician.PlayerIsMuted(sender)) and Musician.Registry.PlayerIsInRange(sender) then
+		if not Musician.PlayerIsMuted(sender) and Musician.Registry.PlayerIsInRange(sender) then
 			handle = Musician.Sampler.PlayNote(instrumentData, key, true, nil, sender)
 		end
 
@@ -744,13 +745,14 @@ function Musician.Live.OnLiveNote(prefix, message, distribution, sender)
 		-- Trigger event
 		sendVisualNoteEvent(true, key, layer, instrument, sender)
 
-	-- Note off
 	elseif bandNotesOn[sender] and bandNotesOn[sender][noteOnKey] then
+		-- Note off
+
 		local handle = unpack(bandNotesOn[sender][noteOnKey])
 
 		-- Stop playing note
 		if handle then
-			C_Timer.After(1/60, function() Musician.Sampler.StopNote(handle) end)
+			C_Timer.After(1 / 60, function() Musician.Sampler.StopNote(handle) end)
 			wipe(bandNotesOn[sender][noteOnKey])
 			bandNotesOn[sender][noteOnKey] = nil
 		end

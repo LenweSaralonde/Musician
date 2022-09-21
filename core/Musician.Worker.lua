@@ -45,7 +45,7 @@ function Musician.Worker.OnUpdate(elapsed)
 				local status, err = pcall(function()
 					worker()
 				end)
-				if not(status) then
+				if not status then
 					workerData.onError(err)
 					Musician.Worker.Remove(worker)
 				end
@@ -59,5 +59,6 @@ function Musician.Worker.OnUpdate(elapsed)
 		-- Run workers until max execution time has been reached
 	until workerCount == 0 or now > maxTime
 
-	Musician.Utils.Debug(MODULE_NAME, "Workers:", workerCount, "Time:", now - startTime, "Overage:", now - maxTime , "Cycles:", cycles, "FPS:", floor(1 / elapsed))
+	Musician.Utils.Debug(MODULE_NAME, "Workers:", workerCount, "Time:", now - startTime, "Overage:", now - maxTime,
+		"Cycles:", cycles, "FPS:", floor(1 / elapsed))
 end

@@ -67,13 +67,14 @@ function Musician.Preloader.QuickPreload()
 	Musician.Utils.Debug(MODULE_NAME, "quick preloading started.")
 
 	local startTime = debugprofilestop()
-	while not(preloaded) do
+	while not preloaded do
 		Musician.Preloader.PreloadNext()
 		local quickPreloadingTime = debugprofilestop() - startTime
 		-- Quick preloading takes longer than 15 seconds: abort it
 		if quickPreloadingTime > 15000 then
 			quickPreloading = false
-			Musician.Utils.Debug(MODULE_NAME, "quick preloading aborted at " .. floor(100 * Musician.Preloader.GetProgress()) .. "% (timeout).")
+			Musician.Utils.Debug(MODULE_NAME,
+				"quick preloading aborted at " .. floor(100 * Musician.Preloader.GetProgress()) .. "% (timeout).")
 			return
 		end
 	end
@@ -94,7 +95,7 @@ function Musician.Preloader.PreloadNext()
 
 	local sampleIsPreloaded = false
 
-	while not(sampleIsPreloaded) do
+	while not sampleIsPreloaded do
 		local key = Musician.Preloader.GetCursorKey(keyCursor)
 		local instrumentName = Musician.INSTRUMENTS_AVAILABLE[instrumentCursor]
 		local instrumentData = Musician.Sampler.GetInstrumentData(instrumentName, key)
@@ -103,12 +104,12 @@ function Musician.Preloader.PreloadNext()
 			local sampleId = Musician.Sampler.GetSampleId(instrumentData, key)
 
 			-- Sample not preloaded
-			if sampleId and not(Musician.Preloader.IsPreloaded(sampleId, true)) then
+			if sampleId and not Musician.Preloader.IsPreloaded(sampleId, true) then
 				-- Preload note samples
 				local hasSample, preloadTime = Musician.Preloader.PreloadNote(instrumentData.midi, key)
 				if hasSample then
 					-- Calculate average loading time during first preloading cycle
-					if not(preloaded) then
+					if not preloaded then
 						totalLoadingTime = totalLoadingTime + preloadTime
 						totalLoadedSamples = totalLoadedSamples + 1
 						averageLoadingTime = Musician.Preloader.GetAverageLoadingTime()
@@ -131,8 +132,9 @@ function Musician.Preloader.PreloadNext()
 				keyCursor = keyCursor + 1
 			else
 				-- No more note to preload
-				if not(preloaded) then
-					Musician.Utils.Debug(MODULE_NAME, "preloading complete in " .. floor(totalLoadingTime) .. " ms (average ".. floor(averageLoadingTime) .. " ms).")
+				if not preloaded then
+					Musician.Utils.Debug(MODULE_NAME,
+						"preloading complete in " .. floor(totalLoadingTime) .. " ms (average " .. floor(averageLoadingTime) .. " ms).")
 					preloaded = true
 					Musician.Preloader:SendMessage(Musician.Events.PreloadingProgress, Musician.Preloader.GetProgress())
 					Musician.Preloader:SendMessage(Musician.Events.PreloadingComplete)
@@ -220,7 +222,7 @@ end
 -- @param elapsed (number)
 function Musician.Preloader.OnUpdate(elapsed)
 	-- Quick preloading in progress
-	if quickPreloading and not(preloaded) then
+	if quickPreloading and not preloaded then
 		return
 	end
 
@@ -257,10 +259,10 @@ end
 --- Flag a note sample as preloaded
 -- @param sampleId (string) as returned by Musician.Sampler.GetSampleId()
 function Musician.Preloader.AddPreloaded(sampleId)
-	if not(Musician.Preloader.IsPreloaded(sampleId, true)) then
+	if not Musician.Preloader.IsPreloaded(sampleId, true) then
 		Musician.Preloader.preloadedSamples[sampleId] = true
 		preloadedSamples = preloadedSamples + 1
-		if not(preloaded) then
+		if not preloaded then
 			Musician.Preloader:SendMessage(Musician.Events.PreloadingProgress, Musician.Preloader.GetProgress())
 		end
 	end
@@ -273,7 +275,7 @@ end
 function Musician.Preloader.IsPreloaded(sampleId, currentCycle)
 
 	-- Consider the sample as preloaded if the average loading time is < 1 ms
-	if not(currentCycle) and (Musician.Preloader.IsComplete() or averageLoadingTime < 1) then
+	if not currentCycle and (Musician.Preloader.IsComplete() or averageLoadingTime < 1) then
 		return true
 	end
 

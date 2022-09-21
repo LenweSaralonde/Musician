@@ -195,7 +195,7 @@ end
 --- Return playing progression
 -- @return progression (number)
 function Musician.Song:GetProgression()
-	if not(self.playing) then
+	if not self.playing then
 		return nil
 	end
 	local duration = self.cropTo - self.cropFrom
@@ -209,7 +209,7 @@ end
 -- @param track (table)
 -- @return isMuted (boolean)
 local function computeTrackAudible(song, track)
-	track.audible = not(track.muted or song.soloTracks > 0 and not(track.solo))
+	track.audible = not (track.muted or song.soloTracks > 0 and not track.solo)
 end
 
 --- Mute or unmute track
@@ -224,10 +224,10 @@ end
 -- @param track (table)
 -- @param isSolo (boolean)
 function Musician.Song:SetTrackSolo(track, isSolo)
-	if track.solo and not(isSolo) then
+	if track.solo and not isSolo then
 		track.solo = false
 		self.soloTracks = self.soloTracks - 1
-	elseif not(track.solo) and isSolo then
+	elseif not track.solo and isSolo then
 		track.solo = true
 		self.soloTracks = self.soloTracks + 1
 	end
@@ -284,7 +284,7 @@ local function trackSeek(cursor, track)
 	end
 
 	local found = false
-	while not(found) do
+	while not found do
 		index = from + floor((to - from) / 2 + .5)
 
 		-- Exact position found! Find first note at exact position
@@ -343,7 +343,7 @@ function Musician.Song:Resume(eventSent)
 	Musician.Utils.AdjustAudioSettings(true)
 	addPlayingSong(self)
 	self.playing = true
-	if not(eventSent) then
+	if not eventSent then
 		Musician.Song:SendMessage(Musician.Events.SongPlay, self)
 	end
 	self:ResumeNotes()
@@ -355,7 +355,7 @@ function Musician.Song:ResumeNotes()
 	if self.playing then
 		for _, track in pairs(self.tracks) do
 			-- Only resume notes for sustained instruments
-			if not(Musician.Sampler.IsInstrumentPlucked(track.instrument)) then
+			if not Musician.Sampler.IsInstrumentPlucked(track.instrument) then
 				for noteIndex = track.playIndex - 1, 1, -1 do
 					local time = track.notes[noteIndex][NOTE.TIME]
 					-- No need to seek if the maximum note duration was exceeded
@@ -397,7 +397,7 @@ end
 --- Play notes accordingly to every frame.
 -- @param elapsed (number)
 function Musician.Song:PlayOnFrame(elapsed)
-	if not(self.playing) then
+	if not self.playing then
 		return
 	end
 
@@ -454,13 +454,13 @@ end
 -- @return isAudible (boolean)
 function Musician.Song:IsAudible()
 	-- Song is not playing
-	if not(self:IsPlaying()) then return false end
+	if not self:IsPlaying() then return false end
 
 	-- Not played by another player: always audible
-	if not(self.player) then return true end
+	if not self.player then return true end
 
 	-- Played by another player who is in range and not muted
-	return Musician.Registry.PlayerIsInRange(self.player) and not(Musician.PlayerIsMuted(self.player))
+	return Musician.Registry.PlayerIsInRange(self.player) and not Musician.PlayerIsMuted(self.player)
 end
 
 --- Play a note
@@ -473,7 +473,7 @@ function Musician.Song:NoteOn(track, noteIndex)
 	local duration = note[NOTE.DURATION]
 
 	-- Send notification emote
-	if self.player ~= nil and not(self.notified) and Musician.Registry.PlayerIsInRange(self.player) then
+	if self.player ~= nil and not self.notified and Musician.Registry.PlayerIsInRange(self.player) then
 		Musician.Utils.DisplayEmote(self.player, Musician.Registry.GetPlayerGUID(self.player), Musician.Msg.EMOTE_PLAYING_MUSIC)
 		self.notified = true
 	end
@@ -596,7 +596,7 @@ function Musician.Song:ImportFromBase64(base64data, crop, onComplete)
 	-- Decode string in a worker
 	base64DecodingWorker = function()
 		-- Importing process has been canceled
-		if not(self.importing) then
+		if not self.importing then
 			Musician.Worker.Remove(base64DecodingWorker)
 			Musician.Song:SendMessage(Musician.Events.SongImportComplete, self)
 			Musician.Song:SendMessage(Musician.Events.SongImportFailed, self)
@@ -653,7 +653,7 @@ function Musician.Song:ImportCompressed(compressedData, crop, onComplete)
 		-- Uncompress string in a worker
 		uncompressWorker = function()
 			-- Importing process has been canceled
-			if not(self.importing) then
+			if not self.importing then
 				Musician.Worker.Remove(uncompressWorker)
 				Musician.Song:SendMessage(Musician.Events.SongImportComplete, self)
 				Musician.Song:SendMessage(Musician.Events.SongImportFailed, self)
@@ -689,7 +689,7 @@ function Musician.Song:ImportCompressed(compressedData, crop, onComplete)
 		end)
 	end)
 
-	if not(success) then
+	if not success then
 		self.importing = false
 		self:OnImportError(Musician.Msg.INVALID_MUSIC_CODE, onComplete)
 	end
@@ -791,7 +791,7 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 			track.solo = false
 
 			-- Track is audible
-			track.audible = not(track.muted)
+			track.audible = not track.muted
 
 			-- Track transposition
 			track.transpose = 0
@@ -830,7 +830,7 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 		-- Import notes in a worker
 		noteImportingWorker = function()
 			-- Importing process has been canceled
-			if not(self.importing) then
+			if not self.importing then
 				Musician.Worker.Remove(noteImportingWorker)
 				Musician.Song:SendMessage(Musician.Events.SongImportComplete, self)
 				Musician.Song:SendMessage(Musician.Events.SongImportFailed, self)
@@ -1000,7 +1000,7 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 		end)
 	end)
 
-	if not(success) then
+	if not success then
 		self.importing = false
 		self:OnImportError(Musician.Msg.INVALID_MUSIC_CODE, onComplete)
 	end
@@ -1071,7 +1071,7 @@ function Musician.Song:Export(onComplete, progressionFactor)
 	-- Export notes in a worker
 	noteExportingWorker = function()
 		-- Exporting process has been canceled
-		if not(self.exporting) then
+		if not self.exporting then
 			Musician.Worker.Remove(noteExportingWorker)
 			return
 		end
@@ -1084,8 +1084,9 @@ function Musician.Song:Export(onComplete, progressionFactor)
 		while exportedNotes < stopOnNoteCount do
 			local note = track.notes[noteIndex]
 
-			-- No more note in this track: skip to next track
 			if note == nil then
+				-- No more note in this track: skip to next track
+
 				trackNoteCount[track.index] = trackNoteCount[track.index] + trackNotesDataChunkCount
 				trackIndex = trackIndex + 1
 				track = self.tracks[trackIndex]
@@ -1093,9 +1094,10 @@ function Musician.Song:Export(onComplete, progressionFactor)
 				noteIndex = 1
 				offset = 0
 
-			-- Ignore notes that are not within the MIDI range
-			-- Also ignore notes with key = 127 to avoid notes type 1 being taken for a separator (0xFF).
 			elseif note[NOTE.KEY] >= 0 and note[NOTE.KEY] < 127 then
+				-- Ignore notes that are not within the MIDI range
+				-- Also ignore notes with key = 127 to avoid notes type 1 being taken for a separator (0xFF).
+
 				trackNotesDataChunkCount = trackNotesDataChunkCount + 1
 				local noteTime = note[NOTE.TIME] - offset
 
@@ -1114,7 +1116,8 @@ function Musician.Song:Export(onComplete, progressionFactor)
 				-- Duration mode
 				if self.mode == Musician.Song.MODE_DURATION then
 					-- Pack duration
-					local maxDuration = self.header == 'MUS8' and note[NOTE.KEY] < 127 and Musician.MAX_LONG_NOTE_DURATION or Musician.MAX_NOTE_DURATION
+					local maxDuration = self.header == 'MUS8' and note[NOTE.KEY] < 127 and Musician.MAX_LONG_NOTE_DURATION or
+						Musician.MAX_NOTE_DURATION
 					local duration = max(0, min(note[NOTE.DURATION], maxDuration))
 					local durationFrames = floor(duration * Musician.NOTE_DURATION_FPS + .5)
 
@@ -1248,7 +1251,7 @@ function Musician.Song:ExportCompressed(onComplete)
 		local compressChunkWorker
 		compressChunkWorker = function()
 			-- Exporting process has been cancelled
-			if not(self.exporting) then
+			if not self.exporting then
 				Musician.Worker.Remove(compressChunkWorker)
 				return
 			end
@@ -1362,7 +1365,7 @@ function Musician.Song:Stream()
 		track.streamIndex = trackSeek(self.cropFrom, track)
 
 		-- Move streamIndex backwards to the earliest playing note (for non-"plucked" instruments)
-		if not(Musician.Sampler.IsInstrumentPlucked(track.instrument)) then
+		if not Musician.Sampler.IsInstrumentPlucked(track.instrument) then
 			for noteIndex = track.streamIndex - 1, 1, -1 do
 				local time = track.notes[noteIndex][NOTE.TIME]
 				-- No need to seek if the maximum note duration was exceeded
@@ -1390,7 +1393,7 @@ end
 
 --- Stop streaming song
 function Musician.Song:StopStreaming()
-	if not(self.streaming) then return end
+	if not self.streaming then return end
 	Musician.Utils.Debug(MODULE_NAME, "StopStreaming", self.name)
 	removeStreamingSong(self)
 	self.streaming = false
@@ -1475,7 +1478,7 @@ end
 -- @param elapsed (number)
 function Musician.Song:StreamOnFrame(elapsed)
 
-	if not(self.streaming) then
+	if not self.streaming then
 		return
 	end
 
@@ -1488,7 +1491,7 @@ function Musician.Song:StreamOnFrame(elapsed)
 	end
 
 	local from = self.streamPosition
-	local to = from	+ self.chunkDuration
+	local to = from + self.chunkDuration
 
 	local chunk = {}
 
@@ -1500,7 +1503,8 @@ function Musician.Song:StreamOnFrame(elapsed)
 		-- Notes On and Notes Off
 		local notes = {}
 		local noteOffset = from
-		while track.notes[track.streamIndex] and (track.notes[track.streamIndex][NOTE.TIME] < to) and (track.notes[track.streamIndex][NOTE.TIME] <= self.cropTo) do
+		while track.notes[track.streamIndex] and (track.notes[track.streamIndex][NOTE.TIME] < to) and
+			(track.notes[track.streamIndex][NOTE.TIME] <= self.cropTo) do
 			local note = track.notes[track.streamIndex]
 			local on = note[NOTE.ON]
 			local time = note[NOTE.TIME]
@@ -1642,7 +1646,14 @@ function Musician.Song:PackChunk(chunk)
 		end
 	end
 
-	return packedVersionAndMode .. packedChunkDuration .. packedSongId .. packedPlaytimeLeft .. packedPlayerPosition .. packedTrackCount .. packedTrackInfo .. packedNoteData
+	return packedVersionAndMode ..
+		packedChunkDuration ..
+		packedSongId ..
+		packedPlaytimeLeft ..
+		packedPlayerPosition ..
+		packedTrackCount ..
+		packedTrackInfo ..
+		packedNoteData
 end
 
 --- Unpack song chunk header
@@ -1688,7 +1699,7 @@ function Musician.Song.UnpackChunkHeader(data)
 		trackCount = Musician.Utils.UnpackNumber(readBytes(1))
 	end)
 
-	if not(success) then
+	if not success then
 		return nil
 	end
 
@@ -1773,7 +1784,7 @@ function Musician.Song.UnpackChunkData(data)
 		end
 	end)
 
-	if not(success) then
+	if not success then
 		return nil
 	end
 
@@ -1807,7 +1818,7 @@ function Musician.Song:ConvertToLive()
 				table.insert(track.notes, {
 					[NOTE.ON] = false,
 					[NOTE.KEY] = note[NOTE.KEY],
-					[NOTE.TIME] = note[NOTE.TIME] + note[NOTE.DURATION] - 1/30
+					[NOTE.TIME] = note[NOTE.TIME] + note[NOTE.DURATION] - 1 / 30
 				})
 				note[NOTE.DURATION] = nil
 			end

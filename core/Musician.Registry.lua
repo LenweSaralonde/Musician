@@ -61,7 +61,8 @@ function Musician.Registry.Init()
 		-- Send Query message to group
 		if Musician.Comm.GetGroupChatType() then
 			debugComm(true, Musician.Registry.event.query, Musician.Comm.GetGroupChatType())
-			Musician.Registry:SendCommMessage(Musician.Registry.event.query, Musician.Registry.GetVersionString(), Musician.Comm.GetGroupChatType(), nil, "ALERT")
+			Musician.Registry:SendCommMessage(Musician.Registry.event.query, Musician.Registry.GetVersionString(),
+				Musician.Comm.GetGroupChatType(), nil, "ALERT")
 		end
 	end
 
@@ -73,13 +74,14 @@ function Musician.Registry.Init()
 	Musician.Registry:RegisterEvent("GROUP_JOINED", function()
 		if Musician.Comm.GetGroupChatType() then
 			debugComm(true, Musician.Registry.event.query, Musician.Comm.GetGroupChatType())
-			Musician.Registry:SendCommMessage(Musician.Registry.event.query, Musician.Registry.GetVersionString(), Musician.Comm.GetGroupChatType(), nil, "ALERT")
+			Musician.Registry:SendCommMessage(Musician.Registry.event.query, Musician.Registry.GetVersionString(),
+				Musician.Comm.GetGroupChatType(), nil, "ALERT")
 		end
 	end)
 
 	-- Enqueue Query message for hovered player
 	Musician.Registry:RegisterEvent("UPDATE_MOUSEOVER_UNIT", function()
-		if not(UnitIsPlayer("mouseover")) then
+		if not UnitIsPlayer("mouseover") then
 			return
 		end
 
@@ -104,13 +106,14 @@ function Musician.Registry.Init()
 	C_Timer.NewTicker(QUERY_RATE, function()
 		local player = table.remove(pendingPlayerQueries, 1)
 
-		while player and not(Musician.Registry.PlayerIsRegisteredWithNoVersion(player)) do
+		while player and not Musician.Registry.PlayerIsRegisteredWithNoVersion(player) do
 			player = table.remove(pendingPlayerQueries, 1)
 		end
 
 		if player and Musician.Registry.PlayerIsRegisteredWithNoVersion(player) then
 			debugComm(true, Musician.Registry.event.query, player)
-			Musician.Registry:SendCommMessage(Musician.Registry.event.query, Musician.Registry.GetVersionString(), 'WHISPER', player, "ALERT")
+			Musician.Registry:SendCommMessage(Musician.Registry.event.query, Musician.Registry.GetVersionString(), 'WHISPER',
+				player, "ALERT")
 		end
 	end)
 
@@ -118,7 +121,7 @@ function Musician.Registry.Init()
 	Musician.Registry:RegisterEvent("CHAT_MSG_CHANNEL_LIST", function(event, players, _, _, _, _, _, _, _, channelName)
 
 		-- Not the Musician channel
-		if channelName ~= Musician.CHANNEL or not(Musician.Registry.fetchingPlayers) then
+		if channelName ~= Musician.CHANNEL or not Musician.Registry.fetchingPlayers then
 			return
 		end
 
@@ -147,7 +150,8 @@ function Musician.Registry.Init()
 			end
 
 			if playerCount > 2 then
-				Musician.Utils.Print(string.gsub(Musician.Msg.PLAYER_COUNT_ONLINE, '{count}', Musician.Utils.Highlight(playerCount - 1)))
+				Musician.Utils.Print(string.gsub(Musician.Msg.PLAYER_COUNT_ONLINE, '{count}',
+					Musician.Utils.Highlight(playerCount - 1)))
 			elseif playerCount == 2 then
 				Musician.Utils.Print(Musician.Msg.PLAYER_COUNT_ONLINE_ONE)
 			elseif playerCount < 2 then
@@ -195,13 +199,13 @@ function Musician.Registry.Init()
 
 	-- Send "Hello" every 5 minutes
 	C_Timer.NewTicker(300, function()
-		if not(Musician.streamingSong) or not(Musician.streamingSong.streaming) then
+		if not Musician.streamingSong or not Musician.streamingSong.streaming then
 			Musician.Registry.SendHello()
 		end
 	end)
 
 	-- Finish initialization on login
-	if not(IsLoggedIn()) then
+	if not IsLoggedIn() then
 		Musician.Registry:RegisterEvent("PLAYER_LOGIN", finishInit)
 	else
 		finishInit()
@@ -212,7 +216,7 @@ end
 --
 function Musician.Registry.FetchPlayers()
 	-- Already fetching or fetched
-	if Musician.Registry.playersFetched and not(Musician.Registry.fetchingPlayers) then
+	if Musician.Registry.playersFetched and not Musician.Registry.fetchingPlayers then
 		return
 	end
 
@@ -257,12 +261,12 @@ function Musician.Registry.PlayerIsInLoadingRange(player)
 	end
 
 	-- Player is not in the registry
-	if not(Musician.Registry.PlayerIsRegistered(player)) then
+	if not Musician.Registry.PlayerIsRegistered(player) then
 		return false
 	end
 
 	-- Player is not "connected" (in the same shard and phase and close enough to interact with the character)
-	if not(C_PlayerInfo.IsConnected(Musician.Registry.players[player].location)) then
+	if not C_PlayerInfo.IsConnected(Musician.Registry.players[player].location) then
 		return false
 	end
 
@@ -274,7 +278,7 @@ end
 -- @return isInRange (boolean)
 function Musician.Registry.PlayerIsInRange(player)
 	-- Already checks if the player is close enough to load the data and in the same phase/instance
-	if not(Musician.Registry.PlayerIsInLoadingRange(player)) then
+	if not Musician.Registry.PlayerIsInLoadingRange(player) then
 		return false
 	end
 
@@ -309,7 +313,7 @@ end
 function Musician.Registry.GetPlayerTooltipText(player)
 	player = Musician.Utils.NormalizePlayerName(player)
 
-	if not(Musician.Registry.PlayerIsRegistered(player)) then
+	if not Musician.Registry.PlayerIsRegistered(player) then
 		return nil
 	end
 
@@ -320,9 +324,11 @@ function Musician.Registry.GetPlayerTooltipText(player)
 		infoText = string.gsub(Musician.Msg.PLAYER_TOOLTIP_VERSION, '{version}', playerVersion)
 
 		if playerProtocol < Musician.PROTOCOL_VERSION then
-			infoText = infoText .. " " .. Musician.Utils.Highlight(Musician.Msg.PLAYER_TOOLTIP_VERSION_OUTDATED, DIM_RED_FONT_COLOR)
+			infoText = infoText ..
+				" " .. Musician.Utils.Highlight(Musician.Msg.PLAYER_TOOLTIP_VERSION_OUTDATED, DIM_RED_FONT_COLOR)
 		elseif playerProtocol > Musician.PROTOCOL_VERSION then
-			infoText = infoText .. " " ..  Musician.Utils.Highlight(Musician.Msg.PLAYER_TOOLTIP_VERSION_INCOMPATIBLE, RED_FONT_COLOR)
+			infoText = infoText ..
+				" " .. Musician.Utils.Highlight(Musician.Msg.PLAYER_TOOLTIP_VERSION_INCOMPATIBLE, RED_FONT_COLOR)
 		end
 	end
 
@@ -374,7 +380,7 @@ function Musician.Registry.UpdateTooltipInfo(tooltip, player, fontSize)
 	tooltip:AddDoubleLine(" ", infoText, 1, 1, 1, 1, 1, 1)
 	if fontSize ~= nil then
 		local line = _G[strconcat(tooltip:GetName(), "TextRight", tooltip:NumLines())]
-		local font, _ , flag = line:GetFont()
+		local font, _, flag = line:GetFont()
 		line:SetFont(font, fontSize, flag)
 	end
 	tooltip:Show()
@@ -385,7 +391,7 @@ end
 -- @param player (string)
 function Musician.Registry.UpdatePlayerTooltip(player)
 	local _, unitType = GameTooltip:GetUnit()
-	if not(UnitIsPlayer(unitType)) then return end
+	if not UnitIsPlayer(unitType) then return end
 	local tooltipPlayer = Musician.Utils.NormalizePlayerName(GetUnitName(unitType, true))
 	if tooltipPlayer == player then
 		Musician.Registry.UpdateTooltipInfo(GameTooltip, player)
@@ -398,11 +404,13 @@ function Musician.Registry.SendHello()
 	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
 		if Musician.Comm.GetChannel() ~= nil then
 			debugComm(true, Musician.Registry.event.hello, Musician.Comm.GetChannel())
-			Musician.Registry:SendCommMessage(Musician.Registry.event.hello, Musician.Registry.GetVersionString(), 'CHANNEL', Musician.Comm.GetChannel(), "ALERT")
+			Musician.Registry:SendCommMessage(Musician.Registry.event.hello, Musician.Registry.GetVersionString(), 'CHANNEL',
+				Musician.Comm.GetChannel(), "ALERT")
 		end
 	else
 		debugComm(true, Musician.Registry.event.hello, 'YELL')
-		Musician.Registry:SendCommMessage(Musician.Registry.event.hello, Musician.Registry.GetVersionString(), 'YELL', nil, "ALERT")
+		Musician.Registry:SendCommMessage(Musician.Registry.event.hello, Musician.Registry.GetVersionString(), 'YELL', nil,
+			"ALERT")
 	end
 end
 
@@ -440,10 +448,12 @@ function Musician.Registry.OnQuery(prefix, version, distribution, player)
 
 	if distribution == 'WHISPER' then
 		debugComm(true, Musician.Registry.event.hello, player)
-		Musician.Registry:SendCommMessage(Musician.Registry.event.hello, Musician.Registry.GetVersionString(), 'WHISPER', player, "ALERT")
+		Musician.Registry:SendCommMessage(Musician.Registry.event.hello, Musician.Registry.GetVersionString(), 'WHISPER',
+			player, "ALERT")
 	elseif Musician.Comm.GetGroupChatType() then
 		debugComm(true, Musician.Registry.event.hello, Musician.Comm.GetGroupChatType())
-		Musician.Registry:SendCommMessage(Musician.Registry.event.hello, Musician.Registry.GetVersionString(), Musician.Comm.GetGroupChatType(), nil, "ALERT")
+		Musician.Registry:SendCommMessage(Musician.Registry.event.hello, Musician.Registry.GetVersionString(),
+			Musician.Comm.GetGroupChatType(), nil, "ALERT")
 	end
 end
 
@@ -535,7 +545,7 @@ function Musician.Registry.GetPlayerVersion(player)
 	player = Musician.Utils.NormalizePlayerName(player)
 	local entry = Musician.Registry.players[player]
 
-	if not(entry) or not (entry.version) then
+	if not entry or not entry.version then
 		return nil, nil
 	end
 
@@ -553,7 +563,7 @@ function Musician.Registry.NotifyNewVersion(otherVersion)
 	if theirVersion:match("[^0-9\\.]") then return end
 
 	-- Compare versions
-	if not(newVersionNotified) and Musician.Utils.VersionCompare(theirVersion, myVersion) == 1 then
+	if not newVersionNotified and Musician.Utils.VersionCompare(theirVersion, myVersion) == 1 then
 		newVersionNotified = true
 
 		local msg = Musician.Msg.NEW_VERSION
@@ -571,7 +581,7 @@ function Musician.Registry.NotifyNewVersion(otherVersion)
 	end
 
 	-- Compare protocol versions
-	if not(newProtocolNotified) and theirProtocol > myProtocol then
+	if not newProtocolNotified and theirProtocol > myProtocol then
 		newProtocolNotified = true
 
 		local msg = Musician.Msg.NEW_PROTOCOL_VERSION

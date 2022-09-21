@@ -124,7 +124,8 @@ function Musician.Utils.FormatText(text)
 	local search = "%*%*[^%*]+%*%*"
 	while string.find(text, search) do
 		local from, to = string.find(text, search)
-		text = string.sub(text, 1, from - 1) .. Musician.Utils.Highlight(string.sub(text, from + 2, to - 2)) .. string.sub(text, to + 1)
+		text = string.sub(text, 1, from - 1) ..
+			Musician.Utils.Highlight(string.sub(text, from + 2, to - 2)) .. string.sub(text, to + 1)
 	end
 
 	return text
@@ -136,7 +137,7 @@ end
 -- @param ... (string)
 -- @return link (string)
 function Musician.Utils.GetLink(command, text, ...)
-	return "|H" .. strjoin(':', command, ... ) .. "|h" .. text .. "|h"
+	return "|H" .. strjoin(':', command, ...) .. "|h" .. text .. "|h"
 end
 
 --- Remove hyperlinks from text
@@ -242,8 +243,8 @@ function Musician.Utils.GetBattleNetAccount(accountID)
 		if accountInfo == nil then return {} end
 	else
 		local presenceID, accountName, battleTag, isBattleTagPresence,
-			_, _, _, isOnline, lastOnline,
-			isAFK, isDND, messageText, _, _, messageTime = BNGetFriendInfoByID(accountID)
+		_, _, _, isOnline, lastOnline,
+		isAFK, isDND, messageText, _, _, messageTime = BNGetFriendInfoByID(accountID)
 		if presenceID == nil then return {} end
 		accountInfo = {
 			bnetAccountID = presenceID, -- Unique numeric identifier for the friend's Battle.net account during this session
@@ -255,7 +256,7 @@ function Musician.Utils.GetBattleNetAccount(accountID)
 			isAFK = isAFK, -- Whether or not the friend is flagged as Away
 			isDND = isDND, -- Whether or not the friend is flagged as Busy
 			--isFavorite = , -- Whether or not the friend is marked as a favorite by you
-			appearOffline = not(isOnline), --
+			appearOffline = not isOnline, --
 			customMessage = messageText, -- The Battle.net broadcast message
 			customMessageTime = messageTime, -- The number of seconds elapsed since the current broadcast message was sent
 			--note = , -- The contents of the player's note about this friend
@@ -323,7 +324,8 @@ function Musician.Utils.GetBattleNetGameAccounts(accountID)
 	local gameAccountsInfo = {}
 	local friendIndex = BNGetFriendIndex(accountID)
 	if friendIndex == nil then return gameAccountsInfo end
-	local numGameAccounts = C_BattleNet and C_BattleNet.GetFriendNumGameAccounts(friendIndex) or BNGetNumFriendGameAccounts(friendIndex)
+	local numGameAccounts = C_BattleNet and C_BattleNet.GetFriendNumGameAccounts(friendIndex) or
+		BNGetNumFriendGameAccounts(friendIndex)
 	if numGameAccounts == nil or numGameAccounts == 0 then return gameAccountsInfo end
 
 	for gameAccountIndex = 1, numGameAccounts do
@@ -392,7 +394,8 @@ function Musician.Utils.DisplayEmote(player, playerGUID, message)
 	end
 
 	if playerGUID then
-		ChatFrame_OnEvent(DEFAULT_CHAT_FRAME, "CHAT_MSG_EMOTE", message, fullPlayerName, '', '', displayPlayerName, '', nil, nil, nil, nil, 0, playerGUID)
+		ChatFrame_OnEvent(DEFAULT_CHAT_FRAME, "CHAT_MSG_EMOTE", message, fullPlayerName, '', '', displayPlayerName, '', nil,
+			nil, nil, nil, 0, playerGUID)
 	else
 		ChatFrame_OnEvent(DEFAULT_CHAT_FRAME, "CHAT_MSG_EMOTE", message, fullPlayerName, '', '', displayPlayerName, '')
 	end
@@ -491,7 +494,7 @@ function Musician.Utils.PackPlayerPosition()
 
 	-- Only set (0, 0) as integer coordinates when posX and posY exactly equal 0,
 	-- meaning the coordinates could not be retrieved (for example in a dungeon).
-	if not(posX == 0 and posY == 0) and posX >= -.5 and posX < .5 and posY >= -.5 and posY < 5 then
+	if not (posX == 0 and posY == 0) and posX >= -.5 and posX < .5 and posY >= -.5 and posY < 5 then
 		-- Round to the closest non-zero integer coordinates
 		posX = 2 * floor(posX) + 1
 		posY = 2 * floor(posY) + 1
@@ -525,7 +528,7 @@ end
 -- @param hex (string)
 -- @return str (string)
 function Musician.Utils.FromHex(hex)
-	return (hex:gsub('..', function (cc)
+	return (hex:gsub('..', function(cc)
 		return string.char(tonumber(cc, 16))
 	end))
 end
@@ -534,7 +537,7 @@ end
 -- @param str (string)
 -- @return hex (string)
 function Musician.Utils.ToHex(str)
-	return (str:gsub('.', function (c)
+	return (str:gsub('.', function(c)
 		return string.format('%02X', string.byte(c))
 	end))
 end
@@ -556,9 +559,10 @@ end
 function Musician.Utils.MuteGameMusic(force)
 	local isMusicianPlaying = Musician.Utils.SongIsPlaying() or Musician.Live.IsPlaying()
 	local isInGameMusicEnabled = GetCVar("Sound_EnableMusic") ~= "0"
-	local mute = Musician_Settings.muteGameMusic and isInGameMusicEnabled and isMusicianPlaying and not(Musician.Sampler.GetMuted())
+	local mute = Musician_Settings.muteGameMusic and isInGameMusicEnabled and isMusicianPlaying and
+		not Musician.Sampler.GetMuted()
 
-	if not(force) and isGameMusicMuted == mute then return end
+	if not force and isGameMusicMuted == mute then return end
 
 	if mute then
 		-- Play a silent music track to mute and fade actual game music
@@ -628,7 +632,7 @@ function Musician.Utils.GetNewAudioSettings(oldSettings)
 	end
 
 	-- Dialog is enabled along with SFX: Use the highest value of the two
-	if not(audioChannels.Master) and audioChannels.SFX and audioChannels.Dialog then
+	if not audioChannels.Master and audioChannels.SFX and audioChannels.Dialog then
 		local sfxVolume = oldSettings.CVars.Sound_SFXVolume
 		local dialogVolume = oldSettings.CVars.Sound_DialogVolume
 		if sfxVolume > dialogVolume and newSettings.CVars.Sound_DialogVolume ~= sfxVolume then
@@ -670,7 +674,7 @@ function Musician.Utils.UpdateAudioSettings(newSettings, noSoundSystemRestart)
 		if GetCVarNumber(key) ~= value then
 			SetCVar(key, value)
 			-- Sound system needs to be restarted after the total number of sound channels was changed
-			if key == 'Sound_NumChannels' and not(noSoundSystemRestart) then
+			if key == 'Sound_NumChannels' and not noSoundSystemRestart then
 				Sound_GameSystem_RestartSoundSystem()
 			end
 		end
@@ -685,7 +689,7 @@ end
 function Musician.Utils.AdjustAudioSettings(noSoundSystemRestart)
 	-- Always make sure at least one audio channel is selected (SFX)
 	local audioChannels = Musician_Settings.audioChannels
-	if not(audioChannels.Master) and not(audioChannels.SFX) and not(audioChannels.Dialog) then
+	if not audioChannels.Master and not audioChannels.SFX and not audioChannels.Dialog then
 		audioChannels.SFX = true
 	end
 
@@ -785,7 +789,8 @@ end
 -- @param playerName (string)
 -- @return isMyself (boolean)
 function Musician.Utils.PlayerIsMyself(playerName)
-	return playerName ~= nil and Musician.Utils.NormalizePlayerName(playerName) == Musician.Utils.NormalizePlayerName(UnitName("player"))
+	return playerName ~= nil and
+		Musician.Utils.NormalizePlayerName(playerName) == Musician.Utils.NormalizePlayerName(UnitName("player"))
 end
 
 --- Return true if the provided player name is on the same realm or connected realm as me
@@ -855,7 +860,10 @@ function Musician.Utils.GetPromoEmote()
 	local sendPromoPart = Musician_Settings.enableEmotePromo
 
 	-- Do not send the promo part too often
-	if sendPromoPart and (overrideNextFullPromoEmote or fullPromoEmoteLastSeen ~= nil and (fullPromoEmoteLastSeen + FULL_PROMO_EMOTE_COOLDOWN) > GetTime()) then
+	if sendPromoPart and
+		(
+		overrideNextFullPromoEmote or
+			fullPromoEmoteLastSeen ~= nil and (fullPromoEmoteLastSeen + FULL_PROMO_EMOTE_COOLDOWN) > GetTime()) then
 		sendPromoPart = false
 	end
 
@@ -903,14 +911,16 @@ function Musician.Utils.SendPromoEmote()
 		overrideNextFullPromoEmote = false
 
 		-- Show a hint to the user that an emote is also being sent by default
-		if not(Musician_Settings.emoteHintShown) then
+		if not Musician_Settings.emoteHintShown then
 			Musician_Settings.emoteHintShown = true
 			local emoteHint = Musician.Msg.OPTIONS_EMOTE_HINT
 			local emoteHintLinkText = emoteHint:match("%[(.+)%]")
-			local emoteHintLink = Musician.Utils.Highlight(Musician.Utils.GetLink("musician", emoteHintLinkText, "options"), '00BBBB')
+			local emoteHintLink = Musician.Utils.Highlight(Musician.Utils.GetLink("musician", emoteHintLinkText, "options"),
+				'00BBBB')
 			emoteHintLink = Musician.Utils.Highlight('[', 'BBBBBB') .. emoteHintLink .. Musician.Utils.Highlight(']', 'BBBBBB')
 			emoteHint = string.gsub(emoteHint, '%[' .. emoteHintLinkText .. '%]', emoteHintLink)
-			DEFAULT_CHAT_FRAME:AddMessage(emoteHint, ORANGE_FONT_COLOR.r * .75, ORANGE_FONT_COLOR.g * .75, ORANGE_FONT_COLOR.b * .75)
+			DEFAULT_CHAT_FRAME:AddMessage(emoteHint,
+				ORANGE_FONT_COLOR.r * .75, ORANGE_FONT_COLOR.g * .75, ORANGE_FONT_COLOR.b * .75)
 		end
 	end
 end
@@ -986,14 +996,15 @@ function Musician.Utils.FormatTime(time, simple)
 		return Musician.Utils.PaddingZeros(m, 2) .. ":" .. Musician.Utils.PaddingZeros(s, 2)
 	end
 
-	return Musician.Utils.PaddingZeros(m, 2) .. ":" .. Musician.Utils.PaddingZeros(s, 2) .. "." .. Musician.Utils.PaddingZeros(cs, 2)
+	return Musician.Utils.PaddingZeros(m, 2) ..
+		":" .. Musician.Utils.PaddingZeros(s, 2) .. "." .. Musician.Utils.PaddingZeros(cs, 2)
 end
 
 --- Parse time in seconds from mm:ss.ss format
 -- @param timestamp (string)
 -- @return seconds (number)
 function Musician.Utils.ParseTime(timestamp)
-	local parts = {string.split(':', timestamp)}
+	local parts = { string.split(':', timestamp) }
 
 	local m
 
@@ -1024,17 +1035,17 @@ end
 -- @param orig (table)
 -- @return copy (table)
 function Musician.Utils.ShallowCopy(orig)
-    local orig_type = type(orig)
-    local copy
-    if orig_type == 'table' then
-        copy = {}
-        for orig_key, orig_value in pairs(orig) do
-            copy[orig_key] = orig_value
-        end
-    else -- number, string, boolean, etc
-        copy = orig
-    end
-    return copy
+	local orig_type = type(orig)
+	local copy
+	if orig_type == 'table' then
+		copy = {}
+		for orig_key, orig_value in pairs(orig) do
+			copy[orig_key] = orig_value
+		end
+	else -- number, string, boolean, etc
+		copy = orig
+	end
+	return copy
 end
 
 --- Deep copy a table
@@ -1086,30 +1097,29 @@ end
 --- Return operating system name
 -- @return os (string)
 function Musician.Utils.GetOs()
-	return
-		IsWindowsClient() and Musician.OS_WINDOWS or
+	return IsWindowsClient() and Musician.OS_WINDOWS or
 		IsMacClient() and Musician.OS_MAC or
 		IsLinuxClient() and Musician.OS_LINUX
 end
 
 --- Blizzard's EasyMenu using MSA_DropDownMenu
 --
-function Musician.Utils.EasyMenu(menuList, menuFrame, anchor, x, y, displayMode, autoHideDelay )
-	if ( displayMode == "MENU" ) then
-		menuFrame.displayMode = displayMode;
+function Musician.Utils.EasyMenu(menuList, menuFrame, anchor, x, y, displayMode, autoHideDelay)
+	if displayMode == "MENU" then
+		menuFrame.displayMode = displayMode
 	end
-	MSA_DropDownMenu_Initialize(menuFrame, Musician.Utils.EasyMenu_Initialize, displayMode, nil, menuList);
-	MSA_ToggleDropDownMenu(1, nil, menuFrame, anchor, x, y, menuList, nil, autoHideDelay);
+	MSA_DropDownMenu_Initialize(menuFrame, Musician.Utils.EasyMenu_Initialize, displayMode, nil, menuList)
+	MSA_ToggleDropDownMenu(1, nil, menuFrame, anchor, x, y, menuList, nil, autoHideDelay)
 end
 
 --- Blizzard's EasyMenu_Initialize using MSA_DropDownMenu
 --
-function Musician.Utils.EasyMenu_Initialize( frame, level, menuList )
+function Musician.Utils.EasyMenu_Initialize(frame, level, menuList)
 	for index = 1, #menuList do
 		local value = menuList[index]
 		if (value.text) then
-			value.index = index;
-			MSA_DropDownMenu_AddButton( value, level );
+			value.index = index
+			MSA_DropDownMenu_AddButton(value, level)
 		end
 	end
 end
@@ -1168,9 +1178,9 @@ function Musician.Utils.GetByteReader(data, err)
 		end
 		return bytes
 	end,
-	function()
-		return cursor
-	end
+		function()
+			return cursor
+		end
 end
 
 --- Call function for each item of the provided table
@@ -1187,5 +1197,5 @@ end
 --- Randomly returns one of the provided arguments
 --
 function Musician.Utils.GetRandomArgument(...)
-	return (select(random(select("#", ...)), ...));
+	return (select(random(select("#", ...)), ...))
 end

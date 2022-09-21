@@ -79,7 +79,8 @@ end
 -- @param duration (number) in seconds
 -- @param[opt] withoutPassword (boolean) join without using password
 local function delayCommChannelJoin(duration, withoutPassword)
-	Musician.Utils.Debug(MODULE_NAME, "Will join the communication channel again in", duration, "second(s).", withoutPassword and "(no password)" or "")
+	Musician.Utils.Debug(MODULE_NAME, "Will join the communication channel again in", duration, "second(s).",
+		withoutPassword and "(no password)" or "")
 	joinWithoutPassword = withoutPassword or false
 	joinChannelAfter = GetTime() + duration
 end
@@ -87,7 +88,7 @@ end
 --- Disable the chat channel password popup
 -- @param isJoining (boolean)
 local function disableChannelPasswordPopup(isJoining)
-	if isJoining and not(StaticPopup_Visible("CHAT_CHANNEL_PASSWORD")) then
+	if isJoining and not StaticPopup_Visible("CHAT_CHANNEL_PASSWORD") then
 		StaticPopupDialogs["CHAT_CHANNEL_PASSWORD"] = nil
 	else
 		StaticPopupDialogs["CHAT_CHANNEL_PASSWORD"] = chatChannelPasswordStaticPopupDialog
@@ -116,7 +117,7 @@ local function isChannelListReady()
 	end
 
 	-- Consider the channel list is ready if there is no gap
-	return not(hasGaps)
+	return not hasGaps
 end
 
 --- Initialize communication
@@ -143,7 +144,7 @@ function Musician.Comm.Init()
 		Musician.Comm.OnGroupJoined()
 	end
 
-	if not(IsLoggedIn()) then
+	if not IsLoggedIn() then
 		Musician.Comm:RegisterEvent("PLAYER_LOGIN", finishInit)
 	else
 		finishInit()
@@ -167,7 +168,7 @@ local function onChannelFailed(reason)
 	Musician.Utils.Debug(MODULE_NAME, "Failed to join the communication channel:", reason)
 	Musician.Comm:SendMessage(Musician.Events.CommChannelUpdate, false)
 	if reason == 'WRONG_PASSWORD' then
-		if not(joinWithoutPassword) then
+		if not joinWithoutPassword then
 			delayCommChannelJoin(0, true) -- Try again now without password, since it could have been accidentally unset
 		else
 			delayCommChannelJoin(300) -- Try again in 5 minutes
@@ -213,7 +214,8 @@ local function reorderChannels()
 	for index = commChannelIndex, lastChannelIndex - 1 do
 		swapChannelsByIndex(index, index + 1)
 	end
-	Musician.Utils.Debug(MODULE_NAME, "reorderChannels", "Changed communication channel position from", commChannelIndex, "to", lastChannelIndex)
+	Musician.Utils.Debug(MODULE_NAME, "reorderChannels", "Changed communication channel position from", commChannelIndex,
+		"to", lastChannelIndex)
 end
 
 --- Join the communication channel and keep it joined
@@ -235,14 +237,14 @@ function Musician.Comm.JoinChannel()
 
 		-- Something interesting happened for the communication channel
 		if channelName == Musician.CHANNEL then
-			-- Successfully joined channed
 			if text == 'YOU_CHANGED' or text == 'YOU_JOINED' then
+				-- Successfully joined channed
 				onChannelJoined()
-			-- Something went wrong
 			elseif text == 'WRONG_PASSWORD' or text == 'BANNED' then
+				-- Something went wrong
 				onChannelFailed(text)
-			-- Left channel
 			elseif text == 'YOU_LEFT' then
+				-- Left channel
 				onChannelLeft()
 			end
 		end
@@ -289,7 +291,7 @@ function Musician.Comm.JoinChannel()
 			joinChannelAfter = nil
 			Musician.Utils.Debug(MODULE_NAME, "Joining the communication channel:", Musician.CHANNEL)
 			disableChannelPasswordPopup(true)
-			JoinTemporaryChannel(Musician.CHANNEL, not(joinWithoutPassword) and Musician.PASSWORD or nil)
+			JoinTemporaryChannel(Musician.CHANNEL, not joinWithoutPassword and Musician.PASSWORD or nil)
 		end
 	end)
 end
@@ -365,13 +367,13 @@ end
 --- Return true if the player can broadcast via the channel or the group chat
 -- @return canBroadcast (boolean)
 function Musician.Comm.CanBroadcast()
-	return not(useCommChannel()) or Musician.Comm.ChannelIsReady() or Musician.Comm.GetGroupChatType() ~= nil
+	return not useCommChannel() or Musician.Comm.ChannelIsReady() or Musician.Comm.GetGroupChatType() ~= nil
 end
 
 --- Return true if the player can play music
 -- @return canPlay (boolean)
 function Musician.Comm.CanPlay()
-	local playerIsAliveOrGhost = not(UnitIsDead("player")) or UnitIsGhost("player")
+	local playerIsAliveOrGhost = not UnitIsDead("player") or UnitIsGhost("player")
 	return Musician.Comm.CanBroadcast() and playerIsAliveOrGhost
 end
 
@@ -379,7 +381,7 @@ end
 -- @return success (boolean)
 function Musician.Comm.PlaySong()
 	if isStopPending or isPlayPending then return false end
-	if not(Musician.Comm.CanPlay()) or not(Musician.sourceSong) then return false end
+	if not Musician.Comm.CanPlay() or not Musician.sourceSong then return false end
 
 	Musician.Utils.Debug(MODULE_NAME, "PlaySong")
 
@@ -399,7 +401,8 @@ end
 --- Toggle play song
 --
 function Musician.Comm.TogglePlaySong()
-	local songIsStreaming = Musician.streamingSong and Musician.streamingSong.streaming and not(Musician.streamingSong.isLiveStreamingSong)
+	local songIsStreaming = Musician.streamingSong and Musician.streamingSong.streaming and
+		not Musician.streamingSong.isLiveStreamingSong
 	if songIsStreaming or isSongPlaying then
 		-- Playing as band
 		if isBandPlayReady then
@@ -420,7 +423,7 @@ end
 --- Stream a packed song chunk
 -- @param packedChunk (string)
 function Musician.Comm.StreamSongChunk(packedChunk)
-	if not(Musician.Comm.CanPlay()) then return false end
+	if not Musician.Comm.CanPlay() then return false end
 	Musician.Comm.StreamCompressedSongChunk(LibDeflate:CompressDeflate(packedChunk, { level = 9 }))
 end
 
@@ -428,7 +431,7 @@ end
 -- @param compressedChunk (string)
 -- @return success (boolean)
 function Musician.Comm.StreamCompressedSongChunk(compressedChunk)
-	if not(Musician.Comm.CanPlay()) then return false end
+	if not Musician.Comm.CanPlay() then return false end
 
 	local serializedChunk
 	if useCommChannel() then
@@ -467,7 +470,7 @@ function Musician.Comm.ProcessChunk(packedChunk, sender)
 	Musician.Comm:SendMessage(Musician.Events.SongChunk, sender, mode, songId, chunkDuration, playtimeLeft, unpack(position))
 
 	-- No longer in loading range
-	if not(Musician.Registry.PlayerIsInLoadingRange(sender)) then
+	if not Musician.Registry.PlayerIsInLoadingRange(sender) then
 		-- Stop and clear existing song
 		if Musician.songs[sender] then
 			Musician.songs[sender]:Stop()
@@ -506,7 +509,7 @@ function Musician.Comm.ProcessChunk(packedChunk, sender)
 	receivingSong:AppendChunk(chunk, mode, songId, chunkDuration, playtimeLeft, sender)
 
 	-- Play song if not already started
-	if not(receivingSong:IsPlaying()) and receivingSong.cursor == 0 then
+	if not receivingSong:IsPlaying() and receivingSong.cursor == 0 then
 
 		-- Play song with delay to anticipate lag
 		local playDelay = chunkDuration / 2
@@ -562,7 +565,7 @@ function Musician.Comm.OnChunk(prefix, message, distribution, sender)
 	end
 
 	local senderIsInGroup = Musician.Utils.PlayerIsInGroup(sender)
-	if not(isGroup) and senderIsInGroup then
+	if not isGroup and senderIsInGroup then
 		return
 	end
 
@@ -580,7 +583,7 @@ end
 -- @return success (boolean)
 function Musician.Comm.StopSong()
 	if isStopPending or isPlayPending then return false end
-	if not(Musician.Comm.CanBroadcast()) then return false end
+	if not Musician.Comm.CanBroadcast() then return false end
 	if Musician.streamingSong and Musician.streamingSong.streaming or isSongPlaying then
 		Musician.Utils.Debug(MODULE_NAME, "StopSong")
 		if Musician.streamingSong ~= nil then
@@ -617,7 +620,7 @@ end
 --- Return the list of ready band players for the current source song
 -- @return readyPlayers (table)
 function Musician.Comm.GetReadyBandPlayers()
-	if not(Musician.sourceSong) then return {} end
+	if not Musician.sourceSong then return {} end
 	local readyPlayers = {}
 	for player, playerCrc32 in pairs(readyBandPlayers) do
 		if playerCrc32 == currentSongCrc32 then
@@ -653,8 +656,8 @@ function Musician.Comm.OnBandReadyQuery(prefix, message, distribution, sender)
 	sender = Musician.Utils.NormalizePlayerName(sender)
 	debugComm(false, prefix, sender .. "(" .. distribution .. ")", message)
 
-	if not(Musician.Utils.PlayerIsInGroup(sender)) then return end
-	if not(currentSongCrc32) then return end
+	if not Musician.Utils.PlayerIsInGroup(sender) then return end
+	if not currentSongCrc32 then return end
 
 	-- Send ready message in return
 	local groupChatType = Musician.Comm.GetGroupChatType()
@@ -687,7 +690,7 @@ function Musician.Comm.OnRosterUpdate(event)
 	-- Remove players from readyBandPlayers who are no longer in the group
 	local isUpdated = false
 	for player, songCrc32 in pairs(readyBandPlayers) do
-		if not(Musician.Utils.PlayerIsInGroup(player)) then
+		if not Musician.Utils.PlayerIsInGroup(player) then
 			readyBandPlayers[player] = nil
 			Musician.Comm:SendMessage(Musician.Events.BandPlayReady, player, songCrc32, false, event)
 			isUpdated = true
@@ -752,7 +755,7 @@ end
 --- Toggle band play ready
 --
 function Musician.Comm.ToggleBandPlayReady()
-	Musician.Comm.SetBandPlayReady(not(isBandPlayReady))
+	Musician.Comm.SetBandPlayReady(not isBandPlayReady)
 end
 
 --- Set band play ready
@@ -760,8 +763,8 @@ end
 -- @return success (boolean)
 function Musician.Comm.SetBandPlayReady(isReady)
 	if isBandActionPending then return false end
-	if not(Musician.Comm.CanBroadcast()) then return false end
-	if not(currentSongCrc32) then return false end
+	if not Musician.Comm.CanBroadcast() then return false end
+	if not currentSongCrc32 then return false end
 
 	local groupChatType = Musician.Comm.GetGroupChatType()
 	if groupChatType == nil then return false end
@@ -785,7 +788,7 @@ function Musician.Comm.OnBandPlayReady(prefix, message, distribution, sender)
 	sender = Musician.Utils.NormalizePlayerName(sender)
 	debugComm(false, prefix, sender .. "(" .. distribution .. ")", message)
 
-	if not(Musician.Utils.PlayerIsInGroup(sender)) then return end
+	if not Musician.Utils.PlayerIsInGroup(sender) then return end
 
 	local isReady = prefix == Musician.Comm.event.bandReady
 	local songCrc32 = tonumber(message)
@@ -798,7 +801,7 @@ function Musician.Comm.OnBandPlayReady(prefix, message, distribution, sender)
 	end
 
 	-- Add/remove player in ready band members
-	local wasReady = not(not(readyBandPlayers[sender]))
+	local wasReady = not not readyBandPlayers[sender]
 	readyBandPlayers[sender] = isReady and songCrc32 or nil
 
 	-- Trigger local events if ready status have changed
@@ -812,8 +815,8 @@ end
 -- @return success (boolean)
 function Musician.Comm.PlaySongBand()
 	if isBandActionPending then return false end
-	if not(Musician.Comm.CanPlay()) then return false end
-	if not(currentSongCrc32) then return false end
+	if not Musician.Comm.CanPlay() then return false end
+	if not currentSongCrc32 then return false end
 
 	local groupChatType = Musician.Comm.GetGroupChatType()
 	if groupChatType == nil then return false end
@@ -839,8 +842,8 @@ function Musician.Comm.OnBandPlay(prefix, message, distribution, sender)
 		Musician.Comm:SendMessage(Musician.Events.CommSendActionComplete, Musician.Comm.action.bandPlay)
 	end
 
-	if not(Musician.Utils.PlayerIsInGroup(sender)) then return end
-	if not(isBandPlayReady) then return end
+	if not Musician.Utils.PlayerIsInGroup(sender) then return end
+	if not isBandPlayReady then return end
 	if Musician.Comm.IsSongPlaying() then return false end
 	if Musician.Comm.GetGroupChatType() == nil then return end
 
@@ -848,7 +851,7 @@ function Musician.Comm.OnBandPlay(prefix, message, distribution, sender)
 	if currentSongCrc32 ~= songCrc32 then return end
 
 	-- Override next full promo emote if I'm not the initiator of band play to avoid spamming it
-	if not(Musician.Utils.PlayerIsMyself(sender)) then
+	if not Musician.Utils.PlayerIsMyself(sender) then
 		Musician.Utils.OverrideNextFullPromoEmote()
 	end
 
@@ -861,8 +864,8 @@ end
 -- @return success (boolean)
 function Musician.Comm.StopSongBand()
 	if isBandActionPending then return false end
-	if not(Musician.Comm.CanBroadcast()) then return false end
-	if not(currentSongCrc32) then return false end
+	if not Musician.Comm.CanBroadcast() then return false end
+	if not currentSongCrc32 then return false end
 
 	local groupChatType = Musician.Comm.GetGroupChatType()
 	if groupChatType == nil then return false end
@@ -888,12 +891,12 @@ function Musician.Comm.OnBandStop(prefix, message, distribution, sender)
 		Musician.Comm:SendMessage(Musician.Events.CommSendActionComplete, Musician.Comm.action.bandStop)
 	end
 
-	if not(Musician.Utils.PlayerIsInGroup(sender)) then return end
+	if not Musician.Utils.PlayerIsInGroup(sender) then return end
 
 	local songCrc32 = tonumber(message)
 
-	if not(isBandPlayReady) then return end
-	if not(Musician.Comm.IsSongPlaying()) then return false end
+	if not isBandPlayReady then return end
+	if not Musician.Comm.IsSongPlaying() then return false end
 	if currentSongCrc32 ~= songCrc32 then return end
 	if Musician.Comm.GetGroupChatType() == nil then return end
 
@@ -905,7 +908,7 @@ end
 --- OnSongPlay
 --
 function Musician.Comm.OnSongPlay(event, song)
-	if not(song.player) then return end
+	if not song.player then return end
 	local player = song.player
 
 	-- This is my song
@@ -917,7 +920,7 @@ end
 --- OnSongStop
 --
 function Musician.Comm.OnSongStop(event, song)
-	if not(song.player) then return end
+	if not song.player then return end
 	local player = song.player
 
 	-- This is my song

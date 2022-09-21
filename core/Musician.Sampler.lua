@@ -120,7 +120,7 @@ function Musician.Sampler.GetInstrumentData(instrumentName, key)
 	end
 
 	-- Handle specific percussion mapping
-	if instrumentData.midi == PERCUSSION_MIDI and not(instrumentData.isPercussion) then
+	if instrumentData.midi == PERCUSSION_MIDI and not instrumentData.isPercussion then
 		return Musician.Sampler.GetInstrumentData(Musician.MIDI_PERCUSSION_MAPPING[key], key)
 	end
 
@@ -171,7 +171,7 @@ function Musician.Sampler.GetSoundFile(instrument, key)
 		for _, region in pairs(instrumentData.regions) do
 			if key >= region.loKey and key <= region.hiKey then
 				local soundFile = region.path
-				if not(instrumentData.isPercussion) then
+				if not instrumentData.isPercussion then
 					soundFile = soundFile .. '\\' .. noteName
 				end
 				soundFile = soundFile .. SAMPLE_FILE_EXT
@@ -193,7 +193,7 @@ function Musician.Sampler.GetSoundFile(instrument, key)
 	else
 		-- Use single path
 		local soundFile = instrumentData.path
-		if not(instrumentData.isPercussion) then
+		if not instrumentData.isPercussion then
 			soundFile = soundFile .. '\\' .. noteName
 		end
 		soundFile = soundFile .. SAMPLE_FILE_EXT
@@ -238,7 +238,7 @@ end
 local function noteOnShouldPlay(noteOn)
 	local player = noteOn[NOTEON.PLAYER]
 	local track = noteOn[NOTEON.TRACK]
-	local shouldPlay = not(globalMute)
+	local shouldPlay = not globalMute
 
 	-- If the note comes from another player while the source song is playing, it should not play.
 	if shouldPlay and player ~= nil and Musician.sourceSong ~= nil and Musician.sourceSong:IsPlaying() then
@@ -252,7 +252,7 @@ local function noteOnShouldPlay(noteOn)
 
 	-- The player is not muted
 	if shouldPlay and player ~= nil then
-		shouldPlay = not(Musician.PlayerIsMuted(player))
+		shouldPlay = not Musician.PlayerIsMuted(player)
 	end
 
 	-- The player should be in range
@@ -271,7 +271,7 @@ end
 -- @param tries (int) Number of attempts in case of failures due to limited polyphony
 -- @param[opt] channel (string) Audio channel to use
 local function playSampleFile(handle, instrumentData, soundFile, tries, channel)
-	if not(notesOn[handle]) then
+	if not notesOn[handle] then
 		return
 	end
 
@@ -279,7 +279,7 @@ local function playSampleFile(handle, instrumentData, soundFile, tries, channel)
 
 	if channel == nil then
 		channel = audioChannels.Master and 'Master' or audioChannels.SFX and 'SFX' or audioChannels.Dialog and 'Dialog'
-		if not(channel) then
+		if not channel then
 			return
 		end
 	end
@@ -391,7 +391,8 @@ function Musician.Sampler.PlayNote(instrument, key, loopNote, track, player)
 	lastHandleId = lastHandleId + 1
 	notesOn[lastHandleId] = noteOn
 
-	Musician.Utils.Debug(MODULE_NAME, 'PlayNote', lastHandleId, instrumentData and instrumentData.name, key, loopNote and '(looped)' or '')
+	Musician.Utils.Debug(MODULE_NAME, 'PlayNote', lastHandleId, instrumentData and instrumentData.name, key,
+		loopNote and '(looped)' or '')
 
 	local willPlay = noteOnShouldPlay(noteOn)
 	if willPlay then
@@ -433,7 +434,7 @@ end
 -- @param handle (int) The note handle returned by PlayNote()
 -- @param[opt] decay (number) Override instrument decay
 function Musician.Sampler.StopNote(handle, decay)
-	if handle == nil or not(notesOn[handle]) then
+	if handle == nil or not notesOn[handle] then
 		return
 	end
 
@@ -458,20 +459,20 @@ function Musician.Sampler.OnUpdate()
 		local shouldPlayNote = noteOnShouldPlay(noteOn)
 		local isNotePlaying = noteOn[NOTEON.SOUND_HANDLE] ~= nil
 
-		-- The note audio should be stopped
-		if isNotePlaying and not(shouldPlayNote) then
+		if isNotePlaying and not shouldPlayNote then
+			-- The note audio should be stopped
 			stopNoteSample(handle)
 
-		-- The note audio should be started
-		elseif not(isNotePlaying) and shouldPlayNote then
+		elseif not isNotePlaying and shouldPlayNote then
+			-- The note audio should be started
 			local instrumentData = noteOn[NOTEON.INSTRUMENT_DATA]
 			local isPlucked = instrumentData.midi > 127 or instrumentData.isPercussion or instrumentData.isPlucked
-			if not(isPlucked) then
+			if not isPlucked then
 				playNoteSample(handle, noteOn[NOTEON.LOOP] ~= nil, false)
 			end
 
-		-- The note audio should be looped
 		elseif isNotePlaying and noteOn[NOTEON.LOOP] ~= nil and noteOn[NOTEON.LOOP] < debugprofilestop() then
+			-- The note audio should be looped
 			playNoteSample(handle, true, true)
 		end
 	end

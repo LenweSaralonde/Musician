@@ -1,7 +1,8 @@
 --- Song links module
 -- @module Musician.SongLinks
 
-Musician.SongLinks = LibStub("AceAddon-3.0"):NewAddon("Musician.SongLinks", "AceComm-3.0", "AceComm-3.0-Extended", "AceEvent-3.0")
+Musician.SongLinks = LibStub("AceAddon-3.0"):NewAddon("Musician.SongLinks", "AceComm-3.0", "AceComm-3.0-Extended",
+	"AceEvent-3.0")
 
 local MODULE_NAME = "SongLinks"
 Musician.AddModule(MODULE_NAME)
@@ -154,7 +155,7 @@ function Musician.SongLinks.Init()
 	-- Hyperlink hooks
 	hooksecurefunc("ChatFrame_OnHyperlinkShow", function(self, link, text)
 		local args = { strsplit(':', link) }
-		if args[1] == HYPERLINK_PREFIX and not(IsModifiedClick("CHATLINK")) then
+		if args[1] == HYPERLINK_PREFIX and not IsModifiedClick("CHATLINK") then
 			-- Extract player name
 			local player = args[2] or UnitName('player')
 
@@ -224,7 +225,9 @@ function Musician.SongLinks.GetChatLink(title, playerName)
 	if playerName == nil or playerName == '' or Musician.Utils.PlayerIsMyself(playerName) then
 		return '[' .. CHAT_LINK_PREFIX .. ': ' .. normalizedTitle .. ']'
 	else
-		return '[' .. CHAT_LINK_PREFIX .. '<' .. Musician.Utils.NormalizePlayerName(playerName) .. '>: ' .. normalizedTitle .. ']'
+		return '[' .. CHAT_LINK_PREFIX ..
+			'<' .. Musician.Utils.NormalizePlayerName(playerName) .. '>: ' ..
+			normalizedTitle .. ']'
 	end
 end
 
@@ -324,7 +327,8 @@ function Musician.SongLinks.RequestSong(title, playerName, dataOnly, context)
 
 	-- Song is already being requested
 	if requestedSongs[playerName] ~= nil then
-		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveFailed, playerName, Musician.SongLinks.errors.alreadyRequested, title, context)
+		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveFailed, playerName,
+			Musician.SongLinks.errors.alreadyRequested, title, context)
 		return
 	end
 
@@ -334,7 +338,8 @@ function Musician.SongLinks.RequestSong(title, playerName, dataOnly, context)
 		debug("Timed out after", REQUEST_TIMEOUT, playerName, title)
 		Musician.SongLinks.RemoveRequest(playerName)
 		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveComplete, playerName, context)
-		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveFailed, playerName, Musician.SongLinks.errors.timeout, title, context)
+		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveFailed, playerName, Musician.SongLinks.errors.timeout, title
+			, context)
 	end
 
 	-- Add song request
@@ -572,7 +577,8 @@ function Musician.SongLinks.OnSongReceived(prefix, message, distribution, sender
 			Musician.SongLinks:SendMessage(Musician.Events.SongReceiveSucessful, sender, songData, song, context)
 		else
 			debug("Song downloading failed")
-			Musician.SongLinks:SendMessage(Musician.Events.SongReceiveFailed, sender, Musician.SongLinks.errors.importingFailed, title, context)
+			Musician.SongLinks:SendMessage(Musician.Events.SongReceiveFailed, sender, Musician.SongLinks.errors.importingFailed,
+				title, context)
 		end
 		song = nil
 		collectgarbage()

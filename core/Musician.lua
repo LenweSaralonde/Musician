@@ -42,8 +42,7 @@ function Musician:OnInitialize()
 	-- Init character settings
 	local defaultCharacterSettings = {
 		minimap = {
-			minimapPos =
-				LE_EXPANSION_LEVEL_CURRENT == 0 and 177 or -- Classic Era
+			minimapPos = LE_EXPANSION_LEVEL_CURRENT == 0 and 177 or -- Classic Era
 				LE_EXPANSION_LEVEL_CURRENT == 1 and 197 or -- BC
 				LE_EXPANSION_LEVEL_CURRENT == 2 and 149 or -- WotLK
 				154, -- Retail
@@ -125,7 +124,8 @@ function Musician:OnEnable()
 	Musician.Preloader.Init()
 
 	-- Show startup message
-	Musician.Utils.Print(string.gsub(Musician.Msg.STARTUP, "{version}", Musician.Utils.Highlight(Musician.Utils.GetVersionText())))
+	Musician.Utils.Print(string.gsub(Musician.Msg.STARTUP, "{version}",
+		Musician.Utils.Highlight(Musician.Utils.GetVersionText())))
 end
 
 --- Add a module
@@ -526,27 +526,27 @@ end
 -- @param button (string)
 function Musician.OnHyperlinkClick(self, link, text, button)
 	local args = { strsplit(':', link) }
-	if args[1] == "musician" and not(IsModifiedClick("CHATLINK")) then
-		-- Stop current song for player
+	if args[1] == "musician" and not IsModifiedClick("CHATLINK") then
 		if args[2] == "stop" then
+			-- Stop current song for player
 			PlaySound(80)
 			Musician.StopPlayerSong(args[3])
-		-- Mute player
 		elseif args[2] == "mute" then
+			-- Mute player
 			PlaySound(80)
 			Musician.MutePlayer(args[3], true)
-		-- Unmute player
 		elseif args[2] == "unmute" then
+			-- Unmute player
 			PlaySound(80)
 			Musician.MutePlayer(args[3], false)
-		-- Open options panel
 		elseif args[2] == "options" then
+			-- Open options panel
 			Musician.Options.Show()
-		-- Seek source song
 		elseif args[2] == "seek" and Musician.sourceSong ~= nil then
+			-- Seek source song
 			Musician.sourceSong:Seek(args[3])
-		-- Open URL
 		elseif args[2] == "url" then
+			-- Open URL
 			Musician.UrlHyperlinkSelector.OnHyperlinkClick(self, link, text, button)
 		end
 	end
@@ -638,7 +638,10 @@ function Musician.SetupHooks()
 	--
 
 	hooksecurefunc("UnitPopup_ShowMenu", function(dropdownMenu, which)
-		if UIDROPDOWNMENU_MENU_LEVEL == 1 and (which == "PARTY" or which == "PLAYER" or which == "RAID_PLAYER" or which == "FRIEND" or which == "FRIEND_OFFLINE" or which == "TARGET") then
+		if UIDROPDOWNMENU_MENU_LEVEL == 1 and
+			(
+			which == "PARTY" or which == "PLAYER" or which == "RAID_PLAYER" or which == "FRIEND" or which == "FRIEND_OFFLINE" or
+				which == "TARGET") then
 			local isPlayer = dropdownMenu.unit and UnitIsPlayer(dropdownMenu.unit) or dropdownMenu.chatTarget
 			local isMyself = false
 			local isMuted = false
@@ -668,32 +671,32 @@ function Musician.SetupHooks()
 					value = "MUSICIAN_SUBSECTION_TITLE_MUTED",
 					text = Musician.Msg.PLAYER_MENU_TITLE .. " " .. Musician.Utils.GetChatIcon(Musician.IconImages.NoteDisabled),
 					isTitle = true,
-					visible = isPlayer and isRegistered and not(isMyself) and isMuted
+					visible = isPlayer and isRegistered and not isMyself and isMuted
 				},
 				{
 					value = "MUSICIAN_SUBSECTION_TITLE_UNMUTED",
 					text = Musician.Msg.PLAYER_MENU_TITLE .. " " .. Musician.Utils.GetChatIcon(Musician.IconImages.Note),
 					isTitle = true,
-					visible = isPlayer and isRegistered and not(isMyself) and not(isMuted)
+					visible = isPlayer and isRegistered and not isMyself and not isMuted
 				},
 				{
 					value = "MUSICIAN_STOP",
 					text = Musician.Msg.PLAYER_MENU_STOP_CURRENT_SONG,
-					visible = isPlayer and isRegistered and not(isMyself) and isPlaying and not(isMuted)
+					visible = isPlayer and isRegistered and not isMyself and isPlaying and not isMuted
 				},
 				{
 					value = "MUSICIAN_MUTE",
 					text = Musician.Msg.PLAYER_MENU_MUTE,
-					visible = isPlayer and isRegistered and not(isMyself) and not(isMuted)
+					visible = isPlayer and isRegistered and not isMyself and not isMuted
 				},
 				{
 					value = "MUSICIAN_UNMUTE",
 					text = Musician.Msg.PLAYER_MENU_UNMUTE,
-					visible = isPlayer and isRegistered and not(isMyself) and isMuted
+					visible = isPlayer and isRegistered and not isMyself and isMuted
 				},
 			}
 
-			if isPlayer and isRegistered and not(isMyself) then
+			if isPlayer and isRegistered and not isMyself then
 				UIDropDownMenu_AddSeparator(1)
 			end
 
@@ -736,86 +739,93 @@ function Musician.SetupHooks()
 	-- Add stop button to "Player plays music" emote
 	--
 
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_EMOTE", function(self, event, msg, player, languageName, channelName, playerName2, pflag, ...)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_EMOTE",
+		function(self, event, msg, player, languageName, channelName, playerName2, pflag, ...)
 
-		local fullPlayerName = Musician.Utils.NormalizePlayerName(player)
+			local fullPlayerName = Musician.Utils.NormalizePlayerName(player)
 
-		-- "Player is playing music."
-		local isPromoEmote, isFullPromoEmote = Musician.Utils.HasPromoEmote(msg)
-		if isFullPromoEmote then
-			Musician.Utils.ResetFullPromoEmoteCooldown()
-		end
+			-- "Player is playing music."
+			local isPromoEmote, isFullPromoEmote = Musician.Utils.HasPromoEmote(msg)
+			if isFullPromoEmote then
+				Musician.Utils.ResetFullPromoEmoteCooldown()
+			end
 
-		-- Process promo emote
-		if isPromoEmote then
-			local isPromoEmoteSuccessful
+			-- Process promo emote
+			if isPromoEmote then
+				local isPromoEmoteSuccessful
 
-			-- Music is loaded and actually playing
-			if Musician.songs[fullPlayerName] ~= nil and Musician.songs[fullPlayerName]:IsPlaying() then
+				-- Music is loaded and actually playing
+				if Musician.songs[fullPlayerName] ~= nil and Musician.songs[fullPlayerName]:IsPlaying() then
 
-				-- Ignore emote if the player has already been notified
-				if Musician.songs[fullPlayerName].notified then
-					return true
-				end
-
-				-- Remove the "promo" part of the emote and mark as already notified
-				Musician.songs[fullPlayerName].notified = true
-				msg = Musician.Msg.EMOTE_PLAYING_MUSIC
-
-				-- Add action link if playing music (and not current player)
-				if not(Musician.Utils.PlayerIsMyself(fullPlayerName)) then
-					-- Stop music
-					if not(Musician.PlayerIsMuted(fullPlayerName)) then
-						local stopAction = Musician.Utils.Highlight(Musician.Utils.GetLink("musician", Musician.Msg.STOP, "stop", fullPlayerName), 'FF0000')
-						msg = msg .. " " .. Musician.Utils.Highlight('[') .. stopAction .. Musician.Utils.Highlight(']')
-						-- Unmute player
-					else
-						local unmuteAction = Musician.Utils.Highlight(Musician.Utils.GetLink("musician", Musician.Msg.UNMUTE, "unmute", fullPlayerName), '00FF00')
-						msg = msg .. " " .. Musician.Utils.Highlight('[') .. unmuteAction .. Musician.Utils.Highlight(']')
-					end
-				end
-
-				isPromoEmoteSuccessful = true
-
-				-- Music is not loaded
-			else
-				-- Player is not in the channel and not in my group: it's from another realm
-				if not(Musician.Utils.PlayerIsOnSameRealm(player)) and not(Musician.Utils.PlayerIsInGroup(player)) then
-					msg = Musician.Msg.EMOTE_PLAYING_MUSIC .. " " .. Musician.Utils.Highlight(Musician.Msg.EMOTE_PLAYER_OTHER_REALM, 'FF0000')
-				else
-					-- languageName may not be provided
-					if languageName == nil or languageName == '' then
-						languageName = GetDefaultLanguage()
+					-- Ignore emote if the player has already been notified
+					if Musician.songs[fullPlayerName].notified then
+						return true
 					end
 
-					-- Determine if it's a language I'm supposed to understand
-					local isUnderstoodLanguage = false
-					for l = 1, GetNumLanguages() do
-						local myLanguageName, _ = GetLanguageByIndex(l)
-						if languageName == myLanguageName then
-							isUnderstoodLanguage = true
-							break
+					-- Remove the "promo" part of the emote and mark as already notified
+					Musician.songs[fullPlayerName].notified = true
+					msg = Musician.Msg.EMOTE_PLAYING_MUSIC
+
+					-- Add action link if playing music (and not current player)
+					if not Musician.Utils.PlayerIsMyself(fullPlayerName) then
+						-- Stop music
+						if not Musician.PlayerIsMuted(fullPlayerName) then
+							local stopAction = Musician.Utils.Highlight(Musician.Utils.GetLink("musician", Musician.Msg.STOP, "stop",
+								fullPlayerName), 'FF0000')
+							msg = msg .. " " .. Musician.Utils.Highlight('[') .. stopAction .. Musician.Utils.Highlight(']')
+							-- Unmute player
+						else
+							local unmuteAction = Musician.Utils.Highlight(Musician.Utils.GetLink("musician", Musician.Msg.UNMUTE, "unmute",
+								fullPlayerName), '00FF00')
+							msg = msg .. " " .. Musician.Utils.Highlight('[') .. unmuteAction .. Musician.Utils.Highlight(']')
 						end
 					end
 
-					-- Player does not speak a language I should understand: player is from the other faction and I'm using an Elixir of Tongues
-					if not(isUnderstoodLanguage) then
-						msg = Musician.Msg.EMOTE_PLAYING_MUSIC .. " " .. Musician.Utils.Highlight(Musician.Msg.EMOTE_PLAYER_OTHER_FACTION, 'FF0000')
-					else -- Song has not been loaded (incompatible version)
-						local errorMsg = string.gsub(Musician.Msg.EMOTE_SONG_NOT_LOADED, '{player}', Musician.Utils.GetPlayerLink(fullPlayerName))
-						msg = Musician.Msg.EMOTE_PLAYING_MUSIC .. " " .. Musician.Utils.Highlight(errorMsg, 'FF0000')
+					isPromoEmoteSuccessful = true
+
+					-- Music is not loaded
+				else
+					-- Player is not in the channel and not in my group: it's from another realm
+					if not Musician.Utils.PlayerIsOnSameRealm(player) and not Musician.Utils.PlayerIsInGroup(player) then
+						msg = Musician.Msg.EMOTE_PLAYING_MUSIC ..
+							" " .. Musician.Utils.Highlight(Musician.Msg.EMOTE_PLAYER_OTHER_REALM, 'FF0000')
+					else
+						-- languageName may not be provided
+						if languageName == nil or languageName == '' then
+							languageName = GetDefaultLanguage()
+						end
+
+						-- Determine if it's a language I'm supposed to understand
+						local isUnderstoodLanguage = false
+						for l = 1, GetNumLanguages() do
+							local myLanguageName, _ = GetLanguageByIndex(l)
+							if languageName == myLanguageName then
+								isUnderstoodLanguage = true
+								break
+							end
+						end
+
+						-- Player does not speak a language I should understand: player is from the other faction and I'm using an Elixir of Tongues
+						if not isUnderstoodLanguage then
+							msg = Musician.Msg.EMOTE_PLAYING_MUSIC ..
+								" " .. Musician.Utils.Highlight(Musician.Msg.EMOTE_PLAYER_OTHER_FACTION, 'FF0000')
+						else -- Song has not been loaded (incompatible version)
+							local errorMsg = string.gsub(Musician.Msg.EMOTE_SONG_NOT_LOADED, '{player}',
+								Musician.Utils.GetPlayerLink(fullPlayerName))
+							msg = Musician.Msg.EMOTE_PLAYING_MUSIC .. " " .. Musician.Utils.Highlight(errorMsg, 'FF0000')
+						end
 					end
+
+					isPromoEmoteSuccessful = false
 				end
 
-				isPromoEmoteSuccessful = false
+				-- Send promo emote event
+				Musician:SendMessage(Musician.Events.PromoEmote, isPromoEmoteSuccessful, msg, fullPlayerName, languageName,
+					channelName, playerName2, pflag, ...)
 			end
 
-			-- Send promo emote event
-			Musician:SendMessage(Musician.Events.PromoEmote, isPromoEmoteSuccessful, msg, fullPlayerName, languageName, channelName, playerName2, pflag, ...)
-		end
-
-		return false, msg, player, languageName, channelName, playerName2, pflag, ...
-	end)
+			return false, msg, player, languageName, channelName, playerName2, pflag, ...
+		end)
 end
 
 --- Add a tips and tricks callback
@@ -832,10 +842,9 @@ end
 --- Show the first tips and tricks
 -- @param callback (function)
 function Musician.ShowTipsAndTricks()
-	if not(Musician_Settings.enableTipsAndTricks) then return end
+	if not Musician_Settings.enableTipsAndTricks then return end
 	if #tipsAndTricks > 0 then
 		local callback = table.remove(tipsAndTricks, 1)
 		callback()
 	end
 end
-
