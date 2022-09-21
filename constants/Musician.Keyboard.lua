@@ -88,10 +88,14 @@ local KEY = {
 
 -- Universal keyboard layout
 Musician.KEYBOARD = {
-	{ KEY.Backquote, KEY.Digit1, KEY.Digit2, KEY.Digit3, KEY.Digit4, KEY.Digit5, KEY.Digit6, KEY.Digit7, KEY.Digit8, KEY.Digit9, KEY.Digit0, KEY.Minus, KEY.Equal, KEY.IntlYen, KEY.Backspace },
-	{ KEY.Tab, KEY.KeyQ, KEY.KeyW, KEY.KeyE, KEY.KeyR, KEY.KeyT, KEY.KeyY, KEY.KeyU, KEY.KeyI, KEY.KeyO, KEY.KeyP, KEY.BracketLeft, KEY.BracketRight, KEY.Backslash1 },
-	{ KEY.CapsLock, KEY.KeyA, KEY.KeyS, KEY.KeyD, KEY.KeyF, KEY.KeyG, KEY.KeyH, KEY.KeyJ, KEY.KeyK, KEY.KeyL, KEY.Semicolon, KEY.Quote, KEY.Backslash2, KEY.Enter },
-	{ KEY.ShiftLeft, KEY.IntlBackslash, KEY.KeyZ, KEY.KeyX, KEY.KeyC, KEY.KeyV, KEY.KeyB, KEY.KeyN, KEY.KeyM, KEY.Comma, KEY.Period, KEY.Slash, KEY.IntlRo, KEY.ShiftRight },
+	{ KEY.Backquote, KEY.Digit1, KEY.Digit2, KEY.Digit3, KEY.Digit4, KEY.Digit5, KEY.Digit6, KEY.Digit7, KEY.Digit8,
+		KEY.Digit9, KEY.Digit0, KEY.Minus, KEY.Equal, KEY.IntlYen, KEY.Backspace },
+	{ KEY.Tab, KEY.KeyQ, KEY.KeyW, KEY.KeyE, KEY.KeyR, KEY.KeyT, KEY.KeyY, KEY.KeyU, KEY.KeyI, KEY.KeyO, KEY.KeyP,
+		KEY.BracketLeft, KEY.BracketRight, KEY.Backslash1 },
+	{ KEY.CapsLock, KEY.KeyA, KEY.KeyS, KEY.KeyD, KEY.KeyF, KEY.KeyG, KEY.KeyH, KEY.KeyJ, KEY.KeyK, KEY.KeyL, KEY.Semicolon,
+		KEY.Quote, KEY.Backslash2, KEY.Enter },
+	{ KEY.ShiftLeft, KEY.IntlBackslash, KEY.KeyZ, KEY.KeyX, KEY.KeyC, KEY.KeyV, KEY.KeyB, KEY.KeyN, KEY.KeyM, KEY.Comma,
+		KEY.Period, KEY.Slash, KEY.IntlRo, KEY.ShiftRight },
 	{ KEY.ControlLeft, KEY.MetaLeft, KEY.AltLeft, KEY.Space, KEY.AltRight, KEY.MetaRight, KEY.ContextMenu, KEY.ControlRight },
 }
 
@@ -116,7 +120,7 @@ Musician.KEYBOARD_MERGEABLE_KEYS = {
 }
 
 -- Disabled keys, depending on the OS
-if not(IsMacClient()) then
+if not IsMacClient() then
 	Musician.DISABLED_KEYS = {}
 	Musician.DISABLED_KEY_VALUES = {}
 else

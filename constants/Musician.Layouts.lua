@@ -73,15 +73,18 @@ local function getHorizontalScale(name, notes, upperBaseKey, lowerBaseKey, upper
 		shift = 1,
 		upper = {
 			keyboardMapping = {
-				KEY.KeyW, KEY.KeyE, KEY.KeyR, KEY.KeyT, KEY.KeyY, KEY.KeyU, KEY.KeyI, KEY.KeyO, KEY.KeyP, KEY.BracketLeft, KEY.BracketRight,
-				KEY.Digit3, KEY.Digit4, KEY.Digit5, KEY.Digit6, KEY.Digit7, KEY.Digit8, KEY.Digit9, KEY.Digit0, KEY.Minus, KEY.Equal, KEY.IntlYen
+				KEY.KeyW, KEY.KeyE, KEY.KeyR, KEY.KeyT, KEY.KeyY, KEY.KeyU, KEY.KeyI, KEY.KeyO, KEY.KeyP, KEY.BracketLeft,
+				KEY.BracketRight,
+				KEY.Digit3, KEY.Digit4, KEY.Digit5, KEY.Digit6, KEY.Digit7, KEY.Digit8, KEY.Digit9, KEY.Digit0, KEY.Minus, KEY.Equal,
+				KEY.IntlYen
 			},
 			baseKey = upperBaseKey or 'C4',
 			baseKeyIndex = upperBaseKeyIndex or 3,
 		},
 		lower = {
 			keyboardMapping = {
-				KEY.IntlBackslash, KEY.KeyZ, KEY.KeyX, KEY.KeyC, KEY.KeyV, KEY.KeyB, KEY.KeyN, KEY.KeyM, KEY.Comma, KEY.Period, KEY.Slash,
+				KEY.IntlBackslash, KEY.KeyZ, KEY.KeyX, KEY.KeyC, KEY.KeyV, KEY.KeyB, KEY.KeyN, KEY.KeyM, KEY.Comma, KEY.Period,
+				KEY.Slash,
 				KEY.KeyA, KEY.KeyS, KEY.KeyD, KEY.KeyF, KEY.KeyG, KEY.KeyH, KEY.KeyJ, KEY.KeyK, KEY.KeyL, KEY.Semicolon, KEY.Quote
 			},
 			baseKey = lowerBaseKey or 'C3',
@@ -133,7 +136,6 @@ local function getPercussionScale(scale)
 	return shiftedScale
 end
 
-
 -- Build layouts
 
 Musician.PianoLayout = {
@@ -144,8 +146,10 @@ Musician.PianoLayout = {
 	upper = {
 		keyboardMapping = {
 			KEY.Backquote, KEY.Tab, KEY.Digit1,
-			KEY.KeyQ, KEY.Digit2, KEY.KeyW, KEY.Digit3, KEY.KeyE, KEY.Digit4, KEY.KeyR, KEY.Digit5, KEY.KeyT, KEY.Digit6, KEY.KeyY, KEY.Digit7, KEY.KeyU, KEY.Digit8,
-			KEY.KeyI, KEY.Digit9, KEY.KeyO, KEY.Digit0, KEY.KeyP, KEY.Minus, KEY.BracketLeft, KEY.Equal, KEY.BracketRight, KEY.IntlYen, KEY.Backslash1, KEY.Backspace
+			KEY.KeyQ, KEY.Digit2, KEY.KeyW, KEY.Digit3, KEY.KeyE, KEY.Digit4, KEY.KeyR, KEY.Digit5, KEY.KeyT, KEY.Digit6, KEY.KeyY,
+			KEY.Digit7, KEY.KeyU, KEY.Digit8,
+			KEY.KeyI, KEY.Digit9, KEY.KeyO, KEY.Digit0, KEY.KeyP, KEY.Minus, KEY.BracketLeft, KEY.Equal, KEY.BracketRight,
+			KEY.IntlYen, KEY.Backslash1, KEY.Backspace
 		},
 		baseKey = 'C4',
 		baseKeyIndex = 3,
@@ -153,7 +157,8 @@ Musician.PianoLayout = {
 	lower = {
 		keyboardMapping = {
 			KEY.ShiftLeft, KEY.CapsLock, KEY.IntlBackslash, KEY.KeyA,
-			KEY.KeyZ, KEY.KeyS, KEY.KeyX, KEY.KeyD, KEY.KeyC, KEY.KeyF, KEY.KeyV, KEY.KeyG, KEY.KeyB, KEY.KeyH, KEY.KeyN, KEY.KeyJ, KEY.KeyM, KEY.KeyK,
+			KEY.KeyZ, KEY.KeyS, KEY.KeyX, KEY.KeyD, KEY.KeyC, KEY.KeyF, KEY.KeyV, KEY.KeyG, KEY.KeyB, KEY.KeyH, KEY.KeyN, KEY.KeyJ,
+			KEY.KeyM, KEY.KeyK,
 			KEY.Comma, KEY.KeyL, KEY.Period, KEY.Semicolon, KEY.Slash, KEY.Quote, KEY.IntlRo, KEY.Backslash2, KEY.ShiftRight
 		},
 		baseKey = 'C3',
