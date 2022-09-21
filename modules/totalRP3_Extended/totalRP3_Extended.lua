@@ -37,22 +37,15 @@ local importingSlotButtons = {}
 
 local containerFrames = {}
 
--- OnInitialize
---
-function Musician.TRP3E:OnInitialize()
-	-- Register all item container frames such as bags as soon as they are created
-	hooksecurefunc('CreateFrame', function(frameType, name)
-		if frameType == 'Frame' and name and type(name) == 'string' and string.sub(name, 1, 14) == 'TRP3_Container' then
-			table.insert(containerFrames, _G[name])
-		end
-	end)
-end
-
 --- OnEnable
 --
 function Musician.TRP3E:OnEnable()
 	if TRP3_API and TRP3_API.extended then
 		Musician.Utils.Debug(MODULE_NAME, "Total RP3 Extended module started.")
+
+		-- Insert default inventory page to container frames
+		table.insert(containerFrames, TRP3_InventoryPage.Main)
+
 		Musician.TRP3E.RegisterHooks()
 		Musician.TRP3E.InitUI()
 	end
@@ -134,7 +127,7 @@ local function setCooldown(infoId, progress)
 	end
 
 	-- Cleanup unused cooldowns
-	for _, containerFrame in pairs({ TRP3_InventoryPage.Main, unpack(containerFrames) }) do
+	for _, containerFrame in pairs(containerFrames) do
 		for _, slot in pairs(containerFrame.slots) do
 			if slot.MusicianCooldown and
 				(not slot.info or importingSlotButtons[slot.info.id] == nil) and
@@ -224,7 +217,7 @@ end
 -- @return slotButtons (table)
 function Musician.TRP3E.GetSlotButtons(infoId)
 	local slotButtons = {}
-	for _, containerFrame in pairs({ TRP3_InventoryPage.Main, unpack(containerFrames) }) do
+	for _, containerFrame in pairs(containerFrames) do
 		for _, slotButton in pairs(containerFrame.slots) do
 			if slotButton.info and slotButton.info.id == infoId then
 				table.insert(slotButtons, slotButton)
@@ -538,14 +531,30 @@ function Musician.TRP3E.FilterTooltip(tooltip)
 	end
 end
 
+--- Update the container frames table
+--
+local function updateContainerFrames()
+	-- Add existing container frames
+	for _, frameName in pairs(UISpecialFrames) do
+		if string.sub(frameName, 1, 14) == 'TRP3_Container' and not tContains(containerFrames, _G[frameName]) then
+			table.insert(containerFrames, _G[frameName])
+		end
+	end
+end
+
+--- Import song
+-- @param encodedSongData (string) Base64-encoded compressed song data
+-- @param infoId (string)
 local function importSong(encodedSongData, infoId)
 	-- Song is already importing
 	if importingIDs[infoId] ~= nil then return end
 	importingIDs[infoId] = true
 
+	updateContainerFrames()
+
 	Musician.TRP3E:SendMessage(Musician.TRP3E.Event.LoadStart, infoId)
 
-	-- Decode song data
+	-- Decode compressed song data
 	local cursor = 1
 	local songData = ''
 	local base64DecodeWorker

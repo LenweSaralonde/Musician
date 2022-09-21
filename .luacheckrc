@@ -444,6 +444,7 @@ stds.wow = {
 		"WorldFrame",
 		"WorldMapFrame",
 		"Minimap",
+		"UISpecialFrames",
 		"GameFontNormal",
 		"GameFontDisable",
 		"GameFontHighlight",
