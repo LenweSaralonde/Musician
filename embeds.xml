@@ -1,17 +1,19 @@
-<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
-	<Script file="lib\LibStub\LibStub.lua"/>
-	<Include file="lib\CallbackHandler-1.0\CallbackHandler-1.0.xml"/>
-	<Script file="lib\LibDataBroker-1.1\LibDataBroker-1.1.lua"/>
-	<Include file="lib\LibDBIcon-1.0\lib.xml"/>
-	<Include file="lib\AceAddon-3.0\AceAddon-3.0.xml"/>
-	<Include file="lib\AceComm-3.0\AceComm-3.0.xml"/>
-	<Include file="lib\AceComm-3.0-Extended\AceComm-3.0-Extended.xml"/>
-	<Include file="lib\AceEvent-3.0\AceEvent-3.0.xml"/>
-	<Include file="lib\MSA-DropDownMenu-1.0\MSA-DropDownMenu-1.0.xml"/>
-	<Include file="lib\LibDeflate\lib.xml"/>
-	<Script file="lib\LibRealmInfo\LibRealmInfo.lua"/>
-	<Script file="lib\LibCRC32\LibCRC32.lua"/>
-	<Script file="lib\LibBase64\LibBase64.lua"/>
-	<Script file="lib\HereBeDragons\HereBeDragons-2.0.lua"/>
-	<Script file="lib\HereBeDragons\HereBeDragons-Pins-2.0.lua"/>
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="lib\LibStub\LibStub.lua" />
+	<Include file="lib\CallbackHandler-1.0\CallbackHandler-1.0.xml" />
+	<Script file="lib\LibDataBroker-1.1\LibDataBroker-1.1.lua" />
+	<Include file="lib\LibDBIcon-1.0\lib.xml" />
+	<Include file="lib\AceAddon-3.0\AceAddon-3.0.xml" />
+	<Include file="lib\AceComm-3.0\AceComm-3.0.xml" />
+	<Include file="lib\AceComm-3.0-Extended\AceComm-3.0-Extended.xml" />
+	<Include file="lib\AceEvent-3.0\AceEvent-3.0.xml" />
+	<Include file="lib\MSA-DropDownMenu-1.0\MSA-DropDownMenu-1.0.xml" />
+	<Include file="lib\LibDeflate\lib.xml" />
+	<Script file="lib\LibRealmInfo\LibRealmInfo.lua" />
+	<Script file="lib\LibCRC32\LibCRC32.lua" />
+	<Script file="lib\LibBase64\LibBase64.lua" />
+	<Script file="lib\HereBeDragons\HereBeDragons-2.0.lua" />
+	<Script file="lib\HereBeDragons\HereBeDragons-Pins-2.0.lua" />
 </Ui>
