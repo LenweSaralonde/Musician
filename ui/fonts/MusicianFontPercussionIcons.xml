@@ -1,4 +1,6 @@
-<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.blizzard.com/wow/ui/">
 	<!-- Percussion icon fonts -->
 	<Script file="Musician.PercussionIcons.lua" />
 	<Font name="MusicianFontPercussionIconsNormal" inherits="GameFontNormal" font="Interface\AddOns\Musician\ui\fonts\musician-percussions.ttf" height="14" virtual="true" />
