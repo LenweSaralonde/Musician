@@ -1,16 +1,18 @@
-<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.blizzard.com/wow/ui/">
 
 	<Script file="MusicianTrackEditor.lua" />
 
 	<!-- Edit box with timecode template -->
 
 	<EditBox name="MusicianTimeEditBoxTemplate" inherits="InputBoxTemplate" letters="8" historyLines="0" autofocus="false" virtual="true">
-		<Size x="55" y="20"/>
+		<Size x="55" y="20" />
 		<FontString inherits="GameFontHighlightSmall" justifyH="LEFT" justifyV="MIDDLE" />
 		<Layers>
 			<Layer level="BACKGROUND">
 				<FontString name="$parentTitle" inherits="GameFontNormal" justifyH="CENTER" justifyV="MIDDLE">
-					<Size x="60" y="0"/>
+					<Size x="60" y="0" />
 					<Anchors>
 						<Anchor point="TOPRIGHT" x="0" y="35" relativePoint="TOPRIGHT" relativeTo="$parent" />
 					</Anchors>
@@ -29,57 +31,57 @@
 			<Layer level="BACKGROUND">
 				<Texture file="Interface\DialogFrame\UI-DialogBox-Background" horizTile="true" vertTile="true">
 					<Anchors>
-						<Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="3" y="-4"/>
-						<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" x="-5" y="2"/>
+						<Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="3" y="-4" />
+						<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" x="-5" y="2" />
 					</Anchors>
 				</Texture>
 			</Layer>
 			<Layer level="BORDER" textureSubLevel="1">
 				<Texture name="$parentInsetBotLeftCorner" inherits="UI-Frame-InnerBotLeftCorner" parentKey="InsetBorderBottomLeft">
 					<Anchors>
-						<Anchor point="BOTTOMLEFT" x="2" y="0"/>
+						<Anchor point="BOTTOMLEFT" x="2" y="0" />
 					</Anchors>
 				</Texture>
 				<Texture name="$parentInsetBotRightCorner" inherits="UI-Frame-InnerBotRight" parentKey="InsetBorderBottomRight">
 					<Anchors>
-						<Anchor point="BOTTOMRIGHT" x="-3" y="0"/>
+						<Anchor point="BOTTOMRIGHT" x="-3" y="0" />
 					</Anchors>
 				</Texture>
 				<Texture name="$parentInsetTopLeftCorner" inherits="UI-Frame-InnerTopLeft" parentKey="InsetBorderTopLeft">
 					<Anchors>
-						<Anchor point="TOPLEFT" x="2" y="-3"/>
+						<Anchor point="TOPLEFT" x="2" y="-3" />
 					</Anchors>
 				</Texture>
 				<Texture name="$parentInsetTopRightCorner" inherits="UI-Frame-InnerTopRight" parentKey="InsetBorderTopmRight">
 					<Anchors>
-						<Anchor point="TOPRIGHT" x="-3" y="-3"/>
+						<Anchor point="TOPRIGHT" x="-3" y="-3" />
 					</Anchors>
 				</Texture>
 			</Layer>
 			<Layer level="BORDER">
 				<Texture name="$parentInsetBottomBorder" inherits="_UI-Frame-InnerBotTile" parentKey="InsetBorderBottom">
 					<Anchors>
-						<Anchor point="BOTTOMLEFT" relativeKey="$parent.InsetBorderBottomLeft" relativePoint="BOTTOMRIGHT"/>
-						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.InsetBorderBottomRight" relativePoint="BOTTOMLEFT"/>
+						<Anchor point="BOTTOMLEFT" relativeKey="$parent.InsetBorderBottomLeft" relativePoint="BOTTOMRIGHT" />
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.InsetBorderBottomRight" relativePoint="BOTTOMLEFT" />
 					</Anchors>
 				</Texture>
 
 				<Texture name="$parentInsetLeftBorder" inherits="!UI-Frame-InnerLeftTile" parentKey="InsetBorderLeft">
 					<Anchors>
-						<Anchor point="TOPLEFT" x="2" y="-3"/>
-						<Anchor point="BOTTOMLEFT" relativeKey="$parent.InsetBorderBottomLeft" relativePoint="TOPLEFT"/>
+						<Anchor point="TOPLEFT" x="2" y="-3" />
+						<Anchor point="BOTTOMLEFT" relativeKey="$parent.InsetBorderBottomLeft" relativePoint="TOPLEFT" />
 					</Anchors>
 				</Texture>
 				<Texture name="$parentInsetRightBorder" inherits="!UI-Frame-InnerRightTile" parentKey="InsetBorderRight">
 					<Anchors>
-						<Anchor point="TOPRIGHT" x="-3" y="-3"/>
-						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.InsetBorderBottomRight" relativePoint="TOPRIGHT"/>
+						<Anchor point="TOPRIGHT" x="-3" y="-3" />
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.InsetBorderBottomRight" relativePoint="TOPRIGHT" />
 					</Anchors>
 				</Texture>
 				<Texture name="$parentInsetTopBorder" inherits="_UI-Frame-InnerTopTile" parentKey="InsetBorderBottom">
 					<Anchors>
-						<Anchor point="TOPLEFT" relativeKey="$parent.InsetBorderLeft" relativePoint="TOPLEFT"/>
-						<Anchor point="TOPRIGHT" relativeKey="$parent.InsetBorderRight" relativePoint="TOPRIGHT"/>
+						<Anchor point="TOPLEFT" relativeKey="$parent.InsetBorderLeft" relativePoint="TOPLEFT" />
+						<Anchor point="TOPRIGHT" relativeKey="$parent.InsetBorderRight" relativePoint="TOPRIGHT" />
 					</Anchors>
 				</Texture>
 			</Layer>
@@ -113,7 +115,7 @@
 					</Anchors>
 				</FontString>
 				<Texture name="$parentMeter" parentKey="meterTexture" alphaMode="ADD">
-					<Size x="32" y="5"/>
+					<Size x="32" y="5" />
 					<Anchors>
 						<Anchor point="CENTER" x="48" y="-4" relativePoint="LEFT" relativeTo="$parent" />
 					</Anchors>
@@ -124,58 +126,58 @@
 			<Layer level="BACKGROUND">
 				<Texture name="$parentLeft" file="Interface\AuctionFrame\UI-AuctionItemNameFrame">
 					<Size>
-						<AbsDimension x="10" y="32"/>
+						<AbsDimension x="10" y="32" />
 					</Size>
 					<Anchors>
 						<Anchor point="LEFT">
 							<Offset>
-								<AbsDimension x="0" y="2"/>
+								<AbsDimension x="0" y="2" />
 							</Offset>
 						</Anchor>
 					</Anchors>
-					<TexCoords left="0" right="0.078125" top="0" bottom="1.0"/>
+					<TexCoords left="0" right="0.078125" top="0" bottom="1.0" />
 				</Texture>
 				<Texture name="$parentRight" file="Interface\AuctionFrame\UI-AuctionItemNameFrame">
 					<Size>
-						<AbsDimension x="10" y="32"/>
+						<AbsDimension x="10" y="32" />
 					</Size>
 					<Anchors>
 						<Anchor point="RIGHT">
 							<Offset>
-								<AbsDimension x="0" y="2"/>
+								<AbsDimension x="0" y="2" />
 							</Offset>
 						</Anchor>
 					</Anchors>
-					<TexCoords left="0.75" right="0.828125" top="0" bottom="1.0"/>
+					<TexCoords left="0.75" right="0.828125" top="0" bottom="1.0" />
 				</Texture>
 				<Texture file="Interface\AuctionFrame\UI-AuctionItemNameFrame">
 					<Size>
-						<AbsDimension x="10" y="32"/>
+						<AbsDimension x="10" y="32" />
 					</Size>
 					<Anchors>
 						<Anchor point="LEFT" relativeTo="$parentLeft" relativePoint="RIGHT">
 							<Offset>
-								<AbsDimension x="0" y="0"/>
+								<AbsDimension x="0" y="0" />
 							</Offset>
 						</Anchor>
 						<Anchor point="RIGHT" relativeTo="$parentRight" relativePoint="LEFT">
 							<Offset>
-								<AbsDimension x="0" y="0"/>
+								<AbsDimension x="0" y="0" />
 							</Offset>
 						</Anchor>
 					</Anchors>
-					<TexCoords left="0.078125" right="0.75" top="0" bottom="1.0"/>
+					<TexCoords left="0.078125" right="0.75" top="0" bottom="1.0" />
 				</Texture>
 			</Layer>
 		</Layers>
 
 		<Frames>
-			<CheckButton name="$parentMute" parentKey="muteCheckbox" inherits="MusicianSmallCheckButtonTemplate" >
+			<CheckButton name="$parentMute" parentKey="muteCheckbox" inherits="MusicianSmallCheckButtonTemplate">
 				<Anchors>
 					<Anchor point="LEFT" x="32" y="9" />
 				</Anchors>
 			</CheckButton>
-			<CheckButton name="$parentSolo" parentKey="soloCheckbox" inherits="MusicianSmallCheckButtonTemplate" >
+			<CheckButton name="$parentSolo" parentKey="soloCheckbox" inherits="MusicianSmallCheckButtonTemplate">
 				<Anchors>
 					<Anchor point="LEFT" x="48" y="9" />
 				</Anchors>
@@ -212,18 +214,18 @@
 			<!-- Player slider -->
 
 			<Slider name="$parentSourceSongSlider" inherits="OptionsSliderTemplate" defaultValue="1" minValue="1" maxValue="1" valueStep=".01" stepsPerPage="1000">
-				<Size y="22"/>
+				<Size y="22" />
 				<Anchors>
-					<Anchor point="TOP" x="0" y="-60"/>
+					<Anchor point="TOP" x="0" y="-60" />
 					<Anchor point="LEFT" x="20" />
 					<Anchor point="RIGHT" x="-20" />
 				</Anchors>
 				<HitRectInsets>
-					<AbsInset left="0" right="0" top="0" bottom="0"/>
+					<AbsInset left="0" right="0" top="0" bottom="0" />
 				</HitRectInsets>
 				<ThumbTexture parentKey="Thumb" name="$parentThumb" file="Interface\Buttons\UI-SliderBar-Button-Horizontal">
 					<TexCoords left="0.375" right="0.625" />
-					<Size x="8" y="32"/>
+					<Size x="8" y="32" />
 				</ThumbTexture>
 			</Slider>
 
@@ -317,34 +319,34 @@
 				<Layers>
 					<Layer level="ARTWORK">
 						<Texture name="$parentTop" file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
-							<Size x="31" y="102"/>
+							<Size x="31" y="102" />
 							<Anchors>
-								<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" x="-2" y="5"/>
+								<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" x="-2" y="5" />
 							</Anchors>
-							<TexCoords left="0" right="0.484375" top="0" bottom="0.4"/>
+							<TexCoords left="0" right="0.484375" top="0" bottom="0.4" />
 						</Texture>
 						<Texture name="$parentBottom" file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
-							<Size x="31" y="106"/>
+							<Size x="31" y="106" />
 							<Anchors>
-								<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" x="-2" y="-2"/>
+								<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" x="-2" y="-2" />
 							</Anchors>
-							<TexCoords left="0.515625" right="1.0" top="0" bottom="0.4140625"/>
+							<TexCoords left="0.515625" right="1.0" top="0" bottom="0.4140625" />
 						</Texture>
 						<Texture name="$parentMiddle" file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
-							<Size x="31" y="1"/>
+							<Size x="31" y="1" />
 							<Anchors>
-								<Anchor point="TOP" relativeTo="$parentTop" relativePoint="BOTTOM"/>
-								<Anchor point="BOTTOM" relativeTo="$parentBottom" relativePoint="TOP"/>
+								<Anchor point="TOP" relativeTo="$parentTop" relativePoint="BOTTOM" />
+								<Anchor point="BOTTOM" relativeTo="$parentBottom" relativePoint="TOP" />
 							</Anchors>
-							<TexCoords left="0" right="0.484375" top=".75" bottom="1.0"/>
+							<TexCoords left="0" right="0.484375" top=".75" bottom="1.0" />
 						</Texture>
 					</Layer>
 				</Layers>
 				<ScrollChild>
 					<Frame name="MusicianTrackEditorTrackContainer">
-						<Size x="585" y="0"/>
+						<Size x="585" y="0" />
 						<Anchors>
-							<Anchor point="TOPLEFT"/>
+							<Anchor point="TOPLEFT" />
 						</Anchors>
 					</Frame>
 				</ScrollChild>
@@ -353,20 +355,20 @@
 			<Frame name="$parentBackground" inherits="MusicianFieldset">
 				<Anchors>
 					<Anchor point="TOPLEFT" x="-5" y="7" relativeTo="$parentScrollFrame" />
-					<Anchor point="BOTTOMRIGHT" x="6" y="-3" relativeTo="$parentScrollFrame"/>
+					<Anchor point="BOTTOMRIGHT" x="6" y="-3" relativeTo="$parentScrollFrame" />
 				</Anchors>
 			</Frame>
 
 			<!-- Resize button -->
 
 			<Button name="$parentResizeButton" parentKey="resizeButton">
-				<Size x="20" y="20"/>
+				<Size x="20" y="20" />
 				<Anchors>
-					<Anchor point="BOTTOMRIGHT" x="3" y="-3"/>
+					<Anchor point="BOTTOMRIGHT" x="3" y="-3" />
 				</Anchors>
-				<NormalTexture file="Interface\ChatFrame\UI-ChatIM-SizeGrabber-Up"/>
-				<HighlightTexture file="Interface\ChatFrame\UI-ChatIM-SizeGrabber-Highlight"/>
-				<PushedTexture file="Interface\ChatFrame\UI-ChatIM-SizeGrabber-Down"/>
+				<NormalTexture file="Interface\ChatFrame\UI-ChatIM-SizeGrabber-Up" />
+				<HighlightTexture file="Interface\ChatFrame\UI-ChatIM-SizeGrabber-Highlight" />
+				<PushedTexture file="Interface\ChatFrame\UI-ChatIM-SizeGrabber-Down" />
 			</Button>
 
 		</Frames>
@@ -380,7 +382,7 @@
 					<Anchors>
 						<Anchor point="TOP">
 							<Offset>
-								<AbsDimension x="0" y="-15"/>
+								<AbsDimension x="0" y="-15" />
 							</Offset>
 						</Anchor>
 					</Anchors>

@@ -1,4 +1,6 @@
-<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.blizzard.com/wow/ui/">
 
 	<Script file="MusicianKeyboard.lua" />
 
@@ -8,16 +10,16 @@
 		<Layers>
 			<Layer level="BACKGROUND">
 				<Texture parentKey="background" name="$parentBackground">
-					<Size x="34" y="20"/>
+					<Size x="34" y="20" />
 					<Anchors>
-						<Anchor point="CENTER"/>
+						<Anchor point="CENTER" />
 					</Anchors>
 					<Color a="1" r="1" g="1" b="1" />
 				</Texture>
 
 				<Texture parentKey="glowColor">
 					<Anchors>
-						<Anchor point="CENTER" relativePoint="CENTER"/>
+						<Anchor point="CENTER" relativePoint="CENTER" />
 					</Anchors>
 					<Color a="1" r="1" g="1" b="1" />
 				</Texture>
@@ -28,7 +30,7 @@
 						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.glowColor" />
 					</Anchors>
 					<MaskedTextures>
-						<MaskedTexture childKey="glowColor"/>
+						<MaskedTexture childKey="glowColor" />
 					</MaskedTextures>
 				</MaskTexture>
 
@@ -56,14 +58,14 @@
 		</Layers>
 		<ButtonText parentKey="Text" name="$parentText">
 			<Anchors>
-				<Anchor point="CENTER" x="0" y="9"/>
+				<Anchor point="CENTER" x="0" y="9" />
 			</Anchors>
 		</ButtonText>
-		<NormalFont style="GameFontHighlightLarge"/>
-		<DisabledFont style="GameFontDisableLarge"/>
-		<HighlightFont style="GameFontHighlightLarge"/>
+		<NormalFont style="GameFontHighlightLarge" />
+		<DisabledFont style="GameFontDisableLarge" />
+		<HighlightFont style="GameFontHighlightLarge" />
 		<HighlightTexture file="Interface\AddOns\Musician\ui\textures\button-glow.blp" alphaMode="ADD" alpha=".2">
-			<TexCoords top=".2" left=".2" right=".8" bottom=".8"/>
+			<TexCoords top=".2" left=".2" right=".8" bottom=".8" />
 		</HighlightTexture>
 		<Scripts>
 			<OnLoad function="MusicianKeyboardKeyTemplate_OnLoad" />
@@ -83,9 +85,9 @@
 				<Anchor point="CENTER" x="0" />
 			</Anchors>
 		</ButtonText>
-		<NormalFont style="MusicianFontIconsNormal"/>
-		<HighlightFont style="MusicianFontIconsHighlight"/>
-		<DisabledFont style="MusicianFontIconsDisable"/>
+		<NormalFont style="MusicianFontIconsNormal" />
+		<HighlightFont style="MusicianFontIconsHighlight" />
+		<DisabledFont style="MusicianFontIconsDisable" />
 		<Scripts>
 			<OnLoad inherit="append" function="MusicianProgramKeyActionTemplate_OnLoad" />
 		</Scripts>
@@ -152,7 +154,7 @@
 				</Anchors>
 			</Button>
 
-			<CheckButton name="$parentPowerChords" parentKey="powerChordsCheckbox" inherits="MusicianSmallCheckButtonTemplate" >
+			<CheckButton name="$parentPowerChords" parentKey="powerChordsCheckbox" inherits="MusicianSmallCheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" x="16" y="0" relativeTo="$parentInstrument" relativePoint="BOTTOMLEFT" />
 				</Anchors>
@@ -205,7 +207,7 @@
 					<Anchors>
 						<Anchor point="TOP">
 							<Offset>
-								<AbsDimension x="0" y="-22"/>
+								<AbsDimension x="0" y="-22" />
 							</Offset>
 						</Anchor>
 					</Anchors>
@@ -225,7 +227,7 @@
 			<Button name="$parentKeyboardConfigButton" parentKey="keyboardConfigButton" inherits="MusicianIconButtonTemplate">
 				<Size x="48" y="24" />
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT" y="-20" x="20"  />
+					<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT" y="-20" x="20" />
 				</Anchors>
 			</Button>
 
@@ -238,7 +240,7 @@
 			<Button name="$parentToggleKeyboardButton" parentKey="toggleKeyboardButton" inherits="MusicianIconButtonTemplate">
 				<Size x="48" y="24" />
 				<Anchors>
-					<Anchor point="TOPRIGHT" relativeTo="$parent" relativePoint="TOPRIGHT" y="-20" x="-20"  />
+					<Anchor point="TOPRIGHT" relativeTo="$parent" relativePoint="TOPRIGHT" y="-20" x="-20" />
 				</Anchors>
 			</Button>
 
@@ -294,7 +296,7 @@
 			<Frame name="$parentControls" parentKey="controls">
 				<Size x="750" y="92" />
 				<Anchors>
-					<Anchor point="BOTTOM" relativeTo="$parent" relativePoint="BOTTOM" y="10"  />
+					<Anchor point="BOTTOM" relativeTo="$parent" relativePoint="BOTTOM" y="10" />
 				</Anchors>
 
 				<Frames>

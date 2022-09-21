@@ -16,17 +16,19 @@ function Musician.SongLinkImportFrame.Init()
 	Musician.SongLinkImportFrame:RegisterMessage(Musician.Events.SongLink, Musician.SongLinkImportFrame.OnSongLinkClick)
 
 	-- Print an error message if an import error occurred
-	Musician.SongLinkImportFrame:RegisterMessage(Musician.Events.SongReceiveFailed, function(event, sender, reason, title, context)
-		if context ~= Musician then return end
-		sender = Musician.Utils.NormalizePlayerName(sender)
-		local msg = Musician.Msg.LINKS_ERROR[reason] or ''
-		msg = string.gsub(msg, '{player}', Musician.Utils.FormatPlayerName(sender))
-		msg = string.gsub(msg, '{title}', title)
-		Musician.Utils.Error(msg)
-	end)
+	Musician.SongLinkImportFrame:RegisterMessage(Musician.Events.SongReceiveFailed,
+		function(event, sender, reason, title, context)
+			if context ~= Musician then return end
+			sender = Musician.Utils.NormalizePlayerName(sender)
+			local msg = Musician.Msg.LINKS_ERROR[reason] or ''
+			msg = string.gsub(msg, '{player}', Musician.Utils.FormatPlayerName(sender))
+			msg = string.gsub(msg, '{title}', title)
+			Musician.Utils.Error(msg)
+		end)
 
 	-- Create WoW game account selector menu frame
-	gameAccountSelectorFrame = CreateFrame("Frame", "MusicianSongLinkImportFrame_GameAccountSelector", UIParent, "MusicianDropDownMenuTooltipTemplate")
+	gameAccountSelectorFrame = CreateFrame("Frame", "MusicianSongLinkImportFrame_GameAccountSelector", UIParent,
+		"MusicianDropDownMenuTooltipTemplate")
 end
 
 local function adjustHeight()
@@ -37,7 +39,7 @@ local function adjustHeight()
 end
 
 local function startImport(title, playerName)
-	if not(Musician.SongLinks.GetRequestingSong(playerName)) then
+	if not Musician.SongLinks.GetRequestingSong(playerName) then
 		Musician.SongLinks.RequestSong(title, playerName, false, Musician)
 	end
 end
@@ -71,10 +73,14 @@ local function update(title, playerName)
 	local playerLink
 	if Musician.Utils.IsBattleNetID(playerName) then
 		local playerDisplayName = Musician.Utils.FormatPlayerName(playerName)
-		playerLink = Musician.Utils.Highlight('[') .. Musician.Utils.Highlight(playerDisplayName) .. Musician.Utils.Highlight(']')
+		playerLink = Musician.Utils.Highlight('[') ..
+			Musician.Utils.Highlight(playerDisplayName) ..
+			Musician.Utils.Highlight(']')
 	else
 		local playerDisplayName = Musician.Utils.FormatPlayerName(playerName)
-		playerLink = Musician.Utils.Highlight('[') .. Musician.Utils.GetLink('player', Musician.Utils.Highlight(playerDisplayName), playerName) .. Musician.Utils.Highlight(']')
+		playerLink = Musician.Utils.Highlight('[') ..
+			Musician.Utils.GetLink('player', Musician.Utils.Highlight(playerDisplayName), playerName) ..
+			Musician.Utils.Highlight(']')
 	end
 
 	local frameTitle = string.gsub(Musician.Msg.LINK_IMPORT_WINDOW_TITLE, '{player}', playerLink)
@@ -82,7 +88,7 @@ local function update(title, playerName)
 
 	local requestingSong = Musician.SongLinks.GetRequestingSong(playerName)
 	-- A song is not being requested
-	if not(requestingSong) then
+	if not requestingSong then
 		-- Set song title
 		frame.songTitle:SetText(title)
 
@@ -168,7 +174,7 @@ function Musician.SongLinkImportFrame.OnSongLinkClick(event, title, playerName)
 				})
 			end
 
-			Musician.Utils.EasyMenu(menu, gameAccountSelectorFrame, "cursor", 0 , 0, "MENU")
+			Musician.Utils.EasyMenu(menu, gameAccountSelectorFrame, "cursor", 0, 0, "MENU")
 		end
 	else
 		-- In-game character
@@ -202,12 +208,13 @@ function Musician.SongLinkImportFrame.ShowImportFrame(title, playerName)
 	end)
 
 	-- Update import progression
-	Musician.SongLinkImportFrame:RegisterMessage(Musician.Events.SongReceiveProgress, function(event, sender, progress, context)
-		if context ~= Musician then return end
-		sender = Musician.Utils.NormalizePlayerName(sender)
-		if sender ~= playerName then return end
-		updateProgression(progress)
-	end)
+	Musician.SongLinkImportFrame:RegisterMessage(Musician.Events.SongReceiveProgress,
+		function(event, sender, progress, context)
+			if context ~= Musician then return end
+			sender = Musician.Utils.NormalizePlayerName(sender)
+			if sender ~= playerName then return end
+			updateProgression(progress)
+		end)
 
 	-- Hide popup when complete
 	Musician.SongLinkImportFrame:RegisterMessage(Musician.Events.SongReceiveComplete, function(event, sender, context)

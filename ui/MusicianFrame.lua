@@ -42,7 +42,7 @@ function Musician.Frame.Init()
 	MusicianFrame:SetClampedToScreen(true)
 
 	-- Set default frame position
-	if not(MusicianFrame:IsUserPlaced()) then
+	if not MusicianFrame:IsUserPlaced() then
 		MusicianFrame:ClearAllPoints()
 		local defaultY = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE and 93 or 126
 		MusicianFrame:SetPoint('RIGHT', UIParent, 'RIGHT', 0, defaultY)
@@ -123,7 +123,7 @@ end
 --- Set focus to import field
 --
 function Musician.Frame.Focus()
-	if not(MusicianFrameSource:HasFocus()) then
+	if not MusicianFrameSource:HasFocus() then
 		MusicianFrameSource:HighlightText(0)
 		MusicianFrameSource:SetFocus()
 	end
@@ -207,7 +207,7 @@ end
 -- @param isEnabled (boolean)
 -- @param isPlaying (boolean)
 function Musician.Frame.UpdatePlayButton()
-	local isEnabled = Musician.sourceSong and Musician.Comm.CanPlay() and not(isCommActionPending)
+	local isEnabled = Musician.sourceSong and Musician.Comm.CanPlay() and not isCommActionPending
 
 	-- This may happen on trial accounts in raid mode
 	if IsInGroup() and (Musician.Comm.GetGroupChatType() == nil) then
@@ -235,7 +235,7 @@ end
 -- @param event (string)
 function Musician.Frame.OnCommSendAction(event)
 	local isComplete = event == Musician.Events.CommSendActionComplete
-	isCommActionPending = not(isComplete)
+	isCommActionPending = not isComplete
 	Musician.Frame.UpdatePlayButton()
 	Musician.Frame.UpdateBandPlayButton()
 end
@@ -249,7 +249,7 @@ function Musician.Frame.OnSongPlayOrStop(event, song)
 	if song == Musician.sourceSong then
 		MusicianFrameTestButton:SetText(isPlaying and Musician.Msg.STOP_TEST or Musician.Msg.TEST_SONG)
 		Musician.Frame.RefreshPlayingProgressBar(event, song)
-	elseif Musician.Utils.PlayerIsMyself(song.player) and Musician.songs[song.player] and not(song.isLiveStreamingSong) then
+	elseif Musician.Utils.PlayerIsMyself(song.player) and Musician.songs[song.player] and not song.isLiveStreamingSong then
 		MusicianFramePlayButton:SetText(isPlaying and Musician.Msg.STOP or Musician.Msg.PLAY)
 		Musician.Frame.RefreshPlayingProgressBar(event, song)
 
@@ -283,7 +283,7 @@ end
 -- @param song (Musician.Song)
 function Musician.Frame.RefreshButtons(event, song)
 	if song ~= Musician.importingSong then return end
-	if not(song.importing) then
+	if not song.importing then
 		MusicianFrameClearButton:Enable()
 		MusicianFrameSource:Enable()
 		Musician.Frame.SetLoadingProgressBar(nil)
@@ -310,7 +310,8 @@ function Musician.Frame.SetLoadingProgressBar(progression)
 		MusicianFrameTextBackgroundLoadingProgressBar:Hide()
 	else
 		MusicianFrameTextBackgroundLoadingProgressBar:Show()
-		MusicianFrameTextBackgroundLoadingProgressBar:SetWidth(max(1, (MusicianFrameTextBackground:GetWidth() - 10) * progression))
+		MusicianFrameTextBackgroundLoadingProgressBar:SetWidth(max(1,
+			(MusicianFrameTextBackground:GetWidth() - 10) * progression))
 	end
 end
 
@@ -322,7 +323,10 @@ function Musician.Frame.RefreshPlayingProgressBar(event, song)
 
 	if song == Musician.sourceSong then
 		button = MusicianFrameTestButton
-	elseif Musician.Utils.PlayerIsMyself(song.player) and Musician.songs[song.player] and not(Musician.songs[song.player].isLiveStreamingSong) then
+	elseif Musician.Utils.PlayerIsMyself(song.player) and
+		Musician.songs[song.player] and
+		not Musician.songs[song.player].isLiveStreamingSong
+	then
 		button = MusicianFramePlayButton
 	else
 		return
@@ -361,21 +365,21 @@ function Musician.Frame.UpdateBandPlayButton()
 	-- Update button visibility
 
 	local isVisible = IsInGroup()
-	local isEnabled = Musician.sourceSong and (Musician.Comm.GetGroupChatType() ~= nil) and not(isCommActionPending)
+	local isEnabled = Musician.sourceSong and (Musician.Comm.GetGroupChatType() ~= nil) and not isCommActionPending
 	MusicianFrameBandPlayButton:SetShown(isVisible)
 	MusicianFrameBandPlayButton:SetEnabled(isEnabled)
 
 	-- Update button LED
 
 	MusicianFrameBandPlayButton:SetChecked(Musician.Comm.IsBandPlayReady())
-	MusicianFrameBandPlayButton:SetBlinking(not(Musician.Comm.IsSongPlaying()))
+	MusicianFrameBandPlayButton:SetBlinking(not Musician.Comm.IsSongPlaying())
 
 	-- Update tooltip and the number of ready players
 
 	local players = Musician.Comm.GetReadyBandPlayers()
 	local tooltipText = Musician.Msg.PLAY_IN_BAND
 
-	if not(Musician.Comm.IsBandPlayReady()) then
+	if not Musician.Comm.IsBandPlayReady() then
 		tooltipText = tooltipText .. "\n" .. Musician.Utils.Highlight(Musician.Msg.PLAY_IN_BAND_HINT, "00FFFF")
 	end
 
@@ -411,7 +415,8 @@ end
 function Musician.Frame.OnBandPlay(event, player, songCrc32)
 	-- Display "Started band play" emote in the chat
 	if Musician.Comm.GetCurrentSongCrc32() == songCrc32 then
-		Musician.Utils.DisplayEmote(player, UnitGUID(Musician.Utils.SimplePlayerName(player)), Musician.Msg.EMOTE_PLAY_IN_BAND_START)
+		Musician.Utils.DisplayEmote(player, UnitGUID(Musician.Utils.SimplePlayerName(player)),
+			Musician.Msg.EMOTE_PLAY_IN_BAND_START)
 	end
 end
 
@@ -420,7 +425,8 @@ end
 function Musician.Frame.OnBandStop(event, player, songCrc32)
 	-- Display "Stopped band play" emote in the chat
 	if Musician.Comm.GetCurrentSongCrc32() == songCrc32 then
-		Musician.Utils.DisplayEmote(player, UnitGUID(Musician.Utils.SimplePlayerName(player)), Musician.Msg.EMOTE_PLAY_IN_BAND_STOP)
+		Musician.Utils.DisplayEmote(player, UnitGUID(Musician.Utils.SimplePlayerName(player)),
+			Musician.Msg.EMOTE_PLAY_IN_BAND_STOP)
 	end
 end
 
@@ -429,7 +435,7 @@ end
 function Musician.Frame.OnSongReceiveSucessful(event, _, _, song, context)
 	if context ~= Musician then return end
 	local isDataOnly = song == nil
-	if not(isDataOnly) then
+	if not isDataOnly then
 
 		-- Stop previous source song being played
 		if Musician.sourceSong and Musician.sourceSong:IsPlaying() then

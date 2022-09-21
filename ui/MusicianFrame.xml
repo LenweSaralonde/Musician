@@ -1,4 +1,6 @@
-<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.blizzard.com/wow/ui/">
 
 	<Script file="MusicianFrame.lua" />
 
@@ -60,8 +62,8 @@
 
 				<ScrollChild>
 					<EditBox name="MusicianFrameSource" multiLine="true" autoFocus="false" countInvisibleLetters="false">
-						<Size x="290" y="90"/>
-						<FontString inherits="GameFontHighlightSmall"/>
+						<Size x="290" y="90" />
+						<FontString inherits="GameFontHighlightSmall" />
 					</EditBox>
 				</ScrollChild>
 			</ScrollFrame>
@@ -74,7 +76,7 @@
 				<Layers>
 					<Layer level="OVERLAY">
 						<Texture name="$parentLoadingProgressBar" alphaMode="ADD">
-							<Size x="290" y="3"/>
+							<Size x="290" y="3" />
 							<Anchors>
 								<Anchor point="BOTTOMLEFT" x="5" y="3" relativePoint="BOTTOMLEFT" />
 							</Anchors>
@@ -91,7 +93,7 @@
 				</Anchors>
 				<ButtonText name="$parentText" parentKey="Text">
 					<Anchors>
-						<Anchor point="CENTER" x="1" y="-1"/>
+						<Anchor point="CENTER" x="1" y="-1" />
 					</Anchors>
 				</ButtonText>
 			</Button>

@@ -35,11 +35,13 @@ function Musician.Options.Init()
 	-- Emote
 	MusicianOptionsPanelUnitEmoteTitle:SetText(Musician.Msg.OPTIONS_CATEGORY_EMOTE)
 	Musician.Options.SetupCheckbox(MusicianOptionsPanelUnitEmoteEnable, Musician.Msg.OPTIONS_ENABLE_EMOTE_LABEL)
-	Musician.Options.SetupCheckbox(MusicianOptionsPanelUnitEmoteEnablePromo, Musician.Msg.OPTIONS_ENABLE_EMOTE_PROMO_LABEL, MusicianOptionsPanelUnitEmoteEnable)
+	Musician.Options.SetupCheckbox(MusicianOptionsPanelUnitEmoteEnablePromo, Musician.Msg.OPTIONS_ENABLE_EMOTE_PROMO_LABEL,
+		MusicianOptionsPanelUnitEmoteEnable)
 
 	-- Integration options
 	MusicianOptionsPanelIntegrationTitle:SetText(Musician.Msg.OPTIONS_INTEGRATION_OPTIONS_TITLE)
-	Musician.Options.SetupCheckbox(MusicianOptionsPanelIntegrationMuteGameMusic, Musician.Msg.OPTIONS_AUTO_MUTE_GAME_MUSIC_LABEL)
+	Musician.Options.SetupCheckbox(MusicianOptionsPanelIntegrationMuteGameMusic,
+		Musician.Msg.OPTIONS_AUTO_MUTE_GAME_MUSIC_LABEL)
 	MusicianOptionsPanelIntegrationMuteGameMusic:HookScript("OnClick", function(self)
 		Musician_Settings.muteGameMusic = self:GetChecked()
 		Musician.Utils.MuteGameMusic(true)
@@ -53,7 +55,8 @@ function Musician.Options.Init()
 	Musician.Options.SetupSoundChannelCheckbox(MusicianOptionsPanelAudioChannelsMaster, MASTER_VOLUME, 'Master', 30)
 	Musician.Options.SetupSoundChannelCheckbox(MusicianOptionsPanelAudioChannelsSFX, FX_VOLUME or SOUND_VOLUME, 'SFX', 15)
 	Musician.Options.SetupSoundChannelCheckbox(MusicianOptionsPanelAudioChannelsDialog, DIALOG_VOLUME, 'Dialog', 20)
-	Musician.Options.SetupCheckbox(MusicianOptionsPanelAudioChannelsAutoAdjust, Musician.Msg.OPTIONS_AUDIO_CHANNELS_AUTO_ADJUST_CONFIG)
+	Musician.Options.SetupCheckbox(MusicianOptionsPanelAudioChannelsAutoAdjust,
+		Musician.Msg.OPTIONS_AUDIO_CHANNELS_AUTO_ADJUST_CONFIG)
 	MusicianOptionsPanelAudioChannelsAutoAdjust:HookScript("OnClick", function(self)
 		Musician_Settings.autoAdjustAudioSettings = self:GetChecked()
 		Musician.Options.RefreshAudioSettings()
@@ -65,7 +68,7 @@ end
 local function computeDependantControls(checkbox)
 	local isEnabled = true
 	for _, dependantControl in pairs(checkbox.dependantControls) do
-		if not(dependantControl:GetChecked()) then
+		if not dependantControl:GetChecked() then
 			isEnabled = false
 		end
 	end
@@ -88,7 +91,7 @@ function Musician.Options.SetupCheckbox(checkbox, labelText, ...)
 	labelElement:SetText(labelText)
 	checkbox:SetHitRectInsets(0, -labelElement:GetWidth(), 0, 0)
 
-	checkbox.dependantControls = {...}
+	checkbox.dependantControls = { ... }
 	for _, dependantControl in pairs(checkbox.dependantControls) do
 		dependantControl:HookScript("OnClick", function()
 			computeDependantControls(checkbox)

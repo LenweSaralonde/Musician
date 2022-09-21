@@ -1,36 +1,38 @@
-<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.blizzard.com/wow/ui/">
 	<!-- Basic message dialog -->
 	<Script file="MusicianBasicMessageDialog.lua" />
 	<Frame name="MusicianBasicMessageDialog" toplevel="true" frameStrata="DIALOG" mixin="MusicianBasicMessageDialogMixin" hidden="true">
-		<Size x="384" y="128"/>
+		<Size x="384" y="128" />
 		<Anchors>
-			<Anchor point="CENTER"/>
+			<Anchor point="CENTER" />
 		</Anchors>
 		<Layers>
 			<Layer level="ARTWORK">
 				<FontString parentKey="Text" inherits="GameFontNormalLarge" justifyH="CENTER" justifyV="CENTER" nonspacewrap="true">
 					<Size>
-						<AbsDimension x="360" y="75"/>
+						<AbsDimension x="360" y="75" />
 					</Size>
 					<Anchors>
-						<Anchor point="TOP" x="0" y="-8"/>
+						<Anchor point="TOP" x="0" y="-8" />
 					</Anchors>
 				</FontString>
 			</Layer>
 		</Layers>
 		<Frames>
-			<Frame parentKey="Border" inherits="DialogBorderTemplate"/>
+			<Frame parentKey="Border" inherits="DialogBorderTemplate" />
 			<Button parentKey="button" name="$parentButton">
-				<Size x="128" y="32"/>
+				<Size x="128" y="32" />
 				<Anchors>
-					<Anchor point="BOTTOM" x="0" y="16"/>
+					<Anchor point="BOTTOM" x="0" y="16" />
 				</Anchors>
-				<NormalTexture inherits="DialogButtonNormalTexture"/>
-				<PushedTexture inherits="DialogButtonPushedTexture"/>
-				<HighlightTexture inherits="DialogButtonHighlightTexture"/>
-				<ButtonText text="OKAY"/>
-				<NormalFont style="DialogButtonNormalText"/>
-				<HighlightFont style="DialogButtonHighlightText"/>
+				<NormalTexture inherits="DialogButtonNormalTexture" />
+				<PushedTexture inherits="DialogButtonPushedTexture" />
+				<HighlightTexture inherits="DialogButtonHighlightTexture" />
+				<ButtonText text="OKAY" />
+				<NormalFont style="DialogButtonNormalText" />
+				<HighlightFont style="DialogButtonHighlightText" />
 			</Button>
 		</Frames>
 		<Scripts>

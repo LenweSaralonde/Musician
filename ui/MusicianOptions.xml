@@ -1,4 +1,6 @@
-<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.blizzard.com/wow/ui/">
 
 	<Script file="MusicianOptions.lua" />
 
@@ -6,25 +8,25 @@
 		<Frames>
 			<ScrollFrame name="MusicianOptionsPanelScrollFrame" inherits="UIPanelScrollFrameTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT"  y="-4" />
+					<Anchor point="TOPLEFT" y="-4" />
 					<Anchor point="BOTTOMRIGHT" x="-27" y="4" />
 				</Anchors>
 				<ScrollChild>
 					<Frame name="MusicianOptionsPanel">
 						<Anchors>
-							<Anchor point="TOPLEFT"/>
+							<Anchor point="TOPLEFT" />
 						</Anchors>
 						<Layers>
 							<Layer level="ARTWORK">
 								<FontString name="$parentTitle" inherits="GameFontNormalLarge" justifyH="LEFT" justifyV="TOP">
 									<Anchors>
-										<Anchor point="TOPLEFT" x="16" y="-16"/>
+										<Anchor point="TOPLEFT" x="16" y="-16" />
 									</Anchors>
 								</FontString>
 								<FontString name="$parentSubText" inherits="GameFontHighlight" nonspacewrap="true" maxLines="3" justifyH="LEFT" justifyV="TOP">
 									<Anchors>
-										<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-8"/>
-										<Anchor point="RIGHT" x="-32" y="0"/>
+										<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-8" />
+										<Anchor point="RIGHT" x="-32" y="0" />
 									</Anchors>
 								</FontString>
 							</Layer>
@@ -32,7 +34,7 @@
 						<Frames>
 							<Frame name="$parentUnitEmote">
 								<Size>
-									<AbsDimension x="580" y="70"/>
+									<AbsDimension x="580" y="70" />
 								</Size>
 								<Anchors>
 									<Anchor point="TOPLEFT" relativeTo="$parentSubText" relativePoint="BOTTOMLEFT" />
@@ -49,19 +51,19 @@
 								<Frames>
 									<CheckButton name="$parentEnable" inherits="MusicianOptionCheckButtonTemplate">
 										<Anchors>
-											<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-10"/>
+											<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-10" />
 										</Anchors>
 									</CheckButton>
 									<CheckButton name="$parentEnablePromo" inherits="MusicianSubOptionCheckButtonTemplate">
 										<Anchors>
-											<Anchor point="TOPLEFT" relativeTo="$parentEnable" relativePoint="BOTTOMLEFT" x="10" y="4"/>
+											<Anchor point="TOPLEFT" relativeTo="$parentEnable" relativePoint="BOTTOMLEFT" x="10" y="4" />
 										</Anchors>
 									</CheckButton>
 								</Frames>
 							</Frame>
 							<Frame name="$parentIntegration">
 								<Size>
-									<AbsDimension x="580" y="70"/>
+									<AbsDimension x="580" y="70" />
 								</Size>
 								<Anchors>
 									<Anchor point="TOPLEFT" relativeTo="$parentUnitEmote" relativePoint="BOTTOMLEFT" />
@@ -78,19 +80,19 @@
 								<Frames>
 									<CheckButton name="$parentMuteGameMusic" inherits="MusicianOptionCheckButtonTemplate">
 										<Anchors>
-											<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-10"/>
+											<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-10" />
 										</Anchors>
 									</CheckButton>
 									<CheckButton name="$parentMuteInstrumentToys" inherits="MusicianOptionCheckButtonTemplate">
 										<Anchors>
-											<Anchor point="TOPLEFT" relativeTo="$parentMuteGameMusic" relativePoint="BOTTOMLEFT" x="0" y="4"/>
+											<Anchor point="TOPLEFT" relativeTo="$parentMuteGameMusic" relativePoint="BOTTOMLEFT" x="0" y="4" />
 										</Anchors>
 									</CheckButton>
 								</Frames>
 							</Frame>
 							<Frame name="$parentAudioChannels">
 								<Size>
-									<AbsDimension x="580" y="86"/>
+									<AbsDimension x="580" y="86" />
 								</Size>
 								<Anchors>
 									<Anchor point="TOPLEFT" relativeTo="$parentIntegration" relativePoint="BOTTOMLEFT" />
@@ -104,11 +106,11 @@
 										</FontString>
 										<FontString name="$parentSubText" inherits="GameFontHighlightSmall" nonspacewrap="true" maxLines="3" justifyH="LEFT" justifyV="TOP">
 											<Size>
-												<AbsDimension y="22" x="0"/>
+												<AbsDimension y="22" x="0" />
 											</Size>
 											<Anchors>
 												<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-8" />
-												<Anchor point="RIGHT" x="0" y="0"/>
+												<Anchor point="RIGHT" x="0" y="0" />
 											</Anchors>
 										</FontString>
 									</Layer>
@@ -116,24 +118,24 @@
 								<Frames>
 									<CheckButton name="$parentMaster" inherits="MusicianOptionCheckButtonTemplate">
 										<Anchors>
-											<Anchor point="TOPLEFT" relativeTo="$parentSubText" relativePoint="BOTTOMLEFT" x="0" y="4"/>
+											<Anchor point="TOPLEFT" relativeTo="$parentSubText" relativePoint="BOTTOMLEFT" x="0" y="4" />
 										</Anchors>
 									</CheckButton>
 									<CheckButton name="$parentSFX" inherits="MusicianOptionCheckButtonTemplate">
 										<Anchors>
-											<Anchor point="LEFT" relativeTo="$parentMasterText" relativePoint="RIGHT" x="10" y="0"/>
-											<Anchor point="TOP" relativeTo="$parentMaster" relativePoint="TOP" x="0" y="0"/>
+											<Anchor point="LEFT" relativeTo="$parentMasterText" relativePoint="RIGHT" x="10" y="0" />
+											<Anchor point="TOP" relativeTo="$parentMaster" relativePoint="TOP" x="0" y="0" />
 										</Anchors>
 									</CheckButton>
 									<CheckButton name="$parentDialog" inherits="MusicianOptionCheckButtonTemplate">
 										<Anchors>
-											<Anchor point="LEFT" relativeTo="$parentSFXText" relativePoint="RIGHT" x="10" y="0"/>
-											<Anchor point="TOP" relativeTo="$parentSFX" relativePoint="TOP" x="0" y="0"/>
+											<Anchor point="LEFT" relativeTo="$parentSFXText" relativePoint="RIGHT" x="10" y="0" />
+											<Anchor point="TOP" relativeTo="$parentSFX" relativePoint="TOP" x="0" y="0" />
 										</Anchors>
 									</CheckButton>
 									<CheckButton name="$parentAutoAdjust" inherits="MusicianSubOptionCheckButtonTemplate">
 										<Anchors>
-											<Anchor point="TOPLEFT" relativeTo="$parentMaster" relativePoint="BOTTOMLEFT" x="10" y="4"/>
+											<Anchor point="TOPLEFT" relativeTo="$parentMaster" relativePoint="BOTTOMLEFT" x="10" y="4" />
 										</Anchors>
 									</CheckButton>
 								</Frames>

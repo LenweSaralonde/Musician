@@ -92,7 +92,7 @@ function Musician.About.OnShow()
 
 	-- Supporters
 	MusicianAboutSupportersTitle:SetText(Musician.Msg.ABOUT_SUPPORTERS)
-	local supporters = { }
+	local supporters = {}
 	randomizeHighlight(supporters, Musician.LEGENDARY_SUPPORTERS, "FF8000")
 	randomizeHighlight(supporters, Musician.SUPPORTERS, "FFFFFF")
 	MusicianAboutSupportersList:SetText(strjoin(" / ", unpack(supporters)))

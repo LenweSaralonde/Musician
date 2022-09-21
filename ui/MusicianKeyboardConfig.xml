@@ -1,4 +1,6 @@
-<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.blizzard.com/wow/ui/">
 
 	<Script file="MusicianKeyboardConfig.lua" />
 
@@ -8,9 +10,9 @@
 		<Layers>
 			<Layer level="BACKGROUND">
 				<Texture parentKey="background" name="$parentBackground">
-					<Size x="34" y="20"/>
+					<Size x="34" y="20" />
 					<Anchors>
-						<Anchor point="CENTER"/>
+						<Anchor point="CENTER" />
 					</Anchors>
 					<Color a="1" r="0.1" g="0.1" b="0.1" />
 				</Texture>
@@ -21,11 +23,11 @@
 			<OnLoad inherit="prepend" function="MusicianKeyboardConfigKeyTemplate_OnLoad" />
 			<OnSizeChanged function="MusicianKeyboardConfigKeyTemplate_OnSizeChanged" />
 		</Scripts>
-		<NormalFont style="GameFontHighlight"/>
-		<DisabledFont style="GameFontDisable"/>
-		<HighlightFont style="GameFontHighlight"/>
+		<NormalFont style="GameFontHighlight" />
+		<DisabledFont style="GameFontDisable" />
+		<HighlightFont style="GameFontHighlight" />
 		<HighlightTexture file="Interface\AddOns\Musician\ui\textures\button-glow.blp" alphaMode="ADD" alpha=".2">
-			<TexCoords top=".2" left=".2" right=".8" bottom=".8"/>
+			<TexCoords top=".2" left=".2" right=".8" bottom=".8" />
 		</HighlightTexture>
 	</Button>
 
@@ -78,7 +80,7 @@
 					<Anchors>
 						<Anchor point="TOP">
 							<Offset>
-								<AbsDimension x="0" y="-22"/>
+								<AbsDimension x="0" y="-22" />
 							</Offset>
 						</Anchor>
 					</Anchors>

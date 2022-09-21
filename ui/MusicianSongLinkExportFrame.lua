@@ -35,11 +35,11 @@ end
 --- Show the export frame
 --
 function Musician.SongLinkExportFrame.Show()
-	if not(Musician.sourceSong) then return end
+	if not Musician.sourceSong then return end
 
 	local frame = MusicianSongLinkExportFrame
 
-	if not(exporting) then
+	if not exporting then
 		local sharedSong = Musician.sourceSong
 
 		frame.postLink = function()

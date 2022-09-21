@@ -37,28 +37,28 @@ local LayerNames = {
 }
 
 local PercussionIconMapping = {
-	[Percussion.AcousticBassDrum] = { PERCUSSION_ICON.BassDrum, "1"},
-	[Percussion.BassDrum1] = { PERCUSSION_ICON.BassDrum, "2"},
-	[Percussion.AcousticSnare] = { PERCUSSION_ICON.Snare, "1"},
-	[Percussion.ElectricSnare] = { PERCUSSION_ICON.Snare, "2"},
-	[Percussion.SideStick] = { PERCUSSION_ICON.SideStick, ""},
-	[Percussion.LowFloorTom] = { PERCUSSION_ICON.FloorTom, "1"},
-	[Percussion.HighFloorTom] = { PERCUSSION_ICON.FloorTom, "2"},
-	[Percussion.LowTom] = { PERCUSSION_ICON.MidTom, "1"},
-	[Percussion.LowMidTom] = { PERCUSSION_ICON.MidTom, "2"},
-	[Percussion.HiMidTom] = { PERCUSSION_ICON.HighTom, "1"},
-	[Percussion.HighTom] = { PERCUSSION_ICON.HighTom, "2"},
-	[Percussion.ClosedHiHat] = { PERCUSSION_ICON.ClosedHiHat, ""},
-	[Percussion.PedalHiHat] = { PERCUSSION_ICON.PedalHiHat, ""},
-	[Percussion.OpenHiHat] = { PERCUSSION_ICON.OpenHiHat, ""},
-	[Percussion.CrashCymbal1] = { PERCUSSION_ICON.CrashCymbal, "1"},
-	[Percussion.CrashCymbal2] = { PERCUSSION_ICON.CrashCymbal, "2"},
-	[Percussion.RideCymbal1] = { PERCUSSION_ICON.RideCymbal, "1"},
-	[Percussion.RideCymbal2] = { PERCUSSION_ICON.RideCymbal, "2"},
-	[Percussion.RideBell] = { PERCUSSION_ICON.RideBell, ""},
-	[Percussion.Tambourine] = { PERCUSSION_ICON.Tambourine, ""},
-	[Percussion.Maracas] = { PERCUSSION_ICON.Maracas, ""},
-	[Percussion.HandClap] = { PERCUSSION_ICON.HandClap, ""},
+	[Percussion.AcousticBassDrum] = { PERCUSSION_ICON.BassDrum, "1" },
+	[Percussion.BassDrum1] = { PERCUSSION_ICON.BassDrum, "2" },
+	[Percussion.AcousticSnare] = { PERCUSSION_ICON.Snare, "1" },
+	[Percussion.ElectricSnare] = { PERCUSSION_ICON.Snare, "2" },
+	[Percussion.SideStick] = { PERCUSSION_ICON.SideStick, "" },
+	[Percussion.LowFloorTom] = { PERCUSSION_ICON.FloorTom, "1" },
+	[Percussion.HighFloorTom] = { PERCUSSION_ICON.FloorTom, "2" },
+	[Percussion.LowTom] = { PERCUSSION_ICON.MidTom, "1" },
+	[Percussion.LowMidTom] = { PERCUSSION_ICON.MidTom, "2" },
+	[Percussion.HiMidTom] = { PERCUSSION_ICON.HighTom, "1" },
+	[Percussion.HighTom] = { PERCUSSION_ICON.HighTom, "2" },
+	[Percussion.ClosedHiHat] = { PERCUSSION_ICON.ClosedHiHat, "" },
+	[Percussion.PedalHiHat] = { PERCUSSION_ICON.PedalHiHat, "" },
+	[Percussion.OpenHiHat] = { PERCUSSION_ICON.OpenHiHat, "" },
+	[Percussion.CrashCymbal1] = { PERCUSSION_ICON.CrashCymbal, "1" },
+	[Percussion.CrashCymbal2] = { PERCUSSION_ICON.CrashCymbal, "2" },
+	[Percussion.RideCymbal1] = { PERCUSSION_ICON.RideCymbal, "1" },
+	[Percussion.RideCymbal2] = { PERCUSSION_ICON.RideCymbal, "2" },
+	[Percussion.RideBell] = { PERCUSSION_ICON.RideBell, "" },
+	[Percussion.Tambourine] = { PERCUSSION_ICON.Tambourine, "" },
+	[Percussion.Maracas] = { PERCUSSION_ICON.Maracas, "" },
+	[Percussion.HandClap] = { PERCUSSION_ICON.HandClap, "" },
 }
 
 local FunctionKeys = {
@@ -119,7 +119,7 @@ local function updateFunctionKeysLEDs(blinkTime, isDeleting)
 			button.led:SetVertexColor(.33, 1, 0, 1)
 		end
 
-		if blinkTime ~= nil and (not(isDeleting) or Musician.Keyboard.HasSavedProgram(program)) then
+		if blinkTime ~= nil and (not isDeleting or Musician.Keyboard.HasSavedProgram(program)) then
 			button.led:SetAlpha(abs(1 - 2 * (4 * blinkTime % 1)))
 		else
 			if Musician.Keyboard.HasSavedProgram(program) then
@@ -195,7 +195,8 @@ local function generateKeys()
 
 	-- Create function keys
 	for col, key in pairs(FunctionKeys) do
-		local button = CreateFrame("Button", "$parent" .. key .. "Button", MusicianKeyboardProgramKeys, "MusicianProgramKeyTemplate")
+		local button = CreateFrame("Button", "$parent" .. key .. "Button", MusicianKeyboardProgramKeys,
+			"MusicianProgramKeyTemplate")
 		extendButton(button)
 		table.insert(keyButtons, button)
 		button.key = key
@@ -220,7 +221,7 @@ local function setKeys()
 	local config = Musician.Keyboard.config
 
 	keyValueButtons = {}
-	noteButtons	= {
+	noteButtons = {
 		[LAYER.LOWER] = {},
 		[LAYER.UPPER] = {}
 	}
@@ -257,12 +258,16 @@ local function setKeys()
 					keyValueName = Musician.KeyboardUtils.GetKeyValueName(keyValue)
 				end
 
-				if keyData ~= nil and keyData[2] >= Musician.MIN_KEY and keyData[2] <= Musician.MAX_KEY and not(Musician.DISABLED_KEYS[key]) and Musician.KeyboardUtils.GetKeyValue(key) then
+				if keyData ~= nil and
+					keyData[2] >= Musician.MIN_KEY and keyData[2] <= Musician.MAX_KEY and
+					not Musician.DISABLED_KEYS[key] and
+					Musician.KeyboardUtils.GetKeyValue(key)
+				then
 					local instrumentName = Musician.Sampler.GetInstrumentName(config.instrument[keyData[1]])
 					local r, g, b = unpack(Musician.INSTRUMENTS[instrumentName].color)
 					local isPercussion = config.instrument[keyData[1]] >= 128
 
-					if not(isPercussion) then
+					if not isPercussion then
 						noteName = Musician.Sampler.NoteName(keyData[2])
 
 						-- Black or white key
@@ -311,9 +316,9 @@ local function setKeys()
 					keyVisible = false
 				elseif key == KEY.ShiftLeft and Musician.KeyboardUtils.GetKeyValue(KEY.IntlBackslash) == "LSHIFT" then
 					keyVisible = false
-				elseif key == KEY.ShiftLeft and not(Musician.KeyboardUtils.GetKeyValue(KEY.IntlBackslash)) then
+				elseif key == KEY.ShiftLeft and not Musician.KeyboardUtils.GetKeyValue(KEY.IntlBackslash) then
 					keyWidth = keyWidth + Musician.KEYBOARD_KEY_SIZE[row][col + 1]
-				elseif key == KEY.IntlBackslash and not(keyValue) then
+				elseif key == KEY.IntlBackslash and not keyValue then
 					keyX = keyX - keyWidth
 					keyVisible = false
 				elseif key == KEY.IntlBackslash and keyValue == "LSHIFT" then
@@ -321,11 +326,11 @@ local function setKeys()
 					keyX = keyX - Musician.KEYBOARD_KEY_SIZE[row][col - 1]
 				elseif key == KEY.IntlRo and keyValue == "RSHIFT" then
 					keyWidth = keyWidth + Musician.KEYBOARD_KEY_SIZE[row][col + 1]
-				elseif key == KEY.IntlRo and not(keyValue) then
+				elseif key == KEY.IntlRo and not keyValue then
 					keyVisible = false
 				elseif key == KEY.ShiftRight and Musician.KeyboardUtils.GetKeyValue(KEY.IntlRo) == "RSHIFT" then
 					keyVisible = false
-				elseif key == KEY.ShiftRight and not(Musician.KeyboardUtils.GetKeyValue(KEY.IntlRo)) then
+				elseif key == KEY.ShiftRight and not Musician.KeyboardUtils.GetKeyValue(KEY.IntlRo) then
 					keyWidth = keyWidth + Musician.KEYBOARD_KEY_SIZE[row][col - 1]
 					keyX = keyX - Musician.KEYBOARD_KEY_SIZE[row][col - 1]
 				end
@@ -375,7 +380,9 @@ local function setKeys()
 	end
 
 	-- Set function keys
-	local functionKeyWidth = (MusicianKeyboardProgramKeys:GetWidth() - MusicianKeyboardProgramKeysWriteProgram:GetWidth() - MusicianKeyboardProgramKeysDeleteProgram:GetWidth()) / 12
+	local functionKeyWidth = (
+		MusicianKeyboardProgramKeys:GetWidth() - MusicianKeyboardProgramKeysWriteProgram:GetWidth() -
+			MusicianKeyboardProgramKeysDeleteProgram:GetWidth()) / 12
 	local keyX = 0
 	for _, key in pairs(FunctionKeys) do
 		local button = getFunctionKeyButton(key)
@@ -560,7 +567,7 @@ local function initLayerControls(layer)
 		Musician.Keyboard.ShiftKeys(layer, #layouts[config.layout].scale)
 	end)
 	_G[varNamePrefix .. "ShiftUp"]:SetScript("OnClick", function()
-		Musician.Keyboard.ShiftKeys(layer, -#layouts[config.layout].scale)
+		Musician.Keyboard.ShiftKeys(layer, - #layouts[config.layout].scale)
 	end)
 	_G[varNamePrefix .. "ShiftReset"]:SetScript("OnClick", function()
 		Musician.Keyboard.SetKeyShift(layer, 0)
@@ -594,7 +601,7 @@ local function updateLiveModeButton()
 		MusicianKeyboardTitleIcon:SetText(ICON.SOLO_MODE)
 	end
 
-	if not(Musician.Live.CanStream()) then
+	if not Musician.Live.CanStream() then
 		button:Disable()
 		button.tooltipText = Musician.Msg.LIVE_MODE_DISABLED
 	else
@@ -608,7 +615,7 @@ local function initLiveModeButton()
 	local button = MusicianKeyboardLiveModeButton
 
 	button:SetScript("OnClick", function()
-		Musician.Live.EnableLive(not(Musician.Live.IsLiveEnabled()))
+		Musician.Live.EnableLive(not Musician.Live.IsLiveEnabled())
 		PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
 	end)
 
@@ -697,7 +704,7 @@ end
 --- Show
 --
 function Musician.Keyboard.Show()
-	if not(Musician.KeyboardUtils.KeyboardIsConfigured()) then
+	if not Musician.KeyboardUtils.KeyboardIsConfigured() then
 		Musician.Utils.Popup(Musician.Msg.SHOULD_CONFIGURE_KEYBOARD, function() MusicianKeyboardConfig:Show() end)
 		Musician.KeyboardConfig.showKeyboardOnComplete = true
 	else
@@ -737,7 +744,7 @@ function Musician.Keyboard.OnLiveNoteOn(event, key, layer, instrumentData, isCho
 
 	local button = noteButtons[layer] and noteButtons[layer][key]
 
-	if not(button) then
+	if not button then
 		return
 	end
 
@@ -765,7 +772,7 @@ function Musician.Keyboard.OnLiveNoteOff(event, key, layer, isChordNote, source)
 
 	local button = noteButtons[layer] and noteButtons[layer][key]
 
-	if not(button) then
+	if not button then
 		return
 	end
 
@@ -800,13 +807,13 @@ function Musician.Keyboard.OnPhysicalKey(keyValue, down)
 
 	-- Grab virtual keyboard key button
 	local button = keyValueButtons[keyValue]
-	if not(button) then	return end
+	if not button then return end
 
 	-- Call handler if up/down status changes
-	local wasDown = button.keyDown and not(button.mouseDown)
-	local wasUp = not(button.keyDown) and not(button.mouseDown)
+	local wasDown = button.keyDown and not button.mouseDown
+	local wasUp = not button.keyDown and not button.mouseDown
 	button.keyDown = down
-	if not(down) and wasDown or down and wasUp then
+	if not down and wasDown or down and wasUp then
 		if Musician.Keyboard.OnKey(keyValue, down) then
 			Musician.Keyboard.SetButtonState(button, down)
 			MusicianKeyboard:SetPropagateKeyboardInput(false)
@@ -827,7 +834,7 @@ end
 --- Virtual keyboard button mouse up handler
 --
 function Musician.Keyboard.OnVirtualKeyMouseUp()
-	if currentMouseButton and not(IsMouseButtonDown()) then
+	if currentMouseButton and not IsMouseButtonDown() then
 		Musician.Keyboard.OnVirtualKey(currentMouseButton, false)
 	end
 end
@@ -854,10 +861,10 @@ end
 -- @param button (Button)
 -- @param down (boolean)
 function Musician.Keyboard.OnVirtualKey(button, down)
-	local wasDown = not(button.keyDown) and button.mouseDown
-	local wasUp = not(button.keyDown) and not(button.mouseDown)
+	local wasDown = not button.keyDown and button.mouseDown
+	local wasUp = not button.keyDown and not button.mouseDown
 	button.mouseDown = down
-	if not(down) and wasDown or down and wasUp then
+	if not down and wasDown or down and wasUp then
 		Musician.Keyboard.OnKey(button.keyValue, down)
 		Musician.Keyboard.SetButtonState(button, down)
 	end
@@ -867,7 +874,7 @@ end
 -- @param button (Button)
 -- @param down (boolean)
 function Musician.Keyboard.SetButtonState(button, down)
-	if not(button) then return end
+	if not button then return end
 	button.down = down
 	if down then
 		if button.SuperOnMouseDown then
@@ -909,13 +916,15 @@ local function refreshKeyboard()
 	local config = Musician.Keyboard.config
 	if config.demoTrackMapping then
 		if config.demoTrackMapping[LAYER.LOWER] then
-			MusicianKeyboardControlsLowerInstrument.tooltipText = string.gsub(Musician.Msg.LOWER_INSTRUMENT_MAPPED_TO_CHANNEL, "{track}", config.demoTrackMapping[LAYER.LOWER])
+			MusicianKeyboardControlsLowerInstrument.tooltipText = string.gsub(Musician.Msg.LOWER_INSTRUMENT_MAPPED_TO_CHANNEL,
+				"{track}", config.demoTrackMapping[LAYER.LOWER])
 		else
 			MusicianKeyboardControlsLowerInstrument.tooltipText = Musician.Msg.CHANGE_LOWER_INSTRUMENT
 		end
 
 		if config.demoTrackMapping[LAYER.UPPER] then
-			MusicianKeyboardControlsUpperInstrument.tooltipText = string.gsub(Musician.Msg.UPPER_INSTRUMENT_MAPPED_TO_CHANNEL, "{track}", config.demoTrackMapping[LAYER.UPPER])
+			MusicianKeyboardControlsUpperInstrument.tooltipText = string.gsub(Musician.Msg.UPPER_INSTRUMENT_MAPPED_TO_CHANNEL,
+				"{track}", config.demoTrackMapping[LAYER.UPPER])
 		else
 			MusicianKeyboardControlsUpperInstrument.tooltipText = Musician.Msg.CHANGE_UPPER_INSTRUMENT
 		end
@@ -990,7 +999,8 @@ function Musician.Keyboard.SetLayout(layoutIndex, doKeyboardRefresh)
 	Musician.Keyboard.SetKeyShift(LAYER.LOWER, 0, false)
 	loadedProgram = nil
 
-	MSA_DropDownMenu_SetText(MusicianKeyboardControlsMainLayoutDropdown, Musician.Msg.KEYBOARD_LAYOUTS[layout.name] or layout.name)
+	MSA_DropDownMenu_SetText(MusicianKeyboardControlsMainLayoutDropdown,
+		Musician.Msg.KEYBOARD_LAYOUTS[layout.name] or layout.name)
 
 	modifiedLayers = {
 		[LAYER.UPPER] = true,
@@ -1129,14 +1139,14 @@ function Musician.Keyboard.BuildMapping()
 		local config = Musician.Keyboard.config
 		local scaleIndex = -baseKeyIndex
 		local isPercussion = config.instrument[layer] >= 128
-		local transpose = not(isPercussion) and config.baseKey or 0
+		local transpose = not isPercussion and config.baseKey or 0
 
 		for _, key in pairs(keyboardMapping) do
 			local scaleNote = scale[scaleIndex % #scale + 1]
 			if scaleNote ~= -1 then
 				local octave = floor(scaleIndex / #scale)
 				local note = scaleNote + baseKey + 12 * octave + transpose
-				if not(Musician.DISABLED_KEYS[key]) then
+				if not Musician.DISABLED_KEYS[key] then
 					Musician.Keyboard.mapping[key] = { layer, note }
 				end
 			end
@@ -1205,13 +1215,12 @@ function Musician.Keyboard.NoteKey(down, keyValue)
 	end
 
 	local button = keyValueButtons[keyValue]
-	if not(button.row) or button.row >= 5 then
+	if not button.row or button.row >= 5 then
 		return false
 	end
 
 	-- Ignore when any modifier key is in action
-	if
-		IsMacClient() and (IsShiftKeyDown() or keyValue == "LSHIFT" or keyValue == "RSHIFT") or
+	if IsMacClient() and (IsShiftKeyDown() or keyValue == "LSHIFT" or keyValue == "RSHIFT") or
 		IsControlKeyDown() or keyValue == "LCTRL" or keyValue == "RCTRL" or
 		IsAltKeyDown() or keyValue == "LALT" or keyValue == "RALT"
 	then
@@ -1257,7 +1266,7 @@ end
 function Musician.Keyboard.SpecialActionKey(down, keyValue)
 
 	-- Override standard Toggle UI to keep the keyboard visible on screen
-	if down and GetBindingFromClick(keyValue) == "TOGGLEUI" and not(InCombatLockdown()) then
+	if down and GetBindingFromClick(keyValue) == "TOGGLEUI" and not InCombatLockdown() then
 		Musician.Keyboard.ToggleUI()
 		return true
 	end
@@ -1287,8 +1296,7 @@ function Musician.Keyboard.SpecialActionKey(down, keyValue)
 
 	-- Set writing program
 	local key = Musician.KeyboardUtils.GetKey(keyValue)
-	local isControlDown =
-		(key == KEY.ControlLeft or key == KEY.ControlRight) and not(IsMacClient()) or
+	local isControlDown = (key == KEY.ControlLeft or key == KEY.ControlRight) and not IsMacClient() or
 		(key == KEY.ShiftLeft or key == KEY.ShiftRight) and IsMacClient() -- Use Shift instead of Ctrl on MacOS
 
 	if isControlDown or key == KEY.WriteProgram then
@@ -1581,7 +1589,7 @@ end
 -- @param key (number)
 function Musician.Keyboard.OnNoteOn(event, song, track, key)
 	local config = Musician.Keyboard.config
-	if config.demoTrackMapping == nil or not(Musician.sourceSong) or song ~= Musician.sourceSong then
+	if config.demoTrackMapping == nil or not Musician.sourceSong or song ~= Musician.sourceSong then
 		return
 	end
 	Musician.Keyboard.ConfigureDemo()
@@ -1605,7 +1613,7 @@ end
 -- @param key (number)
 function Musician.Keyboard.OnNoteOff(event, song, track, key)
 	local config = Musician.Keyboard.config
-	if config.demoTrackMapping == nil or not(Musician.sourceSong) or song ~= Musician.sourceSong then
+	if config.demoTrackMapping == nil or not Musician.sourceSong or song ~= Musician.sourceSong then
 		return
 	end
 
@@ -1642,7 +1650,7 @@ function Musician.Keyboard.UpdateBandSyncButton()
 	local players = Musician.Live.GetSyncedBandPlayers()
 	local tooltipText = Musician.Msg.LIVE_SYNC
 
-	if not(Musician.Live.IsBandSyncMode()) then
+	if not Musician.Live.IsBandSyncMode() then
 		tooltipText = tooltipText .. "\n" .. Musician.Utils.Highlight(Musician.Msg.LIVE_SYNC_HINT, "00FFFF")
 	end
 
@@ -1667,7 +1675,7 @@ end
 --
 function Musician.Keyboard.OnLiveBandSync(event, player, isSynced)
 	-- Display "Is synced" emote in the chat
-	if not(Musician.Utils.PlayerIsMyself(player)) then
+	if not Musician.Utils.PlayerIsMyself(player) then
 		local emote = isSynced and Musician.Msg.EMOTE_PLAYER_LIVE_SYNC_ENABLED or Musician.Msg.EMOTE_PLAYER_LIVE_SYNC_DISABLED
 		Musician.Utils.DisplayEmote(player, UnitGUID(Musician.Utils.SimplePlayerName(player)), emote)
 	end
@@ -1733,7 +1741,8 @@ function MusicianLayerTemplate_OnLoad(self)
 	self.powerChordsBolt:SetText(Musician.Icons.Bolt)
 	self.powerChordsLabel:SetText(Musician.Msg.POWER_CHORDS)
 	self.powerChordsHorns:SetText(Musician.Icons.SignOfHorns)
-	local powerChordsLabelWidth = 12 + self.powerChordsBolt:GetWidth() + self.powerChordsLabel:GetWidth() + self.powerChordsHorns:GetWidth()
+	local powerChordsLabelWidth = 12 + self.powerChordsBolt:GetWidth() + self.powerChordsLabel:GetWidth() +
+		self.powerChordsHorns:GetWidth()
 	self.powerChordsCheckbox:SetHitRectInsets(0, -powerChordsLabelWidth, 0, 0)
 end
 
@@ -1757,18 +1766,18 @@ MusicianKeyboardMixin = {}
 -- @param visible (boolean)
 function MusicianKeyboardMixin:showKeyboard(visible)
 	if visible == nil then
-		visible = not(self.keys:IsVisible())
+		visible = not self.keys:IsVisible()
 	end
 
 	if visible then
 		self:SetHeight(410)
 		self.keys:Show()
-		self.toggleKeyboardButton:SetText(Musician.Icons.Up ..  Musician.Icons.Blank .. Musician.Icons.PianoKeys)
+		self.toggleKeyboardButton:SetText(Musician.Icons.Up .. Musician.Icons.Blank .. Musician.Icons.PianoKeys)
 		self.toggleKeyboardButton.tooltipText = Musician.Msg.HIDE_KEYBOARD
 	else
 		self.keys:Hide()
 		self:SetHeight(410 - self.keys:GetHeight() - 10)
-		self.toggleKeyboardButton:SetText(Musician.Icons.Down ..  Musician.Icons.Blank .. Musician.Icons.PianoKeys)
+		self.toggleKeyboardButton:SetText(Musician.Icons.Down .. Musician.Icons.Blank .. Musician.Icons.PianoKeys)
 		self.toggleKeyboardButton.tooltipText = Musician.Msg.SHOW_KEYBOARD
 	end
 
@@ -1794,7 +1803,7 @@ function MusicianKeyboardMixin:OnLoad()
 	end)
 
 	-- Keyboard toggle button
-	self.toggleKeyboardButton:SetText(Musician.Icons.Down ..  Musician.Icons.Blank .. Musician.Icons.PianoKeys)
+	self.toggleKeyboardButton:SetText(Musician.Icons.Down .. Musician.Icons.Blank .. Musician.Icons.PianoKeys)
 	self.toggleKeyboardButton.tooltipText = Musician.Msg.HIDE_KEYBOARD
 	self.toggleKeyboardButton:HookScript("OnMouseDown", function()
 		PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
@@ -1811,7 +1820,8 @@ function MusicianKeyboardMixin:OnLoad()
 	local writeProgramButton = self.programKeys.writeProgramButton
 	writeProgramButton:SetText(Musician.Icons.Save)
 	local controlKey = IsMacClient() and KEY.ShiftLeft or KEY.ControlLeft -- Use Shift instead of Ctrl on MacOS
-	writeProgramButton.tooltipText = string.gsub(Musician.Msg.WRITE_PROGRAM, "{key}", Musician.Msg.FIXED_KEY_NAMES[controlKey])
+	writeProgramButton.tooltipText = string.gsub(Musician.Msg.WRITE_PROGRAM, "{key}",
+		Musician.Msg.FIXED_KEY_NAMES[controlKey])
 	local writeProgramToggleButton = self.programKeys.writeProgramToggleButton
 	writeProgramToggleButton:SetFrameLevel(writeProgramButton:GetFrameLevel() + 1) -- Move the invisible toggle button over the write program button
 	-- Forward mouse actions from the invisible toggle button to the write program button
@@ -1825,13 +1835,14 @@ function MusicianKeyboardMixin:OnLoad()
 	end)
 	writeProgramToggleButton:HookScript("OnMouseDown", function()
 		Musician.Keyboard.SetDeletingProgram(false)
-		Musician.Keyboard.SetSavingProgram(not(Musician.Keyboard.IsSavingProgram()))
+		Musician.Keyboard.SetSavingProgram(not Musician.Keyboard.IsSavingProgram())
 	end)
 
 	-- Delete program button
 	local deleteProgramButton = self.programKeys.deleteProgramButton
 	deleteProgramButton:SetText(Musician.Icons.Trash)
-	deleteProgramButton.tooltipText = string.gsub(Musician.Msg.DELETE_PROGRAM, "{key}", Musician.Msg.FIXED_KEY_NAMES[KEY.Delete])
+	deleteProgramButton.tooltipText = string.gsub(Musician.Msg.DELETE_PROGRAM, "{key}",
+		Musician.Msg.FIXED_KEY_NAMES[KEY.Delete])
 	local deleteProgramToggleButton = self.programKeys.deleteProgramToggleButton
 	deleteProgramToggleButton:SetFrameLevel(deleteProgramButton:GetFrameLevel() + 1) -- Move the invisible toggle button over the delete program button
 	-- Forward mouse actions from the invisible toggle button to the delete program button
@@ -1844,7 +1855,7 @@ function MusicianKeyboardMixin:OnLoad()
 		ExecuteFrameScript(deleteProgramButton, "OnLeave", ...)
 	end)
 	deleteProgramToggleButton:HookScript("OnMouseDown", function()
-		Musician.Keyboard.SetDeletingProgram((not(Musician.Keyboard.IsDeletingProgram())))
+		Musician.Keyboard.SetDeletingProgram(not Musician.Keyboard.IsDeletingProgram())
 		Musician.Keyboard.SetSavingProgram(false)
 	end)
 

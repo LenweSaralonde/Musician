@@ -1,4 +1,6 @@
-<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.blizzard.com/wow/ui/">
 
 	<Script file="MusicianAbout.lua" />
 
@@ -9,9 +11,9 @@
 		<Layers>
 			<Layer level="ARTWORK">
 				<Texture name="$parentLogo" file="Interface\AddOns\Musician\ui\textures\about-logo.blp">
-					<Size x="128" y="128"/>
+					<Size x="128" y="128" />
 					<Anchors>
-						<Anchor point="TOPLEFT" x="15" y="-15"/>
+						<Anchor point="TOPLEFT" x="15" y="-15" />
 					</Anchors>
 				</Texture>
 
@@ -28,35 +30,35 @@
 				</FontString>
 
 				<FontString name="$parentAuthor" inherits="GameFontNormal" justifyH="LEFT">
-					<Color r="1" g="1" b="1"/>
+					<Color r="1" g="1" b="1" />
 					<Anchors>
 						<Anchor point="TOPLEFT" y="-5" relativePoint="BOTTOMLEFT" relativeTo="$parentVersion" />
 					</Anchors>
 				</FontString>
 
 				<FontString name="$parentLicense" inherits="GameFontNormalSmallLeft">
-					<Color r="1" g="1" b="1"/>
+					<Color r="1" g="1" b="1" />
 					<Anchors>
 						<Anchor point="TOPLEFT" y="-5" relativePoint="BOTTOMLEFT" relativeTo="$parentAuthor" />
 					</Anchors>
 				</FontString>
 
 				<FontString name="$parentDiscord" inherits="GameFontNormalSmallLeft">
-					<Color r="1" g="1" b="1"/>
+					<Color r="1" g="1" b="1" />
 					<Anchors>
 						<Anchor point="TOPLEFT" y="-15" relativePoint="BOTTOMLEFT" relativeTo="$parentLicense" />
 					</Anchors>
 				</FontString>
 
 				<FontString name="$parentPatreon" inherits="GameFontNormalSmallLeft">
-					<Color r="1" g="1" b="1"/>
+					<Color r="1" g="1" b="1" />
 					<Anchors>
-						<Anchor point="TOPLEFT" y="-5"  relativePoint="BOTTOMLEFT" relativeTo="$parentDiscord" />
+						<Anchor point="TOPLEFT" y="-5" relativePoint="BOTTOMLEFT" relativeTo="$parentDiscord" />
 					</Anchors>
 				</FontString>
 
 				<FontString name="$parentPaypal" inherits="GameFontNormalSmallLeft">
-					<Color r="1" g="1" b="1"/>
+					<Color r="1" g="1" b="1" />
 					<Anchors>
 						<Anchor point="TOPLEFT" y="-5" relativePoint="BOTTOMLEFT" relativeTo="$parentPatreon" />
 					</Anchors>
@@ -70,7 +72,7 @@
 				</FontString>
 
 				<FontString name="$parentLocalization" inherits="GameFontNormalSmallLeft">
-					<Color r="1" g="1" b="1"/>
+					<Color r="1" g="1" b="1" />
 					<Anchors>
 						<Anchor point="TOPLEFT" y="-15" relativePoint="BOTTOMLEFT" relativeTo="$parentSupport" />
 						<Anchor point="RIGHT" x="-15" relativeTo="$parent" />
@@ -78,7 +80,7 @@
 				</FontString>
 
 				<FontString name="$parentInstrumentSources" inherits="GameFontWhiteTiny2" justifyH="LEFT">
-					<Color r="1" g="1" b="1"/>
+					<Color r="1" g="1" b="1" />
 					<Anchors>
 						<Anchor point="TOPLEFT" y="-15" relativePoint="BOTTOMLEFT" relativeTo="$parentLocalization" />
 						<Anchor point="RIGHT" x="-15" relativeTo="$parent" />
@@ -86,14 +88,14 @@
 				</FontString>
 
 				<FontString name="$parentSupportersTitle" inherits="GameFontNormalSmallLeft">
-					<Color r="1" g="1" b="1"/>
+					<Color r="1" g="1" b="1" />
 					<Anchors>
 						<Anchor point="TOPLEFT" y="-15" relativePoint="BOTTOMLEFT" relativeTo="$parentInstrumentSources" />
 					</Anchors>
 				</FontString>
 
 				<FontString name="$parentSupportersList" inherits="GameFontNormalSmallLeft">
-					<Color r="0.75" g="0.75" b="0.75"/>
+					<Color r="0.75" g="0.75" b="0.75" />
 					<Anchors>
 						<Anchor point="TOPLEFT" y="-5" relativePoint="BOTTOMLEFT" relativeTo="$parentSupportersTitle" />
 						<Anchor point="RIGHT" x="-30" relativeTo="$parent" />

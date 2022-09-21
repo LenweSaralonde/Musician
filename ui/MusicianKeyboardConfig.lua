@@ -55,13 +55,14 @@ local function createKeyboard()
 		local x = 0
 		for col, key in pairs(rowKeys) do
 			local size = Musician.KEYBOARD_KEY_SIZE[row][col]
-			local button = CreateFrame("Button", "$parent" .. key .. "Button", MusicianKeyboardConfigKeyboard, "MusicianKeyboardConfigKeyTemplate")
+			local button = CreateFrame("Button", "$parent" .. key .. "Button", MusicianKeyboardConfigKeyboard,
+				"MusicianKeyboardConfigKeyTemplate")
 			local keyHeight = KEY_SIZE
 			local keyWidth = size * KEY_SIZE
 
 			button:SetWidth(keyWidth)
 			button:SetHeight(keyHeight)
-			button:SetPoint("TOPLEFT", MusicianKeyboardConfigKeyboard, "TOPLEFT", x, - (row - 1) * KEY_SIZE)
+			button:SetPoint("TOPLEFT", MusicianKeyboardConfigKeyboard, "TOPLEFT", x, -(row - 1) * KEY_SIZE)
 
 			table.insert(keyButtons, button)
 
@@ -123,7 +124,7 @@ function Musician.KeyboardConfig.OnShow(self)
 	PlaySound(SOUNDKIT.IG_QUEST_LIST_OPEN)
 	Musician.KeyboardConfig.UnselectKeyBinding()
 	Musician.KeyboardConfig.Reset()
-	if not(Musician.KeyboardConfig.IsComplete()) then
+	if not Musician.KeyboardConfig.IsComplete() then
 		Musician.KeyboardConfig.SelectKeyBinding(KEY.Backquote)
 	end
 end
@@ -151,7 +152,7 @@ function Musician.KeyboardConfig.Reset()
 			button:SetText(keyName)
 			button.keyValue = keyValue
 
-			if Musician.Msg.FIXED_KEY_NAMES[key] == nil and ALLOWED_DUPLICATES[key] == nil and not(ALLOWED_EMPTY[key]) then
+			if Musician.Msg.FIXED_KEY_NAMES[key] == nil and ALLOWED_DUPLICATES[key] == nil and not ALLOWED_EMPTY[key] then
 				keysTodo = keysTodo + 1
 				if button.keyValue ~= nil then
 					keysDone = keysDone + 1
@@ -175,7 +176,7 @@ function Musician.KeyboardConfig.Clear()
 			if button then
 				button:SetText("")
 				button.keyValue = nil
-				if ALLOWED_DUPLICATES[key] == nil and not(ALLOWED_EMPTY[key]) then
+				if ALLOWED_DUPLICATES[key] == nil and not ALLOWED_EMPTY[key] then
 					keysTodo = keysTodo + 1
 				end
 			end
@@ -231,7 +232,8 @@ function Musician.KeyboardConfig.Button_OnKeyDown(self, keyValue)
 		else
 			local mergedKey = Musician.KEYBOARD_MERGEABLE_KEYS[selectedKeyButton.key]
 			local fixedBindingKey = Musician.KEYBOARD_FIXED_MAPPING[keyValue]
-			local isAllowedBinding = (strlenutf8(keyValue) == 1 or fixedBindingKey ~= nil and fixedBindingKey == mergedKey) and not(Musician.DISABLED_KEY_VALUES[keyValue])
+			local isAllowedBinding = (strlenutf8(keyValue) == 1 or fixedBindingKey ~= nil and fixedBindingKey == mergedKey) and
+				not Musician.DISABLED_KEY_VALUES[keyValue]
 
 			if isAllowedBinding then
 
@@ -240,7 +242,7 @@ function Musician.KeyboardConfig.Button_OnKeyDown(self, keyValue)
 				if currentKeyValue ~= nil and (fixedBindingKey == nil or fixedBindingKey ~= currentKeyValue) then
 					getKeyButton(currentKeyValue):SetText("")
 					getKeyButton(currentKeyValue).keyValue = nil
-					if ALLOWED_DUPLICATES[currentKeyValue] == nil and not(ALLOWED_EMPTY[currentKeyValue]) then
+					if ALLOWED_DUPLICATES[currentKeyValue] == nil and not ALLOWED_EMPTY[currentKeyValue] then
 						keysDone = keysDone - 1
 					end
 				end
@@ -253,7 +255,7 @@ function Musician.KeyboardConfig.Button_OnKeyDown(self, keyValue)
 						currentMapping[selectedKeyButton.keyValue] = nil
 					end
 				else
-					if ALLOWED_DUPLICATES[selectedKeyButton.key] == nil and not(ALLOWED_EMPTY[selectedKeyButton.key]) then
+					if ALLOWED_DUPLICATES[selectedKeyButton.key] == nil and not ALLOWED_EMPTY[selectedKeyButton.key] then
 						keysDone = keysDone + 1
 					end
 				end
@@ -288,7 +290,7 @@ function Musician.KeyboardConfig.SelectNextKeyBinding()
 	end
 	local index = selectedKeyButton.index + 1
 
-	while index <= #keyButtons and not(keyButtons[index]:IsEnabled()) do
+	while index <= #keyButtons and not keyButtons[index]:IsEnabled() do
 		index = index + 1
 	end
 
@@ -316,7 +318,7 @@ function Musician.KeyboardConfig.ClearSelectedKeyBinding()
 			currentMapping[keyValue] = nil
 		end
 
-		if ALLOWED_DUPLICATES[selectedKeyButton.key] == nil and not(ALLOWED_EMPTY[selectedKeyButton.key]) then
+		if ALLOWED_DUPLICATES[selectedKeyButton.key] == nil and not ALLOWED_EMPTY[selectedKeyButton.key] then
 			keysDone = keysDone - 1
 		end
 
@@ -385,7 +387,8 @@ function Musician.KeyboardConfig.UpdateHint()
 				msg2Action = Musician.Msg.KEY_CAN_BE_MERGED
 			end
 
-			local highlightedKey = Musician.Utils.Highlight(Musician.KeyboardUtils.GetKeyValueName(ALLOWED_DUPLICATES[selectedKeyButton.key]))
+			local highlightedKey = Musician.Utils.Highlight(Musician.KeyboardUtils.GetKeyValueName(ALLOWED_DUPLICATES[
+				selectedKeyButton.key]))
 
 			msg2Action = string.gsub(msg2Action, '{key}', highlightedKey)
 

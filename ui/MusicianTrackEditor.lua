@@ -46,7 +46,8 @@ function Musician.TrackEditor.Init()
 
 	-- Resize button
 	local resizeButton = MusicianTrackEditorResizeButton
-	for _, texture in ipairs({ resizeButton:GetNormalTexture(), resizeButton:GetHighlightTexture(), resizeButton:GetPushedTexture() }) do
+	for _, texture in ipairs({ resizeButton:GetNormalTexture(), resizeButton:GetHighlightTexture(),
+		resizeButton:GetPushedTexture() }) do
 		texture:ClearAllPoints()
 		texture:SetPoint("TOPLEFT", -10, 10)
 		texture:SetSize(20, 20)
@@ -230,7 +231,8 @@ end
 --- Return true when the source song is currently streaming
 -- @return (boolean)
 local function isSourceSongStreaming()
-	return Musician.streamingSong and Musician.streamingSong.streaming and Musician.sourceSong and Musician.sourceSong.crc32 == Musician.streamingSong.crc32
+	return Musician.streamingSong and Musician.streamingSong.streaming and Musician.sourceSong and
+		Musician.sourceSong.crc32 == Musician.streamingSong.crc32
 end
 
 --- UpdateSyncButton
@@ -253,10 +255,10 @@ end
 -- @param song (Musician.Song)
 function Musician.TrackEditor.UpdateCursor(event, song)
 	if song == Musician.sourceSong then
-		if not(MusicianTrackEditorSourceSongSlider.dragging) then
+		if not MusicianTrackEditorSourceSongSlider.dragging then
 			local cursor = max(Musician.sourceSong.cropFrom, min(Musician.sourceSong.cropTo, Musician.sourceSong.cursor))
 			MusicianTrackEditorSourceSongSlider:SetValue(cursor)
-			if not(MusicianTrackEditorCursorAt:HasFocus()) then
+			if not MusicianTrackEditorCursorAt:HasFocus() then
 				MusicianTrackEditorCursorAt:SetText(Musician.Utils.FormatTime(cursor))
 			end
 		else
@@ -340,8 +342,10 @@ function Musician.TrackEditor.CreateTrackWidget(trackIndex)
 	if #track.notes > 0 then
 		local firstNote = track.notes[1][NOTE.TIME]
 		local lastNote = track.notes[noteCount][NOTE.TIME] + (track.notes[noteCount][NOTE.DURATION] or 0)
-		trackInfo = trackInfo .. " [" .. Musician.Utils.GetLink('musician', Musician.Utils.FormatTime(firstNote, true), 'seek', firstNote)
-		trackInfo = trackInfo .. " – " .. Musician.Utils.GetLink('musician', Musician.Utils.FormatTime(lastNote, true), 'seek', lastNote) .. "]"
+		trackInfo = trackInfo ..
+			" [" .. Musician.Utils.GetLink('musician', Musician.Utils.FormatTime(firstNote, true), 'seek', firstNote)
+		trackInfo = trackInfo ..
+			" – " .. Musician.Utils.GetLink('musician', Musician.Utils.FormatTime(lastNote, true), 'seek', lastNote) .. "]"
 	end
 	trackInfo = trackInfo .. " (" .. noteCount .. ")"
 
@@ -361,7 +365,7 @@ end
 -- @param trackIndex (number)
 function Musician.TrackEditor.InitTransposeDropdown(dropdown, trackIndex)
 
-	local transposeValues = {"+2", "+1", "0", "-1", "-2"}
+	local transposeValues = { "+2", "+1", "0", "-1", "-2" }
 
 	dropdown.index = nil
 	dropdown.trackIndex = trackIndex
@@ -415,7 +419,8 @@ function Musician.TrackEditor.InitInstrumentDropdown(dropdown, trackIndex)
 			trackFrame.idText:SetTextColor(r, g, b)
 		end
 
-		Musician.TrackEditor:SendMessage(Musician.Events.SongInstrumentChange, Musician.sourceSong, Musician.sourceSong.tracks[dropdown.trackIndex], midiId)
+		Musician.TrackEditor:SendMessage(Musician.Events.SongInstrumentChange, Musician.sourceSong,
+			Musician.sourceSong.tracks[dropdown.trackIndex], midiId)
 	end
 end
 
@@ -433,7 +438,6 @@ function Musician.TrackEditor.SetCropFrom(position)
 	Musician.TrackEditor.UpdateSlider()
 	Musician.TrackEditor.UpdateBounds()
 end
-
 
 --- Set crop end position
 -- @param position (number)
@@ -453,7 +457,7 @@ end
 --- Synchronize track settings with currently streaming song
 --
 function Musician.TrackEditor.Synchronize()
-	if not(isSourceSongStreaming()) then return end
+	if not isSourceSongStreaming() then return end
 
 	for trackIndex, sourceTrack in pairs(Musician.sourceSong.tracks) do
 		local streamingTrack = Musician.streamingSong.tracks[trackIndex]
@@ -476,7 +480,7 @@ function Musician.TrackEditor.OnUpdate(event, elapsed)
 			local width = meterTexture.volumeMeter:GetLevel() * meterTexture.maxWidth
 			meterTexture:SetWidth(width)
 
-			if not(track.audible) then
+			if not track.audible then
 				meterTexture:SetAlpha(.25)
 			else
 				meterTexture:SetAlpha(1)
@@ -500,7 +504,7 @@ end
 function Musician.TrackEditor.NoteOn(event, song, track, key)
 	if song == Musician.sourceSong then
 		local meter = _G['MusicianTrackEditorTrack' .. track.index]
-		if not(meter) then return end
+		if not meter then return end
 		local meterTexture = meter.meterTexture
 		local _, instrumentData = Musician.Sampler.GetSoundFile(track.instrument, key)
 		if instrumentData ~= nil then
@@ -519,7 +523,7 @@ function Musician.TrackEditor.NoteOff(event, song, track)
 		-- Stop if all notes of the track are off
 		if track.polyphony == 0 then
 			local meter = _G['MusicianTrackEditorTrack' .. track.index]
-			if not(meter) then return end
+			if not meter then return end
 			local meterTexture = meter.meterTexture
 			meterTexture.volumeMeter:NoteOff()
 		end

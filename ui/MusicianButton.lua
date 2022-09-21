@@ -79,7 +79,7 @@ function MusicianButton.OnClick(event, button)
 		MusicianButton.HideTooltip()
 		MusicianButton.OpenMenu()
 	elseif button == "RightButton" then
-		Musician.Sampler.SetMuted(not(Musician.Sampler.GetMuted()))
+		Musician.Sampler.SetMuted(not Musician.Sampler.GetMuted())
 		if Musician.Sampler.GetMuted() then
 			PlaySound(SOUNDKIT.IG_MINIMAP_ZOOM_OUT)
 		else
@@ -230,12 +230,12 @@ function MusicianButton.OpenMenu()
 	local menu = MusicianButton.GetMenu()
 	local indent = "     "
 	for _, row in pairs(menu) do
-		if not(row.isTitle) then
+		if not row.isTitle then
 			row.text = indent .. row.text
 		end
 	end
 
-	Musician.Utils.EasyMenu(menu, MusicianButton_Menu, "cursor", 0 , 0, "MENU")
+	Musician.Utils.EasyMenu(menu, MusicianButton_Menu, "cursor", 0, 0, "MENU")
 end
 
 --- ShowTooltip
@@ -282,7 +282,8 @@ function MusicianButton.UpdateTooltipText(alwaysShowLoadingProgression)
 	tooltipText = tooltipText .. "\n" .. Musician.Utils.FormatText(Musician.Msg.TOOLTIP_DRAG_AND_DROP)
 
 	if loadingLine ~= "" then
-		tooltipText = tooltipText .. "\n" .. Musician.Utils.Highlight(Musician.Utils.FormatText(loadingLine), LIGHTBLUE_FONT_COLOR)
+		tooltipText = tooltipText .. "\n" ..
+			Musician.Utils.Highlight(Musician.Utils.FormatText(loadingLine), LIGHTBLUE_FONT_COLOR)
 	end
 
 	if (GameTooltipTextLeft1 == nil) or (tooltipText ~= GameTooltipTextLeft1:GetText()) then
