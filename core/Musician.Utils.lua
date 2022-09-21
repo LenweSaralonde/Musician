@@ -414,15 +414,6 @@ function Musician.Utils.RemoveChatMessage(lineID)
 	end
 end
 
---- Read some bytes from a string and remove them
--- @param str (string)
--- @param bytes (int)
--- @return data (string) read bytes
--- @return str (string) new string
-function Musician.Utils.ReadBytes(str, bytes)
-	return string.sub(str, 1, bytes), string.sub(str, bytes + 1)
-end
-
 --- Pack an integer number into a string
 -- @param num (int) integer to pack
 -- @param bytes (int) number of bytes
