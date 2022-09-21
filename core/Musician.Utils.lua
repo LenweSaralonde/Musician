@@ -718,7 +718,7 @@ end
 -- @return locale (string) 'en', 'fr' etc.
 function Musician.Utils.GetRealmLocale()
 	local locale = select(5, LibRealmInfo:GetRealmInfoByUnit("player")) or GetLocale()
-	return string.gsub(locale, "[A-Z]+", "")
+	return (string.gsub(locale, "[A-Z]+", ""))
 end
 
 --- Return the normalized player name, including realm slug. Normalized player name is a number if a Battle.net account ID or Battle.net game account ID is provided.

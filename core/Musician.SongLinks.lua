@@ -236,9 +236,9 @@ end
 -- @return msg (string)
 function Musician.SongLinks.HyperlinksToChatLinks(text)
 	local capturePattern = '|H' .. HYPERLINK_PREFIX .. ':?([^|]*)|h[^%[]*%[[^:]+: ([^%]]+)%]|r|h'
-	return string.gsub(text, capturePattern, function(playerArg, titleArg)
+	return (string.gsub(text, capturePattern, function(playerArg, titleArg)
 		return Musician.SongLinks.GetChatLink(titleArg, playerArg)
-	end)
+	end))
 end
 
 --- Convert chat text links into hyperlinks
@@ -247,11 +247,11 @@ end
 -- @return text (string)
 function Musician.SongLinks.ChatLinksToHyperlinks(msg, playerName)
 	local capturePattern = '%[' .. CHAT_LINK_PREFIX .. '<?([^>:]*)>?: ([^%]]*)%]'
-	return string.gsub(msg, capturePattern, function(playerArg, titleArg)
+	return (string.gsub(msg, capturePattern, function(playerArg, titleArg)
 		local title = Musician.Utils.RemoveHighlight(titleArg) -- Remove text coloring added by other addons such as Total RP
 		local player = playerArg ~= '' and playerArg or playerName or ''
 		return Musician.SongLinks.GetHyperlink(title, player)
-	end)
+	end))
 end
 
 --- Convert chat links for chat bubbles
@@ -259,12 +259,12 @@ end
 -- @return text (string)
 function Musician.SongLinks.ChatLinksToChatBubble(msg)
 	local capturePattern = '%[' .. CHAT_LINK_PREFIX .. '<?([^>:]*)>?: ([^%]]*)%]'
-	return string.gsub(msg, capturePattern, function(_, titleArg)
+	return (string.gsub(msg, capturePattern, function(_, titleArg)
 		local text = Musician.Msg.LINKS_CHAT_BUBBLE
 		text = string.gsub(text, '{note}', Musician.Utils.GetChatIcon(Musician.IconImages.Note))
 		text = string.gsub(text, '{title}', Musician.Utils.RemoveHighlight(titleArg)) -- Remove text coloring added by other addons such as Total RP
 		return text
-	end)
+	end))
 end
 
 --- OnChatBubbleMsg

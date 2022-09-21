@@ -7,7 +7,7 @@ local MODULE_NAME = "MusicianAbout"
 Musician.AddModule(MODULE_NAME)
 
 local function highlightUrl(text, url)
-	return string.gsub(text, "{url}", Musician.Utils.GetUrlLink(url))
+	return (string.gsub(text, "{url}", Musician.Utils.GetUrlLink(url)))
 end
 
 local function randomizeHighlight(coloredList, list, color)

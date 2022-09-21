@@ -104,7 +104,7 @@ end
 function Musician.Sampler.GetLocalizedMIDIInstrumentName(instrument)
 	-- Unsupported drum kit
 	if Musician.MIDI_INSTRUMENT_MAPPING[instrument] == nil and instrument >= 128 and instrument <= 255 then
-		return string.gsub(Musician.Msg.UNKNOWN_DRUMKIT, '{midi}', instrument - 128)
+		return (string.gsub(Musician.Msg.UNKNOWN_DRUMKIT, '{midi}', instrument - 128))
 	end
 	return Musician.Msg.MIDI_INSTRUMENT_NAMES[instrument] or ""
 end
