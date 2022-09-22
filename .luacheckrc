@@ -115,6 +115,7 @@ read_globals = {
 	"TRP3_ItemTooltip",
 	"TRP3_RefTooltip",
 	"TRP3_ToolFrameItemNormalTabPanel",
+	"TRP3_ToolFrame",
 };
 
 std = "lua51+wow";

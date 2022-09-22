@@ -591,7 +591,7 @@ local function importSong(encodedSongData, infoId)
 	end)
 end
 
---- Indicates whenever the provided item class ID is a musician object
+--- Indicates whenever the provided item class ID is for a musician object
 -- @param classId (string)
 -- @return isMusicianId (boolean)
 function Musician.TRP3E.IsMusicianId(classId)
@@ -651,55 +651,50 @@ function Musician.TRP3E.RegisterHooks()
 			BASE64DECODE_PROGRESSION_RATIO + progress * (1 - BASE64DECODE_PROGRESSION_RATIO))
 	end)
 
-	-- Add a reference to the TRP3 tab panel for tab container frames
-	-- Needed by the editor hook below
-
-	local createTabPanel = TRP3_API.ui.frame.createTabPanel
-	TRP3_API.ui.frame.createTabPanel = function(tabBar, data, callback, confirmCallback)
-		local tabGroup = createTabPanel(tabBar, data, callback, confirmCallback)
-		tabBar.tabGroup = tabGroup
-		return tabGroup
-	end
-
 	-- Disable specific item editor elements for Musician sheet music items
 	--
 
-	hooksecurefunc(TRP3_API.extended.tools, 'initItemEditorNormal', function(toolFrame)
-		local tabGroup = TRP3_ToolFrameItemNormalTabPanel.tabGroup
-		local gameplay = toolFrame.item.normal.gameplay
-		local display = toolFrame.item.normal.display
+	local toolFrame = TRP3_ToolFrame
+	local gameplay = toolFrame.item.normal.gameplay
+	local display = toolFrame.item.normal.display
 
-		local function refreshCheck()
-			if toolFrame.fullClassID ~= nil and Musician.TRP3E.IsMusicianId(toolFrame.fullClassID) then
-				tabGroup:SetTabVisible(2, false)
-				tabGroup:SetTabVisible(3, false)
-				tabGroup:SetTabVisible(4, false)
-				tabGroup:SetTabVisible(5, false)
+	local function refreshCheck()
+		if toolFrame.fullClassID ~= nil and Musician.TRP3E.IsMusicianItem(TRP3_DB.global[toolFrame.fullClassID]) then
 
-				Musician.TRP3E.SetCheckboxEnabled(gameplay.unique, false)
-				Musician.TRP3E.SetCheckboxEnabled(gameplay.stack, false)
-				Musician.TRP3E.SetCheckboxEnabled(gameplay.use, false)
-				Musician.TRP3E.SetCheckboxEnabled(gameplay.container, false)
-				Musician.TRP3E.SetCheckboxEnabled(display.quest, false)
-				Musician.TRP3E.SetEditBoxEnabled(display.right, false)
-			else
-				Musician.TRP3E.SetCheckboxEnabled(gameplay.unique, true)
-				Musician.TRP3E.SetCheckboxEnabled(gameplay.stack, true)
-				Musician.TRP3E.SetCheckboxEnabled(gameplay.use, true)
-				Musician.TRP3E.SetCheckboxEnabled(gameplay.container, true)
-				Musician.TRP3E.SetCheckboxEnabled(display.quest, true)
-				Musician.TRP3E.SetEditBoxEnabled(display.right, true)
+			-- Hide all tabs except the first one
+			local tabIndex = 0
+			for _, frame in pairs({ TRP3_ToolFrameItemNormalTabPanel:GetChildren() }) do
+				if string.sub(frame:GetName(), 1, 16) == 'TRP3_TabBar_Tab_' then
+					tabIndex = tabIndex + 1
+					if tabIndex >= 2 then
+						frame:Hide()
+					end
+				end
 			end
-		end
 
-		gameplay.unique:HookScript('OnClick', refreshCheck)
-		gameplay.stack:HookScript('OnClick', refreshCheck)
-		gameplay.use:HookScript('OnClick', refreshCheck)
-		gameplay.container:HookScript('OnClick', refreshCheck)
-		display.quest:HookScript('OnClick', refreshCheck)
-		toolFrame:HookScript('OnShow', refreshCheck)
-		hooksecurefunc(toolFrame.item.normal, 'loadItem', refreshCheck)
-	end)
+			Musician.TRP3E.SetCheckboxEnabled(gameplay.unique, false)
+			Musician.TRP3E.SetCheckboxEnabled(gameplay.stack, false)
+			Musician.TRP3E.SetCheckboxEnabled(gameplay.use, false)
+			Musician.TRP3E.SetCheckboxEnabled(gameplay.container, false)
+			Musician.TRP3E.SetCheckboxEnabled(display.quest, false)
+			Musician.TRP3E.SetEditBoxEnabled(display.right, false)
+		else
+			Musician.TRP3E.SetCheckboxEnabled(gameplay.unique, true)
+			Musician.TRP3E.SetCheckboxEnabled(gameplay.stack, true)
+			Musician.TRP3E.SetCheckboxEnabled(gameplay.use, true)
+			Musician.TRP3E.SetCheckboxEnabled(gameplay.container, true)
+			Musician.TRP3E.SetCheckboxEnabled(display.quest, true)
+			Musician.TRP3E.SetEditBoxEnabled(display.right, true)
+		end
+	end
+
+	gameplay.unique:HookScript('OnClick', refreshCheck)
+	gameplay.stack:HookScript('OnClick', refreshCheck)
+	gameplay.use:HookScript('OnClick', refreshCheck)
+	gameplay.container:HookScript('OnClick', refreshCheck)
+	display.quest:HookScript('OnClick', refreshCheck)
+	toolFrame:HookScript('OnShow', refreshCheck)
+	hooksecurefunc(toolFrame.item.normal, 'loadItem', refreshCheck)
 end
 
 --- Add or update existing sheet music item into TRP3 items
@@ -905,7 +900,10 @@ end
 -- @param object (table)
 -- @return isMusicianItem (boolean)
 function Musician.TRP3E.IsMusicianItem(object)
-	return object.TY == TRP3_DB.types.ITEM and object.SC ~= nil and object.SC[Musician.TRP3E.WORKFLOW_NAME] ~= nil
+	return object and
+		object.TY == TRP3_DB.types.ITEM and
+		object.SC ~= nil and
+		object.SC[Musician.TRP3E.WORKFLOW_NAME] ~= nil
 end
 
 --- Normalize song title for TRP item names
