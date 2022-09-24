@@ -58,7 +58,7 @@ Musician.COLORS = {
 --
 --  midi (int) General MIDI instrument ID (0-127). For percussions, midi is its MIDI ID + 128
 --
---  decay (number) Decay duration in seconds
+--  decay (number) Decay duration in milliseconds
 --
 --  isPlucked (boolean) True for plucked instruments such as guitar, piano etc. Used for visualization only.
 --
