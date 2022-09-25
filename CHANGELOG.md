@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.9.2.2
+--------
+* Fixed Lua error when clicking empty hyperlinks.
+* Minor bugfixes and improvements.
+
 v1.9.2.1
 --------
 * Fixed memory leaks.
