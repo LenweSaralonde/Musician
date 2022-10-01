@@ -88,7 +88,7 @@ msg.OPTIONS_TRP3 = "RP total 3"
 msg.OPTIONS_TRP3_MAP_SCAN = "Muestra a los jugadores que tienen Musician en el mapa escaneado con un icono {icon}."
 msg.OPTIONS_CROSS_RP_TITLE = "RP cruzado"
 msg.OPTIONS_CROSS_RP_SUB_TEXT = "¡Instala el complemento Cross RP de Tammya-MoonGuard para activar\nla música entre facciones y entre reinos!"
-msg.OPTIONS_CROSS_RP_SUB_TEXT_NO_GATEWAY = "No hay ningún nodo Cross RP disponible por el momento.\nTenga paciencia ..."
+msg.OPTIONS_CROSS_RP_SUB_TEXT_NO_GATEWAY = "No hay ningún nodo Cross RP disponible por el momento.\nTenga paciencia…"
 msg.OPTIONS_CROSS_RP_SUB_TEXT_ACTIVE = "La comunicación cruzada de RP está activa para las siguientes ubicaciones:\n\n{bands}"
 
 --- Tips and Tricks
@@ -112,6 +112,10 @@ msg.PLAYER_COUNT_ONLINE_NONE = "Todavía no hay otros fanáticos de la música."
 --- New version notifications
 msg.NEW_VERSION = "¡Se ha lanzado una nueva versión de Musician! Descargue la actualización de {url}."
 msg.NEW_PROTOCOL_VERSION = "Tu versión de Musician está desactualizada y ya no funciona.\nDescargue la actualización de\n{url}"
+
+-- Loading screen
+msg.LOADING_SCREEN_MESSAGE = "Musician está precargando las muestras de instrumentos en la memoria caché…"
+msg.LOADING_SCREEN_CLOSE_TOOLTIP = "Cerrar y continuar con la precarga en segundo plano."
 
 --- Player tooltips
 msg.PLAYER_TOOLTIP = "Musician"
@@ -171,7 +175,7 @@ msg.HEADER_INSTRUMENT = "Instrumento"
 --- Configure live keyboard frame
 msg.SHOULD_CONFIGURE_KEYBOARD = "Tienes que configurar el teclado antes de jugar."
 msg.CONFIGURE_KEYBOARD = "Configurar teclado"
-msg.CONFIGURE_KEYBOARD_HINT = "Haga clic en una tecla para configurar ..."
+msg.CONFIGURE_KEYBOARD_HINT = "Haga clic en una tecla para configurar…"
 msg.CONFIGURE_KEYBOARD_HINT_COMPLETE = "La configuración del teclado está completa.\n¡Ahora puede guardar sus cambios y comenzar a reproducir música!"
 msg.CONFIGURE_KEYBOARD_START_OVER = "Comenzar de nuevo"
 msg.CONFIGURE_KEYBOARD_SAVE = "Guardar configuración"

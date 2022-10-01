@@ -618,7 +618,7 @@ function Musician.CrossRP.InitTipsAndTricks()
 	-- Init window text, buttons and image
 	MusicianCrossRP_TipsAndTricks.title:SetText(Musician.Msg.TIPS_AND_TRICKS_CROSS_RP_TITLE)
 	MusicianCrossRP_TipsAndTricks.overlayText.text:SetText(Musician.Msg.TIPS_AND_TRICKS_CROSS_RP_TEXT)
-	MusicianCrossRP_TipsAndTricks:SetScript("OnShow", function(self)
+	MusicianCrossRP_TipsAndTricks:HookScript("OnShow", function(self)
 		self.image:Show()
 	end)
 

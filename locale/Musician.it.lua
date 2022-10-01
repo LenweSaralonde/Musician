@@ -88,7 +88,7 @@ msg.OPTIONS_TRP3 = "RP totale 3"
 msg.OPTIONS_TRP3_MAP_SCAN = "Mostra i giocatori che hanno Musician sulla scansione della mappa con un'icona {icon}."
 msg.OPTIONS_CROSS_RP_TITLE = "Cross RP"
 msg.OPTIONS_CROSS_RP_SUB_TEXT = "Installa il componente aggiuntivo Cross RP di Tammya-MoonGuard per attivare\nmusica tra fazioni e reami!"
-msg.OPTIONS_CROSS_RP_SUB_TEXT_NO_GATEWAY = "Al momento non è disponibile alcun nodo Cross RP.\nSii paziente ..."
+msg.OPTIONS_CROSS_RP_SUB_TEXT_NO_GATEWAY = "Al momento non è disponibile alcun nodo Cross RP.\nSii paziente…"
 msg.OPTIONS_CROSS_RP_SUB_TEXT_ACTIVE = "La comunicazione Cross RP è attiva per le seguenti posizioni:\n\n{bands}"
 
 --- Tips and Tricks
@@ -113,6 +113,10 @@ msg.PLAYER_COUNT_ONLINE_NONE = "Non ci sono ancora altri fan della musica in gir
 msg.NEW_VERSION = "È stata rilasciata una nuova versione di Musician! Scarica l'aggiornamento da {url}."
 msg.NEW_PROTOCOL_VERSION = "La tua versione di Musician è obsoleta e non funziona più.\nScarica l'aggiornamento da\n{url}"
 
+-- Loading screen
+msg.LOADING_SCREEN_MESSAGE = "Musician sta precaricando i campioni dello strumento nella memoria cache…"
+msg.LOADING_SCREEN_CLOSE_TOOLTIP = "Chiudi e continua il precaricamento in background."
+
 --- Player tooltips
 msg.PLAYER_TOOLTIP = "Musician"
 msg.PLAYER_TOOLTIP_VERSION = "Musician v {version}"
@@ -127,7 +131,7 @@ msg.TOOLTIP_COPY_URL = "Premi {shortcut} per copiare."
 msg.INVALID_MUSIC_CODE = "Codice musicale non valido."
 msg.PLAY_A_SONG = "Suonare una canzone"
 msg.IMPORT_A_SONG = "Importa una canzone"
-msg.PASTE_MUSIC_CODE = "Importa la tua canzone in formato MIDI su:\n{url}\n\nquindi incolla il codice musicale qui ({shortcut}) ..."
+msg.PASTE_MUSIC_CODE = "Importa la tua canzone in formato MIDI su:\n{url}\n\nquindi incolla il codice musicale qui ({shortcut})…"
 msg.SONG_IMPORTED = "Canzone caricata: {title}."
 
 --- Play as a band
@@ -171,7 +175,7 @@ msg.HEADER_INSTRUMENT = "Strumento"
 --- Configure live keyboard frame
 msg.SHOULD_CONFIGURE_KEYBOARD = "Devi configurare la tastiera prima di suonare."
 msg.CONFIGURE_KEYBOARD = "Configura la tastiera"
-msg.CONFIGURE_KEYBOARD_HINT = "Fare clic su una chiave per impostare ..."
+msg.CONFIGURE_KEYBOARD_HINT = "Fare clic su una chiave per impostare…"
 msg.CONFIGURE_KEYBOARD_HINT_COMPLETE = "La configurazione della tastiera è completa.\nOra puoi salvare le modifiche e iniziare a riprodurre musica!"
 msg.CONFIGURE_KEYBOARD_START_OVER = "Ricominciare"
 msg.CONFIGURE_KEYBOARD_SAVE = "Salva configurazione"
@@ -343,7 +347,7 @@ msg.LINK_IMPORT_WINDOW_TITLE = "Importa brano da {player}:"
 msg.LINK_IMPORT_WINDOW_HINT = "Fare clic su \"Importa\" per avviare l'importazione della canzone in Musician."
 msg.LINK_IMPORT_WINDOW_IMPORT_BUTTON = "Importa brano"
 msg.LINK_IMPORT_WINDOW_CANCEL_IMPORT_BUTTON = "Annulla importazione"
-msg.LINK_IMPORT_WINDOW_REQUESTING = "Richiesta del brano da {player} ..."
+msg.LINK_IMPORT_WINDOW_REQUESTING = "Richiesta del brano da {player}…"
 msg.LINK_IMPORT_WINDOW_PROGRESS = "Importazione in corso… {progress}%"
 msg.LINK_IMPORT_WINDOW_SELECT_ACCOUNT = "Seleziona il personaggio da cui recuperare la canzone:"
 

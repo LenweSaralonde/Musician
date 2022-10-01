@@ -88,7 +88,7 @@ msg.OPTIONS_TRP3 = "RP total 3"
 msg.OPTIONS_TRP3_MAP_SCAN = "Mostre aos jogadores que possuem Musician no mapa a varredura com um ícone {icon}."
 msg.OPTIONS_CROSS_RP_TITLE = "Cross RP"
 msg.OPTIONS_CROSS_RP_SUB_TEXT = "Instale o complemento Cross RP de Tammya-MoonGuard para ativar\nmúsica entre facções e reinos!"
-msg.OPTIONS_CROSS_RP_SUB_TEXT_NO_GATEWAY = "Não há nenhum nó Cross RP disponível no momento.\nPor favor, seja paciente ..."
+msg.OPTIONS_CROSS_RP_SUB_TEXT_NO_GATEWAY = "Não há nenhum nó Cross RP disponível no momento.\nPor favor, seja paciente…"
 msg.OPTIONS_CROSS_RP_SUB_TEXT_ACTIVE = "A comunicação RP cruzada está ativa para os seguintes locais:\n\n{bands}"
 
 --- Tips and Tricks
@@ -113,6 +113,10 @@ msg.PLAYER_COUNT_ONLINE_NONE = "Não há outros fãs de música por aí ainda."
 msg.NEW_VERSION = "Uma nova versão do Musician foi lançada! Baixe a atualização de {url}."
 msg.NEW_PROTOCOL_VERSION = "Sua versão do Musician está desatualizada e não funciona mais.\nFaça download da atualização em\n{url}"
 
+-- Loading screen
+msg.LOADING_SCREEN_MESSAGE = "Musician está pré-carregando as amostras do instrumento na memória cache…"
+msg.LOADING_SCREEN_CLOSE_TOOLTIP = "Feche e continue pré-carregando em segundo plano."
+
 --- Player tooltips
 msg.PLAYER_TOOLTIP = "Musician"
 msg.PLAYER_TOOLTIP_VERSION = "Musician v {version}"
@@ -127,7 +131,7 @@ msg.TOOLTIP_COPY_URL = "Pressione {shortcut} para copiar."
 msg.INVALID_MUSIC_CODE = "Código de música inválido."
 msg.PLAY_A_SONG = "Tocar uma musica"
 msg.IMPORT_A_SONG = "Importar uma música"
-msg.PASTE_MUSIC_CODE = "Importe sua música no formato MIDI em:\n{url}\n\ne cole o código da música aqui ({shortcut}) ..."
+msg.PASTE_MUSIC_CODE = "Importe sua música no formato MIDI em:\n{url}\n\ne cole o código da música aqui ({shortcut})…"
 msg.SONG_IMPORTED = "Música carregada: {title}."
 
 --- Play as a band
@@ -171,7 +175,7 @@ msg.HEADER_INSTRUMENT = "Instrumento"
 --- Configure live keyboard frame
 msg.SHOULD_CONFIGURE_KEYBOARD = "Você tem que configurar o teclado antes de jogar."
 msg.CONFIGURE_KEYBOARD = "Configurar teclado"
-msg.CONFIGURE_KEYBOARD_HINT = "Clique em uma tecla para definir ..."
+msg.CONFIGURE_KEYBOARD_HINT = "Clique em uma tecla para definir…"
 msg.CONFIGURE_KEYBOARD_HINT_COMPLETE = "A configuração do teclado está concluída.\nAgora você pode salvar suas alterações e começar a tocar música!"
 msg.CONFIGURE_KEYBOARD_START_OVER = "Recomeçar"
 msg.CONFIGURE_KEYBOARD_SAVE = "Salvar configuração"

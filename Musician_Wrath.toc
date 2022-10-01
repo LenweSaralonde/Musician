@@ -38,6 +38,7 @@ ui\fonts\MusicianFontPercussionIcons.xml
 
 ui\widgets\MusicianWidgets.xml
 
+ui\MusicianLoadingScreen.xml
 ui\MusicianBasicMessageDialog.xml
 ui\MusicianFrame.xml
 ui\MusicianTrackEditor.xml

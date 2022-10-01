@@ -4,6 +4,7 @@
 --- OnShow
 --
 function MusicianTipsAndTricksTemplate_OnShow(self)
+	self:SetParent(UIParent)
 	PlaySound(SOUNDKIT.IG_QUEST_LIST_OPEN)
 end
 
@@ -16,7 +17,8 @@ end
 --- Enable checkbox OnShow
 --
 function MusicianTipsAndTricksTemplateEnableTipsAndTricks_OnShow(self)
-	self:SetChecked(Musician_Settings.enableTipsAndTricks)
+	local isEnabled = Musician_Settings == nil or Musician_Settings.enableTipsAndTricks == nil or Musician_Settings.enableTipsAndTricks
+	self:SetChecked(isEnabled)
 end
 
 --- Enable checkbox OnLoad

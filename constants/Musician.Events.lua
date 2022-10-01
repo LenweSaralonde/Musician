@@ -142,6 +142,10 @@ Musician.Events.PreloadingProgress = "MusicianPreloadingProgress"
 -- @field Musician.Events.PreloadingComplete
 Musician.Events.PreloadingComplete = "MusicianPreloadingComplete"
 
+--- Fired when the quick preloading process is complete and the loading screen has been dismissed
+-- @field Musician.Events.QuickPreloadingComplete
+Musician.Events.QuickPreloadingComplete = "MusicianQuickPreloadingComplete"
+
 --- Fired when the song importing process is starting
 -- @field Musician.Events.SongImportStart
 -- @param song (Musician.Song)

@@ -88,7 +88,7 @@ msg.OPTIONS_TRP3 = "Итого RP 3"
 msg.OPTIONS_TRP3_MAP_SCAN = "Покажите игрокам, у которых на сканированной карте есть Musician, с помощью значка {icon}."
 msg.OPTIONS_CROSS_RP_TITLE = "Кросс RP"
 msg.OPTIONS_CROSS_RP_SUB_TEXT = "Установите аддон Cross RP от Tammya-MoonGuard, чтобы активировать\nмузыку между фракциями и игровыми мирами!"
-msg.OPTIONS_CROSS_RP_SUB_TEXT_NO_GATEWAY = "На данный момент нет доступного узла Cross RP.\nПожалуйста, подождите ..."
+msg.OPTIONS_CROSS_RP_SUB_TEXT_NO_GATEWAY = "На данный момент нет доступного узла Cross RP.\nПожалуйста, подождите…"
 msg.OPTIONS_CROSS_RP_SUB_TEXT_ACTIVE = "Перекрестная связь RP активна для следующих мест:\n\n{bands}"
 
 --- Tips and Tricks
@@ -112,6 +112,10 @@ msg.PLAYER_COUNT_ONLINE_NONE = "Других меломанов пока нет.
 --- New version notifications
 msg.NEW_VERSION = "Вышла новая версия Musicianа! Загрузите обновление с {url}."
 msg.NEW_PROTOCOL_VERSION = "Ваша версия Musicianа устарела и больше не работает.\nЗагрузите обновление с\n{url}"
+
+-- Loading screen
+msg.LOADING_SCREEN_MESSAGE = "Musician предварительно загружает сэмплы инструмента в кэш-память…"
+msg.LOADING_SCREEN_CLOSE_TOOLTIP = "Закрыть и продолжить предварительную загрузку в фоновом режиме."
 
 --- Player tooltips
 msg.PLAYER_TOOLTIP = "Musician"

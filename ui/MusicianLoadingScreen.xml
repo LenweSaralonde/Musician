@@ -1,0 +1,109 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.blizzard.com/wow/ui/">
+
+	<!-- Loading screen -->
+
+	<Script file="MusicianLoadingScreen.lua" />
+
+	<!-- Loading screen font definition -->
+
+	<FontFamily name="MusicianLoadingScreenFont" virtual="true">
+		<Member alphabet="roman">
+			<Font font="Fonts\FRIZQT__.TTF" height="13.5" outline="NORMAL">
+				<Shadow>
+					<Offset>
+						<AbsDimension x="1" y="-1" />
+					</Offset>
+					<Color r="0" g="0" b="0" />
+				</Shadow>
+			</Font>
+		</Member>
+		<Member alphabet="korean">
+			<Font font="Fonts\2002.TTF" height="13" outline="NORMAL">
+				<Shadow>
+					<Offset>
+						<AbsDimension x="1" y="-1" />
+					</Offset>
+					<Color r="0" g="0" b="0" />
+				</Shadow>
+			</Font>
+		</Member>
+		<Member alphabet="simplifiedchinese">
+			<Font font="Fonts\ARKai_T.ttf" height="15.5" outline="NORMAL">
+				<Shadow>
+					<Offset>
+						<AbsDimension x="1" y="-1" />
+					</Offset>
+					<Color r="0" g="0" b="0" />
+				</Shadow>
+			</Font>
+		</Member>
+		<Member alphabet="traditionalchinese">
+			<Font font="Fonts\blei00d.TTF" height="15.5" outline="NORMAL">
+				<Shadow>
+					<Offset>
+						<AbsDimension x="1" y="-1" />
+					</Offset>
+					<Color r="0" g="0" b="0" />
+				</Shadow>
+			</Font>
+		</Member>
+		<Member alphabet="russian">
+			<Font font="Fonts\FRIZQT___CYR.TTF" height="13.5" outline="NORMAL">
+				<Shadow>
+					<Offset>
+						<AbsDimension x="1" y="-1" />
+					</Offset>
+					<Color r="0" g="0" b="0" />
+				</Shadow>
+			</Font>
+		</Member>
+	</FontFamily>
+
+	<!-- Loading screen frame -->
+
+	<Frame name="MusicianLoadingScreen" toplevel="true" frameStrata="FULLSCREEN_DIALOG" mixin="MusicianLoadingScreenMixin" enableMouse="true" enableKeyboard="true" hidden="true">
+		<Anchors>
+			<Anchor point="CENTER" />
+		</Anchors>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture setAllPoints="true">
+					<Color r="0" g="0" b="0" a="1" />
+				</Texture>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Frame name="$parentContent" parentKey="content">
+				<Anchors>
+					<Anchor point="CENTER" />
+				</Anchors>
+				<Layers>
+					<Layer level="BACKGROUND" textureSubLevel="2">
+						<Texture name="$parentImage" parentKey="image" setAllPoints="true" file="Interface\AddOns\Musician\ui\textures\loading-screen.jpg" />
+					</Layer>
+					<Layer level="BACKGROUND" textureSubLevel="3">
+						<Texture name="$parentBackground" parentKey="background" setAllPoints="true" file="interface\glues\loadingbar\loading-barborder-background-v2.blp" />
+					</Layer>
+					<Layer level="BACKGROUND" textureSubLevel="4">
+						<Texture name="$parentFill" parentKey="fill" setAllPoints="true" file="interface\glues\loadingbar\loading-barfill.blp" />
+					</Layer>
+					<Layer level="BORDER">
+						<Texture name="$parentBorder" parentKey="border" setAllPoints="true" file="interface\glues\loadingbar\loading-barborder-frame-v2.blp" />
+					</Layer>
+					<Layer level="ARTWORK">
+						<FontString name="$parentText" parentKey="text" font="MusicianLoadingScreenFont" justifyH="LEFT" justifyV="MIDDLE" spacing="4" />
+					</Layer>
+				</Layers>
+			</Frame>
+			<Button name="$parentCloseButton" parentKey="close" inherits="UIPanelCloseButton" hidden="true" />
+		</Frames>
+		<Scripts>
+			<OnShow method="OnShow" />
+			<OnHide method="OnHide" />
+			<OnKeyUp method="SuppressKeyboardInput" />
+			<OnKeyDown method="SuppressKeyboardInput" />
+		</Scripts>
+	</Frame>
+</Ui>

@@ -1,4 +1,4 @@
---- Preloads sample files into the disk cache in background
+--- Preloads sample files into the OS page cache
 -- @module Musician.Preloader
 
 Musician.Preloader = LibStub("AceAddon-3.0"):NewAddon("Musician.Preloader", "AceEvent-3.0")
@@ -8,7 +8,11 @@ Musician.AddModule(MODULE_NAME)
 
 Musician.Preloader.preloadedSamples = {}
 
-local DEFAULT_LOADING_TIME = 30 -- Average loading time in ms of an uncached sample from a 5400 RPM HDD
+local SSD_AVERAGE_LOADING_TIME = 10 -- Average loading time in ms of a sample from a SATA SSD
+local HDD_AVERAGE_LOADING_TIME = 30 -- Average loading time in ms of a sample from a 5400 RPM USB HDD
+local FIRST_QUICK_PRELOADING_PERIOD = 1000 -- Max duration in ms of the first quick preloading iteration, during Blizzard's loading screen
+local QUICK_PRELOADING_PERIOD = 250 -- Max duration in ms of the quick preloading iterations, during Musician's custom loading screen
+local SAMPLE_CACHE_KEEPALIVE_PERIOD = 10 -- Period in ms after an already preloaded sample is preloaded again to maintain it in page cache
 
 local instrumentCursor
 local keyCursor
@@ -20,6 +24,9 @@ local averageLoadingTime
 local totalSamples
 local preloadedSamples
 local quickPreloading = true
+local quickPreloadingIsAborted = false
+local quickPreloadingIterations = 0
+local quickPreloadingFirstLoadedSamplesCount = 0
 
 --- Preloader initialization
 --
@@ -37,7 +44,7 @@ function Musician.Preloader.Init()
 	-- Stastics on preloaded samples from disk
 	totalLoadingTime = 0
 	totalLoadedSamples = 0
-	averageLoadingTime = DEFAULT_LOADING_TIME
+	averageLoadingTime = HDD_AVERAGE_LOADING_TIME -- Consider the worst case scenario during initialization
 
 	-- Statistics on preloaded samples for progression
 	totalSamples = 0
@@ -61,27 +68,73 @@ function Musician.Preloader.Init()
 	Musician.Preloader.QuickPreload()
 end
 
---- Attempt to preload all samples at startup
+--- Attempt to preload all samples at startup during the loading screen.
 --
 function Musician.Preloader.QuickPreload()
-	Musician.Utils.Debug(MODULE_NAME, "quick preloading started.")
+	local maxPreloadingTime = QUICK_PRELOADING_PERIOD
+
+	-- Initiating first iteration
+	if quickPreloadingIterations == 0 then
+		Musician.Utils.Debug(MODULE_NAME, "quick preloading started.")
+		maxPreloadingTime = FIRST_QUICK_PRELOADING_PERIOD
+	end
 
 	local startTime = debugprofilestop()
 	while not preloaded do
 		Musician.Preloader.PreloadNext()
 		local quickPreloadingTime = debugprofilestop() - startTime
-		-- Quick preloading takes longer than 15 seconds: abort it
-		if quickPreloadingTime > 15000 then
-			quickPreloading = false
-			Musician.Utils.Debug(MODULE_NAME,
-				"quick preloading aborted at " .. floor(100 * Musician.Preloader.GetProgress()) .. "% (timeout).")
+		-- The iteration didn't end in time
+		if quickPreloadingTime > maxPreloadingTime then
+			-- Don't go any further if the process was aborted
+			if quickPreloadingIsAborted then
+				quickPreloading = false
+				Musician.Utils.Debug(MODULE_NAME, "quick preloading was aborted!")
+				Musician.Preloader:SendMessage(Musician.Events.QuickPreloadingComplete)
+				return
+			end
+
+			-- Show the custom loading screen if was the first iteration
+			if quickPreloadingIterations == 0 then
+				-- Remove the already loaded samples count so the progress bar starts from 0
+				quickPreloadingFirstLoadedSamplesCount = preloadedSamples
+
+				-- Show the loading screen
+				MusicianLoadingScreen:Show()
+
+				-- Show the abort button if loading from an HDD to allow loading in background because it can take a while.
+				if Musician.Preloader.GetAverageLoadingTime() >= SSD_AVERAGE_LOADING_TIME then
+					MusicianLoadingScreen.close:Show()
+				end
+			end
+
+			-- Refresh progression on loading screen and try again on next frame
+			local progression = (preloadedSamples - quickPreloadingFirstLoadedSamplesCount) /
+				(totalSamples - quickPreloadingFirstLoadedSamplesCount)
+			MusicianLoadingScreen:SetProgression(progression)
+			quickPreloadingIterations = quickPreloadingIterations + 1
+			C_Timer.After(0, Musician.Preloader.QuickPreload)
 			return
 		end
 	end
+
+	-- Hide the loading screen
+	if quickPreloadingIterations > 0 then
+		MusicianLoadingScreen:SetProgression(1)
+		C_Timer.After(maxPreloadingTime / 1000 / 2, function()
+			MusicianLoadingScreen:Hide()
+		end)
+	end
+
+	-- Quick preloading is complete
 	quickPreloading = false
 	Musician.Utils.Debug(MODULE_NAME, "quick preloading complete!")
+	Musician.Preloader:SendMessage(Musician.Events.QuickPreloadingComplete)
 
-	-- Measured preloading time: ~12s from SSD, ~0.2s from RAM
+	-- Measured total preloading time: ~12s from SSD, ~0.2s from RAM
+	-- Average time per sample:
+	-- ~30 ms from USB 5400 RPM HDD
+	-- ~6ms from SATA SSD
+	-- ~3ms from PCIe v4 SSD
 end
 
 --- Preload next sample
@@ -144,7 +197,7 @@ function Musician.Preloader.PreloadNext()
 				wipe(Musician.Preloader.preloadedSamples)
 				preloadedSamples = 0
 				keyCursor = Musician.MIN_KEY
-				averageLoadingTime = DEFAULT_LOADING_TIME
+				averageLoadingTime = SAMPLE_CACHE_KEEPALIVE_PERIOD
 			end
 		end
 	end
@@ -286,4 +339,16 @@ end
 -- @return (boolean)
 function Musician.Preloader.IsComplete()
 	return preloaded
+end
+
+--- Return true if the quick preloading is complete or was aborted
+-- @return (boolean)
+function Musician.Preloader.QuickPreloadingIsComplete()
+	return not quickPreloading
+end
+
+--- Abort quick preloading
+--
+function Musician.Preloader.AbortQuickPreloading()
+	quickPreloadingIsAborted = true
 end

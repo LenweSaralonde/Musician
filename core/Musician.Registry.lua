@@ -25,6 +25,8 @@ local newProtocolNotified = false
 
 local pendingPlayerQueries = {} -- Query messages queue
 
+local pendingNotifications = {} -- Pending notification functions
+
 --- Print communication debug message
 -- @param out (boolean) Outgoing message
 -- @param event (string)
@@ -552,6 +554,19 @@ function Musician.Registry.GetPlayerVersion(player)
 	return Musician.Registry.ExtractVersionAndProtocol(entry.version)
 end
 
+--- Send pending notifications
+--
+local function sendPendingNotifications()
+	if not Musician.Preloader.QuickPreloadingIsComplete() then
+		Musician.Registry:RegisterMessage(Musician.Events.QuickPreloadingComplete, sendPendingNotifications)
+		return
+	end
+
+	for _, notification in pairs(pendingNotifications) do
+		notification()
+	end
+end
+
 --- Display a message if a new version of the addon is available
 -- @param otherVersion (string)
 function Musician.Registry.NotifyNewVersion(otherVersion)
@@ -565,30 +580,36 @@ function Musician.Registry.NotifyNewVersion(otherVersion)
 	-- Compare versions
 	if not newVersionNotified and Musician.Utils.VersionCompare(theirVersion, myVersion) == 1 then
 		newVersionNotified = true
+		pendingNotifications["version"] = function()
+			pendingNotifications["version"] = nil
+			local msg = Musician.Msg.NEW_VERSION
+			msg = string.gsub(msg, '{url}', Musician.Utils.GetUrlLink(Musician.URL))
+			msg = string.gsub(msg, '{version}', Musician.Utils.Highlight(theirVersion))
 
-		local msg = Musician.Msg.NEW_VERSION
-		msg = string.gsub(msg, '{url}', Musician.Utils.GetUrlLink(Musician.URL))
-		msg = string.gsub(msg, '{version}', Musician.Utils.Highlight(theirVersion))
+			-- Display message with fanfare sound
+			if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+				PlaySound(67788, 'Master')
+			else
+				PlaySoundFile("Interface\\AddOns\\Musician\\ui\\sound\\fx_flute_mylunesmelody_short.ogg")
+			end
 
-		-- Display message with fanfare sound
-		if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-			PlaySound(67788, 'Master')
-		else
-			PlaySoundFile("Interface\\AddOns\\Musician\\ui\\sound\\fx_flute_mylunesmelody_short.ogg")
+			Musician.Utils.Print(msg)
 		end
-
-		Musician.Utils.Print(msg)
+		sendPendingNotifications()
 	end
 
 	-- Compare protocol versions
 	if not newProtocolNotified and theirProtocol > myProtocol then
 		newProtocolNotified = true
+		pendingNotifications["protocol"] = function()
+			pendingNotifications["protocol"] = nil
+			local msg = Musician.Msg.NEW_PROTOCOL_VERSION
+			msg = string.gsub(msg, '{url}', Musician.Utils.GetUrlLink(Musician.URL))
+			msg = string.gsub(msg, '{version}', Musician.Utils.Highlight(theirVersion))
+			msg = string.gsub(msg, '{protocol}', Musician.Utils.Highlight(theirProtocol))
 
-		local msg = Musician.Msg.NEW_PROTOCOL_VERSION
-		msg = string.gsub(msg, '{url}', Musician.Utils.GetUrlLink(Musician.URL))
-		msg = string.gsub(msg, '{version}', Musician.Utils.Highlight(theirVersion))
-		msg = string.gsub(msg, '{protocol}', Musician.Utils.Highlight(theirProtocol))
-
-		C_Timer.After(3, function() Musician.Utils.Popup(msg) end)
+			C_Timer.After(3, function() Musician.Utils.Popup(msg) end)
+		end
+		sendPendingNotifications()
 	end
 end

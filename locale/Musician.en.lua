@@ -113,6 +113,10 @@ msg.PLAYER_COUNT_ONLINE_NONE = "There are no other music fans around yet."
 msg.NEW_VERSION = "A new version of Musician has been released! Download the update from {url} ."
 msg.NEW_PROTOCOL_VERSION = "Your version of Musician is outdated and does not work anymore.\nPlease download the update from\n{url}"
 
+-- Loading screen
+msg.LOADING_SCREEN_MESSAGE = "Musician is preloading the instrument samples into cache…"
+msg.LOADING_SCREEN_CLOSE_TOOLTIP = "Close and continue preloading in background."
+
 --- Player tooltips
 msg.PLAYER_TOOLTIP = "Musician"
 msg.PLAYER_TOOLTIP_VERSION = "Musician v{version}"

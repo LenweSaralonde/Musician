@@ -88,7 +88,7 @@ msg.OPTIONS_TRP3 = "Total-RP 3"
 msg.OPTIONS_TRP3_MAP_SCAN = "Zeige alle Spieler mit Musician auf der Karte mit einem  {icon} -Symbol an."
 msg.OPTIONS_CROSS_RP_TITLE = "Cross RP"
 msg.OPTIONS_CROSS_RP_SUB_TEXT = "Installiere Cross RP von Tammya-MoonGuard, um fraktions- und bereichsübergreifende Musik spielen zu können!"
-msg.OPTIONS_CROSS_RP_SUB_TEXT_NO_GATEWAY = "Derzeit ist keine Cross-RP-Verbindung verfügbar.\n Bitte warte etwas ..."
+msg.OPTIONS_CROSS_RP_SUB_TEXT_NO_GATEWAY = "Derzeit ist keine Cross-RP-Verbindung verfügbar.\n Bitte warte etwas…"
 msg.OPTIONS_CROSS_RP_SUB_TEXT_ACTIVE = "Die RP-übergreifende Kommunikation ist für die folgenden Standorte aktiv:\n\n{bands}"
 
 --- Tips and Tricks
@@ -111,7 +111,11 @@ msg.PLAYER_COUNT_ONLINE_NONE = "Es gibt noch keine anderen Musikfans."
 
 --- New version notifications
 msg.NEW_VERSION = "Eine neue Version von Musician wurde veröffentlicht! Laden Sie das Update von {url} herunter."
-msg.NEW_PROTOCOL_VERSION = "Ihre Version von Musician ist veraltet und funktioniert nicht mehr.\nBitte laden Sie das Update von\n{url} herunter"
+msg.NEW_PROTOCOL_VERSION = "Ihre Version von Musician ist veraltet und funktioniert nicht mehr.\nBitte laden Sie das Update von\n{url} herunter."
+
+-- Loading screen
+msg.LOADING_SCREEN_MESSAGE = "Musician lädt die Instrumenten-Samples vorab in den Cache-Speicher…"
+msg.LOADING_SCREEN_CLOSE_TOOLTIP = "Schließen und Vorladen im Hintergrund fortsetzen."
 
 --- Player tooltips
 msg.PLAYER_TOOLTIP = "Musician"
@@ -171,7 +175,7 @@ msg.HEADER_INSTRUMENT = "Instrument"
 --- Configure live keyboard frame
 msg.SHOULD_CONFIGURE_KEYBOARD = "Die Tastatur muss vor dem spielen konfiguriert werden."
 msg.CONFIGURE_KEYBOARD = "Tastatur konfigurieren"
-msg.CONFIGURE_KEYBOARD_HINT = "Klicken Sie auf einen Schlüssel, um ..."
+msg.CONFIGURE_KEYBOARD_HINT = "Klicken Sie auf einen Schlüssel, um…"
 msg.CONFIGURE_KEYBOARD_HINT_COMPLETE = "Die Tastaturkonfiguration ist abgeschlossen.\nDu kannst die Änderungen nun speichern und mit dem spielen beginnen!"
 msg.CONFIGURE_KEYBOARD_START_OVER = "Von vorn anfangen"
 msg.CONFIGURE_KEYBOARD_SAVE = "Konfiguration speichern"

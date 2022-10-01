@@ -113,6 +113,10 @@ msg.PLAYER_COUNT_ONLINE_NONE = "沒有在線的音樂迷。"
 msg.NEW_VERSION = "一個新的Musician版本發布了！可以在以下鏈接下載升級：{url}。"
 msg.NEW_PROTOCOL_VERSION = "你的Musician版本過老，已經無法使用。\n請前往以下鏈接升級\n{url}"
 
+-- Loading screen
+msg.LOADING_SCREEN_MESSAGE = "Musician 正在將樂器樣本預加載到緩存中……"
+msg.LOADING_SCREEN_CLOSE_TOOLTIP = "關閉並在後台繼續預加載。"
+
 --- Player tooltips
 msg.PLAYER_TOOLTIP = "Musician"
 msg.PLAYER_TOOLTIP_VERSION = "Musician v{version}"
