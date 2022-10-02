@@ -79,6 +79,7 @@ end
 function MusicianLoadingScreenMixin:OnHide()
 	-- Show UI when complete
 	UIParent:SetShown(true)
+	self.content.image:SetTexture(nil) -- Unload image texture
 end
 
 --- Suppress any keyboard input
