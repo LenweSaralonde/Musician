@@ -30,9 +30,12 @@ function MusicianLoadingScreenMixin:OnShow()
 	local borderWidth = .6 * viewportWidth
 	local borderHeight = 64 * .8 * 1080 / 1024 * contentScale * imageScale
 
-	-- Set the loading bar to 4/3 width to match the new loading screen skin and WoW Classic
-	borderWidth = borderWidth * (4 / 3) / imageRatio
+	-- Set the loading bar to 4/3 width to match the WoW Classic loading screen skin
+	if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then
+		borderWidth = borderWidth * (4 / 3) / imageRatio
+	end
 
+	-- Setup progress bar
 	self.content.background:SetSize(borderWidth, borderHeight)
 	self.content.background:ClearAllPoints()
 	self.content.background:SetPoint("BOTTOM", 0, 54 * contentScale * imageScale)
@@ -46,6 +49,7 @@ function MusicianLoadingScreenMixin:OnShow()
 	self.content.fill:ClearAllPoints()
 	self.content.fill:SetPoint("LEFT", self.content.border, "LEFT", borderWidth * 32 / 1024, 0)
 
+	-- Setup text
 	self.content.text:SetSize(viewportWidth * .38, borderHeight)
 	self.content.text:ClearAllPoints()
 	self.content.text:SetPoint("BOTTOM", self.content.border, "TOP", 0, -3)
@@ -54,26 +58,27 @@ function MusicianLoadingScreenMixin:OnShow()
 
 	-- Setup abort quick preloading button
 	self.close:SetPoint("CENTER", viewportWidth / 2 - 20, viewportHeight / 2 - 20)
+	self.close.tooltip = CreateFrame("GameTooltip", "LoadingScreenTooltip", nil, "SharedTooltipTemplate")
 	self.close:HookScript("OnClick", Musician.Preloader.AbortQuickPreloading)
 	self.close:HookScript("OnEnter", function()
-		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-		GameTooltip_SetTitle(GameTooltip, Musician.Msg.LOADING_SCREEN_CLOSE_TOOLTIP)
-		GameTooltip:Show()
+		self.close.tooltip:SetOwner(self.close, "ANCHOR_NONE")
+		self.close.tooltip:SetPoint("TOPRIGHT", self.close, "BOTTOMRIGHT")
+		GameTooltip_SetTitle(self.close.tooltip, Musician.Msg.LOADING_SCREEN_CLOSE_TOOLTIP)
+		self.close.tooltip:Show()
 	end)
 	self.close:HookScript("OnLeave", function()
-		GameTooltip:Hide()
+		self.close.tooltip:Hide()
 	end)
 
 	-- Hide the main UI during the process
 	UIParent:SetShown(false)
-	GameTooltipIsolatingParent:SetParent(WorldFrame)
 end
 
 --- OnHide
 --
 function MusicianLoadingScreenMixin:OnHide()
+	-- Show UI when complete
 	UIParent:SetShown(true)
-	GameTooltipIsolatingParent:SetParent(UIParent)
 end
 
 --- Suppress any keyboard input
