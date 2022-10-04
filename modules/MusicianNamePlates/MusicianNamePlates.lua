@@ -44,7 +44,7 @@ local PARAM = {
 	SPEED = 6
 }
 
-local releasedNoteFrames = {}
+local noteTexturePoolFrame = CreateFrame("Frame")
 
 local playerAnimatedNotesFrame
 
@@ -96,48 +96,46 @@ function Musician.NamePlates:OnEnable()
 end
 
 --- Render a single animated note
--- @param noteFrame (Frame)
+-- @param noteTexture (Texture)
 -- @param position (number) 0-1
-local function renderAnimatedNote(noteFrame, position)
-	if not noteFrame:IsVisible() then return end
+local function renderAnimatedNote(noteTexture, position)
+	if not noteTexture:IsVisible() then return end
 
-	local speed = noteFrame.animationParams[PARAM.SPEED]
-	local isPercussion = noteFrame.animationParams[PARAM.IS_PERCUSSION]
+	local speed = noteTexture.animationParams[PARAM.SPEED]
+	local isPercussion = noteTexture.animationParams[PARAM.IS_PERCUSSION]
 
 	-- Position
 	local x, y
-	local width = noteFrame:GetParent():GetWidth()
-	local height = noteFrame:GetParent():GetHeight()
+	local width, height = noteTexture:GetParent():GetSize()
 	if not isPercussion then
 		local theta, distance
-		theta = noteFrame.animationParams[PARAM.X] * (1 - position / 2) * ANIMATION_ANGLE_RANGE / 2
+		theta = noteTexture.animationParams[PARAM.X] * (1 - position / 2) * ANIMATION_ANGLE_RANGE / 2
 		theta = min(80, max(-80, theta))
 		distance = position * speed * height
 		x = sin(theta) * (width / 2 + distance)
 		y = cos(theta) * (width / 6 + distance)
 	else
-		x = noteFrame.animationParams[PARAM.X] * width
-		y = noteFrame.animationParams[PARAM.Y] * height
+		x = noteTexture.animationParams[PARAM.X] * width
+		y = noteTexture.animationParams[PARAM.Y] * height
 	end
-	noteFrame:SetPoint("BOTTOM", x, y)
+	noteTexture:SetPoint("BOTTOM", x, y)
 
 	-- Rotation, scale and fade
-	local anglePosition = (position * 2 - 1) * noteFrame.animationParams[PARAM.ORIENTATION]
+	local anglePosition = (position * 2 - 1) * noteTexture.animationParams[PARAM.ORIENTATION]
 	local angle = anglePosition * PI / 4
 	local alpha = 1 - position
 	local scale = 1 + position * .8
-	noteFrame:SetScale(scale)
-	noteFrame.texture:SetAlpha(alpha)
-	noteFrame.texture:SetRotation(angle)
+	noteTexture:SetScale(scale)
+	noteTexture:SetAlpha(alpha)
+	noteTexture:SetRotation(angle)
 end
 
 --- Remove note from animated notes frame
--- @param noteFrame (Frame)
-local function removeNote(noteFrame)
-	noteFrame:Hide()
-	noteFrame:SetParent(nil)
-	noteFrame:ClearAllPoints()
-	table.insert(releasedNoteFrames, noteFrame)
+-- @param noteTexture (Texture)
+local function removeNote(noteTexture)
+	noteTexture:Hide()
+	noteTexture:ClearAllPoints()
+	noteTexture:SetParent(noteTexturePoolFrame)
 end
 
 --- Render notes animation frame
@@ -148,29 +146,29 @@ local function animateNotes(animatedNotesFrame, elapsed)
 	wipe(animatedNotesFrame.notesAddedDuringFrame)
 
 	-- Animate notes
-	local numChildren = animatedNotesFrame:GetNumChildren()
+	local numRegions = animatedNotesFrame:GetNumRegions()
 
-	if numChildren == 0 then return end
+	if numRegions == 0 then return end
 
-	for childIndex = numChildren, 1, -1 do
-		local noteFrame = select(childIndex, animatedNotesFrame:GetChildren())
-		noteFrame.animationParams[PARAM.PROGRESSION] = noteFrame.animationParams[PARAM.PROGRESSION] + elapsed
+	for childIndex = numRegions, 1, -1 do
+		local noteTexture = select(childIndex, animatedNotesFrame:GetRegions())
+		noteTexture.animationParams[PARAM.PROGRESSION] = noteTexture.animationParams[PARAM.PROGRESSION] + elapsed
 
 		local duration = NOTES_ANIMATION_DURATION
-		local isPercussion = noteFrame.animationParams[PARAM.IS_PERCUSSION]
+		local isPercussion = noteTexture.animationParams[PARAM.IS_PERCUSSION]
 
 		if isPercussion then
 			duration = duration / 3
 		end
-		local position = noteFrame.animationParams[PARAM.PROGRESSION] / duration
+		local position = noteTexture.animationParams[PARAM.PROGRESSION] / duration
 
 		-- Animation is complete
 		if position >= 1 then
-			renderAnimatedNote(noteFrame, 1)
-			removeNote(noteFrame)
-			numChildren = numChildren - 1
+			renderAnimatedNote(noteTexture, 1)
+			removeNote(noteTexture)
+			numRegions = numRegions - 1
 		else
-			renderAnimatedNote(noteFrame, position)
+			renderAnimatedNote(noteTexture, position)
 		end
 	end
 end
@@ -219,38 +217,33 @@ local function addNote(animatedNotesFrame, song, track, key)
 		noteSymbold = Musician.Utils.GetRandomArgument(1, 4)
 	end
 
-	-- Get a released note frame or create a new one
-	local noteFrame = table.remove(releasedNoteFrames)
-	if not noteFrame then
-		noteFrame = CreateFrame("Frame")
-		noteFrame:SetFrameStrata("BACKGROUND")
-		noteFrame.texture = noteFrame:CreateTexture(nil, "BACKGROUND", nil, -8)
-		noteFrame.texture:SetAllPoints(noteFrame)
-		noteFrame.texture:SetBlendMode("ADD")
+	-- Acquire note texture from pool
+	local noteTexture = noteTexturePoolFrame:GetRegions()
+	local animationParams
+	if not noteTexture then
+		noteTexture = noteTexturePoolFrame:CreateTexture(nil, "BACKGROUND", nil, -8)
+		noteTexture:SetBlendMode("ADD")
+		noteTexture.animationParams = {}
 	end
 
 	-- Set animation parameters
-	noteFrame.animationParams = {
-		[PARAM.PROGRESSION] = 0,
-		[PARAM.X] = x,
-		[PARAM.Y] = y,
-		[PARAM.ORIENTATION] = orientation,
-		[PARAM.IS_PERCUSSION] = isPercussion,
-		[PARAM.SPEED] = .6 + random() * .6
-	}
+	animationParams = noteTexture.animationParams
+	animationParams[PARAM.PROGRESSION] = 0
+	animationParams[PARAM.X] = x
+	animationParams[PARAM.Y] = y
+	animationParams[PARAM.ORIENTATION] = orientation
+	animationParams[PARAM.IS_PERCUSSION] = isPercussion
+	animationParams[PARAM.SPEED] = .6 + random() * .6
 
 	-- Reset frame
-	noteFrame:SetParent(animatedNotesFrame)
-	noteFrame:SetFrameLevel(0)
-	noteFrame.texture:SetTexture(NOTES_TEXTURE_RACE[animatedNotesFrame.race] or NOTES_TEXTURE)
-	noteFrame.texture:SetTexCoord(unpack(NOTES_TEXTURE_COORDS[noteSymbold]))
-	noteFrame:SetWidth(32)
-	noteFrame:SetHeight(32)
-	noteFrame.texture:Show()
-	noteFrame:Show()
+	noteTexture:SetParent(animatedNotesFrame)
+	noteTexture:SetTexture(NOTES_TEXTURE_RACE[animatedNotesFrame.race] or NOTES_TEXTURE)
+	noteTexture:SetTexCoord(unpack(NOTES_TEXTURE_COORDS[noteSymbold]))
+	noteTexture:SetSize(32, 32)
+	noteTexture:Show()
 
 	-- Render first animation frame
-	renderAnimatedNote(noteFrame, 0)
+	renderAnimatedNote(noteTexture, 0)
 end
 
 --- Set frame text bypassing hooks
