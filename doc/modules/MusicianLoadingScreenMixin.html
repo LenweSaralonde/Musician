@@ -87,7 +87,7 @@
   <li><a href="../modules/Musician.VolumeMeter.html">Musician.VolumeMeter</a></li>
   <li><a href="../modules/Musician.Widgets.html">Musician.Widgets</a></li>
   <li><a href="../modules/Musician.Worker.html">Musician.Worker</a></li>
-  <li><strong>MusicianAnimatedImageTemplate</strong></li>
+  <li><a href="../modules/MusicianAnimatedImageTemplate.html">MusicianAnimatedImageTemplate</a></li>
   <li><a href="../modules/MusicianBandPlayButtonTemplate.html">MusicianBandPlayButtonTemplate</a></li>
   <li><a href="../modules/MusicianBasicMessageDialogMixin.html">MusicianBasicMessageDialogMixin</a></li>
   <li><a href="../modules/MusicianButton.html">MusicianButton</a></li>
@@ -101,7 +101,7 @@
   <li><a href="../modules/MusicianImageTemplate.html">MusicianImageTemplate</a></li>
   <li><a href="../modules/MusicianInstrumentDropdownTemplate.html">MusicianInstrumentDropdownTemplate</a></li>
   <li><a href="../modules/MusicianLEDTextButtonTemplate.html">MusicianLEDTextButtonTemplate</a></li>
-  <li><a href="../modules/MusicianLoadingScreenMixin.html">MusicianLoadingScreenMixin</a></li>
+  <li><strong>MusicianLoadingScreenMixin</strong></li>
   <li><a href="../modules/MusicianProgressBarTemplate.html">MusicianProgressBarTemplate</a></li>
   <li><a href="../modules/MusicianTipsAndTricksButtonTemplates.html">MusicianTipsAndTricksButtonTemplates</a></li>
   <li><a href="../modules/MusicianTipsAndTricksTemplate.html">MusicianTipsAndTricksTemplate</a></li>
@@ -111,24 +111,28 @@
 
 <div id="content">
 
-<h1>Module <code>MusicianAnimatedImageTemplate</code></h1>
-<p>Animated image template</p>
+<h1>Module <code>MusicianLoadingScreenMixin</code></h1>
+<p>Loading screen mixin</p>
 <p></p>
 
 
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#MusicianAnimatedImageTemplate_OnLoad">MusicianAnimatedImageTemplate_OnLoad (self)</a></td>
-	<td class="summary">OnLoad</td>
+	<td class="name" nowrap><a href="#OnHide">OnHide ()</a></td>
+	<td class="summary">OnHide</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#MusicianAnimatedImageTemplate_OnShow">MusicianAnimatedImageTemplate_OnShow (self)</a></td>
+	<td class="name" nowrap><a href="#OnShow">OnShow ()</a></td>
 	<td class="summary">OnShow</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#MusicianAnimatedImageTemplate_OnUpdate">MusicianAnimatedImageTemplate_OnUpdate (self, elapsed)</a></td>
-	<td class="summary">OnUpdate</td>
+	<td class="name" nowrap><a href="#SetProgression">SetProgression (progression)</a></td>
+	<td class="summary">Set progression</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#SuppressKeyboardInput">SuppressKeyboardInput ()</a></td>
+	<td class="summary">Suppress any keyboard input</td>
 	</tr>
 </table>
 
@@ -140,19 +144,13 @@
 
     <dl class="function">
     <dt>
-    <a name = "MusicianAnimatedImageTemplate_OnLoad"></a>
-    <strong>MusicianAnimatedImageTemplate_OnLoad (self)</strong>
+    <a name = "OnHide"></a>
+    <strong>OnHide ()</strong>
     </dt>
     <dd>
-    OnLoad
+    OnHide
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">self</span>
-         (Frame)
-        </li>
-    </ul>
 
 
 
@@ -160,17 +158,31 @@
 
 </dd>
     <dt>
-    <a name = "MusicianAnimatedImageTemplate_OnShow"></a>
-    <strong>MusicianAnimatedImageTemplate_OnShow (self)</strong>
+    <a name = "OnShow"></a>
+    <strong>OnShow ()</strong>
     </dt>
     <dd>
     OnShow
 
 
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "SetProgression"></a>
+    <strong>SetProgression (progression)</strong>
+    </dt>
+    <dd>
+    Set progression
+
+
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">self</span>
-         (Frame)
+        <li><span class="parameter">progression</span>
+         (number) 0-1
         </li>
     </ul>
 
@@ -180,22 +192,13 @@
 
 </dd>
     <dt>
-    <a name = "MusicianAnimatedImageTemplate_OnUpdate"></a>
-    <strong>MusicianAnimatedImageTemplate_OnUpdate (self, elapsed)</strong>
+    <a name = "SuppressKeyboardInput"></a>
+    <strong>SuppressKeyboardInput ()</strong>
     </dt>
     <dd>
-    OnUpdate
+    Suppress any keyboard input
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">self</span>
-         (Frame)
-        </li>
-        <li><span class="parameter">elapsed</span>
-         (number)
-        </li>
-    </ul>
 
 
 
