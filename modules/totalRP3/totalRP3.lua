@@ -10,6 +10,7 @@ local playersPlayingMusic = {}
 local IS_PLAYING_TIMEOUT = 3
 local PIN_TEXTURE = 'Interface\\AddOns\\Musician\\ui\\textures\\map-pin'
 local PIN_HIGHLIGHT_TEXTURE = 'Interface\\AddOns\\Musician\\ui\\textures\\map-pin-highlight'
+local CONFIG_TOOLTIP_MAIN_COLOR = "tooltip_main_color"
 
 function Musician.TRP3:OnEnable()
 	if TRP3_API then
@@ -52,13 +53,13 @@ function Musician.TRP3.HookTooltip()
 
 	-- Add Musician version to Total RP player tooltip
 	TRP3_CharacterTooltip:HookScript("OnShow", function(t)
-		Musician.Registry.UpdateTooltipInfo(TRP3_CharacterTooltip, t.target, TRP3_API.ui.tooltip.getSmallLineFontSize())
+		Musician.TRP3.UpdateTooltipInfo(t.target)
 	end)
 
 	-- Update Total RP player tooltip to add missing Musician client version, if applicable.
 	hooksecurefunc(Musician.Registry, "UpdatePlayerTooltip", function(player)
 		if TRP3_CharacterTooltip ~= nil and TRP3_CharacterTooltip.target == player then
-			Musician.Registry.UpdateTooltipInfo(TRP3_CharacterTooltip, player, TRP3_API.ui.tooltip.getSmallLineFontSize())
+			Musician.TRP3.UpdateTooltipInfo(player)
 		end
 	end)
 end
@@ -82,6 +83,19 @@ function Musician.TRP3.HookNamePlates()
 			end
 		end)
 	end
+end
+
+--- Update the TRP3 player tooltip info with Musician version information.
+-- @param player (string)
+function Musician.TRP3.UpdateTooltipInfo(player)
+	local fontSize = TRP3_API.ui.tooltip.getSmallLineFontSize()
+	local r, g, b
+	if TRP3_Configuration and TRP3_Configuration[CONFIG_TOOLTIP_MAIN_COLOR] then
+		local mainColorHex = TRP3_API.configuration.getValue(CONFIG_TOOLTIP_MAIN_COLOR)
+		local mainColor = TRP3_API.Ellyb.Color.CreateFromHexa(mainColorHex)
+		r, g, b = mainColor.r, mainColor.g, mainColor.b
+	end
+	Musician.Registry.UpdateTooltipInfo(TRP3_CharacterTooltip, player, fontSize, r, g, b)
 end
 
 --- Return true if the player is currently playing some music

@@ -341,13 +341,21 @@ end
 -- @param tooltip (table)
 -- @param player (string)
 -- @param[opt=nil] fontSize (int)
-function Musician.Registry.UpdateTooltipInfo(tooltip, player, fontSize)
+-- @param[opt=1] r (number)
+-- @param[opt=1] g (number)
+-- @param[opt=1] b (number)
+function Musician.Registry.UpdateTooltipInfo(tooltip, player, fontSize, r, g, b)
+
+	-- Default color is white
+	if r == nil then r = 1 end
+	if g == nil then g = 1 end
+	if b == nil then b = 1 end
 
 	-- Reposition line if it's not in the last position
 	local repositionLine = function(line, i)
 		if i ~= tooltip:NumLines() then
 			line:SetText("")
-			Musician.Registry.UpdateTooltipInfo(tooltip, player, fontSize)
+			Musician.Registry.UpdateTooltipInfo(tooltip, player, fontSize, r, g, b)
 		end
 	end
 
@@ -379,7 +387,7 @@ function Musician.Registry.UpdateTooltipInfo(tooltip, player, fontSize)
 	end
 
 	-- No existing text was not found: add it
-	tooltip:AddDoubleLine(" ", infoText, 1, 1, 1, 1, 1, 1)
+	tooltip:AddDoubleLine(" ", infoText, 1, 1, 1, r, g, b)
 	if fontSize ~= nil then
 		local line = _G[strconcat(tooltip:GetName(), "TextRight", tooltip:NumLines())]
 		local font, _, flag = line:GetFont()
