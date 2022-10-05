@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v1.9.3.0
+--------
+* Added loading screen during quick preloading on cold start.
+* Fixed trumpet F4 tuning.
+* Added custom color support for version text in Total RP 3 tooltips.
+* Minor improvements.
+
 v1.9.2.2
 --------
 * Fixed Lua error when clicking empty hyperlinks.
