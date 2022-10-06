@@ -2,12 +2,11 @@ max_line_length = false
 
 exclude_files = {
 	"lib",
-};
+}
 
 ignore = {
-	-- Ignore global writes/accesses/mutations on anything prefixed with
-	-- "Musician". This is the standard prefix for all of our global frame names
-	-- and mixins.
+	-- Ignore global writes/accesses/mutations on anything prefixed with "Musician".
+	-- This is the standard prefix for all of our global frame names and mixins.
 	"11./^Musician",
 
 	-- Ignore unused self. This would popup for Mixins and Objects
@@ -28,7 +27,7 @@ ignore = {
 
 	-- Ignore unused link. This would popup for hyperlink handlers
 	"212/link",
-};
+}
 
 globals = {
 	"Musician",
@@ -72,7 +71,7 @@ globals = {
 			"types" -- Accessed only
 		}
 	}
-};
+}
 
 read_globals = {
 	-- Libraries
@@ -117,9 +116,9 @@ read_globals = {
 	"TRP3_RefTooltip",
 	"TRP3_ToolFrameItemNormalTabPanel",
 	"TRP3_ToolFrame",
-};
+}
 
-std = "lua51+wow";
+std = "lua51+wow"
 
 stds.wow = {
 	-- Globals that we mutate.
@@ -479,4 +478,4 @@ stds.wow = {
 		"UNKNOWN",
 		"PI",
 	},
-};
+}
