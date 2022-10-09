@@ -288,6 +288,8 @@ local function playSampleFile(handle, instrumentData, soundFile, tries, channel)
 
 	-- Note sound file will play
 	if willPlay then
+		Musician.Utils.Debug(MODULE_NAME, 'playSampleFile', handle, channel, soundFile)
+
 		-- Keep internal handle
 		notesOn[handle][NOTEON.SOUND_HANDLE] = soundHandle
 
@@ -303,22 +305,16 @@ local function playSampleFile(handle, instrumentData, soundFile, tries, channel)
 		return
 	end
 
-	-- Failed to play on Master channel: try on the next available channel
-	if channel == 'Master' then
-		local nextChannel = audioChannels.SFX and 'SFX' or audioChannels.Dialog and 'Dialog'
-		if nextChannel then
-			playSampleFile(handle, instrumentData, soundFile, tries, nextChannel)
-			return
-		end
+	-- Failed to play on Master channel: try on the SFX channel if enabled
+	if not willPlay and channel == "Master" and audioChannels.SFX then
+		playSampleFile(handle, instrumentData, soundFile, tries, "SFX")
+		return
 	end
 
 	-- Failed to play on SFX channel: try on the next available channel
-	if channel == 'SFX' then
-		local nextChannel = audioChannels.Dialog and 'Dialog'
-		if nextChannel then
-			playSampleFile(handle, instrumentData, soundFile, tries, nextChannel)
-			return
-		end
+	if not willPlay and channel == "SFX" and audioChannels.Dialog then
+		playSampleFile(handle, instrumentData, soundFile, tries, "Dialog")
+		return
 	end
 
 	-- Note failed to play due to lack of available polyphony
@@ -360,7 +356,6 @@ local function playNoteSample(handle, loopNote, isLooped)
 	local sampleId = Musician.Sampler.GetSampleId(instrumentData, key)
 	local soundFile = noteOn[NOTEON.SOUND_FILE]
 	if soundFile and Musician.Preloader.IsPreloaded(sampleId) then
-		Musician.Utils.Debug(MODULE_NAME, 'playNoteSample', handle, soundFile)
 		playSampleFile(handle, instrumentData, soundFile, 0)
 	end
 end
