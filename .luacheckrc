@@ -266,6 +266,12 @@ stds.wow = {
 			}
 		},
 
+		TooltipDataProcessor = {
+			fields = {
+				"AddTooltipPostCall",
+			}
+		},
+
 		"message",
 		"debugprofilestop",
 		"hooksecurefunc",
@@ -438,6 +444,16 @@ stds.wow = {
 		InterfaceOptionsNamesPanelUnitNameplatesMotionDropDown = {
 			fields = {
 				"SetValue"
+			}
+		},
+
+		Enum = {
+			fields = {
+				TooltipDataType = {
+					fields = {
+						"Unit"
+					}
+				}
 			}
 		},
 

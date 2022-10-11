@@ -52,13 +52,19 @@ function Musician.Registry.Init()
 	-- Finish initialization when player is logged in
 	local function finishInit()
 		-- Standard player tooltip hook
-		GameTooltip:HookScript("OnTooltipSetUnit", function()
-			local _, unitType = GameTooltip:GetUnit()
+		local function onTooltipSetUnit(self)
+			local _, unitType = self:GetUnit()
 			if UnitIsPlayer(unitType) then
 				local player = Musician.Utils.NormalizePlayerName(GetUnitName(unitType, true))
-				Musician.Registry.UpdateTooltipInfo(GameTooltip, player)
+				Musician.Registry.UpdateTooltipInfo(self, player)
 			end
-		end)
+		end
+
+		if TooltipDataProcessor then
+			TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Unit, onTooltipSetUnit)
+		else
+			GameTooltip:HookScript("OnTooltipSetUnit", onTooltipSetUnit)
+		end
 
 		-- Send Query message to group
 		if Musician.Comm.GetGroupChatType() then
