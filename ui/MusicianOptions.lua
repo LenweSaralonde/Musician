@@ -123,11 +123,7 @@ end
 function Musician.Options.Refresh()
 	MusicianOptionsPanelUnitEmoteEnable:SetChecked(Musician_Settings.enableEmote)
 	MusicianOptionsPanelUnitEmoteEnablePromo:SetChecked(Musician_Settings.enableEmotePromo)
-	if Musician_Settings.enableEmote then -- SetEnabled() can't be used here since Enable and Disable are extended
-		MusicianOptionsPanelUnitEmoteEnablePromo:Enable()
-	else
-		MusicianOptionsPanelUnitEmoteEnablePromo:Disable()
-	end
+	MusicianOptionsPanelUnitEmoteEnablePromo:SetEnabled(Musician_Settings.enableEmote)
 	MusicianOptionsPanelIntegrationMuteGameMusic:SetChecked(Musician_Settings.muteGameMusic)
 	MusicianOptionsPanelIntegrationMuteInstrumentToys:SetChecked(Musician_Settings.muteInstrumentToys)
 	MusicianOptionsPanelQuickPreloadingEnable:SetChecked(Musician_Settings.enableQuickPreloading)
