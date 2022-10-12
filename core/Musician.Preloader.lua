@@ -86,9 +86,10 @@ function Musician.Preloader.QuickPreload()
 		-- The iteration didn't end in time
 		if quickPreloadingTime > maxPreloadingTime then
 			-- Don't go any further if the process was aborted
-			if quickPreloadingIsAborted then
+			if quickPreloadingIsAborted or not Musician_Settings.enableQuickPreloading then
 				quickPreloading = false
-				Musician.Utils.Debug(MODULE_NAME, "quick preloading was aborted!")
+				Musician.Utils.Debug(MODULE_NAME,
+					quickPreloadingIsAborted and "quick preloading was aborted!" or "quick preloading is disabled.")
 				Musician.Preloader:SendMessage(Musician.Events.QuickPreloadingComplete)
 				return
 			end

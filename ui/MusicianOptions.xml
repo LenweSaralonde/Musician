@@ -149,6 +149,30 @@
 									</Layer>
 								</Layers>
 							</Frame>
+							<Frame name="$parentQuickPreloading">
+								<Size>
+									<AbsDimension x="580" y="48" />
+								</Size>
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="$parentAudioChannels" relativePoint="BOTTOMLEFT" />
+								</Anchors>
+								<Layers>
+									<Layer level="ARTWORK">
+										<FontString name="$parentTitle" inherits="GameFontNormal" justifyH="LEFT" justifyV="TOP">
+											<Anchors>
+												<Anchor point="TOPLEFT" />
+											</Anchors>
+										</FontString>
+									</Layer>
+								</Layers>
+								<Frames>
+									<CheckButton name="$parentEnable" inherits="MusicianOptionCheckButtonTemplate">
+										<Anchors>
+											<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-10" />
+										</Anchors>
+									</CheckButton>
+								</Frames>
+							</Frame>
 						</Frames>
 					</Frame>
 				</ScrollChild>

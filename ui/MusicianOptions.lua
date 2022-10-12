@@ -10,6 +10,7 @@ local currentMuteGameMusic
 local currentMuteInstrumentToys
 local currentAudioConfiguration
 local currentAutoAdjustAudioConfig
+local currentEnableQuickPreloading
 
 --- Options panel initialization
 --
@@ -60,6 +61,14 @@ function Musician.Options.Init()
 	MusicianOptionsPanelAudioChannelsAutoAdjust:HookScript("OnClick", function(self)
 		Musician_Settings.autoAdjustAudioSettings = self:GetChecked()
 		Musician.Options.RefreshAudioSettings()
+	end)
+
+	-- Quick preloading
+	MusicianOptionsPanelQuickPreloadingTitle:SetText(Musician.Msg.OPTIONS_QUICK_PRELOADING_TITLE)
+	Musician.Options.SetupCheckbox(MusicianOptionsPanelQuickPreloadingEnable,
+		Musician.Msg.OPTIONS_QUICK_PRELOADING_TEXT)
+	MusicianOptionsPanelQuickPreloadingEnable:HookScript("OnClick", function(self)
+		Musician_Settings.enableQuickPreloading = self:GetChecked()
 	end)
 end
 
@@ -121,10 +130,12 @@ function Musician.Options.Refresh()
 	end
 	MusicianOptionsPanelIntegrationMuteGameMusic:SetChecked(Musician_Settings.muteGameMusic)
 	MusicianOptionsPanelIntegrationMuteInstrumentToys:SetChecked(Musician_Settings.muteInstrumentToys)
+	MusicianOptionsPanelQuickPreloadingEnable:SetChecked(Musician_Settings.enableQuickPreloading)
 	currentMuteGameMusic = Musician_Settings.muteGameMusic
 	currentMuteInstrumentToys = Musician_Settings.muteInstrumentToys
 	currentAudioConfiguration = Musician.Utils.GetCurrentAudioSettings()
 	currentAutoAdjustAudioConfig = Musician_Settings.autoAdjustAudioSettings
+	currentEnableQuickPreloading = Musician_Settings.enableQuickPreloading
 	Musician.Options.RefreshAudioSettings()
 end
 
@@ -139,6 +150,7 @@ function Musician.Options.Defaults()
 	Musician_Settings.audioChannels.Master = true
 	Musician_Settings.audioChannels.Dialog = true
 	Musician_Settings.autoAdjustAudioSettings = true
+	Musician_Settings.enableQuickPreloading = true
 	Musician.Options.RefreshAudioSettings()
 end
 
@@ -177,6 +189,7 @@ function Musician.Options.Cancel()
 	Musician.Utils.SetInstrumentToysMuted(Musician_Settings.muteInstrumentToys)
 	Musician.Utils.UpdateAudioSettings(currentAudioConfiguration)
 	Musician_Settings.autoAdjustAudioSettings = currentAutoAdjustAudioConfig
+	Musician_Settings.enableQuickPreloading = currentEnableQuickPreloading
 end
 
 function Musician.Options.Save()

@@ -28,7 +28,8 @@ function Musician:OnInitialize()
 			Master = true,
 			Dialog = true,
 		},
-		autoAdjustAudioSettings = true
+		autoAdjustAudioSettings = true,
+		enableQuickPreloading = true,
 	}
 	Musician_Settings = Mixin(defaultSettings, Musician_Settings or {})
 
