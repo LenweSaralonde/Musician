@@ -40,6 +40,7 @@ Musician.COLORS = {
 	Pink = { 0.96, 0.55, 0.73 },
 	White = { 1.00, 1.00, 1.00 },
 	DarkWhite = { 0.8, 0.8, 0.8 },
+	LightYellow = { 1.00, 0.96, 0.85 },
 	Yellow = { 1.00, 0.96, 0.41 },
 	DarkYellow = { 1.00 / 1.5, 0.96 / 1.5, 0.41 / 1.5 },
 	Brown = { 1.00 / 1.5, 0.96 / 3, 0.41 / 3 },
@@ -254,7 +255,7 @@ Musician.INSTRUMENTS = {
 		isPercussion = false,
 		isPlucked = true,
 		midi = 46,
-		color = Musician.COLORS.White,
+		color = Musician.COLORS.LightYellow,
 		source = "Etherealwinds Harp II CE"
 	},
 	["lute"] = {
