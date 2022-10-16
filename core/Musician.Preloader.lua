@@ -246,8 +246,20 @@ function Musician.Preloader.PreloadNote(instrument, key)
 		Musician.Utils.Debug(MODULE_NAME, "No sample file for", instrumentData.name, key)
 	end
 
+	-- Preload release sample
+	if (soundFile or soundFiles) and instrumentData.release then
+		local releaseSampleFile = Musician.Sampler.GetReleaseSoundFile(instrumentData, key)
+		local play, handle = PlaySoundFile(releaseSampleFile, 'Master')
+		if play then
+			count = count + 1
+			StopSound(handle, 0)
+		end
+	end
+
+	-- Add sample to preloaded table
 	Musician.Preloader.AddPreloaded(sampleId)
 
+	-- Calculate average preload time per sample
 	local preloadTime = 0
 	if count > 0 then
 		preloadTime = (debugprofilestop() - startTime) / count

@@ -201,6 +201,18 @@ function Musician.Sampler.GetSoundFile(instrument, key)
 	end
 end
 
+--- Get the release sound file, if applicable
+-- @param instrumentData (table)
+-- @param key (int) MIDI key
+-- @return releaseSoundFile (string|nil)
+function Musician.Sampler.GetReleaseSoundFile(instrumentData, key)
+	if instrumentData.release then
+		local noteName = Musician.Sampler.NoteName(key)
+		return instrumentData.release .. "\\" .. noteName .. SAMPLE_FILE_EXT
+	end
+	return nil
+end
+
 --- Returns true if the provided instrument is "plucked".
 -- @param instrument (int) MIDI instrument ID
 -- @return isPlucked (boolean)
@@ -263,28 +275,56 @@ local function noteOnShouldPlay(noteOn)
 	return shouldPlay
 end
 
+--- Play a sound file using the first available sound channel.
+-- @param soundFile (string) Path to the sound file
+-- @return willPlay (boolean|nil)
+-- @return soundHandle (int|nil)
+-- @return channel (string|nil)
+function Musician.Sampler.PlaySoundFile(soundFile)
+	local soundHandle, willPlay, channel
+	local audioChannels = Musician_Settings.audioChannels
+
+	-- Try Master
+	if audioChannels.Master then
+		channel = "Master"
+		willPlay, soundHandle = PlaySoundFile(soundFile, channel)
+	end
+
+	-- Try SFX
+	if not willPlay and audioChannels.SFX then
+		channel = "SFX"
+		willPlay, soundHandle = PlaySoundFile(soundFile, channel)
+	end
+
+	-- Try Dialog
+	if not willPlay and audioChannels.Dialog then
+		channel = "Dialog"
+		willPlay, soundHandle = PlaySoundFile(soundFile, channel)
+	end
+
+	return willPlay, soundHandle, channel
+end
+
 --- Play a sample file
 -- Can perform multiple attempts if the sound file could not play
 -- @param handle (int) Sampler note handle
 -- @param instrumentData (table)
 -- @param soundFile (string) Sample file path
 -- @param tries (int) Number of attempts in case of failures due to limited polyphony
--- @param[opt] channel (string) Audio channel to use
-local function playSampleFile(handle, instrumentData, soundFile, tries, channel)
+local function playSampleFile(handle, instrumentData, soundFile, tries)
 	if not notesOn[handle] then
 		return
 	end
 
 	local audioChannels = Musician_Settings.audioChannels
 
-	if channel == nil then
-		channel = audioChannels.Master and 'Master' or audioChannels.SFX and 'SFX' or audioChannels.Dialog and 'Dialog'
-		if not channel then
-			return
-		end
+	-- No channel is set
+	if not audioChannels.Master and not audioChannels.SFX and not audioChannels.Dialog then
+		return
 	end
 
-	local willPlay, soundHandle = PlaySoundFile(soundFile, channel)
+	-- Play the sample sound file
+	local willPlay, soundHandle, channel = Musician.Sampler.PlaySoundFile(soundFile)
 
 	-- Note sound file will play
 	if willPlay then
@@ -302,18 +342,6 @@ local function playSampleFile(handle, instrumentData, soundFile, tries, channel)
 			end
 		end
 
-		return
-	end
-
-	-- Failed to play on Master channel: try on the SFX channel if enabled
-	if not willPlay and channel == "Master" and audioChannels.SFX then
-		playSampleFile(handle, instrumentData, soundFile, tries, "SFX")
-		return
-	end
-
-	-- Failed to play on SFX channel: try on the next available channel
-	if not willPlay and channel == "SFX" and audioChannels.Dialog then
-		playSampleFile(handle, instrumentData, soundFile, tries, "Dialog")
 		return
 	end
 
@@ -343,6 +371,7 @@ local function playNoteSample(handle, loopNote, isLooped)
 	local instrumentData = noteOn[NOTEON.INSTRUMENT_DATA]
 
 	if isLooped then
+		-- Stop the previously playing handle for looping
 		StopSound(noteOn[NOTEON.SOUND_HANDLE], instrumentData.crossfade)
 	end
 
@@ -400,7 +429,8 @@ end
 --- Stop playing a note audio sample.
 -- @param handle (int) The note handle returned by PlayNote()
 -- @param[opt] decay (number) Override instrument decay
-local function stopNoteSample(handle, decay)
+-- @param[opt] playReleaseSample (boolean) Play the release sample, if any
+local function stopNoteSample(handle, decay, playReleaseSample)
 	local noteOn = notesOn[handle]
 
 	-- Note sample is not playing
@@ -411,9 +441,10 @@ local function stopNoteSample(handle, decay)
 
 	-- Get sample decay
 	local instrumentData = noteOn[NOTEON.INSTRUMENT_DATA]
+	local key = noteOn[NOTEON.KEY]
 	if decay == nil and instrumentData then
 		if instrumentData.decayByKey ~= nil then
-			decay = instrumentData.decayByKey[noteOn[NOTEON.KEY]] or instrumentData.decay
+			decay = instrumentData.decayByKey[key] or instrumentData.decay
 		else
 			decay = instrumentData.decay
 		end
@@ -422,6 +453,20 @@ local function stopNoteSample(handle, decay)
 	-- Stop playing the sample
 	Musician.Utils.Debug(MODULE_NAME, 'stopNoteSample', handle, decay)
 	StopSound(soundHandle, decay)
+
+	-- Play release sample
+	if playReleaseSample and instrumentData.release and decay ~= 0 then
+		local releaseSampleFile = Musician.Sampler.GetReleaseSoundFile(instrumentData, key)
+		local releaseWillPlay, releaseSoundHandle, channel = Musician.Sampler.PlaySoundFile(releaseSampleFile)
+		Musician.Utils.Debug(MODULE_NAME, "stopNoteSample", "Play release sample", handle, channel, releaseSampleFile)
+		if releaseWillPlay then
+			C_Timer.After((instrumentData.releaseSustain or 0) / 1000, function()
+				StopSound(releaseSoundHandle, instrumentData.releaseDecay)
+			end)
+		end
+	end
+
+	-- Remove note on
 	noteOn[NOTEON.SOUND_HANDLE] = nil
 end
 
@@ -438,7 +483,7 @@ function Musician.Sampler.StopNote(handle, decay)
 	local instrumentData = noteOn[NOTEON.INSTRUMENT_DATA]
 	Musician.Utils.Debug(MODULE_NAME, 'StopNote', handle, instrumentData and instrumentData.name, key)
 
-	stopNoteSample(handle, decay)
+	stopNoteSample(handle, decay, true)
 
 	wipe(notesOn[handle])
 	notesOn[handle] = nil
@@ -459,7 +504,7 @@ function Musician.Sampler.OnUpdate()
 			stopNoteSample(handle)
 
 		elseif not isNotePlaying and shouldPlayNote then
-			-- The note audio should be started
+			-- The note audio should be started after it was muted
 			local instrumentData = noteOn[NOTEON.INSTRUMENT_DATA]
 			local isPlucked = instrumentData.midi > 127 or instrumentData.isPercussion or instrumentData.isPlucked
 			if not isPlucked then

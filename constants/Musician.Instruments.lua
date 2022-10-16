@@ -53,27 +53,33 @@ Musician.COLORS = {
 
 --- Instruments table. The key is the internal instrument ID (string) and each value is a table having the following attribues (all are optional):
 --
---  color (table) Color {r, g, b} from Musician.COLORS
+--  color (table) Color {r, g, b} from Musician.COLORS.
 --
---  name (string) Same as the instrument id (automatically generated)
+--  name (string) Same as the instrument id (automatically generated).
 --
---  midi (int) General MIDI instrument ID (0-127). For percussions, midi is its MIDI ID + 128
+--  midi (int) General MIDI instrument ID (0-127). For percussions, midi is its MIDI ID + 128.
 --
---  decay (number) Decay duration in milliseconds
+--  decay (number) Decay duration in milliseconds.
 --
 --  isPlucked (boolean) True for plucked instruments such as guitar, piano etc. Used for visualization only.
 --
 --  path (string) Path to the instrument melodic samples directory.
 --
+--  release (string) Path to the instrument release samples directory.
+--
+--  releaseSustain (number) Release sample sustain duration in milliseconds.
+--
+--  releaseDecay (number) Release sample decay duration in milliseconds.
+--
 --  regions (table) Tables of path, lokey and hikey (inclusive) in replacement of path allowing picking melodic samples from multiple directories according to the MIDI key range defined by lokey and hikey.
 --
---  isPercussion (boolean) Act as a percussion instrument using the single sample file (without extension) from path or picked from pathList using keyMod or roundRobin methods
+--  isPercussion (boolean) Act as a percussion instrument using the single sample file (without extension) from path or picked from pathList using keyMod or roundRobin methods.
 --
---  pathList (table) List of file paths to be chosen using keyMod or roundRobin (without extension)
+--  pathList (table) List of file paths to be chosen using keyMod or roundRobin (without extension).
 --
---  keyMod (int) Plays nth sample file from pathList modulo the MIDI key number
+--  keyMod (int) Plays nth sample file from pathList modulo the MIDI key number.
 --
---  roundRobin (boolean) Plays sample file from pathList using round robin
+--  roundRobin (boolean) Plays sample file from pathList using round robin.
 --
 --  source (string) Credits to author, software, library etc used to create the instrument. Displayed in the "About" window.
 -- @table Musician.INSTRUMENTS
