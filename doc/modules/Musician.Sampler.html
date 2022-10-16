@@ -135,6 +135,10 @@
 	<td class="summary">Return global mute state</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#Musician.Sampler.GetReleaseSoundFile">Musician.Sampler.GetReleaseSoundFile (instrumentData, key)</a></td>
+	<td class="summary">Get the release sound file, if applicable</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#Musician.Sampler.GetSampleId">Musician.Sampler.GetSampleId (instrumentData, key)</a></td>
 	<td class="summary">Return sample ID for note and instrument data</td>
 	</tr>
@@ -165,6 +169,10 @@
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Sampler.PlayNote">Musician.Sampler.PlayNote (instrument, key, loopNote[, track[, player]])</a></td>
 	<td class="summary">Start playing a note</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Sampler.PlaySoundFile">Musician.Sampler.PlaySoundFile (soundFile)</a></td>
+	<td class="summary">Play a sound file using the first available sound channel.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Sampler.SetMuted">Musician.Sampler.SetMuted (isMuted)</a></td>
@@ -282,6 +290,34 @@
     <ol>
 
         isMuted (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Sampler.GetReleaseSoundFile"></a>
+    <strong>Musician.Sampler.GetReleaseSoundFile (instrumentData, key)</strong>
+    </dt>
+    <dd>
+    Get the release sound file, if applicable
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">instrumentData</span>
+         (table)
+        </li>
+        <li><span class="parameter">key</span>
+         (int) MIDI key
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        releaseSoundFile (string|nil)
     </ol>
 
 
@@ -488,6 +524,35 @@
         handle (int)</li>
         <li>
         willPlay (boolean)</li>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Sampler.PlaySoundFile"></a>
+    <strong>Musician.Sampler.PlaySoundFile (soundFile)</strong>
+    </dt>
+    <dd>
+    Play a sound file using the first available sound channel.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">soundFile</span>
+         (string) Path to the sound file
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+        willPlay (boolean|nil)</li>
+        <li>
+        soundHandle (int|nil)</li>
+        <li>
+        channel (string|nil)</li>
     </ol>
 
 
