@@ -1,6 +1,14 @@
 Changelog
 =========
 
+v1.9.3.1
+--------
+* Fixed tooltip on WoW patch 10.0.2 (Dragonflight beta).
+* Add checkbox to disable quick loading. #87
+* Changed celtic harp color.
+* Added support for release samples.
+* Minor bugfixes and improvements.
+
 v1.9.3.0
 --------
 * Added loading screen during quick preloading on cold start.
