@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.4.0
+--------
+* TOC bump for WoW patch 10.0.0.
+
 v1.9.3.1
 --------
 * Fixed tooltip on WoW patch 10.0.2 (Dragonflight beta).
