@@ -469,6 +469,13 @@ stds.wow = {
 			}
 		},
 
+		AddonCompartmentFrame = {
+			fields = {
+				"RegisterAddon",
+				"registeredAddons"
+			}
+		},
+
 		Enum = {
 			fields = {
 				TooltipDataType = {

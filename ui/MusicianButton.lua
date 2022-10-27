@@ -61,24 +61,53 @@ function MusicianButton.Init()
 	-- Update icons when preloading is complete
 	MusicianButton:RegisterMessage(Musician.Events.PreloadingComplete, MusicianButton.UpdateIcons)
 	MusicianButton.UpdateIcons()
+
+	-- Register add-on on the minimap
+	if AddonCompartmentFrame then
+		AddonCompartmentFrame:RegisterAddon({
+			notCheckable = true,
+			text = Musician.Msg.MENU_TITLE,
+			icon = MUSICIAN_ICON,
+			registerForRightClick = true,
+			func = function(self, _, _, _, button) MusicianButton.OnClick(nil, button) end
+		})
+		MusicianButton.UpdateIcons()
+	end
+end
+
+--- Return the button icon texture path
+-- @return icon (string)
+function MusicianButton.GetIcon()
+	if Musician.Sampler.GetMuted() then
+		return MUSICIAN_ICON_MUTED
+	elseif Musician.Preloader.IsComplete() then
+		return MUSICIAN_ICON
+	else
+		return MUSICIAN_ICON_WAIT
+	end
 end
 
 --- Update icons
 --
 function MusicianButton.UpdateIcons()
-	local button = icon:GetMinimapButton("Musician")
-	if Musician.Sampler.GetMuted() then
-		ldbData.icon = MUSICIAN_ICON_MUTED
-	elseif Musician.Preloader.IsComplete() then
-		ldbData.icon = MUSICIAN_ICON
-	else
-		ldbData.icon = MUSICIAN_ICON_WAIT
-	end
+	local iconPath = MusicianButton.GetIcon()
 
+	-- Minimap button
+	local button = icon:GetMinimapButton("Musician")
+	ldbData.icon = iconPath
 	if Musician.Preloader.IsComplete() then
 		button.hourglass:Hide()
 	else
 		button.hourglass:Show()
+	end
+
+	-- Add-on compartment frame
+	if AddonCompartmentFrame then
+		for _, info in pairs(AddonCompartmentFrame.registeredAddons) do
+			if info.text == Musician.Msg.MENU_TITLE then
+				info.icon = iconPath
+			end
+		end
 	end
 end
 
