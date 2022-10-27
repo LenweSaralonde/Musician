@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v1.9.4.1
+--------
+* Fixed song links over Battle.net conflicting with Total RP3.
+* Fixed minimap button gap.
+* Added Musician button to the add-on compartment frame.
+* Adjusted close buttons size.
+
 v1.9.4.0
 --------
 * TOC bump for WoW patch 10.0.0.
