@@ -39,7 +39,7 @@ function MusicianButton.Init()
 	buttonFrame.hourglass = hourglass
 
 	-- Add background texture to fill the gap of the thinner WoW 10.0 minimap button border
-	if LE_EXPANSION_LEVEL_CURRENT == 9 then
+	if LE_EXPANSION_LEVEL_CURRENT >= 9 then
 		local backdropMask = buttonFrame:CreateMaskTexture(nil, "BACKGROUND", nil, -7)
 		backdropMask:SetTexture(130925)
 		backdropMask:SetPoint("BOTTOMRIGHT", -1, 2)
