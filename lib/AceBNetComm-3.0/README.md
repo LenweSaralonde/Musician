@@ -1,14 +1,14 @@
-AceComm-3.0-Extended
+AceBNetComm-3.0
 ====================
 
-**AceComm-3.0-Extended** is an additional module for [AceComm-3.0](https://www.wowace.com/projects/ace3/pages/api/ace-comm-3-0) that allows you to send and receive add-on messages over the Battle.net chat system.
+**AceBNetComm-3.0** is an additional module for [AceComm-3.0](https://www.wowace.com/projects/ace3/pages/api/ace-comm-3-0) that allows you to send and receive add-on messages over the Battle.net chat system.
 
-Import the **AceComm-3.0-Extended** module in addition to **AceComm-3.0** to be able to use the Battle.net-specific functions.
+Import the **AceBNetComm-3.0** module in addition to **AceComm-3.0** to be able to use the Battle.net-specific functions.
 ```lua
-MyModule = LibStub("AceAddon-3.0"):NewAddon("MyModule", "AceComm-3.0", "AceComm-3.0-Extended")
+MyModule = LibStub("AceAddon-3.0"):NewAddon("MyModule", "AceComm-3.0", "AceBNetComm-3.0")
 ```
 
-## AceCommExtended:RegisterBNetComm(prefix, method)
+## AceBNetComm:RegisterBNetComm(prefix, method)
 Register for add-on traffic over Battle.net on a specified prefix.
 
 ### Parameters
@@ -17,7 +17,7 @@ Register for add-on traffic over Battle.net on a specified prefix.
 * method
 : Callback to call on message reception: Function reference, or method name (string) to call on self. Defaults to "OnCommReceived". The same arguments as *AceComm:RegisterComm* are provided (prefix, message, distribution, sender): *distribution* is "WHISPER" and *sender* is the Battle.net game account ID.
 
-## AceCommExtended:SendBNetCommMessage(prefix, text, target, prio, callbackFn, callbackArg)
+## AceBNetComm:SendBNetCommMessage(prefix, text, target, prio, callbackFn, callbackArg)
 Send an add-on message over Battle.net chat.
 
 ### Parameters

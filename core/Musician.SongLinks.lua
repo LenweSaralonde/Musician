@@ -1,7 +1,7 @@
 --- Song links module
 -- @module Musician.SongLinks
 
-Musician.SongLinks = LibStub("AceAddon-3.0"):NewAddon("Musician.SongLinks", "AceComm-3.0", "AceComm-3.0-Extended",
+Musician.SongLinks = LibStub("AceAddon-3.0"):NewAddon("Musician.SongLinks", "AceComm-3.0", "AceBNetComm-3.0",
 	"AceEvent-3.0")
 
 local MODULE_NAME = "SongLinks"

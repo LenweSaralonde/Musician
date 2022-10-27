@@ -1,7 +1,19 @@
 max_line_length = false
 
 exclude_files = {
-	"lib",
+	"lib/AceAddon-3.0",
+	"lib/AceComm-3.0",
+	"lib/AceEvent-3.0",
+	"lib/CallbackHandler-1.0",
+	"lib/HereBeDragons",
+	"lib/LibBase64",
+	"lib/LibCRC32",
+	"lib/LibDataBroker-1.10",
+	"lib/LibDBIcon-1.0",
+	"lib/LibDeflate",
+	"lib/LibRealmInfo",
+	"lib/LibStub",
+	"lib/MSA-DropDownMenu-1.0",
 }
 
 ignore = {
@@ -27,6 +39,9 @@ ignore = {
 
 	-- Ignore unused link. This would popup for hyperlink handlers
 	"212/link",
+
+	-- Ignore empty then statements.
+	"542",
 }
 
 globals = {
@@ -36,6 +51,9 @@ globals = {
 	"SLASH_MUSICIAN1",
 	"SLASH_MUSICIAN2",
 	"SLASH_MUSICIAN3",
+
+	-- Custom libraries
+	"BNetChatThrottleLib",
 
 	-- AddOn Overrides
 	TRP3_PlayerMapPinMixin = {
@@ -211,7 +229,8 @@ stds.wow = {
 		C_ChatInfo = {
 			fields = {
 				"GetChannelShortcut",
-				"SwapChatChannelsByChannelIndex"
+				"SwapChatChannelsByChannelIndex",
+				"RegisterAddonMessagePrefix"
 			},
 		},
 
@@ -369,6 +388,9 @@ stds.wow = {
 		"InlineHyperlinkFrame_OnLeave",
 		"InlineHyperlinkFrame_OnClick",
 		"ScrollFrame_OnScrollRangeChanged",
+		"GetFramerate",
+		"UnitInRaid",
+		"RegisterAddonMessagePrefix",
 
 		-- Global Mixins and UI Objects
 
