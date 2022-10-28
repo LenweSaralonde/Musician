@@ -16,7 +16,7 @@ local ldbData = {}
 --
 function MusicianButton.Init()
 	ldbData.type = "launcher"
-	ldbData.text = "Musician"
+	ldbData.text = Musician.Msg.MENU_TITLE
 	ldbData.icon = MUSICIAN_ICON
 	ldbData.OnClick = MusicianButton.OnClick
 	ldbData.OnEnter = MusicianButton.ShowTooltip
@@ -58,11 +58,7 @@ function MusicianButton.Init()
 		end
 	end)
 
-	-- Update icons when preloading is complete
-	MusicianButton:RegisterMessage(Musician.Events.PreloadingComplete, MusicianButton.UpdateIcons)
-	MusicianButton.UpdateIcons()
-
-	-- Register add-on on the minimap
+	-- Register to the add-on compartment frame
 	if AddonCompartmentFrame then
 		AddonCompartmentFrame:RegisterAddon({
 			notCheckable = true,
@@ -71,8 +67,11 @@ function MusicianButton.Init()
 			registerForRightClick = true,
 			func = function(self, _, _, _, button) MusicianButton.OnClick(nil, button) end
 		})
-		MusicianButton.UpdateIcons()
 	end
+
+	-- Update icons when preloading is complete
+	MusicianButton:RegisterMessage(Musician.Events.PreloadingComplete, MusicianButton.UpdateIcons)
+	MusicianButton.UpdateIcons()
 end
 
 --- Return the button icon texture path
