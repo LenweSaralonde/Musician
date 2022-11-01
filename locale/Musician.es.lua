@@ -75,6 +75,7 @@ msg.OPTIONS_AUDIO_CHANNELS_HINT = "Seleccione más canales de audio para aumenta
 msg.OPTIONS_AUDIO_CHANNELS_CHANNEL_POLYPHONY = "{channel} ({polyphony})"
 msg.OPTIONS_AUDIO_CHANNELS_TOTAL_POLYPHONY = "Polifonía máxima total: {polyphony}"
 msg.OPTIONS_AUDIO_CHANNELS_AUTO_ADJUST_CONFIG = "Optimiza automáticamente la configuración de audio cuando se seleccionan varios canales de audio."
+msg.OPTIONS_AUDIO_CACHE_SIZE_FOR_MUSICIAN = "Para Musician (%d MB)"
 msg.OPTIONS_QUICK_PRELOADING_TITLE = "Precarga rápida"
 msg.OPTIONS_QUICK_PRELOADING_TEXT = "Habilitar precarga rápida de instrumentos en arranque en frío."
 msg.OPTIONS_CATEGORY_NAMEPLATES = "Placas de identificación y animaciones"

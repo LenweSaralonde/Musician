@@ -586,6 +586,13 @@ function Musician.Utils.GetMaxPolyphony()
 	return (audioChannels.Master and 30 or 0) + (audioChannels.SFX and 15 or 0) + (audioChannels.Dialog and 20 or 0)
 end
 
+--- Get the recommended total sound cache size.
+-- @return cacheSize (number) in MB
+function Musician.Utils.GetSoundCacheSize()
+	local baseSize = (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) and 128 or 64
+	return baseSize + Musician.SOUND_CACHE_SIZE
+end
+
 --- Get the current audio settings.
 -- @return audioSettings (table)
 function Musician.Utils.GetCurrentAudioSettings()
@@ -596,6 +603,7 @@ function Musician.Utils.GetCurrentAudioSettings()
 			Sound_SFXVolume = GetCVarNumber('Sound_SFXVolume'),
 			Sound_DialogVolume = GetCVarNumber('Sound_DialogVolume'),
 			Sound_NumChannels = GetCVarNumber('Sound_NumChannels'),
+			Sound_MaxCacheSizeInBytes = GetCVarNumber('Sound_MaxCacheSizeInBytes'),
 		}
 	}
 end
@@ -646,6 +654,12 @@ function Musician.Utils.GetNewAudioSettings(oldSettings)
 		end
 	end
 
+	-- Make sure we have a sound cache large enough to kepp all the instrument samples
+	local cacheSizeInBytes = Musician.Utils.GetSoundCacheSize() * 1024 * 1024
+	if oldSettings.CVars.Sound_MaxCacheSizeInBytes < cacheSizeInBytes then
+		newSettings.CVars.Sound_MaxCacheSizeInBytes = cacheSizeInBytes
+	end
+
 	return newSettings
 end
 
@@ -661,14 +675,18 @@ function Musician.Utils.UpdateAudioSettings(newSettings, noSoundSystemRestart)
 	end
 
 	-- CVars
+	local restartSoundSystem = false
 	for key, value in pairs(newSettings.CVars) do
 		if GetCVarNumber(key) ~= value then
 			SetCVar(key, value)
-			-- Sound system needs to be restarted after the total number of sound channels was changed
-			if key == 'Sound_NumChannels' and not noSoundSystemRestart then
-				Sound_GameSystem_RestartSoundSystem()
+			-- Sound system needs to be restarted after the total number of sound channels or cache size was changed
+			if key == 'Sound_NumChannels' or key == 'Sound_MaxCacheSizeInBytes' then
+				restartSoundSystem = true
 			end
 		end
+	end
+	if restartSoundSystem and not noSoundSystemRestart then
+		Sound_GameSystem_RestartSoundSystem()
 	end
 
 	-- Musician audio channels

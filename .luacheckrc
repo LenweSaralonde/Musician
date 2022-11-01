@@ -165,6 +165,7 @@ stds.wow = {
 		"MiniMapTracking_FilterIsVisible",
 		"StaticPopupDialogs",
 		"ChatEdit_OnEditFocusLost",
+		"SettingsLayoutMixin",
 	},
 
 	-- Globals that we access.

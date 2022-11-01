@@ -827,6 +827,36 @@ function Musician.SetupHooks()
 
 			return false, msg, player, languageName, channelName, playerName2, pflag, ...
 		end)
+
+	-- Add custom Sound_MaxCacheSizeInBytes option for Musician (Retail)
+	--
+
+	if SettingsLayoutMixin and SettingsLayoutMixin.Init then
+		hooksecurefunc(SettingsLayoutMixin, "Init", function(layout, layoutType)
+			if layoutType == SettingsLayoutMixin.LayoutType.Vertical then
+				hooksecurefunc(layout, "AddInitializer", function(_, initializer)
+					if type(initializer) == "table" and type(initializer.GetSetting) == "function" then
+						local setting = initializer:GetSetting()
+						if type(setting) == "table" and type(setting.GetVariable) == "function" and
+							setting:GetVariable() == "Sound_MaxCacheSizeInBytes" then
+							local hookedInitializerGetOptions = initializer.GetOptions
+							initializer.GetOptions = function(...)
+								local options = hookedInitializerGetOptions(...)()
+								local cacheSize = Musician.Utils.GetSoundCacheSize()
+								table.insert(options, {
+									label = Musician.Msg.OPTIONS_AUDIO_CACHE_SIZE_FOR_MUSICIAN:format(cacheSize),
+									value = cacheSize * 1024 * 1024 -- Value is in bytes
+								})
+								return function()
+									return options
+								end
+							end
+						end
+					end
+				end)
+			end
+		end)
+	end
 end
 
 --- Add a tips and tricks callback
