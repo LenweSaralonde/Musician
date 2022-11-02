@@ -685,7 +685,7 @@ function Musician.Utils.UpdateAudioSettings(newSettings, noSoundSystemRestart)
 			end
 		end
 	end
-	if restartSoundSystem and not noSoundSystemRestart then
+	if Sound_GameSystem_RestartSoundSystem and restartSoundSystem and not noSoundSystemRestart then
 		Sound_GameSystem_RestartSoundSystem()
 	end
 
