@@ -47,7 +47,10 @@ function Musician:OnInitialize()
 				LE_EXPANSION_LEVEL_CURRENT == 1 and 197 or -- BC
 				LE_EXPANSION_LEVEL_CURRENT == 2 and 149 or -- WotLK
 				154, -- Retail
-			hide = false
+			hide = false,
+		},
+		addOnMenu = {
+			hide = true,
 		},
 	}
 	Musician_CharacterSettings = Mixin(defaultCharacterSettings, Musician_CharacterSettings or {})

@@ -6,6 +6,8 @@ Musician.Options = {}
 local MODULE_NAME = "Options"
 Musician.AddModule(MODULE_NAME)
 
+local currentShortcutMinimapHide
+local currentShortcutMenuHide
 local currentMuteGameMusic
 local currentMuteInstrumentToys
 local currentAudioConfiguration
@@ -62,6 +64,23 @@ function Musician.Options.Init()
 		Musician_Settings.autoAdjustAudioSettings = self:GetChecked()
 		Musician.Options.RefreshAudioSettings()
 	end)
+
+	-- Shortcuts
+	MusicianOptionsPanelShortcutTitle:SetText(Musician.Msg.OPTIONS_CATEGORY_SHORTCUTS)
+	Musician.Options.SetupCheckbox(MusicianOptionsPanelShortcutMinimap, Musician.Msg.OPTIONS_SHORTCUT_MINIMAP)
+	Musician.Options.SetupCheckbox(MusicianOptionsPanelShortcutMenu, Musician.Msg.OPTIONS_SHORTCUT_ADDON_MENU)
+	MusicianOptionsPanelShortcutMinimap:HookScript("OnClick", function(self)
+		Musician_CharacterSettings.minimap.hide = not self:GetChecked()
+		MusicianButton.Refresh()
+	end)
+	MusicianOptionsPanelShortcutMenu:HookScript("OnClick", function(self)
+		Musician_CharacterSettings.addOnMenu.hide = not self:GetChecked()
+		MusicianButton.Refresh()
+	end)
+	-- Hide add-on menu option if the component is not available on the current WoW version
+	if not AddonCompartmentFrame then
+		MusicianOptionsPanelShortcutMenu:Hide()
+	end
 
 	-- Quick preloading
 	MusicianOptionsPanelQuickPreloadingTitle:SetText(Musician.Msg.OPTIONS_QUICK_PRELOADING_TITLE)
@@ -121,12 +140,16 @@ function Musician.Options.Show()
 end
 
 function Musician.Options.Refresh()
+	MusicianOptionsPanelShortcutMinimap:SetChecked(not Musician_CharacterSettings.minimap.hide)
+	MusicianOptionsPanelShortcutMenu:SetChecked(not Musician_CharacterSettings.addOnMenu.hide)
 	MusicianOptionsPanelUnitEmoteEnable:SetChecked(Musician_Settings.enableEmote)
 	MusicianOptionsPanelUnitEmoteEnablePromo:SetChecked(Musician_Settings.enableEmotePromo)
 	MusicianOptionsPanelUnitEmoteEnablePromo:SetEnabled(Musician_Settings.enableEmote)
 	MusicianOptionsPanelIntegrationMuteGameMusic:SetChecked(Musician_Settings.muteGameMusic)
 	MusicianOptionsPanelIntegrationMuteInstrumentToys:SetChecked(Musician_Settings.muteInstrumentToys)
 	MusicianOptionsPanelQuickPreloadingEnable:SetChecked(Musician_Settings.enableQuickPreloading)
+	currentShortcutMinimapHide = Musician_CharacterSettings.minimap.hide
+	currentShortcutMenuHide = Musician_CharacterSettings.addOnMenu.hide
 	currentMuteGameMusic = Musician_Settings.muteGameMusic
 	currentMuteInstrumentToys = Musician_Settings.muteInstrumentToys
 	currentAudioConfiguration = Musician.Utils.GetCurrentAudioSettings()
@@ -136,6 +159,9 @@ function Musician.Options.Refresh()
 end
 
 function Musician.Options.Defaults()
+	Musician_CharacterSettings.minimap.hide = false
+	Musician_CharacterSettings.addOnMenu.hide = true
+	MusicianButton.Refresh()
 	Musician_Settings.enableEmote = true
 	Musician_Settings.enableEmotePromo = true
 	Musician_Settings.muteGameMusic = true
@@ -179,6 +205,9 @@ function Musician.Options.RefreshAudioSettings()
 end
 
 function Musician.Options.Cancel()
+	Musician_CharacterSettings.minimap.hide = currentShortcutMinimapHide
+	Musician_CharacterSettings.addOnMenu.hide = currentShortcutMenuHide
+	MusicianButton.Refresh()
 	Musician_Settings.muteGameMusic = currentMuteGameMusic
 	Musician_Settings.muteInstrumentToys = currentMuteInstrumentToys
 	Musician.Utils.MuteGameMusic(true)

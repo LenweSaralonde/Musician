@@ -216,6 +216,7 @@ stds.wow = {
 		"tinsert",
 		"tInvert",
 		"tremove",
+		"tIndexOf",
 		"wipe",
 		"max",
 		"min",
@@ -473,7 +474,8 @@ stds.wow = {
 		AddonCompartmentFrame = {
 			fields = {
 				"RegisterAddon",
-				"registeredAddons"
+				"registeredAddons",
+				"UpdateDisplay"
 			}
 		},
 

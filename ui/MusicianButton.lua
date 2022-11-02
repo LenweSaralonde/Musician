@@ -11,6 +11,7 @@ local MUSICIAN_ICON_WAIT = "Interface\\AddOns\\Musician\\ui\\textures\\button-wa
 local HOURGLASS = "Interface\\AddOns\\Musician\\ui\\textures\\hourglass"
 
 local ldbData = {}
+local addOnMenuInfo
 
 --- Init
 --
@@ -28,18 +29,54 @@ function MusicianButton.Init()
 	icon:Register("Musician", musicianLDB, Musician_CharacterSettings.minimap)
 
 	-- Create menu frame
-	local buttonFrame = icon:GetMinimapButton("Musician")
 	CreateFrame("Frame", "MusicianButton_Menu", UIParent, "MusicianDropDownMenuTooltipTemplate")
 
-	-- Hourglass icon for preloading
-	local hourglass = buttonFrame:CreateTexture(nil, "OVERLAY", nil, 7)
-	hourglass:SetTexture(HOURGLASS)
-	hourglass:SetPoint("BOTTOMRIGHT", 2, -2)
-	hourglass:SetPoint("TOPLEFT", 10, -10)
-	buttonFrame.hourglass = hourglass
+	-- Create addon menu info
+	addOnMenuInfo = {
+		notCheckable = true,
+		text = Musician.Msg.MENU_TITLE,
+		icon = MUSICIAN_ICON,
+		registerForRightClick = true,
+		func = function(self, _, _, _, button) MusicianButton.OnClick(nil, button) end
+	}
+
+	-- Update tooltip text while preloading
+	MusicianButton.tooltipIsVisible = false
+	MusicianButton:RegisterMessage(Musician.Events.PreloadingProgress, function()
+		if MusicianButton.tooltipIsVisible then
+			MusicianButton.UpdateTooltipText(true)
+		end
+	end)
+
+	-- Refresh when preloading is complete
+	MusicianButton:RegisterMessage(Musician.Events.PreloadingComplete, MusicianButton.Refresh)
+	MusicianButton.Refresh()
+end
+
+--- Refresh the button and its components
+--
+function MusicianButton.Refresh()
+	-- Create/show or hide minimap button
+	if Musician_CharacterSettings.minimap.hide then
+		icon:Hide("Musician")
+	else
+		icon:Show("Musician")
+	end
+
+	-- Get button frame
+	local buttonFrame = icon:GetMinimapButton("Musician")
+
+	-- Create hourglass icon for preloading
+	if buttonFrame and not buttonFrame.hourglass then
+		local hourglass = buttonFrame:CreateTexture(nil, "OVERLAY", nil, 7)
+		hourglass:SetTexture(HOURGLASS)
+		hourglass:SetPoint("BOTTOMRIGHT", 2, -2)
+		hourglass:SetPoint("TOPLEFT", 10, -10)
+		buttonFrame.hourglass = hourglass
+	end
 
 	-- Add background texture to fill the gap of the thinner WoW 10.0 minimap button border
-	if LE_EXPANSION_LEVEL_CURRENT >= 9 then
+	if buttonFrame and not buttonFrame.backdrop and LE_EXPANSION_LEVEL_CURRENT >= 9 then
 		local backdropMask = buttonFrame:CreateMaskTexture(nil, "BACKGROUND", nil, -7)
 		backdropMask:SetTexture(130925)
 		backdropMask:SetPoint("BOTTOMRIGHT", -1, 2)
@@ -48,29 +85,34 @@ function MusicianButton.Init()
 		backdrop:AddMaskTexture(backdropMask)
 		backdrop:SetAllPoints(backdropMask)
 		backdrop:SetColorTexture(0, 0, 0, 1)
+		buttonFrame.backdrop = backdrop
 	end
 
-	-- Update tooltip text when preloading
-	MusicianButton.tooltipIsVisible = false
-	MusicianButton:RegisterMessage(Musician.Events.PreloadingProgress, function()
-		if MusicianButton.tooltipIsVisible then
-			MusicianButton.UpdateTooltipText(true)
+	-- Show or hide the preloading hourglass
+	if buttonFrame then
+		if Musician.Preloader.IsComplete() then
+			buttonFrame.hourglass:Hide()
+		else
+			buttonFrame.hourglass:Show()
 		end
-	end)
-
-	-- Register to the add-on compartment frame
-	if AddonCompartmentFrame then
-		AddonCompartmentFrame:RegisterAddon({
-			notCheckable = true,
-			text = Musician.Msg.MENU_TITLE,
-			icon = MUSICIAN_ICON,
-			registerForRightClick = true,
-			func = function(self, _, _, _, button) MusicianButton.OnClick(nil, button) end
-		})
 	end
 
-	-- Update icons when preloading is complete
-	MusicianButton:RegisterMessage(Musician.Events.PreloadingComplete, MusicianButton.UpdateIcons)
+	-- Update add-on minimap menu
+	if AddonCompartmentFrame then
+		local registeredAddons = AddonCompartmentFrame.registeredAddons
+		local pos = tIndexOf(registeredAddons, addOnMenuInfo)
+		local addMenu = not Musician_CharacterSettings.addOnMenu.hide
+		if addMenu and pos == nil then
+			tinsert(registeredAddons, addOnMenuInfo.pos or (#registeredAddons + 1), addOnMenuInfo)
+			AddonCompartmentFrame:UpdateDisplay()
+		elseif not addMenu and pos ~= nil then
+			addOnMenuInfo.pos = pos
+			tremove(registeredAddons, pos)
+			AddonCompartmentFrame:UpdateDisplay()
+		end
+	end
+
+	-- Update icon textures
 	MusicianButton.UpdateIcons()
 end
 
@@ -90,24 +132,8 @@ end
 --
 function MusicianButton.UpdateIcons()
 	local iconPath = MusicianButton.GetIcon()
-
-	-- Minimap button
-	local button = icon:GetMinimapButton("Musician")
 	ldbData.icon = iconPath
-	if Musician.Preloader.IsComplete() then
-		button.hourglass:Hide()
-	else
-		button.hourglass:Show()
-	end
-
-	-- Add-on compartment frame
-	if AddonCompartmentFrame then
-		for _, info in pairs(AddonCompartmentFrame.registeredAddons) do
-			if info.text == Musician.Msg.MENU_TITLE then
-				info.icon = iconPath
-			end
-		end
-	end
+	addOnMenuInfo.icon = iconPath
 end
 
 --- OnClick

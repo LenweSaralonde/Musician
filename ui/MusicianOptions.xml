@@ -32,12 +32,51 @@
 							</Layer>
 						</Layers>
 						<Frames>
+
+
+
+
+							<Frame name="$parentShortcut">
+								<Size>
+									<AbsDimension x="580" y="48" />
+								</Size>
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="$parentSubText" relativePoint="BOTTOMLEFT" />
+								</Anchors>
+								<Layers>
+									<Layer level="ARTWORK">
+										<FontString name="$parentTitle" inherits="GameFontNormal" justifyH="LEFT" justifyV="TOP">
+											<Anchors>
+												<Anchor point="TOPLEFT" />
+											</Anchors>
+										</FontString>
+									</Layer>
+								</Layers>
+								<Frames>
+									<CheckButton name="$parentMinimap" inherits="MusicianOptionCheckButtonTemplate">
+										<Anchors>
+											<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-10" />
+										</Anchors>
+									</CheckButton>
+									<CheckButton name="$parentMenu" inherits="MusicianOptionCheckButtonTemplate">
+										<Anchors>
+											<Anchor point="LEFT" relativeTo="$parentMinimapText" relativePoint="RIGHT" x="10" y="0" />
+											<Anchor point="TOP" relativeTo="$parentMinimap" relativePoint="TOP" x="0" y="0" />
+										</Anchors>
+									</CheckButton>
+								</Frames>
+							</Frame>
+
+
+
+
+
 							<Frame name="$parentUnitEmote">
 								<Size>
 									<AbsDimension x="580" y="70" />
 								</Size>
 								<Anchors>
-									<Anchor point="TOPLEFT" relativeTo="$parentSubText" relativePoint="BOTTOMLEFT" />
+									<Anchor point="TOPLEFT" relativeTo="$parentShortcut" relativePoint="BOTTOMLEFT" />
 								</Anchors>
 								<Layers>
 									<Layer level="ARTWORK">
@@ -149,6 +188,15 @@
 									</Layer>
 								</Layers>
 							</Frame>
+
+
+
+
+
+
+
+
+
 							<Frame name="$parentQuickPreloading">
 								<Size>
 									<AbsDimension x="580" y="48" />
