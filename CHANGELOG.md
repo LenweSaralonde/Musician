@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.9.5.0
+--------
+* The audio cache size is automatically expanded to fit the instrument samples.
+* Added options to disable the minimap button and menu.
+
 v1.9.4.1
 --------
 * Fixed song links over Battle.net conflicting with Total RP3.
