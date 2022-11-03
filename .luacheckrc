@@ -414,7 +414,7 @@ stds.wow = {
 				"Hide"
 			}
 		},
-		'GameTooltip_SetTitle',
+		"GameTooltip_SetTitle",
 
 		GameTooltipTextLeft1 = {
 			fields = {
