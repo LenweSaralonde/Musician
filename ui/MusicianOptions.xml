@@ -32,10 +32,6 @@
 							</Layer>
 						</Layers>
 						<Frames>
-
-
-
-
 							<Frame name="$parentShortcut">
 								<Size>
 									<AbsDimension x="580" y="48" />
@@ -66,11 +62,6 @@
 									</CheckButton>
 								</Frames>
 							</Frame>
-
-
-
-
-
 							<Frame name="$parentUnitEmote">
 								<Size>
 									<AbsDimension x="580" y="70" />
@@ -188,15 +179,6 @@
 									</Layer>
 								</Layers>
 							</Frame>
-
-
-
-
-
-
-
-
-
 							<Frame name="$parentQuickPreloading">
 								<Size>
 									<AbsDimension x="580" y="48" />
