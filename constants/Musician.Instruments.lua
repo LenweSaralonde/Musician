@@ -223,7 +223,7 @@ Musician.INSTRUMENTS = {
 		isPlucked = true,
 		midi = 0,
 		color = Musician.COLORS.White,
-		source = "NeoPiano mini"
+		source = "Yamaha C7"
 	},
 	["female_voice"] = {
 		path = "Interface\\AddOns\\Musician\\instruments\\female-voice",
