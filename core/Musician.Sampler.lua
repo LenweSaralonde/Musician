@@ -384,7 +384,7 @@ local function playNoteSample(handle, loopNote, isLooped)
 	-- Play the note file only if it has already been preloaded in the file cache
 	local sampleId = Musician.Sampler.GetSampleId(instrumentData, key)
 	local soundFile = noteOn[NOTEON.SOUND_FILE]
-	if soundFile and Musician.Preloader.IsPreloaded(sampleId) then
+	if soundFile and Musician.Preloader.IsPreloaded(sampleId) and not Musician.Preloader.IsSampleMissing(sampleId) then
 		playSampleFile(handle, instrumentData, soundFile, 0)
 	end
 end

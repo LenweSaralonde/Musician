@@ -27,6 +27,7 @@ local quickPreloading = true
 local quickPreloadingIsAborted = false
 local quickPreloadingIterations = 0
 local quickPreloadingFirstLoadedSamplesCount = 0
+local missingSampleIds = {}
 
 --- Preloader initialization
 --
@@ -227,6 +228,7 @@ function Musician.Preloader.PreloadNote(instrument, key)
 				StopSound(handle, 0)
 			else
 				Musician.Utils.Debug(MODULE_NAME, "Sample file not found for", instrumentData.name, key, soundFileItem)
+				missingSampleIds[sampleId] = true
 			end
 		end
 
@@ -239,11 +241,13 @@ function Musician.Preloader.PreloadNote(instrument, key)
 			StopSound(handle, 0)
 		else
 			Musician.Utils.Debug(MODULE_NAME, "Sample file not found for", instrumentData.name, key, soundFile)
+			missingSampleIds[sampleId] = true
 		end
 
 	else
 		-- No file
 		Musician.Utils.Debug(MODULE_NAME, "No sample file for", instrumentData.name, key)
+		missingSampleIds[sampleId] = true
 	end
 
 	-- Preload release sample
@@ -337,7 +341,7 @@ end
 --- Return true if the note sample has been preloaded
 -- @param sampleId (string) as returned by Musician.Sampler.GetSampleId()
 -- @param currentCycle (boolean) for current preloading cycle only (even if the sample is already in cache)
--- @return (boolean)
+-- @return isPreloaded (boolean)
 function Musician.Preloader.IsPreloaded(sampleId, currentCycle)
 
 	-- Consider the sample as preloaded if the average loading time is < 1 ms
@@ -346,6 +350,13 @@ function Musician.Preloader.IsPreloaded(sampleId, currentCycle)
 	end
 
 	return sampleId == nil or Musician.Preloader.preloadedSamples[sampleId] ~= nil
+end
+
+--- Return true if the note sample file is missing
+-- @param sampleId (string) as returned by Musician.Sampler.GetSampleId()
+-- @return isMissing (boolean)
+function Musician.Preloader.IsSampleMissing(sampleId)
+	return missingSampleIds[sampleId]
 end
 
 --- Return true if all the samples have been preloaded
