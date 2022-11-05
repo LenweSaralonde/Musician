@@ -151,6 +151,10 @@
 	<td class="summary">Return true if the note sample has been preloaded</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#Musician.Preloader.IsSampleMissing">Musician.Preloader.IsSampleMissing (sampleId)</a></td>
+	<td class="summary">Return true if the note sample file is missing</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#Musician.Preloader.OnUpdate">Musician.Preloader.OnUpdate (elapsed)</a></td>
 	<td class="summary">Main on update function, called on each frame</td>
 	</tr>
@@ -331,7 +335,32 @@
     <h3>Returns:</h3>
     <ol>
 
-        (boolean)
+        isPreloaded (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Preloader.IsSampleMissing"></a>
+    <strong>Musician.Preloader.IsSampleMissing (sampleId)</strong>
+    </dt>
+    <dd>
+    Return true if the note sample file is missing
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">sampleId</span>
+         (string) as returned by Musician.Sampler.GetSampleId()
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        isMissing (boolean)
     </ol>
 
 
