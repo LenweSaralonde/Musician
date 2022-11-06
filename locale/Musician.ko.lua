@@ -172,11 +172,13 @@ msg.SET_CROP_TO = "끝점 설정"
 msg.SYNCHRONIZE_TRACKS = "현재 노래와 트랙 설정 동기화"
 msg.MUTE_TRACK = "음소거"
 msg.SOLO_TRACK = "독주"
+msg.ACCENT_TRACK = "강조"
 msg.TRANSPOSE_TRACK = "조옮김 (옥타브)"
 msg.CHANGE_TRACK_INSTRUMENT = "악기 변경"
 msg.HEADER_NUMBER = "#"
 msg.HEADER_OCTAVE = "옥타브"
 msg.HEADER_INSTRUMENT = "악기"
+msg.HEADER_ACCENT = "x2"
 
 --- Configure live keyboard frame
 msg.SHOULD_CONFIGURE_KEYBOARD = "연주하기 전에 키보드를 구성해야합니다."

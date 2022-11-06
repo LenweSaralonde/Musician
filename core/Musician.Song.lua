@@ -24,6 +24,7 @@ Musician.Song.Indexes.NOTEON = {}
 Musician.Song.Indexes.NOTEON.TIME = 1
 Musician.Song.Indexes.NOTEON.ENDTIME = 2
 Musician.Song.Indexes.NOTEON.HANDLE = 3
+Musician.Song.Indexes.NOTEON.HANDLE_ACCENT = 4
 
 Musician.Song.Indexes.CHUNK = {}
 Musician.Song.Indexes.CHUNK.SONG_ID = 1
@@ -47,6 +48,7 @@ Musician.Song.MODE_LIVE = 0x20 -- No duration in chunk notes
 Musician.Song.TRACK_OPTION_HAS_INSTRUMENT = 0x1
 Musician.Song.TRACK_OPTION_MUTED = 0x2
 Musician.Song.TRACK_OPTION_SOLO = 0x4
+Musician.Song.TRACK_OPTION_ACCENT = 0x8
 
 local CHUNK_VERSION = 0x01 -- Max: 0x0F (15)
 local BASE64DECODE_PROGRESSION_RATIO = .75
@@ -234,6 +236,13 @@ function Musician.Song:SetTrackSolo(track, isSolo)
 	for _, t in pairs(self.tracks) do
 		computeTrackAudible(self, t)
 	end
+end
+
+--- Set/unset track accent
+-- @param track (table)
+-- @param isAccent (boolean)
+function Musician.Song:SetTrackAccent(track, isAccent)
+	track.accent = isAccent
 end
 
 --- Play song
@@ -491,10 +500,14 @@ function Musician.Song:NoteOn(track, noteIndex)
 	local shouldPlay = true
 
 	-- Play note sound file
-	local handle
+	local handle, handleAccent
 	if shouldPlay then
 		local loopNote = (duration == nil) or (duration > Musician.MAX_NOTE_DURATION)
 		handle = Musician.Sampler.PlayNote(track.instrument, key, loopNote, track, self.player)
+		-- Double the note if the track has accent
+		if track.accent then
+			handleAccent = Musician.Sampler.PlayNote(track.instrument, key, loopNote, track, self.player)
+		end
 		if track.audible then
 			Musician.Song:SendMessage(Musician.Events.NoteOn, self, track, key)
 		end
@@ -512,7 +525,8 @@ function Musician.Song:NoteOn(track, noteIndex)
 	table.insert(track.notesOn[key], {
 		[NOTEON.TIME] = time,
 		[NOTEON.ENDTIME] = endTime,
-		[NOTEON.HANDLE] = handle or 0
+		[NOTEON.HANDLE] = handle or 0,
+		[NOTEON.HANDLE_ACCENT] = handleAccent or 0
 	})
 
 	track.polyphony = track.polyphony + 1
@@ -540,6 +554,10 @@ function Musician.Song:NoteOff(track, key, stackIndex)
 		local handle = noteOn[NOTEON.HANDLE]
 		if handle ~= nil then
 			Musician.Sampler.StopNote(handle)
+		end
+		local handleAccent = noteOn[NOTEON.HANDLE_ACCENT]
+		if handleAccent ~= nil then
+			Musician.Sampler.StopNote(handleAccent)
 		end
 		if track.audible then
 			Musician.Song:SendMessage(Musician.Events.NoteOff, self, track, key)
@@ -790,6 +808,9 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 			-- Track is solo
 			track.solo = false
 
+			-- Track has accent
+			track.accent = false
+
 			-- Track is audible
 			track.audible = not track.muted
 
@@ -959,8 +980,10 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 						local hasInstrument = bit.band(trackOptions, Musician.Song.TRACK_OPTION_HAS_INSTRUMENT) ~= 0
 						local muted = bit.band(trackOptions, Musician.Song.TRACK_OPTION_MUTED) ~= 0
 						local solo = bit.band(trackOptions, Musician.Song.TRACK_OPTION_SOLO) ~= 0
+						local accent = bit.band(trackOptions, Musician.Song.TRACK_OPTION_ACCENT) ~= 0
 						self:SetTrackSolo(track, solo)
 						self:SetTrackMuted(track, muted)
+						self:SetTrackAccent(track, accent)
 
 						-- Instrument (1)
 						local instrument = Musician.Utils.UnpackNumber(readBytes(1))
@@ -1209,7 +1232,8 @@ function Musician.Song:Export(onComplete, progressionFactor)
 				local hasInstrument = (t.instrument ~= -1) and Musician.Song.TRACK_OPTION_HAS_INSTRUMENT or 0
 				local muted = t.muted and Musician.Song.TRACK_OPTION_MUTED or 0
 				local solo = t.solo and Musician.Song.TRACK_OPTION_SOLO or 0
-				local trackOptions = bit.bor(hasInstrument, muted, solo)
+				local accent = t.accent and Musician.Song.TRACK_OPTION_ACCENT or 0
+				local trackOptions = bit.bor(hasInstrument, muted, solo, accent)
 				metadata = metadata .. Musician.Utils.PackNumber(trackOptions, 1)
 
 				-- Instrument (1)
@@ -1532,7 +1556,6 @@ function Musician.Song:StreamOnFrame(elapsed)
 						-- Calculate relative time
 						local relativeTime = time - noteOffset
 
-
 						-- Insert note in chunk data
 						table.insert(notes, {
 							[NOTE.ON] = on,
@@ -1540,6 +1563,16 @@ function Musician.Song:StreamOnFrame(elapsed)
 							[NOTE.TIME] = relativeTime,
 							[NOTE.DURATION] = duration
 						})
+
+						-- Insert doubled note if the track has accent
+						if track.accent then
+							table.insert(notes, {
+								[NOTE.ON] = on,
+								[NOTE.KEY] = key,
+								[NOTE.TIME] = 0,
+								[NOTE.DURATION] = duration
+							})
+						end
 
 						noteOffset = noteOffset + relativeTime
 					end

@@ -172,11 +172,13 @@ msg.SET_CROP_TO = "设置结尾点"
 msg.SYNCHRONIZE_TRACKS = "以当前音乐同步音轨设定"
 msg.MUTE_TRACK = "静音"
 msg.SOLO_TRACK = "独奏"
+msg.ACCENT_TRACK = "强调"
 msg.TRANSPOSE_TRACK = "变调(八度音阶)"
 msg.CHANGE_TRACK_INSTRUMENT = "切换乐器"
 msg.HEADER_NUMBER = "#"
 msg.HEADER_OCTAVE = "八度音阶"
 msg.HEADER_INSTRUMENT = "乐器"
+msg.HEADER_ACCENT = "x2"
 
 --- Configure live keyboard frame
 msg.SHOULD_CONFIGURE_KEYBOARD = "在开始演奏前需要对键盘进行设置。"

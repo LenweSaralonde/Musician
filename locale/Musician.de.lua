@@ -172,11 +172,13 @@ msg.SET_CROP_TO = "Schnittpunkt Ende"
 msg.SYNCHRONIZE_TRACKS = "Synchronisieren Sie die Spureinstellungen mit dem aktuellen Titel"
 msg.MUTE_TRACK = "Stumm"
 msg.SOLO_TRACK = "Solo"
+msg.ACCENT_TRACK = "Betonen"
 msg.TRANSPOSE_TRACK = "Transponieren (Oktave)"
 msg.CHANGE_TRACK_INSTRUMENT = "Instrument wechseln"
 msg.HEADER_NUMBER = "#"
 msg.HEADER_OCTAVE = "Oktave"
 msg.HEADER_INSTRUMENT = "Instrument"
+msg.HEADER_ACCENT = "x2"
 
 --- Configure live keyboard frame
 msg.SHOULD_CONFIGURE_KEYBOARD = "Die Tastatur muss vor dem spielen konfiguriert werden."

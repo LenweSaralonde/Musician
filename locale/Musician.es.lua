@@ -172,11 +172,13 @@ msg.SET_CROP_TO = "Establecer punto final"
 msg.SYNCHRONIZE_TRACKS = "Sincronizar la configuración de la pista con la canción actual"
 msg.MUTE_TRACK = "Silencio"
 msg.SOLO_TRACK = "Solo"
+msg.ACCENT_TRACK = "Recalcar"
 msg.TRANSPOSE_TRACK = "Transponer (octava)"
 msg.CHANGE_TRACK_INSTRUMENT = "Cambiar instrumento"
 msg.HEADER_NUMBER = "#"
 msg.HEADER_OCTAVE = "Octava"
 msg.HEADER_INSTRUMENT = "Instrumento"
+msg.HEADER_ACCENT = "x2"
 
 --- Configure live keyboard frame
 msg.SHOULD_CONFIGURE_KEYBOARD = "Tienes que configurar el teclado antes de jugar."

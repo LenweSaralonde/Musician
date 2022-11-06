@@ -172,11 +172,13 @@ msg.SET_CROP_TO = "Установить конечную точку"
 msg.SYNCHRONIZE_TRACKS = "Синхронизировать настройки трека с текущей песней"
 msg.MUTE_TRACK = "Немой"
 msg.SOLO_TRACK = "Соло"
+msg.ACCENT_TRACK = "Подчеркивать"
 msg.TRANSPOSE_TRACK = "Транспонирование (октава)"
 msg.CHANGE_TRACK_INSTRUMENT = "Сменить инструмент"
 msg.HEADER_NUMBER = "#"
 msg.HEADER_OCTAVE = "Октава"
 msg.HEADER_INSTRUMENT = "Инструмент"
+msg.HEADER_ACCENT = "x2"
 
 --- Configure live keyboard frame
 msg.SHOULD_CONFIGURE_KEYBOARD = "Вы должны настроить клавиатуру перед игрой."

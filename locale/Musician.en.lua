@@ -172,11 +172,13 @@ msg.SET_CROP_TO = "Set end point"
 msg.SYNCHRONIZE_TRACKS = "Synchronize track settings with the current song"
 msg.MUTE_TRACK = "Mute"
 msg.SOLO_TRACK = "Solo"
+msg.ACCENT_TRACK = "Accent"
 msg.TRANSPOSE_TRACK = "Transpose (octave)"
 msg.CHANGE_TRACK_INSTRUMENT = "Change instrument"
 msg.HEADER_NUMBER = "#"
 msg.HEADER_OCTAVE = "Octave"
 msg.HEADER_INSTRUMENT = "Instrument"
+msg.HEADER_ACCENT = "x2"
 
 --- Configure live keyboard frame
 msg.SHOULD_CONFIGURE_KEYBOARD = "You have to configure the keyboard before playing."

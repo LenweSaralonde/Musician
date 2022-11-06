@@ -41,6 +41,7 @@ function Musician.TrackEditor.Init()
 	MusicianTrackEditorHeaderTrackId:SetText(Musician.Msg.HEADER_NUMBER)
 	MusicianTrackEditorHeaderMute:SetText(Musician.Icons.Mute)
 	MusicianTrackEditorHeaderSolo:SetText(Musician.Icons.Solo)
+	MusicianTrackEditorHeaderAccent:SetText(Musician.Msg.HEADER_ACCENT)
 	MusicianTrackEditorHeaderTranspose:SetText(Musician.Msg.HEADER_OCTAVE)
 	MusicianTrackEditorHeaderInstrument:SetText(Musician.Msg.HEADER_INSTRUMENT)
 
@@ -304,6 +305,12 @@ function Musician.TrackEditor.CreateTrackWidget(trackIndex)
 			Musician.sourceSong:SetTrackSolo(Musician.sourceSong.tracks[trackIndex], checkButton:GetChecked())
 		end)
 
+		-- Accent
+		trackFrame.accentCheckbox.tooltipText = Musician.Msg.ACCENT_TRACK
+		trackFrame.accentCheckbox:HookScript('OnClick', function(checkButton)
+			Musician.sourceSong:SetTrackAccent(Musician.sourceSong.tracks[trackIndex], checkButton:GetChecked())
+		end)
+
 		-- Meter
 		trackFrame.meterTexture.maxWidth = trackFrame.meterTexture:GetWidth()
 		trackFrame.meterTexture.volumeMeter = Musician.VolumeMeter.create()
@@ -314,6 +321,9 @@ function Musician.TrackEditor.CreateTrackWidget(trackIndex)
 
 	-- Solo
 	trackFrame.soloCheckbox:SetChecked(track.solo)
+
+	-- Accent
+	trackFrame.accentCheckbox:SetChecked(track.accent)
 
 	-- Meter
 	trackFrame.meterTexture:SetWidth(0)
@@ -465,6 +475,7 @@ function Musician.TrackEditor.Synchronize()
 		streamingTrack.transpose = sourceTrack.transpose
 		Musician.streamingSong:SetTrackMuted(streamingTrack, sourceTrack.muted)
 		Musician.streamingSong:SetTrackSolo(streamingTrack, sourceTrack.solo)
+		Musician.streamingSong:SetTrackAccent(streamingTrack, sourceTrack.accent)
 	end
 end
 
