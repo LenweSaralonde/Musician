@@ -123,6 +123,7 @@ Some basic modifications can be made to the imported song in the song editor, wh
 * Mute and solo tracks
 * Change track instruments
 * Transpose tracks
+* Accent tracks, to make them louder by doubling the notes
 
 The song editor also shows some information about the tracks (MIDI instrument, start and end points, number of notes…) and the activity while the song is playing. Click the track start or end point timecode to reach it in the timeline.
 
