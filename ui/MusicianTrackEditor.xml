@@ -230,8 +230,8 @@
 					<AbsInset left="0" right="0" top="0" bottom="0" />
 				</HitRectInsets>
 				<ThumbTexture parentKey="Thumb" name="$parentThumb" file="Interface\Buttons\UI-SliderBar-Button-Horizontal">
-					<TexCoords left="0.375" right="0.625" />
-					<Size x="8" y="32" />
+					<TexCoords left="0.3125" right="0.65625" />
+					<Size x="11" y="32" />
 				</ThumbTexture>
 			</Slider>
 
@@ -323,11 +323,19 @@
 					<Anchor point="BOTTOM" y="12" />
 				</Anchors>
 				<Layers>
+					<Layer level="BACKGROUND">
+						<Texture file="Interface\DialogFrame\UI-DialogBox-Background" horizTile="true" vertTile="true">
+							<Anchors>
+								<Anchor point="TOPRIGHT" relativePoint="TOPRIGHT" x="26" y="4" />
+								<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" x="0" y="-2" />
+							</Anchors>
+						</Texture>
+					</Layer>
 					<Layer level="ARTWORK">
 						<Texture name="$parentTop" file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
 							<Size x="31" y="102" />
 							<Anchors>
-								<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" x="-2" y="5" />
+								<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" x="-2" y="4" />
 							</Anchors>
 							<TexCoords left="0" right="0.484375" top="0" bottom="0.4" />
 						</Texture>
