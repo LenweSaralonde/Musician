@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.9.6.0
+--------
+* Added track accent to play notes in double and make them sound louder.
+* Fixed minor cosmetic issues in the song editor.
+
 v1.9.5.0
 --------
 * The audio cache size is automatically expanded to fit the instrument samples.
