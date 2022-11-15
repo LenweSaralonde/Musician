@@ -1,6 +1,12 @@
 Changelog
 =========
 
+v1.9.6.1
+--------
+* Adjusted levels for bass guitar, female voice and sackbut.
+* Fixed minimap button style.
+* TOC bump for WoW patch 10.0.2.
+
 v1.9.6.0
 --------
 * Added track accent to play notes in double and make them sound louder.
