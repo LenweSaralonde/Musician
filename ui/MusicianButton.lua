@@ -75,19 +75,6 @@ function MusicianButton.Refresh()
 		buttonFrame.hourglass = hourglass
 	end
 
-	-- Add background texture to fill the gap of the thinner WoW 10.0 minimap button border
-	if buttonFrame and not buttonFrame.backdrop and LE_EXPANSION_LEVEL_CURRENT >= 9 then
-		local backdropMask = buttonFrame:CreateMaskTexture(nil, "BACKGROUND", nil, -7)
-		backdropMask:SetTexture(130925)
-		backdropMask:SetPoint("BOTTOMRIGHT", -1, 2)
-		backdropMask:SetPoint("TOPLEFT", 4, -3)
-		local backdrop = buttonFrame:CreateTexture(nil, "BACKGROUND", nil, -7)
-		backdrop:AddMaskTexture(backdropMask)
-		backdrop:SetAllPoints(backdropMask)
-		backdrop:SetColorTexture(0, 0, 0, 1)
-		buttonFrame.backdrop = backdrop
-	end
-
 	-- Show or hide the preloading hourglass
 	if buttonFrame then
 		if Musician.Preloader.IsComplete() then
