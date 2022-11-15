@@ -8,6 +8,7 @@ Quick links
 -----------
 * [Discord server](https://discord.gg/ypfpGxK) (EN/FR) for help, good music and more!
 * Additional modules:
+  * [Musician: Extended](https://musician.lenwe.io/extended) — Add even more instruments to Musician.
   * [Musician List](https://musician.lenwe.io/list) — Save and load your songs in-game.
   * [Musician MIDI](https://musician.lenwe.io/midi) — Play live music using your MIDI keyboard.
 * [Wiki](https://github.com/LenweSaralonde/Musician/wiki) — Tips and tricks, FAQ and detailed documentation for gamers, developers and music producers.
