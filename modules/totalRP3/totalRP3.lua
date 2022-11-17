@@ -187,7 +187,8 @@ function Musician.TRP3.HookPlayerMap()
 						icon = Musician.Utils.GetChatIcon(Musician.IconImages.Note)
 					end
 
-					newDisplayData.playerName = newDisplayData.playerName .. " " .. icon
+					newDisplayData.playerNameColored = newDisplayData.playerNameColored .. " " .. icon
+					newDisplayData.playerNameFancy = newDisplayData.playerNameFancy .. " " .. icon
 					self.Texture:SetTexture(PIN_TEXTURE)
 					self.HighlightTexture:SetTexture(PIN_HIGHLIGHT_TEXTURE)
 
