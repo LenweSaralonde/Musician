@@ -275,8 +275,8 @@ msg.VERTICAL_LAYOUT = "Вертикальный"
 
 --- Live keyboard frame
 msg.LIVE_SONG_NAME = "Живая песня"
-msg.SOLO_MODE = "Соло режим"
-msg.LIVE_MODE = "Живой режим"
+msg.SOLO_MODE = "Solo"
+msg.LIVE_MODE = "Live"
 msg.LIVE_MODE_DISABLED = "Живой режим отключен во время воспроизведения."
 msg.ENABLE_SOLO_MODE = "Включите Solo Mode (вы играете за себя)"
 msg.ENABLE_LIVE_MODE = "Включите Live Mode (вы играете для всех)"

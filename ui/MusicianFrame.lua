@@ -74,7 +74,7 @@ function Musician.Frame.Init()
 	Musician.Frame.Clear()
 
 	-- Reduce source text size in Chinese
-	if Musician.Msg == Musician.Locale.zh then
+	if Musician.Msg == Musician.Locale.zh or Musician.Msg == Musician.Locale.tw then
 		local w, h = MusicianFrameSource:GetSize()
 		local scale = .75
 		MusicianFrameSource:SetScale(scale)
