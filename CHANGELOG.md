@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.9.6.2
+--------
+* Fixed player name note icon missing in Total RP3 map scan.
+* Fixed translations not fitting in some UI elements.
+
 v1.9.6.1
 --------
 * Adjusted levels for bass guitar, female voice and sackbut.
