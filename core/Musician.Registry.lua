@@ -53,10 +53,12 @@ function Musician.Registry.Init()
 	local function finishInit()
 		-- Standard player tooltip hook
 		local function onTooltipSetUnit(self)
-			local _, unitType = self:GetUnit()
-			if UnitIsPlayer(unitType) then
-				local player = Musician.Utils.NormalizePlayerName(GetUnitName(unitType, true))
-				Musician.Registry.UpdateTooltipInfo(self, player)
+			if self and self.GetUnit then
+				local _, unitType = self:GetUnit()
+				if UnitIsPlayer(unitType) then
+					local player = Musician.Utils.NormalizePlayerName(GetUnitName(unitType, true))
+					Musician.Registry.UpdateTooltipInfo(self, player)
+				end
 			end
 		end
 
