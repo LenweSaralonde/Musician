@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.9.6.3
+--------
+* Fixed tooltip bug with HandyNotes: Dragonflight (Dragon Isles) Treasures and Rares. #90
+* Updated HereBeDragons-2.0.
+
 v1.9.6.2
 --------
 * Fixed player name note icon missing in Total RP3 map scan.

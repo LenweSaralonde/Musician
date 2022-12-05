@@ -1,7 +1,7 @@
 ## Interface: 100002
 ## Title: Musician
 ## Author: LenweSaralonde
-## Version: 1.9.6.2
+## Version: 1.9.6.3
 ## Notes: Listen to and perform music with your character
 ## OptionalDeps: CrossRP, ElvUI, Kui_Nameplates, MyRolePlay, NeatPlates, Plater, TidyPlates, TidyPlates_ThreatPlates, totalRP3, totalRP3_Extended
 ## SavedVariables: Musician_Settings
