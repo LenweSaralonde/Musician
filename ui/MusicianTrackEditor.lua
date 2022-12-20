@@ -23,6 +23,13 @@ function Musician.TrackEditor.Init()
 	Musician.TrackEditor:RegisterMessage(Musician.Events.SourceSongLoaded, Musician.TrackEditor.OnLoad)
 	Musician.TrackEditor:RegisterMessage(Musician.Events.StreamStart, Musician.TrackEditor.UpdateSyncButton)
 	Musician.TrackEditor:RegisterMessage(Musician.Events.StreamStop, Musician.TrackEditor.UpdateSyncButton)
+	Musician.TrackEditor:RegisterMessage(Musician.Events.SongInstrumentChange, Musician.TrackEditor.OnInstrumentChange)
+	Musician.TrackEditor:RegisterMessage(Musician.Events.SongTransposeChange, Musician.TrackEditor.OnTransposeChange)
+	Musician.TrackEditor:RegisterMessage(Musician.Events.SongMutedChange, Musician.TrackEditor.OnMutedChange)
+	Musician.TrackEditor:RegisterMessage(Musician.Events.SongSoloChange, Musician.TrackEditor.OnSoloChange)
+	Musician.TrackEditor:RegisterMessage(Musician.Events.SongAccentChange, Musician.TrackEditor.OnAccentChange)
+	Musician.TrackEditor:RegisterMessage(Musician.Events.SongCropFromChange, Musician.TrackEditor.OnCropChange)
+	Musician.TrackEditor:RegisterMessage(Musician.Events.SongCropToChange, Musician.TrackEditor.OnCropChange)
 
 	-- Main frame settings
 	MusicianTrackEditor:SetClampedToScreen(true)
@@ -296,19 +303,19 @@ function Musician.TrackEditor.CreateTrackWidget(trackIndex)
 		-- Mute
 		trackFrame.muteCheckbox.tooltipText = Musician.Msg.MUTE_TRACK
 		trackFrame.muteCheckbox:HookScript('OnClick', function(checkButton)
-			Musician.sourceSong:SetTrackMuted(Musician.sourceSong.tracks[trackIndex], checkButton:GetChecked())
+			Musician.sourceSong:SetTrackMuted(trackIndex, checkButton:GetChecked())
 		end)
 
 		-- Solo
 		trackFrame.soloCheckbox.tooltipText = Musician.Msg.SOLO_TRACK
 		trackFrame.soloCheckbox:HookScript('OnClick', function(checkButton)
-			Musician.sourceSong:SetTrackSolo(Musician.sourceSong.tracks[trackIndex], checkButton:GetChecked())
+			Musician.sourceSong:SetTrackSolo(trackIndex, checkButton:GetChecked())
 		end)
 
 		-- Accent
 		trackFrame.accentCheckbox.tooltipText = Musician.Msg.ACCENT_TRACK
 		trackFrame.accentCheckbox:HookScript('OnClick', function(checkButton)
-			Musician.sourceSong:SetTrackAccent(Musician.sourceSong.tracks[trackIndex], checkButton:GetChecked())
+			Musician.sourceSong:SetTrackAccent(trackIndex, checkButton:GetChecked())
 		end)
 
 		-- Meter
@@ -362,10 +369,10 @@ function Musician.TrackEditor.CreateTrackWidget(trackIndex)
 	Musician.Utils.SetFontStringTextFixedSize(trackFrame.infoText, trackInfo)
 
 	-- Transposition
-	trackFrame.transposeDropdown.SetValue(track.transpose)
+	trackFrame.transposeDropdown.UpdateValue(track.transpose)
 
 	-- Instrument
-	trackFrame.instrumentDropdown.SetValue(track.instrument)
+	trackFrame.instrumentDropdown.UpdateValue(track.instrument)
 
 	trackFrame:Show()
 end
@@ -382,13 +389,19 @@ function Musician.TrackEditor.InitTransposeDropdown(dropdown, trackIndex)
 	dropdown.tooltipText = Musician.Msg.TRANSPOSE_TRACK
 
 	dropdown.SetValue = function(value)
-		dropdown.SetIndex(3 - floor(value / 12))
+		dropdown.UpdateValue(value)
+		Musician.sourceSong:SetTrackTranspose(dropdown.trackIndex, dropdown.value)
 	end
 
 	dropdown.SetIndex = function(index)
-		dropdown.index = index
-		Musician.sourceSong.tracks[dropdown.trackIndex].transpose = (-index + 3) * 12
-		MSA_DropDownMenu_SetText(dropdown, transposeValues[index])
+		dropdown.UpdateValue((-index + 3) * 12)
+		Musician.sourceSong:SetTrackTranspose(dropdown.trackIndex, dropdown.value)
+	end
+
+	dropdown.UpdateValue = function(value)
+		dropdown.index = 3 - floor(value / 12)
+		dropdown.value = value
+		MSA_DropDownMenu_SetText(dropdown, transposeValues[dropdown.index])
 	end
 
 	dropdown.OnClick = function(self, arg1)
@@ -417,51 +430,112 @@ end
 function Musician.TrackEditor.InitInstrumentDropdown(dropdown, trackIndex)
 	dropdown.trackIndex = trackIndex
 	dropdown.tooltipText = Musician.Msg.CHANGE_TRACK_INSTRUMENT
+	dropdown.OnChange = function(midiId)
+		Musician.sourceSong:SetTrackInstrument(dropdown.trackIndex, midiId)
+	end
 
-	dropdown.OnChange = function(midiId, instrumentId)
-		Musician.sourceSong.tracks[dropdown.trackIndex].instrument = midiId
-
-		if Musician.INSTRUMENTS[instrumentId].color ~= nil then
-			local r, g, b = unpack(Musician.INSTRUMENTS[instrumentId].color)
-			local trackFrame = _G['MusicianTrackEditorTrack' .. trackIndex]
+	-- Change track row color
+	hooksecurefunc(dropdown, "UpdateValue", function(value)
+		local trackFrame = dropdown:GetParent()
+		local instrumentName = Musician.Sampler.GetInstrumentName(value)
+		if Musician.INSTRUMENTS[instrumentName].color ~= nil then
+			local r, g, b = unpack(Musician.INSTRUMENTS[instrumentName].color)
 			trackFrame.nameText:SetTextColor(r, g, b)
 			trackFrame.infoText:SetTextColor(r, g, b)
 			trackFrame.idText:SetTextColor(r, g, b)
 		end
+	end)
+end
 
-		Musician.TrackEditor:SendMessage(Musician.Events.SongInstrumentChange, Musician.sourceSong,
-			Musician.sourceSong.tracks[dropdown.trackIndex], midiId)
+--- Get track frame for source song track
+-- @param song (Musician.Song)
+-- @param track (table) Track object of the song
+-- @return trackFrame (Frame)
+function Musician.TrackEditor.GetTrackFrame(song, track)
+	if song ~= Musician.sourceSong then return nil end
+	return _G['MusicianTrackEditorTrack' .. track.index]
+end
+
+--- Handle track instruent change
+-- @param event (string)
+-- @param song (Musician.Song)
+-- @param track (table) Track object of the song
+-- @param midiId (number) MIDI id of the instrument
+function Musician.TrackEditor.OnInstrumentChange(event, song, track, midiId)
+	local trackFrame = Musician.TrackEditor.GetTrackFrame(song, track)
+	if trackFrame then
+		trackFrame.instrumentDropdown.UpdateValue(midiId)
+	end
+end
+
+--- Handle track transpose change
+-- @param event (string)
+-- @param song (Musician.Song)
+-- @param track (table) Track object of the song
+-- @param semitones (number) Transpose level, in semitones
+function Musician.TrackEditor.OnTransposeChange(event, song, track, semitones)
+	local trackFrame = Musician.TrackEditor.GetTrackFrame(song, track)
+	if trackFrame then
+		trackFrame.transposeDropdown.UpdateValue(semitones)
+	end
+end
+
+--- Handle track muted change
+-- @param event (string)
+-- @param song (Musician.Song)
+-- @param track (table) Track object of the song
+-- @param isMuted (boolean) Muted flag
+function Musician.TrackEditor.OnMutedChange(event, song, track, isMuted)
+	local trackFrame = Musician.TrackEditor.GetTrackFrame(song, track)
+	if trackFrame then
+		trackFrame.muteCheckbox:SetChecked(isMuted)
+	end
+end
+
+--- Handle track solo change
+-- @param event (string)
+-- @param song (Musician.Song)
+-- @param track (table) Track object of the song
+-- @param isSolo (boolean) Solo flag
+function Musician.TrackEditor.OnSoloChange(event, song, track, isSolo)
+	local trackFrame = Musician.TrackEditor.GetTrackFrame(song, track)
+	if trackFrame then
+		trackFrame.soloCheckbox:SetChecked(isSolo)
+	end
+end
+
+--- Handle track accent change
+-- @param event (string)
+-- @param song (Musician.Song)
+-- @param track (table) Track object of the song
+-- @param isAccent (boolean) Accent flag
+function Musician.TrackEditor.OnAccentChange(event, song, track, isAccent)
+	local trackFrame = Musician.TrackEditor.GetTrackFrame(song, track)
+	if trackFrame then
+		trackFrame.accentCheckbox:SetChecked(isAccent)
 	end
 end
 
 --- Set crop start position
 -- @param position (number)
 function Musician.TrackEditor.SetCropFrom(position)
-	if position < Musician.sourceSong.cropTo then
-		Musician.sourceSong.cropFrom = floor(position * 100) / 100
-	end
-
-	if Musician.sourceSong.cursor < position then
-		Musician.sourceSong:Seek(position)
-	end
-
-	Musician.TrackEditor.UpdateSlider()
-	Musician.TrackEditor.UpdateBounds()
+	Musician.sourceSong:SetCropFrom(floor(position * 100) / 100)
 end
 
 --- Set crop end position
 -- @param position (number)
 function Musician.TrackEditor.SetCropTo(position)
-	if position > Musician.sourceSong.cropFrom then
-		Musician.sourceSong.cropTo = ceil(position * 100) / 100
-	end
+	Musician.sourceSong:SetCropTo(ceil(position * 100) / 100)
+end
 
-	if Musician.sourceSong.cursor > position then
-		Musician.sourceSong:Seek(position)
+--- Handle song crop from or crop to change
+-- @param event (string)
+-- @param song (Musician.Song)
+function Musician.TrackEditor.OnCropChange(event, song)
+	if song == Musician.sourceSong then
+		Musician.TrackEditor.UpdateSlider()
+		Musician.TrackEditor.UpdateBounds()
 	end
-
-	Musician.TrackEditor.UpdateSlider()
-	Musician.TrackEditor.UpdateBounds()
 end
 
 --- Synchronize track settings with currently streaming song
@@ -470,12 +544,11 @@ function Musician.TrackEditor.Synchronize()
 	if not isSourceSongStreaming() then return end
 
 	for trackIndex, sourceTrack in pairs(Musician.sourceSong.tracks) do
-		local streamingTrack = Musician.streamingSong.tracks[trackIndex]
-		streamingTrack.instrument = sourceTrack.instrument
-		streamingTrack.transpose = sourceTrack.transpose
-		Musician.streamingSong:SetTrackMuted(streamingTrack, sourceTrack.muted)
-		Musician.streamingSong:SetTrackSolo(streamingTrack, sourceTrack.solo)
-		Musician.streamingSong:SetTrackAccent(streamingTrack, sourceTrack.accent)
+		Musician.streamingSong:SetTrackInstrument(trackIndex, sourceTrack.instrument)
+		Musician.streamingSong:SetTrackTranspose(trackIndex, sourceTrack.transpose)
+		Musician.streamingSong:SetTrackMuted(trackIndex, sourceTrack.muted)
+		Musician.streamingSong:SetTrackSolo(trackIndex, sourceTrack.solo)
+		Musician.streamingSong:SetTrackAccent(trackIndex, sourceTrack.accent)
 	end
 end
 

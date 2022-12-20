@@ -67,12 +67,59 @@ Musician.Events.StreamStop = "MusicianStreamStop"
 -- @param song (Musician.Song)
 Musician.Events.SongCursor = "MusicianSongCursor"
 
---- Fired when the instrument of a song track has changed in the song editor
+--- Fired when the instrument of a song track has changed
 -- @field Musician.Events.SongInstrumentChange
 -- @param song (Musician.Song)
 -- @param track (table) Track object of the song
 -- @param midiId (number) MIDI id of the instrument
 Musician.Events.SongInstrumentChange = "MusicianSongInstrumentChange"
+
+--- Fired when the transposition of a song track has changed
+-- @field Musician.Events.SongTransposeChange
+-- @param song (Musician.Song)
+-- @param track (table) Track object of the song
+-- @param semitones (number) Transposition level, in semitones
+Musician.Events.SongTransposeChange = "MusicianSongTransposeChange"
+
+--- Fired when the muted flag of a song track has changed
+-- @field Musician.Events.SongMutedChange
+-- @param song (Musician.Song)
+-- @param track (table) Track object of the song
+-- @param isMuted (boolean) Muted flag
+Musician.Events.SongMutedChange = "MusicianSongMutedChange"
+
+--- Fired when the solo flag of a song track has changed
+-- @field Musician.Events.SongSoloChange
+-- @param song (Musician.Song)
+-- @param track (table) Track object of the song
+-- @param isSolo (boolean) Solo flag
+Musician.Events.SongSoloChange = "MusicianSongSoloChange"
+
+--- Fired when the audible flag of a song track has changed
+-- @field Musician.Events.SongAudibleChange
+-- @param song (Musician.Song)
+-- @param track (table) Track object of the song
+-- @param isAudible (boolean) Audible flag
+Musician.Events.SongAudibleChange = "MusicianSongAudibleChange"
+
+--- Fired when the accent flag of a song track has changed
+-- @field Musician.Events.SongAccentChange
+-- @param song (Musician.Song)
+-- @param track (table) Track object of the song
+-- @param isAccent (boolean) Accent flag
+Musician.Events.SongAccentChange = "MusicianSongAccentChange"
+
+--- Fired when the song crop from point has changed
+-- @field Musician.Events.SongCropFromChange
+-- @param song (Musician.Song)
+-- @param cropFrom (number) Crop from point
+Musician.Events.SongCropFromChange = "MusicianSongCropFromChange"
+
+--- Fired when the song crop to point has changed
+-- @field Musician.Events.SongCropToChange
+-- @param song (Musician.Song)
+-- @param cropTo (number) Crop to point
+Musician.Events.SongCropToChange = "MusicianSongCropToChange"
 
 --- Fired when a song note starts playing and is audible
 -- @field Musician.Events.NoteOn

@@ -206,43 +206,134 @@ function Musician.Song:GetProgression()
 	return position / duration
 end
 
+--- Get track by index
+-- @param trackIndex (int)
+-- @return track (table)
+function Musician.Song:GetTrack(trackIndex)
+	return self.tracks[trackIndex]
+end
+
 --- Compute the track audible flag after a track was muted or set as solo.
--- @param song (table)
+-- @param song (Musician.Song)
 -- @param track (table)
--- @return isMuted (boolean)
-local function computeTrackAudible(song, track)
+-- @param sendAudibleEvent (boolean) Send Musician.Events.SongAudibleChange when true
+local function computeTrackAudible(song, track, sendAudibleEvent)
 	track.audible = not (track.muted or song.soloTracks > 0 and not track.solo)
+	if sendAudibleEvent then
+		Musician.Song:SendMessage(Musician.Events.SongAudibleChange, song, track, track.audible)
+	end
 end
 
 --- Mute or unmute track
+-- @param song (Musician.Song)
 -- @param track (table)
 -- @param isMuted (boolean)
-function Musician.Song:SetTrackMuted(track, isMuted)
+-- @param sendAudibleEvent (boolean) Send Musician.Events.SongAudibleChange when true
+local function setTrackMuted(song, track, isMuted, sendAudibleEvent)
 	track.muted = isMuted
-	computeTrackAudible(self, track)
+	computeTrackAudible(song, track, sendAudibleEvent)
 end
 
 --- Set/unset track solo
+-- @param song (Musician.Song)
 -- @param track (table)
 -- @param isSolo (boolean)
-function Musician.Song:SetTrackSolo(track, isSolo)
+-- @param sendAudibleEvent (boolean) Send Musician.Events.SongAudibleChange when true
+local function setTrackSolo(song, track, isSolo, sendAudibleEvent)
 	if track.solo and not isSolo then
 		track.solo = false
-		self.soloTracks = self.soloTracks - 1
+		song.soloTracks = song.soloTracks - 1
 	elseif not track.solo and isSolo then
 		track.solo = true
-		self.soloTracks = self.soloTracks + 1
+		song.soloTracks = song.soloTracks + 1
 	end
-	for _, t in pairs(self.tracks) do
-		computeTrackAudible(self, t)
+	for _, t in pairs(song.tracks) do
+		computeTrackAudible(song, t, sendAudibleEvent)
 	end
 end
 
+--- Mute or unmute track
+-- @param track (int|table)
+-- @param isMuted (boolean)
+function Musician.Song:SetTrackMuted(track, isMuted)
+	if type(track) == "number" then
+		track = self:GetTrack(track)
+	end
+	if track == nil then return end
+	setTrackMuted(self, track, isMuted, true)
+	Musician.Song:SendMessage(Musician.Events.SongMutedChange, self, track, isMuted)
+end
+
+--- Set/unset track solo
+-- @param track (int|table)
+-- @param isSolo (boolean)
+function Musician.Song:SetTrackSolo(track, isSolo)
+	if type(track) == "number" then
+		track = self:GetTrack(track)
+	end
+	if track == nil then return end
+	setTrackSolo(self, track, isSolo, true)
+	Musician.Song:SendMessage(Musician.Events.SongSoloChange, self, track, isSolo)
+end
+
 --- Set/unset track accent
--- @param track (table)
+-- @param track (int|table)
 -- @param isAccent (boolean)
 function Musician.Song:SetTrackAccent(track, isAccent)
+	if type(track) == "number" then
+		track = self:GetTrack(track)
+	end
+	if track == nil then return end
 	track.accent = isAccent
+	Musician.Song:SendMessage(Musician.Events.SongAccentChange, self, track, isAccent)
+end
+
+--- Set track transposition in semitones
+-- @param track (int|table)
+-- @param semitones (int)
+function Musician.Song:SetTrackTranspose(track, semitones)
+	if type(track) == "number" then
+		track = self:GetTrack(track)
+	end
+	if track == nil then return end
+	track.transpose = semitones
+	Musician.Song:SendMessage(Musician.Events.SongTransposeChange, self, track, semitones)
+end
+
+--- Set track instrument MIDI ID
+-- @param track (int|table)
+-- @param midiId (int)
+function Musician.Song:SetTrackInstrument(track, midiId)
+	if type(track) == "number" then
+		track = self:GetTrack(track)
+	end
+	if track == nil then return end
+	track.instrument = midiId
+	Musician.Song:SendMessage(Musician.Events.SongInstrumentChange, self, track, midiId)
+end
+
+--- Set crop from point
+-- @param cropFrom (number)
+function Musician.Song:SetCropFrom(cropFrom)
+	if cropFrom < self.cropTo then
+		self.cropFrom = cropFrom
+	end
+	if self.cursor < cropFrom then
+		self:Seek(cropFrom)
+	end
+	Musician.Song:SendMessage(Musician.Events.SongCropFromChange, self, cropFrom)
+end
+
+--- Set crop to point
+-- @param cropTo (number)
+function Musician.Song:SetCropTo(cropTo)
+	if cropTo > self.cropFrom then
+		self.cropTo = cropTo
+	end
+	if self.cursor > cropTo then
+		self:Seek(cropTo)
+	end
+	Musician.Song:SendMessage(Musician.Events.SongCropToChange, self, cropTo)
 end
 
 --- Play song
@@ -981,9 +1072,9 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 						local muted = bit.band(trackOptions, Musician.Song.TRACK_OPTION_MUTED) ~= 0
 						local solo = bit.band(trackOptions, Musician.Song.TRACK_OPTION_SOLO) ~= 0
 						local accent = bit.band(trackOptions, Musician.Song.TRACK_OPTION_ACCENT) ~= 0
-						self:SetTrackSolo(track, solo)
-						self:SetTrackMuted(track, muted)
-						self:SetTrackAccent(track, accent)
+						setTrackSolo(self, track, solo, false)
+						setTrackMuted(self, track, muted, false)
+						track.accent = accent
 
 						-- Instrument (1)
 						local instrument = Musician.Utils.UnpackNumber(readBytes(1))
