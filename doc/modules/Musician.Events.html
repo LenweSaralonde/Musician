@@ -211,8 +211,24 @@
 	<td class="summary">Fired when the player registry is ready to use.</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#Musician.Events.SongAccentChange">Musician.Events.SongAccentChange</a></td>
+	<td class="summary">Fired when the accent flag of a song track has changed</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Events.SongAudibleChange">Musician.Events.SongAudibleChange</a></td>
+	<td class="summary">Fired when the audible flag of a song track has changed</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#Musician.Events.SongChunk">Musician.Events.SongChunk</a></td>
 	<td class="summary">Fired when a song chunk has been received</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Events.SongCropFromChange">Musician.Events.SongCropFromChange</a></td>
+	<td class="summary">Fired when the song crop from point has changed</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Events.SongCropToChange">Musician.Events.SongCropToChange</a></td>
+	<td class="summary">Fired when the song crop to point has changed</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Events.SongCursor">Musician.Events.SongCursor</a></td>
@@ -252,11 +268,15 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Events.SongInstrumentChange">Musician.Events.SongInstrumentChange</a></td>
-	<td class="summary">Fired when the instrument of a song track has changed in the song editor</td>
+	<td class="summary">Fired when the instrument of a song track has changed</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Events.SongLink">Musician.Events.SongLink</a></td>
 	<td class="summary">Fired when the user clicks on a song link</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Events.SongMutedChange">Musician.Events.SongMutedChange</a></td>
+	<td class="summary">Fired when the muted flag of a song track has changed</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Events.SongPlay">Musician.Events.SongPlay</a></td>
@@ -287,8 +307,16 @@
 	<td class="summary">Fired when the song reception process is complete successfully</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#Musician.Events.SongSoloChange">Musician.Events.SongSoloChange</a></td>
+	<td class="summary">Fired when the solo flag of a song track has changed</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#Musician.Events.SongStop">Musician.Events.SongStop</a></td>
 	<td class="summary">Fired when a song stops playing</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Events.SongTransposeChange">Musician.Events.SongTransposeChange</a></td>
+	<td class="summary">Fired when the transposition of a song track has changed</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Events.SourceSongLoaded">Musician.Events.SourceSongLoaded</a></td>
@@ -780,6 +808,56 @@
 
 </dd>
     <dt>
+    <a name = "Musician.Events.SongAccentChange"></a>
+    <strong>Musician.Events.SongAccentChange</strong>
+    </dt>
+    <dd>
+    Fired when the accent flag of a song track has changed
+
+
+    <ul>
+        <li><span class="parameter">song</span>
+         (Musician.Song)
+        </li>
+        <li><span class="parameter">track</span>
+         (table) Track object of the song
+        </li>
+        <li><span class="parameter">isAccent</span>
+         (boolean) Accent flag
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Events.SongAudibleChange"></a>
+    <strong>Musician.Events.SongAudibleChange</strong>
+    </dt>
+    <dd>
+    Fired when the audible flag of a song track has changed
+
+
+    <ul>
+        <li><span class="parameter">song</span>
+         (Musician.Song)
+        </li>
+        <li><span class="parameter">track</span>
+         (table) Track object of the song
+        </li>
+        <li><span class="parameter">isAudible</span>
+         (boolean) Audible flag
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
     <a name = "Musician.Events.SongChunk"></a>
     <strong>Musician.Events.SongChunk</strong>
     </dt>
@@ -817,6 +895,50 @@
         </li>
         <li><span class="parameter">guid</span>
          (string) Player GUID
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Events.SongCropFromChange"></a>
+    <strong>Musician.Events.SongCropFromChange</strong>
+    </dt>
+    <dd>
+    Fired when the song crop from point has changed
+
+
+    <ul>
+        <li><span class="parameter">song</span>
+         (Musician.Song)
+        </li>
+        <li><span class="parameter">cropFrom</span>
+         (number) Crop from point
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Events.SongCropToChange"></a>
+    <strong>Musician.Events.SongCropToChange</strong>
+    </dt>
+    <dd>
+    Fired when the song crop to point has changed
+
+
+    <ul>
+        <li><span class="parameter">song</span>
+         (Musician.Song)
+        </li>
+        <li><span class="parameter">cropTo</span>
+         (number) Crop to point
         </li>
     </ul>
 
@@ -1007,7 +1129,7 @@
     <strong>Musician.Events.SongInstrumentChange</strong>
     </dt>
     <dd>
-    Fired when the instrument of a song track has changed in the song editor
+    Fired when the instrument of a song track has changed
 
 
     <ul>
@@ -1041,6 +1163,31 @@
         </li>
         <li><span class="parameter">playerName</span>
          (string)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Events.SongMutedChange"></a>
+    <strong>Musician.Events.SongMutedChange</strong>
+    </dt>
+    <dd>
+    Fired when the muted flag of a song track has changed
+
+
+    <ul>
+        <li><span class="parameter">song</span>
+         (Musician.Song)
+        </li>
+        <li><span class="parameter">track</span>
+         (table) Track object of the song
+        </li>
+        <li><span class="parameter">isMuted</span>
+         (boolean) Muted flag
         </li>
     </ul>
 
@@ -1223,6 +1370,31 @@
 
 </dd>
     <dt>
+    <a name = "Musician.Events.SongSoloChange"></a>
+    <strong>Musician.Events.SongSoloChange</strong>
+    </dt>
+    <dd>
+    Fired when the solo flag of a song track has changed
+
+
+    <ul>
+        <li><span class="parameter">song</span>
+         (Musician.Song)
+        </li>
+        <li><span class="parameter">track</span>
+         (table) Track object of the song
+        </li>
+        <li><span class="parameter">isSolo</span>
+         (boolean) Solo flag
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
     <a name = "Musician.Events.SongStop"></a>
     <strong>Musician.Events.SongStop</strong>
     </dt>
@@ -1233,6 +1405,31 @@
     <ul>
         <li><span class="parameter">song</span>
          (Musician.Song)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Events.SongTransposeChange"></a>
+    <strong>Musician.Events.SongTransposeChange</strong>
+    </dt>
+    <dd>
+    Fired when the transposition of a song track has changed
+
+
+    <ul>
+        <li><span class="parameter">song</span>
+         (Musician.Song)
+        </li>
+        <li><span class="parameter">track</span>
+         (table) Track object of the song
+        </li>
+        <li><span class="parameter">semitones</span>
+         (number) Transposition level, in semitones
         </li>
     </ul>
 

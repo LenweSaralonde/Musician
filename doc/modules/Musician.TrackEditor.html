@@ -123,6 +123,10 @@
 	<td class="summary">Track widget factory</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#Musician.TrackEditor.GetTrackFrame">Musician.TrackEditor.GetTrackFrame (song, track)</a></td>
+	<td class="summary">Get track frame for source song track</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#Musician.TrackEditor.Init">Musician.TrackEditor.Init ()</a></td>
 	<td class="summary">Init</td>
 	</tr>
@@ -143,8 +147,32 @@
 	<td class="summary">NoteOn handler</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#Musician.TrackEditor.OnAccentChange">Musician.TrackEditor.OnAccentChange (event, song, track, isAccent)</a></td>
+	<td class="summary">Handle track accent change</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.TrackEditor.OnCropChange">Musician.TrackEditor.OnCropChange (event, song)</a></td>
+	<td class="summary">Handle song crop from or crop to change</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.TrackEditor.OnInstrumentChange">Musician.TrackEditor.OnInstrumentChange (event, song, track, midiId)</a></td>
+	<td class="summary">Handle track instruent change</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#Musician.TrackEditor.OnLoad">Musician.TrackEditor.OnLoad ()</a></td>
 	<td class="summary">Song loaded handler</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.TrackEditor.OnMutedChange">Musician.TrackEditor.OnMutedChange (event, song, track, isMuted)</a></td>
+	<td class="summary">Handle track muted change</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.TrackEditor.OnSoloChange">Musician.TrackEditor.OnSoloChange (event, song, track, isSolo)</a></td>
+	<td class="summary">Handle track solo change</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.TrackEditor.OnTransposeChange">Musician.TrackEditor.OnTransposeChange (event, song, track, semitones)</a></td>
+	<td class="summary">Handle track transpose change</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Musician.TrackEditor.OnUpdate">Musician.TrackEditor.OnUpdate (event, elapsed)</a></td>
@@ -214,6 +242,34 @@
         </li>
     </ul>
 
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.TrackEditor.GetTrackFrame"></a>
+    <strong>Musician.TrackEditor.GetTrackFrame (song, track)</strong>
+    </dt>
+    <dd>
+    Get track frame for source song track
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">song</span>
+         (Musician.Song)
+        </li>
+        <li><span class="parameter">track</span>
+         (table) Track object of the song
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        trackFrame (Frame)
+    </ol>
 
 
 
@@ -335,6 +391,87 @@
 
 </dd>
     <dt>
+    <a name = "Musician.TrackEditor.OnAccentChange"></a>
+    <strong>Musician.TrackEditor.OnAccentChange (event, song, track, isAccent)</strong>
+    </dt>
+    <dd>
+    Handle track accent change
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+         (string)
+        </li>
+        <li><span class="parameter">song</span>
+         (Musician.Song)
+        </li>
+        <li><span class="parameter">track</span>
+         (table) Track object of the song
+        </li>
+        <li><span class="parameter">isAccent</span>
+         (boolean) Accent flag
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.TrackEditor.OnCropChange"></a>
+    <strong>Musician.TrackEditor.OnCropChange (event, song)</strong>
+    </dt>
+    <dd>
+    Handle song crop from or crop to change
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+         (string)
+        </li>
+        <li><span class="parameter">song</span>
+         (Musician.Song)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.TrackEditor.OnInstrumentChange"></a>
+    <strong>Musician.TrackEditor.OnInstrumentChange (event, song, track, midiId)</strong>
+    </dt>
+    <dd>
+    Handle track instruent change
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+         (string)
+        </li>
+        <li><span class="parameter">song</span>
+         (Musician.Song)
+        </li>
+        <li><span class="parameter">track</span>
+         (table) Track object of the song
+        </li>
+        <li><span class="parameter">midiId</span>
+         (number) MIDI id of the instrument
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
     <a name = "Musician.TrackEditor.OnLoad"></a>
     <strong>Musician.TrackEditor.OnLoad ()</strong>
     </dt>
@@ -342,6 +479,93 @@
     Song loaded handler
 
 
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.TrackEditor.OnMutedChange"></a>
+    <strong>Musician.TrackEditor.OnMutedChange (event, song, track, isMuted)</strong>
+    </dt>
+    <dd>
+    Handle track muted change
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+         (string)
+        </li>
+        <li><span class="parameter">song</span>
+         (Musician.Song)
+        </li>
+        <li><span class="parameter">track</span>
+         (table) Track object of the song
+        </li>
+        <li><span class="parameter">isMuted</span>
+         (boolean) Muted flag
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.TrackEditor.OnSoloChange"></a>
+    <strong>Musician.TrackEditor.OnSoloChange (event, song, track, isSolo)</strong>
+    </dt>
+    <dd>
+    Handle track solo change
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+         (string)
+        </li>
+        <li><span class="parameter">song</span>
+         (Musician.Song)
+        </li>
+        <li><span class="parameter">track</span>
+         (table) Track object of the song
+        </li>
+        <li><span class="parameter">isSolo</span>
+         (boolean) Solo flag
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.TrackEditor.OnTransposeChange"></a>
+    <strong>Musician.TrackEditor.OnTransposeChange (event, song, track, semitones)</strong>
+    </dt>
+    <dd>
+    Handle track transpose change
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+         (string)
+        </li>
+        <li><span class="parameter">song</span>
+         (Musician.Song)
+        </li>
+        <li><span class="parameter">track</span>
+         (table) Track object of the song
+        </li>
+        <li><span class="parameter">semitones</span>
+         (number) Transpose level, in semitones
+        </li>
+    </ul>
 
 
 

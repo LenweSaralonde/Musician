@@ -175,6 +175,10 @@
 	<td class="summary">Return playing progression</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:GetTrack">Musician.Song:GetTrack (trackIndex)</a></td>
+	<td class="summary">Get track by index</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#Musician.Song:Import">Musician.Song:Import (data, crop[, previousProgression=0[, onComplete]])</a></td>
 	<td class="summary">Import song from string</td>
 	</tr>
@@ -239,8 +243,20 @@
 	<td class="summary">Seek to position</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:SetCropFrom">Musician.Song:SetCropFrom (cropFrom)</a></td>
+	<td class="summary">Set crop from point</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:SetCropTo">Musician.Song:SetCropTo (cropTo)</a></td>
+	<td class="summary">Set crop to point</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#Musician.Song:SetTrackAccent">Musician.Song:SetTrackAccent (track, isAccent)</a></td>
 	<td class="summary">Set/unset track accent</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:SetTrackInstrument">Musician.Song:SetTrackInstrument (track, midiId)</a></td>
+	<td class="summary">Set track instrument MIDI ID</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Song:SetTrackMuted">Musician.Song:SetTrackMuted (track, isMuted)</a></td>
@@ -249,6 +265,10 @@
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Song:SetTrackSolo">Musician.Song:SetTrackSolo (track, isSolo)</a></td>
 	<td class="summary">Set/unset track solo</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Song:SetTrackTranspose">Musician.Song:SetTrackTranspose (track, semitones)</a></td>
+	<td class="summary">Set track transposition in semitones</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Song:SongNotesOff">Musician.Song:SongNotesOff ()</a></td>
@@ -579,6 +599,31 @@
     <ol>
 
         progression (number)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song:GetTrack"></a>
+    <strong>Musician.Song:GetTrack (trackIndex)</strong>
+    </dt>
+    <dd>
+    Get track by index
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">trackIndex</span>
+         (int)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        track (table)
     </ol>
 
 
@@ -940,6 +985,46 @@
 
 </dd>
     <dt>
+    <a name = "Musician.Song:SetCropFrom"></a>
+    <strong>Musician.Song:SetCropFrom (cropFrom)</strong>
+    </dt>
+    <dd>
+    Set crop from point
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">cropFrom</span>
+         (number)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song:SetCropTo"></a>
+    <strong>Musician.Song:SetCropTo (cropTo)</strong>
+    </dt>
+    <dd>
+    Set crop to point
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">cropTo</span>
+         (number)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
     <a name = "Musician.Song:SetTrackAccent"></a>
     <strong>Musician.Song:SetTrackAccent (track, isAccent)</strong>
     </dt>
@@ -950,10 +1035,33 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">track</span>
-         (table)
+         (int|table)
         </li>
         <li><span class="parameter">isAccent</span>
          (boolean)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song:SetTrackInstrument"></a>
+    <strong>Musician.Song:SetTrackInstrument (track, midiId)</strong>
+    </dt>
+    <dd>
+    Set track instrument MIDI ID
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">track</span>
+         (int|table)
+        </li>
+        <li><span class="parameter">midiId</span>
+         (int)
         </li>
     </ul>
 
@@ -973,7 +1081,7 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">track</span>
-         (table)
+         (int|table)
         </li>
         <li><span class="parameter">isMuted</span>
          (boolean)
@@ -996,10 +1104,33 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">track</span>
-         (table)
+         (int|table)
         </li>
         <li><span class="parameter">isSolo</span>
          (boolean)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Song:SetTrackTranspose"></a>
+    <strong>Musician.Song:SetTrackTranspose (track, semitones)</strong>
+    </dt>
+    <dd>
+    Set track transposition in semitones
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">track</span>
+         (int|table)
+        </li>
+        <li><span class="parameter">semitones</span>
+         (int)
         </li>
     </ul>
 
