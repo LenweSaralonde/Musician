@@ -471,7 +471,9 @@ end
 --- Update note icon next to player name
 -- @param namePlate (Frame)
 function Musician.NamePlates.UpdateNoteIcon(namePlate)
-	Musician.NamePlates.AddNoteIcon(namePlate, namePlate.UnitFrame.name)
+	if namePlate.UnitFrame and namePlate.UnitFrame.name then
+		Musician.NamePlates.AddNoteIcon(namePlate, namePlate.UnitFrame.name)
+	end
 end
 
 --- Returns true when the note icon container should be rendered
