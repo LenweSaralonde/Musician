@@ -9,6 +9,7 @@ Musician.SUPPORTERS = {
 	"Crisellianna",
 	"Naelyel",
 	"Aphex",
+	"Derenly",
 }
 
 --- Legendary supporter names
