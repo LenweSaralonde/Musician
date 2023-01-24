@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v1.9.6.4
+--------
+* TOC bump for WoW patch 10.0.5.
+* TOC bump for WoW Classic patch 3.4.1.
+* Added internal events to notify when song settings have changed.
+* Minor bugfixes and improvements.
+
 v1.9.6.3
 --------
 * Fixed tooltip bug with HandyNotes: Dragonflight (Dragon Isles) Treasures and Rares. #90
