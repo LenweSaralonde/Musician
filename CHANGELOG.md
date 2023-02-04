@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.9.7.0
+--------
+* Added plugin version handling.
+* Minor bugfixes and improvements.
+
 v1.9.6.4
 --------
 * TOC bump for WoW patch 10.0.5.
