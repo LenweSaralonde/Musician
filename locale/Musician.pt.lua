@@ -125,7 +125,7 @@ msg.LOADING_SCREEN_CLOSE_TOOLTIP = "Feche e continue pré-carregando em segundo 
 
 --- Player tooltips
 msg.PLAYER_TOOLTIP = "Musician"
-msg.PLAYER_TOOLTIP_VERSION = "Musician v {version}"
+msg.PLAYER_TOOLTIP_VERSION = "{name} v {version}"
 msg.PLAYER_TOOLTIP_VERSION_OUTDATED = " (Desatualizado)"
 msg.PLAYER_TOOLTIP_VERSION_INCOMPATIBLE = " (INCOMPATÍVEL)"
 msg.PLAYER_TOOLTIP_PRELOADING = "Pré-carregando sons… ({progress})"

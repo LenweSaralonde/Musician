@@ -125,7 +125,7 @@ msg.LOADING_SCREEN_CLOSE_TOOLTIP = "Close and continue preloading in background.
 
 --- Player tooltips
 msg.PLAYER_TOOLTIP = "Musician"
-msg.PLAYER_TOOLTIP_VERSION = "Musician v{version}"
+msg.PLAYER_TOOLTIP_VERSION = "{name} v{version}"
 msg.PLAYER_TOOLTIP_VERSION_OUTDATED = " (Outdated)"
 msg.PLAYER_TOOLTIP_VERSION_INCOMPATIBLE = " (INCOMPATIBLE)"
 msg.PLAYER_TOOLTIP_PRELOADING = "Preloading sounds… ({progress})"

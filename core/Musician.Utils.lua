@@ -943,36 +943,28 @@ end
 --- Compare two version numbers
 -- @param versionA (string)
 -- @param versionB (string)
--- @return difference (number) 0 if A = B, 1 if A > B, -1 if A < B
+-- @return difference (number) 0 if equal, positive value if A > B, negative value if A < B
 function Musician.Utils.VersionCompare(versionA, versionB)
-
 	if versionA == versionB then
 		return 0
 	end
 
-	local partsA = { strsplit('.', versionA) }
-	local partsB = { strsplit('.', versionB) }
-	local countA = #partsA
-	local countB = #partsB
+	local va1, va2, va3, va4 = strsplit('.', versionA)
+	local vb1, vb2, vb3, vb4 = strsplit('.', versionB)
+	va1, va2, va3, va4 = tonumber(va1) or 0, tonumber(va2) or 0, tonumber(va3) or 0, tonumber(va4) or 0
+	vb1, vb2, vb3, vb4 = tonumber(vb1) or 0, tonumber(vb2) or 0, tonumber(vb3) or 0, tonumber(vb4) or 0
 
-	for i = 1, min(countA, countB) do
-		local a = tonumber(partsA[i]) or 0
-		local b = tonumber(partsB[i]) or 0
-
-		if a > b then
-			return 1
-		elseif a < b then
-			return -1
-		end
+	if va1 ~= vb1 then
+		return va1 - vb1
+	elseif va2 ~= vb2 then
+		return va2 - vb2
+	elseif va3 ~= vb3 then
+		return va3 - vb3
+	elseif va4 ~= vb4 then
+		return va4 - vb4
+	else
+		return 0
 	end
-
-	if countA > countB then
-		return 1
-	elseif countA < countB then
-		return -1
-	end
-
-	return 0
 end
 
 --- Add padding zeros

@@ -125,7 +125,7 @@ msg.LOADING_SCREEN_CLOSE_TOOLTIP = "Закрыть и продолжить пр�
 
 --- Player tooltips
 msg.PLAYER_TOOLTIP = "Musician"
-msg.PLAYER_TOOLTIP_VERSION = "Musician v {version}"
+msg.PLAYER_TOOLTIP_VERSION = "{name} v {version}"
 msg.PLAYER_TOOLTIP_VERSION_OUTDATED = " (Устарело)"
 msg.PLAYER_TOOLTIP_VERSION_INCOMPATIBLE = " (НЕСОВМЕСТИМО)"
 msg.PLAYER_TOOLTIP_PRELOADING = "Звуки предварительной загрузки… ({progress})"

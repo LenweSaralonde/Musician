@@ -306,7 +306,8 @@ end
 -- @param alwaysShowLoadingProgression (boolean)
 function MusicianButton.UpdateTooltipText(alwaysShowLoadingProgression)
 
-	local mainLine = string.gsub(Musician.Msg.PLAYER_TOOLTIP_VERSION, "{version}", GetAddOnMetadata("Musician", "Version"))
+	local playerVersion, _, playerPlugins = Musician.Registry.ExtractVersionAndProtocol(Musician.Registry.GetVersionString())
+	local mainLine = Musician.Registry.FormatPlayerTooltipVersion(playerVersion, playerPlugins)
 
 	local leftClickLine = Musician.Msg.TOOLTIP_LEFT_CLICK
 	local leftAction = Musician.Msg.TOOLTIP_ACTION_OPEN_MENU

@@ -125,7 +125,7 @@ msg.LOADING_SCREEN_CLOSE_TOOLTIP = "關閉並在後台繼續預加載。"
 
 --- Player tooltips
 msg.PLAYER_TOOLTIP = "Musician"
-msg.PLAYER_TOOLTIP_VERSION = "Musician v{version}"
+msg.PLAYER_TOOLTIP_VERSION = "{name} v{version}"
 msg.PLAYER_TOOLTIP_VERSION_OUTDATED = " (當前版本已過期)"
 msg.PLAYER_TOOLTIP_VERSION_INCOMPATIBLE = " (當前版本不兼容)"
 msg.PLAYER_TOOLTIP_PRELOADING = "音效預載中……({progress})"

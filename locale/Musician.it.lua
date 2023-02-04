@@ -125,7 +125,7 @@ msg.LOADING_SCREEN_CLOSE_TOOLTIP = "Chiudi e continua il precaricamento in backg
 
 --- Player tooltips
 msg.PLAYER_TOOLTIP = "Musician"
-msg.PLAYER_TOOLTIP_VERSION = "Musician v {version}"
+msg.PLAYER_TOOLTIP_VERSION = "{name} v {version}"
 msg.PLAYER_TOOLTIP_VERSION_OUTDATED = " (Obsoleto)"
 msg.PLAYER_TOOLTIP_VERSION_INCOMPATIBLE = " (INCOMPATIBILE)"
 msg.PLAYER_TOOLTIP_PRELOADING = "Precaricamento dei suoni… ({progress})"

@@ -125,7 +125,7 @@ msg.LOADING_SCREEN_CLOSE_TOOLTIP = "닫고 백그라운드에서 사전 로드�
 
 --- Player tooltips
 msg.PLAYER_TOOLTIP = "Musician"
-msg.PLAYER_TOOLTIP_VERSION = "뮤지션 v{version}"
+msg.PLAYER_TOOLTIP_VERSION = "{name} v{version}"
 msg.PLAYER_TOOLTIP_VERSION_OUTDATED = " (시대에 뒤쳐진)"
 msg.PLAYER_TOOLTIP_VERSION_INCOMPATIBLE = " (호환 불가)"
 msg.PLAYER_TOOLTIP_PRELOADING = "소리 미리로드 중… ({progress})"

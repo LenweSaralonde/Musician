@@ -125,7 +125,7 @@ msg.LOADING_SCREEN_CLOSE_TOOLTIP = "Schließen und Vorladen im Hintergrund forts
 
 --- Player tooltips
 msg.PLAYER_TOOLTIP = "Musician"
-msg.PLAYER_TOOLTIP_VERSION = "Musician v {version}"
+msg.PLAYER_TOOLTIP_VERSION = "{name} v {version}"
 msg.PLAYER_TOOLTIP_VERSION_OUTDATED = " (Veraltet)"
 msg.PLAYER_TOOLTIP_VERSION_INCOMPATIBLE = " (UNVEREINBAR)"
 msg.PLAYER_TOOLTIP_PRELOADING = "Vorladen von Sounds… ({progress})"

@@ -317,10 +317,11 @@ function Musician.Registry.GetPlayerGUID(player)
 	return nil
 end
 
---- Return player tooltip text
+--- Return detailed player tooltip text, including plugin information
 -- @param player (string)
+-- @param noDetail (boolean) Don't include plugin information when true
 -- @return infoText (string)
-function Musician.Registry.GetPlayerTooltipText(player)
+function Musician.Registry.GetDetailedPlayerTooltipText(player, noDetail)
 	player = Musician.Utils.NormalizePlayerName(player)
 
 	if not Musician.Registry.PlayerIsRegistered(player) then
@@ -329,9 +330,9 @@ function Musician.Registry.GetPlayerTooltipText(player)
 
 	local infoText = Musician.Msg.PLAYER_TOOLTIP
 
-	local playerVersion, playerProtocol = Musician.Registry.GetPlayerVersion(player)
+	local playerVersion, playerProtocol, playerPlugins = Musician.Registry.GetPlayerVersion(player)
 	if playerVersion then
-		infoText = string.gsub(Musician.Msg.PLAYER_TOOLTIP_VERSION, '{version}', playerVersion)
+		infoText = Musician.Registry.FormatPlayerTooltipVersion(playerVersion, noDetail and '' or playerPlugins)
 
 		if playerProtocol < Musician.PROTOCOL_VERSION then
 			infoText = infoText ..
@@ -341,6 +342,42 @@ function Musician.Registry.GetPlayerTooltipText(player)
 				" " .. Musician.Utils.Highlight(Musician.Msg.PLAYER_TOOLTIP_VERSION_INCOMPATIBLE, RED_FONT_COLOR)
 		end
 	end
+
+	return infoText
+end
+
+--- Return player tooltip text, without plugin information
+-- @param player (string)
+-- @return infoText (string)
+function Musician.Registry.GetPlayerTooltipText(player)
+	return Musician.Registry.GetDetailedPlayerTooltipText(player, true)
+end
+
+--- Format player tooltip version text
+-- @param playerVersion (string)
+-- @param playerPlugins (string) Space-separated list of plugins and their version (PluginName=version)
+-- @return infoText (string)
+function Musician.Registry.FormatPlayerTooltipVersion(playerVersion, playerPlugins)
+	local name = Musician.Msg.PLAYER_TOOLTIP
+	local version = playerVersion
+
+	-- Format plugin information
+	if playerPlugins ~= "" then
+		for _, pluginString in pairs({ string.split(' ', playerPlugins) }) do
+			local pluginName, pluginVersion = string.split('=', pluginString)
+			-- Only keep version-related characters to avoid escape sequences injection
+			pluginVersion = string.gsub(pluginVersion, "[^0-9a-zA-Z%.%-%_]+", "")
+
+			local separator = (name == Musician.Msg.PLAYER_TOOLTIP) and ": " or " + "
+			name = name .. separator .. string.gsub(pluginName, '^' .. Musician.Msg.PLAYER_TOOLTIP, "") -- Remove "Musician" from plugin name
+			version = version .. " x " .. pluginVersion
+		end
+	end
+
+	-- Format tooltip version text
+	local infoText = Musician.Msg.PLAYER_TOOLTIP_VERSION
+	infoText = string.gsub(infoText, "{name}", name)
+	infoText = string.gsub(infoText, "{version}", version)
 
 	return infoText
 end
@@ -367,7 +404,7 @@ function Musician.Registry.UpdateTooltipInfo(tooltip, player, fontSize, r, g, b)
 		end
 	end
 
-	local infoText = Musician.Registry.GetPlayerTooltipText(player)
+	local infoText = Musician.Registry.GetDetailedPlayerTooltipText(player)
 
 	if infoText == nil then
 		return
@@ -529,42 +566,48 @@ function Musician.Registry.GetVersionString()
 end
 
 --- Extract version and protocol from received version string
--- @param versionAndProtocol (string)
+-- @param versionString (string)
 -- @return version (string)
 -- @return protocol (number)
-function Musician.Registry.ExtractVersionAndProtocol(versionAndProtocol)
-	versionAndProtocol = string.gsub(versionAndProtocol, "%s.+", "")
-	local versionParts = { string.split('.', versionAndProtocol) }
-	local protocol
-	local majorVersion = tonumber(versionParts[1]) or 0
-	local minorVersion = tonumber(versionParts[2]) or 0
+-- @return plugins (string) Space-separated list of plugins and their version (PluginName=version)
+function Musician.Registry.ExtractVersionAndProtocol(versionString)
+	local versionAndProtocol = string.gsub(versionString, "%s.+", "")
+	local v1, v2, v3, v4, protocol = string.split('.', versionAndProtocol)
+	v1 = tonumber(v1) or 0
+	v2 = tonumber(v2) or 0
+	v3 = tonumber(v3) or 0
+	v4 = tonumber(v4) or 0
 
 	-- Version string contains protocol version as 5th number
-	if #versionParts == 5 then
-		protocol = tonumber(table.remove(versionParts, 5)) or 0
-	elseif majorVersion == 1 and minorVersion >= 5 then -- 1.5.xx -> MUS4
+	if protocol ~= nil then
+		protocol = tonumber(protocol)
+	elseif v1 == 1 and v2 >= 5 then -- 1.5.xx -> MUS4
 		protocol = 4
-	elseif majorVersion == 1 and minorVersion >= 4 then -- 1.4.xx -> MUS3
+	elseif v1 == 1 and v2 >= 4 then -- 1.4.xx -> MUS3
 		protocol = 3
-	elseif majorVersion == 1 and minorVersion >= 1 then -- 1.1.xx -> MUS2
+	elseif v1 == 1 and v2 >= 1 then -- 1.1.xx -> MUS2
 		protocol = 2
 	else -- 1.0.xx -> MUS1
 		protocol = 1
 	end
 
-	return table.concat(versionParts, '.'), protocol
+	-- Plugins string
+	local plugins = strjoin(' ', select(2, string.split(' ', versionString)))
+
+	return strjoin('.', v1, v2, v3, v4), protocol, plugins
 end
 
 --- Return version and protocol for player
 -- @param player (string)
 -- @return version (string)
 -- @return protocol (number)
+-- @return plugins (string) Space-separated list of plugins and their version (PluginName=version)
 function Musician.Registry.GetPlayerVersion(player)
 	player = Musician.Utils.NormalizePlayerName(player)
 	local entry = Musician.Registry.players[player]
 
 	if not entry or not entry.version then
-		return nil, nil
+		return nil, nil, nil
 	end
 
 	return Musician.Registry.ExtractVersionAndProtocol(entry.version)
@@ -594,7 +637,7 @@ function Musician.Registry.NotifyNewVersion(otherVersion)
 	if theirVersion:match("[^0-9\\.]") then return end
 
 	-- Compare versions
-	if not newVersionNotified and Musician.Utils.VersionCompare(theirVersion, myVersion) == 1 then
+	if not newVersionNotified and Musician.Utils.VersionCompare(theirVersion, myVersion) > 0 then
 		newVersionNotified = true
 		pendingNotifications["version"] = function()
 			pendingNotifications["version"] = nil
