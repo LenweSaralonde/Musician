@@ -210,9 +210,9 @@ Musician.Events.SongImportProgress = "MusicianSongImportProgress"
 Musician.Events.SongImportComplete = "MusicianSongImportComplete"
 
 --- Fired when the song importing process is complete successfully
--- @field Musician.Events.SongImportSucessful
+-- @field Musician.Events.SongImportSuccessful
 -- @param song (Musician.Song)
-Musician.Events.SongImportSucessful = "MusicianSongImportSucessful"
+Musician.Events.SongImportSuccessful = "MusicianSongImportSuccessful"
 
 --- Fired when the song importing process failed
 -- @field Musician.Events.SongImportFailed
@@ -309,12 +309,12 @@ Musician.Events.SongReceiveComplete = "MusicianSongReceiveComplete"
 Musician.Events.SongReceiveCanceled = "MusicianSongReceiveCanceled"
 
 --- Fired when the song reception process is complete successfully
--- @field Musician.Events.SongReceiveSucessful
+-- @field Musician.Events.SongReceiveSuccessful
 -- @param sender (string)
 -- @param songData (string)
 -- @param[opt] song (Musician.Song)
 -- @param[opt] context (table) Reference to the module that initiated the song request.
-Musician.Events.SongReceiveSucessful = "MusicianSongReceiveSucessful"
+Musician.Events.SongReceiveSuccessful = "MusicianSongReceiveSuccessful"
 
 --- Fired when the song reception process failed
 -- @field Musician.Events.SongReceiveFailed

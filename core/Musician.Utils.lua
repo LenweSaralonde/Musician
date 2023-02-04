@@ -888,7 +888,7 @@ end
 --- Return true if the message contains the promo emote, in any language
 -- @param message (string)
 -- @return hasPromoEmote (boolean)
--- @return isFullPromoEmote (boolean) true if the emote contains the part invinting other players to install Musician
+-- @return isFullPromoEmote (boolean) true if the emote contains the part inviting other players to install Musician
 function Musician.Utils.HasPromoEmote(message)
 	for _, locale in pairs(Musician.Locale) do
 		if locale.EMOTE_PLAYING_MUSIC ~= nil and string.find(message, locale.EMOTE_PLAYING_MUSIC, 1, true) == 1 then

@@ -1100,7 +1100,7 @@ function Musician.Song:Import(data, crop, previousProgression, onComplete)
 				-- Import is complete!
 				self.importing = false
 				Musician.Song:SendMessage(Musician.Events.SongImportComplete, self)
-				Musician.Song:SendMessage(Musician.Events.SongImportSucessful, self)
+				Musician.Song:SendMessage(Musician.Events.SongImportSuccessful, self)
 				if onComplete then
 					onComplete(true)
 				end

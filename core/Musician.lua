@@ -84,7 +84,7 @@ function Musician:OnInitialize()
 	Musician.About.Init()
 
 	Musician:RegisterMessage(Musician.Events.SongPlay, Musician.OnSongPlayed)
-	Musician:RegisterMessage(Musician.Events.SongImportSucessful, Musician.OnSourceImportSuccessful)
+	Musician:RegisterMessage(Musician.Events.SongImportSuccessful, Musician.OnSourceImportSuccessful)
 	Musician:RegisterMessage(Musician.Events.SongImportFailed, Musician.OnSourceImportFailed)
 
 	-- Automatically mute game music

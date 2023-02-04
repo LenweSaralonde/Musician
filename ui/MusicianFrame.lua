@@ -31,7 +31,7 @@ function Musician.Frame.Init()
 	Musician.Frame:RegisterMessage(Musician.Events.BandStop, Musician.Frame.OnBandStop)
 	Musician.Frame:RegisterMessage(Musician.Events.BandPlayReady, Musician.Frame.OnBandPlayReady)
 	Musician.Frame:RegisterMessage(Musician.Events.BandReadyPlayersUpdated, Musician.Frame.UpdateBandPlayButton)
-	Musician.Frame:RegisterMessage(Musician.Events.SongReceiveSucessful, Musician.Frame.OnSongReceiveSucessful)
+	Musician.Frame:RegisterMessage(Musician.Events.SongReceiveSuccessful, Musician.Frame.OnSongReceiveSuccessful)
 	Musician.Frame:RegisterEvent("GROUP_ROSTER_UPDATE", Musician.Frame.OnRosterUpdate)
 	Musician.Frame:RegisterEvent("PLAYER_DEAD", Musician.Frame.OnCommChannelUpdate)
 	Musician.Frame:RegisterEvent("PLAYER_ALIVE", Musician.Frame.OnCommChannelUpdate)
@@ -430,9 +430,9 @@ function Musician.Frame.OnBandStop(event, player, songCrc32)
 	end
 end
 
---- OnSongReceiveSucessful
+--- OnSongReceiveSuccessful
 -- Show main window when a downloaded song has been successfully imported for playing.
-function Musician.Frame.OnSongReceiveSucessful(event, _, _, song, context)
+function Musician.Frame.OnSongReceiveSuccessful(event, _, _, song, context)
 	if context ~= Musician then return end
 	local isDataOnly = song == nil
 	if not isDataOnly then

@@ -556,7 +556,7 @@ function Musician.SongLinks.OnSongReceived(prefix, message, distribution, sender
 		Musician.SongLinks.RemoveRequest(sender)
 		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveComplete, sender, context)
 		debug("Song downloading complete (data only)", requestedSong.title)
-		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveSucessful, sender, songData, nil, context)
+		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveSuccessful, sender, songData, nil, context)
 		return
 	end
 
@@ -574,7 +574,7 @@ function Musician.SongLinks.OnSongReceived(prefix, message, distribution, sender
 		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveComplete, sender, context)
 		if success then
 			debug("Song downloading complete", song.name)
-			Musician.SongLinks:SendMessage(Musician.Events.SongReceiveSucessful, sender, songData, song, context)
+			Musician.SongLinks:SendMessage(Musician.Events.SongReceiveSuccessful, sender, songData, song, context)
 		else
 			debug("Song downloading failed")
 			Musician.SongLinks:SendMessage(Musician.Events.SongReceiveFailed, sender, Musician.SongLinks.errors.importingFailed,
