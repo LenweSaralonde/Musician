@@ -66,6 +66,8 @@ globals = {
 			script = {
 				fields = {
 					"executeClassScript",
+					"runWorkflow",
+					"runLuaScriptEffect",
 					"clearRootCompilation" -- Accessed only
 				}
 			},

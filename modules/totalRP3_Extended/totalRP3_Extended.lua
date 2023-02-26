@@ -613,33 +613,29 @@ function Musician.TRP3E.RegisterHooks()
 
 	local executeClassScript = TRP3_API.script.executeClassScript
 	TRP3_API.script.executeClassScript = function(useWorkflow, classSC, args, infoId)
-
-		-- Musician import workflow is invoked and present
-		if useWorkflow == Musician.TRP3E.WORKFLOW_NAME and classSC[Musician.TRP3E.WORKFLOW_NAME] ~= nil then
-			local ST = classSC[Musician.TRP3E.WORKFLOW_NAME].ST
-
-			-- Grab the song data inside the workflow
-			if type(ST) == 'table' then
-				for _, STrow in pairs(ST) do
-					if type(STrow.e) == 'table' then
-						for _, eRow in pairs(STrow.e) do
-							-- Song data variable has been found
-							if eRow.id == 'var_object' and
-								eRow.args[1] == 'w' and
-								eRow.args[2] == '[=]' and
-								eRow.args[3] == Musician.TRP3E.VARIABLE_NAME
-							then
-								-- Launch import
-								importSong(eRow.args[4], infoId)
-								return 0 -- success
-							end
-						end
-					end
-				end
-			end
+		if Musician.TRP3E.RunWorkflow(useWorkflow, classSC, infoId) then
+			return 0
 		end
-
 		return executeClassScript(useWorkflow, classSC, args, infoId)
+	end
+
+	local runWorkflow = TRP3_API.script.runWorkflow
+	TRP3_API.script.runWorkflow = function(args, source, workflowID, slotID)
+		if Musician.TRP3E.RunWorkflow(workflowID, args.scripts, args.classID) then
+			return
+		end
+		runWorkflow(args, source, workflowID, slotID)
+	end
+
+	-- Inject the Musician API into restricted LUA code
+	--
+
+	local runLuaScriptEffect = TRP3_API.script.runLuaScriptEffect
+	TRP3_API.script.runLuaScriptEffect = function(code, args, secured)
+		-- TODO: use add-on list to inject plugins as well
+		args.Musician = Musician
+		code = "local Musician = args.Musician\n" .. code
+		return runLuaScriptEffect(code, args, secured)
 	end
 
 	-- Notify loading progression for song import
@@ -659,7 +655,7 @@ function Musician.TRP3E.RegisterHooks()
 	local display = toolFrame.item.normal.display
 
 	local function refreshCheck()
-		if toolFrame.fullClassID ~= nil and Musician.TRP3E.IsMusicianItem(TRP3_DB.global[toolFrame.fullClassID]) then
+		if toolFrame.fullClassID ~= nil and not Musician.TRP3E.IsEditableItem(toolFrame.fullClassID) then
 
 			-- Hide all tabs except the first one
 			local tabIndex = 0
@@ -695,6 +691,37 @@ function Musician.TRP3E.RegisterHooks()
 	display.quest:HookScript('OnClick', refreshCheck)
 	toolFrame:HookScript('OnShow', refreshCheck)
 	hooksecurefunc(toolFrame.item.normal, 'loadItem', refreshCheck)
+end
+
+--- Indicates whenever the provided item class ID is for a musician object
+-- @param workflowID (string)
+-- @return status (boolean) true when success
+function Musician.TRP3E.RunWorkflow(workflowID, classSC, infoId)
+	-- Musician import workflow is invoked and present
+	if workflowID == Musician.TRP3E.WORKFLOW_NAME and classSC[Musician.TRP3E.WORKFLOW_NAME] ~= nil then
+		local ST = classSC[Musician.TRP3E.WORKFLOW_NAME].ST
+
+		-- Grab the song data inside the workflow
+		if type(ST) == 'table' then
+			for _, STrow in pairs(ST) do
+				if type(STrow.e) == 'table' then
+					for _, eRow in pairs(STrow.e) do
+						-- Song data variable has been found
+						if eRow.id == 'var_object' and
+							eRow.args[1] == 'w' and
+							eRow.args[2] == '[=]' and
+							eRow.args[3] == Musician.TRP3E.VARIABLE_NAME
+						then
+							-- Launch import
+							importSong(eRow.args[4], infoId)
+							return true -- success
+						end
+					end
+				end
+			end
+		end
+	end
+	return false
 end
 
 --- Add or update existing sheet music item into TRP3 items
@@ -904,6 +931,13 @@ function Musician.TRP3E.IsMusicianItem(object)
 		object.TY == TRP3_DB.types.ITEM and
 		object.SC ~= nil and
 		object.SC[Musician.TRP3E.WORKFLOW_NAME] ~= nil
+end
+
+--- Indicates whenever the provided TRP3 item object is editable
+-- @param classId (string)
+-- @return isEditableItem (boolean)
+function Musician.TRP3E.IsEditableItem(classId)
+	return not Musician.TRP3E.IsMusicianItem(TRP3_DB.global[classId]) or not Musician.TRP3E.IsMusicianId(classId)
 end
 
 --- Normalize song title for TRP item names
