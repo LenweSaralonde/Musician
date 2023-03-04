@@ -1,6 +1,12 @@
 Changelog
 =========
 
+v1.9.7.1
+--------
+* Fixed residual animated notes showing above the wrong player nameplate.
+* Fixed notes not being stopped when live mode is disabled.
+* Updated the option label in the MIDI converter to use the full pitch bend range by default.
+
 v1.9.7.0
 --------
 * Added plugin version handling.
