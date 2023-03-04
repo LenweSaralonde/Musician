@@ -1,6 +1,6 @@
 var userLang = (navigator.language || navigator.userLanguage).replace(/[-_].*$/g, '');
 
-var LOCALE_VERSION = 7;
+var LOCALE_VERSION = 8;
 var MUSICIAN_MSG = {};
 
 var MUSICIAN_DOWNLOAD_URL = null;
