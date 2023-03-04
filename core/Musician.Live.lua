@@ -211,6 +211,7 @@ end
 --- Enable or disable live mode
 -- @param enabled (boolean)
 function Musician.Live.EnableLive(enabled)
+	Musician.Live.AllNotesOff()
 	isLiveEnabled = enabled
 	liveModeStatusChanged()
 end
