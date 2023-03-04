@@ -6,14 +6,14 @@ Play music for you and the other players, from MIDI files or live, using 22 inst
 
 Quick links
 -----------
-* [Discord server](https://discord.gg/ypfpGxK) (EN/FR) for help, good music and more!
-* Additional modules:
-  * [Musician: Extended](https://musician.lenwe.io/extended) — Add even more instruments to Musician.
-  * [Musician List](https://musician.lenwe.io/list) — Save and load your songs in-game.
-  * [Musician MIDI](https://musician.lenwe.io/midi) — Play live music using your MIDI keyboard.
-* [Wiki](https://github.com/LenweSaralonde/Musician/wiki) — Tips and tricks, FAQ and detailed documentation for gamers, developers and music producers.
-* [Bug tracker](https://github.com/LenweSaralonde/Musician/issues) — Report issues
-* [GitHub repo](https://github.com/LenweSaralonde/Musician) — Contribute to the project
+* 💬 [Discord server](https://discord.gg/ypfpGxK) (EN/FR) for help, good music and more!
+* 🔌 Additional modules:
+  * 🎷 [Musician: Extended](https://musician.lenwe.io/extended) — Add even more instruments to Musician.
+  * 📜 [Musician List](https://musician.lenwe.io/list) — Save and load your songs in-game.
+  * 🎹 [Musician MIDI](https://musician.lenwe.io/midi) — Play live music using your MIDI keyboard.
+* 📖 [Wiki](https://github.com/LenweSaralonde/Musician/wiki) — Tips and tricks, FAQ and detailed documentation for gamers, developers and music producers.
+* 🐞 [Bug tracker](https://github.com/LenweSaralonde/Musician/issues) — Report issues
+* 👨‍💻 [GitHub repo](https://github.com/LenweSaralonde/Musician) — Contribute to the project
 
 Un [Guide en français](https://www.lenwe.info/guide-musician/) est également disponible. 🇫🇷🥖🍷
 
@@ -39,7 +39,9 @@ How to play music
 -----------------
 Musician plays music files in **MIDI format**. MIDI files have a **.mid**, **.midi** or **.kar** extension and do not contain any sound like MP3s, but a sequence of notes. This is why a MIDI file sounds differently according to the software or musical instrument it's played on.
 
-You can find millions of MIDI files very easily by searching for *MIDI* + *music genre/title/etc.* on Google. I also made a [selection of cool music files](https://www.dropbox.com/sh/6ypecquora72sne/AADAS0HnHS142bhpMNurRfX8a?dl=0) you can try with the add-on.
+💡 You can find millions of MIDI files very easily by searching for *MIDI* + *music genre/title/etc.* on Google. I also made a [selection of cool music files](https://www.dropbox.com/sh/6ypecquora72sne/AADAS0HnHS142bhpMNurRfX8a?dl=0) you can try with the add-on.
+
+⚠️ **Don't try to convert audio files such as MP3s or YouTube videos into MIDI**, the result will be disappointing. This is a tedious work that can only be done manually by experienced musicians.
 
 ### How to play a song
 
@@ -92,7 +94,7 @@ The live keyboard consists in two layers, **Upper** and **Lower**, respectively 
 
 Various keyboard layouts are available, including simplified ones with limited notes but a wider range of keys.
 
-The spacebar acts like the sustain pedal of a piano.
+The space bar acts like the sustain pedal of a piano.
 
 In **Live Mode**, the other players hear you playing while in **Solo Mode**, you play for yourself. In Live Mode, keep in mind that if you hear the sound playing instantly at the press of the key, the other players will hear it after a slight delay of approximately 2 seconds.
 
@@ -126,7 +128,7 @@ Some basic modifications can be made to the imported song in the song editor, wh
 * Transpose tracks
 * Accent tracks, to make them louder by doubling the notes
 
-The song editor also shows some information about the tracks (MIDI instrument, start and end points, number of notes…) and the activity while the song is playing. Click the track start or end point timecode to reach it in the timeline.
+The song editor also shows some information about the tracks (MIDI instrument, start and end points, number of notes…) and the activity while the song is playing. Click the track start or end point time code to reach it in the timeline.
 
 You can still change the track settings of the song currently playing by clicking the **Synchronize track settings** button ![Synchronize track settings button](https://raw.githubusercontent.com/LenweSaralonde/Musician/master/img/synchronize-track-settings-button.png) as long as you have the same song loaded in the editor.
 
@@ -152,7 +154,7 @@ You can see what realms and factions you're connected to in Musician's options o
 
 Integration with role-playing add-ons
 -------------------------------------
-Musician integrates with role-playing add-ons [Total RP](https://www.curseforge.com/wow/addons/total-rp-3) and [MyRolePlay](https://www.curseforge.com/wow/addons/my-role-play) to benefit from some of their features, such as roleplay character names and tooltips.
+Musician integrates with role-playing add-ons [Total RP](https://www.curseforge.com/wow/addons/total-rp-3) and [MyRolePlay](https://www.curseforge.com/wow/addons/my-role-play) to benefit from some of their features, such as roleplaying character names and tooltips.
 
 [Total RP](https://www.curseforge.com/wow/addons/total-rp-3)'s map scan feature shows players who also have Musician with a 🎵 icon. The icon blinks for players who are currently playing music.
 
@@ -215,25 +217,33 @@ The drum kits are replaced by traditional percussions such as a bodhrán (frame 
 
 Check the full mapping in [Musician.MidiMapping.lua](https://github.com/LenweSaralonde/Musician/blob/master/constants/Musician.MidiMapping.lua) for details.
 
-Unfortunately, due to limitations of the WoW UI, velocity and controls (volume, padding, pitch bend, modulation…) are not supported. The polypohony may be limited for some players, try to avoid songs having more than 12 simultaneous notes.
+Unfortunately, due to limitations of the WoW UI, velocity and controls (volume, padding, pitch bend, modulation…) are not supported. The polyphony may be limited for some players, try to avoid songs having more than 12 simultaneous notes.
 
 Limitations and known issues
 ----------------------------
-Here is a summary of the problems you may encounter:
+Musician has several issues that are due to limitations of the World of Warcraft API. Unfortunately, these can't be fixed but there are some tricks you can do to work around them:
 
-* There is no support for velocity and modulation. This is actually not possible with the WoW UI.
-* Wait for the preloading process to complete before playing to ensure good conditions.
-* Sound latency may be experienced with the live keyboard on Windows, depending on your sound card model and drivers.
-* Music playing relies on the refresh rate of the screen so stuttering may occur on slower computers. Adjust your settings to maintain a framerate above 30 FPS for good results.
-* The polyphony is limited, some notes may drop if there are too many playing at the same time.
-* Songs having an overly high note rate may stutter.
-* Clipping may occur for some songs if you have all your volume settings maxed out. Just reduce in-game volume to avoid this.
-* Play as a band features do not work with trial accounts in raid mode.
+* The volume of the music played with Musician can't be adjusted. Reduce the Master volume if it's too loud for you or if you're experiencing clipping. Setting the Master volume to 75% should deliver a comfortable experience in most cases.
+* Musician has lots of audio files that need to be loaded into memory when the game starts. This results in a loading screen showing up or audio not playing properly for a few seconds after entering the game. Make sure you have more RAM than the minimum required by Blizzard. Run WoW on an SSD if possible. Avoid running too much applications in the background while you play WoW with Musician.
+* Audio delay occurs when playing live on Windows, because WoW doesn't support low latency drivers such as ASIO or WASAPI. If you have a digital piano with MIDI output, you can use it with [MusicianMIDI](https://lenwe.io/musicianmidi) to play live, and rely on your direct instrument sound instead of Musician's (you can mute Musician using the minimap button).
+* Music playing relies on the refresh rate of the screen so stuttering may occur on slower computers. Adjust your settings to maintain a framerate above 30 FPS for good results. Songs having an overly high note rate may stutter.
+* There is no support for velocity and modulation in MIDI files.
+* The volume of MIDI tracks can't be adjusted. However, each track has an **Accent** checkbox you can enable to double the notes and make the track sound louder.
+* The polyphony is limited, some notes may drop if there are too many playing at the same time. By default, Musician uses the SFX and Dialog channels to reach a 64-note polyphony which is enough for 99,99% of the songs. Both channels' volume is set to 100% to make sure all notes play at the same level.
+* The *Play as a band* feature does not work with trial accounts in raid mode.
 
 Support
 -------
-If you like Musician and want to support its development, you can [become a patron](https://musician.lenwe.io/patreon) or just [make a donation](https://musician.lenwe.io/paypal).
+If you like Musician and want to support its development, the best you can do is to spread the word and invite your friends to install it! ❤️
 
-Special thanks to the supporters of the project:
+You can also toss a coin to your developer on [Patreon](https://musician.lenwe.io/patreon) or [Paypal](https://musician.lenwe.io/paypal).
 
-Grayson Blackclaw / ChanceTheCheetah / Selena - WRA / Crisellianna / Naelyel
+🙏 Special thanks to the official supporters of the project:
+
+* Grayson Blackclaw
+* ChanceTheCheetah
+* Selena - WRA
+* Crisellianna
+* Naelyel
+* Aphex
+* Derenly
