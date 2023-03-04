@@ -150,8 +150,8 @@ local function animateNotes(animatedNotesFrame, elapsed)
 
 	if numRegions == 0 then return end
 
-	for childIndex = numRegions, 1, -1 do
-		local noteTexture = select(childIndex, animatedNotesFrame:GetRegions())
+	for regionIndex = numRegions, 1, -1 do
+		local noteTexture = select(regionIndex, animatedNotesFrame:GetRegions())
 		noteTexture.animationParams[PARAM.PROGRESSION] = noteTexture.animationParams[PARAM.PROGRESSION] + elapsed
 
 		local duration = NOTES_ANIMATION_DURATION
@@ -620,8 +620,8 @@ function Musician.NamePlates.DetachNamePlate(namePlate)
 	namePlate.musicianAnimatedNotesFrame:Hide()
 
 	-- Remove animated notes frames
-	while namePlate.musicianAnimatedNotesFrame:GetNumChildren() > 0 do
-		removeNote(select(1, namePlate.musicianAnimatedNotesFrame:GetChildren()))
+	while namePlate.musicianAnimatedNotesFrame:GetNumRegions() > 0 do
+		removeNote(select(1, namePlate.musicianAnimatedNotesFrame:GetRegions()))
 	end
 end
 
