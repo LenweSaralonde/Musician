@@ -13,4 +13,4 @@ MUSICIAN_MSG.becomeAPatron = "Conviértase en un patrocinador para apoyar el pro
 MUSICIAN_MSG.donatePayPal = "Done para apoyar el proyecto";
 MUSICIAN_MSG.patreonLink = "Conviértase en patrocinador";
 MUSICIAN_MSG.donateLink = "Donar";
-MUSICIAN_MSG.fromMuseScore = "La canción proviene de MuseScore.";
+MUSICIAN_MSG.useFullPitchBendRange = "Utilice el rango de inflexión de tono completo de forma predeterminada. (-12/+12).";

@@ -13,4 +13,4 @@ MUSICIAN_MSG.becomeAPatron = "Станьте покровителем, чтоб�
 MUSICIAN_MSG.donatePayPal = "Пожертвовать для поддержки проекта";
 MUSICIAN_MSG.patreonLink = "Станьте покровителем";
 MUSICIAN_MSG.donateLink = "Пожертвовать";
-MUSICIAN_MSG.fromMuseScore = "Песня взята из MuseScore.";
+MUSICIAN_MSG.useFullPitchBendRange = "По умолчанию используйте полный диапазон высоты тона (-12/+12).";

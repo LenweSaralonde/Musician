@@ -38,7 +38,7 @@ window.onload = function() {
 	document.querySelector("#PayPal a").title = MUSICIAN_MSG.donatePayPal;
 	document.querySelector('#PatreonLink').innerHTML = MUSICIAN_MSG.patreonLink;
 	document.querySelector('#DonateLink').innerHTML = MUSICIAN_MSG.donateLink;
-	document.querySelector('label[for=FromMuseScore]').innerHTML = MUSICIAN_MSG.fromMuseScore;
+	document.querySelector('label[for=UseFullPitchBendRange]').innerHTML = MUSICIAN_MSG.useFullPitchBendRange;
 
 	var localeScriptTag = document.createElement('script');
 	localeScriptTag.src = 'https://musician.lenwe.io/version/';

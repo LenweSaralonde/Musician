@@ -13,4 +13,4 @@ MUSICIAN_MSG.becomeAPatron = "Become a patron to support the project";
 MUSICIAN_MSG.donatePayPal = "Donate to support the project";
 MUSICIAN_MSG.patreonLink = "Become a patron";
 MUSICIAN_MSG.donateLink = "Donate";
-MUSICIAN_MSG.fromMuseScore = "The song comes from MuseScore.";
+MUSICIAN_MSG.useFullPitchBendRange = "Use full pitch bend range by default (-12/+12).";

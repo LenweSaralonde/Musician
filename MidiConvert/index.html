@@ -4,8 +4,8 @@
 	<title>Musician – MIDI Import</title>
 	<meta charset="UTF-8">
 	<script type="text/javascript" src="./js/base64.js"></script>
-	<script type="text/javascript" src="./js/musician-midi-converter.js?v=1.8.5"></script>
-	<script type="text/javascript" src="./js/locale.js?v=7"></script>
+	<script type="text/javascript" src="./js/musician-midi-converter.js?v=1.8.5b"></script>
+	<script type="text/javascript" src="./js/locale.js?v=8"></script>
 	<style type="text/css">
 		body {
 			font-family: Helvetica, Arial, Sans-serif;
@@ -272,7 +272,7 @@
 			<div id="Text"></div>
 		</div>
 		<div id="Options">
-			<input type="checkbox" id="FromMuseScore"><label for="FromMuseScore">The song is from MuseScore.</label>
+			<input type="checkbox" id="UseFullPitchBendRange"><label for="UseFullPitchBendRange">The song is from MuseScore.</label>
 		</div>
 		<div id="Result">
 			<textarea id="ResultsText" onClick="this.setSelectionRange(0, this.value.length)" readonly></textarea>
@@ -345,7 +345,7 @@
 				processMidiFile();
 			});
 
-			document.querySelector("#FromMuseScore").addEventListener("change", function(e){
+			document.querySelector("#UseFullPitchBendRange").addEventListener("change", function(e){
 				processMidiFile();
 			});
 		}
@@ -354,7 +354,7 @@
 			var reader = new FileReader();
 			reader.onload = function(e){
 				try {
-					var options = { fromMuseScore: document.querySelector("#FromMuseScore").checked };
+					var options = { useFullPitchBendRange: document.querySelector("#UseFullPitchBendRange").checked };
 					document.querySelector("#ResultsText").value = base64(MusicianMidiConverter.packSong(e.target.result, file.name, options));
 					document.querySelector("#Result").className = "visible";
 					document.querySelector("#CopyButton").className = "visible";

@@ -11,7 +11,7 @@ const MAX_NOTE_TIME = 65535 / NOTE_TIME_FPS; // 16-bit
 const MODE_DURATION = 0x10;
 
 const DEFAULT_PITCH_BEND_RANGE = 2;
-const MUSESCORE_DEFAULT_PITCH_BEND_RANGE = 12;
+const FULL_PITCH_BEND_RANGE = 12;
 
 const CC_RPN_FINE = 0x64;
 const CC_RPN_COARSE = 0x65;
@@ -224,13 +224,13 @@ function processSustain(events) {
  * Replace pitch bend events by semitone slides.
  * @param {array} events
  * @param {object} options
- * @param {boolean} options.fromMuseScore Fix default pitch bend range for songs imported from MuseScore
+ * @param {boolean} options.useFullPitchBendRange Use full pitch bend range by default (-12/+12)
  * @returns {array}
  */
 function processPitchBend(events, options = {}) {
 
-	// Set default pitch bend range to 12 for songs imported from MuseScore
-	const defaultPitchBendRange = options.fromMuseScore ? MUSESCORE_DEFAULT_PITCH_BEND_RANGE : DEFAULT_PITCH_BEND_RANGE;
+	// Set default pitch bend range to 12
+	const defaultPitchBendRange = options.useFullPitchBendRange ? FULL_PITCH_BEND_RANGE : DEFAULT_PITCH_BEND_RANGE;
 
 	const eventsWithPitchBend = [];
 	const notesOn = {};
