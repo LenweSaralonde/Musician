@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.7.2
+--------
+* TOC bump for WoW patch 10.0.7.
+
 v1.9.7.1
 --------
 * Fixed residual animated notes showing above the wrong player nameplate.
