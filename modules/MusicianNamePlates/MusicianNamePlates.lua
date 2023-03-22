@@ -388,6 +388,9 @@ function Musician.NamePlates.OnNamePlateAdded(event, unitToken)
 
 	local namePlate = C_NamePlate.GetNamePlateForUnit(unitToken)
 
+	-- Animated notes may not have been cleaned up when the nameplate was recycled
+	Musician.NamePlates.DetachNamePlate(namePlate)
+
 	-- May return "Unknown" on first attempt: try again later.
 	if GetUnitName(unitToken, true) == UNKNOWN then
 		C_Timer.After(.1, function()
@@ -610,7 +613,7 @@ function Musician.NamePlates.AttachNamePlate(namePlate, player, event)
 	namePlate.musicianAnimatedNotesFrame.notesAddedDuringFrame = {}
 end
 
---- Detach Musician nameplate
+--- Detach animated notes frame from the nameplate
 -- @param namePlate (Frame)
 function Musician.NamePlates.DetachNamePlate(namePlate)
 
