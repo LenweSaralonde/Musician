@@ -617,7 +617,7 @@ end
 -- @param namePlate (Frame)
 function Musician.NamePlates.DetachNamePlate(namePlate)
 
-	if not namePlate.musicianAnimatedNotesFrame then return end
+	if not namePlate or not namePlate.musicianAnimatedNotesFrame then return end
 
 	-- Hide animated notes frame
 	namePlate.musicianAnimatedNotesFrame:Hide()
