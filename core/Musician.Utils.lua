@@ -397,7 +397,8 @@ function Musician.Utils.DisplayEmote(player, playerGUID, message)
 		ChatFrame_OnEvent(DEFAULT_CHAT_FRAME, "CHAT_MSG_EMOTE", message, fullPlayerName, '', '', displayPlayerName, '', nil,
 			nil, nil, nil, 0, playerGUID)
 	else
-		ChatFrame_OnEvent(DEFAULT_CHAT_FRAME, "CHAT_MSG_EMOTE", message, fullPlayerName, '', '', displayPlayerName, '')
+		ChatFrame_OnEvent(DEFAULT_CHAT_FRAME, "CHAT_MSG_EMOTE", message, fullPlayerName, '', '', displayPlayerName, '', nil,
+		nil, nil, nil, 0)
 	end
 end
 
