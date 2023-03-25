@@ -580,19 +580,9 @@ local function initLayerControls(layer)
 	_G[varNamePrefix .. "PowerChords"]:SetChecked(Musician.Keyboard.config.powerChords[layer])
 end
 
---- Update texts and icons for live and solo modes
+--- Update text for live and solo modes
 --
-local function updateLiveModeButton()
-	local button = MusicianKeyboardLiveModeButton
-
-	if Musician.Live.IsLiveEnabled() and Musician.Live.CanStream() then
-		button.led:SetAlpha(1)
-		button.tooltipText = Musician.Msg.ENABLE_SOLO_MODE
-	else
-		button.led:SetAlpha(0)
-		button.tooltipText = Musician.Msg.ENABLE_LIVE_MODE
-	end
-
+local function updateLiveModeText()
 	if Musician.Live.IsLiveEnabled() and Musician.Live.CanStream() then
 		MusicianKeyboardTitle:SetText(Musician.Msg.PLAY_LIVE)
 		MusicianKeyboardTitleIcon:SetText(ICON.LIVE_MODE)
@@ -600,28 +590,13 @@ local function updateLiveModeButton()
 		MusicianKeyboardTitle:SetText(Musician.Msg.PLAY_SOLO)
 		MusicianKeyboardTitleIcon:SetText(ICON.SOLO_MODE)
 	end
-
-	if not Musician.Live.CanStream() then
-		button:Disable()
-		button.tooltipText = Musician.Msg.LIVE_MODE_DISABLED
-	else
-		button:Enable()
-	end
 end
 
---- Init live mode button
+--- Init live mode text
 --
-local function initLiveModeButton()
-	local button = MusicianKeyboardLiveModeButton
-
-	button:SetScript("OnClick", function()
-		Musician.Live.EnableLive(not Musician.Live.IsLiveEnabled())
-		PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
-	end)
-
-	updateLiveModeButton()
-
-	Musician.Keyboard:RegisterMessage(Musician.Events.LiveModeChange, updateLiveModeButton)
+local function initLiveModeText()
+	updateLiveModeText()
+	Musician.Keyboard:RegisterMessage(Musician.Events.LiveModeChange, updateLiveModeText)
 end
 
 --- Enable or disable layer controls
@@ -673,8 +648,6 @@ function Musician.Keyboard.Init()
 	Musician.Keyboard:RegisterMessage(Musician.Events.NoteOff, Musician.Keyboard.OnNoteOff)
 	Musician.Keyboard:RegisterMessage(Musician.Events.SongPlay, Musician.Keyboard.OnSongPlay)
 	Musician.Keyboard:RegisterMessage(Musician.Events.SongInstrumentChange, Musician.Keyboard.OnSongPlay)
-	Musician.Keyboard:RegisterMessage(Musician.Events.LiveBandSync, Musician.Keyboard.OnLiveBandSync)
-	Musician.Keyboard:RegisterEvent("GROUP_ROSTER_UPDATE", Musician.Keyboard.UpdateBandSyncButton)
 
 	-- Init layouts
 	initLayouts()
@@ -689,16 +662,13 @@ function Musician.Keyboard.Init()
 	-- Init controls
 	initLayerControls(LAYER.LOWER)
 	initLayerControls(LAYER.UPPER)
-	initLiveModeButton()
+	initLiveModeText()
 
 	Musician.Keyboard.BuildMapping()
 	updateFunctionKeys()
 
 	-- Show or hide keyboard according to last settings
 	MusicianKeyboard:showKeyboard(Musician_Settings.keyboardVisible)
-
-	-- Update band sync button
-	Musician.Keyboard.UpdateBandSyncButton()
 end
 
 --- Show
@@ -1628,62 +1598,6 @@ function Musician.Keyboard.OnNoteOff(event, song, track, key)
 	end
 end
 
---- Update band sync button
---
-function Musician.Keyboard.UpdateBandSyncButton()
-
-	-- Update button visibility
-
-	local isVisible = IsInGroup()
-	local isEnabled = Musician.Comm.GetGroupChatType() ~= nil
-
-	local button = MusicianKeyboardBandSyncButton
-	button:SetShown(isVisible)
-	button:SetEnabled(isEnabled)
-
-	-- Update button LED
-
-	MusicianKeyboardBandSyncButton:SetChecked(Musician.Live.IsBandSyncMode())
-
-	-- Update tooltip and the number of ready players
-
-	local players = Musician.Live.GetSyncedBandPlayers()
-	local tooltipText = Musician.Msg.LIVE_SYNC
-
-	if not Musician.Live.IsBandSyncMode() then
-		tooltipText = tooltipText .. "\n" .. Musician.Utils.Highlight(Musician.Msg.LIVE_SYNC_HINT, "00FFFF")
-	end
-
-	if #players > 0 then
-		button.count.text:SetText(#players)
-		button.count:Show()
-
-		local playerNames = {}
-		for _, playerName in ipairs(players) do
-			table.insert(playerNames, "– " .. Musician.Utils.FormatPlayerName(playerName))
-		end
-
-		tooltipText = tooltipText .. "\n" .. Musician.Msg.SYNCED_PLAYERS
-		tooltipText = tooltipText .. "\n" .. strjoin("\n", unpack(playerNames))
-	else
-		button.count:Hide()
-	end
-	button:SetTooltipText(tooltipText)
-end
-
---- OnLiveBandSync
---
-function Musician.Keyboard.OnLiveBandSync(event, player, isSynced)
-	-- Display "Is synced" emote in the chat
-	if not Musician.Utils.PlayerIsMyself(player) then
-		local emote = isSynced and Musician.Msg.EMOTE_PLAYER_LIVE_SYNC_ENABLED or Musician.Msg.EMOTE_PLAYER_LIVE_SYNC_DISABLED
-		Musician.Utils.DisplayEmote(player, UnitGUID(Musician.Utils.SimplePlayerName(player)), emote)
-	end
-
-	-- Update button
-	Musician.Keyboard.UpdateBandSyncButton()
-end
-
 --- Set sustain
 -- @param value (boolean)
 function Musician.Keyboard.SetSustain(value)
@@ -1795,13 +1709,6 @@ function MusicianKeyboardMixin:OnLoad()
 		MusicianKeyboardConfig:Show()
 	end)
 
-	-- Band sync button
-	self.bandSyncButton.count:SetPoint("CENTER", self.bandSyncButton, "TOPRIGHT", -4, -4)
-	self.bandSyncButton.tooltipText = Musician.Msg.LIVE_SYNC
-	self.bandSyncButton:HookScript("OnClick", function()
-		Musician.Live.ToggleBandSyncMode()
-	end)
-
 	-- Keyboard toggle button
 	self.toggleKeyboardButton:SetText(Musician.Icons.Down .. Musician.Icons.Blank .. Musician.Icons.PianoKeys)
 	self.toggleKeyboardButton.tooltipText = Musician.Msg.HIDE_KEYBOARD
@@ -1811,10 +1718,6 @@ function MusicianKeyboardMixin:OnLoad()
 	self.toggleKeyboardButton:HookScript("OnClick", function()
 		self:showKeyboard()
 	end)
-
-	-- Live mode button
-	self.liveModeButton:SetText(Musician.Msg.LIVE_MODE)
-	self.liveModeButton.led:SetVertexColor(.33, 1, 0, 1)
 
 	-- Write program button
 	local writeProgramButton = self.programKeys.writeProgramButton

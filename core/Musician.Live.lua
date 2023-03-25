@@ -134,7 +134,6 @@ end
 -- @param instrument (int)
 -- @param player (string)
 local function sendVisualNoteEvent(noteOn, key, layer, instrument, player)
-
 	local song = getLiveSongForPlayer(player)
 	local track = getLiveTrack(song, layer, instrument)
 
@@ -184,6 +183,16 @@ local function liveModeStatusChanged(event, ...)
 	Musician.Live:SendMessage(Musician.Events.LiveModeChange)
 end
 
+--- Display an emote when another group member changed their band live sync status.
+--
+local function bandLiveSyncStatusChanged(event, player, isSynced)
+	if not Musician.Utils.PlayerIsMyself(player) then
+		local emote = isSynced and Musician.Msg.EMOTE_PLAYER_LIVE_SYNC_ENABLED or
+		Musician.Msg.EMOTE_PLAYER_LIVE_SYNC_DISABLED
+		Musician.Utils.DisplayEmote(player, UnitGUID(Musician.Utils.SimplePlayerName(player)), emote)
+	end
+end
+
 --- Init live mode
 --
 function Musician.Live.Init()
@@ -200,6 +209,8 @@ function Musician.Live.Init()
 	Musician.Live:RegisterEvent("PLAYER_DEAD", liveModeStatusChanged)
 	Musician.Live:RegisterEvent("PLAYER_ALIVE", liveModeStatusChanged)
 	Musician.Live:RegisterEvent("PLAYER_UNGHOST", liveModeStatusChanged)
+
+	Musician.Live:RegisterMessage(Musician.Events.LiveBandSync, bandLiveSyncStatusChanged)
 
 	if not IsLoggedIn() then
 		Musician.Live:RegisterEvent("PLAYER_LOGIN", Musician.Live.OnGroupJoined)
@@ -319,7 +330,6 @@ end
 -- @param layer (int)
 -- @param instrument (int)
 function Musician.Live.InsertNote(noteOn, key, layer, instrument)
-
 	-- Do nothing if live mode is not enabled or can't stream
 	if not Musician.Live.CanStream() or not Musician.Live.IsLiveEnabled() then
 		return
@@ -397,7 +407,6 @@ end
 -- @param[opt=false] isChordNote (boolean)
 -- @param[opt] source (table) UI component triggering the note
 function Musician.Live.NoteOn(key, layer, instrument, isChordNote, source)
-
 	-- Key is out of range
 	if key < Musician.MIN_KEY or key > Musician.MAX_KEY or instrument == -1 then return end
 
@@ -451,7 +460,6 @@ end
 -- @param[opt=false] isChordNote (boolean)
 -- @param[opt=false] sustainedNote (table) Stop this previously sustained note instead of the note on
 function Musician.Live.NoteOff(key, layer, instrument, isChordNote, sustainedNote)
-
 	-- Key is out of range
 	if key < Musician.MIN_KEY or key > Musician.MAX_KEY or instrument == -1 then return end
 
@@ -664,7 +672,6 @@ function Musician.Live.OnRosterUpdate()
 	-- Remove players from syncedBandPlayers who are no longer in the group
 	for player, _ in pairs(syncedBandPlayers) do
 		if not Musician.Utils.PlayerIsInGroup(player) then
-
 			-- Stop all player notes
 			if bandNotesOn[player] then
 				for _, noteData in pairs(bandNotesOn[player]) do
@@ -694,7 +701,8 @@ function Musician.Live.OnLiveNote(prefix, message, distribution, sender)
 
 	if not Musician.Utils.PlayerIsInGroup(sender) then return end
 
-	local noteOn, key, layer, instrument, posY, posX, posZ, instanceID, guid = message:match("^(%S+) (%S+) (%S+) (%S+) (%S+) (%S+) (%S+) (%S+) (.*)")
+	local noteOn, key, layer, instrument, posY, posX, posZ, instanceID, guid = message:match(
+		"^(%S+) (%S+) (%S+) (%S+) (%S+) (%S+) (%S+) (%S+) (.*)")
 	noteOn = noteOn == "ON"
 	key = tonumber(key)
 	layer = tonumber(layer)
@@ -745,7 +753,6 @@ function Musician.Live.OnLiveNote(prefix, message, distribution, sender)
 
 		-- Trigger event
 		sendVisualNoteEvent(true, key, layer, instrument, sender)
-
 	elseif bandNotesOn[sender] and bandNotesOn[sender][noteOnKey] then
 		-- Note off
 

@@ -11,7 +11,7 @@ Musician.PATREON_URL = "https://musician.lenwe.io/patreon"
 Musician.PAYPAL_URL = "https://musician.lenwe.io/paypal"
 Musician.LOCALIZATION_URL = "https://musician.lenwe.io/localize"
 
-Musician.API_VERSION = 26
+Musician.API_VERSION = 27
 Musician.FILE_HEADER = "MUS8"
 Musician.FILE_HEADER_COMPRESSED = "MUZ8"
 Musician.PROTOCOL_VERSION = 7

@@ -1,0 +1,13 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.blizzard.com/wow/ui/">
+	<!-- Live mode button -->
+	<Script file="MusicianLiveModeButtonTemplate.lua" />
+	<Button name="MusicianLiveModeButtonTemplate" inherits="MusicianLEDTextButtonTemplate" mixin="MusicianLiveModeButtonTemplateMixin" virtual="true">
+		<Size x="105" y="24" />
+		<Scripts>
+			<OnLoad inherit="append" function="MusicianLiveModeButtonTemplate_OnLoad" />
+			<OnClick inherit="append" function="MusicianLiveModeButtonTemplate_OnClick" />
+		</Scripts>
+	</Button>
+</Ui>

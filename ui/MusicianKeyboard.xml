@@ -231,7 +231,7 @@
 				</Anchors>
 			</Button>
 
-			<Button name="$parentBandSyncButton" parentKey="bandSyncButton" inherits="MusicianBandPlayButtonTemplate">
+			<Button name="$parentBandSyncButton" parentKey="bandSyncButton" inherits="MusicianBandLivePlayButtonTemplate">
 				<Anchors>
 					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentKeyboardConfigButton" />
 				</Anchors>
@@ -244,8 +244,7 @@
 				</Anchors>
 			</Button>
 
-			<Button name="$parentLiveModeButton" parentKey="liveModeButton" inherits="MusicianLEDTextButtonTemplate">
-				<Size x="105" y="24" />
+			<Button name="$parentLiveModeButton" parentKey="liveModeButton" inherits="MusicianLiveModeButtonTemplate">
 				<Anchors>
 					<Anchor point="RIGHT" relativeTo="$parentToggleKeyboardButton" relativePoint="LEFT" />
 				</Anchors>

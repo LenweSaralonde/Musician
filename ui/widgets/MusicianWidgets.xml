@@ -10,7 +10,9 @@
 	<Include file="MusicianIconTextButtonTemplate.xml" />
 	<Include file="MusicianLEDTextButtonTemplate.xml" />
 	<Include file="MusicianIconTextProgressBarButtonTemplate.xml" />
+	<Include file="MusicianLiveModeButtonTemplate.xml" />
 	<Include file="MusicianBandPlayButtonTemplate.xml" />
+	<Include file="MusicianBandLivePlayButtonTemplate.xml" />
 	<Include file="MusicianEditBoxBackdropTemplate.xml" />
 	<Include file="MusicianDropDownMenuTooltipTemplate.xml" />
 	<Include file="MusicianInstrumentDropdownTemplate.xml" />
