@@ -145,6 +145,32 @@ local function sendVisualNoteEvent(noteOn, key, layer, instrument, player)
 	end
 end
 
+--- Stop all player's band notes
+-- @param player (string)
+local function stopPlayerBandNotes(player)
+	if bandNotesOn[player] then
+		for _, noteData in pairs(bandNotesOn[player]) do
+			local handle, layer, key, instrument = unpack(noteData)
+			if handle then
+				Musician.Sampler.StopNote(handle, 0)
+				sendVisualNoteEvent(false, key, layer, instrument, player)
+			end
+			wipe(noteData)
+		end
+		wipe(bandNotesOn[player])
+	end
+end
+
+--- Stop and remove player's band song
+-- @param player (string)
+local function stopPlayerBandSong(player)
+	if bandSongs[player] then
+		bandSongs[player]:Stop()
+		bandSongs[player] = nil
+		collectgarbage()
+	end
+end
+
 --- Start periodically extending the live song duration
 --
 local function startLiveSongDurationUpdater()
@@ -188,7 +214,7 @@ end
 local function bandLiveSyncStatusChanged(event, player, isSynced)
 	if not Musician.Utils.PlayerIsMyself(player) then
 		local emote = isSynced and Musician.Msg.EMOTE_PLAYER_LIVE_SYNC_ENABLED or
-		Musician.Msg.EMOTE_PLAYER_LIVE_SYNC_DISABLED
+			Musician.Msg.EMOTE_PLAYER_LIVE_SYNC_DISABLED
 		Musician.Utils.DisplayEmote(player, UnitGUID(Musician.Utils.SimplePlayerName(player)), emote)
 	end
 end
@@ -211,6 +237,7 @@ function Musician.Live.Init()
 	Musician.Live:RegisterEvent("PLAYER_UNGHOST", liveModeStatusChanged)
 
 	Musician.Live:RegisterMessage(Musician.Events.LiveBandSync, bandLiveSyncStatusChanged)
+	Musician.Live:RegisterMessage(Musician.Events.SongStop, Musician.Live.OnSongStop)
 
 	if not IsLoggedIn() then
 		Musician.Live:RegisterEvent("PLAYER_LOGIN", Musician.Live.OnGroupJoined)
@@ -587,6 +614,8 @@ function Musician.Live.SetBandSyncMode(enabled)
 	local groupChatType = Musician.Comm.GetGroupChatType()
 	if groupChatType == nil then return false end
 
+	Musician.Live.AllNotesOff()
+
 	local type = Musician.Live.event.bandSync
 	local message = tostring(enabled)
 
@@ -672,24 +701,28 @@ function Musician.Live.OnRosterUpdate()
 	-- Remove players from syncedBandPlayers who are no longer in the group
 	for player, _ in pairs(syncedBandPlayers) do
 		if not Musician.Utils.PlayerIsInGroup(player) then
-			-- Stop all player notes
-			if bandNotesOn[player] then
-				for _, noteData in pairs(bandNotesOn[player]) do
-					local handle, layer, key, instrument = unpack(noteData)
-					if handle then
-						Musician.Sampler.StopNote(handle, 0)
-						sendVisualNoteEvent(false, key, layer, instrument, player)
-					end
-				end
-			end
+			-- Stop notes and song
+			stopPlayerBandNotes(player)
+			stopPlayerBandSong(player)
 
 			-- Remove player
 			syncedBandPlayers[player] = nil
 			bandNotesOn[player] = nil
-			bandSongs[player] = nil
-			collectgarbage()
 			Musician.Live:SendMessage(Musician.Events.LiveBandSync, player, false)
 		end
+	end
+end
+
+--- OnSongStop
+-- @param event (string)
+-- @param song (Musician.song)
+function Musician.Live.OnSongStop(event, song)
+	-- Stop all player's band notes when their received live song has ended.
+	-- This avoid leftover band notes to keep going in case the note off messages didn't arrive
+	local player = song.player
+	if song.mode == Musician.Song.MODE_LIVE and syncedBandPlayers[player] and bandSongs[player] ~= song then
+		stopPlayerBandNotes(player)
+		stopPlayerBandSong(player)
 	end
 end
 
