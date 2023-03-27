@@ -1,6 +1,12 @@
 Changelog
 =========
 
+v1.9.7.3
+--------
+* Fixed rare Comm channel reordering issue.
+* Stop leftover live band play notes when song ends.
+* Minor bugfixes and improvements.
+
 v1.9.7.2
 --------
 * TOC bump for WoW patch 10.0.7.
