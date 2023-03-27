@@ -198,9 +198,10 @@ local function reorderChannels()
 
 	-- Get the index of the last channel
 	local lastChannelIndex = 0
-	for index = commChannelIndex, MAX_WOW_CHAT_CHANNELS do
+	for index = MAX_WOW_CHAT_CHANNELS, commChannelIndex, -1  do
 		if (C_ChatInfo.GetChannelShortcut(index) or "") ~= "" then
 			lastChannelIndex = index
+			break
 		end
 	end
 
