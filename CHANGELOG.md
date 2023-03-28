@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.7.4
+--------
+* Version bump for CurseForge update.
+
 v1.9.7.3
 --------
 * Fixed rare Comm channel reordering issue.
