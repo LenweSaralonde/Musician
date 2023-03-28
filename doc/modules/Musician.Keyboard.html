@@ -88,6 +88,7 @@
   <li><a href="../modules/Musician.Widgets.html">Musician.Widgets</a></li>
   <li><a href="../modules/Musician.Worker.html">Musician.Worker</a></li>
   <li><a href="../modules/MusicianAnimatedImageTemplate.html">MusicianAnimatedImageTemplate</a></li>
+  <li><a href="../modules/MusicianBandLivePlayButtonTemplate.html">MusicianBandLivePlayButtonTemplate</a></li>
   <li><a href="../modules/MusicianBandPlayButtonTemplate.html">MusicianBandPlayButtonTemplate</a></li>
   <li><a href="../modules/MusicianBasicMessageDialogMixin.html">MusicianBasicMessageDialogMixin</a></li>
   <li><a href="../modules/MusicianButton.html">MusicianButton</a></li>
@@ -101,6 +102,7 @@
   <li><a href="../modules/MusicianImageTemplate.html">MusicianImageTemplate</a></li>
   <li><a href="../modules/MusicianInstrumentDropdownTemplate.html">MusicianInstrumentDropdownTemplate</a></li>
   <li><a href="../modules/MusicianLEDTextButtonTemplate.html">MusicianLEDTextButtonTemplate</a></li>
+  <li><a href="../modules/MusicianLiveModeButtonTemplate.html">MusicianLiveModeButtonTemplate</a></li>
   <li><a href="../modules/MusicianLoadingScreenMixin.html">MusicianLoadingScreenMixin</a></li>
   <li><a href="../modules/MusicianProgressBarTemplate.html">MusicianProgressBarTemplate</a></li>
   <li><a href="../modules/MusicianTipsAndTricksButtonTemplates.html">MusicianTipsAndTricksButtonTemplates</a></li>
@@ -181,10 +183,6 @@
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Keyboard.OnKey">Musician.Keyboard.OnKey (keyValue, down)</a></td>
 	<td class="summary">Key up/down handler, from physical or on-screen keyboard</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Musician.Keyboard.OnLiveBandSync">Musician.Keyboard.OnLiveBandSync (event, player, isSynced)</a></td>
-	<td class="summary">OnLiveBandSync</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Keyboard.OnLiveNoteOff">Musician.Keyboard.OnLiveNoteOff (event, key, layer, isChordNote, source)</a></td>
@@ -301,10 +299,6 @@
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Keyboard.ToggleUI">Musician.Keyboard.ToggleUI ()</a></td>
 	<td class="summary">Toggle UI, keeping the keyboard visible</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Musician.Keyboard.UpdateBandSyncButton">Musician.Keyboard.UpdateBandSyncButton ()</a></td>
-	<td class="summary">Update band sync button</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#MusicianKeyboardKeyTemplate_OnLoad">MusicianKeyboardKeyTemplate_OnLoad (self)</a></td>
@@ -707,32 +701,6 @@
 
         (boolean) True if the keypress was consumed
     </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Musician.Keyboard.OnLiveBandSync"></a>
-    <strong>Musician.Keyboard.OnLiveBandSync (event, player, isSynced)</strong>
-    </dt>
-    <dd>
-    OnLiveBandSync
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">event</span>
-
-        </li>
-        <li><span class="parameter">player</span>
-
-        </li>
-        <li><span class="parameter">isSynced</span>
-        Display "Is synced" emote in the chat
-        </li>
-    </ul>
-
 
 
 
@@ -1388,20 +1356,6 @@
     </dt>
     <dd>
     Toggle UI, keeping the keyboard visible
-
-
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Musician.Keyboard.UpdateBandSyncButton"></a>
-    <strong>Musician.Keyboard.UpdateBandSyncButton ()</strong>
-    </dt>
-    <dd>
-    Update band sync button
 
 
 

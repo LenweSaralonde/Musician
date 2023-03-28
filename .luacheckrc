@@ -244,6 +244,12 @@ stds.wow = {
 			}
 		},
 
+		C_DateAndTime = {
+			fields = {
+				"GetCurrentCalendarTime",
+			}
+		},
+
 		C_ChatBubbles = {
 			fields = {
 				"GetAllChatBubbles"
