@@ -10,6 +10,8 @@ local LibRealmInfo = LibStub:GetLibrary("LibRealmInfo")
 
 local FULL_PROMO_EMOTE_COOLDOWN = 10 * 60 -- Cooldown in seconds for the full promo emote
 
+local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetadata
+
 local isGameMusicMuted = false
 local fullPromoEmoteLastSeen
 local overrideNextFullPromoEmote = false

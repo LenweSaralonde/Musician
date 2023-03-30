@@ -20,6 +20,8 @@ local QUERY_RATE = .1
 local QUERY_MAX_TRIES = 3
 local QUERY_RETRY_AFTER = 3
 
+local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetadata
+
 local newVersionNotified = false
 local newProtocolNotified = false
 

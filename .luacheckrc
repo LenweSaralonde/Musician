@@ -299,6 +299,12 @@ stds.wow = {
 			}
 		},
 
+		C_AddOns = {
+			fields = {
+				"GetAddOnMetadata",
+			}
+		},
+
 		"message",
 		"debugprofilestop",
 		"hooksecurefunc",
