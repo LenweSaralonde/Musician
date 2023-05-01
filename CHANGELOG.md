@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.7.5
+--------
+* Updated for WoW patch 10.1.
+
 v1.9.7.4
 --------
 * Version bump for CurseForge update.
