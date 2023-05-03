@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.7.6
+--------
+* Fixed errors due to changes in Total RP 3 API.
+
 v1.9.7.5
 --------
 * Updated for WoW patch 10.1.
