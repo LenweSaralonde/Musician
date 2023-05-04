@@ -58,11 +58,51 @@ globals = {
 	-- AddOn Overrides
 	TRP3_PlayerMapPinMixin = {
 		fields = {
+			"Decorate",
 			"GetDisplayDataFromPoiInfo"
 		},
 	},
+	TRP3_RefTooltip = {
+		fields = {
+			"Show"
+		}
+	},
 	TRP3_API = {
 		fields = {
+			"CreateColorFromHexString", -- Accessed only
+			globals = {
+				fields = {
+					"empty", -- Accessed only
+					"player_id", -- Accessed only
+					"extended_version", -- Accessed only
+					"extended_display_version" -- Accessed only
+				}
+			},
+			configuration = {
+				fields = {
+					"getValue" -- Accessed only
+				}
+			},
+			extended = {
+				fields = {
+					"unregisterObject", -- Accessed only
+					"registerObject", -- Accessed only
+					tools = {
+						fields = {
+							"getBlankItemData" -- Accessed only
+						}
+					}
+				},
+			},
+			utils = {
+				fields = {
+					str = {
+						fields = {
+							"id" -- Accessed only
+						}
+					}
+				}
+			},
 			script = {
 				fields = {
 					"executeClassScript",
@@ -77,6 +117,34 @@ globals = {
 						}
 					},
 					"tooltip" -- Accessed only
+				}
+			},
+			inventory = {
+				fields = {
+					"addItem", -- Accessed only
+					"showItemTooltip" -- Accessed only
+				}
+			},
+			popup = {
+				fields = {
+					"showPopup", -- Accessed only
+					"ICONS" -- Accessed only
+				}
+			},
+			security = {
+				fields = {
+					"computeSecurity" -- Accessed only
+				}
+			},
+			Events = {
+				fields = {
+					"registerCallback" -- Accessed only
+				}
+			},
+			loc = {
+				fields = {
+					"EDITOR_PREVIEW", -- Accessed only
+					"EDITOR_ICON_SELECT" -- Accessed only
 				}
 			}
 		},
@@ -121,19 +189,70 @@ read_globals = {
 	"mrp",
 	"msp",
 
-	"AddOn_TotalRP3",
-	"TRP3_API",
-	"TRP3_CharacterTooltip",
-	"TRP3_BlizzardNamePlates",
-	"TRP3_PlayerMapPinMixin",
-	"TRP3_NAMEPLATES_ADDON",
-	"TRP3_Configuration",
+	AddOn_TotalRP3 = {
+		fields = {
+			Player = {
+				fields = {
+					static = {
+						fields = {
+							"CreateFromCharacterID"
+						}
+					}
+				}
+			}
+		}
+	},
+	TRP3_CharacterTooltip = {
+		fields = {
+			"HookScript",
+			"target"
+		}
+	},
+	TRP3_BlizzardNamePlates = {
+		fields = {
+			"UpdateNamePlate",
+			"UpdateAllNamePlates"
+		}
+	},
+	TRP3_NAMEPLATES_ADDON = {
+		fields = {}
+	},
+	TRP3_Configuration = {
+		fields = {
+			"tooltip_main_color"
+		}
+	},
 
-	"TRP3_InventoryPage",
-	"TRP3_ItemTooltip",
-	"TRP3_RefTooltip",
-	"TRP3_ToolFrameItemNormalTabPanel",
-	"TRP3_ToolFrame",
+	TRP3_InventoryPage = {
+		fields = {
+			"Main"
+		}
+	},
+	TRP3_ItemTooltip = {
+		fields = {
+			"Hide"
+		}
+	},
+	TRP3_ToolFrameItemNormalTabPanel = {
+		fields = {
+			"GetChildren"
+		}
+	},
+	TRP3_ToolFrame = {
+		fields = {
+			"HookScript",
+			item = {
+				fields = {
+					normal = {
+						fields = {
+							"gameplay",
+							"display"
+						}
+					}
+				}
+			}
+		}
+	},
 	TRP3_Extended = {
 		fields = {
 			"TriggerEvent",
