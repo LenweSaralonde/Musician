@@ -720,11 +720,9 @@ function Musician.TRP3E.AddSheetMusicItem(title, encodedSongData, locale, icon, 
 	TRP3_API.extended.unregisterObject(objectID)
 	TRP3_API.extended.registerObject(objectID, object, 0)
 	TRP3_API.script.clearRootCompilation(objectID)
-	if TRP3_API.events and TRP3_API.events.fireEvent then
-		TRP3_API.events.fireEvent(TRP3_API.inventory.EVENT_REFRESH_BAG)
-		TRP3_API.events.fireEvent(TRP3_API.quest.EVENT_REFRESH_CAMPAIGN)
-		TRP3_API.events.fireEvent(TRP3_API.events.ON_OBJECT_UPDATED)
-	end
+	TRP3_Extended:TriggerEvent(TRP3_Extended.Events.REFRESH_BAG)
+	TRP3_Extended:TriggerEvent(TRP3_Extended.Events.REFRESH_CAMPAIGN)
+	TRP3_Extended:TriggerEvent(TRP3_Extended.Events.ON_OBJECT_UPDATED)
 
 	-- Add to the bag
 	if quantity and quantity > 0 then

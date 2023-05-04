@@ -134,6 +134,18 @@ read_globals = {
 	"TRP3_RefTooltip",
 	"TRP3_ToolFrameItemNormalTabPanel",
 	"TRP3_ToolFrame",
+	TRP3_Extended = {
+		fields = {
+			"TriggerEvent",
+			Events = {
+				fields = {
+					"REFRESH_BAG",
+					"REFRESH_CAMPAIGN",
+					"ON_OBJECT_UPDATED",
+				}
+			}
+		}
+	}
 }
 
 std = "lua51+wow"
