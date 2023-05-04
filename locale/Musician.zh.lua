@@ -119,6 +119,9 @@ msg.PLAYER_COUNT_ONLINE_NONE = "没有在线的音乐迷。"
 msg.NEW_VERSION = "一个新的Musician版本发布了！可以在以下链接下载升级：{url}。"
 msg.NEW_PROTOCOL_VERSION = "你的Musician版本过老，已经无法使用。\n请前往以下链接升级\n{url}"
 
+-- Module warnings
+msg.ERR_INCOMPATIBLE_MODULE_API = "{module} 的 Musician 模块无法启动，因为 {module} 不兼容。尝试更新 Musician 和 {module}。"
+
 -- Loading screen
 msg.LOADING_SCREEN_MESSAGE = "Musician 正在将乐器样本预加载到缓存中……"
 msg.LOADING_SCREEN_CLOSE_TOOLTIP = "关闭并在后台继续预加载。"

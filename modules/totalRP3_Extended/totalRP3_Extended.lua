@@ -41,6 +41,11 @@ local containerFrames = {}
 --
 function Musician.TRP3E:OnEnable()
 	if TRP3_API and TRP3_API.extended then
+		-- Check third party add-on API
+		if not Musician.Utils.CheckModuleDependencies("Total RP 3: Extended", Musician.TRP3E.CheckAPI) then
+			return
+		end
+
 		Musician.Utils.Debug(MODULE_NAME, "Total RP3 Extended module started.")
 
 		-- Insert default inventory page to container frames
@@ -49,6 +54,25 @@ function Musician.TRP3E:OnEnable()
 		Musician.TRP3E.RegisterHooks()
 		Musician.TRP3E.InitUI()
 	end
+end
+
+--- Check the TRP3 Extended API is valid
+-- @return isValid (boolean)
+function Musician.TRP3E.CheckAPI()
+	return
+		Musician.TRP3.CheckAPI() and
+		TRP3_API.extended.unregisterObject and
+		TRP3_API.extended.registerObject and
+		TRP3_API.extended.tools.getBlankItemData and
+		TRP3_API.script.executeClassScript and
+		TRP3_API.script.clearRootCompilation and
+		TRP3_API.inventory.addItem and
+		TRP3_API.inventory.showItemTooltip and
+		TRP3_API.security.computeSecurity and
+		TRP3_Extended.TriggerEvent and
+		TRP3_Extended.Events.REFRESH_BAG and
+		TRP3_Extended.Events.REFRESH_CAMPAIGN and
+		TRP3_Extended.Events.ON_OBJECT_UPDATED
 end
 
 local function initLocaleDropdown()

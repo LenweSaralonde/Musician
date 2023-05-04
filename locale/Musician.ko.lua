@@ -119,6 +119,9 @@ msg.PLAYER_COUNT_ONLINE_NONE = "아직 다른 음악 팬이 없습니다."
 msg.NEW_VERSION = "Musician의 새 버전이 출시되었습니다! {url}에서 업데이트를 다운로드하십시오."
 msg.NEW_PROTOCOL_VERSION = "Musician 버전이 오래되어 더 이상 작동하지 않습니다.\n\n{url}에서 업데이트를 다운로드하십시오."
 
+-- Module warnings
+msg.ERR_INCOMPATIBLE_MODULE_API = "{module}이(가) 호환되지 않기 때문에 {module}용 Musician 모듈을 시작할 수 없습니다. Musician 및 {module}을(를) 업데이트해 보십시오."
+
 -- Loading screen
 msg.LOADING_SCREEN_MESSAGE = "Musician 이 악기 샘플을 캐시 메모리에 미리 로드하고 있습니다…"
 msg.LOADING_SCREEN_CLOSE_TOOLTIP = "닫고 백그라운드에서 사전 로드를 계속합니다."

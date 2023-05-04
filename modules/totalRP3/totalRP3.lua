@@ -14,6 +14,11 @@ local CONFIG_TOOLTIP_MAIN_COLOR = "tooltip_main_color"
 
 function Musician.TRP3:OnEnable()
 	if TRP3_API then
+		-- Check third party add-on API
+		if not Musician.Utils.CheckModuleDependencies("Total RP 3", Musician.TRP3.CheckAPI) then
+			return
+		end
+
 		Musician.Utils.Debug(MODULE_NAME, "Total RP3 module started.")
 
 		-- Init settings
@@ -25,10 +30,35 @@ function Musician.TRP3:OnEnable()
 		if TRP3_CharacterTooltip then
 			Musician.TRP3.HookTooltip()
 		else
-			TRP3_API.Events.registerCallback("WORKFLOW_ON_FINISH", Musician.TRP3.HookTooltip)
+			TRP3_API.RegisterCallback(TRP3_Addon, TRP3_Addon.Events.WORKFLOW_ON_FINISH, Musician.TRP3.HookTooltip)
 		end
 		Musician.TRP3:RegisterMessage(Musician.Events.SongChunk, Musician.TRP3.OnSongChunk)
 	end
+end
+
+--- Check the TRP3 API is valid
+-- @return isValid (boolean)
+function Musician.TRP3.CheckAPI()
+	return
+		TRP3_API.CreateColorFromHexString and
+		TRP3_PlayerMapPinMixin.Decorate and
+		TRP3_PlayerMapPinMixin.GetDisplayDataFromPoiInfo and
+		TRP3_RefTooltip.Show and
+		TRP3_API.CreateColorFromHexString and
+		TRP3_API.globals and
+		TRP3_API.configuration.getValue and
+		TRP3_API.utils.str.id and
+		TRP3_API.ui.frame.createTabPanel and
+		TRP3_API.ui.tooltip and
+		TRP3_API.popup.showPopup and
+		TRP3_API.popup.ICONS and
+		TRP3_API.RegisterCallback and
+		TRP3_Addon.Events.WORKFLOW_ON_FINISH and
+		TRP3_API.loc.EDITOR_PREVIEW and
+		TRP3_API.loc.EDITOR_ICON_SELECT and
+		AddOn_TotalRP3.Player.static.CreateFromCharacterID and
+		TRP3_BlizzardNamePlates.UpdateNamePlate and
+		TRP3_BlizzardNamePlates.UpdateAllNamePlates
 end
 
 --- Return RP display name for player
@@ -78,7 +108,7 @@ function Musician.TRP3.HookNamePlates()
 		-- Force refreshing the nameplates on TRP side when leaving the cinematic mode
 		-- to avoid player names showing in NPCs nameplates.
 		UIParent:HookScript("OnShow", function()
-			if TRP3_NAMEPLATES_ADDON == "Blizzard_NamePlates" then
+			if TRP3_BlizzardNamePlates.initializedNameplates ~= nil then
 				TRP3_BlizzardNamePlates:UpdateAllNamePlates()
 			end
 		end)

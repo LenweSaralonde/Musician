@@ -119,6 +119,9 @@ msg.PLAYER_COUNT_ONLINE_NONE = "Todavía no hay otros fanáticos de la música."
 msg.NEW_VERSION = "¡Se ha lanzado una nueva versión de Musician! Descargue la actualización de {url}."
 msg.NEW_PROTOCOL_VERSION = "Tu versión de Musician está desactualizada y ya no funciona.\nDescargue la actualización de\n{url}"
 
+-- Module warnings
+msg.ERR_INCOMPATIBLE_MODULE_API = "El módulo de Musician para {module} no pudo iniciarse porque {module} es incompatible. Intente actualizar Musician y {module}."
+
 -- Loading screen
 msg.LOADING_SCREEN_MESSAGE = "Musician está precargando las muestras de instrumentos en la memoria caché…"
 msg.LOADING_SCREEN_CLOSE_TOOLTIP = "Cerrar y continuar con la precarga en segundo plano."

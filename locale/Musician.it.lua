@@ -119,6 +119,9 @@ msg.PLAYER_COUNT_ONLINE_NONE = "Non ci sono ancora altri fan della musica in gir
 msg.NEW_VERSION = "È stata rilasciata una nuova versione di Musician! Scarica l'aggiornamento da {url}."
 msg.NEW_PROTOCOL_VERSION = "La tua versione di Musician è obsoleta e non funziona più.\nScarica l'aggiornamento da\n{url}"
 
+-- Module warnings
+msg.ERR_INCOMPATIBLE_MODULE_API = "Il modulo Musician per {module} non può essere avviato perché {module} è incompatibile. Prova ad aggiornare Musician e {module}."
+
 -- Loading screen
 msg.LOADING_SCREEN_MESSAGE = "Musician sta precaricando i campioni dello strumento nella memoria cache…"
 msg.LOADING_SCREEN_CLOSE_TOOLTIP = "Chiudi e continua il precaricamento in background."

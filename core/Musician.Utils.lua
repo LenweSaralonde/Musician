@@ -1203,3 +1203,20 @@ end
 function Musician.Utils.GetRandomArgument(...)
 	return (select(random(select("#", ...)), ...))
 end
+
+--- Check third party add-on dependencies for a module. Return false and display an error message if the provided check function is not resolved.
+-- @param moduleName (string) Name of the module/add-on
+-- @param checkFunc (function) Returns false or throws an error if the dependencides don't match
+-- @return isValid True if the dependencies are correct.
+function Musician.Utils.CheckModuleDependencies(moduleName, checkFunc)
+	local isValid = false
+	local success = pcall(function()
+		isValid = checkFunc()
+	end)
+	if success and isValid then
+		return true
+	end
+	local msg = string.gsub(Musician.Msg.ERR_INCOMPATIBLE_MODULE_API, '{module}', moduleName)
+	DEFAULT_CHAT_FRAME:AddMessage(msg, RED_FONT_COLOR.r, RED_FONT_COLOR.g, RED_FONT_COLOR.b)
+	return false
+end

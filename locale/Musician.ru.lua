@@ -119,6 +119,9 @@ msg.PLAYER_COUNT_ONLINE_NONE = "Других меломанов пока нет.
 msg.NEW_VERSION = "Вышла новая версия Musicianа! Загрузите обновление с {url}."
 msg.NEW_PROTOCOL_VERSION = "Ваша версия Musicianа устарела и больше не работает.\nЗагрузите обновление с\n{url}"
 
+-- Module warnings
+msg.ERR_INCOMPATIBLE_MODULE_API = "Модуль Musician для {module} не может быть запущен, поскольку {module} несовместим. Попробуйте обновить Musician и {module}."
+
 -- Loading screen
 msg.LOADING_SCREEN_MESSAGE = "Musician предварительно загружает сэмплы инструмента в кэш-память…"
 msg.LOADING_SCREEN_CLOSE_TOOLTIP = "Закрыть и продолжить предварительную загрузку в фоновом режиме."

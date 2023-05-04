@@ -70,6 +70,7 @@ globals = {
 	TRP3_API = {
 		fields = {
 			"CreateColorFromHexString", -- Accessed only
+			"RegisterCallback", -- Accessed only
 			globals = {
 				fields = {
 					"empty",    -- Accessed only
@@ -134,11 +135,6 @@ globals = {
 			security = {
 				fields = {
 					"computeSecurity" -- Accessed only
-				}
-			},
-			Events = {
-				fields = {
-					"registerCallback" -- Accessed only
 				}
 			},
 			loc = {
@@ -240,15 +236,22 @@ read_globals = {
 	TRP3_BlizzardNamePlates = {
 		fields = {
 			"UpdateNamePlate",
-			"UpdateAllNamePlates"
+			"UpdateAllNamePlates",
+			"initializedNameplates"
 		}
-	},
-	TRP3_NAMEPLATES_ADDON = {
-		fields = {}
 	},
 	TRP3_Configuration = {
 		fields = {
 			"tooltip_main_color"
+		}
+	},
+	TRP3_Addon = {
+		fields = {
+			Events = {
+				fields = {
+					"WORKFLOW_ON_FINISH"
+				}
+			}
 		}
 	},
 
