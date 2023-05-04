@@ -72,7 +72,7 @@ globals = {
 			"CreateColorFromHexString", -- Accessed only
 			globals = {
 				fields = {
-					"empty", -- Accessed only
+					"empty",    -- Accessed only
 					"player_id", -- Accessed only
 					"extended_version", -- Accessed only
 					"extended_display_version" -- Accessed only
@@ -156,6 +156,12 @@ globals = {
 			"modes", -- Accessed only
 			"types" -- Accessed only
 		}
+	},
+
+	mrp = {
+		fields = {
+			"UpdateTooltip"
+		}
 	}
 }
 
@@ -179,15 +185,38 @@ read_globals = {
 
 	-- 3rd party add-ons
 	"ElvUI",
-	"CrossRP",
+	CrossRP = {
+		fields = {
+			Proto = {
+				fields = {
+					"IsDestLinked",
+					"SelectBridge",
+					"DestFromFullname",
+					"GetBandFromUnit",
+					"GetBandFromDest",
+					"DestToFullname",
+					"Send",
+					"GetNetworkStatus",
+					"SetMessageHandler",
+				}
+			}
+		}
+	},
 	"KuiNameplates",
 	"NeatPlates",
 	"TidyPlates",
 	"TidyPlatesThreat",
-	"Plater",
+	Plater = {
+		fields = {
+			"UpdatePlateText"
+		}
+	},
 
-	"mrp",
-	"msp",
+	msp = {
+		fields = {
+			"char"
+		}
+	},
 
 	AddOn_TotalRP3 = {
 		fields = {
