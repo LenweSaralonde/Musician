@@ -676,6 +676,15 @@ function Musician.NamePlates.OnSetUIVisibility(isVisible)
 	end
 end
 
+--- Indicates whenever the friendly player nameplates are enabled.
+-- @return areVisible (boolean)
+function Musician.NamePlates.AreNamePlatesEnabled()
+	return
+		GetCVarBool("nameplateShowAll") and
+		GetCVarBool("nameplateShowFriends") and
+		tonumber(GetCVar("nameplatePlayerMaxDistance")) or 0 > 0
+end
+
 --- Initialize tips and tricks
 --
 function Musician.NamePlates.InitTipsAndTricks()
@@ -693,8 +702,7 @@ function Musician.NamePlates.InitTipsAndTricks()
 	MusicianNamePlatesTipsAndTricks.text:SetText(text)
 
 	-- Already enabled
-	local nameplatesEnabled = GetCVarBool("nameplateShowAll") and GetCVarBool("nameplateShowFriends")
-	if nameplatesEnabled then
+	if Musician.NamePlates.AreNamePlatesEnabled() then
 		Musician_Settings.namePlatesHintShown = true
 		return
 	end

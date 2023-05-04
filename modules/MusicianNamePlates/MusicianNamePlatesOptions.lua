@@ -42,9 +42,8 @@ function Musician.NamePlates.Options.Init()
 		if disableSetCVarHook or isSettingCVar then
 			return
 		end
-		if name == "nameplateShowAll" or name == "nameplateShowFriends" then
-			MusicianOptionsPanelUnitNamePlatesEnable:SetChecked(C_CVar.GetCVarBool("nameplateShowAll") and
-				C_CVar.GetCVarBool("nameplateShowFriends"))
+		if name == "nameplateShowAll" or name == "nameplateShowFriends" or name == "nameplatePlayerMaxDistance" then
+			MusicianOptionsPanelUnitNamePlatesEnable:SetChecked(Musician.NamePlates.AreNamePlatesEnabled())
 			if MusicianOptionsPanelUnitNamePlatesEnable:IsVisible() then
 				ExecuteFrameScript(MusicianOptionsPanelUnitNamePlatesEnable, "OnClick", "LeftButton")
 			end
@@ -84,6 +83,7 @@ function Musician.NamePlates.Options.Init()
 			SetCVarSafe("nameplateShowFriends", true)
 			SetCVarSafe("nameplateShowEnemies", true)
 			SetCVarSafe("nameplateMotion", 0)
+			SetCVarSafe("nameplatePlayerMaxDistance", 60)
 			if InterfaceOptionsNamesPanelUnitNameplatesFriends then
 				InterfaceOptionsNamesPanelUnitNameplatesFriends:SetChecked(true)
 				ExecuteFrameScript(InterfaceOptionsNamesPanelUnitNameplatesFriends, "OnClick", "LeftButton")
@@ -177,8 +177,7 @@ hooksecurefunc(Musician.Options, "Defaults", Musician.NamePlates.Options.Default
 --- Refresh checkboxes based on actual values
 --
 function Musician.NamePlates.Options.RefreshCheckboxes()
-	MusicianOptionsPanelUnitNamePlatesEnable:SetChecked(C_CVar.GetCVarBool("nameplateShowAll") and
-		C_CVar.GetCVarBool("nameplateShowFriends"))
+	MusicianOptionsPanelUnitNamePlatesEnable:SetChecked(Musician.NamePlates.AreNamePlatesEnabled())
 	MusicianOptionsPanelUnitNamePlatesShowIcon:SetChecked(Musician_Settings.showNamePlateIcon)
 	MusicianOptionsPanelUnitNamePlatesHideNamePlateBars:SetChecked(Musician_Settings.hideNamePlateBars)
 	MusicianOptionsPanelUnitNamePlatesHideNPCs:SetChecked(not C_CVar.GetCVarBool("nameplateShowFriendlyNPCs"))
