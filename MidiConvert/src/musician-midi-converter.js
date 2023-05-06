@@ -84,7 +84,7 @@ function extractEvents(midi) {
 	// Extract all events as a flat array
 	const events = [];
 	for (const trackIndex in midi.tracks) {
-		const tick = 0;
+		let tick = 0;
 		for (const event of midi.tracks[trackIndex]) {
 			tick += event.deltaTime;
 			event.tick = tick;
