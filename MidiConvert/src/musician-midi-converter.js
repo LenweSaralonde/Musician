@@ -72,7 +72,7 @@ function utf8Encode(str) {
 function filenameToTitle(fileName) {
 	return fileName.replace(/[_]+/g, ' ').replace(/\.[a-zA-Z0-9]+$/, '').replace(/^(.)|\s+(.)/g, function ($1) {
 		return $1.toUpperCase();
-	});
+	}).trim();
 }
 
 /**
@@ -424,7 +424,7 @@ function convertMidi(midiArray, fileName, options) {
 		const instrument = (trackInstrument !== undefined) ? trackInstrument : (channelInstrument || 0);
 		const trackKey = `${trackIndex}-${channel}-${instrument}`;
 		// For MIDI format 2 files, channels 10 and 11 can be used for percussions
-		const isPercussion = (midi.format === 2) ? (channel === 9 || channel === 10) : (channel === 9);
+		const isPercussion = (midi?.header?.format === 2) ? (channel === 9 || channel === 10) : (channel === 9);
 
 		// Create new track
 		if (!tracksMap.has(trackKey)) {
@@ -446,6 +446,7 @@ function convertMidi(midiArray, fileName, options) {
 	}
 
 	// Fill song data
+	let metaChannel = null;
 	for (const event of events) {
 		switch (event.type) {
 			case 'noteOn':
@@ -463,9 +464,17 @@ function convertMidi(midiArray, fileName, options) {
 				instrumentByChannel.set(event.channel, event.programNumber);
 				break;
 
+			case 'channelPrefix':
+				metaChannel = event.channel;
+				break;
+
 			case 'trackName':
-				const trackName = event.text;
-				trackNames[event.trackIndex] = trackName;
+				// Type 0 MIDI files that have a single track may have several trackName events,
+				// one per channel, defined by a previous channelPrefix event
+				if (trackNames[event.trackIndex] === undefined) {
+					trackNames[event.trackIndex] = {};
+				}
+				trackNames[event.trackIndex][metaChannel || 0] = event.text.trim();
 				break;
 
 			case 'text':
@@ -480,7 +489,9 @@ function convertMidi(midiArray, fileName, options) {
 	}
 
 	// Song title
-	title = (titleParts.length > 0) ? titleParts.join(' - ') : filenameToTitle(fileName); // Default to file name
+	title = (titleParts.length > 0)
+		? titleParts.join(' - ').trim()
+		: filenameToTitle(fileName); // Defaults to file name
 
 	// Create tracks list
 	const tracks = Array.from(tracksMap, ([trackKey, track]) => track).filter(track => (track.notes.length > 0)); // Only keep tracks with notes
@@ -496,7 +507,7 @@ function convertMidi(midiArray, fileName, options) {
 
 	// Track names
 	for (const track of tracks) {
-		track.name = trackNames[track.trackIndex] || '';
+		track.name = trackNames[track.trackIndex] && (trackNames[track.trackIndex][track.channel] || trackNames[track.trackIndex][0]) || '';
 	}
 
 	// Return final object
