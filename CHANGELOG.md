@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v1.9.7.7
+--------
+* Handle nameplatePlayerMaxDistance CVar to show animated nameplates.
+* Added safeguards to improve compatibility with third party add-ons.
+* Fixed track/channel names for type 0 MIDI files.
+* Improved text decoding such as track names in MIDI files.
+
 v1.9.7.6
 --------
 * Fixed errors due to changes in Total RP 3 API.
