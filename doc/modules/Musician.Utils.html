@@ -125,6 +125,10 @@
 	<td class="summary">Automatically adjust the audio settings, if needed.</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.CheckModuleDependencies">Musician.Utils.CheckModuleDependencies (moduleName, checkFunc)</a></td>
+	<td class="summary">Check third party add-on dependencies for a module.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.Debug">Musician.Utils.Debug (module, ...)</a></td>
 	<td class="summary">Print debug stuff in the console</td>
 	</tr>
@@ -451,6 +455,34 @@
         </li>
     </ul>
 
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.CheckModuleDependencies"></a>
+    <strong>Musician.Utils.CheckModuleDependencies (moduleName, checkFunc)</strong>
+    </dt>
+    <dd>
+    Check third party add-on dependencies for a module.  Return false and display an error message if the provided check function is not resolved.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">moduleName</span>
+         (string) Name of the module/add-on
+        </li>
+        <li><span class="parameter">checkFunc</span>
+         (function) Returns false or throws an error if the dependencides don't match
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        isValid True if the dependencies are correct.
+    </ol>
 
 
 
