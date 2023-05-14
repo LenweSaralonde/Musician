@@ -1,0 +1,11 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.blizzard.com/wow/ui/">
+	<!-- Slider -->
+	<Slider name="MusicianSliderTemplate" inherits="OptionsSliderTemplate" virtual="true">
+		<ThumbTexture parentKey="Thumb" name="$parentThumb" file="Interface\Buttons\UI-SliderBar-Button-Horizontal">
+			<TexCoords left="0.3125" right="0.65625" />
+			<Size x="11" y="32" />
+		</ThumbTexture>
+	</Slider>
+</Ui>

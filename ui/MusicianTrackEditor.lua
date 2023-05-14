@@ -265,8 +265,10 @@ end
 --- UpdateSlider
 --
 function Musician.TrackEditor.UpdateSlider()
-	MusicianTrackEditorSourceSongSliderLow:SetText("")
-	MusicianTrackEditorSourceSongSliderHigh:SetText("")
+	if MusicianTrackEditorSourceSongSliderLow then
+		MusicianTrackEditorSourceSongSliderLow:SetText("")
+		MusicianTrackEditorSourceSongSliderHigh:SetText("")
+	end
 	MusicianTrackEditorSourceSongSlider:SetMinMaxValues(Musician.sourceSong.cropFrom, Musician.sourceSong.cropTo)
 	MusicianTrackEditorSourceSongSlider:SetValue(Musician.sourceSong.cursor)
 end

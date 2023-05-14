@@ -219,7 +219,7 @@
 
 			<!-- Player slider -->
 
-			<Slider name="$parentSourceSongSlider" inherits="OptionsSliderTemplate" defaultValue="1" minValue="1" maxValue="1" valueStep=".01" stepsPerPage="1000">
+			<Slider name="$parentSourceSongSlider" inherits="MusicianSliderTemplate" defaultValue="1" minValue="1" maxValue="1" valueStep=".01" stepsPerPage="1000">
 				<Size y="22" />
 				<Anchors>
 					<Anchor point="TOP" x="0" y="-60" />
@@ -229,10 +229,6 @@
 				<HitRectInsets>
 					<AbsInset left="0" right="0" top="0" bottom="0" />
 				</HitRectInsets>
-				<ThumbTexture parentKey="Thumb" name="$parentThumb" file="Interface\Buttons\UI-SliderBar-Button-Horizontal">
-					<TexCoords left="0.3125" right="0.65625" />
-					<Size x="11" y="32" />
-				</ThumbTexture>
 			</Slider>
 
 			<!-- Timecode inputs -->
