@@ -20,5 +20,5 @@
 	<Include file="MusicianAnimatedImageTemplate.xml" />
 	<Include file="MusicianTipsAndTricksTemplate.xml" />
 	<Include file="MusicianTipsAndTricksButtonTemplates.xml" />
-	<Include file="MusicianScrollFrameTemplate.xml" />
+	<Include file="MusicianScrollFrameTemplate.classic.xml" />
 </Ui>

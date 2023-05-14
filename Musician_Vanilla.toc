@@ -36,7 +36,7 @@ locale\locale.xml
 ui\fonts\MusicianFontIcons.xml
 ui\fonts\MusicianFontPercussionIcons.xml
 
-ui\widgets\MusicianWidgets.xml
+ui\widgets\MusicianWidgets.classic.xml
 
 ui\MusicianLoadingScreen.xml
 ui\MusicianBasicMessageDialog.xml

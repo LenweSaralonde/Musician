@@ -315,52 +315,23 @@
 
 			<!-- Track list -->
 
-			<ScrollFrame name="$parentScrollFrame" inherits="UIPanelScrollFrameTemplate">
+			<ScrollFrame name="$parentScrollFrame" inherits="MusicianScrollFrameTemplate">
+				<KeyValues>
+					<KeyValue key="scrollBarX" value="1" type="number"/>
+					<KeyValue key="scrollBarTopY" value="-2" type="number"/>
+					<KeyValue key="scrollBarBottomY" value="10" type="number"/>
+				</KeyValues>
 				<Anchors>
 					<Anchor point="TOP" y="-132" />
-					<Anchor point="LEFT" x="13" />
-					<Anchor point="RIGHT" x="-39" />
-					<Anchor point="BOTTOM" y="12" />
+					<Anchor point="BOTTOM" y="10" />
 				</Anchors>
-				<Layers>
-					<Layer level="BACKGROUND">
-						<Texture file="Interface\DialogFrame\UI-DialogBox-Background" horizTile="true" vertTile="true">
-							<Anchors>
-								<Anchor point="TOPRIGHT" relativePoint="TOPRIGHT" x="26" y="4" />
-								<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" x="0" y="-2" />
-							</Anchors>
-						</Texture>
-					</Layer>
-					<Layer level="ARTWORK">
-						<Texture name="$parentTop" file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
-							<Size x="31" y="102" />
-							<Anchors>
-								<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" x="-2" y="4" />
-							</Anchors>
-							<TexCoords left="0" right="0.484375" top="0" bottom="0.4" />
-						</Texture>
-						<Texture name="$parentBottom" file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
-							<Size x="31" y="106" />
-							<Anchors>
-								<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" x="-2" y="-2" />
-							</Anchors>
-							<TexCoords left="0.515625" right="1.0" top="0" bottom="0.4140625" />
-						</Texture>
-						<Texture name="$parentMiddle" file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
-							<Size x="31" y="1" />
-							<Anchors>
-								<Anchor point="TOP" relativeTo="$parentTop" relativePoint="BOTTOM" />
-								<Anchor point="BOTTOM" relativeTo="$parentBottom" relativePoint="TOP" />
-							</Anchors>
-							<TexCoords left="0" right="0.484375" top=".75" bottom="1.0" />
-						</Texture>
-					</Layer>
-				</Layers>
 				<ScrollChild>
-					<Frame name="MusicianTrackEditorTrackContainer">
-						<Size x="585" y="0" />
+					<!-- Placeholder container to determine the scroll range -->
+					<Frame name="MusicianTrackEditorScrollFrameContentPlaceholder">
 						<Anchors>
-							<Anchor point="TOPLEFT" />
+							<Anchor point="TOP" />
+							<Anchor point="LEFT" />
+							<Anchor point="RIGHT" />
 						</Anchors>
 					</Frame>
 				</ScrollChild>
@@ -368,8 +339,18 @@
 
 			<Frame name="$parentBackground" inherits="MusicianFieldset">
 				<Anchors>
-					<Anchor point="TOPLEFT" x="-5" y="7" relativeTo="$parentScrollFrame" />
-					<Anchor point="BOTTOMRIGHT" x="6" y="-3" relativeTo="$parentScrollFrame" />
+					<Anchor point="TOP" y="7" relativeTo="$parentScrollFrame" />
+					<Anchor point="BOTTOM" y="-3" relativeTo="$parentScrollFrame" />
+					<Anchor point="LEFT" x="8" />
+					<Anchor point="RIGHT" x="-8" />
+				</Anchors>
+			</Frame>
+
+			<!-- Actual container for the tracks. The children are anchored to the ScrollChild placeholder frame to avoid issues -->
+			<Frame name="$parentTracksContainer" clipChildren="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentScrollFrame" />
+					<Anchor point="BOTTOMRIGHT" relativeTo="$parentScrollFrame" x="-5" />
 				</Anchors>
 			</Frame>
 

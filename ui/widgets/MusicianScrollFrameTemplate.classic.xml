@@ -1,0 +1,39 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.blizzard.com/wow/ui/">
+	<!-- Scroll frame -->
+	<ScrollFrame name="MusicianScrollFrameTemplate" inherits="UIPanelScrollFrameTemplate" virtual="true">
+		<Anchors>
+			<Anchor point="LEFT" x="13" />
+			<Anchor point="RIGHT" x="-39" />
+			<Anchor point="TOP" y="12" />
+			<Anchor point="BOTTOM" y="12" />
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture name="$parentTop" file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
+					<Size x="31" y="32" />
+					<Anchors>
+						<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" x="-2" y="5" />
+					</Anchors>
+					<TexCoords left="0" right="0.484375" top="0" bottom="0.122" />
+				</Texture>
+				<Texture name="$parentBottom" file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
+					<Size x="31" y="32" />
+					<Anchors>
+						<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" x="-2" y="-2" />
+					</Anchors>
+					<TexCoords left="0.515625" right="1.0" top="0.290" bottom="0.4140625" />
+				</Texture>
+				<Texture name="$parentMiddle" file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
+					<Size x="31" y="1" />
+					<Anchors>
+						<Anchor point="TOP" relativeTo="$parentTop" relativePoint="BOTTOM" />
+						<Anchor point="BOTTOM" relativeTo="$parentBottom" relativePoint="TOP" />
+					</Anchors>
+					<TexCoords left="0" right="0.484375" top=".75" bottom="1.0" />
+				</Texture>
+			</Layer>
+		</Layers>
+	</ScrollFrame>
+</Ui>

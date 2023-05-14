@@ -33,6 +33,8 @@ function Musician.TrackEditor.Init()
 
 	-- Main frame settings
 	MusicianTrackEditor:SetClampedToScreen(true)
+
+	-- Clamp main frame size
 	MusicianTrackEditor:HookScript("OnSizeChanged", function(self)
 		local width, height = self:GetSize()
 		local minWidth, minHeight = 600, 270
@@ -74,17 +76,25 @@ function Musician.TrackEditor.Init()
 	end)
 
 	-- Scroll frame
-	MusicianTrackEditorScrollFrame:HookScript("OnScrollRangeChanged", function(self)
-		-- Workaround to fix the gap in the scroll height
-		C_Timer.After(.0001, function()
-			local range = max(0, MusicianTrackEditorTrackContainer:GetHeight() - self:GetHeight() - 2)
-			self.ScrollBar:SetMinMaxValues(0, range)
-			ScrollFrame_OnScrollRangeChanged(self, 0, range)
-		end)
-	end)
+
+	-- Fix precision issues with the scrollbar track thumb size
+	local scrollBarSetVisibleExtentPercentage = MusicianTrackEditorScrollFrame.ScrollBar.SetVisibleExtentPercentage
+	MusicianTrackEditorScrollFrame.ScrollBar.SetVisibleExtentPercentage = function(self, visibleExtentPercentage)
+		scrollBarSetVisibleExtentPercentage(self, floor(visibleExtentPercentage * 100000 + .5) / 100000)
+	end
+
+	-- Put the tracks container on top of the background artwork
+	MusicianTrackEditorTracksContainer:SetFrameLevel(MusicianTrackEditorBackground:GetFrameLevel() + 1)
+
+	-- Synchronize scroll child
 	MusicianTrackEditorScrollFrame:HookScript("OnSizeChanged", function(self)
-		MusicianTrackEditorTrackContainer:SetWidth(self:GetWidth())
+		MusicianTrackEditorScrollFrameContentPlaceholder:SetWidth(self:GetWidth())
 	end)
+
+	-- WoW Classic still uses the old school scrollbars, adjust anchors accordingly
+	if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then
+		MusicianTrackEditorTracksContainer:SetPoint("BOTTOMRIGHT", MusicianTrackEditorScrollFrame, "BOTTOMRIGHT", 0, -2)
+	end
 
 	-- Slider
 	MusicianTrackEditorSourceSongSlider:SetScript("OnMouseDown", function(self)
@@ -202,7 +212,10 @@ function Musician.TrackEditor.OnLoad()
 	end
 
 	-- Resize track container
-	MusicianTrackEditorTrackContainer:SetHeight(32 * trackCount)
+	MusicianTrackEditorScrollFrameContentPlaceholder:SetHeight(32 * trackCount)
+	MusicianTrackEditorTracksContainer:SetClipsChildren(true)
+	MusicianTrackEditorScrollFrame:SetVerticalScroll(0)
+	MusicianTrackEditorScrollFrame:UpdateScrollChildRect()
 
 	-- Resize main window
 	local headerHeight = 142
@@ -291,9 +304,10 @@ function Musician.TrackEditor.CreateTrackWidget(trackIndex)
 
 	-- Create frame, init dropdowns, labels and checkboxes
 	if trackFrame == nil then
-		_G[trackFrameName] = CreateFrame("Frame", trackFrameName, MusicianTrackEditorTrackContainer, "MusicianTrackTemplate")
+		_G[trackFrameName] = CreateFrame("Frame", trackFrameName, MusicianTrackEditorTracksContainer, "MusicianTrackTemplate")
 		trackFrame = _G[trackFrameName]
-		trackFrame:SetPoint("TOPLEFT", 0, -trackFrame:GetHeight() * (trackIndex - 1))
+		local y = -trackFrame:GetHeight() * (trackIndex - 1)
+		trackFrame:SetPoint("TOPLEFT", MusicianTrackEditorScrollFrameContentPlaceholder, "TOPLEFT", 1, y - 2)
 		Musician.TrackEditor.InitTransposeDropdown(trackFrame.transposeDropdown, trackIndex)
 		Musician.TrackEditor.InitInstrumentDropdown(trackFrame.instrumentDropdown, trackIndex)
 
