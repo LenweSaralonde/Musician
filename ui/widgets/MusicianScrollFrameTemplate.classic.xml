@@ -5,7 +5,7 @@
 	<ScrollFrame name="MusicianScrollFrameTemplate" inherits="UIPanelScrollFrameTemplate" virtual="true">
 		<Anchors>
 			<Anchor point="LEFT" x="13" />
-			<Anchor point="RIGHT" x="-39" />
+			<Anchor point="RIGHT" x="-40" />
 			<Anchor point="TOP" y="12" />
 			<Anchor point="BOTTOM" y="12" />
 		</Anchors>
