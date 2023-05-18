@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.8.0
+--------
+* Updated the song editor with the new 10.1 scrollbar and slider.
+
 v1.9.7.7
 --------
 * Handle nameplatePlayerMaxDistance CVar to show animated nameplates.
