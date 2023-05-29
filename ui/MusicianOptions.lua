@@ -74,7 +74,7 @@ function Musician.Options.Init()
 		MusicianButton.Refresh()
 	end)
 	MusicianOptionsPanelShortcutMenu:HookScript("OnClick", function(self)
-		Musician_CharacterSettings.addOnMenu.hide = not self:GetChecked()
+		Musician_CharacterSettings.addonCompartment.hide = not self:GetChecked()
 		MusicianButton.Refresh()
 	end)
 	-- Hide add-on menu option if the component is not available on the current WoW version
@@ -141,7 +141,7 @@ end
 
 function Musician.Options.Refresh()
 	MusicianOptionsPanelShortcutMinimap:SetChecked(not Musician_CharacterSettings.minimap.hide)
-	MusicianOptionsPanelShortcutMenu:SetChecked(not Musician_CharacterSettings.addOnMenu.hide)
+	MusicianOptionsPanelShortcutMenu:SetChecked(not Musician_CharacterSettings.addonCompartment.hide)
 	MusicianOptionsPanelUnitEmoteEnable:SetChecked(Musician_Settings.enableEmote)
 	MusicianOptionsPanelUnitEmoteEnablePromo:SetChecked(Musician_Settings.enableEmotePromo)
 	MusicianOptionsPanelUnitEmoteEnablePromo:SetEnabled(Musician_Settings.enableEmote)
@@ -149,7 +149,7 @@ function Musician.Options.Refresh()
 	MusicianOptionsPanelIntegrationMuteInstrumentToys:SetChecked(Musician_Settings.muteInstrumentToys)
 	MusicianOptionsPanelQuickPreloadingEnable:SetChecked(Musician_Settings.enableQuickPreloading)
 	currentShortcutMinimapHide = Musician_CharacterSettings.minimap.hide
-	currentShortcutMenuHide = Musician_CharacterSettings.addOnMenu.hide
+	currentShortcutMenuHide = Musician_CharacterSettings.addonCompartment.hide
 	currentMuteGameMusic = Musician_Settings.muteGameMusic
 	currentMuteInstrumentToys = Musician_Settings.muteInstrumentToys
 	currentAudioConfiguration = Musician.Utils.GetCurrentAudioSettings()
@@ -160,7 +160,7 @@ end
 
 function Musician.Options.Defaults()
 	Musician_CharacterSettings.minimap.hide = false
-	Musician_CharacterSettings.addOnMenu.hide = true
+	Musician_CharacterSettings.addonCompartment.hide = true
 	MusicianButton.Refresh()
 	Musician_Settings.enableEmote = true
 	Musician_Settings.enableEmotePromo = true
@@ -206,7 +206,7 @@ end
 
 function Musician.Options.Cancel()
 	Musician_CharacterSettings.minimap.hide = currentShortcutMinimapHide
-	Musician_CharacterSettings.addOnMenu.hide = currentShortcutMenuHide
+	Musician_CharacterSettings.addonCompartment.hide = currentShortcutMenuHide
 	MusicianButton.Refresh()
 	Musician_Settings.muteGameMusic = currentMuteGameMusic
 	Musician_Settings.muteInstrumentToys = currentMuteInstrumentToys

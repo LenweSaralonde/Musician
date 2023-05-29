@@ -49,14 +49,15 @@ function Musician:OnInitialize()
 				154, -- Retail
 			hide = false,
 		},
-		addOnMenu = {
-			hide = true,
+		addonCompartment = {
+			hide = false,
 		},
 	}
 	Musician_CharacterSettings = Mixin(defaultCharacterSettings, Musician_CharacterSettings or {})
 
 	-- Remove obsolete character settings
 	Musician_CharacterSettings.framePosition = nil
+	Musician_CharacterSettings.addOnMenu = nil
 
 	-- Init bindings names
 	_G.BINDING_HEADER_MUSICIAN = Musician.Msg.ABOUT_TITLE

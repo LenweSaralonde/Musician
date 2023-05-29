@@ -37,7 +37,9 @@ function MusicianButton.Init()
 		text = Musician.Msg.MENU_TITLE,
 		icon = MUSICIAN_ICON,
 		registerForRightClick = true,
-		func = function(self, _, _, _, button) MusicianButton.OnClick(nil, button) end
+		func = function(self, _, _, _, button) MusicianButton.OnClick(nil, button) end,
+		funcOnEnter = MusicianButton.ShowTooltip,
+		funcOnLeave = MusicianButton.HideTooltip
 	}
 
 	-- Update tooltip text while preloading
@@ -88,7 +90,7 @@ function MusicianButton.Refresh()
 	if AddonCompartmentFrame then
 		local registeredAddons = AddonCompartmentFrame.registeredAddons
 		local pos = tIndexOf(registeredAddons, addOnMenuInfo)
-		local addMenu = not Musician_CharacterSettings.addOnMenu.hide
+		local addMenu = not Musician_CharacterSettings.addonCompartment.hide
 		if addMenu and pos == nil then
 			tinsert(registeredAddons, addOnMenuInfo.pos or (#registeredAddons + 1), addOnMenuInfo)
 			AddonCompartmentFrame:UpdateDisplay()
