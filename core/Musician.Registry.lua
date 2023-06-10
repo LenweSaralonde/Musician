@@ -19,6 +19,10 @@ Musician.Registry.event.playerUnregistered = "MusicianPlayerUnregistered" -- A p
 local QUERY_RATE = .1
 local QUERY_MAX_TRIES = 3
 local QUERY_RETRY_AFTER = 3
+local HELLO_SEND_RATE = 300
+local FETCH_PLAYERS_RETRY_RATE = 1
+local FETCH_PLAYERS_END_TIMEOUT = 2
+local NOTIFY_NEW_VERSION_POPUP_DELAY = 3
 
 local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetadata
 
@@ -28,6 +32,21 @@ local newProtocolNotified = false
 local pendingPlayerQueries = {} -- Query messages queue
 
 local pendingNotifications = {} -- Pending notification functions
+
+--- Send pending notifications
+--
+local function sendPendingNotifications()
+	if not Musician.Preloader.QuickPreloadingIsComplete() then
+		Musician.Registry:RegisterMessage(Musician.Events.QuickPreloadingComplete, sendPendingNotifications)
+		return
+	end
+
+	for _, notification in pairs(pendingNotifications) do
+		notification()
+	end
+
+	wipe(pendingNotifications)
+end
 
 --- Print communication debug message
 -- @param out (boolean) Outgoing message
@@ -133,17 +152,25 @@ function Musician.Registry.Init()
 	Musician.Registry:RegisterEvent("CHAT_MSG_CHANNEL_LIST", function(event, players, _, _, _, _, _, _, _, channelName)
 
 		-- Not the Musician channel
-		if channelName ~= Musician.CHANNEL or not Musician.Registry.fetchingPlayers then
+		if channelName ~= Musician.CHANNEL then
+			return
+		end
+
+		-- Add the connected players to the registry
+		for player in string.gmatch(players, "([^, *]+)") do
+			player = Musician.Utils.NormalizePlayerName(player)
+			Musician.Registry.RegisterPlayer(player)
+		end
+
+		-- Not currently fetching players on startup
+		if not Musician.Registry.fetchingPlayers then
 			return
 		end
 
 		-- No more need to retry
-		Musician.Registry.listChannelsRetryTimer:Cancel()
-
-		-- Get connected players
-		for player in string.gmatch(players, "([^, *]+)") do
-			player = Musician.Utils.NormalizePlayerName(player)
-			Musician.Registry.RegisterPlayer(player)
+		if Musician.Registry.listChannelsRetryTicker ~= nil then
+			Musician.Registry.listChannelsRetryTicker:Cancel()
+			Musician.Registry.listChannelsRetryTicker = nil
 		end
 
 		-- Finalize when all CHAT_MSG_CHANNEL_LIST pages are received (no new page received after 1 second)
@@ -153,22 +180,11 @@ function Musician.Registry.Init()
 			Musician.Registry.fetchingPlayersTimer = nil
 		end
 
-		Musician.Registry.fetchingPlayersTimer = C_Timer.NewTimer(1, function()
+		Musician.Registry.fetchingPlayersTimer = C_Timer.NewTimer(FETCH_PLAYERS_END_TIMEOUT, function()
 
 			-- Display the number of players online
-			local playerCount = 0
-			for _, _ in pairs(Musician.Registry.players) do
-				playerCount = playerCount + 1
-			end
-
-			if playerCount > 2 then
-				Musician.Utils.Print(string.gsub(Musician.Msg.PLAYER_COUNT_ONLINE, '{count}',
-					Musician.Utils.Highlight(playerCount - 1)))
-			elseif playerCount == 2 then
-				Musician.Utils.Print(Musician.Msg.PLAYER_COUNT_ONLINE_ONE)
-			elseif playerCount < 2 then
-				Musician.Utils.Print(Musician.Msg.PLAYER_COUNT_ONLINE_NONE)
-			end
+			pendingNotifications["playerCount"] = Musician.Registry.DisplayPlayerCount
+			sendPendingNotifications()
 
 			-- We're done!
 			Musician.Registry.playersFetched = true
@@ -181,7 +197,7 @@ function Musician.Registry.Init()
 	-- Hide CHAT_MSG_CHANNEL_LIST when fetching players
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL_LIST", function(self, event, ...)
 		local _, _, _, _, _, _, _, _, channelName = ...
-		if channelName == Musician.CHANNEL and Musician.Registry.fetchingPlayers then
+		if channelName == Musician.CHANNEL then
 			return true
 		end
 		return false, ...
@@ -210,7 +226,7 @@ function Musician.Registry.Init()
 	end)
 
 	-- Send "Hello" every 5 minutes
-	C_Timer.NewTicker(300, function()
+	C_Timer.NewTicker(HELLO_SEND_RATE, function()
 		if not Musician.streamingSong or not Musician.streamingSong.streaming then
 			Musician.Registry.SendHello()
 		end
@@ -221,6 +237,24 @@ function Musician.Registry.Init()
 		Musician.Registry:RegisterEvent("PLAYER_LOGIN", finishInit)
 	else
 		finishInit()
+	end
+end
+
+--- Displays the number of other online players with Musician in the chat window.
+--
+function Musician.Registry.DisplayPlayerCount()
+	local playerCount = 0
+	for _, _ in pairs(Musician.Registry.players) do
+		playerCount = playerCount + 1
+	end
+
+	if playerCount > 2 then
+		Musician.Utils.Print(string.gsub(Musician.Msg.PLAYER_COUNT_ONLINE, '{count}',
+			Musician.Utils.Highlight(playerCount - 1)))
+	elseif playerCount == 2 then
+		Musician.Utils.Print(Musician.Msg.PLAYER_COUNT_ONLINE_ONE)
+	else
+		Musician.Utils.Print(Musician.Msg.PLAYER_COUNT_ONLINE_NONE)
 	end
 end
 
@@ -238,7 +272,7 @@ function Musician.Registry.FetchPlayers()
 		ListChannelByName(Musician.CHANNEL)
 
 		-- The request may not work on the first attempt so try again every second until it succeeds
-		Musician.Registry.listChannelsRetryTimer = C_Timer.NewTicker(1, function()
+		Musician.Registry.listChannelsRetryTicker = C_Timer.NewTicker(FETCH_PLAYERS_RETRY_RATE, function()
 			ListChannelByName(Musician.CHANNEL)
 		end)
 	end
@@ -615,19 +649,6 @@ function Musician.Registry.GetPlayerVersion(player)
 	return Musician.Registry.ExtractVersionAndProtocol(entry.version)
 end
 
---- Send pending notifications
---
-local function sendPendingNotifications()
-	if not Musician.Preloader.QuickPreloadingIsComplete() then
-		Musician.Registry:RegisterMessage(Musician.Events.QuickPreloadingComplete, sendPendingNotifications)
-		return
-	end
-
-	for _, notification in pairs(pendingNotifications) do
-		notification()
-	end
-end
-
 --- Display a message if a new version of the addon is available
 -- @param otherVersion (string)
 function Musician.Registry.NotifyNewVersion(otherVersion)
@@ -642,7 +663,6 @@ function Musician.Registry.NotifyNewVersion(otherVersion)
 	if not newVersionNotified and Musician.Utils.VersionCompare(theirVersion, myVersion) > 0 then
 		newVersionNotified = true
 		pendingNotifications["version"] = function()
-			pendingNotifications["version"] = nil
 			local msg = Musician.Msg.NEW_VERSION
 			msg = string.gsub(msg, '{url}', Musician.Utils.GetUrlLink(Musician.URL))
 			msg = string.gsub(msg, '{version}', Musician.Utils.Highlight(theirVersion))
@@ -663,13 +683,12 @@ function Musician.Registry.NotifyNewVersion(otherVersion)
 	if not newProtocolNotified and theirProtocol > myProtocol then
 		newProtocolNotified = true
 		pendingNotifications["protocol"] = function()
-			pendingNotifications["protocol"] = nil
 			local msg = Musician.Msg.NEW_PROTOCOL_VERSION
 			msg = string.gsub(msg, '{url}', Musician.Utils.GetUrlLink(Musician.URL))
 			msg = string.gsub(msg, '{version}', Musician.Utils.Highlight(theirVersion))
 			msg = string.gsub(msg, '{protocol}', Musician.Utils.Highlight(theirProtocol))
 
-			C_Timer.After(3, function() Musician.Utils.Popup(msg) end)
+			C_Timer.After(NOTIFY_NEW_VERSION_POPUP_DELAY, function() Musician.Utils.Popup(msg) end)
 		end
 		sendPendingNotifications()
 	end
