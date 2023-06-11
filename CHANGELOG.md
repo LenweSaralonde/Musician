@@ -1,6 +1,12 @@
 Changelog
 =========
 
+v1.9.8.1
+--------
+* Added `/mus mute` and `/mus unmute` commands to globally mute and unmute the music from Musician.
+* Optimized registry initialization and player count at login.
+* Added add-on compartment menu tooltip.
+
 v1.9.8.0
 --------
 * Updated the song editor with the new 10.1 scrollbar and slider.
