@@ -53,6 +53,14 @@ function MusicianButton.Init()
 	-- Refresh when preloading is complete
 	MusicianButton:RegisterMessage(Musician.Events.PreloadingComplete, MusicianButton.Refresh)
 	MusicianButton.Refresh()
+
+	-- Update icons and tooltip when the global mute state has changed
+	MusicianButton:RegisterMessage(Musician.Events.GlobalMute, function()
+		MusicianButton.UpdateIcons()
+		if MusicianButton.tooltipIsVisible then
+			MusicianButton.UpdateTooltipText()
+		end
+	end)
 end
 
 --- Refresh the button and its components
@@ -140,8 +148,6 @@ function MusicianButton.OnClick(event, button)
 		else
 			PlaySound(SOUNDKIT.IG_MINIMAP_ZOOM_IN)
 		end
-		MusicianButton.UpdateIcons()
-		MusicianButton.ShowTooltip()
 	end
 end
 

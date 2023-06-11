@@ -38,6 +38,11 @@ Musician.Events.SongPlay = "MusicianSongPlay"
 -- @param song (Musician.Song)
 Musician.Events.SongStop = "MusicianSongStop"
 
+--- Fired when the global mute state has changed
+-- @field Musician.Events.GlobalMute
+-- @param isMuted (boolean)
+Musician.Events.GlobalMute = "MusicianGlobalMute"
+
 --- Fired when a song chunk has been received
 -- @field Musician.Events.SongChunk
 -- @param sender (string) Player name

@@ -1,7 +1,7 @@
 --- Sampler engine
 -- @module Musician.Sampler
 
-Musician.Sampler = LibStub("AceAddon-3.0"):NewAddon("Musician.Sampler")
+Musician.Sampler = LibStub("AceAddon-3.0"):NewAddon("Musician.Sampler", "AceEvent-3.0")
 
 local MODULE_NAME = "Sampler"
 Musician.AddModule(MODULE_NAME)
@@ -555,6 +555,7 @@ end
 -- @param isMuted (boolean)
 function Musician.Sampler.SetMuted(isMuted)
 	globalMute = isMuted
+	Musician.Sampler:SendMessage(Musician.Events.GlobalMute, isMuted)
 end
 
 --- Return global mute state

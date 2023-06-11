@@ -247,6 +247,30 @@ function Musician.GetCommands()
 		end
 	})
 
+	-- Mute all music
+
+	table.insert(commands, {
+		command = {
+			"mute",
+		},
+		text = Musician.Msg.COMMAND_MUTE,
+		func = function()
+			Musician.Sampler.SetMuted(true)
+		end
+	})
+
+	-- Unmute music
+
+	table.insert(commands, {
+		command = {
+			"unmute",
+		},
+		text = Musician.Msg.COMMAND_UNMUTE,
+		func = function()
+			Musician.Sampler.SetMuted(false)
+		end
+	})
+
 	-- Open track editor
 
 	table.insert(commands, {
