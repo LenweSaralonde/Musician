@@ -329,9 +329,11 @@ function Musician.Registry.PlayerIsInRange(player)
 	end
 
 	-- Only works when the player is in our group but more precise
-	local inRange, checkedRange = UnitInRange(Musician.Utils.SimplePlayerName(player))
-	if checkedRange then
-		return inRange
+	if IsInGroup() or IsInRaid() then
+		local inRange, checkedRange = UnitInRange(Musician.Utils.SimplePlayerName(player))
+		if checkedRange then
+			return inRange
+		end
 	end
 
 	-- Range check
