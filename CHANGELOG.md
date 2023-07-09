@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.8.2
+--------
+* Updated for WoW patch 10.1.5 and WoW Classic patch 3.4.2.
+
 v1.9.8.1
 --------
 * Added `/mus mute` and `/mus unmute` commands to globally mute and unmute the music from Musician.
