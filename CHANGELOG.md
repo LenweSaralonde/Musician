@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.8.3
+--------
+* Fixed music not hearable when played by a player outside the party or raid.
+
 v1.9.8.2
 --------
 * Updated for WoW patch 10.1.5 and WoW Classic patch 3.4.2.
