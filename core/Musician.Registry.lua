@@ -329,8 +329,10 @@ function Musician.Registry.PlayerIsInRange(player)
 	end
 
 	-- Only works when the player is in our group but more precise
-	if IsInGroup() or IsInRaid() then
+	-- Needed in instances where the player coordinates are not available.
+	if (IsInGroup() or IsInRaid()) and IsInInstance() then
 		local inRange, checkedRange = UnitInRange(Musician.Utils.SimplePlayerName(player))
+		-- checkedRange seems to be always true since patch 10.1.5
 		if checkedRange then
 			return inRange
 		end
