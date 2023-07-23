@@ -562,7 +562,6 @@ function Musician.SongLinks.OnSongReceived(prefix, message, distribution, sender
 
 	local song = Musician.Song.create()
 	song.sender = sender
-	collectgarbage()
 
 	requestedSong.song = song
 	requestedSong.status = Musician.SongLinks.status.importing
@@ -580,7 +579,5 @@ function Musician.SongLinks.OnSongReceived(prefix, message, distribution, sender
 			Musician.SongLinks:SendMessage(Musician.Events.SongReceiveFailed, sender, Musician.SongLinks.errors.importingFailed,
 				title, context)
 		end
-		song = nil
-		collectgarbage()
 	end)
 end

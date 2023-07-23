@@ -437,9 +437,12 @@ function Musician.Frame.OnSongReceiveSuccessful(event, _, _, song, context)
 	local isDataOnly = song == nil
 	if not isDataOnly then
 
-		-- Stop previous source song being played
-		if Musician.sourceSong and Musician.sourceSong:IsPlaying() then
-			Musician.sourceSong:Stop()
+		-- Stop and wipe previous source song
+		if Musician.sourceSong then
+			if Musician.sourceSong:IsPlaying() then
+				Musician.sourceSong:Stop()
+			end
+			Musician.sourceSong:Wipe()
 		end
 
 		-- Load source song

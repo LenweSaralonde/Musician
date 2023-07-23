@@ -166,8 +166,8 @@ end
 local function stopPlayerBandSong(player)
 	if bandSongs[player] then
 		bandSongs[player]:Stop()
+		bandSongs[player]:Wipe()
 		bandSongs[player] = nil
-		collectgarbage()
 	end
 end
 
@@ -200,8 +200,8 @@ local function liveModeStatusChanged(event, ...)
 		if song == liveStreamingSong then
 			Musician.Live.AllNotesOff()
 			stopLiveSongDurationUpdater()
+			liveStreamingSong:Wipe()
 			liveStreamingSong = nil
-			collectgarbage()
 		end
 	end
 

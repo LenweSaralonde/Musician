@@ -7,18 +7,19 @@ local MODULE_NAME = "Musician.SongLinkExportFrame"
 Musician.AddModule(MODULE_NAME)
 
 local exporting = false
+local exportingSong
 
 local function onExportComplete()
 	MusicianSongLinkExportFrame:Hide()
+	exportingSong:Wipe()
 end
 
-local function postLink(sharedSong)
+local function postLink()
+	exportingSong = Musician.sourceSong:Clone()
 	local frame = MusicianSongLinkExportFrame
 	local name = Musician.Utils.NormalizeSongName(frame.songTitle:GetText())
-	sharedSong.name = name
-	if sharedSong == Musician.sourceSong then
-		Musician.Frame.Clear()
-	end
+	exportingSong.name = name
+	Musician.Frame.Clear()
 	ChatEdit_LinkItem(nil, Musician.SongLinks.GetHyperlink(name))
 
 	-- Focus the chat edit box on WoW Classic (it's not done by default)
@@ -29,7 +30,7 @@ local function postLink(sharedSong)
 		end
 	end
 
-	Musician.SongLinks.AddSong(sharedSong, name, onExportComplete)
+	Musician.SongLinks.AddSong(exportingSong, name, onExportComplete)
 end
 
 --- Show the export frame
@@ -40,14 +41,12 @@ function Musician.SongLinkExportFrame.Show()
 	local frame = MusicianSongLinkExportFrame
 
 	if not exporting then
-		local sharedSong = Musician.sourceSong
-
 		frame.postLink = function()
-			postLink(sharedSong)
+			postLink()
 		end
 
 		frame.songTitle:SetMaxBytes(Musician.Song.MAX_NAME_LENGTH)
-		frame.songTitle:SetText(sharedSong.name)
+		frame.songTitle:SetText(Musician.sourceSong.name)
 		frame.songTitle:HighlightText(0)
 		frame.songTitle:SetFocus()
 		frame.songTitle:Enable()
@@ -63,7 +62,7 @@ function Musician.SongLinkExportFrame.Show()
 		frame.postLinkButton:Enable()
 
 		Musician.SongLinkExportFrame:RegisterMessage(Musician.Events.SongExportStart, function(event, song)
-			if song ~= sharedSong then return end
+			if song ~= exportingSong then return end
 			exporting = true
 			frame.postLinkButton:Disable()
 			frame.songTitle:Disable()
@@ -73,7 +72,7 @@ function Musician.SongLinkExportFrame.Show()
 		end)
 
 		Musician.SongLinkExportFrame:RegisterMessage(Musician.Events.SongExportProgress, function(event, song, progress)
-			if song ~= sharedSong then return end
+			if song ~= exportingSong then return end
 			frame.progressBar:SetProgress(progress)
 			local percentageText = floor(progress * 100)
 			local progressText = string.gsub(Musician.Msg.LINK_EXPORT_WINDOW_PROGRESS, '{progress}', percentageText)
@@ -81,7 +80,7 @@ function Musician.SongLinkExportFrame.Show()
 		end)
 
 		Musician.SongLinkExportFrame:RegisterMessage(Musician.Events.SongExportComplete, function(event, song)
-			if song ~= sharedSong then return end
+			if song ~= exportingSong then return end
 			frame.progressBar:Hide()
 			frame.progressText:Hide()
 			frame.hint:Show()
@@ -89,8 +88,6 @@ function Musician.SongLinkExportFrame.Show()
 			Musician.SongLinkExportFrame:UnregisterMessage(Musician.Events.SongExportStart)
 			Musician.SongLinkExportFrame:UnregisterMessage(Musician.Events.SongExportProgress)
 			Musician.SongLinkExportFrame:UnregisterMessage(Musician.Events.SongExportComplete)
-			sharedSong = nil
-			collectgarbage()
 		end)
 	end
 

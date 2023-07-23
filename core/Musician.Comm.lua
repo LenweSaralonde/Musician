@@ -389,12 +389,13 @@ function Musician.Comm.PlaySong()
 	isPlayPending = true
 	Musician.Comm:SendMessage(Musician.Events.CommSendAction, Musician.Comm.action.play)
 
-	if Musician.streamingSong and Musician.streamingSong.streaming then
-		Musician.streamingSong:StopStreaming()
+	if Musician.streamingSong then
+		if Musician.streamingSong.streaming then
+			Musician.streamingSong:StopStreaming()
+		end
+		Musician.streamingSong:Wipe()
 	end
-
 	Musician.streamingSong = Musician.sourceSong:Clone()
-	collectgarbage()
 	Musician.streamingSong:Stream()
 	return true
 end
@@ -475,8 +476,8 @@ function Musician.Comm.ProcessChunk(packedChunk, sender)
 		-- Stop and clear existing song
 		if Musician.songs[sender] then
 			Musician.songs[sender]:Stop()
+			Musician.songs[sender]:Wipe()
 			Musician.songs[sender] = nil
-			collectgarbage()
 		end
 		return
 	end
@@ -485,8 +486,8 @@ function Musician.Comm.ProcessChunk(packedChunk, sender)
 	if Musician.songs[sender] and Musician.songs[sender].songId ~= songId then
 		-- Clear existing song
 		Musician.songs[sender]:Stop()
+		Musician.songs[sender]:Wipe()
 		Musician.songs[sender] = nil
-		collectgarbage()
 	end
 
 	-- Create playing song, if missing
@@ -589,8 +590,8 @@ function Musician.Comm.StopSong()
 		Musician.Utils.Debug(MODULE_NAME, "StopSong")
 		if Musician.streamingSong ~= nil then
 			Musician.streamingSong:StopStreaming()
+			Musician.streamingSong:Wipe()
 			Musician.streamingSong = nil
-			collectgarbage()
 		end
 		isStopPending = true
 		Musician.Comm:SendMessage(Musician.Events.CommSendAction, Musician.Comm.action.stop)

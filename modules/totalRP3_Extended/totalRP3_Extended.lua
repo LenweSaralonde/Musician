@@ -31,6 +31,7 @@ local BASE64DECODE_PROGRESSION_RATIO = .33
 local BASE64_CONVERT_RATE = 72 -- Number of base64 chunks to be encoded or decoded in 1 ms Must be a multiple of 4
 
 local exporting = false
+local exportingSong
 
 local importingIDs = {}
 local importingSlotButtons = {}
@@ -223,13 +224,15 @@ function Musician.TRP3E.InitUI()
 
 		if not success then return end
 
-		-- Stop previous source song being played
-		if Musician.sourceSong and Musician.sourceSong:IsPlaying() then
-			Musician.sourceSong:Stop()
+		-- Stop and wipe previous source song
+		if Musician.sourceSong then
+			if Musician.sourceSong:IsPlaying() then
+				Musician.sourceSong:Stop()
+			end
+			Musician.sourceSong:Wipe()
 		end
 
 		Musician.sourceSong = song
-		collectgarbage()
 
 		Musician.TRP3E:SendMessage(Musician.Events.SourceSongLoaded, song)
 		MusicianFrame:Show()
@@ -283,10 +286,8 @@ local function createItem(song, locale, icon, quantity)
 				Musician.TRP3E.AddSheetMusicItem(song.name, encodedSongData, locale, icon, quantity)
 				Musician.TRP3E:SendMessage(Musician.TRP3E.Event.CreateProgress, song, 1)
 				Musician.TRP3E:SendMessage(Musician.TRP3E.Event.CreateComplete, song)
-				song = nil
 				Musician.TRP3E:UnregisterMessage(Musician.Events.SongExportStart)
 				Musician.TRP3E:UnregisterMessage(Musician.Events.SongExportProgress)
-				collectgarbage()
 				return
 			end
 		end
@@ -399,29 +400,27 @@ function Musician.TRP3E.ShowExportFrame()
 	local frame = MusicianTRPEExportFrame
 
 	if not exporting then
-		local sharedSong = Musician.sourceSong
 
 		frame.createItem = function()
+			exportedSong = Musician.sourceSong:Clone()
 			local title = Musician.Utils.NormalizeSongName(frame.songTitle:GetText())
 			local locale = frame.locale.value
 			local icon = frame.preview.selectedIcon
 			local quantity = frame.addToBag:GetChecked() and tonumber(frame.quantity:GetText())
 
-			sharedSong.name = title
-			if sharedSong == Musician.sourceSong then
-				Musician.Frame.Clear()
-			end
+			exportedSong.name = title
+			Musician.Frame.Clear()
 
-			createItem(sharedSong, locale, icon, quantity)
+			createItem(exportedSong, locale, icon, quantity)
 		end
 
 		-- Retrieve existing item data
-		local _, object = Musician.TRP3E.GetSheetMusicItem(sharedSong.name)
+		local _, object = Musician.TRP3E.GetSheetMusicItem(Musician.sourceSong.name)
 
 		-- Song title
 
 		frame.songTitle:SetMaxBytes(Musician.Song.MAX_NAME_LENGTH)
-		frame.songTitle:SetText(sharedSong.name)
+		frame.songTitle:SetText(Musician.sourceSong.name)
 		frame.songTitle:HighlightText(0)
 		frame.songTitle:SetFocus()
 		frame.songTitle:Enable()
@@ -503,8 +502,6 @@ function Musician.TRP3E.ShowExportFrame()
 			Musician.TRP3E:UnregisterMessage(Musician.TRP3E.Event.CreateStart)
 			Musician.TRP3E:UnregisterMessage(Musician.TRP3E.Event.CreateProgress)
 			Musician.TRP3E:UnregisterMessage(Musician.TRP3E.Event.CreateComplete)
-			sharedSong = nil
-			collectgarbage()
 		end)
 	end
 
@@ -601,8 +598,6 @@ local function importSong(encodedSongData, infoId)
 				song.TRP3ItemID = nil
 				importingIDs[infoId] = nil
 				Musician.TRP3E:SendMessage(Musician.TRP3E.Event.LoadComplete, infoId, song, success)
-				song = nil
-				collectgarbage()
 			end)
 
 			return

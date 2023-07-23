@@ -438,8 +438,8 @@ function Musician.StopPlayerSong(playerName, remove)
 	if Musician.songs[playerName] then
 		Musician.songs[playerName]:Stop()
 		if remove then
+			Musician.songs[playerName]:Wipe()
 			Musician.songs[playerName] = nil
-			collectgarbage()
 		end
 	end
 end
@@ -460,11 +460,11 @@ function Musician.ImportSource(str)
 	-- Remove previously importing song
 	if Musician.importingSong ~= nil then
 		Musician.importingSong:CancelImport()
+		Musician.importingSong:Wipe()
 		Musician.importingSong = nil
 	end
 
 	Musician.importingSong = Musician.Song.create()
-	collectgarbage()
 	Musician.importingSong:ImportFromBase64(str, true)
 end
 
@@ -474,14 +474,17 @@ end
 function Musician.OnSourceImportSuccessful(event, song)
 	if song ~= Musician.importingSong then return end
 
-	-- Stop previous source song being played
-	if Musician.sourceSong and Musician.sourceSong:IsPlaying() then
-		Musician.sourceSong:Stop()
+	-- Stop and wipe previous source song
+	if Musician.sourceSong then
+		if Musician.sourceSong:IsPlaying() then
+			Musician.sourceSong:Stop()
+		end
+		Musician.sourceSong:Wipe()
+		Musician.sourceSong = song
 	end
 
-	Musician.sourceSong = song
+	Musician.importingSong:Wipe()
 	Musician.importingSong = nil
-	collectgarbage()
 
 	Musician:SendMessage(Musician.Events.SourceSongLoaded, song)
 end
@@ -489,8 +492,10 @@ end
 --- Handle failed source import
 --
 function Musician.OnSourceImportFailed()
-	Musician.importingSong = nil
-	collectgarbage()
+	if Musician.importingSong then
+		Musician.importingSong:Wipe()
+		Musician.importingSong = nil
+	end
 end
 
 --- Perform all on-frame actions

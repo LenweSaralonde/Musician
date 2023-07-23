@@ -1464,6 +1464,27 @@ function Musician.Song:Clone()
 	return song
 end
 
+--- Completely wipes the song data from memory.
+function Musician.Song:Wipe()
+	-- Wipe tracks
+	for _, track in next, self.tracks, nil do
+		-- Track notes
+		for _, note in next, track.notes, nil do
+			wipe(note)
+		end
+		wipe(track.notes)
+		-- Track notes on
+		for _, noteOn in next, track.notesOn, nil do
+			wipe(noteOn)
+		end
+		wipe(track.notesOn)
+	end
+	wipe(self.tracks)
+
+	-- Wipe object
+	wipe(self)
+end
+
 --- Stream song
 function Musician.Song:Stream()
 	Musician.Utils.Debug(MODULE_NAME, "Stream", self.name)
