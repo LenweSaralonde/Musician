@@ -254,19 +254,19 @@ function Musician.TRP3E.GetSlotButtons(infoId)
 	return slotButtons
 end
 
-local function createItem(song, locale, icon, quantity)
-	Musician.TRP3E:RegisterMessage(Musician.Events.SongExportStart, function(event, exportedSong)
-		if exportedSong ~= song then return end
-		Musician.TRP3E:SendMessage(Musician.TRP3E.Event.CreateStart, exportedSong)
+local function createItem(locale, icon, quantity)
+	Musician.TRP3E:RegisterMessage(Musician.Events.SongExportStart, function(event, song)
+		if song ~= exportingSong then return end
+		Musician.TRP3E:SendMessage(Musician.TRP3E.Event.CreateStart, song)
 	end)
 
-	Musician.TRP3E:RegisterMessage(Musician.Events.SongExportProgress, function(event, exportedSong, progress)
-		if exportedSong ~= song then return end
-		Musician.TRP3E:SendMessage(Musician.TRP3E.Event.CreateProgress, exportedSong,
+	Musician.TRP3E:RegisterMessage(Musician.Events.SongExportProgress, function(event, song, progress)
+		if song ~= exportingSong then return end
+		Musician.TRP3E:SendMessage(Musician.TRP3E.Event.CreateProgress, song,
 			progress * (1 - BASE64ENCODE_PROGRESSION_RATIO))
 	end)
 
-	song:ExportCompressed(function(songData)
+	exportingSong:ExportCompressed(function(songData)
 		-- Total RP Extended only allows printable characters in its data
 		-- Encode song data in base 64 to avoid issues exporting the item
 		local cursor = 1
@@ -274,7 +274,7 @@ local function createItem(song, locale, icon, quantity)
 		local base64EncodeWorker
 		base64EncodeWorker = function()
 			local progression = min(1, cursor / #songData)
-			Musician.TRP3E:SendMessage(Musician.TRP3E.Event.CreateProgress, song,
+			Musician.TRP3E:SendMessage(Musician.TRP3E.Event.CreateProgress, exportingSong,
 				(1 - BASE64ENCODE_PROGRESSION_RATIO) + progression * BASE64ENCODE_PROGRESSION_RATIO)
 
 			local cursorTo = min(#songData, cursor + BASE64_CONVERT_RATE - 1)
@@ -283,11 +283,13 @@ local function createItem(song, locale, icon, quantity)
 
 			if cursorTo == #songData then
 				Musician.Worker.Remove(base64EncodeWorker)
-				Musician.TRP3E.AddSheetMusicItem(song.name, encodedSongData, locale, icon, quantity)
-				Musician.TRP3E:SendMessage(Musician.TRP3E.Event.CreateProgress, song, 1)
-				Musician.TRP3E:SendMessage(Musician.TRP3E.Event.CreateComplete, song)
+				Musician.TRP3E.AddSheetMusicItem(exportingSong.name, encodedSongData, locale, icon, quantity)
+				Musician.TRP3E:SendMessage(Musician.TRP3E.Event.CreateProgress, exportingSong, 1)
+				Musician.TRP3E:SendMessage(Musician.TRP3E.Event.CreateComplete, exportingSong)
 				Musician.TRP3E:UnregisterMessage(Musician.Events.SongExportStart)
 				Musician.TRP3E:UnregisterMessage(Musician.Events.SongExportProgress)
+				exportingSong:Wipe()
+				exportingSong = nil
 				return
 			end
 		end
@@ -402,16 +404,17 @@ function Musician.TRP3E.ShowExportFrame()
 	if not exporting then
 
 		frame.createItem = function()
-			exportedSong = Musician.sourceSong:Clone()
 			local title = Musician.Utils.NormalizeSongName(frame.songTitle:GetText())
 			local locale = frame.locale.value
 			local icon = frame.preview.selectedIcon
 			local quantity = frame.addToBag:GetChecked() and tonumber(frame.quantity:GetText())
 
-			exportedSong.name = title
+			Musician.sourceSong.name = title
 			Musician.Frame.Clear()
 
-			createItem(exportedSong, locale, icon, quantity)
+			exportingSong = Musician.sourceSong:Clone()
+
+			createItem(locale, icon, quantity)
 		end
 
 		-- Retrieve existing item data
@@ -426,6 +429,13 @@ function Musician.TRP3E.ShowExportFrame()
 		frame.songTitle:Enable()
 		frame.songTitle:SetScript('OnKeyDown', updateHint)
 		frame.songTitle:SetScript('OnTextChanged', updateHint)
+
+		-- Update the exported song title if the source song has changed before starting the export
+		Musician.TRP3E:RegisterMessage(Musician.Events.SourceSongLoaded, function()
+			if not exportingSong then
+				frame.songTitle:SetText(Musician.sourceSong.name)
+			end
+		end)
 
 		-- Locale
 

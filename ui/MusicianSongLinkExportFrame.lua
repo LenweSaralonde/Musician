@@ -12,14 +12,17 @@ local exportingSong
 local function onExportComplete()
 	MusicianSongLinkExportFrame:Hide()
 	exportingSong:Wipe()
+	exportingSong = nil
 end
 
 local function postLink()
-	exportingSong = Musician.sourceSong:Clone()
 	local frame = MusicianSongLinkExportFrame
 	local name = Musician.Utils.NormalizeSongName(frame.songTitle:GetText())
-	exportingSong.name = name
+
+	Musician.sourceSong.name = name
 	Musician.Frame.Clear()
+
+	exportingSong = Musician.sourceSong:Clone()
 	ChatEdit_LinkItem(nil, Musician.SongLinks.GetHyperlink(name))
 
 	-- Focus the chat edit box on WoW Classic (it's not done by default)
@@ -60,6 +63,13 @@ function Musician.SongLinkExportFrame.Show()
 
 		frame.postLinkButton:SetText(Musician.Msg.LINK_EXPORT_WINDOW_POST_BUTTON)
 		frame.postLinkButton:Enable()
+
+		-- Update the exported song title if the source song has changed before starting the export
+		Musician.SongLinkExportFrame:RegisterMessage(Musician.Events.SourceSongLoaded, function()
+			if not exportingSong then
+				frame.songTitle:SetText(Musician.sourceSong.name)
+			end
+		end)
 
 		Musician.SongLinkExportFrame:RegisterMessage(Musician.Events.SongExportStart, function(event, song)
 			if song ~= exportingSong then return end
