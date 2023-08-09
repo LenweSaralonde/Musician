@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.8.4
+--------
+* Optimized memory management to address intermittent freezing.
+
 v1.9.8.3
 --------
 * Fixed music not hearable when played by a player outside the party or raid.
