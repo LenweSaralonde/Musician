@@ -225,17 +225,19 @@ function Musician.TRP3E.InitUI()
 		if not success then return end
 
 		-- Stop and wipe previous source song
-		if Musician.sourceSong then
-			if Musician.sourceSong:IsPlaying() then
-				Musician.sourceSong:Stop()
-			end
-			Musician.sourceSong:Wipe()
+		if Musician.sourceSong and Musician.sourceSong:IsPlaying() then
+			Musician.sourceSong:Stop()
 		end
+		local previousSourceSongToWipe = Musician.sourceSong
 
 		Musician.sourceSong = song
 
 		Musician.TRP3E:SendMessage(Musician.Events.SourceSongLoaded, song)
 		MusicianFrame:Show()
+
+		if previousSourceSongToWipe then
+			previousSourceSongToWipe:Wipe()
+		end
 	end)
 end
 

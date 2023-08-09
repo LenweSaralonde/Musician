@@ -475,18 +475,20 @@ function Musician.OnSourceImportSuccessful(event, song)
 	if song ~= Musician.importingSong then return end
 
 	-- Stop and wipe previous source song
-	if Musician.sourceSong then
-		if Musician.sourceSong:IsPlaying() then
-			Musician.sourceSong:Stop()
-		end
-		Musician.sourceSong:Wipe()
-		Musician.sourceSong = song
+	if Musician.sourceSong and Musician.sourceSong:IsPlaying() then
+		Musician.sourceSong:Stop()
 	end
+	local previousSourceSongToWipe = Musician.sourceSong
 
-	Musician.importingSong:Wipe()
+	Musician.sourceSong = song
+
 	Musician.importingSong = nil
 
 	Musician:SendMessage(Musician.Events.SourceSongLoaded, song)
+
+	if previousSourceSongToWipe then
+		previousSourceSongToWipe:Wipe()
+	end
 end
 
 --- Handle failed source import

@@ -438,12 +438,10 @@ function Musician.Frame.OnSongReceiveSuccessful(event, _, _, song, context)
 	if not isDataOnly then
 
 		-- Stop and wipe previous source song
-		if Musician.sourceSong then
-			if Musician.sourceSong:IsPlaying() then
-				Musician.sourceSong:Stop()
-			end
-			Musician.sourceSong:Wipe()
+		if Musician.sourceSong and Musician.sourceSong:IsPlaying() then
+			Musician.sourceSong:Stop()
 		end
+		local previousSourceSongToWipe = Musician.sourceSong
 
 		-- Load source song
 		Musician.sourceSong = song
@@ -451,5 +449,10 @@ function Musician.Frame.OnSongReceiveSuccessful(event, _, _, song, context)
 		-- Refresh and show UI
 		Musician.SongLinks:SendMessage(Musician.Events.SourceSongLoaded, song)
 		MusicianFrame:Show()
+
+		-- Wipe previous source song
+		if previousSourceSongToWipe then
+			previousSourceSongToWipe:Wipe()
+		end
 	end
 end
