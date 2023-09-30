@@ -1231,7 +1231,7 @@ function Musician.Keyboard.SpecialActionKey(down, keyValue)
 
 	-- Override standard Toggle UI to keep the keyboard visible on screen
 	if down and GetBindingFromClick(keyValue) == "TOGGLEUI" and not InCombatLockdown() then
-		Musician.Keyboard.ToggleUI()
+		ToggleFrame(UIParent)
 		return true
 	end
 
@@ -1413,30 +1413,6 @@ function Musician.Keyboard.DeleteProgram(program)
 	Musician_Settings.keyboardPrograms[program] = nil
 	loadedProgram = program
 	Musician.Utils.Print(string.gsub(Musician.Msg.PROGRAM_DELETED, '{num}', Musician.Utils.Highlight(program)))
-end
-
---- Toggle UI, keeping the keyboard visible
---
-function Musician.Keyboard.ToggleUI()
-	ToggleFrame(UIParent)
-
-	-- Update keyboard parent frame to make it visible when the main UI is hidden
-	local expectedParent
-	if UIParent:IsVisible() then
-		expectedParent = UIParent
-	else
-		expectedParent = WorldFrame
-	end
-
-	if MusicianKeyboard:GetParent() ~= expectedParent then
-		MusicianKeyboard:SetParent(expectedParent)
-		if expectedParent == WorldFrame then
-			MusicianKeyboard:SetScale(UIParent:GetScale())
-		else
-			MusicianKeyboard:SetScale(1)
-			MusicianKeyboard:SetFrameStrata("DIALOG")
-		end
-	end
 end
 
 --- Enable demo mode with provided track indexes
@@ -1755,12 +1731,27 @@ function MusicianKeyboardMixin:OnLoad()
 	-- Layer names
 	self.controls.lower.layerName:SetText(Musician.Msg.LAYERS[Musician.KEYBOARD_LAYER.LOWER])
 	self.controls.upper.layerName:SetText(Musician.Msg.LAYERS[Musician.KEYBOARD_LAYER.UPPER])
+
+	-- Keep the live keyboard visible when the UI is hidden
+	UIParent:HookScript("OnHide", function()
+		MusicianKeyboard:SetParent(WorldFrame)
+		MusicianKeyboard:SetScale(UIParent:GetScale())
+	end)
+	UIParent:HookScript("OnShow", function()
+		MusicianKeyboard:SetParent(UIParent)
+		MusicianKeyboard:SetScale(1)
+		MusicianKeyboard:SetFrameStrata("DIALOG")
+	end)
 end
 
 --- OnShow
 --
 function MusicianKeyboardMixin:OnShow()
-	self:SetScale(1)
+	if self:GetParent() == WorldFrame then
+		self:SetScale(UIParent:GetScale())
+	else
+		self:SetScale(1)
+	end
 end
 
 --- OnHide
