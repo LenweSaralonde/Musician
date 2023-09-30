@@ -30,6 +30,7 @@ function MusicianButton.Init()
 
 	-- Create menu frame
 	CreateFrame("Frame", "MusicianButton_Menu", UIParent, "MusicianDropDownMenuTooltipTemplate")
+	MusicianButton_Menu:Hide()
 
 	-- Create addon menu info
 	addOnMenuInfo = {

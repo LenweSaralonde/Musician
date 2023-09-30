@@ -29,6 +29,7 @@ function Musician.SongLinkImportFrame.Init()
 	-- Create WoW game account selector menu frame
 	gameAccountSelectorFrame = CreateFrame("Frame", "MusicianSongLinkImportFrame_GameAccountSelector", UIParent,
 		"MusicianDropDownMenuTooltipTemplate")
+	gameAccountSelectorFrame:Hide()
 end
 
 local function adjustHeight()
