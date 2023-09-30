@@ -42,10 +42,10 @@ end
 -- @param key (string)
 function MusicianDialogTemplate_OnKeyDown(self, key)
 	if self:IsShown() and key == "ESCAPE" and not self.noEscape then
-		self:SetPropagateKeyboardInput(false)
+		Musician.Utils.SetPropagateKeyboardInput(self, false)
 		self:Hide()
 	else
-		self:SetPropagateKeyboardInput(true)
+		Musician.Utils.SetPropagateKeyboardInput(self, true)
 	end
 end
 

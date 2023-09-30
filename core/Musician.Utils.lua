@@ -1167,6 +1167,15 @@ function Musician.Utils.SetFontStringTextFixedSize(fontString, text)
 	end
 end
 
+--- Safely set keyboard propagation for frame, without triggering combat lockdown warnings.
+-- @param frame (Frame)
+-- @param propagate (boolean)
+function Musician.Utils.SetPropagateKeyboardInput(frame, propagate)
+	if not InCombatLockdown() then
+		frame:SetPropagateKeyboardInput(propagate)
+	end
+end
+
 --- Return byte reader functions for provided data string
 -- @param data (string)
 -- @param err (string) Error to be returned in case of reading error

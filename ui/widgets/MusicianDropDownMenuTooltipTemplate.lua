@@ -12,10 +12,10 @@ end
 -- @param key (string)
 function MusicianDropDownMenuTooltipTemplate_OnKeyDown(self, key)
 	if MSA_DropDownList1:IsShown() and key == "ESCAPE" then
-		self:SetPropagateKeyboardInput(false)
+		Musician.Utils.SetPropagateKeyboardInput(self, false)
 		MSA_DropDownMenu_OnHide(self)
 	else
-		self:SetPropagateKeyboardInput(true)
+		Musician.Utils.SetPropagateKeyboardInput(self, true)
 	end
 end
 

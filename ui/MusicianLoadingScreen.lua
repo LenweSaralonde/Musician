@@ -85,7 +85,7 @@ end
 --- Suppress any keyboard input
 --
 function MusicianLoadingScreenMixin:SuppressKeyboardInput()
-	self:SetPropagateKeyboardInput(false)
+	Musician.Utils.SetPropagateKeyboardInput(self, false)
 end
 
 --- Set progression

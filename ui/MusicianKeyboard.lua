@@ -769,11 +769,11 @@ end
 function Musician.Keyboard.OnPhysicalKey(keyValue, down)
 
 	if Musician.Keyboard.SpecialActionKey(down, keyValue) then
-		MusicianKeyboard:SetPropagateKeyboardInput(false)
+		Musician.Utils.SetPropagateKeyboardInput(MusicianKeyboard, false)
 		return
 	end
 
-	MusicianKeyboard:SetPropagateKeyboardInput(true)
+	Musician.Utils.SetPropagateKeyboardInput(MusicianKeyboard, true)
 
 	-- Grab virtual keyboard key button
 	local button = keyValueButtons[keyValue]
@@ -786,10 +786,10 @@ function Musician.Keyboard.OnPhysicalKey(keyValue, down)
 	if not down and wasDown or down and wasUp then
 		if Musician.Keyboard.OnKey(keyValue, down) then
 			Musician.Keyboard.SetButtonState(button, down)
-			MusicianKeyboard:SetPropagateKeyboardInput(false)
+			Musician.Utils.SetPropagateKeyboardInput(MusicianKeyboard, false)
 		end
 	else
-		MusicianKeyboard:SetPropagateKeyboardInput(false)
+		Musician.Utils.SetPropagateKeyboardInput(MusicianKeyboard, false)
 	end
 end
 
