@@ -769,11 +769,8 @@ end
 function Musician.Keyboard.OnPhysicalKey(keyValue, down)
 
 	if Musician.Keyboard.SpecialActionKey(down, keyValue) then
-		Musician.Utils.SetPropagateKeyboardInput(MusicianKeyboard, false)
 		return
 	end
-
-	Musician.Utils.SetPropagateKeyboardInput(MusicianKeyboard, true)
 
 	-- Grab virtual keyboard key button
 	local button = keyValueButtons[keyValue]
@@ -786,10 +783,7 @@ function Musician.Keyboard.OnPhysicalKey(keyValue, down)
 	if not down and wasDown or down and wasUp then
 		if Musician.Keyboard.OnKey(keyValue, down) then
 			Musician.Keyboard.SetButtonState(button, down)
-			Musician.Utils.SetPropagateKeyboardInput(MusicianKeyboard, false)
 		end
-	else
-		Musician.Utils.SetPropagateKeyboardInput(MusicianKeyboard, false)
 	end
 end
 
@@ -1243,17 +1237,8 @@ function Musician.Keyboard.SpecialActionKey(down, keyValue)
 
 	-- Escape key
 	if down and keyValue == "ESCAPE" then
-		if Musician.Keyboard.IsSavingProgram() then
-			-- Leave saving program mode
-			Musician.Keyboard.SetSavingProgram(false)
-		elseif Musician.Keyboard.IsDeletingProgram() then
-			-- Leave deleting program mode
-			Musician.Keyboard.SetDeletingProgram(false)
-		else
-			-- Hide main window
-			MusicianKeyboard:Hide()
-		end
-
+		-- Hide main window
+		MusicianKeyboard:Hide()
 		return true
 	end
 

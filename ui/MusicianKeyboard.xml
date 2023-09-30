@@ -192,7 +192,7 @@
 
 	<!-- Main frame -->
 
-	<Frame name="MusicianKeyboard" inherits="MusicianDialogTemplate" mixin="MusicianKeyboardMixin" enableKeyboard="true">
+	<Frame name="MusicianKeyboard" inherits="MusicianDialogTemplate" mixin="MusicianKeyboardMixin" enableKeyboard="true" propagateKeyboardInput="false">
 		<Scripts>
 			<OnLoad inherit="prepend" method="OnLoad" />
 			<OnShow inherit="append" method="OnShow" />
