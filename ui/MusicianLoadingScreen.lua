@@ -86,12 +86,6 @@ function MusicianLoadingScreenMixin:OnHide()
 	self.content.image:SetTexture(nil) -- Unload image texture
 end
 
---- Suppress any keyboard input
---
-function MusicianLoadingScreenMixin:SuppressKeyboardInput()
-	Musician.Utils.SetPropagateKeyboardInput(self, false)
-end
-
 --- Set progression
 -- @param progression (number) 0-1
 function MusicianLoadingScreenMixin:SetProgression(progression)

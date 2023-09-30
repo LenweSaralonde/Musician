@@ -86,6 +86,12 @@ function Musician.Preloader.QuickPreload()
 		local quickPreloadingTime = debugprofilestop() - startTime
 		-- The iteration didn't end in time
 		if quickPreloadingTime > maxPreloadingTime then
+			-- Abort quick preloading when entering combat
+			if not quickPreloadingIsAborted and InCombatLockdown() then
+				Musician.Preloader.AbortQuickPreloading()
+				MusicianLoadingScreen:Hide()
+			end
+
 			-- Don't go any further if the process was aborted
 			if quickPreloadingIsAborted or not Musician_Settings.enableQuickPreloading then
 				quickPreloading = false
