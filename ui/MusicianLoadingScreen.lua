@@ -71,14 +71,18 @@ function MusicianLoadingScreenMixin:OnShow()
 	end)
 
 	-- Hide the main UI during the process
-	UIParent:SetShown(false)
+	if not InCombatLockdown() then
+		UIParent:SetShown(false)
+	end
 end
 
 --- OnHide
 --
 function MusicianLoadingScreenMixin:OnHide()
 	-- Show UI when complete
-	UIParent:SetShown(true)
+	if not InCombatLockdown() then
+		UIParent:SetShown(true)
+	end
 	self.content.image:SetTexture(nil) -- Unload image texture
 end
 

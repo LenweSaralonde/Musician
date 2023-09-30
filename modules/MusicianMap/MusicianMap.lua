@@ -64,7 +64,6 @@ end
 --- OnEnable
 --
 function Musician.Map:OnEnable()
-
 	-- Init character settings
 	local defaultCharacterSettings = {
 		tracking = {
@@ -213,11 +212,13 @@ function Musician.Map.UpdateWorldMapPin(player, posX, posY, instanceID)
 
 		if worldMapPlayerPins[player] == nil then
 			-- Create a new pin
-			worldMapPlayerPins[player] = map:AcquirePin(PIN_TEMPLATE_WORLD_MAP, {
-				player = player,
-				name = Musician.Utils.FormatPlayerName(player),
-				position = position
-			})
+			if not InCombatLockdown() then
+				worldMapPlayerPins[player] = map:AcquirePin(PIN_TEMPLATE_WORLD_MAP, {
+					player = player,
+					name = Musician.Utils.FormatPlayerName(player),
+					position = position
+				})
+			end
 		else
 			-- Update pin position
 			worldMapPlayerPins[player]:SetPosition(position:GetXY())
@@ -295,7 +296,6 @@ end
 --- Hook tracking options for the minimap
 --
 function Musician.Map.HookMiniMapTracking()
-
 	-- GetNumTrackingTypes
 
 	local hookedGetNumTrackingTypes
