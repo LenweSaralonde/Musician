@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.9.8.7
+--------
+* Fixed Lua error when closing the live keyboard in WoW Classic.
+* Fixed Lua error when attempting to retrieve a song from a WoW multi-account of another flavor in WoW Classic.
+
 v1.9.8.6
 --------
 * Fixed keyboard not responding when entering the game while already in combat.
