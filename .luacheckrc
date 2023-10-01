@@ -568,6 +568,8 @@ stds.wow = {
 		"GetFramerate",
 		"UnitInRaid",
 		"RegisterAddonMessagePrefix",
+		"securecall",
+		"CloseSpecialWindows",
 
 		-- Global Mixins and UI Objects
 

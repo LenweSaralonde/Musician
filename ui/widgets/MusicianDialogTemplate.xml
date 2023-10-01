@@ -65,7 +65,6 @@
 			<OnLoad function="MusicianDialogTemplate_OnLoad" />
 			<OnDragStart function="MusicianDialogTemplate_OnDragStart" />
 			<OnDragStop function="MusicianDialogTemplate_OnDragStop" />
-			<OnKeyDown function="MusicianDialogTemplate_OnKeyDown" />
 			<OnShow function="MusicianDialogTemplate_OnShow" />
 			<OnHide function="MusicianDialogTemplate_OnHide" />
 		</Scripts>

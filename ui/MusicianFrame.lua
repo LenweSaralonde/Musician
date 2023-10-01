@@ -38,7 +38,7 @@ function Musician.Frame.Init()
 	Musician.Frame:RegisterEvent("PLAYER_UNGHOST", Musician.Frame.OnCommChannelUpdate)
 
 	-- Main frame settings
-	MusicianFrame.noEscape = true
+	MusicianFrame:DisableEscape()
 	MusicianFrame:SetClampedToScreen(true)
 
 	-- Set default frame position

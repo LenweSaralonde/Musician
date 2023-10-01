@@ -638,6 +638,9 @@ function Musician.Keyboard.Init()
 		demoTrackMapping = nil,
 	}
 
+	-- Escape is handled in SpecialActionKey()
+	MusicianKeyboard:DisableEscape()
+
 	-- Set scripts
 	MusicianKeyboard:SetScript("OnKeyDown", Musician.Keyboard.OnPhysicalKeyDown)
 	MusicianKeyboard:SetScript("OnKeyUp", Musician.Keyboard.OnPhysicalKeyUp)
@@ -1237,6 +1240,14 @@ function Musician.Keyboard.SpecialActionKey(down, keyValue)
 
 	-- Escape key
 	if down and keyValue == "ESCAPE" then
+		-- Close special windows, if any
+		for _, frameName in pairs(UISpecialFrames) do
+			if _G[frameName]:IsShown() then
+				securecall(CloseSpecialWindows)
+				return true
+			end
+		end
+
 		-- Hide main window
 		MusicianKeyboard:Hide()
 		return true
