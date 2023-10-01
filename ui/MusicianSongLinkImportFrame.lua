@@ -165,9 +165,13 @@ function Musician.SongLinkImportFrame.OnSongLinkClick(event, title, playerName)
 			})
 
 			for _, gameAccountInfo in pairs(gameAccountsInfo) do
+				local text = gameAccountInfo.characterName
+				if gameAccountInfo.realmDisplayName then
+					text = text .. ' – ' .. gameAccountInfo.realmDisplayName
+				end
 				table.insert(menu, {
 					notCheckable = true,
-					text = gameAccountInfo.characterName .. ' – ' .. gameAccountInfo.realmDisplayName,
+					text = text,
 					func = function()
 						Musician.SongLinkImportFrame.ShowImportFrame(title, gameAccountInfo.gameAccountID)
 					end
