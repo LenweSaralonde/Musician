@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.9.8.6
+--------
+* Fixed keyboard not responding when entering the game while already in combat.
+* Fixed blocked actions in combat lockdown.
+
 v1.9.8.5
 --------
 * Added new supporters in the credits <3.
