@@ -1242,7 +1242,7 @@ function Musician.Keyboard.SpecialActionKey(down, keyValue)
 	if down and keyValue == "ESCAPE" then
 		-- Close special windows, if any
 		for _, frameName in pairs(UISpecialFrames) do
-			if _G[frameName]:IsShown() then
+			if _G[frameName] and _G[frameName]:IsShown() then
 				securecall(CloseSpecialWindows)
 				return true
 			end
