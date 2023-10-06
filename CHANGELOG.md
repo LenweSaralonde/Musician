@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.8.8
+--------
+* Fixed Lua error that can occur when interacting with dropdown menus from other add-ons.
+
 v1.9.8.7
 --------
 * Fixed Lua error when closing the live keyboard in WoW Classic.
