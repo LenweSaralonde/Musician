@@ -44,7 +44,7 @@ local function initializeHooks()
 				end
 
 				-- Ignore if the root opener is not a MusicianDropDownMenuTooltipTemplate
-				if not rootOpener.hasEscape then return end
+				if not rootOpener or not rootOpener.hasEscape then return end
 
 				-- Enable escape for the current level
 				enableEscape(level)
@@ -69,7 +69,7 @@ local function initializeHooks()
 		end)
 
 	hooksecurefunc('MSA_DropDownMenu_OnHide', function(frame)
-		if not rootOpener.hasEscape then return end
+		if not rootOpener or not rootOpener.hasEscape then return end
 
 		local level = string.gsub(frame:GetName(), 'MSA_DropDownList', '') + 0
 
