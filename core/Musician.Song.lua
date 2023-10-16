@@ -1466,6 +1466,9 @@ end
 
 --- Completely wipes the song data from memory.
 function Musician.Song:Wipe()
+	-- Already wiped
+	if not self.tracks then	return end
+
 	-- Wipe tracks
 	for _, track in next, self.tracks, nil do
 		-- Track notes
