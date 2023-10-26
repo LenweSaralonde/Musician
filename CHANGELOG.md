@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.9.8.9
+--------
+* Fixed rare Lua error with the ElvUI nameplates module. #97
+* Fixed rare Lua error occurring after a song is loaded.
+
 v1.9.8.8
 --------
 * Fixed Lua error that can occur when interacting with dropdown menus from other add-ons.
