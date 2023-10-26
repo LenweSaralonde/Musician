@@ -9,7 +9,7 @@ Musician.AddModule(MODULE_NAME)
 
 local function updateEvlUI_Nameplate(self, ElvNamePlate)
 	C_Timer.After(0, function()
-		if ElvNamePlate then
+		if ElvNamePlate and ElvNamePlate.Name then
 			local namePlate = ElvNamePlate:GetParent()
 			Musician.NamePlates.AddNoteIcon(namePlate, ElvNamePlate.Name)
 		end
@@ -20,7 +20,6 @@ end
 --
 function Musician.ElvUI:OnEnable()
 	if ElvUI then
-
 		Musician.Utils.Debug(MODULE_NAME, "ElvUI detected.")
 
 		local E, _, _, _, _ = unpack(ElvUI) --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
@@ -43,7 +42,7 @@ function Musician.ElvUI:OnEnable()
 			if not namePlate then return end
 			local namePlateName = namePlate:GetName()
 			local ElvNamePlate = _G["ElvNP_" .. namePlateName]
-			if not ElvNamePlate then return end
+			if not ElvNamePlate or not ElvNamePlate.Name then return end
 			Musician.NamePlates.AddNoteIcon(namePlate, ElvNamePlate.Name)
 		end)
 
