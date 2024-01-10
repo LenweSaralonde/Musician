@@ -144,6 +144,7 @@ end
 local function animateNotes(animatedNotesFrame, elapsed)
 	-- Empty the table of notes added during the frame
 	wipe(animatedNotesFrame.notesAddedDuringFrame)
+	wipe(animatedNotesFrame.percussionNotesAddedDuringFrame)
 
 	-- Animate notes
 	local numRegions = animatedNotesFrame:GetNumRegions()
@@ -195,9 +196,9 @@ local function addNote(animatedNotesFrame, song, track, key)
 	if track.instrument < 128 and not (instrument and instrument.isPercussion) then
 		-- Avoid duplicates during the same frame
 		if animatedNotesFrame.notesAddedDuringFrame[key] then return end
+		animatedNotesFrame.notesAddedDuringFrame[key] = true
 
 		-- Adjust center key
-		animatedNotesFrame.notesAddedDuringFrame[key] = key
 		animatedNotesFrame.centerKey[1] = animatedNotesFrame.centerKey[1] + key
 		animatedNotesFrame.centerKey[2] = animatedNotesFrame.centerKey[2] + 1
 		local centerKey = animatedNotesFrame.centerKey[1] / animatedNotesFrame.centerKey[2]
@@ -210,6 +211,10 @@ local function addNote(animatedNotesFrame, song, track, key)
 		isPercussion = false
 		noteSymbold = Musician.Utils.GetRandomArgument(2, 3)
 	else
+		-- Avoid duplicates during the same frame
+		if animatedNotesFrame.percussionNotesAddedDuringFrame[key .. track.index] then return end
+		animatedNotesFrame.percussionNotesAddedDuringFrame[key .. track.index] = true
+
 		-- Position is random for percussions
 		x = random() - .5
 		y = random() * .66
@@ -611,6 +616,7 @@ function Musician.NamePlates.AttachNamePlate(namePlate, player, event)
 	namePlate.musicianAnimatedNotesFrame.songId = nil
 	namePlate.musicianAnimatedNotesFrame.race = select(2, UnitRace(namePlate.namePlateUnitToken))
 	namePlate.musicianAnimatedNotesFrame.notesAddedDuringFrame = {}
+	namePlate.musicianAnimatedNotesFrame.percussionNotesAddedDuringFrame = {}
 end
 
 --- Detach animated notes frame from the nameplate
@@ -643,6 +649,7 @@ function Musician.NamePlates.CreatePlayerAnimatedNotesFrame()
 	playerAnimatedNotesFrame.songId = nil
 	playerAnimatedNotesFrame.race = select(2, UnitRace("player"))
 	playerAnimatedNotesFrame.notesAddedDuringFrame = {}
+	playerAnimatedNotesFrame.percussionNotesAddedDuringFrame = {}
 	playerAnimatedNotesFrame.zoom = GetCameraZoom()
 	playerAnimatedNotesFrame.zoomTo = playerAnimatedNotesFrame.zoom
 	playerAnimatedNotesFrame.zoomFrom = playerAnimatedNotesFrame.zoom
