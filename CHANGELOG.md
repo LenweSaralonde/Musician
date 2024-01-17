@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.9.8.10
+---------
+* Fixed error when playing music in instances. #98
+* Updated for WoW Retail patch 10.2.5 and WoW Classic patch 1.15.0.
+
 v1.9.8.9
 --------
 * Fixed rare Lua error with the ElvUI nameplates module. #97
