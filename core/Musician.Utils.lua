@@ -378,7 +378,11 @@ end
 -- @return instanceID (number)
 function Musician.Utils.GetPlayerPosition()
 	local posY, posX, posZ, instanceID = UnitPosition("player") -- posZ is always 0
-	return posY or 0, posX or 0, posZ or 0, instanceID or 0xFFFFFFFF
+	if posX ~= nil and posY ~= nil then
+		return posY or 0, posX or 0, posZ or 0, instanceID or 0x7FFFFFFF
+	else
+		return 0, 0, 0, 0x7FFFFFFF
+	end
 end
 
 --- Display a faked emote

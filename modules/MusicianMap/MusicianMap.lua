@@ -37,9 +37,11 @@ local TRACKING = Musician.Map.TRACKING
 -- @return mapY (number)
 local function worldToMapCoordinates(instanceID, posX, posY, overrideUiMapID)
 	local worldPosition = CreateVector2D(posY, posX) -- X and Y coordinates have to be swapped
-	local uiMapID, mapPosition = C_Map.GetMapPosFromWorldPos(instanceID, worldPosition, overrideUiMapID)
+	local success, uiMapID, mapPosition = pcall(function()
+		return C_Map.GetMapPosFromWorldPos(instanceID, worldPosition, overrideUiMapID)
+	end)
 
-	if uiMapID then
+	if success and uiMapID then
 		local mapX, mapY = mapPosition:GetXY()
 		return uiMapID, mapX, mapY
 	end
