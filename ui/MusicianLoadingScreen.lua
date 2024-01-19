@@ -6,8 +6,6 @@ MusicianLoadingScreenMixin = {}
 --- OnShow
 --
 function MusicianLoadingScreenMixin:OnShow()
-	self:SetParent(WorldFrame)
-	self:SetAllPoints(true)
 	local imageRatio = 16 / 9
 	local minRatio = 1.6 -- For 16:9 background image
 	local screenWidth, screenHeight = WorldFrame:GetSize()
@@ -69,20 +67,11 @@ function MusicianLoadingScreenMixin:OnShow()
 	self.close:HookScript("OnLeave", function()
 		self.close.tooltip:Hide()
 	end)
-
-	-- Hide the main UI during the process
-	if not InCombatLockdown() then
-		UIParent:SetShown(false)
-	end
 end
 
 --- OnHide
 --
 function MusicianLoadingScreenMixin:OnHide()
-	-- Show UI when complete
-	if not InCombatLockdown() then
-		UIParent:SetShown(true)
-	end
 	self.content.image:SetTexture(nil) -- Unload image texture
 end
 
@@ -90,4 +79,16 @@ end
 -- @param progression (number) 0-1
 function MusicianLoadingScreenMixin:SetProgression(progression)
 	self.content.fill:SetWidth(self.content.fill.fullWidth * progression)
+end
+
+--- OnKeyUp
+--
+function MusicianLoadingScreenMixin:OnKeyUp()
+	-- Just capture the event to prevent it from propagating to the parent frame
+end
+
+--- OnKeyDown
+--
+function MusicianLoadingScreenMixin:OnKeyDown()
+	-- Just capture the event to prevent it from propagating to the parent frame
 end

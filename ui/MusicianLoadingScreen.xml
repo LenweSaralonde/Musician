@@ -63,9 +63,10 @@
 
 	<!-- Loading screen frame -->
 
-	<Frame name="MusicianLoadingScreen" toplevel="true" frameStrata="FULLSCREEN_DIALOG" mixin="MusicianLoadingScreenMixin" enableMouse="true" enableKeyboard="true" hidden="true" propagateKeyboardInput="false">
+	<Frame name="MusicianLoadingScreen" toplevel="true" frameStrata="TOOLTIP" frameLevel="10000" mixin="MusicianLoadingScreenMixin" enableMouse="true" enableKeyboard="true" hidden="true" propagateKeyboardInput="false">
 		<Anchors>
-			<Anchor point="CENTER" />
+			<Anchor point="TOPLEFT" />
+			<Anchor point="BOTTOMRIGHT" />
 		</Anchors>
 		<Layers>
 			<Layer level="BACKGROUND">
@@ -102,6 +103,8 @@
 		<Scripts>
 			<OnShow method="OnShow" />
 			<OnHide method="OnHide" />
+			<OnKeyDown method="OnKeyDown" />
+			<OnKeyUp method="OnKeyUp" />
 		</Scripts>
 	</Frame>
 </Ui>
