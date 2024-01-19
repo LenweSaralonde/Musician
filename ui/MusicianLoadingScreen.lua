@@ -89,6 +89,10 @@ end
 
 --- OnKeyDown
 --
-function MusicianLoadingScreenMixin:OnKeyDown()
-	-- Just capture the event to prevent it from propagating to the parent frame
+function MusicianLoadingScreenMixin:OnKeyDown(keyValue)
+	-- Abort quick preloading with ESCAPE
+	if keyValue == "ESCAPE" then
+		self:Hide()
+		Musician.Preloader.AbortQuickPreloading()
+	end
 end
