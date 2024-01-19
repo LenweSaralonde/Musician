@@ -6,7 +6,8 @@ Musician.Live = LibStub("AceAddon-3.0"):NewAddon("Musician.Live", "AceComm-3.0",
 local MODULE_NAME = "Live"
 Musician.AddModule(MODULE_NAME)
 
-local STREAM_PADDING = 10 -- Number of seconds to wait before ending streaming without activity
+local STREAM_PADDING = 10 -- Number of seconds to wait before ending streaming without any active note being played
+local STREAM_TIMEOUT = 30 -- Number of seconds to wait before ending streaming without any sort of activity, regardless if some notes are being played or not
 
 local NOTEON = {}
 NOTEON.HANDLE = 1
@@ -34,7 +35,8 @@ local streamingStartTimer
 local liveStreamingSong
 local shouldMuteGameMusic = false
 local isBandSyncMode = false
-local playingLiveTimer
+local unmuteGameMusicTimer
+local timeoutTimer
 local syncedBandPlayers = {}
 local bandSongs = {}
 local bandNotesOn = {}
@@ -61,6 +63,29 @@ local function debug(out, event, source, message, ...)
 	source = "|cFF00FFFF" .. source .. "|r"
 
 	Musician.Utils.Debug(MODULE_NAME, prefix, event, source, message, ...)
+end
+
+--- Stop stream timeout
+--
+local function stopStreamTimeout()
+	if timeoutTimer then
+		timeoutTimer:Cancel()
+		timeoutTimer = nil
+	end
+end
+
+--- Stop and set a new stream timeout
+--
+local function resetStreamTimeout()
+	stopStreamTimeout()
+	if Musician.Live.IsLiveEnabled() then
+		timeoutTimer = C_Timer.NewTimer(STREAM_TIMEOUT, function()
+			timeoutTimer = nil
+			if Musician.Live.IsLiveEnabled() then
+				Musician.Live.AllNotesOff()
+			end
+		end)
+	end
 end
 
 --- Create a live song for a player
@@ -198,7 +223,7 @@ local function liveModeStatusChanged(event, ...)
 	if event == Musician.Events.StreamStop then
 		local song = ...
 		if song == liveStreamingSong then
-			Musician.Live.AllNotesOff()
+			stopStreamTimeout()
 			stopLiveSongDurationUpdater()
 			liveStreamingSong:Wipe()
 			liveStreamingSong = nil
@@ -249,6 +274,7 @@ end
 --- Enable or disable live mode
 -- @param enabled (boolean)
 function Musician.Live.EnableLive(enabled)
+	stopStreamTimeout()
 	Musician.Live.AllNotesOff()
 	isLiveEnabled = enabled
 	liveModeStatusChanged()
@@ -265,21 +291,21 @@ end
 local function muteGameMusic()
 	shouldMuteGameMusic = true
 	Musician.Utils.MuteGameMusic()
-	if playingLiveTimer then
-		playingLiveTimer:Cancel()
+	if unmuteGameMusicTimer then
+		unmuteGameMusicTimer:Cancel()
 	end
 end
 
 --- unmuteGameMusic
 --
 local function unmuteGameMusic()
-	if playingLiveTimer then
-		playingLiveTimer:Cancel()
+	if unmuteGameMusicTimer then
+		unmuteGameMusicTimer:Cancel()
 	end
-	playingLiveTimer = C_Timer.NewTimer(STREAM_PADDING, function()
+	unmuteGameMusicTimer = C_Timer.NewTimer(STREAM_PADDING, function()
 		shouldMuteGameMusic = false
 		Musician.Utils.MuteGameMusic()
-		playingLiveTimer = nil
+		unmuteGameMusicTimer = nil
 	end)
 end
 
@@ -364,6 +390,10 @@ function Musician.Live.InsertNote(noteOn, key, layer, instrument)
 
 	-- Key is out of range
 	if key < Musician.MIN_KEY or key > Musician.MAX_KEY then return end
+
+	-- Register note activity
+	Musician.Utils.Debug(MODULE_NAME, 'InsertNote', noteOn, key, layer, instrument)
+	resetStreamTimeout()
 
 	Musician.Live.CreateLiveSong()
 
