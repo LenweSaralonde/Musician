@@ -1,6 +1,12 @@
 Changelog
 =========
 
+v1.9.8.11
+---------
+* Fixed ElvUI group frames not showing after the loading screen. #96
+* Quick preloading can now be skipped by pressing the Escape key.
+* Added live play timeout to prevent songs for lasting forever with improperly implemented plugins.
+
 v1.9.8.10
 ---------
 * Fixed error when playing music in instances. #98
