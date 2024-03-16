@@ -301,7 +301,7 @@ end
 -- @return chatType (string)
 function Musician.Comm.GetGroupChatType()
 	local inInstance, instanceType = IsInInstance()
-	local isF2P = IsTrialAccount()
+	local isF2P = IsTrialAccount() or IsVeteranTrialAccount()
 	local inGroup = IsInGroup()
 	local inRaid = IsInRaid()
 	local inLFG = IsInGroup(LE_PARTY_CATEGORY_INSTANCE)

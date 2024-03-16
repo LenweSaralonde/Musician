@@ -482,6 +482,7 @@ stds.wow = {
 		"JoinTemporaryChannel",
 		"IsInInstance",
 		"IsTrialAccount",
+		"IsVeteranTrialAccount",
 		"IsInGroup",
 		"IsInRaid",
 		"IsModifiedClick",
