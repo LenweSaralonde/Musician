@@ -1,16 +1,19 @@
 --- MSA-DropDownMenu-1.0 - DropDown menu for non-Blizzard addons
---- Copyright (c) 2016-2022, Marouan Sabbagh <mar.sabbagh@gmail.com>
+--- Copyright (c) 2016-2024, Marouan Sabbagh <mar.sabbagh@gmail.com>
 --- All Rights Reserved.
 ---
 --- https://www.curseforge.com/wow/addons/msa-dropdownmenu-10
 
-local name, version = "MSA-DropDownMenu-1.0", 15
+local name, version = "MSA-DropDownMenu-1.0", 17
 
 local lib, oldVersion = LibStub:NewLibrary(name, version)
 if not lib then return end
 
 -- WoW API
 local _G = _G
+
+-- Hack - Support of different WoW API versions
+local IsAddOnLoaded = C_AddOns.IsAddOnLoaded or IsAddOnLoaded;
 
 MSA_DROPDOWNMENU_MINBUTTONS = 8;
 MSA_DROPDOWNMENU_MAXBUTTONS = 8;
@@ -1439,7 +1442,7 @@ function MSA_ToggleDropDownMenu(level, value, dropDownFrame, anchorName, xOffset
 end
 
 if ToggleDropDownMenu then
-    hooksecurefunc("ToggleDropDownMenu", function(level, value, dropDownFrame, anchorName, xOffset, yOffset, menuList, button, autoHideDelay)
+    hooksecurefunc("ToggleDropDownMenu", function(level, value, dropDownFrame, anchorName, xOffset, yOffset, menuList, button, autoHideDelay, overrideDisplayMode)
         local listFrameMSA = _G["MSA_DropDownList1"];
         if ( listFrameMSA:IsShown() ) then
             listFrameMSA:Hide();
@@ -1588,7 +1591,11 @@ function MSA_DropDownMenuButton_OpenColorPicker(self, button)
         button = self;
     end
     MSA_DROPDOWNMENU_MENU_VALUE = button.value;
-    MSA_OpenColorPicker(button);
+    if WOW_PROJECT_ID ~= WOW_PROJECT_WRATH_CLASSIC then
+        ColorPickerFrame:SetupColorPickerAndShow(button);
+    else
+        MSA_OpenColorPicker(button);
+    end
 end
 
 function MSA_DropDownMenu_DisableButton(level, id)
@@ -1650,17 +1657,19 @@ function MSA_DropDownMenu_GetValue(id)
     end
 end
 
-function MSA_OpenColorPicker(info)
-    ColorPickerFrame.func = info.swatchFunc;
-    ColorPickerFrame.hasOpacity = info.hasOpacity;
-    ColorPickerFrame.opacityFunc = info.opacityFunc;
-    ColorPickerFrame.opacity = info.opacity;
-    ColorPickerFrame.previousValues = {r = info.r, g = info.g, b = info.b, opacity = info.opacity};
-    ColorPickerFrame.cancelFunc = info.cancelFunc;
-    ColorPickerFrame.extraInfo = info.extraInfo;
-    -- This must come last, since it triggers a call to ColorPickerFrame.func()
-    ColorPickerFrame:SetColorRGB(info.r, info.g, info.b);
-    ShowUIPanel(ColorPickerFrame);
+if WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC then
+    function MSA_OpenColorPicker(info)
+        ColorPickerFrame.func = info.swatchFunc;
+        ColorPickerFrame.hasOpacity = info.hasOpacity;
+        ColorPickerFrame.opacityFunc = info.opacityFunc;
+        ColorPickerFrame.opacity = info.opacity;
+        ColorPickerFrame.previousValues = {r = info.r, g = info.g, b = info.b, opacity = info.opacity};
+        ColorPickerFrame.cancelFunc = info.cancelFunc;
+        ColorPickerFrame.extraInfo = info.extraInfo;
+        -- This must come last, since it triggers a call to ColorPickerFrame.func()
+        ColorPickerFrame:SetColorRGB(info.r, info.g, info.b);
+        ShowUIPanel(ColorPickerFrame);
+    end
 end
 
 ------------------------------------------------------------------------------------------------------------------------
