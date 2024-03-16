@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.9.8.12
+---------
+* Fixed blocked raid chat message warnings on veteran trial accounts.
+* Updated for WoW Classic patch 1.15.1.
+
 v1.9.8.11
 ---------
 * Fixed ElvUI group frames not showing after the loading screen. #96
