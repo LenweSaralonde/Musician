@@ -11,8 +11,9 @@ local LibBase64 = LibStub:GetLibrary("LibBase64")
 
 Musician.Comm.event = {}
 Musician.Comm.event.stop = "MusicianStop"
-Musician.Comm.event.stream = "MusicianStream7"
-Musician.Comm.event.streamGroup = "MusicianGStream7"
+Musician.Comm.event.stream = "MusicianStream8"
+Musician.Comm.event.streamAlt = "MusicianStream8a"
+Musician.Comm.event.streamGroup = "MusicianGStream8"
 Musician.Comm.event.bandPlay = "MusicianBPlay"
 Musician.Comm.event.bandStop = "MusicianBStop"
 Musician.Comm.event.bandReady = "MusicianBOK"
@@ -41,6 +42,9 @@ local isBandPlayReady = false
 local readyBandPlayers = {}
 local currentSongCrc32
 
+local lastSentChannelStreamMessage = 0
+local useAlternateChannelStreamPrefix = false
+
 --- Print communication debug message
 -- @param out (boolean) Outgoing message
 -- @param event (string)
@@ -59,7 +63,10 @@ local function debugComm(out, event, source, message, ...)
 		source = table.concat(source, ":")
 	end
 
-	if (event == Musician.Comm.event.stream) or (event == Musician.Comm.event.streamGroup) then
+	if event == Musician.Comm.event.stream or
+		event == Musician.Comm.event.streamAlt or
+		event == Musician.Comm.event.streamGroup
+	then
 		message = "Song data (" .. #message .. ")"
 	end
 
@@ -130,6 +137,7 @@ function Musician.Comm.Init()
 	Musician.Comm:RegisterEvent("GROUP_LEFT", Musician.Comm.OnGroupLeft)
 	Musician.Comm:RegisterEvent("GROUP_ROSTER_UPDATE", Musician.Comm.OnRosterUpdate)
 	Musician.Comm:RegisterComm(Musician.Comm.event.stream, Musician.Comm.OnChunk)
+	Musician.Comm:RegisterComm(Musician.Comm.event.streamAlt, Musician.Comm.OnChunk)
 	Musician.Comm:RegisterComm(Musician.Comm.event.streamGroup, Musician.Comm.OnChunk)
 	Musician.Comm:RegisterComm(Musician.Comm.event.stop, Musician.Comm.OnStopSong)
 	Musician.Comm:RegisterComm(Musician.Comm.event.bandReadyQuery, Musician.Comm.OnBandReadyQuery)
@@ -149,6 +157,23 @@ function Musician.Comm.Init()
 	else
 		finishInit()
 	end
+
+	-- Determine if should be using the alternate prefix for streaming in the channel
+	-- to mitigate the agressive throttling for add-on messages added in 10.2.7
+	hooksecurefunc(_G.C_ChatInfo, "SendAddonMessage", function(prefix)
+		if prefix == Musician.Comm.event.stream then
+			local now = debugprofilestop()
+			-- A previous channel stream message was broadcasted very recently,
+			-- better use the alternate channel next time to avoid throttling.
+			if now - lastSentChannelStreamMessage < 1000 and
+				Musician.streamingSong and
+				Musician.streamingSong.mode == Musician.Song.MODE_DURATION
+			then
+				useAlternateChannelStreamPrefix = true
+			end
+			lastSentChannelStreamMessage = now
+		end
+	end)
 end
 
 --- Function executed when the communication channel has been successfullly joined
@@ -198,7 +223,7 @@ local function reorderChannels()
 
 	-- Get the index of the last channel
 	local lastChannelIndex = 0
-	for index = MAX_WOW_CHAT_CHANNELS, commChannelIndex, -1  do
+	for index = MAX_WOW_CHAT_CHANNELS, commChannelIndex, -1 do
 		if (C_ChatInfo.GetChannelShortcut(index) or "") ~= "" then
 			lastChannelIndex = index
 			break
@@ -280,7 +305,6 @@ function Musician.Comm.JoinChannel()
 		-- Attempt to join if the channel list is ready (has channels and no gap)
 		-- or if allowed to join despite the channel list not being ready
 		if canJoinWhenNotReady or isChannelListReady() then
-
 			-- Don't join if currently showing the password popup for the channel
 			local _, passwordPopup = StaticPopup_Visible("CHAT_CHANNEL_PASSWORD")
 			if passwordPopup and passwordPopup.text and passwordPopup.text.text_arg1 == Musician.CHANNEL then
@@ -448,7 +472,21 @@ function Musician.Comm.StreamCompressedSongChunk(compressedChunk)
 	local bandwidth = (max(bwMin, min(bwMax, #serializedChunk)) - bwMin) / (bwMax - bwMin)
 	Musician.Comm:SendMessage(Musician.Events.Bandwidth, bandwidth)
 
-	Musician.Comm.BroadcastCommMessage(serializedChunk, Musician.Comm.event.stream, Musician.Comm.event.streamGroup)
+	-- Determine if we should use the alternate prefix for channel streaming
+	local channelBroadcastPrefix = Musician.Comm.event.stream
+	if useAlternateChannelStreamPrefix then
+		channelBroadcastPrefix = Musician.Comm.event.streamAlt
+		useAlternateChannelStreamPrefix = false
+	end
+
+	-- Stream chunk
+	Musician.Comm.BroadcastCommMessage(serializedChunk, channelBroadcastPrefix, Musician.Comm.event.streamGroup)
+
+	-- Use alternate channel stream prefix next time if the song is live
+	if Musician.streamingSong.mode == Musician.Song.MODE_LIVE and channelBroadcastPrefix == Musician.Comm.event.stream then
+		useAlternateChannelStreamPrefix = true
+	end
+
 	return true
 end
 
@@ -456,7 +494,6 @@ end
 -- @param packedChunk (string)
 -- @param sender (string)
 function Musician.Comm.ProcessChunk(packedChunk, sender)
-
 	-- Decode chunk header
 	local mode, songId, chunkDuration, playtimeLeft, position = Musician.Song.UnpackChunkHeader(packedChunk)
 
@@ -469,7 +506,8 @@ function Musician.Comm.ProcessChunk(packedChunk, sender)
 
 	-- Update player position
 	Musician.Registry.UpdatePlayerPositionAndGUID(sender, unpack(position))
-	Musician.Comm:SendMessage(Musician.Events.SongChunk, sender, mode, songId, chunkDuration, playtimeLeft, unpack(position))
+	Musician.Comm:SendMessage(Musician.Events.SongChunk, sender, mode, songId, chunkDuration, playtimeLeft,
+		unpack(position))
 
 	-- No longer in loading range
 	if not Musician.Registry.PlayerIsInLoadingRange(sender) then
@@ -512,7 +550,6 @@ function Musician.Comm.ProcessChunk(packedChunk, sender)
 
 	-- Play song if not already started
 	if not receivingSong:IsPlaying() and receivingSong.cursor == 0 then
-
 		-- Play song with delay to anticipate lag
 		local playDelay = chunkDuration / 2
 		receivingSong:Play(playDelay)
@@ -535,7 +572,8 @@ function Musician.Comm.ProcessChunk(packedChunk, sender)
 					-- Synchronize songs if their play time left are close, which is the case for songs played in band play mode.
 					if abs(receivingSongPlayTimeLeft - songPlayTimeLeft) < syncRange then
 						-- Calculate delay
-						local delay = (chunkDuration / 2 + receivingSong.cursor - song.cursor) % chunkDuration - chunkDuration / 2
+						local delay = (chunkDuration / 2 + receivingSong.cursor - song.cursor) % chunkDuration -
+							chunkDuration / 2
 						-- Adjust playing position to catch up the delay if within the sync range.
 						if -syncRange < delay and delay < 0 then
 							-- delay is negative: receiving song is late
@@ -578,7 +616,7 @@ function Musician.Comm.OnChunk(prefix, message, distribution, sender)
 		packedChunk = LibDeflate:DecompressDeflate(LibBase64:dec(message)) -- LibDeflate:DecodeForWoWAddonChannel fails over YELL
 	end
 
-	Musician.Comm.ProcessChunk(packedChunk, sender, isGroup)
+	Musician.Comm.ProcessChunk(packedChunk, sender)
 end
 
 --- Stop song
@@ -786,7 +824,6 @@ end
 --- Receive band ready or not ready message
 --
 function Musician.Comm.OnBandPlayReady(prefix, message, distribution, sender)
-
 	sender = Musician.Utils.NormalizePlayerName(sender)
 	debugComm(false, prefix, sender .. "(" .. distribution .. ")", message)
 
