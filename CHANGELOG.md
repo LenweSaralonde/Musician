@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.9.9.0
+--------
+* Mitigate add-on messages throttling for WoW Retail patch 10.2.7.
+* Updated for Cataclysm Classic patch 4.4.0.
+
 v1.9.8.12
 ---------
 * Fixed blocked raid chat message warnings on veteran trial accounts.
