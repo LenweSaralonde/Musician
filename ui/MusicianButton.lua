@@ -37,7 +37,15 @@ function MusicianButton.Init()
 		text = Musician.Msg.MENU_TITLE,
 		icon = MUSICIAN_ICON,
 		registerForRightClick = true,
-		func = function(self, _, _, _, button) MusicianButton.OnClick(nil, button) end,
+		func = function(self, event, _, _, button)
+			if event and event.buttonName then
+				-- WoW 10+
+				MusicianButton.OnClick(nil, event.buttonName)
+			else
+				-- Old school
+				MusicianButton.OnClick(nil, button)
+			end
+		end,
 		funcOnEnter = MusicianButton.ShowTooltip,
 		funcOnLeave = MusicianButton.HideTooltip
 	}
