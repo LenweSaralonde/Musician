@@ -171,7 +171,7 @@ end
 --- Update the minimap tracking
 --
 function Musician.Map.MinimapTrackingUpdate()
-	if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and MiniMapTracking_Update then
+	if MiniMapTracking_Update then
 		MiniMapTracking_Update()
 	end
 end
@@ -322,7 +322,19 @@ function Musician.Map.HookMiniMapTracking()
 			local active = Musician.Map.GetMiniMapTracking()
 			local category = ''
 			local nested = -1 -- Should not be nested
-			return name, texture, active, category, nested
+			if LE_EXPANSION_LEVEL_CURRENT < 10 then
+				-- Old school
+				return name, texture, active, category, nested
+			else
+				-- WoW 10+
+				return {
+					type = 'other',
+					name = name,
+					active = active,
+					subType = -1,
+					texture = texture,
+				}
+			end
 		else
 			return hookedGetTrackingInfo(id, ...)
 		end
@@ -333,6 +345,21 @@ function Musician.Map.HookMiniMapTracking()
 	else
 		hookedGetTrackingInfo = GetTrackingInfo
 		GetTrackingInfo = GetTrackingInfoHook
+	end
+
+	-- GetTrackingFilter
+
+	local hookedGetTrackingFilter
+	local GetTrackingFilterHook = function(id, ...)
+		if id == hookedGetNumTrackingTypes() + 1 then
+			return { spellID = 1 }
+		else
+			return hookedGetTrackingFilter(id, ...)
+		end
+	end
+	if C_Minimap and C_Minimap.GetTrackingFilter then
+		hookedGetTrackingFilter = C_Minimap.GetTrackingFilter
+		C_Minimap.GetTrackingFilter = GetTrackingFilterHook
 	end
 
 	-- MiniMapTracking_FilterIsVisible

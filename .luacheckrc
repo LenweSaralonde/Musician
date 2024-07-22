@@ -314,6 +314,7 @@ stds.wow = {
 			fields = {
 				"GetNumTrackingTypes",
 				"GetTrackingInfo",
+				"GetTrackingFilter",
 				"SetTracking",
 				"ClearAllTracking",
 			}
