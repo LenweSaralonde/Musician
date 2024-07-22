@@ -20,12 +20,28 @@ function Musician.Options.Init()
 	-- Register panel
 	local panel = MusicianOptionsPanelContainer
 	panel.name = Musician.Msg.OPTIONS_TITLE
-	panel.refresh = Musician.Options.Refresh
-	panel.okay = Musician.Options.Save
-	panel.cancel = Musician.Options.Cancel
-	panel.default = Musician.Options.Defaults
-	MusicianOptionsPanelContainer:SetScript("OnShow", Musician.Options.UpdateSize)
-	InterfaceOptions_AddCategory(MusicianOptionsPanelContainer)
+
+	panel:SetScript("OnShow", Musician.Options.UpdateSize)
+
+	if InterfaceOptions_AddCategory then
+		-- Old school
+		InterfaceOptions_AddCategory(panel)
+
+		panel.refresh = Musician.Options.Refresh
+		panel.okay = Musician.Options.Save
+		panel.cancel = Musician.Options.Cancel
+		panel.default = Musician.Options.Defaults
+	else
+		-- WoW 11+
+		local category = Settings.RegisterCanvasLayoutCategory(panel, "Musician")
+		Settings.RegisterAddOnCategory(category)
+		Musician.Options.category = category
+
+		panel.OnRefresh = Musician.Options.Refresh
+		panel.OnCommit = Musician.Options.Save
+		panel.OnCancel = Musician.Options.Cancel
+		panel.OnDefault = Musician.Options.Defaults
+	end
 
 	-- Enable hyperlinks
 	Musician.EnableHyperlinks(MusicianOptionsPanel)
@@ -136,7 +152,13 @@ function Musician.Options.Show()
 	if InterfaceOptionsFrame_Show then
 		InterfaceOptionsFrame_Show() -- This one has to be opened first
 	end
-	InterfaceOptionsFrame_OpenToCategory("Musician")
+	if InterfaceOptionsFrame_OpenToCategory then
+		-- Old school
+		InterfaceOptionsFrame_OpenToCategory("Musician")
+	else
+		-- WoW 11+
+		Settings.OpenToCategory(Musician.Options.category.ID)
+	end
 end
 
 function Musician.Options.Refresh()
