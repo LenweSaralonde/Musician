@@ -657,6 +657,14 @@ stds.wow = {
 			}
 		},
 
+		Settings = {
+			fields = {
+				"RegisterCanvasLayoutCategory",
+				"RegisterAddOnCategory",
+				"OpenToCategory"
+			}
+		},
+
 		Enum = {
 			fields = {
 				TooltipDataType = {
