@@ -93,6 +93,10 @@ function Musician.NamePlates:OnEnable()
 
 	-- Tips and tricks
 	Musician.NamePlates.InitTipsAndTricks()
+
+	-- Update all nameplates at initialization for a clean start
+	Musician.NamePlates.UpdateAll()
+	C_Timer.After(.5, Musician.NamePlates.UpdateAll)
 end
 
 --- Render a single animated note
@@ -351,6 +355,9 @@ function Musician.NamePlates.UpdateNamePlate(namePlate)
 
 		if healthBarIsVisible ~= namePlate.UnitFrame.healthBar:IsVisible() then
 			namePlate.UnitFrame.healthBar:SetShown(healthBarIsVisible)
+			if namePlate.UnitFrame.HealthBarsContainer ~= nil then
+				namePlate.UnitFrame.HealthBarsContainer:SetShown(healthBarIsVisible)
+			end
 		end
 		if namePlate.UnitFrame.ClassificationFrame and
 			classificationFrameIsVisible ~= namePlate.UnitFrame.ClassificationFrame:IsVisible() then
