@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.9.9.1
+--------
+* Updated for The War Within prepatch.
+* Updated for WoW Classic patch 1.15.3.
+
 v1.9.9.0
 --------
 * Mitigate add-on messages throttling for WoW Retail patch 10.2.7.
