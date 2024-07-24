@@ -12,6 +12,7 @@ local HOURGLASS = "Interface\\AddOns\\Musician\\ui\\textures\\hourglass"
 
 local ldbData = {}
 local addOnMenuInfo
+local isTooltipFromMinimapButton
 
 --- Init
 --
@@ -39,10 +40,9 @@ function MusicianButton.Init()
 		registerForRightClick = true,
 		func = function(self, event, _, _, button)
 			if event and event.buttonName then
-				-- WoW 10+
 				MusicianButton.OnClick(nil, event.buttonName)
 			else
-				-- Old school
+				-- Old school way
 				MusicianButton.OnClick(nil, button)
 			end
 		end,
@@ -183,7 +183,6 @@ function MusicianButton.GetMenu()
 	})
 
 	if Musician.sourceSong then
-
 		-- Source song title
 
 		table.insert(menu, {
@@ -219,7 +218,6 @@ function MusicianButton.GetMenu()
 		-- Play/stop imported song
 
 		if Musician.Comm.IsSongPlaying() then
-
 			-- If the song being playing is not the same as the source song, show its title
 			if Musician.sourceSong and Musician.streamingSong and Musician.sourceSong.name ~= Musician.streamingSong.name then
 				table.insert(menu, {
@@ -313,6 +311,7 @@ function MusicianButton.ShowTooltip(self)
 	if self then
 		GameTooltip:SetOwner(self, "ANCHOR_BOTTOMLEFT")
 	end
+	isTooltipFromMinimapButton = self:GetName() ~= nil
 	MusicianButton.UpdateTooltipText(false)
 	GameTooltip:Show()
 	MusicianButton.tooltipIsVisible = true
@@ -321,8 +320,8 @@ end
 --- UpdateTooltipText
 -- @param alwaysShowLoadingProgression (boolean)
 function MusicianButton.UpdateTooltipText(alwaysShowLoadingProgression)
-
-	local playerVersion, _, playerPlugins = Musician.Registry.ExtractVersionAndProtocol(Musician.Registry.GetVersionString())
+	local playerVersion, _, playerPlugins = Musician.Registry.ExtractVersionAndProtocol(Musician.Registry
+		.GetVersionString())
 	local mainLine = Musician.Registry.FormatPlayerTooltipVersion(playerVersion, playerPlugins)
 
 	local leftClickLine = Musician.Msg.TOOLTIP_LEFT_CLICK
@@ -349,7 +348,9 @@ function MusicianButton.UpdateTooltipText(alwaysShowLoadingProgression)
 	local tooltipText = Musician.Utils.Highlight(mainLine, NORMAL_FONT_COLOR)
 	tooltipText = tooltipText .. "\n" .. Musician.Utils.FormatText(leftClickLine)
 	tooltipText = tooltipText .. "\n" .. Musician.Utils.FormatText(rightClickLine)
-	tooltipText = tooltipText .. "\n" .. Musician.Utils.FormatText(Musician.Msg.TOOLTIP_DRAG_AND_DROP)
+	if isTooltipFromMinimapButton then
+		tooltipText = tooltipText .. "\n" .. Musician.Utils.FormatText(Musician.Msg.TOOLTIP_DRAG_AND_DROP)
+	end
 
 	if loadingLine ~= "" then
 		tooltipText = tooltipText .. "\n" ..
@@ -360,7 +361,6 @@ function MusicianButton.UpdateTooltipText(alwaysShowLoadingProgression)
 		GameTooltip:SetText("0") -- Workaround for colored text issues with chinese client
 		GameTooltip:SetText(tooltipText, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
 	end
-
 end
 
 --- HideTooltip
