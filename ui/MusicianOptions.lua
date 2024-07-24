@@ -24,23 +24,22 @@ function Musician.Options.Init()
 	panel:SetScript("OnShow", Musician.Options.UpdateSize)
 
 	if InterfaceOptions_AddCategory then
-		-- Old school
-		InterfaceOptions_AddCategory(panel)
-
+		-- Old school way
 		panel.refresh = Musician.Options.Refresh
 		panel.okay = Musician.Options.Save
 		panel.cancel = Musician.Options.Cancel
 		panel.default = Musician.Options.Defaults
-	else
-		-- WoW 11+
-		local category = Settings.RegisterCanvasLayoutCategory(panel, "Musician")
-		Settings.RegisterAddOnCategory(category)
-		Musician.Options.category = category
 
+		InterfaceOptions_AddCategory(panel)
+	else
 		panel.OnRefresh = Musician.Options.Refresh
 		panel.OnCommit = Musician.Options.Save
 		panel.OnCancel = Musician.Options.Cancel
 		panel.OnDefault = Musician.Options.Defaults
+
+		local category = Settings.RegisterCanvasLayoutCategory(panel, "Musician")
+		Settings.RegisterAddOnCategory(category)
+		Musician.Options.category = category
 	end
 
 	-- Enable hyperlinks
@@ -48,13 +47,15 @@ function Musician.Options.Init()
 
 	-- Set title and link to the Discord server
 	MusicianOptionsPanelTitle:SetText(Musician.Msg.OPTIONS_TITLE)
-	local discordText = string.gsub(Musician.Msg.OPTIONS_SUB_TEXT, "{url}", Musician.Utils.GetUrlLink(Musician.DISCORD_URL))
+	local discordText = string.gsub(Musician.Msg.OPTIONS_SUB_TEXT, "{url}",
+		Musician.Utils.GetUrlLink(Musician.DISCORD_URL))
 	MusicianOptionsPanelSubText:SetText(discordText)
 
 	-- Emote
 	MusicianOptionsPanelUnitEmoteTitle:SetText(Musician.Msg.OPTIONS_CATEGORY_EMOTE)
 	Musician.Options.SetupCheckbox(MusicianOptionsPanelUnitEmoteEnable, Musician.Msg.OPTIONS_ENABLE_EMOTE_LABEL)
-	Musician.Options.SetupCheckbox(MusicianOptionsPanelUnitEmoteEnablePromo, Musician.Msg.OPTIONS_ENABLE_EMOTE_PROMO_LABEL,
+	Musician.Options.SetupCheckbox(MusicianOptionsPanelUnitEmoteEnablePromo,
+		Musician.Msg.OPTIONS_ENABLE_EMOTE_PROMO_LABEL,
 		MusicianOptionsPanelUnitEmoteEnable)
 
 	-- Integration options
@@ -153,10 +154,9 @@ function Musician.Options.Show()
 		InterfaceOptionsFrame_Show() -- This one has to be opened first
 	end
 	if InterfaceOptionsFrame_OpenToCategory then
-		-- Old school
+		-- Old school way
 		InterfaceOptionsFrame_OpenToCategory("Musician")
 	else
-		-- WoW 11+
 		Settings.OpenToCategory(Musician.Options.category.ID)
 	end
 end
@@ -206,7 +206,8 @@ function Musician.Options.RefreshAudioSettings()
 
 	local audioChannels = Musician_Settings.audioChannels
 
-	local checked = (audioChannels.SFX and 1 or 0) + (audioChannels.Master and 1 or 0) + (audioChannels.Dialog and 1 or 0)
+	local checked = (audioChannels.SFX and 1 or 0) + (audioChannels.Master and 1 or 0) +
+	(audioChannels.Dialog and 1 or 0)
 
 	-- Make sure at least one channel is checked
 	if checked == 0 then
