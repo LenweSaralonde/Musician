@@ -330,6 +330,7 @@ stds.wow = {
 		"StaticPopupDialogs",
 		"ChatEdit_OnEditFocusLost",
 		"SettingsLayoutMixin",
+		"UnitPopup_ShowMenu",
 	},
 
 	-- Globals that we access.
@@ -663,6 +664,12 @@ stds.wow = {
 				"RegisterCanvasLayoutCategory",
 				"RegisterAddOnCategory",
 				"OpenToCategory"
+			}
+		},
+
+		Menu = {
+			fields = {
+				"ModifyMenu",
 			}
 		},
 
