@@ -614,6 +614,7 @@ function Musician.NamePlates.AttachNamePlate(namePlate, player, event)
 		namePlate.musicianAnimatedNotesFrame:SetHeight(NOTES_ANIMATION_HEIGHT)
 		namePlate.musicianAnimatedNotesFrame:SetScript("OnUpdate", Musician.NamePlates.OnNamePlateNotesFrameUpdate)
 		namePlate.musicianAnimatedNotesFrame.namePlate = namePlate
+		Musician.NamePlates.UpdateNamePlateCinematicMode(namePlate)
 	else
 		namePlate.musicianAnimatedNotesFrame:Show()
 	end
