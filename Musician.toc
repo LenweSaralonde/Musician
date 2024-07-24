@@ -1,7 +1,7 @@
 ## Interface: 110000
 ## Title: Musician
 ## Author: LenweSaralonde
-## Version: 1.9.9.1
+## Version: 1.9.9.2
 ## IconTexture: Interface\AddOns\Musician\ui\textures\addon-list-icon.blp
 ## Notes: Listen to and perform music with your character
 ## OptionalDeps: CrossRP, ElvUI, Kui_Nameplates, MyRolePlay, NeatPlates, Plater, TidyPlates, TidyPlates_ThreatPlates, totalRP3, totalRP3_Extended

@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.9.9.2
+--------
+* Fixed Lua error in WoW Classic Era.
+* Fixed animated notes not always showing in cinematic mode.
+
 v1.9.9.1
 --------
 * Updated for The War Within prepatch.
