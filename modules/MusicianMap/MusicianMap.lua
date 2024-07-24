@@ -81,11 +81,33 @@ function Musician.Map:OnEnable()
 	miniMapPinPool = CreateFramePool("FRAME", Minimap, PIN_TEMPLATE_MINI_MAP)
 	self:RegisterMessage(Musician.Events.SongChunk, Musician.Map.OnSongChunk)
 	hooksecurefunc(WorldMapFrame, 'OnMapChanged', Musician.Map.RefreshWorldMap)
-	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-		Musician.Map.HookWorldMapTracking()
-	end
-	if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
-		Musician.Map.HookMiniMapTracking()
+	if Menu then
+		local mapMenuCheckboxInitializer = function(button, description, menu)
+			local rightTexture = button:AttachTexture();
+			rightTexture:SetSize(20, 20);
+			rightTexture:SetPoint("RIGHT");
+			rightTexture:SetTexture(Musician.IconImages.Note);
+		end
+		Menu.ModifyMenu("MENU_MINIMAP_TRACKING", function(owner, rootDescription, contextData)
+			local checkbox = rootDescription:CreateCheckbox(Musician.Msg.MAP_TRACKING_OPTION_ACTIVE_MUSICIANS,
+				Musician.Map.GetMiniMapTracking,
+				function() Musician.Map.SetMiniMapTracking(not Musician.Map.GetMiniMapTracking()) end)
+			checkbox:AddInitializer(mapMenuCheckboxInitializer);
+		end)
+		Menu.ModifyMenu("MENU_WORLD_MAP_TRACKING", function(owner, rootDescription, contextData)
+			local checkbox = rootDescription:CreateCheckbox(Musician.Msg.MAP_TRACKING_OPTION_ACTIVE_MUSICIANS,
+				Musician.Map.GetWorldMapTracking,
+				function() Musician.Map.SetWorldMapTracking(not Musician.Map.GetWorldMapTracking()) end)
+			checkbox:AddInitializer(mapMenuCheckboxInitializer);
+		end)
+	else
+		-- Old school way
+		if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+			Musician.Map.HookWorldMapTracking()
+		end
+		if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+			Musician.Map.HookMiniMapTracking()
+		end
 	end
 	Musician.Map.MinimapTrackingUpdate()
 end
@@ -296,6 +318,7 @@ function Musician.Map.RefreshMiniMap()
 end
 
 --- Hook tracking options for the minimap
+-- @deprecated Remove this function when all WoW flavors have the new Menu system implemented
 --
 function Musician.Map.HookMiniMapTracking()
 	-- GetNumTrackingTypes
@@ -322,19 +345,7 @@ function Musician.Map.HookMiniMapTracking()
 			local active = Musician.Map.GetMiniMapTracking()
 			local category = ''
 			local nested = -1 -- Should not be nested
-			if LE_EXPANSION_LEVEL_CURRENT < 10 then
-				-- Old school
-				return name, texture, active, category, nested
-			else
-				-- WoW 10+
-				return {
-					type = 'other',
-					name = name,
-					active = active,
-					subType = -1,
-					texture = texture,
-				}
-			end
+			return name, texture, active, category, nested
 		else
 			return hookedGetTrackingInfo(id, ...)
 		end
@@ -400,6 +411,7 @@ function Musician.Map.HookMiniMapTracking()
 end
 
 --- Hook tracking options for the world map
+-- @deprecated Remove this function when all WoW flavors have the new Menu system implemented
 --
 function Musician.Map.HookWorldMapTracking()
 	-- Find world map button with filtering options dropdown
