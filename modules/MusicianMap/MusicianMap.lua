@@ -82,19 +82,19 @@ function Musician.Map:OnEnable()
 	self:RegisterMessage(Musician.Events.SongChunk, Musician.Map.OnSongChunk)
 	hooksecurefunc(WorldMapFrame, 'OnMapChanged', Musician.Map.RefreshWorldMap)
 	if Menu then
-		local mapMenuCheckboxInitializer = function(button, description, menu)
+		local mapMenuCheckboxInitializer = function(button)
 			local rightTexture = button:AttachTexture();
 			rightTexture:SetSize(20, 20);
 			rightTexture:SetPoint("RIGHT");
 			rightTexture:SetTexture(Musician.IconImages.Note);
 		end
-		Menu.ModifyMenu("MENU_MINIMAP_TRACKING", function(owner, rootDescription, contextData)
+		Menu.ModifyMenu("MENU_MINIMAP_TRACKING", function(_, rootDescription)
 			local checkbox = rootDescription:CreateCheckbox(Musician.Msg.MAP_TRACKING_OPTION_ACTIVE_MUSICIANS,
 				Musician.Map.GetMiniMapTracking,
 				function() Musician.Map.SetMiniMapTracking(not Musician.Map.GetMiniMapTracking()) end)
 			checkbox:AddInitializer(mapMenuCheckboxInitializer);
 		end)
-		Menu.ModifyMenu("MENU_WORLD_MAP_TRACKING", function(owner, rootDescription, contextData)
+		Menu.ModifyMenu("MENU_WORLD_MAP_TRACKING", function(_, rootDescription)
 			local checkbox = rootDescription:CreateCheckbox(Musician.Msg.MAP_TRACKING_OPTION_ACTIVE_MUSICIANS,
 				Musician.Map.GetWorldMapTracking,
 				function() Musician.Map.SetWorldMapTracking(not Musician.Map.GetWorldMapTracking()) end)
@@ -193,7 +193,7 @@ end
 --- Update the minimap tracking
 --
 function Musician.Map.MinimapTrackingUpdate()
-	if MiniMapTracking_Update then
+	if MiniMapTracking_Update and LE_EXPANSION_LEVEL_CURRENT > 0 then
 		MiniMapTracking_Update()
 	end
 end
