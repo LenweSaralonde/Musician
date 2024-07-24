@@ -37,7 +37,7 @@ function Musician.Options.Init()
 		panel.OnCancel = Musician.Options.Cancel
 		panel.OnDefault = Musician.Options.Defaults
 
-		local category = Settings.RegisterCanvasLayoutCategory(panel, "Musician")
+		local category = Settings.RegisterCanvasLayoutCategory(panel, panel.name)
 		Settings.RegisterAddOnCategory(category)
 		Musician.Options.category = category
 	end
@@ -155,7 +155,7 @@ function Musician.Options.Show()
 	end
 	if InterfaceOptionsFrame_OpenToCategory then
 		-- Old school way
-		InterfaceOptionsFrame_OpenToCategory("Musician")
+		InterfaceOptionsFrame_OpenToCategory(Musician.Msg.OPTIONS_TITLE)
 	else
 		Settings.OpenToCategory(Musician.Options.category.ID)
 	end
