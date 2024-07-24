@@ -11,7 +11,6 @@ local tipsAndTricks = {}
 --- OnInitialize
 --
 function Musician:OnInitialize()
-
 	-- Init settings
 	local defaultSettings = {
 		nextSongId = 0,
@@ -46,7 +45,8 @@ function Musician:OnInitialize()
 			minimapPos = LE_EXPANSION_LEVEL_CURRENT == 0 and 177 or -- Classic Era
 				LE_EXPANSION_LEVEL_CURRENT == 1 and 197 or -- BC
 				LE_EXPANSION_LEVEL_CURRENT == 2 and 149 or -- WotLK
-				154, -- Retail
+				LE_EXPANSION_LEVEL_CURRENT == 3 and 149 or -- Cata
+				154,                                       -- Retail
 			hide = false,
 		},
 		addonCompartment = {
@@ -344,7 +344,6 @@ function Musician.Help()
 	Musician.Utils.Print(Musician.Msg.COMMAND_LIST_TITLE)
 
 	for _, row in pairs(Musician.GetCommands()) do
-
 		local params = ""
 		if row.params then
 			params = Musician.Utils.FormatText(row.params) .. "\n"
@@ -386,9 +385,13 @@ function Musician.RunCommandLine(commandLine)
 				module, state = arg1, arg2
 			end
 
-			if state == "on" then state = true
-			elseif state == "off" then state = false
-			else state = nil end
+			if state == "on" then
+				state = true
+			elseif state == "off" then
+				state = false
+			else
+				state = nil
+			end
 
 			if module ~= nil then
 				if state then
@@ -597,10 +600,63 @@ function Musician.EnableHyperlinks(self)
 	self:HookScript("OnHyperlinkLeave", Musician.OnHyperlinkLeave)
 end
 
+--- Return menu entries for player menu
+-- @param unit (string)
+-- @param chatTarget (string)
+-- @param name (string)
+-- @param server (string)
+-- @return items (table)
+function Musician.GetPlayerMenuItems(unit, chatTarget, name, server)
+	local isPlayer = unit and UnitIsPlayer(unit) or chatTarget
+	local isMyself = false
+	local isMuted = false
+	local isPlaying = false
+	local isRegistered = false
+	local player
+
+	if isPlayer then
+		if chatTarget then
+			player = Musician.Utils.NormalizePlayerName(chatTarget)
+		else
+			if server then
+				player = name .. '-' .. server
+			else
+				player = Musician.Utils.NormalizePlayerName(name)
+			end
+		end
+
+		isMyself = Musician.Utils.PlayerIsMyself(player)
+		isMuted = Musician.PlayerIsMuted(player)
+		isPlaying = Musician.songs[player] ~= nil and Musician.songs[player]:IsPlaying()
+		isRegistered = Musician.Registry.PlayerIsRegistered(player)
+	end
+
+	if not isPlayer or not isRegistered or isMyself then
+		return {}
+	end
+
+	local items = {}
+	table.insert(items, {
+		text = Musician.Msg.PLAYER_MENU_TITLE ..
+			" " .. Musician.Utils.GetChatIcon(isMuted and Musician.IconImages.NoteDisabled or Musician.IconImages.Note),
+		isTitle = true,
+	})
+	if isPlaying and not isMuted then
+		table.insert(items, {
+			text = Musician.Msg.PLAYER_MENU_STOP_CURRENT_SONG,
+			func = function() Musician.StopPlayerSong(player) end
+		})
+	end
+	table.insert(items, {
+		text = isMuted and Musician.Msg.PLAYER_MENU_UNMUTE or Musician.Msg.PLAYER_MENU_MUTE,
+		func = function() Musician.MutePlayer(player, not isMuted) end
+	})
+	return items
+end
+
 --- Setup hooks
 --
 function Musician.SetupHooks()
-
 	-- Hyperlinks
 	--
 
@@ -640,116 +696,52 @@ function Musician.SetupHooks()
 	-- Player dropdown menus
 	--
 
-	-- Handle actions in player dropdown menus
-	--
+	if UnitPopup_ShowMenu then
+		-- Old school way
+		hooksecurefunc("UnitPopup_ShowMenu", function(dropdownMenu, which)
+			if UIDROPDOWNMENU_MENU_LEVEL ~= 1 then return end
+			if
+				which == "PARTY" or which == "PLAYER" or which == "RAID_PLAYER" or which == "FRIEND" or which == "FRIEND_OFFLINE" or
+				which == "TARGET" then
+				local items = Musician.GetPlayerMenuItems(dropdownMenu.unit, dropdownMenu.chatTarget, dropdownMenu.name,
+					dropdownMenu.server)
 
-	local function playerDropdownOnClick(self)
-		local dropdownMenu = self.arg1
-		local button = self.value
-		local isPlayer = dropdownMenu and (dropdownMenu.unit and UnitIsPlayer(dropdownMenu.unit) or dropdownMenu.chatTarget)
-		local player
-
-		if isPlayer then
-			if dropdownMenu.chatTarget then
-				player = Musician.Utils.NormalizePlayerName(dropdownMenu.chatTarget)
-			else
-				if dropdownMenu.server then
-					player = dropdownMenu.name .. '-' .. dropdownMenu.server
-				else
-					player = Musician.Utils.NormalizePlayerName(dropdownMenu.name)
-				end
-			end
-
-			if button == "MUSICIAN_MUTE" then
-				Musician.MutePlayer(player, true)
-			elseif button == "MUSICIAN_UNMUTE" then
-				Musician.MutePlayer(player, false)
-			elseif button == "MUSICIAN_STOP" then
-				Musician.StopPlayerSong(player)
-			end
-		end
-	end
-
-	-- Add player dropdown menu options
-	--
-
-	hooksecurefunc("UnitPopup_ShowMenu", function(dropdownMenu, which)
-		if UIDROPDOWNMENU_MENU_LEVEL == 1 and
-			(
-			which == "PARTY" or which == "PLAYER" or which == "RAID_PLAYER" or which == "FRIEND" or which == "FRIEND_OFFLINE" or
-				which == "TARGET") then
-			local isPlayer = dropdownMenu.unit and UnitIsPlayer(dropdownMenu.unit) or dropdownMenu.chatTarget
-			local isMyself = false
-			local isMuted = false
-			local isPlaying = false
-			local isRegistered = false
-			local player
-
-			if isPlayer then
-				if dropdownMenu.chatTarget then
-					player = Musician.Utils.NormalizePlayerName(dropdownMenu.chatTarget)
-				else
-					if dropdownMenu.server then
-						player = dropdownMenu.name .. '-' .. dropdownMenu.server
-					else
-						player = Musician.Utils.NormalizePlayerName(dropdownMenu.name)
+				if #items > 0 then
+					UIDropDownMenu_AddSeparator(1)
+					for _, item in pairs(items) do
+						local info = UIDropDownMenu_CreateInfo()
+						info.text = item.text
+						info.isTitle = item.isTitle
+						info.func = item.func
+						info.notCheckable = true
+						info.value = item.value
+						UIDropDownMenu_AddButton(info)
 					end
 				end
-
-				isMyself = Musician.Utils.PlayerIsMyself(player)
-				isMuted = Musician.PlayerIsMuted(player)
-				isPlaying = Musician.songs[player] ~= nil and Musician.songs[player]:IsPlaying()
-				isRegistered = Musician.Registry.PlayerIsRegistered(player)
 			end
+		end)
+	else
+		local modifyPlayerMenu = function(_, rootDescription, contextData)
+			local items = Musician.GetPlayerMenuItems(contextData.unit, contextData.chatTarget, contextData.name,
+				contextData.server)
 
-			local items = {
-				{
-					value = "MUSICIAN_SUBSECTION_TITLE_MUTED",
-					text = Musician.Msg.PLAYER_MENU_TITLE .. " " .. Musician.Utils.GetChatIcon(Musician.IconImages.NoteDisabled),
-					isTitle = true,
-					visible = isPlayer and isRegistered and not isMyself and isMuted
-				},
-				{
-					value = "MUSICIAN_SUBSECTION_TITLE_UNMUTED",
-					text = Musician.Msg.PLAYER_MENU_TITLE .. " " .. Musician.Utils.GetChatIcon(Musician.IconImages.Note),
-					isTitle = true,
-					visible = isPlayer and isRegistered and not isMyself and not isMuted
-				},
-				{
-					value = "MUSICIAN_STOP",
-					text = Musician.Msg.PLAYER_MENU_STOP_CURRENT_SONG,
-					visible = isPlayer and isRegistered and not isMyself and isPlaying and not isMuted
-				},
-				{
-					value = "MUSICIAN_MUTE",
-					text = Musician.Msg.PLAYER_MENU_MUTE,
-					visible = isPlayer and isRegistered and not isMyself and not isMuted
-				},
-				{
-					value = "MUSICIAN_UNMUTE",
-					text = Musician.Msg.PLAYER_MENU_UNMUTE,
-					visible = isPlayer and isRegistered and not isMyself and isMuted
-				},
-			}
-
-			if isPlayer and isRegistered and not isMyself then
-				UIDropDownMenu_AddSeparator(1)
-			end
-
-			for _, item in pairs(items) do
-				if item.visible then
-					local info = UIDropDownMenu_CreateInfo()
-					info.text = item.text
-					info.isTitle = item.isTitle
-					info.func = playerDropdownOnClick
-					info.notCheckable = true
-					info.value = item.value
-					info.arg1 = dropdownMenu
-					UIDropDownMenu_AddButton(info)
+			if #items > 0 then
+				rootDescription:CreateDivider()
+				for _, item in pairs(items) do
+					if item.isTitle then
+						rootDescription:CreateTitle(item.text)
+					else
+						rootDescription:CreateButton(item.text, item.func)
+					end
 				end
 			end
 		end
-	end)
+
+		Menu.ModifyMenu("MENU_UNIT_PLAYER", modifyPlayerMenu)
+		Menu.ModifyMenu("MENU_UNIT_FRIEND", modifyPlayerMenu)
+		Menu.ModifyMenu("MENU_UNIT_PARTY", modifyPlayerMenu)
+		Menu.ModifyMenu("MENU_UNIT_RAID_PLAYER", modifyPlayerMenu)
+	end
 
 	-- Add muted/unmuted status to player messages when playing
 	--
@@ -777,7 +769,6 @@ function Musician.SetupHooks()
 
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_EMOTE",
 		function(self, event, msg, player, languageName, channelName, playerName2, pflag, ...)
-
 			local fullPlayerName = Musician.Utils.NormalizePlayerName(player)
 
 			-- "Player is playing music."
@@ -792,7 +783,6 @@ function Musician.SetupHooks()
 
 				-- Music is loaded and actually playing
 				if Musician.songs[fullPlayerName] ~= nil and Musician.songs[fullPlayerName]:IsPlaying() then
-
 					-- Ignore emote if the player has already been notified
 					if Musician.songs[fullPlayerName].notified then
 						return true
@@ -806,14 +796,18 @@ function Musician.SetupHooks()
 					if not Musician.Utils.PlayerIsMyself(fullPlayerName) then
 						-- Stop music
 						if not Musician.PlayerIsMuted(fullPlayerName) then
-							local stopAction = Musician.Utils.Highlight(Musician.Utils.GetLink("musician", Musician.Msg.STOP, "stop",
-								fullPlayerName), 'FF0000')
-							msg = msg .. " " .. Musician.Utils.Highlight('[') .. stopAction .. Musician.Utils.Highlight(']')
+							local stopAction = Musician.Utils.Highlight(
+								Musician.Utils.GetLink("musician", Musician.Msg.STOP, "stop",
+									fullPlayerName), 'FF0000')
+							msg = msg ..
+								" " .. Musician.Utils.Highlight('[') .. stopAction .. Musician.Utils.Highlight(']')
 							-- Unmute player
 						else
-							local unmuteAction = Musician.Utils.Highlight(Musician.Utils.GetLink("musician", Musician.Msg.UNMUTE, "unmute",
-								fullPlayerName), '00FF00')
-							msg = msg .. " " .. Musician.Utils.Highlight('[') .. unmuteAction .. Musician.Utils.Highlight(']')
+							local unmuteAction = Musician.Utils.Highlight(
+								Musician.Utils.GetLink("musician", Musician.Msg.UNMUTE, "unmute",
+									fullPlayerName), '00FF00')
+							msg = msg ..
+								" " .. Musician.Utils.Highlight('[') .. unmuteAction .. Musician.Utils.Highlight(']')
 						end
 					end
 
@@ -856,7 +850,8 @@ function Musician.SetupHooks()
 				end
 
 				-- Send promo emote event
-				Musician:SendMessage(Musician.Events.PromoEmote, isPromoEmoteSuccessful, msg, fullPlayerName, languageName,
+				Musician:SendMessage(Musician.Events.PromoEmote, isPromoEmoteSuccessful, msg, fullPlayerName,
+					languageName,
 					channelName, playerName2, pflag, ...)
 			end
 
