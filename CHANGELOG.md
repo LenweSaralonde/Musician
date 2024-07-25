@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.9.3
+--------
+* Upgraded HereBeDrgons for WoW Classic.
+
 v1.9.9.2
 --------
 * Fixed Lua error in WoW Classic Era.
