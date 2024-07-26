@@ -861,6 +861,7 @@ function Musician.SetupHooks()
 	-- Add custom Sound_MaxCacheSizeInBytes option for Musician (Retail)
 	--
 
+	local isSoundCacheOptionHooked = false
 	if SettingsLayoutMixin and SettingsLayoutMixin.Init then
 		hooksecurefunc(SettingsLayoutMixin, "Init", function(layout, layoutType)
 			if layoutType == SettingsLayoutMixin.LayoutType.Vertical then
@@ -868,8 +869,9 @@ function Musician.SetupHooks()
 					if type(initializer) == "table" and type(initializer.GetSetting) == "function" then
 						local setting = initializer:GetSetting()
 						if type(setting) == "table" and type(setting.GetVariable) == "function" and
-							setting:GetVariable() == "Sound_MaxCacheSizeInBytes" then
+							setting:GetVariable() == "Sound_MaxCacheSizeInBytes" and not isSoundCacheOptionHooked then
 							local hookedInitializerGetOptions = initializer.GetOptions
+							isSoundCacheOptionHooked = true
 							initializer.GetOptions = function(...)
 								local options = hookedInitializerGetOptions(...)()
 								local cacheSize = Musician.Utils.GetSoundCacheSize()
