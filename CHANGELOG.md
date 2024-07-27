@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.9.4
+--------
+* Fixed recommended sound cache size option for Musician.
+
 v1.9.9.3
 --------
 * Upgraded HereBeDrgons for WoW Classic.
