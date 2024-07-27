@@ -741,6 +741,7 @@ function Musician.SetupHooks()
 		Menu.ModifyMenu("MENU_UNIT_FRIEND", modifyPlayerMenu)
 		Menu.ModifyMenu("MENU_UNIT_PARTY", modifyPlayerMenu)
 		Menu.ModifyMenu("MENU_UNIT_RAID_PLAYER", modifyPlayerMenu)
+		Menu.ModifyMenu("MENU_UNIT_ENEMY_PLAYER", modifyPlayerMenu)
 	end
 
 	-- Add muted/unmuted status to player messages when playing
