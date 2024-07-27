@@ -875,8 +875,10 @@ function Musician.SetupHooks()
 							initializer.GetOptions = function(...)
 								local options = hookedInitializerGetOptions(...)()
 								local cacheSize = Musician.Utils.GetSoundCacheSize()
+								local label = Musician.Msg.OPTIONS_AUDIO_CACHE_SIZE_FOR_MUSICIAN:format(cacheSize)
 								table.insert(options, {
-									label = Musician.Msg.OPTIONS_AUDIO_CACHE_SIZE_FOR_MUSICIAN:format(cacheSize),
+									label = label,
+									text = label,
 									value = cacheSize * 1024 * 1024 -- Value is in bytes
 								})
 								return function()
