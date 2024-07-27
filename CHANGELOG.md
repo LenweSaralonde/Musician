@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.9.5
+--------
+* Fixed menus for CrossRP integration.
+
 v1.9.9.4
 --------
 * Fixed recommended sound cache size option for Musician.
