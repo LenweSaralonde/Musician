@@ -82,24 +82,23 @@ function Musician.Map:OnEnable()
 	self:RegisterMessage(Musician.Events.SongChunk, Musician.Map.OnSongChunk)
 	hooksecurefunc(WorldMapFrame, 'OnMapChanged', Musician.Map.RefreshWorldMap)
 	if Menu then
-		local mapMenuCheckboxInitializer = function(button)
-			local rightTexture = button:AttachTexture();
-			rightTexture:SetSize(20, 20);
-			rightTexture:SetPoint("RIGHT");
-			rightTexture:SetTexture(Musician.IconImages.Note);
+		local function modifyMapMenu(menu, getter, setter)
+			Menu.ModifyMenu(menu, function(_, rootDescription)
+				rootDescription:CreateDivider()
+				rootDescription:CreateTitle(Musician.Msg.MAP_TRACKING_OPTIONS_TITLE)
+				local checkbox = rootDescription:CreateCheckbox(Musician.Msg.MAP_TRACKING_OPTION_ACTIVE_MUSICIANS,
+					getter,
+					function() setter(not getter()) end)
+				checkbox:AddInitializer(function(button)
+					local rightTexture = button:AttachTexture();
+					rightTexture:SetSize(20, 20);
+					rightTexture:SetPoint("RIGHT");
+					rightTexture:SetTexture(Musician.IconImages.Note);
+				end);
+			end)
 		end
-		Menu.ModifyMenu("MENU_MINIMAP_TRACKING", function(_, rootDescription)
-			local checkbox = rootDescription:CreateCheckbox(Musician.Msg.MAP_TRACKING_OPTION_ACTIVE_MUSICIANS,
-				Musician.Map.GetMiniMapTracking,
-				function() Musician.Map.SetMiniMapTracking(not Musician.Map.GetMiniMapTracking()) end)
-			checkbox:AddInitializer(mapMenuCheckboxInitializer);
-		end)
-		Menu.ModifyMenu("MENU_WORLD_MAP_TRACKING", function(_, rootDescription)
-			local checkbox = rootDescription:CreateCheckbox(Musician.Msg.MAP_TRACKING_OPTION_ACTIVE_MUSICIANS,
-				Musician.Map.GetWorldMapTracking,
-				function() Musician.Map.SetWorldMapTracking(not Musician.Map.GetWorldMapTracking()) end)
-			checkbox:AddInitializer(mapMenuCheckboxInitializer);
-		end)
+		modifyMapMenu("MENU_MINIMAP_TRACKING", Musician.Map.GetMiniMapTracking, Musician.Map.SetMiniMapTracking)
+		modifyMapMenu("MENU_WORLD_MAP_TRACKING", Musician.Map.GetWorldMapTracking, Musician.Map.SetWorldMapTracking)
 	else
 		-- Old school way
 		if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
