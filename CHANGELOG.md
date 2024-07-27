@@ -7,7 +7,7 @@ v1.9.9.4
 
 v1.9.9.3
 --------
-* Upgraded HereBeDrgons for WoW Classic.
+* Upgraded HereBeDragons for WoW Classic.
 
 v1.9.9.2
 --------
