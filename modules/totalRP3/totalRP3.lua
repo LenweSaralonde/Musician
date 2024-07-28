@@ -118,14 +118,13 @@ end
 --- Update the TRP3 player tooltip info with Musician version information.
 -- @param player (string)
 function Musician.TRP3.UpdateTooltipInfo(player)
-	local fontSize = TRP3_API.ui.tooltip.getSmallLineFontSize()
 	local r, g, b
 	if TRP3_Configuration and TRP3_Configuration[CONFIG_TOOLTIP_MAIN_COLOR] then
 		local mainColorHex = TRP3_API.configuration.getValue(CONFIG_TOOLTIP_MAIN_COLOR)
 		local mainColor = TRP3_API.CreateColorFromHexString(mainColorHex)
 		r, g, b = mainColor.r, mainColor.g, mainColor.b
 	end
-	Musician.Registry.UpdateTooltipInfo(TRP3_CharacterTooltip, player, fontSize, r, g, b)
+	Musician.Registry.UpdateTooltipInfo(TRP3_CharacterTooltip, player, 10, r, g, b)
 end
 
 --- Return true if the player is currently playing some music
