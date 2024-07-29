@@ -9,7 +9,7 @@
 -- make into AceComm.
 -- @class file
 -- @name AceComm-3.0
--- @release $Id$
+-- @release $Id: AceComm-3.0.lua 1333 2024-05-05 16:24:39Z nevcairiel $
 
 --[[ AceComm-3.0
 
