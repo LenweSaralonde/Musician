@@ -7,7 +7,6 @@
 	<Include file="lib\LibDBIcon-1.0\lib.xml" />
 	<Include file="lib\AceAddon-3.0\AceAddon-3.0.xml" />
 	<Include file="lib\AceComm-3.0\AceComm-3.0.xml" />
-	<Include file="lib\AceBNetComm-3.0\AceBNetComm-3.0.xml" />
 	<Include file="lib\AceEvent-3.0\AceEvent-3.0.xml" />
 	<Include file="lib\MSA-DropDownMenu-1.0\MSA-DropDownMenu-1.0.xml" />
 	<Include file="lib\LibDeflate\lib.xml" />

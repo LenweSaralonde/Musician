@@ -178,6 +178,12 @@ read_globals = {
 	"MSA_DropDownMenu_OnHide",
 	"MSA_DropDownList1",
 	"MSA_DropDownList2",
+	ChatThrottleLib = {
+		fields = {
+			"SendAddonMessage",
+			"BNSendGameData"
+		}
+	},
 
 	-- 3rd party add-ons
 	"ElvUI",
