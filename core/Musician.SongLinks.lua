@@ -1,47 +1,49 @@
 --- Song links module
 -- @module Musician.SongLinks
 
-Musician.SongLinks = LibStub("AceAddon-3.0"):NewAddon("Musician.SongLinks", "AceComm-3.0", "AceBNetComm-3.0",
+Musician.SongLinks = LibStub("AceAddon-3.0"):NewAddon("Musician.SongLinks", "AceComm-3.0", -- "AceBNetComm-3.0",
 	"AceEvent-3.0")
 
 local MODULE_NAME = "SongLinks"
 Musician.AddModule(MODULE_NAME)
 
-local LibDeflate = LibStub:GetLibrary("LibDeflate")
-local LibBase64 = LibStub:GetLibrary("LibBase64")
+local LibDeflate                           = LibStub:GetLibrary("LibDeflate")
+local LibBase64                            = LibStub:GetLibrary("LibBase64")
 
-Musician.SongLinks.event = {}
-Musician.SongLinks.event.song = "MusicianSong"
-Musician.SongLinks.event.requestSong = "MusicianSongReq"
-Musician.SongLinks.event.songError = "MusicianSongErr"
+Musician.SongLinks.event                   = {}
+Musician.SongLinks.event.song              = "MusicianSongSnd"
+Musician.SongLinks.event.requestSong       = "MusicianSongReq"
+Musician.SongLinks.event.songError         = "MusicianSongErr"
 
-Musician.SongLinks.errors = {}
-Musician.SongLinks.errors.notFound = 'notFound'
-Musician.SongLinks.errors.alreadySending = 'alreadySending'
+Musician.SongLinks.errors                  = {}
+Musician.SongLinks.errors.notFound         = 'notFound'
+Musician.SongLinks.errors.alreadySending   = 'alreadySending'
 Musician.SongLinks.errors.alreadyRequested = 'alreadyRequested'
-Musician.SongLinks.errors.timeout = 'timeout'
-Musician.SongLinks.errors.offline = 'offline'
-Musician.SongLinks.errors.importingFailed = 'importingFailed'
+Musician.SongLinks.errors.timeout          = 'timeout'
+Musician.SongLinks.errors.offline          = 'offline'
+Musician.SongLinks.errors.importingFailed  = 'importingFailed'
 
-Musician.SongLinks.status = {}
-Musician.SongLinks.status.requested = 'requested'
-Musician.SongLinks.status.downloading = 'downloading'
-Musician.SongLinks.status.importing = 'importing'
+Musician.SongLinks.status                  = {}
+Musician.SongLinks.status.requested        = 'requested'
+Musician.SongLinks.status.downloading      = 'downloading'
+Musician.SongLinks.status.importing        = 'importing'
 
-Musician.SongLinks.supportsContext = true
+Musician.SongLinks.supportsContext         = true
 
-local sharedSongs = {}
-local sendingSongs = {}
-local requestedSongs = {}
+local sharedSongs                          = {}
+local sendingSongs                         = {}
+local requestedSongs                       = {}
 
-local RECEIVING_PROGRESSION_RATIO = .9
-local REQUEST_TIMEOUT = 30
-local MAX_TITLE_LENGTH = 48
+local BNetCommHandlers                     = {}
 
-local HYPERLINK_PREFIX = 'musicianSong'
-local CHAT_LINK_PREFIX = 'Musician'
-local LINK_COLOR = '00FFFF'
-local CHAT_MSG_EVENTS = {
+local RECEIVING_PROGRESSION_RATIO          = .9
+local REQUEST_TIMEOUT                      = 30
+local MAX_TITLE_LENGTH                     = 48
+
+local HYPERLINK_PREFIX                     = 'musicianSong'
+local CHAT_LINK_PREFIX                     = 'Musician'
+local LINK_COLOR                           = '00FFFF'
+local CHAT_MSG_EVENTS                      = {
 	"CHAT_MSG_CHANNEL",
 	"CHAT_MSG_SAY", "CHAT_MSG_YELL", "CHAT_MSG_EMOTE", "CHAT_MSG_TEXT_EMOTE",
 	"CHAT_MSG_PARTY", "CHAT_MSG_PARTY_LEADER",
@@ -51,16 +53,12 @@ local CHAT_MSG_EVENTS = {
 	"CHAT_MSG_WHISPER", "CHAT_MSG_WHISPER_INFORM",
 	"CHAT_MSG_BN_WHISPER", "CHAT_MSG_BN_WHISPER_INFORM"
 }
-local BUBBLE_CHAT_MSG_EVENTS = {
+local BUBBLE_CHAT_MSG_EVENTS               = {
 	"CHAT_MSG_SAY", "CHAT_MSG_YELL",
 	"CHAT_MSG_PARTY", "CHAT_MSG_PARTY_LEADER",
 	"CHAT_MSG_RAID", "CHAT_MSG_RAID_LEADER",
 	"CHAT_MSG_INSTANCE_CHAT", "CHAT_MSG_INSTANCE_CHAT_LEADER",
 }
-
-local MSG_MULTI_FIRST = "\001"
-local MSG_MULTI_NEXT  = "\002"
-local MSG_MULTI_LAST  = "\003"
 
 --- Print communication debug message
 -- @param out (boolean) Outgoing message
@@ -93,16 +91,146 @@ local function debug(message, ...)
 	Musician.Utils.Debug(MODULE_NAME, message, ...)
 end
 
---- Send communication message.
--- Same parameters as AceComm:SendCommMessage but will use Battle.net if the provided target is a game account ID.
-local function SendCommMessage(prefix, text, kind, target, priority, callback, callbackArg)
-	if kind == 'WHISPER' and Musician.Utils.IsBattleNetID(target) then
+--- Simplified version of AceComm's SendCommMessage that only supports short (not multipart) communication messages but supports Battle.net.
+-- @param prefix (string) A printable character (\032-\255) classification of the message (typically AddonName or AddonNameEvent)
+-- @param text (string) Data to send, nils (\000) not allowed. Any length.
+-- @param distribution (string) Addon channel, e.g. "RAID", "GUILD", etc; see SendAddonMessage API
+-- @param target (string) Destination for some distributions; see SendAddonMessage API or valid Battle.net game account ID
+-- @param [prio] (string) OPTIONAL: ChatThrottleLib priority, "BULK", "NORMAL" or "ALERT". Defaults to "NORMAL".
+-- @param [callbackFn] (function) OPTIONAL: callback function to be called as each chunk is sent. receives 3 args: the user supplied arg (see next), the number of bytes sent so far, and the number of bytes total to send.
+-- @param [callbackArg] (any): OPTIONAL: first arg to the callback function. nil will be passed if not specified.
+function Musician.SongLinks:SendCommMessage(prefix, text, distribution, target, prio, callbackFn, callbackArg)
+	-- Injecting target in the queue name to evenly share the bandwidth among them
+	local queueName = prefix .. " " .. distribution .. " " .. target
+	local ctlCallback
+	if callbackFn then
+		ctlCallback = function(_, sendResult)
+			return callbackFn(callbackArg, #text, #text, sendResult)
+		end
+	end
+	if distribution == 'WHISPER' and Musician.Utils.IsBattleNetID(target) then
 		if Musician.Utils.IsBattleNetGameAccountOnline(target) then
-			Musician.SongLinks:SendBNetCommMessage(prefix, text, target, priority, callback, callbackArg)
+			ChatThrottleLib:BNSendGameData(prio, prefix, text, distribution, target, queueName, ctlCallback)
 		end
 	else
-		Musician.SongLinks:SendCommMessage(prefix, text, kind, target, priority, callback, callbackArg)
+		ChatThrottleLib:SendAddonMessage(prio, prefix, text, distribution, target, queueName, ctlCallback)
 	end
+end
+
+--- Alternative to AceComm's SendCommMessage() to support Battle.net and avoid problems when the chunks are received in the wrong order.
+-- @param prefix (string) A printable character (\032-\255) classification of the message (typically AddonName or AddonNameEvent)
+-- @param text (string) Data to send, nils (\000) not allowed. Any length.
+-- @param distribution (string) Addon channel, e.g. "RAID", "GUILD", etc; see SendAddonMessage API
+-- @param target (string) Destination for some distributions; see SendAddonMessage API or valid Battle.net game account ID
+-- @param [prio] (string) OPTIONAL: ChatThrottleLib priority, "BULK", "NORMAL" or "ALERT". Defaults to "NORMAL".
+-- @param [callbackFn] (function) OPTIONAL: callback function to be called as each chunk is sent. receives 3 args: the user supplied arg (see next), the number of bytes sent so far, and the number of bytes total to send.
+-- @param [callbackArg] (any): OPTIONAL: first arg to the callback function. nil will be passed if not specified.
+function Musician.SongLinks:SendIndexedCommMessage(prefix, text, distribution, target, prio, callbackFn, callbackArg)
+	local isBnet = distribution == 'WHISPER' and Musician.Utils.IsBattleNetID(target)
+	local queueName = prefix .. " " .. distribution .. " " .. target
+	local chunkSize = 255 - 4
+	local textlen = #text
+	local chunkCount = math.ceil(textlen / chunkSize)
+	local cursor = 1
+	local totalSent = 0
+	for index = 1, chunkCount do
+		-- Encode chunk count and indexes on 3 bytes. This allows messsage length up to ~2 GB, which should be enough.
+		-- Resulting base64-encoded index is 4 bytes long.
+		local controlBytes
+		if index == 1 then
+			-- The first controlBytes contains the total number of chunks, with the first bit set to 1
+			controlBytes = bit.bor(chunkCount, 0x800000)
+		else
+			-- The other controlBytes contains the index number, with the first bit set to 0
+			controlBytes = bit.band(index, 0x7FFFFF)
+		end
+		local serializedControlBytes = LibBase64:enc(Musician.Utils.PackNumber(controlBytes, 3))
+		local chunk = string.sub(text, cursor, cursor + chunkSize - 1)
+		local indexedChunk = serializedControlBytes .. chunk
+
+		-- Send chunk
+		local function ctlCallback(_, sendResult)
+			if sendResult then
+				totalSent = totalSent + #chunk
+			end
+			-- Run callback for the last sent chunk
+			if index == chunkCount then
+				return callbackFn(callbackArg, totalSent, textlen, sendResult)
+			end
+		end
+		if isBnet then
+			ChatThrottleLib:BNSendGameData(prio, prefix, indexedChunk, distribution, target, queueName, ctlCallback)
+		else
+			ChatThrottleLib:SendAddonMessage(prio, prefix, indexedChunk, distribution, target, queueName, ctlCallback)
+		end
+
+		-- Ready for the next round!
+		cursor = cursor + chunkSize
+	end
+end
+
+--- Handler for short (not multipart) Battle.net messages, similar to AceComm's RegisterComm().
+-- @param prefix (string) A printable character (\032-\255) classification of the message (typically AddonName or AddonNameEvent), max 16 characters
+-- @param method (function) Callback to call on message reception: Function reference, or method name (string) to call on self. Defaults to "OnCommReceived"
+function Musician.SongLinks:RegisterBNetComm(prefix, method)
+	BNetCommHandlers[prefix] = method
+end
+
+--- Same as AceComm's RegisterComm but for multipart communication message with indexed chunks. Supports Battle.net messages.
+-- @param prefix (string) A printable character (\032-\255) classification of the message (typically AddonName or AddonNameEvent), max 16 characters
+-- @param method (function) Callback to call on message reception: Function reference, or method name (string) to call on self. Defaults to "OnCommReceived"
+-- @param [isBnet] (boolean) Register Battle.net messages when true
+function Musician.SongLinks:RegisterIndexedComm(prefix, method, isBnet)
+	local messages = {}
+
+	local function onIndexedChunk(_, messageWithIndex, distribution, sender)
+		local messageId = prefix .. ' ' .. sender
+		local controlBytes = Musician.Utils.UnpackNumber(LibBase64:dec(string.sub(messageWithIndex, 1, 4)))
+		local index = 1
+		if bit.band(controlBytes, 0x800000) == 0x800000 then
+			-- First chunk
+			messages[messageId] = {
+				chunks = {},
+				count = bit.band(controlBytes, 0x7FFFFF),
+				downloaded = 0,
+			}
+		else
+			-- Lost chunk (may happen after a /reload while receiving a message)
+			if messages[messageId] == nil then
+				return
+			end
+			index = bit.band(controlBytes, 0x7FFFFF)
+		end
+		local message = messages[messageId]
+		message.downloaded = message.downloaded + 1
+		message.chunks[index] = string.sub(messageWithIndex, 5)
+
+		-- Download complete
+		if message.downloaded == message.count then
+			local text = ''
+			for i = 1, message.count do
+				text = text .. message.chunks[i]
+				message.chunks[i] = nil
+			end
+			wipe(messages[messageId].chunks)
+			wipe(messages[messageId])
+			messages[messageId] = nil
+			method(prefix, text, distribution, sender)
+		end
+	end
+
+	if isBnet then
+		Musician.SongLinks:RegisterBNetComm(prefix, onIndexedChunk)
+	else
+		Musician.SongLinks:RegisterComm(prefix, onIndexedChunk)
+	end
+end
+
+--- Same as RegisterIndexedComm but for Battle.net messages only.
+-- @param prefix (string) A printable character (\032-\255) classification of the message (typically AddonName or AddonNameEvent), max 16 characters
+-- @param method (function) Callback to call on message reception: Function reference, or method name (string) to call on self. Defaults to "OnCommReceived"
+function Musician.SongLinks:RegisterIndexedBNetComm(prefix, method)
+	Musician.SongLinks:RegisterIndexedComm(prefix, method, true)
 end
 
 --- Initialize song links
@@ -112,16 +240,23 @@ function Musician.SongLinks.Init()
 	Musician.SongLinks:RegisterMessage(Musician.Events.SongImportProgress, Musician.SongLinks.OnSongImportProgress)
 
 	-- Register communication for game chat
-	Musician.SongLinks:RegisterComm(Musician.SongLinks.event.song, Musician.SongLinks.OnSongReceived)
+	Musician.SongLinks:RegisterIndexedComm(Musician.SongLinks.event.song, Musician.SongLinks.OnSongReceived)
 	Musician.SongLinks:RegisterComm(Musician.SongLinks.event.requestSong, Musician.SongLinks.OnRequestSong)
 	Musician.SongLinks:RegisterComm(Musician.SongLinks.event.songError, Musician.SongLinks.OnSongError)
 	Musician.SongLinks:RegisterEvent("CHAT_MSG_ADDON", Musician.SongLinks.OnSongData)
 
 	-- Register communication for Battle.net chat
-	Musician.SongLinks:RegisterBNetComm(Musician.SongLinks.event.song, Musician.SongLinks.OnSongReceived)
+	Musician.SongLinks:RegisterIndexedBNetComm(Musician.SongLinks.event.song, Musician.SongLinks.OnSongReceived)
 	Musician.SongLinks:RegisterBNetComm(Musician.SongLinks.event.requestSong, Musician.SongLinks.OnRequestSong)
 	Musician.SongLinks:RegisterBNetComm(Musician.SongLinks.event.songError, Musician.SongLinks.OnSongError)
-	Musician.SongLinks:RegisterEvent("BN_CHAT_MSG_ADDON", Musician.SongLinks.OnSongData)
+	Musician.SongLinks:RegisterEvent("BN_CHAT_MSG_ADDON", function(event, prefix, ...)
+		-- Call handlers registered using RegisterBNetComm()
+		if BNetCommHandlers[prefix] then
+			BNetCommHandlers[prefix](prefix, ...)
+		end
+		-- Also call the low level handler OnSongData to update the progression
+		Musician.SongLinks.OnSongData(event, prefix, ...)
+	end)
 
 	-- Replace song links in chat bubbles
 	for _, event in pairs(BUBBLE_CHAT_MSG_EVENTS) do
@@ -338,7 +473,8 @@ function Musician.SongLinks.RequestSong(title, playerName, dataOnly, context)
 		debug("Timed out after", REQUEST_TIMEOUT, playerName, title)
 		Musician.SongLinks.RemoveRequest(playerName)
 		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveComplete, playerName, context)
-		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveFailed, playerName, Musician.SongLinks.errors.timeout, title
+		Musician.SongLinks:SendMessage(Musician.Events.SongReceiveFailed, playerName, Musician.SongLinks.errors.timeout,
+			title
 			, context)
 	end
 
@@ -347,7 +483,7 @@ function Musician.SongLinks.RequestSong(title, playerName, dataOnly, context)
 		title = title,
 		context = context,
 		status = Musician.SongLinks.status.requested,
-		total = nil,
+		total = 0,
 		downloaded = 0,
 		progress = nil,
 		song = nil,
@@ -360,7 +496,7 @@ function Musician.SongLinks.RequestSong(title, playerName, dataOnly, context)
 
 	-- Send song request to player
 	debugComm(true, Musician.SongLinks.event.requestSong, playerName, title)
-	SendCommMessage(Musician.SongLinks.event.requestSong, title, 'WHISPER', playerName, 'ALERT')
+	Musician.SongLinks:SendCommMessage(Musician.SongLinks.event.requestSong, title, 'WHISPER', playerName, 'ALERT')
 end
 
 --- Remove a song download request
@@ -426,7 +562,7 @@ function Musician.SongLinks.SendSong(title, playerName)
 		debug("Song not found")
 		local message = Musician.SongLinks.errors.notFound .. ' ' .. title
 		debugComm(true, Musician.SongLinks.event.songError, playerName, message)
-		SendCommMessage(Musician.SongLinks.event.songError, message, 'WHISPER', playerName, 'ALERT')
+		Musician.SongLinks:SendCommMessage(Musician.SongLinks.event.songError, message, 'WHISPER', playerName, 'ALERT')
 		return
 	end
 
@@ -448,7 +584,7 @@ function Musician.SongLinks.SendSongData(title, playerName, songData)
 		debug("Song already sending")
 		local message = Musician.SongLinks.errors.alreadySending .. ' ' .. title
 		debugComm(true, Musician.SongLinks.event.songError, playerName, message)
-		SendCommMessage(Musician.SongLinks.event.songError, message, 'WHISPER', playerName, 'ALERT')
+		Musician.SongLinks:SendCommMessage(Musician.SongLinks.event.songError, message, 'WHISPER', playerName, 'ALERT')
 		return
 	end
 
@@ -463,17 +599,15 @@ function Musician.SongLinks.SendSongData(title, playerName, songData)
 		encodedData = LibDeflate:EncodeForWoWAddonChannel(songData)
 	end
 
-	-- Prepend data length to the message so the recipient can determine the progression
-	local msg = #encodedData .. " " .. encodedData
-
 	-- Send song
-	debugComm(true, Musician.SongLinks.event.song, playerName, title, #msg)
-	SendCommMessage(Musician.SongLinks.event.song, msg, 'WHISPER', playerName, 'BULK', function(_, sent, total)
-		-- Song upload complete
-		if sent == total then
-			sendingSongs[playerName] = nil
-		end
-	end)
+	debugComm(true, Musician.SongLinks.event.song, playerName, title, #encodedData)
+	Musician.SongLinks:SendIndexedCommMessage(Musician.SongLinks.event.song, encodedData, 'WHISPER', playerName, 'NORMAL',
+		function(_, sent, total)
+			-- Song upload complete
+			if sent == total then
+				sendingSongs[playerName] = nil
+			end
+		end)
 end
 
 --- OnSongData
@@ -493,28 +627,24 @@ function Musician.SongLinks.OnSongData(event, prefix, message, distribution, sen
 		requestedSong.timeoutTimer = C_Timer.NewTimer(REQUEST_TIMEOUT, requestedSong.onTimeout)
 	end
 
-	-- Get progression from chunks
-	local control, data = string.match(message, "^([\001-\009])(.*)")
-	local receivingProgressionRatio = requestedSong.dataOnly and 1 or RECEIVING_PROGRESSION_RATIO
-	local progress
-	if control then
-		if control == MSG_MULTI_FIRST then
-			requestedSong.status = Musician.SongLinks.status.downloading
-			-- Extract total data length to determine the progression
-			requestedSong.total, data = string.match(data, "^([0-9]+) (.*)")
-			requestedSong.downloaded = #data
-		elseif control == MSG_MULTI_NEXT or control == MSG_MULTI_LAST then
-			-- Lost chunk (may happen after a /reload while receiving a song)
-			if requestedSong.total == nil then return end
+	-- Determine progression from chunk control bytes
+	local controlBytes = Musician.Utils.UnpackNumber(LibBase64:dec(string.sub(message, 1, 4)))
 
-			-- Update received data length
-			requestedSong.downloaded = requestedSong.downloaded + #data
-		end
-		progress = receivingProgressionRatio * requestedSong.downloaded / requestedSong.total
-	else
-		-- The whole song fits in a single message
-		progress = receivingProgressionRatio
+	-- This is the first index with the number of chunks
+	if bit.band(0x800000, controlBytes) == 0x800000 then
+		local chunkCount = bit.band(0x7FFFFF, controlBytes)
+		requestedSong.status = Musician.SongLinks.status.downloading
+		requestedSong.total = chunkCount
 	end
+
+	-- Update received data length
+	requestedSong.downloaded = requestedSong.downloaded + 1
+
+	-- Lost chunk (may happen after a /reload while receiving a song)
+	if requestedSong.total == 0 then return end
+
+	local receivingProgressionRatio = requestedSong.dataOnly and 1 or RECEIVING_PROGRESSION_RATIO
+	local progress = receivingProgressionRatio * requestedSong.downloaded / requestedSong.total
 	requestedSong.progress = progress
 	Musician.SongLinks:SendMessage(Musician.Events.SongReceiveProgress, sender, progress, requestedSong.context)
 end
@@ -543,12 +673,11 @@ function Musician.SongLinks.OnSongReceived(prefix, message, distribution, sender
 	if requestedSong == nil then return end
 
 	local context = requestedSongs[sender].context
-	local _, encodedData = string.match(message, "^([0-9]+) (.*)")
 	local songData
 	if Musician.Utils.IsBattleNetID(sender) then
-		songData = LibBase64:dec(encodedData)
+		songData = LibBase64:dec(message)
 	else
-		songData = LibDeflate:DecodeForWoWAddonChannel(encodedData)
+		songData = LibDeflate:DecodeForWoWAddonChannel(message)
 	end
 
 	-- Data only
@@ -576,7 +705,8 @@ function Musician.SongLinks.OnSongReceived(prefix, message, distribution, sender
 			Musician.SongLinks:SendMessage(Musician.Events.SongReceiveSuccessful, sender, songData, song, context)
 		else
 			debug("Song downloading failed")
-			Musician.SongLinks:SendMessage(Musician.Events.SongReceiveFailed, sender, Musician.SongLinks.errors.importingFailed,
+			Musician.SongLinks:SendMessage(Musician.Events.SongReceiveFailed, sender,
+				Musician.SongLinks.errors.importingFailed,
 				title, context)
 		end
 	end)
