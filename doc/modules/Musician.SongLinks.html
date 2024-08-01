@@ -209,6 +209,26 @@
 	<td class="name" nowrap><a href="#Musician.SongLinks.SendSongData">Musician.SongLinks.SendSongData (title, playerName, songData)</a></td>
 	<td class="summary">Send song data to another player</td>
 	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.SongLinks:RegisterBNetComm">Musician.SongLinks:RegisterBNetComm (prefix, method)</a></td>
+	<td class="summary">Handler for short (not multipart) Battle.net messages, similar to AceComm's RegisterComm().</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.SongLinks:RegisterIndexedBNetComm">Musician.SongLinks:RegisterIndexedBNetComm (prefix, method)</a></td>
+	<td class="summary">Same as RegisterIndexedComm but for Battle.net messages only.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.SongLinks:RegisterIndexedComm">Musician.SongLinks:RegisterIndexedComm (prefix, method, isBnet)</a></td>
+	<td class="summary">Same as AceComm's RegisterComm but for multipart communication message with indexed chunks.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.SongLinks:SendCommMessage">Musician.SongLinks:SendCommMessage (prefix, text, distribution, target, prio, callbackFn, callbackArg)</a></td>
+	<td class="summary">Simplified version of AceComm's SendCommMessage that only supports short (not multipart) communication messages but supports Battle.net.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.SongLinks:SendIndexedCommMessage">Musician.SongLinks:SendIndexedCommMessage (prefix, text, distribution, target, prio, callbackFn, callbackArg)</a></td>
+	<td class="summary">Alternative to AceComm's SendCommMessage() to support Battle.net and avoid problems when the chunks are received in the wrong order.</td>
+	</tr>
 </table>
 
 <br/>
@@ -759,13 +779,161 @@
 
 
 </dd>
+    <dt>
+    <a name = "Musician.SongLinks:RegisterBNetComm"></a>
+    <strong>Musician.SongLinks:RegisterBNetComm (prefix, method)</strong>
+    </dt>
+    <dd>
+    Handler for short (not multipart) Battle.net messages, similar to AceComm's RegisterComm().
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">prefix</span>
+         (string) A printable character (\032-\255) classification of the message (typically AddonName or AddonNameEvent), max 16 characters
+        </li>
+        <li><span class="parameter">method</span>
+         (function) Callback to call on message reception: Function reference, or method name (string) to call on self. Defaults to "OnCommReceived"
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.SongLinks:RegisterIndexedBNetComm"></a>
+    <strong>Musician.SongLinks:RegisterIndexedBNetComm (prefix, method)</strong>
+    </dt>
+    <dd>
+    Same as RegisterIndexedComm but for Battle.net messages only.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">prefix</span>
+         (string) A printable character (\032-\255) classification of the message (typically AddonName or AddonNameEvent), max 16 characters
+        </li>
+        <li><span class="parameter">method</span>
+         (function) Callback to call on message reception: Function reference, or method name (string) to call on self. Defaults to "OnCommReceived"
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.SongLinks:RegisterIndexedComm"></a>
+    <strong>Musician.SongLinks:RegisterIndexedComm (prefix, method, isBnet)</strong>
+    </dt>
+    <dd>
+    Same as AceComm's RegisterComm but for multipart communication message with indexed chunks.  Supports Battle.net messages.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">prefix</span>
+         (string) A printable character (\032-\255) classification of the message (typically AddonName or AddonNameEvent), max 16 characters
+        </li>
+        <li><span class="parameter">method</span>
+         (function) Callback to call on message reception: Function reference, or method name (string) to call on self. Defaults to "OnCommReceived"
+        </li>
+        <li><span class="parameter">isBnet</span>
+        ] (boolean) Register Battle.net messages when true
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.SongLinks:SendCommMessage"></a>
+    <strong>Musician.SongLinks:SendCommMessage (prefix, text, distribution, target, prio, callbackFn, callbackArg)</strong>
+    </dt>
+    <dd>
+    Simplified version of AceComm's SendCommMessage that only supports short (not multipart) communication messages but supports Battle.net.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">prefix</span>
+         (string) A printable character (\032-\255) classification of the message (typically AddonName or AddonNameEvent)
+        </li>
+        <li><span class="parameter">text</span>
+         (string) Data to send, nils (\000) not allowed. Any length.
+        </li>
+        <li><span class="parameter">distribution</span>
+         (string) Addon channel, e.g. "RAID", "GUILD", etc; see SendAddonMessage API
+        </li>
+        <li><span class="parameter">target</span>
+         (string) Destination for some distributions; see SendAddonMessage API or valid Battle.net game account ID
+        </li>
+        <li><span class="parameter">prio</span>
+        ] (string) OPTIONAL: ChatThrottleLib priority, "BULK", "NORMAL" or "ALERT". Defaults to "NORMAL".
+        </li>
+        <li><span class="parameter">callbackFn</span>
+        ] (function) OPTIONAL: callback function to be called as each chunk is sent. receives 3 args: the user supplied arg (see next), the number of bytes sent so far, and the number of bytes total to send.
+        </li>
+        <li><span class="parameter">callbackArg</span>
+        ] (any): OPTIONAL: first arg to the callback function. nil will be passed if not specified.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.SongLinks:SendIndexedCommMessage"></a>
+    <strong>Musician.SongLinks:SendIndexedCommMessage (prefix, text, distribution, target, prio, callbackFn, callbackArg)</strong>
+    </dt>
+    <dd>
+    Alternative to AceComm's SendCommMessage() to support Battle.net and avoid problems when the chunks are received in the wrong order.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">prefix</span>
+         (string) A printable character (\032-\255) classification of the message (typically AddonName or AddonNameEvent)
+        </li>
+        <li><span class="parameter">text</span>
+         (string) Data to send, nils (\000) not allowed. Any length.
+        </li>
+        <li><span class="parameter">distribution</span>
+         (string) Addon channel, e.g. "RAID", "GUILD", etc; see SendAddonMessage API
+        </li>
+        <li><span class="parameter">target</span>
+         (string) Destination for some distributions; see SendAddonMessage API or valid Battle.net game account ID
+        </li>
+        <li><span class="parameter">prio</span>
+        ] (string) OPTIONAL: ChatThrottleLib priority, "BULK", "NORMAL" or "ALERT". Defaults to "NORMAL".
+        </li>
+        <li><span class="parameter">callbackFn</span>
+        ] (function) OPTIONAL: callback function to be called as each chunk is sent. receives 3 args: the user supplied arg (see next), the number of bytes sent so far, and the number of bytes total to send.
+        </li>
+        <li><span class="parameter">callbackArg</span>
+        ] (any): OPTIONAL: first arg to the callback function. nil will be passed if not specified.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
 </dl>
 
 
 </div> <!-- id="content" -->
 </div> <!-- id="main" -->
 <div id="about">
-<i>generated by <a href="http://github.com/lunarmodules/LDoc">LDoc 1.5.0</a></i>
+<i>generated by <a href="http://github.com/lunarmodules/ldoc">LDoc 1.5.0</a></i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
