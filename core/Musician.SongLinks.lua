@@ -393,9 +393,12 @@ end
 -- @return msg (string)
 function Musician.SongLinks.HyperlinksToChatLinks(text)
 	local capturePattern = '|H' .. HYPERLINK_PREFIX .. ':?([^|]*)|h[^%[]*%[[^:]+: ([^%]]+)%]|r|h'
-	return (string.gsub(text, capturePattern, function(playerArg, titleArg)
+	text = string.gsub(text, capturePattern, function(playerArg, titleArg)
 		return Musician.SongLinks.GetChatLink(titleArg, playerArg)
-	end))
+	end)
+	-- Add spaces between links to prevent the message from failing through Battle.net messenging
+	text = string.gsub(text, '%]%[' .. CHAT_LINK_PREFIX, '] [' .. CHAT_LINK_PREFIX)
+	return text
 end
 
 --- Convert chat text links into hyperlinks
