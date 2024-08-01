@@ -1,14 +1,14 @@
 --- Song links module
 -- @module Musician.SongLinks
 
-Musician.SongLinks = LibStub("AceAddon-3.0"):NewAddon("Musician.SongLinks", "AceComm-3.0", -- "AceBNetComm-3.0",
-	"AceEvent-3.0")
+Musician.SongLinks = LibStub("AceAddon-3.0"):NewAddon("Musician.SongLinks", "AceComm-3.0", "AceEvent-3.0")
 
 local MODULE_NAME = "SongLinks"
 Musician.AddModule(MODULE_NAME)
 
 local LibDeflate                           = LibStub:GetLibrary("LibDeflate")
 local LibBase64                            = LibStub:GetLibrary("LibBase64")
+local LibCRC32                             = LibStub:GetLibrary("LibCRC32")
 
 Musician.SongLinks.event                   = {}
 Musician.SongLinks.event.song              = "MusicianSongSnd"
@@ -128,9 +128,11 @@ end
 function Musician.SongLinks:SendIndexedCommMessage(prefix, text, distribution, target, prio, callbackFn, callbackArg)
 	local isBnet = distribution == 'WHISPER' and Musician.Utils.IsBattleNetID(target)
 	local queueName = prefix .. " " .. distribution .. " " .. target
-	local chunkSize = 255 - 4
+	local chunkSize = 255 - 10 -- Base64-serialized header is 10 bytes long
 	local textlen = #text
 	local chunkCount = math.ceil(textlen / chunkSize)
+	local crc32 = LibCRC32:hash(text)
+	local packedCrc32 = Musician.Utils.PackNumber(crc32, 4)
 	local cursor = 1
 	local totalSent = 0
 	for index = 1, chunkCount do
@@ -144,17 +146,19 @@ function Musician.SongLinks:SendIndexedCommMessage(prefix, text, distribution, t
 			-- The other controlBytes contains the index number, with the first bit set to 0
 			controlBytes = bit.band(index, 0x7FFFFF)
 		end
-		local serializedControlBytes = LibBase64:enc(Musician.Utils.PackNumber(controlBytes, 3))
+		local packedControlBytes = Musician.Utils.PackNumber(controlBytes, 3)
+		local serializedHeader = string.sub(LibBase64:enc(packedCrc32 .. packedControlBytes), 1, 10) -- Strip the 2 padding characters
 		local chunk = string.sub(text, cursor, cursor + chunkSize - 1)
-		local indexedChunk = serializedControlBytes .. chunk
+		local indexedChunk = serializedHeader .. chunk
 
 		-- Send chunk
+		local currentIndex = index
 		local function ctlCallback(_, sendResult)
 			if sendResult then
 				totalSent = totalSent + #chunk
 			end
 			-- Run callback for the last sent chunk
-			if index == chunkCount then
+			if currentIndex == chunkCount then
 				return callbackFn(callbackArg, totalSent, textlen, sendResult)
 			end
 		end
@@ -184,26 +188,46 @@ function Musician.SongLinks:RegisterIndexedComm(prefix, method, isBnet)
 	local messages = {}
 
 	local function onIndexedChunk(_, messageWithIndex, distribution, sender)
-		local messageId = prefix .. ' ' .. sender
-		local controlBytes = Musician.Utils.UnpackNumber(LibBase64:dec(string.sub(messageWithIndex, 1, 4)))
-		local index = 1
-		if bit.band(controlBytes, 0x800000) == 0x800000 then
-			-- First chunk
+		-- Get message ID, control bytes and CRC32 from message header
+		local header = LibBase64:dec(string.sub(messageWithIndex, 1, 10))
+		local crc32 = Musician.Utils.UnpackNumber(string.sub(header, 1, 4))
+		local controlBytes = Musician.Utils.UnpackNumber(string.sub(header, 5, 7))
+		local messageId = prefix .. ' ' .. sender .. ' ' .. crc32
+
+		-- Create new message object
+		if messages[messageId] == nil then
 			messages[messageId] = {
 				chunks = {},
-				count = bit.band(controlBytes, 0x7FFFFF),
+				count = 0,
 				downloaded = 0,
+				wipe = function()
+					messages[messageId].timeout:Cancel()
+					wipe(messages[messageId].chunks)
+					wipe(messages[messageId])
+					messages[messageId] = nil
+				end
 			}
-		else
-			-- Lost chunk (may happen after a /reload while receiving a message)
-			if messages[messageId] == nil then
-				return
-			end
-			index = bit.band(controlBytes, 0x7FFFFF)
 		end
 		local message = messages[messageId]
+
+		-- Add chunk
+		local index = 1
+		if bit.band(controlBytes, 0x800000) == 0x800000 then
+			-- First chunk: get number of chunks
+			local chunkCount = bit.band(controlBytes, 0x7FFFFF)
+			message.count = chunkCount
+		else
+			-- Get chunk index
+			index = bit.band(controlBytes, 0x7FFFFF)
+		end
 		message.downloaded = message.downloaded + 1
-		message.chunks[index] = string.sub(messageWithIndex, 5)
+		message.chunks[index] = string.sub(messageWithIndex, 11)
+
+		-- Handle timeout
+		if message.timeout then
+			message.timeout:Cancel()
+		end
+		message.timeout = C_Timer.NewTimer(REQUEST_TIMEOUT, message.wipe)
 
 		-- Download complete
 		if message.downloaded == message.count then
@@ -212,9 +236,7 @@ function Musician.SongLinks:RegisterIndexedComm(prefix, method, isBnet)
 				text = text .. message.chunks[i]
 				message.chunks[i] = nil
 			end
-			wipe(messages[messageId].chunks)
-			wipe(messages[messageId])
-			messages[messageId] = nil
+			message.wipe()
 			method(prefix, text, distribution, sender)
 		end
 	end
@@ -628,7 +650,8 @@ function Musician.SongLinks.OnSongData(event, prefix, message, distribution, sen
 	end
 
 	-- Determine progression from chunk control bytes
-	local controlBytes = Musician.Utils.UnpackNumber(LibBase64:dec(string.sub(message, 1, 4)))
+	local header = LibBase64:dec(string.sub(message, 1, 10))
+	local controlBytes = Musician.Utils.UnpackNumber(string.sub(header, 5, 7))
 
 	-- This is the first index with the number of chunks
 	if bit.band(0x800000, controlBytes) == 0x800000 then
