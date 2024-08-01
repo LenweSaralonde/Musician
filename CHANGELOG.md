@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.9.10.0
+---------
+* Rewrote song links protocol to avoid errors during cross-realm transfers.
+* Set proper font size for add-on version in TRP3 tooltip #100
+
 v1.9.9.5
 --------
 * Fixed menus for CrossRP integration.
