@@ -12,7 +12,7 @@ local LibCRC32                             = LibStub:GetLibrary("LibCRC32")
 
 Musician.SongLinks.event                   = {}
 Musician.SongLinks.event.song              = "MusicianSongSnd"
-Musician.SongLinks.event.requestSong       = "MusicianSongReq"
+Musician.SongLinks.event.requestSong       = "MusicianSongRqt"
 Musician.SongLinks.event.songError         = "MusicianSongErr"
 
 Musician.SongLinks.errors                  = {}
