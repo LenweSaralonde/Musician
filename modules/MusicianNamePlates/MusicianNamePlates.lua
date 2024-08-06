@@ -246,7 +246,7 @@ local function addNote(animatedNotesFrame, song, track, key)
 
 	-- Reset frame
 	noteTexture:SetParent(animatedNotesFrame)
-	noteTexture:SetTexture(NOTES_TEXTURE_RACE[animatedNotesFrame.race] or NOTES_TEXTURE)
+	noteTexture:SetTexture(animatedNotesFrame.race and NOTES_TEXTURE_RACE[animatedNotesFrame.race] or NOTES_TEXTURE)
 	noteTexture:SetTexCoord(unpack(NOTES_TEXTURE_COORDS[noteSymbold]))
 	noteTexture:SetSize(32, 32)
 	noteTexture:Show()
@@ -325,13 +325,13 @@ function Musician.NamePlates.UpdateNamePlate(namePlate)
 	local unitToken = namePlate.namePlateUnitToken
 	local isPlayerOrFriendly = unitToken and (UnitIsFriend(unitToken, "player") or UnitIsPlayer(unitToken))
 
-	if not namePlate:IsForbidden() and isPlayerOrFriendly and not UnitIsUnit(unitToken, "player") then
+	if isPlayerOrFriendly and not namePlate:IsForbidden() and not UnitIsUnit(unitToken, "player") then
 
 		local healthBarIsVisible, classificationFrameIsVisible, levelFrameIsVisible, raidTargetFrameIsVisible
 
-		local isInCombat = UnitAffectingCombat(namePlate.namePlateUnitToken)
-		local health = UnitHealth(namePlate.namePlateUnitToken)
-		local healthMax = UnitHealthMax(namePlate.namePlateUnitToken)
+		local isInCombat = UnitAffectingCombat(unitToken)
+		local health = UnitHealth(unitToken)
+		local healthMax = UnitHealthMax(unitToken)
 		local showHealthBar = not Musician_Settings.hideNamePlateBars
 
 		if isInCombat or (health < healthMax) or showHealthBar then
@@ -388,7 +388,7 @@ end
 function Musician.NamePlates.OnUnitFrameUpdate(frame)
 	if frame:IsForbidden() then return end
 	local namePlate = frame:GetParent()
-	if namePlate and namePlate.namePlateUnitToken then
+	if namePlate then
 		Musician.NamePlates.UpdateNamePlate(namePlate)
 	end
 end
@@ -511,8 +511,9 @@ function Musician.NamePlates.AddNoteIcon(namePlate, textElement, append)
 		end)
 	end
 
-	local player = UnitIsPlayer(namePlate.namePlateUnitToken) and
-		Musician.Utils.NormalizePlayerName(GetUnitName(namePlate.namePlateUnitToken, true))
+	local unitToken = namePlate.namePlateUnitToken
+	local player = unitToken and UnitIsPlayer(unitToken) and
+		Musician.Utils.NormalizePlayerName(GetUnitName(unitToken, true))
 	local isNameVisible = Musician.NamePlates.ShouldRenderNoteIcon(textElement)
 	local hasNoteIcon = player and not Musician.Utils.PlayerIsMyself(player) and Musician_Settings.showNamePlateIcon and
 		Musician.Registry.PlayerIsRegistered(player)
@@ -620,9 +621,10 @@ function Musician.NamePlates.AttachNamePlate(namePlate, player, event)
 	end
 
 	-- Set data
+	local unitToken = namePlate.namePlateUnitToken
 	namePlate.musicianAnimatedNotesFrame.player = player
 	namePlate.musicianAnimatedNotesFrame.songId = nil
-	namePlate.musicianAnimatedNotesFrame.race = select(2, UnitRace(namePlate.namePlateUnitToken))
+	namePlate.musicianAnimatedNotesFrame.race = unitToken and select(2, UnitRace(unitToken)) or nil
 	namePlate.musicianAnimatedNotesFrame.notesAddedDuringFrame = {}
 	namePlate.musicianAnimatedNotesFrame.percussionNotesAddedDuringFrame = {}
 end
