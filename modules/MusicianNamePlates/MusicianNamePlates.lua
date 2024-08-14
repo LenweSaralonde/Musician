@@ -316,58 +316,34 @@ end
 --- UpdateNamePlate
 -- @param namePlate (Frame)
 function Musician.NamePlates.UpdateNamePlate(namePlate)
-
 	-- Handle cinematic mode
 	Musician.NamePlates.UpdateNamePlateCinematicMode(namePlate)
 
 	-- Hide friendly and player health bars when not in combat
-
 	local unitToken = namePlate.namePlateUnitToken
+	local unitFrame = namePlate.UnitFrame
 	local isPlayerOrFriendly = unitToken and (UnitIsFriend(unitToken, "player") or UnitIsPlayer(unitToken))
+	local shouldShowNameplate = unitFrame and ShouldShowName(unitFrame)
 
-	if isPlayerOrFriendly and not namePlate:IsForbidden() and not UnitIsUnit(unitToken, "player") then
-
-		local healthBarIsVisible, classificationFrameIsVisible, levelFrameIsVisible, raidTargetFrameIsVisible
-
+	if isPlayerOrFriendly and not namePlate:IsForbidden() and not UnitIsUnit(unitToken, "player") and shouldShowNameplate then
 		local isInCombat = UnitAffectingCombat(unitToken)
 		local health = UnitHealth(unitToken)
 		local healthMax = UnitHealthMax(unitToken)
-		local showHealthBar = not Musician_Settings.hideNamePlateBars
+		local shouldDisplayElement = not GetCVarBool("nameplateShowOnlyNames") and
+			(not Musician_Settings.hideNamePlateBars or isInCombat or health < healthMax)
 
-		if isInCombat or (health < healthMax) or showHealthBar then
-			healthBarIsVisible = true
-			classificationFrameIsVisible = true
-			levelFrameIsVisible = true
-			raidTargetFrameIsVisible = true
-		else
-			healthBarIsVisible = false
-			classificationFrameIsVisible = false
-			levelFrameIsVisible = false
-			raidTargetFrameIsVisible = false
-		end
+		local elements = {
+			unitFrame.HealthBarsContainer,
+			unitFrame.healthBar,
+			unitFrame.ClassificationFrame,
+			unitFrame.RaidTargetFrame,
+			unitFrame.LevelFrame
+		}
 
-		if GetCVarBool("nameplateShowOnlyNames") then
-			healthBarIsVisible = false
-			classificationFrameIsVisible = false
-			levelFrameIsVisible = false
-			raidTargetFrameIsVisible = false
-		end
-
-		if healthBarIsVisible ~= namePlate.UnitFrame.healthBar:IsVisible() then
-			namePlate.UnitFrame.healthBar:SetShown(healthBarIsVisible)
-			if namePlate.UnitFrame.HealthBarsContainer ~= nil then
-				namePlate.UnitFrame.HealthBarsContainer:SetShown(healthBarIsVisible)
+		for _, element in pairs(elements) do
+			if element and shouldDisplayElement ~= element:IsVisible() then
+				element:SetShown(shouldDisplayElement)
 			end
-		end
-		if namePlate.UnitFrame.ClassificationFrame and
-			classificationFrameIsVisible ~= namePlate.UnitFrame.ClassificationFrame:IsVisible() then
-			namePlate.UnitFrame.ClassificationFrame:SetShown(classificationFrameIsVisible)
-		end
-		if namePlate.UnitFrame.RaidTargetFrame and raidTargetFrameIsVisible ~= namePlate.UnitFrame.RaidTargetFrame:IsVisible() then
-			namePlate.UnitFrame.RaidTargetFrame:SetShown(raidTargetFrameIsVisible)
-		end
-		if namePlate.UnitFrame.LevelFrame and levelFrameIsVisible ~= namePlate.UnitFrame.LevelFrame:IsVisible() then
-			namePlate.UnitFrame.LevelFrame:SetShown(classificationFrameIsVisible)
 		end
 	end
 
