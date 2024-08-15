@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.9.10.2
+---------
+* Fixed player raid unit frame sometimes unexpectedly showing up at login.
+* Automatically disable special nameplate features that could interfere with the most popular nameplates customization add-ons.
+
 v1.9.10.1
 ---------
 * Fixed unexpected health bar showing on some special entities' nameplate such as portals or mining spots.
