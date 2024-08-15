@@ -13,6 +13,9 @@ function Musician.NeatPlates:OnEnable()
 	if Musician.NamePlates and NeatPlates then
 		Musician.Utils.Debug(MODULE_NAME, "NeatPlates detected.")
 
+		-- Disable incompatible features
+		Musician.NamePlates.ForbidHideHealthBars()
+
 		-- Always render the note icon
 		Musician.NamePlates.ShouldRenderNoteIcon = function()
 			return true

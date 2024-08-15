@@ -92,6 +92,7 @@ msg.OPTIONS_HIDE_NPC_NAMEPLATES = "Ocultar las placas de identificación de los 
 msg.OPTIONS_CINEMATIC_MODE = "Muestre animaciones cuando la interfaz de usuario esté oculta con {binding}."
 msg.OPTIONS_CINEMATIC_MODE_NO_BINDING = "Muestra animaciones cuando la interfaz de usuario está oculta."
 msg.OPTIONS_NAMEPLATES_CINEMATIC_MODE = "Muestre placas de identificación cuando la interfaz de usuario esté oculta."
+msg.OPTIONS_NAMEPLATES_OPTION_DISABLED_3RD_PARTY = "Esta opción no tiene efecto porque está instalado un add-on de personalización de placas de identificación."
 msg.OPTIONS_TRP3 = "RP total 3"
 msg.OPTIONS_TRP3_MAP_SCAN = "Muestra a los jugadores que tienen Musician en el mapa escaneado con un icono {icon}."
 msg.OPTIONS_CROSS_RP_TITLE = "RP cruzado"

@@ -12,6 +12,9 @@ function Musician.TidyPlates_ThreatPlates:OnEnable()
 	if TidyPlatesThreat then
 		Musician.Utils.Debug(MODULE_NAME, "TidyPlates ThreatPlates detected.")
 
+		-- Disable incompatible features
+		Musician.NamePlates.ForbidHideHealthBars()
+
 		hooksecurefunc(Musician.NamePlates, "UpdateNoteIcon", function(namePlate)
 			if namePlate.TPFrame and namePlate.TPFrame.visual and namePlate.TPFrame.visual.name then
 				Musician.NamePlates.AddNoteIcon(namePlate, namePlate.TPFrame.visual.name)

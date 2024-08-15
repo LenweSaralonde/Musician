@@ -92,6 +92,7 @@ msg.OPTIONS_HIDE_NPC_NAMEPLATES = "Скрыть таблички с именам
 msg.OPTIONS_CINEMATIC_MODE = "Показывать анимацию, когда пользовательский интерфейс скрыт с помощью {binding}."
 msg.OPTIONS_CINEMATIC_MODE_NO_BINDING = "Показывать анимацию, когда пользовательский интерфейс скрыт."
 msg.OPTIONS_NAMEPLATES_CINEMATIC_MODE = "Показывать таблички с именами, когда пользовательский интерфейс скрыт."
+msg.OPTIONS_NAMEPLATES_OPTION_DISABLED_3RD_PARTY = "Эта опция не действует, поскольку установлена ​​надстройка для настройки табличек."
 msg.OPTIONS_TRP3 = "Итого RP 3"
 msg.OPTIONS_TRP3_MAP_SCAN = "Покажите игрокам, у которых на сканированной карте есть Musician, с помощью значка {icon}."
 msg.OPTIONS_CROSS_RP_TITLE = "Кросс RP"

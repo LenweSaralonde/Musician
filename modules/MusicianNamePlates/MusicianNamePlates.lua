@@ -10,6 +10,8 @@ Musician.AddModule(MODULE_NAME)
 local GetCVar = (C_CVar and C_CVar.GetCVar or GetCVar)
 local GetCVarBool = (C_CVar and C_CVar.GetCVarBool or GetCVarBool)
 
+local canHideHealthBars = true
+local canShowNamesCinematicMode = true
 local playerNamePlates = {}
 local namePlatePlayers = {}
 local NOTES_TEXTURE = 167069 -- "spells\\t_vfx_note.blp"
@@ -97,6 +99,30 @@ function Musician.NamePlates:OnEnable()
 	-- Update all nameplates at initialization for a clean start
 	Musician.NamePlates.UpdateAll()
 	C_Timer.After(.5, Musician.NamePlates.UpdateAll)
+end
+
+--- Prevents the nameplate health bar from being hidden.
+--
+function Musician.NamePlates.ForbidHideHealthBars()
+	canHideHealthBars = false
+end
+
+--- Indicates if the nameplate health bar can hidden.
+-- @return canHideHealthBars (boolean)
+function Musician.NamePlates.CanHideHealthBars()
+	return canHideHealthBars
+end
+
+--- Prevents the nameplates to remain visible in cinematic mode.
+--
+function Musician.NamePlates.ForbidShowNamesCinematicMode()
+	canShowNamesCinematicMode = false
+end
+
+--- Indicates if the nameplates can safely be displayed in cinematic mode.
+-- @return canShowNamesCinematicMode (boolean)
+function Musician.NamePlates.CanShowNamesCinematicMode()
+	return canShowNamesCinematicMode
 end
 
 --- Render a single animated note
@@ -320,29 +346,31 @@ function Musician.NamePlates.UpdateNamePlate(namePlate)
 	Musician.NamePlates.UpdateNamePlateCinematicMode(namePlate)
 
 	-- Hide friendly and player health bars when not in combat
-	local unitToken = namePlate.namePlateUnitToken
-	local unitFrame = namePlate.UnitFrame
-	local isPlayerOrFriendly = unitToken and (UnitIsFriend(unitToken, "player") or UnitIsPlayer(unitToken))
-	local shouldShowNameplate = unitFrame and ShouldShowName(unitFrame)
+	if Musician.NamePlates.CanHideHealthBars() then
+		local unitToken = namePlate.namePlateUnitToken
+		local unitFrame = namePlate.UnitFrame
+		local isPlayerOrFriendly = unitToken and (UnitIsFriend(unitToken, "player") or UnitIsPlayer(unitToken))
+		local shouldShowNameplate = unitFrame and ShouldShowName(unitFrame)
 
-	if isPlayerOrFriendly and not namePlate:IsForbidden() and not UnitIsUnit(unitToken, "player") and shouldShowNameplate then
-		local isInCombat = UnitAffectingCombat(unitToken)
-		local health = UnitHealth(unitToken)
-		local healthMax = UnitHealthMax(unitToken)
-		local shouldDisplayElement = not GetCVarBool("nameplateShowOnlyNames") and
-			(not Musician_Settings.hideNamePlateBars or isInCombat or health < healthMax)
+		if isPlayerOrFriendly and not namePlate:IsForbidden() and not UnitIsUnit(unitToken, "player") and shouldShowNameplate then
+			local isInCombat = UnitAffectingCombat(unitToken)
+			local health = UnitHealth(unitToken)
+			local healthMax = UnitHealthMax(unitToken)
+			local shouldDisplayElement = not GetCVarBool("nameplateShowOnlyNames") and
+				(not Musician_Settings.hideNamePlateBars or isInCombat or health < healthMax)
 
-		local elements = {
-			unitFrame.HealthBarsContainer,
-			unitFrame.healthBar,
-			unitFrame.ClassificationFrame,
-			unitFrame.RaidTargetFrame,
-			unitFrame.LevelFrame
-		}
+			local elements = {
+				unitFrame.HealthBarsContainer,
+				unitFrame.healthBar,
+				unitFrame.ClassificationFrame,
+				unitFrame.RaidTargetFrame,
+				unitFrame.LevelFrame
+			}
 
-		for _, element in pairs(elements) do
-			if element and shouldDisplayElement ~= element:IsVisible() then
-				element:SetShown(shouldDisplayElement)
+			for _, element in pairs(elements) do
+				if element and shouldDisplayElement ~= element:IsVisible() then
+					element:SetShown(shouldDisplayElement)
+				end
 			end
 		end
 	end
@@ -432,9 +460,10 @@ function Musician.NamePlates.UpdateNamePlateCinematicMode(namePlate)
 
 	local UIParentIsVisible = UIParent:IsVisible()
 	local isCinematicModeEnabled = Musician.NamePlates.AreNamePlatesEnabled() and Musician_Settings.cinematicMode
+	local cinematicModeNamePlates = Musician.NamePlates.CanShowNamesCinematicMode() and Musician_Settings.cinematicModeNamePlates
 
 	-- Attach animated notes frame to WorldFrame if hiding nameplates in cinematic mode
-	if not Musician_Settings.cinematicModeNamePlates and isCinematicModeEnabled then
+	if not cinematicModeNamePlates and isCinematicModeEnabled then
 		local parent, scale
 		if not UIParentIsVisible then
 			parent = WorldFrame
@@ -451,8 +480,7 @@ function Musician.NamePlates.UpdateNamePlateCinematicMode(namePlate)
 	end
 
 	-- Set nameplate visibility
-	if not Musician_Settings.cinematicModeNamePlates and isCinematicModeEnabled or
-		not isCinematicModeEnabled then
+	if not cinematicModeNamePlates and isCinematicModeEnabled or not isCinematicModeEnabled then
 		if UIParentIsVisible then
 			namePlate:Show()
 		else

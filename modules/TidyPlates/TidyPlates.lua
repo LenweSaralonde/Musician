@@ -13,6 +13,9 @@ function Musician.TidyPlates:OnEnable()
 	if TidyPlates then
 		Musician.Utils.Debug(MODULE_NAME, "TidyPlates detected.")
 
+		-- Disable incompatible features
+		Musician.NamePlates.ForbidHideHealthBars()
+
 		-- Always render the note icon
 		Musician.NamePlates.ShouldRenderNoteIcon = function()
 			return true

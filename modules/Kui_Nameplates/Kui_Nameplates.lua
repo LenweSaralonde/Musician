@@ -14,6 +14,9 @@ function Musician.KuiNamePlates:OnEnable()
 
 		Musician.Utils.Debug(MODULE_NAME, "Kui Nameplates detected.")
 
+		-- Disable incompatible features
+		Musician.NamePlates.ForbidHideHealthBars()
+
 		hooksecurefunc(Musician.NamePlates, "UpdateNoteIcon", function(namePlate)
 			if namePlate.kui and namePlate.kui.NameText then
 				Musician.NamePlates.AddNoteIcon(namePlate, namePlate.kui.NameText)

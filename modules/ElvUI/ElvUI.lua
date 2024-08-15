@@ -22,6 +22,9 @@ function Musician.ElvUI:OnEnable()
 	if ElvUI then
 		Musician.Utils.Debug(MODULE_NAME, "ElvUI detected.")
 
+		-- Disable incompatible features
+		Musician.NamePlates.ForbidHideHealthBars()
+
 		local E, _, _, _, _ = unpack(ElvUI) --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 		local NP = E:GetModule("NamePlates")
 
