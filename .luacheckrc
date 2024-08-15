@@ -579,6 +579,7 @@ stds.wow = {
 		"RegisterAddonMessagePrefix",
 		"securecall",
 		"CloseSpecialWindows",
+		"ShouldShowName",
 
 		-- Global Mixins and UI Objects
 
