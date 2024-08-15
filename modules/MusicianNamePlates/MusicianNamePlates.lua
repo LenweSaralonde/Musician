@@ -364,7 +364,8 @@ end
 function Musician.NamePlates.OnUnitFrameUpdate(frame)
 	if frame:IsForbidden() then return end
 	local namePlate = frame:GetParent()
-	if namePlate then
+	-- Make sure the unit frame belongs to a nameplate before going further
+	if namePlate and namePlate:GetName() and string.sub(namePlate:GetName(), 1, 9) == 'NamePlate' then
 		Musician.NamePlates.UpdateNamePlate(namePlate)
 	end
 end
