@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v1.9.10.1
+---------
+* Fixed unexpected health bar showing on some special entities' nameplate such as portals or mining spots.
+* Fixed nameplates sometimes showing up when the UI is hidden even if Musician nameplates are disabled.
+* Fixed rare Lua error in nameplates module.
+* Updated for WoW retail patch 11.0.2.
+
 v1.9.10.0
 ---------
 * Rewrote song links protocol to avoid errors during cross-realm transfers.
