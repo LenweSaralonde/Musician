@@ -14,17 +14,11 @@ function Musician.TidyPlates_ThreatPlates:OnEnable()
 
 		-- Disable incompatible features
 		Musician.NamePlates.ForbidHideHealthBars()
+		Musician.NamePlates.ForbidShowNamesCinematicMode()
 
 		hooksecurefunc(Musician.NamePlates, "UpdateNoteIcon", function(namePlate)
 			if namePlate.TPFrame and namePlate.TPFrame.visual and namePlate.TPFrame.visual.name then
 				Musician.NamePlates.AddNoteIcon(namePlate, namePlate.TPFrame.visual.name)
-			end
-		end)
-
-		-- Handle cinematic mode
-		hooksecurefunc(Musician.NamePlates, "UpdateNamePlateCinematicMode", function(namePlate)
-			if namePlate.TPFrame then
-				Musician.NamePlates.UpdateNamePlateCinematicMode(namePlate.TPFrame)
 			end
 		end)
 	end

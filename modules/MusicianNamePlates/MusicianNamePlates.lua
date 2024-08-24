@@ -460,10 +460,10 @@ function Musician.NamePlates.UpdateNamePlateCinematicMode(namePlate)
 
 	local UIParentIsVisible = UIParent:IsVisible()
 	local isCinematicModeEnabled = Musician.NamePlates.AreNamePlatesEnabled() and Musician_Settings.cinematicMode
-	local cinematicModeNamePlates = Musician.NamePlates.CanShowNamesCinematicMode() and Musician_Settings.cinematicModeNamePlates
+	local isCinematicModeNamePlatesEnabled = Musician_Settings.cinematicModeNamePlates
 
 	-- Attach animated notes frame to WorldFrame if hiding nameplates in cinematic mode
-	if not cinematicModeNamePlates and isCinematicModeEnabled then
+	if namePlate.musicianAnimatedNotesFrame and isCinematicModeEnabled then
 		local parent, scale
 		if not UIParentIsVisible then
 			parent = WorldFrame
@@ -480,11 +480,13 @@ function Musician.NamePlates.UpdateNamePlateCinematicMode(namePlate)
 	end
 
 	-- Set nameplate visibility
-	if not cinematicModeNamePlates and isCinematicModeEnabled or not isCinematicModeEnabled then
-		if UIParentIsVisible then
-			namePlate:Show()
-		else
-			namePlate:Hide()
+	if Musician.NamePlates.CanShowNamesCinematicMode() then
+		if isCinematicModeEnabled and not isCinematicModeNamePlatesEnabled or not isCinematicModeEnabled then
+			if UIParentIsVisible then
+				namePlate:Show()
+			else
+				namePlate:Hide()
+			end
 		end
 	end
 end
