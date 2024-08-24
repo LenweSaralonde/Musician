@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.10.3
+---------
+* Disabled nameplates visibility control in cinematic mode when ThreatPlates is installed to avoid side effects.
+
 v1.9.10.2
 ---------
 * Fixed player raid unit frame sometimes unexpectedly showing up at login.
