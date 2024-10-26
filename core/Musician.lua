@@ -46,7 +46,7 @@ function Musician:OnInitialize()
 				LE_EXPANSION_LEVEL_CURRENT == 1 and 197 or -- BC
 				LE_EXPANSION_LEVEL_CURRENT == 2 and 149 or -- WotLK
 				LE_EXPANSION_LEVEL_CURRENT == 3 and 149 or -- Cata
-				154,                                       -- Retail
+				150.5,                                     -- Retail
 			hide = false,
 		},
 		addonCompartment = {
