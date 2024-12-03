@@ -56,7 +56,7 @@ local function getTrackingOption(option)
 	return Musician_CharacterSettings.tracking[option]
 end
 
---- Set map tracking option settting
+--- Set map tracking option setting
 -- @param option (string) from Musician.Map.TRACKING
 -- @param enabled (boolean)
 local function setTrackingOption(option, enabled)
