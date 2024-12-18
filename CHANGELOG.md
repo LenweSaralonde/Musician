@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.9.10.4
+---------
+* Adjusted default minimap icon position.
+* Updated for WoW retail patch 11.0.7, Cataclysm Classic 4.4.1 and Classic Era 1.15.5.
+
 v1.9.10.3
 ---------
 * Disabled nameplates visibility control in cinematic mode when ThreatPlates is installed to avoid side effects.
