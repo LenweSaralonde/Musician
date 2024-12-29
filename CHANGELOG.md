@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.9.11.0
+---------
+* Added Tukui nameplates support.
+* Fixed nameplate bug with Plater when the guild name is displayed.
+
 v1.9.10.4
 ---------
 * Adjusted default minimap icon position.
