@@ -345,7 +345,7 @@ v1.7.5.1
 v1.7.5.0
 --------
 * Song editor window can now be resized. #65
-* MIDI converter was entierly rewritten to remove the dependency to ToneJS Midi, fix minor issues and improve performance. #58
+* MIDI converter was entirely rewritten to remove the dependency to ToneJS Midi, fix minor issues and improve performance. #58
 * Fixed held down notes sometimes getting stopped on sustain pedal release in live play mode. #66
 
 v1.7.4.0
@@ -355,7 +355,7 @@ v1.7.4.0
 v1.7.3.0
 --------
 * Unified version for WoW Shadowlands, WoW Classic and WoW Burning Crusade Classic.
-* Created localization for German, Spanish, Italian, Korean, Portugese, Russian and traditional Chinese using Google Translate.
+* Created localization for German, Spanish, Italian, Korean, Portuguese, Russian and traditional Chinese using Google Translate.
 * Minor bugfixes and improvements.
 
 v1.7.2.2
