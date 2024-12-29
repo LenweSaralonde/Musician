@@ -241,7 +241,7 @@ function Musician.CrossRP.Init()
 			end
 		end)
 
-	-- Scan nearby foreingers on each frame
+	-- Scan nearby foreigners on each frame
 	--
 	Musician.CrossRP:RegisterMessage(Musician.Events.Frame, function(event)
 
@@ -376,7 +376,7 @@ function Musician.CrossRP.GetAdverseFaction()
 	end
 end
 
---- Return destination string for targetted unit
+--- Return destination string for targeted unit
 -- @param unit (string)
 -- @return (string)
 function Musician.CrossRP.GetUnitDestination(unit)

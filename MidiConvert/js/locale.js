@@ -53,9 +53,9 @@ function setMusicianVersion(version, url) {
 
 function setDownloadLink() {
 	if (MUSICIAN_VERSION != null)
-		document.getElementById("DowloadLink").innerHTML = MUSICIAN_MSG.dowloadVersion.replace(/\{version\}/, MUSICIAN_VERSION);
+		document.getElementById("DownloadLink").innerHTML = MUSICIAN_MSG.downloadVersion.replace(/\{version\}/, MUSICIAN_VERSION);
 	else
-		document.getElementById("DowloadLink").innerHTML = MUSICIAN_MSG.dowload;
+		document.getElementById("DownloadLink").innerHTML = MUSICIAN_MSG.download;
 }
 
 var localeScriptTag = document.createElement('script');

@@ -315,7 +315,7 @@ function Musician.Frame.SetLoadingProgressBar(progression)
 	end
 end
 
---- Regresh progress bar of the song
+--- Refresh progress bar of the song
 -- @param event (string)
 -- @param song (Musician.Song) Can be the source song or the song currently playing
 function Musician.Frame.RefreshPlayingProgressBar(event, song)
@@ -341,7 +341,7 @@ function Musician.Frame.RefreshPlayingProgressBar(event, song)
 	end
 end
 
---- Regresh bandwidth indicator
+--- Refresh bandwidth indicator
 -- @param event (string)
 -- @param bandwidth (number)
 function Musician.Frame.RefreshBandwidthIndicator(event, bandwidth)

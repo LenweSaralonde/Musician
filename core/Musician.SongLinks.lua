@@ -136,7 +136,7 @@ function Musician.SongLinks:SendIndexedCommMessage(prefix, text, distribution, t
 	local cursor = 1
 	local totalSent = 0
 	for index = 1, chunkCount do
-		-- Encode chunk count and indexes on 3 bytes. This allows messsage length up to ~2 GB, which should be enough.
+		-- Encode chunk count and indexes on 3 bytes. This allows message length up to ~2 GB, which should be enough.
 		-- Resulting base64-encoded index is 4 bytes long.
 		local controlBytes
 		if index == 1 then
@@ -396,7 +396,7 @@ function Musician.SongLinks.HyperlinksToChatLinks(text)
 	text = string.gsub(text, capturePattern, function(playerArg, titleArg)
 		return Musician.SongLinks.GetChatLink(titleArg, playerArg)
 	end)
-	-- Add spaces between links to prevent the message from failing through Battle.net messenging
+	-- Add spaces between links to prevent the message from failing through Battle.net messaging
 	text = string.gsub(text, '%]%[' .. CHAT_LINK_PREFIX, '] [' .. CHAT_LINK_PREFIX)
 	return text
 end

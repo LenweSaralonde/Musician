@@ -472,7 +472,7 @@ function Musician.TrackEditor.GetTrackFrame(song, track)
 	return _G['MusicianTrackEditorTrack' .. track.index]
 end
 
---- Handle track instruent change
+--- Handle track instrument change
 -- @param event (string)
 -- @param song (Musician.Song)
 -- @param track (table) Track object of the song

@@ -42,7 +42,7 @@ function Musician.Preloader.Init()
 	-- Waited time before a new sample preloading
 	frameWaitedTime = 0
 
-	-- Stastics on preloaded samples from disk
+	-- Statistics on preloaded samples from disk
 	totalLoadingTime = 0
 	totalLoadedSamples = 0
 	averageLoadingTime = HDD_AVERAGE_LOADING_TIME -- Consider the worst case scenario during initialization

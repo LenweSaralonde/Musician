@@ -661,7 +661,7 @@ function Musician.Utils.GetNewAudioSettings(oldSettings)
 		end
 	end
 
-	-- Make sure we have a sound cache large enough to kepp all the instrument samples
+	-- Make sure we have a sound cache large enough to keep all the instrument samples
 	local cacheSizeInBytes = Musician.Utils.GetSoundCacheSize() * 1024 * 1024
 	if oldSettings.CVars.Sound_MaxCacheSizeInBytes < cacheSizeInBytes then
 		newSettings.CVars.Sound_MaxCacheSizeInBytes = cacheSizeInBytes
@@ -1210,7 +1210,7 @@ end
 
 --- Check third party add-on dependencies for a module. Return false and display an error message if the provided check function is not resolved.
 -- @param moduleName (string) Name of the module/add-on
--- @param checkFunc (function) Returns false or throws an error if the dependencides don't match
+-- @param checkFunc (function) Returns false or throws an error if the dependencies don't match
 -- @return isValid True if the dependencies are correct.
 function Musician.Utils.CheckModuleDependencies(moduleName, checkFunc)
 	local isValid = false

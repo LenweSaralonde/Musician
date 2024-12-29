@@ -51,7 +51,7 @@ Musician.COLORS = {
 	Gray = { 0.6, 0.6, 0.6 },
 }
 
---- Instruments table. The key is the internal instrument ID (string) and each value is a table having the following attribues (all are optional):
+--- Instruments table. The key is the internal instrument ID (string) and each value is a table having the following attributes (all are optional):
 --
 --  color (table) Color {r, g, b} from Musician.COLORS.
 --

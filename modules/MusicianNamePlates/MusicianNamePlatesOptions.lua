@@ -34,10 +34,10 @@ local function SetCVarSafe(name, value)
 	isSettingCVar = false
 end
 
---- Mark the option checkbox as overriden by a third party add-on.
+--- Mark the option checkbox as overridden by a third party add-on.
 -- @param checkbox (Frame)
 -- @param isDisabled (boolean)
-local function setOverridenBy3rdParty(checkbox, isDisabled)
+local function setOverriddenBy3rdParty(checkbox, isDisabled)
 	if isDisabled then
 		checkbox.tooltipText = Musician.Msg.OPTIONS_NAMEPLATES_OPTION_DISABLED_3RD_PARTY
 		checkbox:SetAlpha(.4)
@@ -196,8 +196,8 @@ function Musician.NamePlates.Options.RefreshCheckboxes()
 	MusicianOptionsPanelUnitNamePlatesHideNPCs:SetChecked(not C_CVar.GetCVarBool("nameplateShowFriendlyNPCs"))
 	MusicianOptionsPanelUnitNamePlatesCinematicMode:SetChecked(Musician_Settings.cinematicMode)
 	MusicianOptionsPanelUnitNamePlatesCinematicModeNamePlates:SetChecked(Musician_Settings.cinematicModeNamePlates)
-	setOverridenBy3rdParty(MusicianOptionsPanelUnitNamePlatesHideNamePlateBars, not Musician.NamePlates.CanHideHealthBars())
-	setOverridenBy3rdParty(MusicianOptionsPanelUnitNamePlatesCinematicModeNamePlates, not Musician.NamePlates.CanShowNamesCinematicMode())
+	setOverriddenBy3rdParty(MusicianOptionsPanelUnitNamePlatesHideNamePlateBars, not Musician.NamePlates.CanHideHealthBars())
+	setOverriddenBy3rdParty(MusicianOptionsPanelUnitNamePlatesCinematicModeNamePlates, not Musician.NamePlates.CanShowNamesCinematicMode())
 end
 
 --- Get text label for cinematic mode

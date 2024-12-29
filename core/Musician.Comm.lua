@@ -159,7 +159,7 @@ function Musician.Comm.Init()
 	end
 
 	-- Determine if should be using the alternate prefix for streaming in the channel
-	-- to mitigate the agressive throttling for add-on messages added in 10.2.7
+	-- to mitigate the aggressive throttling for add-on messages added in 10.2.7
 	hooksecurefunc(_G.C_ChatInfo, "SendAddonMessage", function(prefix)
 		if prefix == Musician.Comm.event.stream then
 			local now = debugprofilestop()
@@ -176,7 +176,7 @@ function Musician.Comm.Init()
 	end)
 end
 
---- Function executed when the communication channel has been successfullly joined
+--- Function executed when the communication channel has been successfully joined
 --
 local function onChannelJoined()
 	Musician.Utils.Debug(MODULE_NAME, "Communication channel successfully joined.")
@@ -264,7 +264,7 @@ function Musician.Comm.JoinChannel()
 		-- Something interesting happened for the communication channel
 		if channelName == Musician.CHANNEL then
 			if text == 'YOU_CHANGED' or text == 'YOU_JOINED' then
-				-- Successfully joined channed
+				-- Successfully joined channel
 				onChannelJoined()
 			elseif text == 'WRONG_PASSWORD' or text == 'BANNED' then
 				-- Something went wrong

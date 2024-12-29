@@ -52,7 +52,7 @@
 						<Anchor point="TOPLEFT" x="2" y="-3" />
 					</Anchors>
 				</Texture>
-				<Texture name="$parentInsetTopRightCorner" inherits="UI-Frame-InnerTopRight" parentKey="InsetBorderTopmRight">
+				<Texture name="$parentInsetTopRightCorner" inherits="UI-Frame-InnerTopRight" parentKey="InsetBorderTopRight">
 					<Anchors>
 						<Anchor point="TOPRIGHT" x="-3" y="-3" />
 					</Anchors>
