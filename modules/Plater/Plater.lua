@@ -25,11 +25,5 @@ end
 --- Update note icon next to player name
 -- @param namePlate (Frame)
 function Musician.Plater.UpdateNoteIcon(namePlate)
-	local currentUnitNameString = namePlate.CurrentUnitNameString
-	local otherUnitNameString = namePlate.CurrentUnitNameString == namePlate.unitName and namePlate.ActorNameSpecial or
-		namePlate.unitName
-	Musician.NamePlates.AddNoteIcon(namePlate, currentUnitNameString)
-	if otherUnitNameString and otherUnitNameString.noteIcon then
-		otherUnitNameString.noteIcon:Hide()
-	end
+	Musician.NamePlates.AddNoteIcon(namePlate, namePlate.CurrentUnitNameString)
 end

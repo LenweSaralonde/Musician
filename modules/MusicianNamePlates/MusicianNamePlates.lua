@@ -525,7 +525,12 @@ function Musician.NamePlates.AddNoteIcon(namePlate, textElement, append)
 	local isNameVisible = Musician.NamePlates.ShouldRenderNoteIcon(textElement)
 	local hasNoteIcon = player and not Musician.Utils.PlayerIsMyself(player) and Musician_Settings.showNamePlateIcon and
 		Musician.Registry.PlayerIsRegistered(player)
-	local iconPlaceholder = Musician.Utils.GetChatIcon("")
+	local textIcon = Musician.Utils.GetChatIcon(Musician.IconImages.Note)
+	if append then
+		textIcon = ' ' .. textIcon
+	else
+		textIcon = textIcon .. ' '
+	end
 
 	if hasNoteIcon and isNameVisible then
 		local nameString = textElement:GetText()
@@ -533,69 +538,30 @@ function Musician.NamePlates.AddNoteIcon(namePlate, textElement, append)
 			return
 		end
 
-		-- Icon placeholder is present but not at the right position: remove it
-		local from, to = string.find(nameString, iconPlaceholder, 1, true)
+		-- Find if icon is present
+		local from, to = string.find(nameString, textIcon, 1, true)
+
+		-- Icon is present but not at the right position: remove it
 		if append and to and to ~= nameString or not append and from and from ~= 1 then
 			nameString = string.sub(nameString, 1, from - 1) .. string.sub(nameString, to + 1, #nameString)
-			nameString = string.gsub(nameString, '%s+', ' ')
-			nameString = strtrim(nameString)
 			from = nil
 		end
 
-		-- Add icon placeholder if not found or previously removed
+		-- Add icon if not found or previously removed
 		if from == nil then
 			if append then
-				setTextUnhooked(textElement, nameString .. " " .. iconPlaceholder)
+				setTextUnhooked(textElement, nameString .. textIcon)
 			else
-				setTextUnhooked(textElement, iconPlaceholder .. " " .. nameString)
+				setTextUnhooked(textElement, textIcon .. nameString)
 			end
 		end
-
-		local parent = textElement:GetParent()
-		-- Create note icon
-		if textElement.noteIcon == nil then
-			textElement.noteIcon = parent:CreateTexture(nil, "ARTWORK")
-			textElement.noteIcon:SetTexture(Musician.IconImages.Note)
-			textElement.noteIcon.updateSize = function(self)
-				textElement.noteIcon:SetWidth(textElement:GetHeight())
-				textElement.noteIcon:SetHeight(textElement:GetHeight())
-				textElement.noteIcon:SetScale(textElement:GetScale())
-			end
-			parent:HookScript("OnSizeChanged", textElement.noteIcon.updateSize)
-		end
-
-		-- Update note icon
-		textElement.noteIcon:SetParent(parent)
-
-		local offset = 0
-		if textElement:GetJustifyH() == "CENTER" then
-			local textWidth = textElement:GetStringWidth()
-			offset = (textElement:GetWidth() - textWidth) / 2
-		end
-
-		textElement.noteIcon:ClearAllPoints()
-		if append then
-			textElement.noteIcon:SetPoint("RIGHT", textElement, "RIGHT", -offset, 0)
-		else
-			textElement.noteIcon:SetPoint("LEFT", textElement, "LEFT", offset, 0)
-		end
-
-		textElement.noteIcon.updateSize()
-		textElement.noteIcon:Show()
 	else
-		-- Hide icon
-		if textElement.noteIcon then
-			textElement.noteIcon:Hide()
-		end
-
-		-- Remove note icon placeholder
+		-- Remove note icon
 		local nameString = textElement:GetText()
 		if nameString ~= nil then
-			local from, to = string.find(nameString, iconPlaceholder, 1, true)
+			local from, to = string.find(nameString, textIcon, 1, true)
 			if to and from ~= nil then
 				nameString = string.sub(nameString, 1, from - 1) .. string.sub(nameString, to + 1, #nameString)
-				nameString = string.gsub(nameString, '%s+', ' ')
-				nameString = strtrim(nameString)
 				setTextUnhooked(textElement, nameString)
 			end
 		end
