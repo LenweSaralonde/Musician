@@ -526,9 +526,7 @@ function Musician.NamePlates.AddNoteIcon(namePlate, textElement, append)
 	local hasNoteIcon = player and not Musician.Utils.PlayerIsMyself(player) and Musician_Settings.showNamePlateIcon and
 		Musician.Registry.PlayerIsRegistered(player)
 	local textIcon = Musician.Utils.GetChatIcon(Musician.IconImages.Note)
-	if append then
-		textIcon = ' ' .. textIcon
-	else
+	if not append then
 		textIcon = textIcon .. ' '
 	end
 

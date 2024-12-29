@@ -158,7 +158,9 @@ globals = {
 		fields = {
 			"UpdateTooltip"
 		}
-	}
+	},
+
+	"oUF_NamePlateDriver"
 }
 
 read_globals = {
@@ -187,6 +189,7 @@ read_globals = {
 
 	-- 3rd party add-ons
 	"ElvUI",
+	"Tukui",
 	CrossRP = {
 		fields = {
 			Proto = {

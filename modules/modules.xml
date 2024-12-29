@@ -13,5 +13,6 @@
 	<Include file="TidyPlates_ThreatPlates\TidyPlates_ThreatPlates.xml" />
 	<Include file="NeatPlates\NeatPlates.xml" />
 	<Include file="ElvUI\ElvUI.xml" />
+	<Include file="Tukui\Tukui.xml" />
 	<Include file="MusicianExtras\MusicianExtras.xml" />
 </Ui>
