@@ -1,4 +1,3 @@
---- Simulates a volume meter for visual feedback
 --- ElvUI integration
 -- @module Musician.ElvUI
 
@@ -38,15 +37,9 @@ function Musician.ElvUI:OnEnable()
 		hooksecurefunc(NP, "SetupTarget", updateEvlUI_Nameplate)
 		hooksecurefunc(NP, "StyleFilterUpdate", updateEvlUI_Nameplate)
 
-		-- Update nameplate when player is registered
-		Musician.ElvUI:RegisterMessage(Musician.Registry.event.playerRegistered, function(event, player)
-			local fullPlayerName = Musician.Utils.NormalizePlayerName(player)
-			local namePlate = Musician.NamePlates.playerNamePlates[fullPlayerName]
-			if not namePlate then return end
-			local namePlateName = namePlate:GetName()
-			local ElvNamePlate = _G["ElvNP_" .. namePlateName]
-			if not ElvNamePlate or not ElvNamePlate.Name then return end
-			Musician.NamePlates.AddNoteIcon(namePlate, ElvNamePlate.Name)
+		-- Update the note icon when the nameplate gets updated by MusicianNamePlates
+		hooksecurefunc(Musician.NamePlates, "UpdateNoteIcon", function(namePlate)
+			updateEvlUI_Nameplate(self, namePlate.unitFrame) -- ElvUI's custom frame is actually "unitFrame"
 		end)
 
 		Musician.Utils.Debug(MODULE_NAME, "ElvUI module initialized.")
