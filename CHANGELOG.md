@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.9.11.1
+---------
+* Added add-on category and group.
+* TOC bump for WoW Retail 11.1.0, WoW Classic 4.4.2 and WoW Classic Era 1.15.6.
+
 v1.9.11.0
 ---------
 * Added Tukui nameplates support.
