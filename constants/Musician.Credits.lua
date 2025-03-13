@@ -11,6 +11,7 @@ Musician.SUPPORTERS = {
 	"Aphex",
 	"Derenly",
 	"Serreldian",
+	"Larxania Lunimarch",
 }
 
 --- Legendary supporter names
