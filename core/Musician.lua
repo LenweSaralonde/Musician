@@ -60,7 +60,7 @@ function Musician:OnInitialize()
 	Musician_CharacterSettings.addOnMenu = nil
 
 	-- Init bindings names
-	_G.BINDING_HEADER_MUSICIAN = Musician.Msg.ABOUT_TITLE
+	_G.BINDING_CATEGORY_MUSICIAN = Musician.Msg.ABOUT_TITLE
 	_G.BINDING_NAME_MUSICIANTOGGLE = Musician.Msg.COMMAND_SHOW
 	_G.BINDING_NAME_MUSICIANPLAY = Musician.Msg.COMMAND_PLAY
 	_G.BINDING_NAME_MUSICIANKEYBOARD = Musician.Msg.COMMAND_LIVE_KEYBOARD

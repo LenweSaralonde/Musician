@@ -1,11 +1,11 @@
 <Bindings>
-	<Binding name="MUSICIANTOGGLE" header="MUSICIAN" category="ADDONS">
+	<Binding name="MUSICIANTOGGLE" category="BINDING_CATEGORY_MUSICIAN">
 		MusicianFrame:Toggle()
 	</Binding>
-	<Binding name="MUSICIANPLAY" category="ADDONS">
+	<Binding name="MUSICIANPLAY" category="BINDING_CATEGORY_MUSICIAN">
 		Musician.Comm.TogglePlaySong()
 	</Binding>
-	<Binding name="MUSICIANKEYBOARD" category="ADDONS">
+	<Binding name="MUSICIANKEYBOARD" category="BINDING_CATEGORY_MUSICIAN">
 		MusicianFrameSource:ClearFocus()
 		Musician.Keyboard.Show()
 	</Binding>
