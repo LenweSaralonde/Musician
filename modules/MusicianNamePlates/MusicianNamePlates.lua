@@ -668,12 +668,9 @@ end
 --- Indicates whenever the friendly player nameplates are enabled.
 -- @return areVisible (boolean)
 function Musician.NamePlates.AreNamePlatesEnabled()
-	return
-		GetCVarBool("nameplateShowAll") and
-		GetCVarBool("nameplateShowFriends") and
-		tonumber(GetCVar("nameplatePlayerMaxDistance")) or 0 > 0
+	local hasValidMaxDistance = WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE or (tonumber(GetCVar("nameplatePlayerMaxDistance")) or 0) > 0
+	return GetCVarBool("nameplateShowAll") and GetCVarBool("nameplateShowFriends") and hasValidMaxDistance
 end
-
 --- Initialize tips and tricks
 --
 function Musician.NamePlates.InitTipsAndTricks()

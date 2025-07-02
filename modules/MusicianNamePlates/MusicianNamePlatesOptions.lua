@@ -14,12 +14,9 @@ local C_CVar = _G["C_CVar"] or {
 -- Previous settings to be restored restore when Cancel is pressed
 local oldSettings = {}
 
--- True when a CVar is being set by SetCVarSafe
-local isSettingCVar = false
-
--- Disable the SetCVar hook when true
+-- Disable checkbox refreshing
 -- This is needed when setting several CVars within the same action
-local disableSetCVarHook = false
+local disableRefreshCheckboxes = false
 
 --- Set a CVar (can be safely used in combat and doesn't refresh checkboxes)
 -- @param name (string)
@@ -29,9 +26,7 @@ local function SetCVarSafe(name, value)
 		C_Timer.After(1, function() SetCVarSafe(name, value) end)
 		return
 	end
-	isSettingCVar = true
 	SetCVar(name, value)
-	isSettingCVar = false
 end
 
 --- Mark the option checkbox as overridden by a third party add-on.
@@ -52,16 +47,11 @@ end
 function Musician.NamePlates.Options.Init()
 	-- Refresh relevant panel elements when a CVar was changed externally
 	hooksecurefunc(C_CVar, "SetCVar", function(name)
-		if disableSetCVarHook or isSettingCVar then
+		if disableRefreshCheckboxes then
 			return
 		end
-		if name == "nameplateShowAll" or name == "nameplateShowFriends" or name == "nameplatePlayerMaxDistance" then
-			MusicianOptionsPanelUnitNamePlatesEnable:SetChecked(Musician.NamePlates.AreNamePlatesEnabled())
-			if MusicianOptionsPanelUnitNamePlatesEnable:IsVisible() then
-				ExecuteFrameScript(MusicianOptionsPanelUnitNamePlatesEnable, "OnClick", "LeftButton")
-			end
-		elseif name == "nameplateShowFriendlyNPCs" then
-			MusicianOptionsPanelUnitNamePlatesHideNPCs:SetChecked(not C_CVar.GetCVarBool("nameplateShowFriendlyNPCs"))
+		if name == "nameplateShowAll" or name == "nameplateShowFriends" or name == "nameplatePlayerMaxDistance" or name == "nameplateShowFriendlyNPCs" then
+			Musician.NamePlates.Options.RefreshCheckboxes()
 		end
 	end)
 
@@ -83,7 +73,7 @@ function Musician.NamePlates.Options.Init()
 		Musician.Msg.OPTIONS_ENABLE_NAMEPLATES)
 	MusicianOptionsPanelUnitNamePlatesEnable:HookScript("OnClick", function(self)
 		-- Enable nameplates
-		disableSetCVarHook = true
+		disableRefreshCheckboxes = true
 		SetCVarSafe("nameplateShowAll", self:GetChecked())
 		if InterfaceOptionsNamesPanelUnitNameplatesShowAll then
 			InterfaceOptionsNamesPanelUnitNameplatesShowAll:SetChecked(self:GetChecked())
@@ -109,7 +99,7 @@ function Musician.NamePlates.Options.Init()
 				InterfaceOptionsNamesPanelUnitNameplatesMotionDropDown:SetValue(0)
 			end
 		end
-		disableSetCVarHook = false
+		disableRefreshCheckboxes = false
 	end)
 
 	-- Show icon checkbox
