@@ -78,4 +78,9 @@ function MusicianOptionsPanelMap_OnLoad()
 	MusicianOptionsPanelMapWorldMap:HookScript("OnClick", function()
 		Musician.Map.Options.Save(true)
 	end)
+
+	-- Only show on Classic Era
+	if LE_EXPANSION_LEVEL_CURRENT > 0 then
+		MusicianOptionsPanelMap:Hide()
+	end
 end
