@@ -81,33 +81,32 @@ function Musician.Map:OnEnable()
 	miniMapPinPool = CreateFramePool("FRAME", Minimap, PIN_TEMPLATE_MINI_MAP)
 	self:RegisterMessage(Musician.Events.SongChunk, Musician.Map.OnSongChunk)
 	hooksecurefunc(WorldMapFrame, 'OnMapChanged', Musician.Map.RefreshWorldMap)
-	if Menu then
-		local function modifyMapMenu(menu, getter, setter)
-			Menu.ModifyMenu(menu, function(_, rootDescription)
-				rootDescription:CreateDivider()
-				rootDescription:CreateTitle(Musician.Msg.MAP_TRACKING_OPTIONS_TITLE)
-				local checkbox = rootDescription:CreateCheckbox(Musician.Msg.MAP_TRACKING_OPTION_ACTIVE_MUSICIANS,
-					getter,
-					function() setter(not getter()) end)
-				checkbox:AddInitializer(function(button)
-					local rightTexture = button:AttachTexture();
-					rightTexture:SetSize(20, 20);
-					rightTexture:SetPoint("RIGHT");
-					rightTexture:SetTexture(Musician.IconImages.Note);
-				end);
+
+	-- Tracking menu generators
+	local function getMenuGenerator(getter, setter)
+		return function (_, rootDescription)
+			rootDescription:CreateDivider()
+			rootDescription:CreateTitle(Musician.Msg.MAP_TRACKING_OPTIONS_TITLE)
+			local checkbox = rootDescription:CreateCheckbox(Musician.Msg.MAP_TRACKING_OPTION_ACTIVE_MUSICIANS,
+				getter,
+				function() setter(not getter()) end)
+			checkbox:AddInitializer(function(button)
+				local rightTexture = button:AttachTexture();
+				rightTexture:SetSize(20, 20);
+				rightTexture:SetPoint("RIGHT");
+				rightTexture:SetTexture(Musician.IconImages.Note);
 			end)
 		end
-		modifyMapMenu("MENU_MINIMAP_TRACKING", Musician.Map.GetMiniMapTracking, Musician.Map.SetMiniMapTracking)
-		modifyMapMenu("MENU_WORLD_MAP_TRACKING", Musician.Map.GetWorldMapTracking, Musician.Map.SetWorldMapTracking)
-	else
-		-- Old school way
-		if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-			Musician.Map.HookWorldMapTracking()
-		end
-		if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
-			Musician.Map.HookMiniMapTracking()
-		end
 	end
+	local miniMapMenuGenerator = getMenuGenerator(Musician.Map.GetMiniMapTracking, Musician.Map.SetMiniMapTracking)
+	local worldMapMenuGenerator = getMenuGenerator(Musician.Map.GetWorldMapTracking, Musician.Map.SetWorldMapTracking)
+
+	Menu.ModifyMenu("MENU_MINIMAP_TRACKING", miniMapMenuGenerator)
+	Menu.ModifyMenu("MENU_WORLD_MAP_TRACKING", worldMapMenuGenerator) -- Retail
+	if WorldMapFrame.WorldMapOptionsDropDown and WorldMapFrame.WorldMapOptionsDropDown.menuGenerator then
+		hooksecurefunc(WorldMapFrame.WorldMapOptionsDropDown, 'menuGenerator', worldMapMenuGenerator) -- Classic
+	end
+
 	Musician.Map.MinimapTrackingUpdate()
 end
 
@@ -313,133 +312,6 @@ function Musician.Map.RefreshMiniMap()
 	else
 		HereBeDragons_Pins:RemoveAllMinimapIcons(Musician.Map)
 		wipe(miniMapPlayerPins)
-	end
-end
-
---- Hook tracking options for the minimap
--- @deprecated Remove this function when all WoW flavors have the new Menu system implemented
---
-function Musician.Map.HookMiniMapTracking()
-	-- GetNumTrackingTypes
-
-	local hookedGetNumTrackingTypes
-	local GetNumTrackingTypesHook = function(...)
-		return hookedGetNumTrackingTypes(...) + 1
-	end
-	if C_Minimap and C_Minimap.GetNumTrackingTypes then
-		hookedGetNumTrackingTypes = C_Minimap.GetNumTrackingTypes
-		C_Minimap.GetNumTrackingTypes = GetNumTrackingTypesHook
-	else
-		hookedGetNumTrackingTypes = GetNumTrackingTypes
-		GetNumTrackingTypes = GetNumTrackingTypesHook
-	end
-
-	-- GetTrackingInfo
-
-	local hookedGetTrackingInfo
-	local GetTrackingInfoHook = function(id, ...)
-		if id == hookedGetNumTrackingTypes() + 1 then
-			local name = Musician.Msg.MAP_TRACKING_OPTION_ACTIVE_MUSICIANS
-			local texture = Musician.IconImages.Note
-			local active = Musician.Map.GetMiniMapTracking()
-			local category = ''
-			local nested = -1 -- Should not be nested
-			return name, texture, active, category, nested
-		else
-			return hookedGetTrackingInfo(id, ...)
-		end
-	end
-	if C_Minimap and C_Minimap.GetTrackingInfo then
-		hookedGetTrackingInfo = C_Minimap.GetTrackingInfo
-		C_Minimap.GetTrackingInfo = GetTrackingInfoHook
-	else
-		hookedGetTrackingInfo = GetTrackingInfo
-		GetTrackingInfo = GetTrackingInfoHook
-	end
-
-	-- GetTrackingFilter
-
-	local hookedGetTrackingFilter
-	local GetTrackingFilterHook = function(id, ...)
-		if id == hookedGetNumTrackingTypes() + 1 then
-			return { spellID = 1 }
-		else
-			return hookedGetTrackingFilter(id, ...)
-		end
-	end
-	if C_Minimap and C_Minimap.GetTrackingFilter then
-		hookedGetTrackingFilter = C_Minimap.GetTrackingFilter
-		C_Minimap.GetTrackingFilter = GetTrackingFilterHook
-	end
-
-	-- MiniMapTracking_FilterIsVisible
-
-	if MiniMapTracking_FilterIsVisible then
-		local hookedMiniMapTracking_FilterIsVisible = MiniMapTracking_FilterIsVisible
-		MiniMapTracking_FilterIsVisible = function(id)
-			if id == hookedGetNumTrackingTypes() + 1 then
-				return true
-			end
-			return hookedMiniMapTracking_FilterIsVisible(id)
-		end
-	end
-
-	-- SetTracking
-
-	local SetTrackingHook = function(id, on)
-		if id == hookedGetNumTrackingTypes() + 1 then
-			Musician.Map.SetMiniMapTracking(on)
-		end
-	end
-	if C_Minimap and C_Minimap.SetTracking then
-		hooksecurefunc(C_Minimap, 'SetTracking', SetTrackingHook)
-	else
-		hooksecurefunc('SetTracking', SetTrackingHook)
-	end
-
-	-- ClearAllTracking
-
-	local ClearAllTrackingHook = function()
-		Musician.Map.SetMiniMapTracking(false)
-	end
-	if C_Minimap and C_Minimap.ClearAllTracking then
-		hooksecurefunc(C_Minimap, 'ClearAllTracking', ClearAllTrackingHook)
-	else
-		hooksecurefunc('ClearAllTracking', ClearAllTrackingHook)
-	end
-end
-
---- Hook tracking options for the world map
--- @deprecated Remove this function when all WoW flavors have the new Menu system implemented
---
-function Musician.Map.HookWorldMapTracking()
-	-- Find world map button with filtering options dropdown
-	for _, overlayFrame in pairs(WorldMapFrame.overlayFrames) do
-		if overlayFrame:IsObjectType('Button') and overlayFrame.InitializeDropDown then
-			hooksecurefunc(overlayFrame, 'InitializeDropDown', function(self)
-				local info = UIDropDownMenu_CreateInfo()
-
-				UIDropDownMenu_AddSeparator()
-
-				info.isTitle = true
-				info.notCheckable = true
-				info.text = Musician.Msg.MAP_TRACKING_OPTIONS_TITLE
-				UIDropDownMenu_AddButton(info)
-
-				info.isTitle = nil
-				info.disabled = nil
-				info.notCheckable = nil
-				info.isNotRadio = true
-				info.keepShownOnClick = true
-				info.text = Musician.Msg.MAP_TRACKING_OPTION_ACTIVE_MUSICIANS
-				info.checked = Musician.Map.GetWorldMapTracking()
-				info.func = function(_, _, _, on)
-					Musician.Map.SetWorldMapTracking(on)
-				end
-				UIDropDownMenu_AddButton(info)
-			end)
-			return
-		end
 	end
 end
 
