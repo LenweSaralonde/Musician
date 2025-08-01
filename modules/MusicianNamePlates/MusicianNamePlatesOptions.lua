@@ -26,7 +26,9 @@ local function SetCVarSafe(name, value)
 		C_Timer.After(1, function() SetCVarSafe(name, value) end)
 		return
 	end
+	disableRefreshCheckboxes = true
 	SetCVar(name, value)
+	disableRefreshCheckboxes = false
 end
 
 --- Mark the option checkbox as overridden by a third party add-on.
@@ -73,7 +75,6 @@ function Musician.NamePlates.Options.Init()
 		Musician.Msg.OPTIONS_ENABLE_NAMEPLATES)
 	MusicianOptionsPanelUnitNamePlatesEnable:HookScript("OnClick", function(self)
 		-- Enable nameplates
-		disableRefreshCheckboxes = true
 		SetCVarSafe("nameplateShowAll", self:GetChecked())
 		if InterfaceOptionsNamesPanelUnitNameplatesShowAll then
 			InterfaceOptionsNamesPanelUnitNameplatesShowAll:SetChecked(self:GetChecked())
@@ -99,7 +100,6 @@ function Musician.NamePlates.Options.Init()
 				InterfaceOptionsNamesPanelUnitNameplatesMotionDropDown:SetValue(0)
 			end
 		end
-		disableRefreshCheckboxes = false
 	end)
 
 	-- Show icon checkbox
