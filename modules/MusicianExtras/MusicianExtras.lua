@@ -6,6 +6,8 @@ Musician.Extras = LibStub("AceAddon-3.0"):NewAddon("Musician.Extras", "AceEvent-
 local MODULE_NAME = "Extras"
 Musician.AddModule(MODULE_NAME)
 
+local SendChatMessage = (C_ChatInfo and C_ChatInfo.SendChatMessage or SendChatMessage)
+
 --- OnEnable
 --
 function Musician.Extras:OnEnable()

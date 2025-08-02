@@ -406,7 +406,8 @@ stds.wow = {
 			fields = {
 				"GetChannelShortcut",
 				"SwapChatChannelsByChannelIndex",
-				"RegisterAddonMessagePrefix"
+				"RegisterAddonMessagePrefix",
+				"SendChatMessage"
 			},
 		},
 

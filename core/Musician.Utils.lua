@@ -17,6 +17,7 @@ local fullPromoEmoteLastSeen
 local overrideNextFullPromoEmote = false
 local debugStartTime = debugprofilestop()
 
+local SendChatMessage = (C_ChatInfo and C_ChatInfo.SendChatMessage or SendChatMessage)
 local GetCVar = (C_CVar and C_CVar.GetCVar or GetCVar)
 local GetCVarNumber = function(cvar)
 	return floor(tonumber(GetCVar(cvar)) * 1000) / 1000
