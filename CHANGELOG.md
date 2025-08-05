@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.9.12.1
+---------
+* Updated for WoW retail patch 11.2.
+* Fixed unresponsive nameplate option checkboxes.
+
 v1.9.12.0
 ---------
 * Updated for WoW Classic Mists of Pandaria prepatch.
