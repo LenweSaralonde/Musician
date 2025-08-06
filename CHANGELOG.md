@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.12.2
+---------
+* Fixed LUA error in TRP Extended song export frame.
+
 v1.9.12.1
 ---------
 * Updated for WoW retail patch 11.2.
