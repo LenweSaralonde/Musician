@@ -85,7 +85,7 @@
 		</Frames>
 		<Layers>
 			<Layer level="BACKGROUND">
-				<FontString name="$parentQuantityLabel" parentKey="quantityLabel" inherits="GameFontNormalRight">
+				<FontString name="$parentQuantityLabel" parentKey="quantityLabel" inherits="GameFontNormal" justifyH="RIGHT">
 					<Anchors>
 						<Anchor point="BOTTOM" relativeTo="$parentAddToBagText" />
 						<Anchor point="LEFT" relativeTo="$parentAddToBagText" relativePoint="RIGHT" x="10" />
