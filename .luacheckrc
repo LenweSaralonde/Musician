@@ -37,8 +37,9 @@ ignore = {
 	-- Ignore Live play handler variables.
 	"212/isChordNote",
 
-	-- Ignore unused link. This would popup for hyperlink handlers
+	-- Ignore unused link and linkData. This would popup for hyperlink handlers
 	"212/link",
+	"212/linkData",
 
 	-- Ignore empty then statements.
 	"542",
@@ -313,12 +314,6 @@ std = "lua51+wow"
 stds.wow = {
 	-- Globals that we mutate.
 	globals = {
-		ItemRefTooltip = {
-			fields = {
-				"SetHyperlink"
-			}
-		},
-
 		C_Minimap = {
 			fields = {
 				"GetNumTrackingTypes",
@@ -326,6 +321,18 @@ stds.wow = {
 				"GetTrackingFilter",
 				"SetTracking",
 				"ClearAllTracking",
+			}
+		},
+
+		ChatFrameUtil = {
+			fields = {
+				"SubstituteChatMessageBeforeSend",
+			}
+		},
+
+		ChatFrameMixin = {
+			fields = {
+				"OnLoad",
 			}
 		},
 
@@ -477,6 +484,19 @@ stds.wow = {
 		C_AddOns = {
 			fields = {
 				"GetAddOnMetadata",
+			}
+		},
+
+		LinkUtil = {
+			fields = {
+				"RegisterLinkHandler",
+			}
+		},
+
+		ChatFrameUtil = {
+			fields = {
+				"LinkItem",
+				"GetActiveWindow",
 			}
 		},
 

@@ -6,6 +6,9 @@ Musician.SongLinkExportFrame = LibStub("AceAddon-3.0"):NewAddon("Musician.SongLi
 local MODULE_NAME = "Musician.SongLinkExportFrame"
 Musician.AddModule(MODULE_NAME)
 
+local ChatEdit_LinkItem = ChatFrameUtil and ChatFrameUtil.LinkItem or ChatEdit_LinkItem
+local ChatEdit_GetActiveWindow = ChatFrameUtil and ChatFrameUtil.GetActiveWindow or ChatEdit_GetActiveWindow
+
 local exporting = false
 local exportingSong
 
@@ -122,7 +125,7 @@ function MusicianSongLinkExportFrameMixin:OnLoad()
 		self:Hide()
 	end)
 	-- Prevent the chat edit box from being closed when the link EditBox is focused on WoW Classic
-	if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then
+	if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE and ChatEdit_OnEditFocusLost then
 		local chatEditOnFocusLost = ChatEdit_OnEditFocusLost
 		self.songTitle:HookScript("OnEnter", function()
 			ChatEdit_OnEditFocusLost = function() end

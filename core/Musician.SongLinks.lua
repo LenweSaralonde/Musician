@@ -1,6 +1,8 @@
 --- Song links module
 -- @module Musician.SongLinks
 
+local ChatEdit_LinkItem = ChatFrameUtil and ChatFrameUtil.LinkItem or ChatEdit_LinkItem
+
 Musician.SongLinks = LibStub("AceAddon-3.0"):NewAddon("Musician.SongLinks", "AceComm-3.0", "AceEvent-3.0")
 
 local MODULE_NAME = "SongLinks"
@@ -286,11 +288,19 @@ function Musician.SongLinks.Init()
 	end
 
 	-- Convert hyperlinks to plain text chat links before sending messages
-	local HookedSubstituteChatMessageBeforeSend = SubstituteChatMessageBeforeSend
-	SubstituteChatMessageBeforeSend = function(msg)
-		msg = HookedSubstituteChatMessageBeforeSend(msg)
-		msg = Musician.SongLinks.HyperlinksToChatLinks(msg)
-		return msg
+	local function getSubstituteChatMessageBeforeSendHook(originalFunction)
+		return function(msg)
+			msg = originalFunction(msg)
+			msg = Musician.SongLinks.HyperlinksToChatLinks(msg)
+			return msg
+		end
+	end
+	if ChatFrameUtil and ChatFrameUtil.SubstituteChatMessageBeforeSend then
+		ChatFrameUtil.SubstituteChatMessageBeforeSend =
+			getSubstituteChatMessageBeforeSendHook(ChatFrameUtil.SubstituteChatMessageBeforeSend)
+	else
+		SubstituteChatMessageBeforeSend =
+			getSubstituteChatMessageBeforeSendHook(SubstituteChatMessageBeforeSend)
 	end
 
 	-- Convert received plain text chat links into hyperlinks
@@ -310,9 +320,9 @@ function Musician.SongLinks.Init()
 	end
 
 	-- Hyperlink hooks
-	hooksecurefunc("ChatFrame_OnHyperlinkShow", function(self, link, text)
+	LinkUtil.RegisterLinkHandler(HYPERLINK_PREFIX, function(link, text)
 		local args = { strsplit(':', link) }
-		if args[1] == HYPERLINK_PREFIX and not IsModifiedClick("CHATLINK") then
+		if not IsModifiedClick("CHATLINK") then
 			-- Extract player name
 			local player = args[2] or UnitName('player')
 
@@ -321,15 +331,11 @@ function Musician.SongLinks.Init()
 
 			-- Trigger SongLink event
 			Musician.SongLinks:SendMessage(Musician.Events.SongLink, title, player)
+		else
+			-- Send back the link to the chat if modified click
+			ChatEdit_LinkItem(nil, text)
 		end
 	end)
-	local hookedSetHyperlink = ItemRefTooltip.SetHyperlink
-	function ItemRefTooltip:SetHyperlink(link, ...)
-		if link and link:sub(0, #HYPERLINK_PREFIX) == HYPERLINK_PREFIX then
-			return
-		end
-		return hookedSetHyperlink(self, link, ...)
-	end
 end
 
 --- Normalize song title for links

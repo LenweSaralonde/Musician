@@ -566,7 +566,7 @@ end
 -- @param button (string)
 function Musician.OnHyperlinkClick(self, link, text, button)
 	local args = { strsplit(':', link) }
-	if args[1] == "musician" and not IsModifiedClick("CHATLINK") then
+	if not IsModifiedClick("CHATLINK") then
 		if args[2] == "stop" then
 			-- Stop current song for player
 			PlaySound(80)
@@ -661,37 +661,25 @@ function Musician.SetupHooks()
 	-- Hyperlinks
 	--
 
-	-- Set hyperlink handler to the chat frames
-	hooksecurefunc("ChatFrame_OnHyperlinkShow", Musician.OnHyperlinkClick)
-	hooksecurefunc("ChatFrame_OnLoad", function(self)
+	-- Set global hyperlink handler
+	LinkUtil.RegisterLinkHandler("musician", function(link, text, linkData, contextData)
+		Musician.OnHyperlinkClick(contextData.frame, link, text, contextData.button)
+	end)
+
+	-- Set hyperlink enter and leave global handlers to the chat frames (required by URL hyperlinks posted in the chat)
+	local function chatFrameOnLoad(self)
 		self:HookScript("OnHyperlinkEnter", Musician.OnHyperlinkEnter)
 		self:HookScript("OnHyperlinkLeave", Musician.OnHyperlinkLeave)
-	end)
+	end
+	if ChatFrameMixin and ChatFrameMixin.OnLoad then
+		hooksecurefunc(ChatFrameMixin, "OnLoad", chatFrameOnLoad)
+	else
+		hooksecurefunc("ChatFrame_OnLoad", chatFrameOnLoad)
+	end
 	local chatFrameIndex = 1
 	while _G['ChatFrame' .. chatFrameIndex] ~= nil do
-		local chatFrame = _G['ChatFrame' .. chatFrameIndex]
-		chatFrame:HookScript("OnHyperlinkEnter", Musician.OnHyperlinkEnter)
-		chatFrame:HookScript("OnHyperlinkLeave", Musician.OnHyperlinkLeave)
+		chatFrameOnLoad(_G['ChatFrame' .. chatFrameIndex])
 		chatFrameIndex = chatFrameIndex + 1
-	end
-
-	-- Block clicks on custom hyperlinks
-	-- Not hooking SetItemRef directly to avoid tainting.
-	local hookedSetHyperlink = ItemRefTooltip.SetHyperlink
-	function ItemRefTooltip:SetHyperlink(link, ...)
-		if link and strsplit(':', link) == "musician" then
-			return
-		end
-		return hookedSetHyperlink(self, link, ...)
-	end
-
-	-- Block modified clicks on custom hyperlinks
-	local hookedHandleModifiedItemClick = HandleModifiedItemClick
-	function HandleModifiedItemClick(link, itemLocation, ...)
-		if link and string.match(link, '|Hmusician:[^|]+|h') then
-			return false
-		end
-		return hookedHandleModifiedItemClick(link, itemLocation, ...)
 	end
 
 	-- Player dropdown menus
