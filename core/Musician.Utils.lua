@@ -61,7 +61,7 @@ end
 --- Display an error message in a popup
 -- @param msg (string)
 function Musician.Utils.Error(msg)
-	message(msg)
+	SetBasicMessageDialogText(msg, true)
 	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
 		PlaySound(32051)
 	else

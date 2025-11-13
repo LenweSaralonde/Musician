@@ -480,7 +480,7 @@ stds.wow = {
 			}
 		},
 
-		"message",
+		"SetBasicMessageDialogText",
 		"debugprofilestop",
 		"hooksecurefunc",
 		"IsWindowsClient",
