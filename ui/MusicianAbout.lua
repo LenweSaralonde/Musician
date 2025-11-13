@@ -98,7 +98,7 @@ function Musician.About.OnShow()
 	MusicianAboutSupportersList:SetText(strjoin(" / ", unpack(supporters)))
 
 	-- Resize window to fit content
-	MusicianAbout:SetHeight(MusicianAboutSupportersList:GetBottom() - 40 - MusicianAbout:GetTop())
+	MusicianAbout:SetHeight(abs(MusicianAboutSupportersList:GetBottom() - 40 - MusicianAbout:GetTop()))
 
 	-- Slightly enlarge window in Chinese
 	if Musician.Msg == Musician.Locale.zh then
