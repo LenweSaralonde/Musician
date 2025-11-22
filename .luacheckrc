@@ -497,6 +497,13 @@ stds.wow = {
 			fields = {
 				"LinkItem",
 				"GetActiveWindow",
+				"AddMessageEventFilter",
+			}
+		},
+
+		ChatFrameMixin = {
+			fields = {
+				"OnEvent",
 			}
 		},
 

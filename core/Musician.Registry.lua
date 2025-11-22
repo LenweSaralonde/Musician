@@ -25,6 +25,7 @@ local FETCH_PLAYERS_END_TIMEOUT = 2
 local NOTIFY_NEW_VERSION_POPUP_DELAY = 3
 
 local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetadata
+local ChatFrame_AddMessageEventFilter = ChatFrameUtil and ChatFrameUtil.AddMessageEventFilter or ChatFrame_AddMessageEventFilter
 
 local newVersionNotified = false
 local newProtocolNotified = false

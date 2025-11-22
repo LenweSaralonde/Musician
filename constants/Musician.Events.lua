@@ -250,7 +250,7 @@ Musician.Events.SourceSongLoaded = "MusicianSourceSongLoaded"
 -- @param isPromoEmoteSuccessful (boolean) true if the music can be heard
 -- @param msg (string)
 -- @param fullPlayerName (string)
--- @param ... (string) Other arguments provided by ChatFrame_AddMessageEventFilter() (languageName, channelName...)
+-- @param ... (string) Other arguments provided by ChatFrameUtil.AddMessageEventFilter() (languageName, channelName...)
 Musician.Events.PromoEmote = "MusicianPromoEmote"
 
 --- Fired when bandwidth limit indicator has changed while streaming a song

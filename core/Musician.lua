@@ -6,6 +6,8 @@ Musician = LibStub("AceAddon-3.0"):NewAddon("Musician", "AceEvent-3.0")
 local MODULE_NAME = "Main"
 Musician.modules = { MODULE_NAME } -- All modules
 
+local ChatFrame_AddMessageEventFilter = ChatFrameUtil and ChatFrameUtil.AddMessageEventFilter or ChatFrame_AddMessageEventFilter
+
 local tipsAndTricks = {}
 
 --- OnInitialize

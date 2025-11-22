@@ -1,12 +1,13 @@
 --- Song links module
 -- @module Musician.SongLinks
 
-local ChatEdit_LinkItem = ChatFrameUtil and ChatFrameUtil.LinkItem or ChatEdit_LinkItem
-
 Musician.SongLinks = LibStub("AceAddon-3.0"):NewAddon("Musician.SongLinks", "AceComm-3.0", "AceEvent-3.0")
 
 local MODULE_NAME = "SongLinks"
 Musician.AddModule(MODULE_NAME)
+
+local ChatEdit_LinkItem = ChatFrameUtil and ChatFrameUtil.LinkItem or ChatEdit_LinkItem
+local ChatFrame_AddMessageEventFilter = ChatFrameUtil and ChatFrameUtil.AddMessageEventFilter or ChatFrame_AddMessageEventFilter
 
 local LibDeflate                           = LibStub:GetLibrary("LibDeflate")
 local LibBase64                            = LibStub:GetLibrary("LibBase64")

@@ -8,6 +8,8 @@ Musician.AddModule(MODULE_NAME)
 
 local LibDeflate = LibStub:GetLibrary("LibDeflate")
 
+local ChatFrame_AddMessageEventFilter = ChatFrameUtil and ChatFrameUtil.AddMessageEventFilter or ChatFrame_AddMessageEventFilter
+
 Musician.CrossRP.isReady = false
 
 local streamingSongId
