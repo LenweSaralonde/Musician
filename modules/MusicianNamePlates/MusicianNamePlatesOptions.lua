@@ -6,10 +6,12 @@ Musician.NamePlates.Options = {}
 local MODULE_NAME = "NamePlates.Options"
 Musician.AddModule(MODULE_NAME)
 
--- WoW Classic polyfills
 local C_CVar = _G["C_CVar"] or {
 	GetCVarBool = GetCVarBool
 }
+
+local CVAR_nameplateShowFriendlyPlayers = LE_EXPANSION_LEVEL_CURRENT >= 11 and "nameplateShowFriendlyPlayers" or "nameplateShowFriends"
+local CVAR_nameplateShowFriendlyNpcs = LE_EXPANSION_LEVEL_CURRENT >= 11 and "nameplateShowFriendlyNpcs" or "nameplateShowFriendlyNPCs"
 
 -- Previous settings to be restored restore when Cancel is pressed
 local oldSettings = {}
@@ -52,7 +54,7 @@ function Musician.NamePlates.Options.Init()
 		if disableRefreshCheckboxes then
 			return
 		end
-		if name == "nameplateShowAll" or name == "nameplateShowFriends" or name == "nameplatePlayerMaxDistance" or name == "nameplateShowFriendlyNPCs" then
+		if name == "nameplateShowAll" or name == CVAR_nameplateShowFriendlyPlayers or name == "nameplatePlayerMaxDistance" or name == CVAR_nameplateShowFriendlyNpcs then
 			Musician.NamePlates.Options.RefreshCheckboxes()
 		end
 	end)
@@ -83,10 +85,15 @@ function Musician.NamePlates.Options.Init()
 
 		-- Enable more settings when nameplates are enabled to make sure they are always visible
 		if self:GetChecked() then
-			-- Enable nameplates for friends and enemies and disable nameplate motion.
-			SetCVarSafe("nameplateShowFriends", true)
+			-- Enable nameplates for friends and enemies.
+			SetCVarSafe(CVAR_nameplateShowFriendlyPlayers, true)
 			SetCVarSafe("nameplateShowEnemies", true)
-			SetCVarSafe("nameplateMotion", 0)
+			-- Disable nameplate motion.
+			SetCVarSafe("nameplateMotion", 0) -- old school
+			if CVarCallbackRegistry.SetCVarBitfieldMask and Enum.NamePlateStackType then
+				CVarCallbackRegistry:SetCVarBitfieldMask("nameplateStackingTypes", Enum.NamePlateStackType.Friendly)
+			end
+			-- Set maximum distance
 			SetCVarSafe("nameplatePlayerMaxDistance", 60)
 			if InterfaceOptionsNamesPanelUnitNameplatesFriends then
 				InterfaceOptionsNamesPanelUnitNameplatesFriends:SetChecked(true)
@@ -171,7 +178,7 @@ end
 function Musician.NamePlates.Options.Defaults()
 	MusicianOptionsPanelUnitNamePlatesEnable:SetChecked(true)
 	ExecuteFrameScript(MusicianOptionsPanelUnitNamePlatesEnable, "OnClick", "LeftButton")
-	SetCVarSafe("nameplateShowFriendlyNPCs", false)
+	SetCVarSafe(CVAR_nameplateShowFriendlyNpcs, false)
 	Musician_Settings = Mixin(Musician_Settings, Musician.NamePlates.Options.GetDefaults())
 end
 
@@ -183,7 +190,7 @@ function Musician.NamePlates.Options.RefreshCheckboxes()
 	MusicianOptionsPanelUnitNamePlatesEnable:SetChecked(Musician.NamePlates.AreNamePlatesEnabled())
 	MusicianOptionsPanelUnitNamePlatesShowIcon:SetChecked(Musician_Settings.showNamePlateIcon)
 	MusicianOptionsPanelUnitNamePlatesHideNamePlateBars:SetChecked(Musician_Settings.hideNamePlateBars)
-	MusicianOptionsPanelUnitNamePlatesHideNPCs:SetChecked(not C_CVar.GetCVarBool("nameplateShowFriendlyNPCs"))
+	MusicianOptionsPanelUnitNamePlatesHideNPCs:SetChecked(not C_CVar.GetCVarBool(CVAR_nameplateShowFriendlyNpcs))
 	MusicianOptionsPanelUnitNamePlatesCinematicMode:SetChecked(Musician_Settings.cinematicMode)
 	MusicianOptionsPanelUnitNamePlatesCinematicModeNamePlates:SetChecked(Musician_Settings.cinematicModeNamePlates)
 	setOverriddenBy3rdParty(MusicianOptionsPanelUnitNamePlatesHideNamePlateBars, not Musician.NamePlates.CanHideHealthBars())
@@ -211,7 +218,7 @@ function Musician.NamePlates.Options.Refresh()
 	end
 
 	oldSettings = {
-		nameplateShowFriendlyNPCs = C_CVar.GetCVarBool("nameplateShowFriendlyNPCs"),
+		nameplateShowFriendlyNpcs = C_CVar.GetCVarBool(CVAR_nameplateShowFriendlyNpcs),
 		showNamePlateIcon = Musician_Settings.showNamePlateIcon,
 		hideNamePlateBars = Musician_Settings.hideNamePlateBars,
 		cinematicMode = Musician_Settings.cinematicMode,
@@ -226,7 +233,7 @@ hooksecurefunc(Musician.Options, "Refresh", Musician.NamePlates.Options.Refresh)
 -- Restore previous values on cancel
 --
 function Musician.NamePlates.Options.Cancel()
-	SetCVarSafe("nameplateShowFriendlyNPCs", oldSettings.nameplateShowFriendlyNPCs)
+	SetCVarSafe(CVAR_nameplateShowFriendlyNpcs, oldSettings.nameplateShowFriendlyNpcs)
 	Musician_Settings.showNamePlateIcon = oldSettings.showNamePlateIcon
 	Musician_Settings.hideNamePlateBars = oldSettings.hideNamePlateBars
 	Musician_Settings.cinematicMode = oldSettings.cinematicMode
@@ -240,7 +247,7 @@ hooksecurefunc(Musician.Options, "Cancel", Musician.NamePlates.Options.Cancel)
 --- Save values
 --
 function Musician.NamePlates.Options.Save(fromButton)
-	SetCVarSafe("nameplateShowFriendlyNPCs", not MusicianOptionsPanelUnitNamePlatesHideNPCs:GetChecked())
+	SetCVarSafe(CVAR_nameplateShowFriendlyNpcs, not MusicianOptionsPanelUnitNamePlatesHideNPCs:GetChecked())
 	Musician_Settings.showNamePlateIcon = MusicianOptionsPanelUnitNamePlatesShowIcon:GetChecked()
 	Musician_Settings.hideNamePlateBars = MusicianOptionsPanelUnitNamePlatesHideNamePlateBars:GetChecked()
 	Musician_Settings.cinematicMode = MusicianOptionsPanelUnitNamePlatesCinematicMode:GetChecked()

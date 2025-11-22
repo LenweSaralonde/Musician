@@ -507,6 +507,12 @@ stds.wow = {
 			}
 		},
 
+		CVarCallbackRegistry = {
+			fields = {
+				"SetCVarBitfieldMask",
+			}
+		},
+
 		"SetBasicMessageDialogText",
 		"debugprofilestop",
 		"hooksecurefunc",
@@ -716,6 +722,11 @@ stds.wow = {
 				TooltipDataType = {
 					fields = {
 						"Unit"
+					}
+				},
+				NamePlateStackType= {
+					fields = {
+						"Friendly"
 					}
 				}
 			}

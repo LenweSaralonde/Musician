@@ -6,9 +6,10 @@ Musician.NamePlates = LibStub("AceAddon-3.0"):NewAddon("Musician.NamePlates", "A
 local MODULE_NAME = "NamePlates"
 Musician.AddModule(MODULE_NAME)
 
--- WoW Classic polyfills
 local GetCVar = (C_CVar and C_CVar.GetCVar or GetCVar)
 local GetCVarBool = (C_CVar and C_CVar.GetCVarBool or GetCVarBool)
+
+local CVAR_nameplateShowFriendlyPlayers = LE_EXPANSION_LEVEL_CURRENT >= 11 and "nameplateShowFriendlyPlayers" or "nameplateShowFriends"
 
 local canHideHealthBars = true
 local canShowNamesCinematicMode = true
@@ -669,7 +670,7 @@ end
 -- @return areVisible (boolean)
 function Musician.NamePlates.AreNamePlatesEnabled()
 	local hasValidMaxDistance = WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE or (tonumber(GetCVar("nameplatePlayerMaxDistance")) or 0) > 0
-	return GetCVarBool("nameplateShowAll") and GetCVarBool("nameplateShowFriends") and hasValidMaxDistance
+	return GetCVarBool("nameplateShowAll") and GetCVarBool(CVAR_nameplateShowFriendlyPlayers) and hasValidMaxDistance
 end
 --- Initialize tips and tricks
 --
