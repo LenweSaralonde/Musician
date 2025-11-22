@@ -848,7 +848,7 @@ function Musician.SetupHooks()
 			return false, msg, player, languageName, channelName, playerName2, pflag, ...
 		end)
 
-	-- Add custom Sound_MaxCacheSizeInBytes option for Musician (Retail)
+	-- Add custom Sound_MaxCacheSizeInBytes option for Musician
 	--
 
 	local isSoundCacheOptionHooked = false
@@ -869,7 +869,8 @@ function Musician.SetupHooks()
 								table.insert(options, {
 									label = label,
 									text = label,
-									value = cacheSize * 1024 * 1024 -- Value is in bytes
+									value = cacheSize * 1024 * 1024, -- Value is in bytes
+									controlType = 1,
 								})
 								return function()
 									return options
