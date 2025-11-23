@@ -91,10 +91,10 @@ function Musician.Map:OnEnable()
 				getter,
 				function() setter(not getter()) end)
 			checkbox:AddInitializer(function(button)
-				local rightTexture = button:AttachTexture();
-				rightTexture:SetSize(20, 20);
-				rightTexture:SetPoint("RIGHT");
-				rightTexture:SetTexture(Musician.IconImages.Note);
+				local rightTexture = button:AttachTexture()
+				rightTexture:SetSize(20, 20)
+				rightTexture:SetPoint("RIGHT")
+				rightTexture:SetTexture(Musician.IconImages.Note)
 			end)
 		end
 	end
