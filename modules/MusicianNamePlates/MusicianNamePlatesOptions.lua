@@ -50,7 +50,7 @@ end
 --
 function Musician.NamePlates.Options.Init()
 	-- Refresh relevant panel elements when a CVar was changed externally
-	hooksecurefunc(C_CVar, "SetCVar", function(name)
+	hooksecurefunc(C_CVar, 'SetCVar', function(name)
 		if disableRefreshCheckboxes then
 			return
 		end

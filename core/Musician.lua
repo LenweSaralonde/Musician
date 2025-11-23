@@ -99,7 +99,7 @@ function Musician:OnInitialize()
 		end)
 	end
 	Musician:RegisterEvent("PLAYER_ENTERING_WORLD", muteGameMusic)
-	hooksecurefunc('SetCVar', function(cvar)
+	hooksecurefunc(C_CVar, 'SetCVar', function(cvar)
 		if cvar == 'Sound_EnableMusic' then
 			muteGameMusic()
 		end
