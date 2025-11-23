@@ -98,6 +98,7 @@ globals = {
 			},
 			utils = {
 				fields = {
+					"getIconTexture", -- Accessed only
 					str = {
 						fields = {
 							"id" -- Accessed only
@@ -243,11 +244,25 @@ read_globals = {
 			"target"
 		}
 	},
+	TRP3_NamePlates = {
+		fields = {
+			"UpdateAllNamePlates",
+			"RegisterCallback"
+		}
+	},
+	TRP3_NamePlatesUtil = {
+		fields = {
+			"GetPreferredIconSize"
+		}
+	},
 	TRP3_BlizzardNamePlates = {
 		fields = {
-			"UpdateNamePlate",
-			"UpdateAllNamePlates",
-			"initializedNameplates"
+			"UpdateNamePlate"
+		}
+	},
+	TRP3_PlaterNamePlates = {
+		fields = {
+			"CustomizeNameplate"
 		}
 	},
 	TRP3_Configuration = {

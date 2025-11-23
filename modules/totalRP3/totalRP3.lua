@@ -39,26 +39,32 @@ end
 --- Check the TRP3 API is valid
 -- @return isValid (boolean)
 function Musician.TRP3.CheckAPI()
-	return
-		TRP3_API.CreateColorFromHexString and
-		TRP3_PlayerMapPinMixin.Decorate and
-		TRP3_PlayerMapPinMixin.GetDisplayDataFromPoiInfo and
-		TRP3_RefTooltip.Show and
-		TRP3_API.CreateColorFromHexString and
-		TRP3_API.globals and
-		TRP3_API.configuration.getValue and
-		TRP3_API.utils.str.id and
-		TRP3_API.ui.frame.createTabPanel and
-		TRP3_API.ui.tooltip and
-		TRP3_API.popup.showPopup and
-		TRP3_API.popup.ICONS and
-		TRP3_API.RegisterCallback and
-		TRP3_Addon.Events.WORKFLOW_ON_FINISH and
-		TRP3_API.loc.EDITOR_PREVIEW and
-		TRP3_API.loc.EDITOR_ICON_SELECT and
-		AddOn_TotalRP3.Player.static.CreateFromCharacterID and
-		TRP3_BlizzardNamePlates.UpdateNamePlate and
-		TRP3_BlizzardNamePlates.UpdateAllNamePlates
+	local ok, apiOk = pcall(function()
+		return
+			TRP3_API.CreateColorFromHexString and
+			TRP3_RefTooltip.Show and
+			TRP3_API.CreateColorFromHexString and
+			TRP3_API.globals and
+			TRP3_API.configuration.getValue and
+			TRP3_API.utils.str.id and
+			TRP3_API.ui.frame.createTabPanel and
+			TRP3_API.ui.tooltip and
+			TRP3_API.popup.showPopup and
+			TRP3_API.popup.ICONS and
+			TRP3_API.RegisterCallback and
+			TRP3_API.loc.EDITOR_PREVIEW and
+			TRP3_API.loc.EDITOR_ICON_SELECT and
+			TRP3_Addon.Events.WORKFLOW_ON_FINISH and
+			TRP3_PlayerMapPinMixin and
+			TRP3_PlayerMapPinMixin.Decorate and
+			TRP3_PlayerMapPinMixin.GetDisplayDataFromPoiInfo and
+			AddOn_TotalRP3.Player.static.CreateFromCharacterID and
+			TRP3_NamePlates.RegisterCallback and
+			TRP3_NamePlates.UpdateAllNamePlates and
+			TRP3_API.utils.getIconTexture and
+			TRP3_NamePlatesUtil.GetPreferredIconSize
+	end)
+	return ok and apiOk
 end
 
 --- Return RP display name for player
@@ -94,24 +100,64 @@ function Musician.TRP3.HookTooltip()
 	end)
 end
 
---- Hook TRP player nameplates (standard)
+--- Hook TRP player nameplates
 --
 function Musician.TRP3.HookNamePlates()
 	if not Musician.NamePlates then return end
+	-- Hook Blizzard nameplates module
 	if TRP3_BlizzardNamePlates and TRP3_BlizzardNamePlates.UpdateNamePlate then
-		Musician.Utils.Debug(MODULE_NAME, "Adding nameplate support.")
+		Musician.Utils.Debug(MODULE_NAME, "Adding Blizzard nameplates support.")
 		hooksecurefunc(TRP3_BlizzardNamePlates, "UpdateNamePlate", function(self, namePlate)
 			if namePlate and namePlate.UnitFrame then
-				Musician.NamePlates.UpdateNoteIcon(namePlate)
+				Musician.NamePlates.UpdateNamePlate(namePlate)
 			end
 		end)
-		-- Force refreshing the nameplates on TRP side when leaving the cinematic mode
-		-- to avoid player names showing in NPCs nameplates.
-		UIParent:HookScript("OnShow", function()
-			if TRP3_BlizzardNamePlates.initializedNameplates ~= nil then
-				TRP3_BlizzardNamePlates:UpdateAllNamePlates()
+	end
+	-- Hook Plater nameplates module
+	if TRP3_PlaterNamePlates and TRP3_PlaterNamePlates.CustomizeNameplate then
+		Musician.Utils.Debug(MODULE_NAME, "Adding Plater nameplates support.")
+		-- Prevent the TRP3 icon from remaining visible in cinematic mode
+		hooksecurefunc(TRP3_PlaterNamePlates, "CustomizeNameplate", function(self, namePlate, _, displayInfo)
+			if namePlate:IsForbidden() then
+				return
+			end
+			if namePlate.TRP3Icon and namePlate.CurrentUnitNameString then
+				local shouldDisplayTrp3Icon = namePlate.CurrentUnitNameString:IsVisible() and displayInfo.icon and
+					not displayInfo.shouldHide
+				namePlate.TRP3Icon:SetShown(shouldDisplayTrp3Icon)
 			end
 		end)
+	end
+	-- Force refreshing the nameplates on TRP side when toggling the cinematic mode
+	-- to avoid player names showing in NPCs nameplates.
+	UIParent:HookScript("OnShow", function() TRP3_NamePlates:UpdateAllNamePlates() end)
+	UIParent:HookScript("OnHide", function() TRP3_NamePlates:UpdateAllNamePlates() end)
+	-- Update Musician nameplates with TRP3 info
+	TRP3_NamePlates.RegisterCallback(Musician.TRP3, "OnNamePlateDataUpdated")
+end
+
+--- Update the Musician nameplate with TRP info
+--
+function Musician.TRP3:OnNamePlateDataUpdated(_, nameplate, _, displayInfo)
+	if nameplate:IsForbidden() or not nameplate:IsShown() or not displayInfo or not nameplate.musicianUnitFrame then
+		return
+	end
+	-- Attach icon
+	if not nameplate.musicianUnitFrame.trp3Icon then
+		nameplate.musicianUnitFrame.trp3Icon = nameplate.musicianUnitFrame:CreateTexture(nil, "ARTWORK")
+		nameplate.musicianUnitFrame.trp3Icon:ClearAllPoints()
+		nameplate.musicianUnitFrame.trp3Icon:SetPoint("RIGHT", nameplate.musicianUnitFrame.name, "LEFT", -4, 0)
+		nameplate.musicianUnitFrame.trp3Icon:Hide()
+	end
+	-- Update icon
+	if displayInfo.icon and nameplate.musicianUnitFrame.trp3Icon and not displayInfo.shouldHide then
+		nameplate.musicianUnitFrame.trp3Icon:ClearAllPoints()
+		nameplate.musicianUnitFrame.trp3Icon:SetTexture(TRP3_API.utils.getIconTexture(displayInfo.icon))
+		nameplate.musicianUnitFrame.trp3Icon:SetSize(TRP3_NamePlatesUtil.GetPreferredIconSize())
+		nameplate.musicianUnitFrame.trp3Icon:SetPoint("RIGHT", nameplate.musicianUnitFrame.name, "LEFT", -4, 0)
+		nameplate.musicianUnitFrame.trp3Icon:Show()
+	elseif nameplate.musicianUnitFrame.trp3Icon then
+		nameplate.musicianUnitFrame.trp3Icon:Hide()
 	end
 end
 
@@ -158,9 +204,7 @@ end
 --- Hook TRP player map
 --
 function Musician.TRP3.HookPlayerMap()
-
 	if TRP3_PlayerMapPinMixin then
-
 		-- TRP3_PlayerMapPinMixin.GetDisplayDataFromPoiInfo
 		--
 		if TRP3_PlayerMapPinMixin.GetDisplayDataFromPoiInfo then
@@ -202,7 +246,6 @@ function Musician.TRP3.HookPlayerMap()
 		if TRP3_PlayerMapPinMixin.Decorate then
 			local TRP3_PlayerMapPinMixin_Decorate = TRP3_PlayerMapPinMixin.Decorate
 			TRP3_PlayerMapPinMixin.Decorate = function(self, displayData, ...)
-
 				local newDisplayData = Mixin({}, displayData)
 
 				-- Append note icon to player name and replace pin texture by a musical note
@@ -232,5 +275,4 @@ function Musician.TRP3.HookPlayerMap()
 			end
 		end
 	end
-
 end
