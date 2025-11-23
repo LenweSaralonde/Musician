@@ -138,26 +138,26 @@ end
 
 --- Update the Musician nameplate with TRP info
 --
-function Musician.TRP3:OnNamePlateDataUpdated(_, nameplate, _, displayInfo)
-	if nameplate:IsForbidden() or not nameplate:IsShown() or not displayInfo or not nameplate.musicianUnitFrame then
+function Musician.TRP3:OnNamePlateDataUpdated(_, namePlate, _, displayInfo)
+	if namePlate:IsForbidden() or not namePlate:IsShown() or not displayInfo or not namePlate.musicianUnitFrame then
 		return
 	end
 	-- Attach icon
-	if not nameplate.musicianUnitFrame.trp3Icon then
-		nameplate.musicianUnitFrame.trp3Icon = nameplate.musicianUnitFrame:CreateTexture(nil, "ARTWORK")
-		nameplate.musicianUnitFrame.trp3Icon:ClearAllPoints()
-		nameplate.musicianUnitFrame.trp3Icon:SetPoint("RIGHT", nameplate.musicianUnitFrame.name, "LEFT", -4, 0)
-		nameplate.musicianUnitFrame.trp3Icon:Hide()
+	if not namePlate.musicianUnitFrame.trp3Icon then
+		namePlate.musicianUnitFrame.trp3Icon = namePlate.musicianUnitFrame:CreateTexture(nil, "ARTWORK")
+		namePlate.musicianUnitFrame.trp3Icon:ClearAllPoints()
+		namePlate.musicianUnitFrame.trp3Icon:SetPoint("RIGHT", namePlate.musicianUnitFrame.name, "LEFT", -4, 0)
+		namePlate.musicianUnitFrame.trp3Icon:Hide()
 	end
 	-- Update icon
-	if displayInfo.icon and nameplate.musicianUnitFrame.trp3Icon and not displayInfo.shouldHide then
-		nameplate.musicianUnitFrame.trp3Icon:ClearAllPoints()
-		nameplate.musicianUnitFrame.trp3Icon:SetTexture(TRP3_API.utils.getIconTexture(displayInfo.icon))
-		nameplate.musicianUnitFrame.trp3Icon:SetSize(TRP3_NamePlatesUtil.GetPreferredIconSize())
-		nameplate.musicianUnitFrame.trp3Icon:SetPoint("RIGHT", nameplate.musicianUnitFrame.name, "LEFT", -4, 0)
-		nameplate.musicianUnitFrame.trp3Icon:Show()
-	elseif nameplate.musicianUnitFrame.trp3Icon then
-		nameplate.musicianUnitFrame.trp3Icon:Hide()
+	if displayInfo.icon and namePlate.musicianUnitFrame.trp3Icon and not displayInfo.shouldHide then
+		namePlate.musicianUnitFrame.trp3Icon:ClearAllPoints()
+		namePlate.musicianUnitFrame.trp3Icon:SetTexture(TRP3_API.utils.getIconTexture(displayInfo.icon))
+		namePlate.musicianUnitFrame.trp3Icon:SetSize(TRP3_NamePlatesUtil.GetPreferredIconSize())
+		namePlate.musicianUnitFrame.trp3Icon:SetPoint("RIGHT", namePlate.musicianUnitFrame.name, "LEFT", -4, 0)
+		namePlate.musicianUnitFrame.trp3Icon:Show()
+	elseif namePlate.musicianUnitFrame.trp3Icon then
+		namePlate.musicianUnitFrame.trp3Icon:Hide()
 	end
 end
 
