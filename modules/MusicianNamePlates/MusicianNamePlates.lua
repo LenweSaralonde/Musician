@@ -37,6 +37,7 @@ local NOTES_ANIMATION_DURATION = 2
 local ANIMATION_KEY_RANGE = 48
 local ANIMATION_ANGLE_RANGE = 90 -- degrees
 local ZOOM_STEP_DURATION = .25
+local NOTES_ANIMATION_SCALE = .9
 
 -- Animation parameter indexes
 local PARAM = {
@@ -53,6 +54,14 @@ local noteTexturePoolFrame = CreateFrame("Frame")
 local playerAnimatedNotesFrame
 
 Musician.NamePlates.playerNamePlates = playerNamePlates
+
+local function adjustNamePlateScale(namePlate)
+	if namePlate.musicianAnimatedNotesFrame then
+		local nameplateScale = namePlate.musicianAnimatedNotesFrame:GetParent() == namePlate and 1 or
+		namePlate:GetScale()
+		namePlate.musicianAnimatedNotesFrame:SetScale(NOTES_ANIMATION_SCALE * nameplateScale / UIParent:GetScale())
+	end
+end
 
 --- OnEnable
 --
@@ -107,6 +116,13 @@ function Musician.NamePlates:OnEnable()
 	UIParent:HookScript("OnShow", Musician.NamePlates.UpdateAll)
 	UIParent:HookScript("OnHide", Musician.NamePlates.UpdateAll)
 	hooksecurefunc("SetUIVisibility", Musician.NamePlates.OnSetUIVisibility)
+
+	-- Update all nameplates when UI scale has changed
+	hooksecurefunc(C_CVar, 'SetCVar', function(name)
+		if name == "uiscale" or name == "useUiScale" then
+			Musician.NamePlates.UpdateAll()
+		end
+	end)
 
 	-- Tips and tricks
 	Musician.NamePlates.InitTipsAndTricks()
@@ -324,7 +340,7 @@ function Musician.NamePlates.OnNamePlateNotesFrameUpdate(animatedNotesFrame, ela
 	-- Adjust frame position for fixed player frame (not hooked to a nameplate)
 	if animatedNotesFrame == playerAnimatedNotesFrame then
 		-- Get current zoom level
-		local cameraZoom = GetCameraZoom()
+		local cameraZoom = GetCameraZoom() * NOTES_ANIMATION_SCALE
 		local cameraOffset = GetCVar("test_cameraOverShoulder")
 
 		-- Zoom level changed
@@ -368,6 +384,9 @@ end
 --- UpdateNamePlate
 -- @param namePlate (Frame)
 function Musician.NamePlates.UpdateNamePlate(namePlate)
+	-- Adjust scale
+	adjustNamePlateScale(namePlate)
+
 	-- Handle cinematic mode
 	Musician.NamePlates.UpdateNamePlateCinematicMode(namePlate)
 
@@ -503,19 +522,10 @@ function Musician.NamePlates.UpdateNamePlateCinematicMode(namePlate)
 
 	-- Attach animated notes frame to WorldFrame if hiding nameplates in cinematic mode
 	if not isCinematicModeNamePlatesEnabled and namePlate.musicianAnimatedNotesFrame and isCinematicModeEnabled then
-		local parent, scale
-		if not UIParentIsVisible then
-			parent = WorldFrame
-			scale = namePlate:GetScale()
-		else
-			parent = namePlate
-			scale = 1
-		end
-
+		local parent = not UIParentIsVisible and WorldFrame or namePlate
 		if namePlate.musicianAnimatedNotesFrame:GetParent() ~= parent then
 			namePlate.musicianAnimatedNotesFrame:SetParent(parent)
-			namePlate.musicianAnimatedNotesFrame:SetScale(scale)
-			namePlate.musicianAnimatedNotesFrame:SetFrameLevel(0)
+			adjustNamePlateScale(namePlate)
 		end
 	end
 
@@ -646,6 +656,7 @@ function Musician.NamePlates.AttachNamePlate(namePlate, player, event)
 		namePlate.musicianAnimatedNotesFrame:SetScript('OnUpdate', Musician.NamePlates.OnNamePlateNotesFrameUpdate)
 		namePlate.musicianAnimatedNotesFrame.namePlate = namePlate
 		Musician.NamePlates.UpdateNamePlateCinematicMode(namePlate)
+		adjustNamePlateScale(namePlate)
 	else
 		namePlate.musicianAnimatedNotesFrame:Show()
 	end
@@ -687,6 +698,7 @@ function Musician.NamePlates.CreatePlayerAnimatedNotesFrame()
 	playerAnimatedNotesFrame:SetWidth(NOTES_ANIMATION_WIDTH)
 	playerAnimatedNotesFrame:SetHeight(NOTES_ANIMATION_HEIGHT)
 	playerAnimatedNotesFrame:SetScript("OnUpdate", Musician.NamePlates.OnNamePlateNotesFrameUpdate)
+	playerAnimatedNotesFrame:SetScale(NOTES_ANIMATION_SCALE)
 
 	-- Set data
 	playerAnimatedNotesFrame.player = Musician.Utils.NormalizePlayerName(UnitName("player"))
@@ -694,7 +706,7 @@ function Musician.NamePlates.CreatePlayerAnimatedNotesFrame()
 	playerAnimatedNotesFrame.race = select(2, UnitRace("player"))
 	playerAnimatedNotesFrame.notesAddedDuringFrame = {}
 	playerAnimatedNotesFrame.percussionNotesAddedDuringFrame = {}
-	playerAnimatedNotesFrame.zoom = GetCameraZoom()
+	playerAnimatedNotesFrame.zoom = GetCameraZoom() * NOTES_ANIMATION_SCALE
 	playerAnimatedNotesFrame.zoomTo = playerAnimatedNotesFrame.zoom
 	playerAnimatedNotesFrame.zoomFrom = playerAnimatedNotesFrame.zoom
 	playerAnimatedNotesFrame.zoomElapsed = 0
