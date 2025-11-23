@@ -358,6 +358,7 @@ stds.wow = {
 				"band",
 				"bor",
 				"bxor",
+				"bnot",
 			},
 		},
 
@@ -707,7 +708,8 @@ stds.wow = {
 			fields = {
 				"RegisterCanvasLayoutCategory",
 				"RegisterAddOnCategory",
-				"OpenToCategory"
+				"OpenToCategory",
+				"GetCVarMask",
 			}
 		},
 
@@ -724,9 +726,14 @@ stds.wow = {
 						"Unit"
 					}
 				},
-				NamePlateStackType= {
+				NamePlateStackType = {
 					fields = {
 						"Friendly"
+					}
+				},
+				NamePlateStyle = {
+					fields = {
+						"Modern"
 					}
 				}
 			}

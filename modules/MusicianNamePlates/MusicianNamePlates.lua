@@ -9,7 +9,8 @@ Musician.AddModule(MODULE_NAME)
 local GetCVar = (C_CVar and C_CVar.GetCVar or GetCVar)
 local GetCVarBool = (C_CVar and C_CVar.GetCVarBool or GetCVarBool)
 
-local CVAR_nameplateShowFriendlyPlayers = LE_EXPANSION_LEVEL_CURRENT >= 11 and "nameplateShowFriendlyPlayers" or "nameplateShowFriends"
+local CVAR_nameplateShowFriendlyPlayers = LE_EXPANSION_LEVEL_CURRENT >= 11 and "nameplateShowFriendlyPlayers" or
+	"nameplateShowFriends"
 
 local canHideHealthBars = true
 local canShowNamesCinematicMode = true
@@ -17,7 +18,7 @@ local playerNamePlates = {}
 local namePlatePlayers = {}
 local NOTES_TEXTURE = 167069 -- "spells\\t_vfx_note.blp"
 local NOTES_TEXTURE_RACE = {
-	VoidElf = 1664883, -- "spells\\t_vfx_note_void.blp",
+	VoidElf = 1664883,       -- "spells\\t_vfx_note_void.blp",
 }
 
 if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then
@@ -25,10 +26,10 @@ if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then
 end
 
 local NOTES_TEXTURE_COORDS = {
-	{ 0, 0.5, 0, 0.5 },
-	{ 0.5, 1, 0, 0.5 },
-	{ 0, 0.5, 0.5, 1 },
-	{ 0.5, 1, 0.5, 1 },
+	{ 0,   0.5, 0,   0.5 },
+	{ 0.5, 1,   0,   0.5 },
+	{ 0,   0.5, 0.5, 1 },
+	{ 0.5, 1,   0.5, 1 },
 }
 local NOTES_ANIMATION_HEIGHT = 220
 local NOTES_ANIMATION_WIDTH = 110
@@ -83,6 +84,19 @@ function Musician.NamePlates:OnEnable()
 		hooksecurefunc("CompactUnitFrame_UpdateWidgetsOnlyMode", Musician.NamePlates.OnUnitFrameUpdate)
 	end
 
+	-- Unit combat status changed
+	local unitsInCombat = {}
+	C_Timer.NewTicker(0, function()
+		for _, namePlate in pairs(C_NamePlate.GetNamePlates()) do
+			local unitToken = namePlate.unitToken or namePlate.namePlateUnitToken
+			local isInCombat = UnitAffectingCombat(unitToken)
+			if unitsInCombat[unitToken] ~= isInCombat then
+				unitsInCombat[unitToken] = isInCombat
+				Musician.NamePlates.UpdateNamePlate(namePlate)
+			end
+		end
+	end)
+
 	-- Player registered
 	Musician.NamePlates:RegisterMessage(Musician.Registry.event.playerRegistered, Musician.NamePlates.OnPlayerRegistered)
 
@@ -124,6 +138,20 @@ end
 -- @return canShowNamesCinematicMode (boolean)
 function Musician.NamePlates.CanShowNamesCinematicMode()
 	return canShowNamesCinematicMode
+end
+
+--- Indicates if the nameplate has been customized by another third party addon
+-- @param namePlate (Frame)
+-- @return boolean isCustomized
+function Musician.NamePlates.IsNameplateCustomized(namePlate)
+	local expectedChildren = 1
+	if namePlate.musicianUnitFrame ~= nil then
+		expectedChildren = expectedChildren + 1
+	end
+	if namePlate.musicianAnimatedNotesFrame ~= nil then
+		expectedChildren = expectedChildren + 1
+	end
+	return namePlate:GetNumChildren() > expectedChildren
 end
 
 --- Render a single animated note
@@ -293,10 +321,8 @@ end
 -- @param animatedNotesFrame (Frame)
 -- @param elapsed (number)
 function Musician.NamePlates.OnNamePlateNotesFrameUpdate(animatedNotesFrame, elapsed)
-
 	-- Adjust frame position for fixed player frame (not hooked to a nameplate)
 	if animatedNotesFrame == playerAnimatedNotesFrame then
-
 		-- Get current zoom level
 		local cameraZoom = GetCameraZoom()
 		local cameraOffset = GetCVar("test_cameraOverShoulder")
@@ -311,7 +337,6 @@ function Musician.NamePlates.OnNamePlateNotesFrameUpdate(animatedNotesFrame, ela
 
 		-- Zoom animation in progress
 		if animatedNotesFrame.zoomElapsed ~= nil and animatedNotesFrame.zoomElapsed < ZOOM_STEP_DURATION then
-
 			animatedNotesFrame.zoomElapsed = animatedNotesFrame.zoomElapsed + elapsed
 			local progression = min(1, animatedNotesFrame.zoomElapsed / ZOOM_STEP_DURATION)
 			if progression == 1 then
@@ -347,33 +372,48 @@ function Musician.NamePlates.UpdateNamePlate(namePlate)
 	Musician.NamePlates.UpdateNamePlateCinematicMode(namePlate)
 
 	-- Hide friendly and player health bars when not in combat
-	if Musician.NamePlates.CanHideHealthBars() then
-		local unitToken = namePlate.namePlateUnitToken
+	if Musician.NamePlates.CanHideHealthBars() and not Musician.NamePlates.IsNameplateCustomized(namePlate) then
+		local unitToken = namePlate.unitToken or namePlate.namePlateUnitToken
 		local unitFrame = namePlate.UnitFrame
 		local isPlayerOrFriendly = unitToken and (UnitIsFriend(unitToken, "player") or UnitIsPlayer(unitToken))
 		local shouldShowNameplate = unitFrame and ShouldShowName(unitFrame)
 
 		if isPlayerOrFriendly and not namePlate:IsForbidden() and not UnitIsUnit(unitToken, "player") and shouldShowNameplate then
 			local isInCombat = UnitAffectingCombat(unitToken)
-			local health = UnitHealth(unitToken)
-			local healthMax = UnitHealthMax(unitToken)
-			local shouldDisplayElement = not GetCVarBool("nameplateShowOnlyNames") and
-				(not Musician_Settings.hideNamePlateBars or isInCombat or health < healthMax)
 
-			local elements = {
-				unitFrame.HealthBarsContainer,
-				unitFrame.healthBar,
-				unitFrame.ClassificationFrame,
-				unitFrame.RaidTargetFrame,
-				unitFrame.LevelFrame
-			}
+			-- Determine if the Blizzard unit frame should be displayed
+			local shouldDisplayBlizzardUnitFrame
+			if LE_EXPANSION_LEVEL_CURRENT >= 11 then
+				-- Midnight
+				shouldDisplayBlizzardUnitFrame = not GetCVarBool("nameplateShowOnlyNames") and
+					(not Musician_Settings.hideNamePlateBars or isInCombat)
+			else
+				-- Old school
+				local health = UnitHealth(unitToken)
+				local healthMax = UnitHealthMax(unitToken)
+				shouldDisplayBlizzardUnitFrame = not GetCVarBool("nameplateShowOnlyNames") and
+					(not Musician_Settings.hideNamePlateBars or isInCombat or health < healthMax)
+			end
 
-			for _, element in pairs(elements) do
-				if element and shouldDisplayElement ~= element:IsVisible() then
-					element:SetShown(shouldDisplayElement)
-				end
+			-- Set Blizzard unit frame visibility
+			if shouldDisplayBlizzardUnitFrame ~= unitFrame:IsVisible() then
+				unitFrame:SetShown(shouldDisplayBlizzardUnitFrame)
+			end
+
+			-- Set Musician unit frame visibility
+			if namePlate.musicianUnitFrame then
+				namePlate.musicianUnitFrame:SetShown(not shouldDisplayBlizzardUnitFrame)
 			end
 		end
+	end
+
+	-- Synchronize Musician unit frame name font string with Blizzard's
+	if namePlate.musicianUnitFrame and namePlate.UnitFrame and namePlate.UnitFrame.name then
+		local fontName, fontSize, fontFlags = namePlate.UnitFrame.name:GetFont()
+		namePlate.musicianUnitFrame.name:SetFont(fontName, fontSize, fontFlags)
+		namePlate.musicianUnitFrame.name:SetTextColor(namePlate.UnitFrame.name:GetTextColor())
+		namePlate.musicianUnitFrame.name:SetText(namePlate.UnitFrame.name:GetText())
+		namePlate.musicianUnitFrame.name:SetShown(namePlate.UnitFrame.name:IsShown())
 	end
 
 	-- Update icon
@@ -403,7 +443,6 @@ end
 -- @param event (string)
 -- @param unitToken (string)
 function Musician.NamePlates.OnNamePlateAdded(event, unitToken)
-
 	local namePlate = C_NamePlate.GetNamePlateForUnit(unitToken)
 
 	-- Animated notes may not have been cleaned up when the nameplate was recycled
@@ -456,7 +495,6 @@ end
 --- Hide nameplates in cinematic mode if nameplates are not enabled in this mode
 -- @param namePlate (Frame)
 function Musician.NamePlates.UpdateNamePlateCinematicMode(namePlate)
-
 	if InCombatLockdown() then return end
 
 	local UIParentIsVisible = UIParent:IsVisible()
@@ -464,7 +502,7 @@ function Musician.NamePlates.UpdateNamePlateCinematicMode(namePlate)
 	local isCinematicModeNamePlatesEnabled = Musician_Settings.cinematicModeNamePlates
 
 	-- Attach animated notes frame to WorldFrame if hiding nameplates in cinematic mode
-	if namePlate.musicianAnimatedNotesFrame and isCinematicModeEnabled then
+	if not isCinematicModeNamePlatesEnabled and namePlate.musicianAnimatedNotesFrame and isCinematicModeEnabled then
 		local parent, scale
 		if not UIParentIsVisible then
 			parent = WorldFrame
@@ -474,9 +512,10 @@ function Musician.NamePlates.UpdateNamePlateCinematicMode(namePlate)
 			scale = 1
 		end
 
-		if namePlate.musicianAnimatedNotesFrame and namePlate.musicianAnimatedNotesFrame:GetParent() ~= parent then
+		if namePlate.musicianAnimatedNotesFrame:GetParent() ~= parent then
 			namePlate.musicianAnimatedNotesFrame:SetParent(parent)
 			namePlate.musicianAnimatedNotesFrame:SetScale(scale)
+			namePlate.musicianAnimatedNotesFrame:SetFrameLevel(0)
 		end
 	end
 
@@ -495,8 +534,13 @@ end
 --- Update note icon next to player name
 -- @param namePlate (Frame)
 function Musician.NamePlates.UpdateNoteIcon(namePlate)
+	-- Set for Blizzard unit frame
 	if namePlate.UnitFrame and namePlate.UnitFrame.name then
 		Musician.NamePlates.AddNoteIcon(namePlate, namePlate.UnitFrame.name)
+	end
+	-- Set for Musician unit frame
+	if namePlate.musicianUnitFrame then
+		Musician.NamePlates.AddNoteIcon(namePlate, namePlate.musicianUnitFrame.name)
 	end
 end
 
@@ -511,7 +555,6 @@ end
 -- @param textElement (FontString)
 -- @param append (boolean) Add note icon at the end of the string
 function Musician.NamePlates.AddNoteIcon(namePlate, textElement, append)
-
 	-- Hook the SetText() function to ensure the icon is always added, even when modified by a third party
 	if textElement.musicianSetTextIsHooked == nil then
 		textElement.musicianSetTextIsHooked = true
@@ -520,7 +563,7 @@ function Musician.NamePlates.AddNoteIcon(namePlate, textElement, append)
 		end)
 	end
 
-	local unitToken = namePlate.namePlateUnitToken
+	local unitToken = namePlate.unitToken or namePlate.namePlateUnitToken
 	local player = unitToken and UnitIsPlayer(unitToken) and
 		Musician.Utils.NormalizePlayerName(GetUnitName(unitToken, true))
 	local isNameVisible = Musician.NamePlates.ShouldRenderNoteIcon(textElement)
@@ -572,6 +615,20 @@ end
 -- @param player (string)
 -- @param event (string)
 function Musician.NamePlates.AttachNamePlate(namePlate, player, event)
+	-- Create a simplified unit frame with player name when not in combat
+	if not namePlate.musicianUnitFrame then
+		namePlate.musicianUnitFrame = CreateFrame('Button', nil, namePlate)
+		namePlate.musicianUnitFrame:SetPoint('CENTER')
+		namePlate.musicianUnitFrame:SetUsingParentLevel(true)
+		namePlate.musicianUnitFrame:SetSize(1, 1)
+		namePlate.musicianUnitFrame:SetShown(false)
+		namePlate.musicianUnitFrame.name = namePlate.musicianUnitFrame:CreateFontString(nil, 'OVERLAY',
+			'SystemFont_NamePlate')
+		namePlate.musicianUnitFrame.name:SetPoint('CENTER')
+		namePlate.musicianUnitFrame.name:SetJustifyH('CENTER')
+		namePlate.musicianUnitFrame.name:SetJustifyV('MIDDLE')
+		namePlate.musicianUnitFrame.name:SetWordWrap(false)
+	end
 
 	Musician.NamePlates.UpdateNamePlate(namePlate)
 
@@ -579,14 +636,14 @@ function Musician.NamePlates.AttachNamePlate(namePlate, player, event)
 
 	-- Create or show animated notes frames
 	if not namePlate.musicianAnimatedNotesFrame then
-		namePlate.musicianAnimatedNotesFrame = CreateFrame("Frame")
-		namePlate.musicianAnimatedNotesFrame:SetFrameStrata("BACKGROUND")
+		namePlate.musicianAnimatedNotesFrame = CreateFrame('Frame')
+		namePlate.musicianAnimatedNotesFrame:SetFrameStrata('WORLD')
 		namePlate.musicianAnimatedNotesFrame:SetParent(namePlate)
 		namePlate.musicianAnimatedNotesFrame:SetFrameLevel(0)
-		namePlate.musicianAnimatedNotesFrame:SetPoint("BOTTOM", namePlate, "BOTTOM", 0, -20)
+		namePlate.musicianAnimatedNotesFrame:SetPoint('BOTTOM', namePlate, 'BOTTOM', 0, -20)
 		namePlate.musicianAnimatedNotesFrame:SetWidth(NOTES_ANIMATION_WIDTH)
 		namePlate.musicianAnimatedNotesFrame:SetHeight(NOTES_ANIMATION_HEIGHT)
-		namePlate.musicianAnimatedNotesFrame:SetScript("OnUpdate", Musician.NamePlates.OnNamePlateNotesFrameUpdate)
+		namePlate.musicianAnimatedNotesFrame:SetScript('OnUpdate', Musician.NamePlates.OnNamePlateNotesFrameUpdate)
 		namePlate.musicianAnimatedNotesFrame.namePlate = namePlate
 		Musician.NamePlates.UpdateNamePlateCinematicMode(namePlate)
 	else
@@ -594,7 +651,7 @@ function Musician.NamePlates.AttachNamePlate(namePlate, player, event)
 	end
 
 	-- Set data
-	local unitToken = namePlate.namePlateUnitToken
+	local unitToken = namePlate.unitToken or namePlate.namePlateUnitToken
 	namePlate.musicianAnimatedNotesFrame.player = player
 	namePlate.musicianAnimatedNotesFrame.songId = nil
 	namePlate.musicianAnimatedNotesFrame.race = unitToken and select(2, UnitRace(unitToken)) or nil
@@ -605,6 +662,10 @@ end
 --- Detach animated notes frame from the nameplate
 -- @param namePlate (Frame)
 function Musician.NamePlates.DetachNamePlate(namePlate)
+	-- Hide Musician unit frame
+	if namePlate.musicianUnitFrame then
+		namePlate.musicianUnitFrame:Hide()
+	end
 
 	if not namePlate or not namePlate.musicianAnimatedNotesFrame then return end
 
@@ -669,9 +730,11 @@ end
 --- Indicates whenever the friendly player nameplates are enabled.
 -- @return areVisible (boolean)
 function Musician.NamePlates.AreNamePlatesEnabled()
-	local hasValidMaxDistance = WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE or (tonumber(GetCVar("nameplatePlayerMaxDistance")) or 0) > 0
+	local hasValidMaxDistance = WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE or
+		(tonumber(GetCVar("nameplatePlayerMaxDistance")) or 0) > 0
 	return GetCVarBool("nameplateShowAll") and GetCVarBool(CVAR_nameplateShowFriendlyPlayers) and hasValidMaxDistance
 end
+
 --- Initialize tips and tricks
 --
 function Musician.NamePlates.InitTipsAndTricks()

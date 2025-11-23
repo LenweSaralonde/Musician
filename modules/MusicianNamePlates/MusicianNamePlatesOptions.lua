@@ -83,7 +83,7 @@ function Musician.NamePlates.Options.Init()
 			ExecuteFrameScript(InterfaceOptionsNamesPanelUnitNameplatesShowAll, "OnClick", "LeftButton")
 		end
 
-		-- Enable more settings when nameplates are enabled to make sure they are always visible
+		-- Enable more settings when nameplates are enabled to make sure they are always visible in the best conditions
 		if self:GetChecked() then
 			-- Enable nameplates for friends and enemies.
 			SetCVarSafe(CVAR_nameplateShowFriendlyPlayers, true)
@@ -91,7 +91,7 @@ function Musician.NamePlates.Options.Init()
 			-- Disable nameplate motion.
 			SetCVarSafe("nameplateMotion", 0) -- old school
 			if CVarCallbackRegistry.SetCVarBitfieldMask and Enum.NamePlateStackType then
-				CVarCallbackRegistry:SetCVarBitfieldMask("nameplateStackingTypes", Enum.NamePlateStackType.Friendly)
+				CVarCallbackRegistry:SetCVarBitfieldMask("nameplateStackingTypes", 0)
 			end
 			-- Set maximum distance
 			SetCVarSafe("nameplatePlayerMaxDistance", 60)
