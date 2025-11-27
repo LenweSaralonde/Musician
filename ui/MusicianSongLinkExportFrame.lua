@@ -124,19 +124,11 @@ function MusicianSongLinkExportFrameMixin:OnLoad()
 	self.songTitle:SetScript("OnEscapePressed", function()
 		self:Hide()
 	end)
-	-- Prevent the chat edit box from being closed when the link EditBox is focused on WoW Classic
-	if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE and ChatEdit_OnEditFocusLost then
-		local chatEditOnFocusLost = ChatEdit_OnEditFocusLost
-		self.songTitle:HookScript("OnEnter", function()
-			ChatEdit_OnEditFocusLost = function() end
-		end)
-		self.songTitle:HookScript("OnLeave", function()
-			ChatEdit_OnEditFocusLost = chatEditOnFocusLost
-		end)
-	end
+	Musician.SongLinks.PreventChatCloseOnFocus(self.songTitle)
 
 	-- Post link button
 	self.postLinkButton:HookScript("OnClick", function()
 		self.postLink()
 	end)
+	Musician.SongLinks.PreventChatCloseOnFocus(self.postLinkButton)
 end

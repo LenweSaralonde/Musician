@@ -517,12 +517,6 @@ stds.wow = {
 			}
 		},
 
-		ChatFrameMixin = {
-			fields = {
-				"OnEvent",
-			}
-		},
-
 		CVarCallbackRegistry = {
 			fields = {
 				"SetCVarBitfieldMask",
@@ -720,6 +714,18 @@ stds.wow = {
 			}
 		},
 
+		ChatFrameMixin = {
+			fields = {
+				"OnEvent",
+			}
+		},
+
+		ChatFrameEditBoxMixin = {
+			fields = {
+				"ShouldDeactivateChatOnEditFocusLost"
+			}
+		},
+
 		Settings = {
 			fields = {
 				"RegisterCanvasLayoutCategory",
@@ -771,6 +777,7 @@ stds.wow = {
 		"LE_PARTY_CATEGORY_INSTANCE",
 		"LE_EXPANSION_LEVEL_CURRENT",
 		"MAX_WOW_CHAT_CHANNELS",
+		"ACTIVE_CHAT_EDIT_BOX",
 		"UIDROPDOWNMENU_MENU_LEVEL",
 		"RED_FONT_COLOR",
 		"ORANGE_FONT_COLOR",

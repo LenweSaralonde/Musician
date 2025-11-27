@@ -6,8 +6,9 @@ Musician.SongLinks = LibStub("AceAddon-3.0"):NewAddon("Musician.SongLinks", "Ace
 local MODULE_NAME = "SongLinks"
 Musician.AddModule(MODULE_NAME)
 
-local ChatEdit_LinkItem = ChatFrameUtil and ChatFrameUtil.LinkItem or ChatEdit_LinkItem
-local ChatFrame_AddMessageEventFilter = ChatFrameUtil and ChatFrameUtil.AddMessageEventFilter or ChatFrame_AddMessageEventFilter
+local ChatEdit_LinkItem                    = ChatFrameUtil and ChatFrameUtil.LinkItem or ChatEdit_LinkItem
+local ChatFrame_AddMessageEventFilter      = ChatFrameUtil and ChatFrameUtil.AddMessageEventFilter or
+	ChatFrame_AddMessageEventFilter
 
 local LibDeflate                           = LibStub:GetLibrary("LibDeflate")
 local LibBase64                            = LibStub:GetLibrary("LibBase64")
@@ -741,6 +742,36 @@ function Musician.SongLinks.OnSongReceived(prefix, message, distribution, sender
 			Musician.SongLinks:SendMessage(Musician.Events.SongReceiveFailed, sender,
 				Musician.SongLinks.errors.importingFailed,
 				title, context)
+		end
+	end)
+end
+
+--- Prevent the chat edit box from closing when the button is clicked.
+-- @param button (Button)
+function Musician.SongLinks.PreventChatCloseOnFocus(button)
+	button:HookScript("OnEnter", function()
+		local activeChatWindow = ChatFrameUtil and ChatFrameUtil.GetActiveWindow and ChatFrameUtil.GetActiveWindow() or
+			ACTIVE_CHAT_EDIT_BOX
+		if activeChatWindow then
+			if ChatFrameEditBoxMixin and ChatFrameEditBoxMixin.ShouldDeactivateChatOnEditFocusLost then
+				local shouldDeactivateChatOnEditFocusLost = activeChatWindow.ShouldDeactivateChatOnEditFocusLost
+				button.restoreEditFocusLost = function()
+					activeChatWindow.ShouldDeactivateChatOnEditFocusLost = shouldDeactivateChatOnEditFocusLost
+				end
+				activeChatWindow.ShouldDeactivateChatOnEditFocusLost = function() return false end
+			else
+				local chatEditOnFocusLost = activeChatWindow:GetScript('OnEditFocusLost')
+				button.restoreEditFocusLost = function()
+					activeChatWindow:SetScript('OnEditFocusLost', chatEditOnFocusLost)
+				end
+				activeChatWindow:SetScript('OnEditFocusLost', function() end)
+			end
+		end
+	end)
+	button:HookScript("OnLeave", function()
+		if button.restoreEditFocusLost then
+			button.restoreEditFocusLost()
+			button.restoreEditFocusLost = nil
 		end
 	end)
 end
