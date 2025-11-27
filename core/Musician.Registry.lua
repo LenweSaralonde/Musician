@@ -26,6 +26,7 @@ local NOTIFY_NEW_VERSION_POPUP_DELAY = 3
 
 local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetadata
 local ChatFrame_AddMessageEventFilter = ChatFrameUtil and ChatFrameUtil.AddMessageEventFilter or ChatFrame_AddMessageEventFilter
+local canaccessvalue = canaccessvalue or function() return true end
 
 local newVersionNotified = false
 local newProtocolNotified = false
@@ -75,11 +76,14 @@ function Musician.Registry.Init()
 	local function finishInit()
 		-- Standard player tooltip hook
 		local function onTooltipSetUnit(self)
-			if self and self.GetUnit then
+			if canaccessvalue(self) and self and canaccessvalue(self.GetUnit) and self.GetUnit then
 				local _, unitType = self:GetUnit()
 				if UnitIsPlayer(unitType) then
-					local player = Musician.Utils.NormalizePlayerName(GetUnitName(unitType, true))
-					Musician.Registry.UpdateTooltipInfo(self, player)
+					local unitName = GetUnitName(unitType, true)
+					if canaccessvalue(unitName) then
+						local player = Musician.Utils.NormalizePlayerName(unitName)
+						Musician.Registry.UpdateTooltipInfo(self, player)
+					end
 				end
 			end
 		end
@@ -117,7 +121,10 @@ function Musician.Registry.Init()
 			return
 		end
 
-		local player = Musician.Utils.NormalizePlayerName(GetUnitName("mouseover", true))
+		local unitName = GetUnitName("mouseover", true)
+		if not canaccessvalue(unitName) then return end
+
+		local player = Musician.Utils.NormalizePlayerName(unitName)
 		if Musician.Utils.PlayerIsMyself(player) then
 			return
 		end
@@ -334,7 +341,7 @@ function Musician.Registry.PlayerIsInRange(player)
 	if (IsInGroup() or IsInRaid()) and IsInInstance() then
 		local inRange, checkedRange = UnitInRange(Musician.Utils.SimplePlayerName(player))
 		-- checkedRange seems to be always true since patch 10.1.5
-		if checkedRange then
+		if canaccessvalue(checkedRange) and checkedRange then
 			return inRange
 		end
 	end
@@ -488,7 +495,11 @@ end
 function Musician.Registry.UpdatePlayerTooltip(player)
 	local _, unitType = GameTooltip:GetUnit()
 	if not UnitIsPlayer(unitType) then return end
-	local tooltipPlayer = Musician.Utils.NormalizePlayerName(GetUnitName(unitType, true))
+
+	local unitName = GetUnitName(unitType, true)
+	if not canaccessvalue(unitName) then return end
+
+	local tooltipPlayer = Musician.Utils.NormalizePlayerName(unitName)
 	if tooltipPlayer == player then
 		Musician.Registry.UpdateTooltipInfo(GameTooltip, player)
 	end

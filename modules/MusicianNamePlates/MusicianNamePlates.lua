@@ -8,6 +8,7 @@ Musician.AddModule(MODULE_NAME)
 
 local GetCVar = (C_CVar and C_CVar.GetCVar or GetCVar)
 local GetCVarBool = (C_CVar and C_CVar.GetCVarBool or GetCVarBool)
+local canaccessvalue = canaccessvalue or function() return true end
 
 local CVAR_nameplateShowFriendlyPlayers = LE_EXPANSION_LEVEL_CURRENT >= 11 and "nameplateShowFriendlyPlayers" or
 	"nameplateShowFriends"
@@ -58,7 +59,7 @@ Musician.NamePlates.playerNamePlates = playerNamePlates
 local function adjustNamePlateScale(namePlate)
 	if namePlate.musicianAnimatedNotesFrame then
 		local nameplateScale = namePlate.musicianAnimatedNotesFrame:GetParent() == namePlate and 1 or
-		namePlate:GetScale()
+			namePlate:GetScale()
 		namePlate.musicianAnimatedNotesFrame:SetScale(NOTES_ANIMATION_SCALE * nameplateScale / UIParent:GetScale())
 	end
 end
@@ -394,34 +395,37 @@ function Musician.NamePlates.UpdateNamePlate(namePlate)
 	if Musician.NamePlates.CanHideHealthBars() and not Musician.NamePlates.IsNameplateCustomized(namePlate) then
 		local unitToken = namePlate.unitToken or namePlate.namePlateUnitToken
 		local unitFrame = namePlate.UnitFrame
-		local isPlayerOrFriendly = unitToken and (UnitIsFriend(unitToken, "player") or UnitIsPlayer(unitToken))
-		local shouldShowNameplate = unitFrame and ShouldShowName(unitFrame)
 
-		if isPlayerOrFriendly and not namePlate:IsForbidden() and not UnitIsUnit(unitToken, "player") and shouldShowNameplate then
-			local isInCombat = UnitAffectingCombat(unitToken)
+		if unitToken and canaccessvalue(unitFrame) and canaccessvalue(UnitIsUnit(unitFrame.unit, "target")) then
+			local isPlayerOrFriendly = UnitIsFriend(unitToken, "player") or UnitIsPlayer(unitToken)
+			local shouldShowNameplate = unitFrame and ShouldShowName(unitFrame)
 
-			-- Determine if the Blizzard unit frame should be displayed
-			local shouldDisplayBlizzardUnitFrame
-			if LE_EXPANSION_LEVEL_CURRENT >= 11 then
-				-- Midnight
-				shouldDisplayBlizzardUnitFrame = not GetCVarBool("nameplateShowOnlyNames") and
-					(not Musician_Settings.hideNamePlateBars or isInCombat)
-			else
-				-- Old school
-				local health = UnitHealth(unitToken)
-				local healthMax = UnitHealthMax(unitToken)
-				shouldDisplayBlizzardUnitFrame = not GetCVarBool("nameplateShowOnlyNames") and
-					(not Musician_Settings.hideNamePlateBars or isInCombat or health < healthMax)
-			end
+			if isPlayerOrFriendly and not namePlate:IsForbidden() and not UnitIsUnit(unitToken, "player") and shouldShowNameplate then
+				local isInCombat = UnitAffectingCombat(unitToken)
 
-			-- Set Blizzard unit frame visibility
-			if shouldDisplayBlizzardUnitFrame ~= unitFrame:IsVisible() then
-				unitFrame:SetShown(shouldDisplayBlizzardUnitFrame)
-			end
+				-- Determine if the Blizzard unit frame should be displayed
+				local shouldDisplayBlizzardUnitFrame
+				if LE_EXPANSION_LEVEL_CURRENT >= 11 then
+					-- Midnight
+					shouldDisplayBlizzardUnitFrame = not GetCVarBool("nameplateShowOnlyNames") and
+						(not Musician_Settings.hideNamePlateBars or isInCombat)
+				else
+					-- Old school
+					local health = UnitHealth(unitToken)
+					local healthMax = UnitHealthMax(unitToken)
+					shouldDisplayBlizzardUnitFrame = not GetCVarBool("nameplateShowOnlyNames") and
+						(not Musician_Settings.hideNamePlateBars or isInCombat or health < healthMax)
+				end
 
-			-- Set Musician unit frame visibility
-			if namePlate.musicianUnitFrame then
-				namePlate.musicianUnitFrame:SetShown(not shouldDisplayBlizzardUnitFrame)
+				-- Set Blizzard unit frame visibility
+				if shouldDisplayBlizzardUnitFrame ~= unitFrame:IsVisible() then
+					unitFrame:SetShown(shouldDisplayBlizzardUnitFrame)
+				end
+
+				-- Set Musician unit frame visibility
+				if namePlate.musicianUnitFrame then
+					namePlate.musicianUnitFrame:SetShown(not shouldDisplayBlizzardUnitFrame)
+				end
 			end
 		end
 	end
@@ -467,8 +471,12 @@ function Musician.NamePlates.OnNamePlateAdded(event, unitToken)
 	-- Animated notes may not have been cleaned up when the nameplate was recycled
 	Musician.NamePlates.DetachNamePlate(namePlate)
 
+	-- Make sure player name is accessible
+	local unitName = GetUnitName(unitToken, true)
+	if not canaccessvalue(unitName) then return end
+
 	-- May return "Unknown" on first attempt: try again later.
-	if GetUnitName(unitToken, true) == UNKNOWN then
+	if unitName == UNKNOWN then
 		C_Timer.After(.1, function()
 			Musician.NamePlates.OnNamePlateAdded(event, unitToken)
 		end)
@@ -477,7 +485,7 @@ function Musician.NamePlates.OnNamePlateAdded(event, unitToken)
 
 	if UnitIsPlayer(unitToken) then
 		-- Add references to the nameplate
-		local player = Musician.Utils.NormalizePlayerName(GetUnitName(unitToken, true))
+		local player = Musician.Utils.NormalizePlayerName(unitName)
 		playerNamePlates[player] = namePlate
 		namePlatePlayers[unitToken] = player
 
@@ -574,8 +582,12 @@ function Musician.NamePlates.AddNoteIcon(namePlate, textElement, append)
 	end
 
 	local unitToken = namePlate.unitToken or namePlate.namePlateUnitToken
-	local player = unitToken and UnitIsPlayer(unitToken) and
-		Musician.Utils.NormalizePlayerName(GetUnitName(unitToken, true))
+	local unitName = unitToken and GetUnitName(unitToken, true)
+	if not canaccessvalue(textElement:GetText()) or not canaccessvalue(unitName) then
+		return
+	end
+
+	local player = unitToken and UnitIsPlayer(unitToken) and Musician.Utils.NormalizePlayerName(unitName)
 	local isNameVisible = Musician.NamePlates.ShouldRenderNoteIcon(textElement)
 	local hasNoteIcon = player and not Musician.Utils.PlayerIsMyself(player) and Musician_Settings.showNamePlateIcon and
 		Musician.Registry.PlayerIsRegistered(player)

@@ -633,6 +633,7 @@ stds.wow = {
 		"securecall",
 		"CloseSpecialWindows",
 		"ShouldShowName",
+		"canaccessvalue",
 
 		-- Global Mixins and UI Objects
 

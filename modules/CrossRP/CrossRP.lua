@@ -9,6 +9,7 @@ Musician.AddModule(MODULE_NAME)
 local LibDeflate = LibStub:GetLibrary("LibDeflate")
 
 local ChatFrame_AddMessageEventFilter = ChatFrameUtil and ChatFrameUtil.AddMessageEventFilter or ChatFrame_AddMessageEventFilter
+local canaccessvalue = canaccessvalue or function() return true end
 
 Musician.CrossRP.isReady = false
 
@@ -131,13 +132,15 @@ function Musician.CrossRP.Init()
 	-- Send CrossRP Query to hovered player
 	--
 	Musician.CrossRP:RegisterEvent("UPDATE_MOUSEOVER_UNIT", function()
-
 		local destination = Musician.CrossRP.GetUnitDestination("mouseover")
 		if not destination then
 			return
 		end
 
-		local player = Musician.Utils.NormalizePlayerName(GetUnitName("mouseover", true))
+		local unitName = GetUnitName("mouseover", true)
+		if not canaccessvalue(unitName) then return end
+
+		local player = Musician.Utils.NormalizePlayerName(unitName)
 		if Musician.Utils.PlayerIsMyself(player) then
 			return
 		end
@@ -384,6 +387,7 @@ end
 function Musician.CrossRP.GetUnitDestination(unit)
 	if not UnitIsPlayer(unit) then return nil end
 	local player = GetUnitName(unit, true)
+	if not canaccessvalue(player) then return nil end
 	local faction = Musician.CrossRP.GetFactionId(UnitFactionGroup(unit))
 	if not faction then return nil end
 	return Musician.CrossRP.DestFromFullname(player, faction)
