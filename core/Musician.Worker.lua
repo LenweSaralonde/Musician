@@ -60,5 +60,5 @@ function Musician.Worker.OnUpdate(elapsed)
 	until workerCount == 0 or now > maxTime
 
 	Musician.Utils.Debug(MODULE_NAME, "Workers:", workerCount, "Time:", now - startTime, "Overage:", now - maxTime,
-		"Cycles:", cycles, "FPS:", floor(1 / elapsed))
+		"Cycles:", cycles, "FPS:", elapsed ~= 0 and floor(1 / elapsed) or 0)
 end
