@@ -432,8 +432,8 @@ function Musician.NamePlates.UpdateNamePlate(namePlate)
 
 	-- Synchronize Musician unit frame name font string with Blizzard's
 	if namePlate.musicianUnitFrame and namePlate.UnitFrame and namePlate.UnitFrame.name then
-		local fontName, fontSize, fontFlags = namePlate.UnitFrame.name:GetFont()
-		namePlate.musicianUnitFrame.name:SetFont(fontName, fontSize, fontFlags)
+		namePlate.musicianUnitFrame.name:SetIgnoreParentScale(namePlate.UnitFrame.name:IsIgnoringParentScale())
+		namePlate.musicianUnitFrame.name:SetFontObject(namePlate.UnitFrame.name:GetFontObject())
 		namePlate.musicianUnitFrame.name:SetTextColor(namePlate.UnitFrame.name:GetTextColor())
 		namePlate.musicianUnitFrame.name:SetText(namePlate.UnitFrame.name:GetText())
 		namePlate.musicianUnitFrame.name:SetShown(namePlate.UnitFrame.name:IsShown())
