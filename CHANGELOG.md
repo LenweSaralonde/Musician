@@ -1,6 +1,15 @@
 Changelog
 =========
 
+v1.9.12.3
+---------
+* Updated for WoW Retail 11.2.7, MoP Classic 5.5.2 and Classic Era 1.15.8.
+* Prevent chat edit box from being closed when inserting a song link.
+* Set fixed size for animated notes regardless of UI scale.
+* Fixed Total RP3 nameplate support.
+* Fixed nameplate related bugs.
+* Minor bugfixes and improvements.
+
 v1.9.12.2
 ---------
 * Fixed LUA error in TRP Extended song export frame.
