@@ -1,4 +1,4 @@
-## Interface: 50500
+## Interface: 50502
 ## Title: Musician
 ## Author: LenweSaralonde
 ## Version: 1.9.12.2
