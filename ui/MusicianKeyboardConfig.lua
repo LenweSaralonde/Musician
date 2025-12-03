@@ -235,6 +235,8 @@ function Musician.KeyboardConfig.Button_OnKeyDown(self, keyValue)
 			local isAllowedBinding = (strlenutf8(keyValue) == 1 or fixedBindingKey ~= nil and fixedBindingKey == mergedKey) and
 				not Musician.DISABLED_KEY_VALUES[keyValue]
 
+			Musician.Utils.Debug(MODULE_NAME, "Binding key", selectedKeyButton.key, "with key value", keyValue, isAllowedBinding)
+
 			if isAllowedBinding then
 
 				-- This key value is already mapped to another physical key: clear text (except if it's a key with fixed binding)
