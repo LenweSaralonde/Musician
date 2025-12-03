@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.12.4
+---------
+* Fixed oversized nameplates in full HD resolutions and lower.
+
 v1.9.12.3
 ---------
 * Updated for WoW Retail 11.2.7, MoP Classic 5.5.2 and Classic Era 1.15.8.
