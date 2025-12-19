@@ -247,3 +247,5 @@ You can also toss a coin to your developer on [Patreon](https://musician.lenwe.i
 * Naelyel
 * Aphex
 * Derenly
+* Serreldian
+* Larxania Lunimarch
