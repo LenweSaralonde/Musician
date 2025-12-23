@@ -84,7 +84,7 @@ function Musician.Map:OnEnable()
 
 	-- Tracking menu generators
 	local function getMenuGenerator(getter, setter)
-		return function (_, rootDescription)
+		return function(_, rootDescription)
 			rootDescription:CreateDivider()
 			rootDescription:CreateTitle(Musician.Msg.MAP_TRACKING_OPTIONS_TITLE)
 			local checkbox = rootDescription:CreateCheckbox(Musician.Msg.MAP_TRACKING_OPTION_ACTIVE_MUSICIANS,
@@ -125,19 +125,10 @@ function Musician.Map.OnSongChunk(event, sender, mode, _, _, _, posY, posX, _, i
 		activePlayers[sender].timer:Cancel()
 	end
 
-	-- Remove player from active player list when the song chunk has expired
-	local timeout = mode == Musician.Song.MODE_DURATION and 3 or 2
-	local timer = C_Timer.NewTimer(timeout, function()
-		if activePlayers[sender] ~= nil then
-			wipe(activePlayers[sender])
-			activePlayers[sender] = nil
-		end
-		Musician.Map.RemovePlayer(sender)
-	end)
-
 	-- Verify map ID
 	local uiMapID = worldToMapCoordinates(instanceID, posX, posY)
 	if uiMapID == nil then
+		Musician.Map.RemovePlayer(sender)
 		return
 	end
 
@@ -146,8 +137,15 @@ function Musician.Map.OnSongChunk(event, sender, mode, _, _, _, posY, posX, _, i
 
 	-- Within a dungeon (mapType 4) or the coordinates are (0, 0): ignore
 	if info.mapType == 4 or posX == 0 and posY == 0 then
+		Musician.Map.RemovePlayer(sender)
 		return
 	end
+
+	-- Remove player from active player list after the song chunk has expired
+	local timeout = mode == Musician.Song.MODE_DURATION and 3 or 2
+	local timer = C_Timer.NewTimer(timeout, function()
+		Musician.Map.RemovePlayer(sender)
+	end)
 
 	-- Add player to active player list
 	activePlayers[sender] = {
@@ -213,6 +211,16 @@ end
 --- Remove active player from maps
 --
 function Musician.Map.RemovePlayer(player)
+	if activePlayers[player] ~= nil then
+		-- Cancel previous activity expiration timer
+		if activePlayers[player].timer then
+			activePlayers[player].timer:Cancel()
+		end
+		-- Wipe data
+		wipe(activePlayers[player])
+		activePlayers[player] = nil
+	end
+	-- Remove pins
 	Musician.Map.RemoveWorldMapPin(player)
 	Musician.Map.RemoveMiniMapPin(player)
 end
