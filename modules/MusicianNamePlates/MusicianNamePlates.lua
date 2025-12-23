@@ -685,19 +685,21 @@ end
 --- Detach animated notes frame from the nameplate
 -- @param namePlate (Frame)
 function Musician.NamePlates.DetachNamePlate(namePlate)
+	if not namePlate then return end
+
 	-- Hide Musician unit frame
 	if namePlate.musicianUnitFrame then
 		namePlate.musicianUnitFrame:Hide()
 	end
 
-	if not namePlate or not namePlate.musicianAnimatedNotesFrame then return end
-
 	-- Hide animated notes frame
-	namePlate.musicianAnimatedNotesFrame:Hide()
+	if namePlate.musicianAnimatedNotesFrame then
+		namePlate.musicianAnimatedNotesFrame:Hide()
 
-	-- Remove animated notes frames
-	while namePlate.musicianAnimatedNotesFrame:GetNumRegions() > 0 do
-		removeNote(select(1, namePlate.musicianAnimatedNotesFrame:GetRegions()))
+		-- Remove animated notes frames
+		while namePlate.musicianAnimatedNotesFrame:GetNumRegions() > 0 do
+			removeNote(select(1, namePlate.musicianAnimatedNotesFrame:GetRegions()))
+		end
 	end
 end
 
