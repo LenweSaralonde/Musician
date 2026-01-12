@@ -240,12 +240,13 @@ You can also toss a coin to your developer on [Patreon](https://musician.lenwe.i
 
 🙏 Special thanks to the official supporters of the project:
 
-* Grayson Blackclaw
-* ChanceTheCheetah
-* Selena - WRA
-* Crisellianna
-* Naelyel
-* Aphex
-* Derenly
-* Serreldian
+* Lindalë Dawnsinger
 * Larxania Lunimarch
+* Serreldian
+* Derenly
+* Aphex
+* Naelyel
+* Crisellianna
+* Selena - WRA
+* ChanceTheCheetah
+* Grayson Blackclaw
