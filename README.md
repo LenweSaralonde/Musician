@@ -240,6 +240,7 @@ You can also toss a coin to your developer on [Patreon](https://musician.lenwe.i
 
 🙏 Special thanks to the official supporters of the project:
 
+* Foogiano
 * Lindalë Dawnsinger
 * Larxania Lunimarch
 * Serreldian

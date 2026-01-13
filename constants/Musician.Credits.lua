@@ -13,6 +13,7 @@ Musician.SUPPORTERS = {
 	"Serreldian",
 	"Larxania Lunimarch",
 	"Lindalë Dawnsinger",
+	"Foogiano",
 }
 
 --- Legendary supporter names
