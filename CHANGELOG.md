@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v1.9.13.0
+---------
+* New loading screen artwork.
+* TOC bump for WoW Midnight 12.0.0 prepatch.
+* Added support for TBC Anniversary Classic 2.5.5.
+* TOC bump for WoW Mists of Pandaria Classic 5.5.3.
+
 v1.9.12.4
 ---------
 * Fixed oversized nameplates in full HD resolutions and lower.
