@@ -79,8 +79,8 @@ function MusicianOptionsPanelMap_OnLoad()
 		Musician.Map.Options.Save(true)
 	end)
 
-	-- Only show on Classic Era
-	if LE_EXPANSION_LEVEL_CURRENT > 0 then
+	-- Only show on Classic Era and TBC
+	if LE_EXPANSION_LEVEL_CURRENT > 1 then
 		MusicianOptionsPanelMap:Hide()
 	end
 end

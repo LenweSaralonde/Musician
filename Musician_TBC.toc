@@ -1,0 +1,67 @@
+## Interface: 20505
+## Title: Musician
+## Author: LenweSaralonde
+## Version: 1.9.12.4
+## IconTexture: Interface\AddOns\Musician\ui\textures\addon-list-icon.blp
+## Notes: Listen to and perform music with your character
+## OptionalDeps: ElvUI, Kui_Nameplates, MyRolePlay, NeatPlates, Plater, TidyPlates, TidyPlates_ThreatPlates, totalRP3
+## SavedVariables: Musician_Settings
+## SavedVariablesPerCharacter: Musician_CharacterSettings
+## Category-enUS: Roleplay
+## Category-deDE: Rollenspiel
+## Category-esES: Juego de rol
+## Category-esMX: Juego de rol
+## Category-frFR: Jeu de rôle
+## Category-itIT: Gioco di Ruolo
+## Category-koKR: 롤플레잉
+## Category-ptBR: Interpretação de Papel
+## Category-ruRU: Ролевая игра
+## Category-zhCN: 角色扮演
+## Category-zhTW: 角色扮演
+## Group: Musician
+
+embeds.xml
+
+core\Musician.lua
+core\Musician.Song.lua
+core\Musician.Utils.lua
+core\Musician.Worker.lua
+core\Musician.Sampler.lua
+core\Musician.Comm.lua
+core\Musician.Registry.lua
+core\Musician.SongLinks.lua
+core\Musician.Preloader.lua
+core\Musician.KeyboardUtils.lua
+core\Musician.Live.lua
+core\Musician.VolumeMeter.lua
+
+constants\Musician.Constants.lua
+constants\Musician.Events.lua
+constants\Musician.Instruments.lua
+constants\Musician.Midi.lua
+constants\Musician.MidiMapping.lua
+constants\Musician.Keyboard.lua
+constants\Musician.Layouts.lua
+constants\Musician.Credits.lua
+
+locale\locale.xml
+
+ui\fonts\MusicianFontIcons.xml
+ui\fonts\MusicianFontPercussionIcons.xml
+
+ui\widgets\MusicianWidgets.classic.xml
+
+ui\MusicianLoadingScreen.xml
+ui\MusicianBasicMessageDialog.xml
+ui\MusicianFrame.xml
+ui\MusicianTrackEditor.xml
+ui\MusicianButton.lua
+ui\MusicianKeyboard.xml
+ui\MusicianKeyboardConfig.xml
+ui\MusicianOptions.xml
+ui\MusicianAbout.xml
+ui\MusicianSongLinkExportFrame.xml
+ui\MusicianSongLinkImportFrame.xml
+ui\MusicianUrlHyperlinkSelector.xml
+
+modules\modules.classic.xml
