@@ -13,13 +13,13 @@
 				<Texture name="$parentLogo" file="Interface\AddOns\Musician\ui\textures\about-logo.blp">
 					<Size x="128" y="128" />
 					<Anchors>
-						<Anchor point="TOPLEFT" x="15" y="-15" />
+						<Anchor point="TOPLEFT" x="15" y="-40" />
 					</Anchors>
 				</Texture>
 
 				<FontString name="$parentTitle" inherits="SystemFont_Huge2" justifyH="LEFT">
 					<Anchors>
-						<Anchor point="LEFT" x="0" y="32" relativePoint="RIGHT" relativeTo="$parentLogo" />
+						<Anchor point="TOPLEFT" x="0" y="0" relativePoint="TOPRIGHT" relativeTo="$parentLogo" />
 					</Anchors>
 				</FontString>
 
