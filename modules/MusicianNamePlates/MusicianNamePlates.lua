@@ -434,7 +434,12 @@ function Musician.NamePlates.UpdateNamePlate(namePlate)
 	if namePlate.musicianUnitFrame and namePlate.UnitFrame and namePlate.UnitFrame.name then
 		namePlate.musicianUnitFrame.name:SetIgnoreParentScale(namePlate.UnitFrame.name:IsIgnoringParentScale())
 		namePlate.musicianUnitFrame.name:SetFontObject(namePlate.UnitFrame.name:GetFontObject())
-		namePlate.musicianUnitFrame.name:SetTextColor(namePlate.UnitFrame.name:GetTextColor())
+		-- On Retail, use the health bar color instead of name text color when text only mode is disabled
+		if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE and not GetCVarBool("nameplateShowOnlyNameForFriendlyPlayerUnits") then
+			namePlate.musicianUnitFrame.name:SetTextColor(namePlate.UnitFrame.healthBar:GetStatusBarColor())
+		else
+			namePlate.musicianUnitFrame.name:SetTextColor(namePlate.UnitFrame.name:GetTextColor())
+		end
 		namePlate.musicianUnitFrame.name:SetText(namePlate.UnitFrame.name:GetText())
 		namePlate.musicianUnitFrame.name:SetShown(namePlate.UnitFrame.name:IsShown())
 	end
