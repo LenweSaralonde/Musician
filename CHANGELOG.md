@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.9.13.1
+---------
+* Fixed name color in friendly player nameplates.
+* Updated visuals and HD logo.
+
 v1.9.13.0
 ---------
 * New loading screen artwork.
