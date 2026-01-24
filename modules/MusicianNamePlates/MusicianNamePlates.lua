@@ -396,7 +396,7 @@ function Musician.NamePlates.UpdateNamePlate(namePlate)
 		local unitToken = namePlate.unitToken or namePlate.namePlateUnitToken
 		local unitFrame = namePlate.UnitFrame
 
-		if unitToken and canaccessvalue(unitFrame) and canaccessvalue(UnitIsUnit(unitFrame.unit, "target")) then
+		if canaccessvalue(unitToken) and unitToken and canaccessvalue(unitFrame) and canaccessvalue(UnitIsUnit(unitFrame.unit, "target")) then
 			local isPlayerOrFriendly = UnitIsFriend(unitToken, "player") or UnitIsPlayer(unitToken)
 			local shouldShowNameplate = unitFrame and ShouldShowName(unitFrame)
 
@@ -488,7 +488,7 @@ function Musician.NamePlates.OnNamePlateAdded(event, unitToken)
 		return
 	end
 
-	if UnitIsPlayer(unitToken) then
+	if canaccessvalue(unitToken) and UnitIsPlayer(unitToken) then
 		-- Add references to the nameplate
 		local player = Musician.Utils.NormalizePlayerName(unitName)
 		playerNamePlates[player] = namePlate
@@ -503,7 +503,7 @@ end
 -- @param event (string)
 -- @param unitToken (string)
 function Musician.NamePlates.OnNamePlateRemoved(event, unitToken)
-	if not UnitIsPlayer(unitToken) then return end
+	if not canaccessvalue(unitToken) or not UnitIsPlayer(unitToken) then return end
 
 	-- Detach nameplate and remove references
 	local player = namePlatePlayers[unitToken]
@@ -587,6 +587,10 @@ function Musician.NamePlates.AddNoteIcon(namePlate, textElement, append)
 	end
 
 	local unitToken = namePlate.unitToken or namePlate.namePlateUnitToken
+	if not canaccessvalue(unitToken) then
+		return
+	end
+
 	local unitName = unitToken and GetUnitName(unitToken, true)
 	if not canaccessvalue(textElement:GetText()) or not canaccessvalue(unitName) then
 		return

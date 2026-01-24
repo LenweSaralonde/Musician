@@ -78,7 +78,7 @@ function Musician.Registry.Init()
 		local function onTooltipSetUnit(self)
 			if canaccessvalue(self) and self and canaccessvalue(self.GetUnit) and self.GetUnit then
 				local _, unitType = self:GetUnit()
-				if UnitIsPlayer(unitType) then
+				if canaccessvalue(unitType) and UnitIsPlayer(unitType) then
 					local unitName = GetUnitName(unitType, true)
 					if canaccessvalue(unitName) then
 						local player = Musician.Utils.NormalizePlayerName(unitName)
@@ -462,18 +462,21 @@ function Musician.Registry.UpdateTooltipInfo(tooltip, player, fontSize, r, g, b)
 	local i = 1
 	while _G[tooltipName .. 'TextRight' .. i] do
 		local line = _G[tooltipName .. 'TextRight' .. i]
+		local lineText = line:GetText()
 
-		-- Info text is already present: no update needed
-		if line:GetText() == infoText then
-			repositionLine(line, i)
-			return
-		end
+		if canaccessvalue(lineText) then
+			-- Info text is already present: no update needed
+			if lineText == infoText then
+				repositionLine(line, i)
+				return
+			end
 
-		-- Default is already present: update it by the detailed info text
-		if line:GetText() == Musician.Msg.PLAYER_TOOLTIP then
-			line:SetText(infoText)
-			repositionLine(line, i)
-			return
+			-- Default is already present: update it by the detailed info text
+			if lineText == Musician.Msg.PLAYER_TOOLTIP then
+				line:SetText(infoText)
+				repositionLine(line, i)
+				return
+			end
 		end
 
 		i = i + 1
@@ -494,7 +497,7 @@ end
 -- @param player (string)
 function Musician.Registry.UpdatePlayerTooltip(player)
 	local _, unitType = GameTooltip:GetUnit()
-	if not UnitIsPlayer(unitType) then return end
+	if not canaccessvalue(unitType) or not UnitIsPlayer(unitType) then return end
 
 	local unitName = GetUnitName(unitType, true)
 	if not canaccessvalue(unitName) then return end

@@ -610,6 +610,8 @@ end
 -- @param server (string)
 -- @return items (table)
 function Musician.GetPlayerMenuItems(unit, chatTarget, name, server)
+	if not canaccessvalue(unit) then return {} end
+
 	local isPlayer = unit and UnitIsPlayer(unit) or chatTarget
 	local isMyself = false
 	local isMuted = false

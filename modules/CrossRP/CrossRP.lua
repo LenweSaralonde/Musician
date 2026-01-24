@@ -385,7 +385,7 @@ end
 -- @param unit (string)
 -- @return (string)
 function Musician.CrossRP.GetUnitDestination(unit)
-	if not UnitIsPlayer(unit) then return nil end
+	if not canaccessvalue(unit) or not UnitIsPlayer(unit) then return nil end
 	local player = GetUnitName(unit, true)
 	if not canaccessvalue(player) then return nil end
 	local faction = Musician.CrossRP.GetFactionId(UnitFactionGroup(unit))
