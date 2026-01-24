@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.13.2
+---------
+* Fixed errors related to secret values access in dungeons.
+
 v1.9.13.1
 ---------
 * Fixed name color in friendly player nameplates.
