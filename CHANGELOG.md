@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.13.3
+---------
+* Fixed nameplates text size.
+
 v1.9.13.2
 ---------
 * Fixed errors related to secret values access in dungeons.
