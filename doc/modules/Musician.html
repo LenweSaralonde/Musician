@@ -135,6 +135,10 @@
 	<td class="summary">Enable hyperlinks support on frame</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#FilterSenderName">FilterSenderName (event, formattedPlayerName, msg, playerName)</a></td>
+	<td class="summary">Filter formatted sender name in chat to add the music playing status icon</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#GetCommands">GetCommands ()</a></td>
 	<td class="summary">Get command definitions</td>
 	</tr>
@@ -285,6 +289,40 @@
         </li>
     </ul>
 
+
+
+
+
+</dd>
+    <dt>
+    <a name = "FilterSenderName"></a>
+    <strong>FilterSenderName (event, formattedPlayerName, msg, playerName)</strong>
+    </dt>
+    <dd>
+    Filter formatted sender name in chat to add the music playing status icon
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+         (string)
+        </li>
+        <li><span class="parameter">formattedPlayerName</span>
+         (string)
+        </li>
+        <li><span class="parameter">msg</span>
+         (string) Not used
+        </li>
+        <li><span class="parameter">playerName</span>
+         (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        formattedPlayerNameWithIcon (string)
+    </ol>
 
 
 
