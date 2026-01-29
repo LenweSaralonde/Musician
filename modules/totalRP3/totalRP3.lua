@@ -24,7 +24,8 @@ function Musician.TRP3:OnEnable()
 		-- Init settings
 		Musician_Settings = Mixin(Musician.TRP3.Options.GetDefaults(), Musician_Settings)
 
-		Musician.TRP3.HookPlayerNames()
+		Musician.TRP3.HookMusicianPlayerNames()
+		Musician.TRP3.HookTRP3PlayerNames()
 		Musician.TRP3.HookNamePlates()
 		Musician.TRP3.HookPlayerMap()
 		if TRP3_CharacterTooltip then
@@ -76,10 +77,20 @@ function Musician.TRP3.GetRpName(player)
 	return trpPlayer:GetCustomColoredRoleplayingNamePrefixedWithIcon()
 end
 
---- Hook player name formatting
+--- Hook player name formatting on Musician side to use TRP3 names
 --
-function Musician.TRP3.HookPlayerNames()
+function Musician.TRP3.HookMusicianPlayerNames()
 	Musician.Utils.FormatPlayerName = Musician.TRP3.GetRpName
+end
+
+--- Hook player name formatting on TRP3 side to add the playing status note icon
+--
+function Musician.TRP3.HookTRP3PlayerNames()
+	-- Just move our filter on top of the list so it's processed after TRP3's
+	if ChatFrameUtil and ChatFrameUtil.AddSenderNameFilter then
+		ChatFrameUtil.RemoveSenderNameFilter(Musician.FilterSenderName)
+		ChatFrameUtil.AddSenderNameFilter(Musician.FilterSenderName)
+	end
 end
 
 --- Hook TRP player tooltip

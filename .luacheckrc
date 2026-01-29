@@ -514,6 +514,8 @@ stds.wow = {
 				"LinkItem",
 				"GetActiveWindow",
 				"AddMessageEventFilter",
+				"AddSenderNameFilter",
+				"RemoveSenderNameFilter",
 			}
 		},
 

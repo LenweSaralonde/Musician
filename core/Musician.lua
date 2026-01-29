@@ -7,6 +7,7 @@ local MODULE_NAME = "Main"
 Musician.modules = { MODULE_NAME } -- All modules
 
 local ChatFrame_AddMessageEventFilter = ChatFrameUtil and ChatFrameUtil.AddMessageEventFilter or ChatFrame_AddMessageEventFilter
+local canaccessvalue = canaccessvalue or function() return true end
 
 local tipsAndTricks = {}
 
@@ -659,6 +660,29 @@ function Musician.GetPlayerMenuItems(unit, chatTarget, name, server)
 	return items
 end
 
+--- Filter formatted sender name in chat to add the music playing status icon
+-- @param event (string)
+-- @param formattedPlayerName (string)
+-- @param msg (string) Not used
+-- @param playerName (string)
+-- @return formattedPlayerNameWithIcon (string)
+function Musician.FilterSenderName(event, ...)
+	local formattedPlayerName, _, playerName = ...
+	if not canaccessvalue(formattedPlayerName) or not canaccessvalue(playerName) then
+		return
+	end
+
+	local fullPlayerName = Musician.Utils.NormalizePlayerName(playerName)
+
+	if Musician.songs[fullPlayerName] ~= nil and Musician.songs[fullPlayerName]:IsPlaying() then
+		if Musician.PlayerIsMuted(fullPlayerName) then
+			return Musician.Utils.GetChatIcon(Musician.IconImages.NoteDisabled) .. formattedPlayerName
+		else
+			return Musician.Utils.GetChatIcon(Musician.IconImages.Note) .. formattedPlayerName
+		end
+	end
+end
+
 --- Setup hooks
 --
 function Musician.SetupHooks()
@@ -739,23 +763,16 @@ function Musician.SetupHooks()
 
 	-- Add muted/unmuted status to player messages when playing
 	--
-
-	local HookedGetPlayerLink = GetPlayerLink
-	GetPlayerLink = function(...)
-		local link = HookedGetPlayerLink(...)
-
-		local playerName = ...
-		local fullPlayerName = Musician.Utils.NormalizePlayerName(playerName)
-
-		if Musician.songs[fullPlayerName] ~= nil and Musician.songs[fullPlayerName]:IsPlaying() then
-			if Musician.PlayerIsMuted(fullPlayerName) then
-				link = Musician.Utils.GetChatIcon(Musician.IconImages.NoteDisabled) .. link
-			else
-				link = Musician.Utils.GetChatIcon(Musician.IconImages.Note) .. link
-			end
+	if ChatFrameUtil and ChatFrameUtil.AddSenderNameFilter then
+		-- Midnight
+		ChatFrameUtil.AddSenderNameFilter(Musician.FilterSenderName);
+	else
+		-- Old school way
+		local HookedGetPlayerLink = GetPlayerLink
+		GetPlayerLink = function(playerName, ...)
+			local link = HookedGetPlayerLink(playerName, ...)
+			return Musician.FilterSenderName(nil, link, nil, playerName) or link
 		end
-
-		return link
 	end
 
 	-- Add stop button to "Player plays music" emote

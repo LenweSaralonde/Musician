@@ -158,6 +158,7 @@ function Musician.Registry.Init()
 
 	-- Update connected players
 	Musician.Registry:RegisterEvent("CHAT_MSG_CHANNEL_LIST", function(event, players, _, _, _, _, _, _, _, channelName)
+		if not canaccessvalue(players) or not canaccessvalue(channelName) then return end
 
 		-- Not the Musician channel
 		if channelName ~= Musician.CHANNEL then
@@ -570,6 +571,7 @@ end
 --- Add player to registry
 -- @param player (string)
 function Musician.Registry.RegisterPlayer(player)
+	if not canaccessvalue(player) then return end
 	player = Musician.Utils.NormalizePlayerName(player)
 
 	if Musician.Registry.players[player] == nil then
@@ -582,6 +584,7 @@ end
 --- Remove player from registry
 -- @param player (string)
 function Musician.Registry.UnregisterPlayer(player)
+	if not canaccessvalue(player) then return end
 	player = Musician.Utils.NormalizePlayerName(player)
 	if Musician.Registry.players[player] then
 		wipe(Musician.Registry.players[player])
