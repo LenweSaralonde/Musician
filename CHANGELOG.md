@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.13.4
+---------
+* Fixed LUA errors in raids on Retail.
+
 v1.9.13.3
 ---------
 * Fixed nameplates text size.
