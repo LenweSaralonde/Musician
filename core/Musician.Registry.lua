@@ -267,6 +267,14 @@ function Musician.Registry.DisplayPlayerCount()
 	end
 end
 
+--- Initiate request to list player names in communication channel
+--
+local function sendListChannelByNameRequest()
+	if not Musician.Comm.InChatMessagingLockdown() then
+		ListChannelByName(Musician.CHANNEL)
+	end
+end
+
 --- Fetch the connected players
 --
 function Musician.Registry.FetchPlayers()
@@ -278,12 +286,10 @@ function Musician.Registry.FetchPlayers()
 	-- Send fetch players request to the server
 	if Musician.Comm.GetChannel() ~= nil then
 		Musician.Registry.fetchingPlayers = true
-		ListChannelByName(Musician.CHANNEL)
+		sendListChannelByNameRequest()
 
 		-- The request may not work on the first attempt so try again every second until it succeeds
-		Musician.Registry.listChannelsRetryTicker = C_Timer.NewTicker(FETCH_PLAYERS_RETRY_RATE, function()
-			ListChannelByName(Musician.CHANNEL)
-		end)
+		Musician.Registry.listChannelsRetryTicker = C_Timer.NewTicker(FETCH_PLAYERS_RETRY_RATE, sendListChannelByNameRequest)
 	end
 end
 

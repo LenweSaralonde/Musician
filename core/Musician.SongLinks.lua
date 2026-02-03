@@ -9,6 +9,7 @@ Musician.AddModule(MODULE_NAME)
 local ChatEdit_LinkItem                    = ChatFrameUtil and ChatFrameUtil.LinkItem or ChatEdit_LinkItem
 local ChatFrame_AddMessageEventFilter      = ChatFrameUtil and ChatFrameUtil.AddMessageEventFilter or
 	ChatFrame_AddMessageEventFilter
+local canaccessvalue                       = canaccessvalue or function() return true end
 
 local LibDeflate                           = LibStub:GetLibrary("LibDeflate")
 local LibBase64                            = LibStub:GetLibrary("LibBase64")
@@ -157,13 +158,15 @@ function Musician.SongLinks:SendIndexedCommMessage(prefix, text, distribution, t
 
 		-- Send chunk
 		local currentIndex = index
+		local success = true
 		local function ctlCallback(_, sendResult)
-			if sendResult then
-				totalSent = totalSent + #chunk
+			if not sendResult then
+				success = false
 			end
+			totalSent = totalSent + #chunk
 			-- Run callback for the last sent chunk
 			if currentIndex == chunkCount then
-				return callbackFn(callbackArg, totalSent, textlen, sendResult)
+				return callbackFn(callbackArg, totalSent, textlen, success)
 			end
 		end
 		if isBnet then
@@ -290,19 +293,31 @@ function Musician.SongLinks.Init()
 	end
 
 	-- Convert hyperlinks to plain text chat links before sending messages
-	local function getSubstituteChatMessageBeforeSendHook(originalFunction)
-		return function(msg)
-			msg = originalFunction(msg)
-			msg = Musician.SongLinks.HyperlinksToChatLinks(msg)
-			return msg
-		end
-	end
-	if ChatFrameUtil and ChatFrameUtil.SubstituteChatMessageBeforeSend then
-		ChatFrameUtil.SubstituteChatMessageBeforeSend =
-			getSubstituteChatMessageBeforeSendHook(ChatFrameUtil.SubstituteChatMessageBeforeSend)
+	if ChatFrameEditBoxMixin and ChatFrameEditBoxMixin.OnPreSendText and EventRegistry and EventRegistry.RegisterCallback then
+		EventRegistry:RegisterCallback("ChatFrame.OnEditBoxPreSendText", function(event, chatBox)
+			local text = chatBox:GetText();
+			if canaccessvalue(chatBox) then
+				chatBox:SetText(Musician.SongLinks.HyperlinksToChatLinks(text))
+			end
+		end, Musician.SongLinks);
 	else
-		SubstituteChatMessageBeforeSend =
-			getSubstituteChatMessageBeforeSendHook(SubstituteChatMessageBeforeSend)
+		-- Old school way, using dirty hooks
+
+		local function getSubstituteChatMessageBeforeSendHook(originalFunction)
+			return function(msg)
+				msg = originalFunction(msg)
+				msg = Musician.SongLinks.HyperlinksToChatLinks(msg)
+				return msg
+			end
+		end
+
+		if ChatFrameUtil and ChatFrameUtil.SubstituteChatMessageBeforeSend then
+			ChatFrameUtil.SubstituteChatMessageBeforeSend =
+				getSubstituteChatMessageBeforeSendHook(ChatFrameUtil.SubstituteChatMessageBeforeSend)
+		else
+			SubstituteChatMessageBeforeSend =
+				getSubstituteChatMessageBeforeSendHook(SubstituteChatMessageBeforeSend)
+		end
 	end
 
 	-- Convert received plain text chat links into hyperlinks
@@ -400,6 +415,7 @@ end
 -- @param text (string)
 -- @return msg (string)
 function Musician.SongLinks.HyperlinksToChatLinks(text)
+	if not canaccessvalue(text) then return text end
 	local capturePattern = '|H' .. HYPERLINK_PREFIX .. ':?([^|]*)|h[^%[]*%[[^:]+: ([^%]]+)%]|r|h'
 	text = string.gsub(text, capturePattern, function(playerArg, titleArg)
 		return Musician.SongLinks.GetChatLink(titleArg, playerArg)
@@ -414,6 +430,7 @@ end
 -- @param[opt] playerName (string)
 -- @return text (string)
 function Musician.SongLinks.ChatLinksToHyperlinks(msg, playerName)
+	if not canaccessvalue(msg) or not canaccessvalue(playerName) then return msg end
 	local capturePattern = '%[' .. CHAT_LINK_PREFIX .. '<?([^>:]*)>?: ([^%]]*)%]'
 	return (string.gsub(msg, capturePattern, function(playerArg, titleArg)
 		local title = Musician.Utils.RemoveHighlight(titleArg) -- Remove text coloring added by other addons such as Total RP
@@ -426,6 +443,7 @@ end
 -- @param msg (string)
 -- @return text (string)
 function Musician.SongLinks.ChatLinksToChatBubble(msg)
+	if not canaccessvalue(msg) then return msg end
 	local capturePattern = '%[' .. CHAT_LINK_PREFIX .. '<?([^>:]*)>?: ([^%]]*)%]'
 	return (string.gsub(msg, capturePattern, function(_, titleArg)
 		local text = Musician.Msg.LINKS_CHAT_BUBBLE

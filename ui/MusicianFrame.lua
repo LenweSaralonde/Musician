@@ -32,10 +32,11 @@ function Musician.Frame.Init()
 	Musician.Frame:RegisterMessage(Musician.Events.BandPlayReady, Musician.Frame.OnBandPlayReady)
 	Musician.Frame:RegisterMessage(Musician.Events.BandReadyPlayersUpdated, Musician.Frame.UpdateBandPlayButton)
 	Musician.Frame:RegisterMessage(Musician.Events.SongReceiveSuccessful, Musician.Frame.OnSongReceiveSuccessful)
-	Musician.Frame:RegisterEvent("GROUP_ROSTER_UPDATE", Musician.Frame.OnRosterUpdate)
+	Musician.Frame:RegisterEvent("GROUP_ROSTER_UPDATE", Musician.Frame.OnCommChannelUpdate)
 	Musician.Frame:RegisterEvent("PLAYER_DEAD", Musician.Frame.OnCommChannelUpdate)
 	Musician.Frame:RegisterEvent("PLAYER_ALIVE", Musician.Frame.OnCommChannelUpdate)
 	Musician.Frame:RegisterEvent("PLAYER_UNGHOST", Musician.Frame.OnCommChannelUpdate)
+	Musician.Frame:RegisterMessage(Musician.Events.CommChatMessagingLockdown, Musician.Frame.OnCommChannelUpdate)
 
 	-- Main frame settings
 	MusicianFrame:DisableEscape()
@@ -217,16 +218,9 @@ function Musician.Frame.UpdatePlayButton()
 	MusicianFramePlayButton:SetEnabled(isEnabled)
 end
 
---- OnRosterUpdate
---
-function Musician.Frame.OnRosterUpdate(event)
-	Musician.Frame.UpdatePlayButton()
-	Musician.Frame.UpdateBandPlayButton()
-end
-
 --- OnCommChannelUpdate
--- @param event (string)
-function Musician.Frame.OnCommChannelUpdate(event)
+--
+function Musician.Frame.OnCommChannelUpdate()
 	Musician.Frame.UpdatePlayButton()
 	Musician.Frame.UpdateBandPlayButton()
 end

@@ -28,6 +28,11 @@ Musician.Events.CommSendAction = "MusicianCommSendAction"
 -- @param action (string) Action name, from Musician.Comm.action
 Musician.Events.CommSendActionComplete = "MusicianCommSendActionComplete"
 
+--- Fired when entering or leaving chat messaging lockdown
+-- @field Musician.Events.CommChatMessagingLockdown
+-- @param inLockdown (boolean)
+Musician.Events.CommChatMessagingLockdown = "MusicianCommChatMessagingLockdown"
+
 --- Fired when a song starts playing
 -- @field Musician.Events.SongPlay
 -- @param song (Musician.Song)

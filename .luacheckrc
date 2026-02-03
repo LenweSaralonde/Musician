@@ -430,7 +430,8 @@ stds.wow = {
 				"GetChannelShortcut",
 				"SwapChatChannelsByChannelIndex",
 				"RegisterAddonMessagePrefix",
-				"SendChatMessage"
+				"SendChatMessage",
+				"InChatMessagingLockdown",
 			},
 		},
 
@@ -522,6 +523,12 @@ stds.wow = {
 		CVarCallbackRegistry = {
 			fields = {
 				"SetCVarBitfieldMask",
+			}
+		},
+
+		EventRegistry = {
+			fields = {
+				"RegisterCallback",
 			}
 		},
 
@@ -724,7 +731,8 @@ stds.wow = {
 
 		ChatFrameEditBoxMixin = {
 			fields = {
-				"ShouldDeactivateChatOnEditFocusLost"
+				"ShouldDeactivateChatOnEditFocusLost",
+				"OnPreSendText", -- Accessed only
 			}
 		},
 

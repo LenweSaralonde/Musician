@@ -105,6 +105,11 @@ end
 --- Return true if the channel list is ready for the communication channel to join.
 -- @return isReady (boolean)
 local function isChannelListReady()
+	-- Within discussion lockdown
+	if Musician.Comm.InChatMessagingLockdown() then
+		return false
+	end
+
 	-- The channel list is empty
 	if select('#', GetChannelList()) == 0 then
 		return false
@@ -172,6 +177,16 @@ function Musician.Comm.Init()
 				useAlternateChannelStreamPrefix = true
 			end
 			lastSentChannelStreamMessage = now
+		end
+	end)
+
+	-- Monitor chat messaging lockdown state changes
+	local inLockdown = Musician.Comm.InChatMessagingLockdown()
+	C_Timer.NewTicker(0, function()
+		local newInLockdown = Musician.Comm.InChatMessagingLockdown()
+		if newInLockdown ~= inLockdown then
+			inLockdown = newInLockdown
+			Musician.Comm:SendMessage(Musician.Events.CommChatMessagingLockdown, inLockdown)
 		end
 	end)
 end
@@ -389,9 +404,18 @@ function Musician.Comm.ChannelIsReady()
 	return useCommChannel() and Musician.Comm.GetChannel() ~= nil
 end
 
+--- Return true if the game is in messaging lockdown (ie during a boss fight in a dungeon)
+-- @return inLockdown (boolean)
+function Musician.Comm.InChatMessagingLockdown()
+	return C_ChatInfo and C_ChatInfo.InChatMessagingLockdown and C_ChatInfo.InChatMessagingLockdown()
+end
+
 --- Return true if the player can broadcast via the channel or the group chat
 -- @return canBroadcast (boolean)
 function Musician.Comm.CanBroadcast()
+	if Musician.Comm.InChatMessagingLockdown() then
+		return false
+	end
 	return not useCommChannel() or Musician.Comm.ChannelIsReady() or Musician.Comm.GetGroupChatType() ~= nil
 end
 
