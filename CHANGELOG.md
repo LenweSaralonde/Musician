@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.13.5
+---------
+* Fixed broken messaging during boss encounters.
+
 v1.9.13.4
 ---------
 * Fixed LUA errors in raids on Retail.
