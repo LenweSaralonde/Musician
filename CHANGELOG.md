@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.13.7
+---------
+* Rolled back 3rd party library MSA-DropDownMenu-1.0 to v18 due to compatibility bugs in v20 with add-ons using v18.
+
 v1.9.13.6
 ---------
 * Updated 3rd party libraries.
