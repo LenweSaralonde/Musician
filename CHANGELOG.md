@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.9.13.6
+---------
+* Updated 3rd party libraries.
+* TOC bump for Wow Retail 12.0.1.
+
 v1.9.13.5
 ---------
 * Fixed broken messaging during boss encounters.
