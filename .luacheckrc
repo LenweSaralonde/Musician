@@ -180,8 +180,6 @@ read_globals = {
 	"MSA_DropDownMenu_DisableDropDown",
 	"MSA_CloseDropDownMenus",
 	"MSA_DropDownMenu_OnHide",
-	"MSA_DropDownList1",
-	"MSA_DropDownList2",
 	ChatThrottleLib = {
 		fields = {
 			"SendAddonMessage",
