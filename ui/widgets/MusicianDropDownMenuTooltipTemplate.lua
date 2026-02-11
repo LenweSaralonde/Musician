@@ -1,9 +1,6 @@
 --- Dropdown menu with tooltip template
 -- @module MusicianDropDownMenuTooltipTemplate
 
-local _, msaVersion = LibStub:GetLibrary("MSA-DropDownMenu-1.0")
-local MSA = "MSA" .. msaVersion .. "_"
-
 local specialFrameToRestore = nil
 local hooksInitialized = false
 local rootOpener = nil
@@ -13,7 +10,7 @@ local rootOpener = nil
 local function disableEscape()
 	for index = #UISpecialFrames, 1, -1 do
 		local frameName = UISpecialFrames[index]
-		if string.match(frameName, MSA .. "DropDownList[0-9]+") then
+		if string.match(frameName, "MSA[0-9]*_DropDownList[0-9]+") then
 			table.remove(UISpecialFrames, index)
 		end
 	end
@@ -23,7 +20,7 @@ end
 -- @param level (int)
 local function enableEscape(level)
 	disableEscape()
-	table.insert(UISpecialFrames, MSA .. "DropDownList" .. level)
+	table.insert(UISpecialFrames, Musician.Utils.GetDropDownList(level):GetName())
 end
 
 --- Initialize MSA Hooks
@@ -36,7 +33,7 @@ local function initializeHooks()
 	hooksecurefunc('MSA_ToggleDropDownMenu',
 		function(level, _, dropDownFrame, _, _, _, _, button, _)
 			level = level or 1
-			local frame = _G[MSA .. "DropDownList" .. level]
+			local frame = Musician.Utils.GetDropDownList(level)
 
 			if frame and frame:IsShown() then
 				local opener = (dropDownFrame or button:GetParent())
@@ -74,7 +71,7 @@ local function initializeHooks()
 	hooksecurefunc('MSA_DropDownMenu_OnHide', function(frame)
 		if not rootOpener or not rootOpener.hasEscape then return end
 
-		local level = string.gsub(frame:GetName(), MSA .. "DropDownList", "") + 0
+		local level = string.gsub(frame:GetName(), 'MSA[0-9]*_DropDownList', '') + 0
 
 		if (level == 1) then
 			-- Restore escape for the parent

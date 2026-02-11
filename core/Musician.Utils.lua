@@ -1134,6 +1134,14 @@ function Musician.Utils.EasyMenu_Initialize(frame, level, menuList)
 	end
 end
 
+--- Returns the MSA dropdown list frame based on the level
+-- @param level (int)
+-- @return dropDownList (Frame)
+function Musician.Utils.GetDropDownList(level)
+	local _, msaVersion = LibStub:GetLibrary("MSA-DropDownMenu-1.0")
+	return _G['MSA' .. msaVersion .. '_DropDownList' .. level] or _G['MSA_DropDownList' .. level]
+end
+
 --- Set text to a FontString element ensuring the visual text size is respected
 -- @param fontString (FontString)
 -- @param text (string)

@@ -3,9 +3,6 @@
 
 Musician.Keyboard = LibStub("AceAddon-3.0"):NewAddon("Musician.Keyboard", "AceEvent-3.0")
 
-local _, msaVersion = LibStub:GetLibrary("MSA-DropDownMenu-1.0")
-local MSA = "MSA" .. msaVersion .. "_"
-
 local MODULE_NAME = "Keyboard"
 Musician.AddModule(MODULE_NAME)
 
@@ -504,8 +501,8 @@ local function initLayoutDropdown()
 		MSA_CloseDropDownMenus()
 	end
 
-	_G[MSA .. 'DropDownList1']:SetClampedToScreen(true)
-	_G[MSA .. 'DropDownList2']:SetClampedToScreen(true)
+	Musician.Utils.GetDropDownList(1):SetClampedToScreen(true)
+	Musician.Utils.GetDropDownList(2):SetClampedToScreen(true)
 
 	local layout = layouts[Musician.Keyboard.config.layout]
 	MSA_DropDownMenu_SetText(dropdown, Musician.Msg.KEYBOARD_LAYOUTS[layout.name] or layout.name)
@@ -534,7 +531,7 @@ local function initBaseKeyDropdown()
 		MSA_CloseDropDownMenus()
 	end
 
-	_G[MSA .. 'DropDownList1']:SetClampedToScreen(true)
+	Musician.Utils.GetDropDownList(1):SetClampedToScreen(true)
 	MSA_DropDownMenu_SetText(dropdown, Musician.NOTE_NAMES[Musician.Keyboard.config.baseKey])
 end
 

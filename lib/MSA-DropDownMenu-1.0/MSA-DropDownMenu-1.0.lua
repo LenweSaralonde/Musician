@@ -1,25 +1,23 @@
 --- MSA-DropDownMenu-1.0 - DropDown menu for non-Blizzard addons
---- Copyright (c) 2016-2026, Marouan Sabbagh <mar.sabbagh@gmail.com>
+--- Copyright (c) 2016-2024, Marouan Sabbagh <mar.sabbagh@gmail.com>
 --- All Rights Reserved.
 ---
 --- https://www.curseforge.com/wow/addons/msa-dropdownmenu-10
 
--- WARNING:
--- Frame names are version-dependent and are not part of the public API.
--- Do not access frames directly by name, always use the library-provided interface.
-
-local name, version = "MSA-DropDownMenu-1.0", 20
+local name, version = "MSA-DropDownMenu-1.0", 18
 
 local lib = LibStub:NewLibrary(name, version)
 if not lib then return end
 
 -- WoW API
 local _G = _G
-local securecallfunction = securecallfunction;
-local securecall = securecall;
 
-MSA_DROPDOWNMENU_MAXBUTTONS = 1;
-MSA_DROPDOWNMENU_MAXLEVELS = 3;
+-- Hack - Support of different WoW API versions
+local IsAddOnLoaded = C_AddOns.IsAddOnLoaded or IsAddOnLoaded;
+
+MSA_DROPDOWNMENU_MINBUTTONS = 8;
+MSA_DROPDOWNMENU_MAXBUTTONS = 8;
+MSA_DROPDOWNMENU_MAXLEVELS = 2;
 MSA_DROPDOWNMENU_BUTTON_HEIGHT = 16;
 MSA_DROPDOWNMENU_BORDER_HEIGHT = 15;
 -- The current open menu
@@ -34,300 +32,388 @@ MSA_DROPDOWNMENU_MENU_VALUE = nil;
 MSA_DROPDOWNMENU_SHOW_TIME = 2;
 -- Default dropdown text height
 MSA_DROPDOWNMENU_DEFAULT_TEXT_HEIGHT = nil;
--- Default dropdown width padding
-MSA_DROPDOWNMENU_DEFAULT_WIDTH_PADDING = 25;
 -- List of open menus
 MSA_OPEN_DROPDOWNMENUS = {};
 
 lib.delegate = lib.delegate or CreateFrame("Frame");
 local MSA_DropDownMenuDelegate = lib.delegate;
-local MSA = "MSA"..version.."_"
 
--- Frames --------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+-- Frames
+------------------------------------------------------------------------------------------------------------------------
 
 local function CreateDropDownMenuButton(name, parent)
-    local frame = CreateFrame("Button", name, parent)
-    frame:SetSize(100, 16)
-    frame:SetFrameLevel(frame:GetParent():GetFrameLevel() + 2)
+    local DropDownMenuButton = CreateFrame("Button", name, parent or nil)
+    DropDownMenuButton:SetWidth(100)
+    DropDownMenuButton:SetHeight(16)
+    DropDownMenuButton:SetFrameLevel(DropDownMenuButton:GetParent():GetFrameLevel()+2)
 
-    local texture1 = frame:CreateTexture(name.."Highlight", "BACKGROUND")
-    texture1:SetTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight")
-    texture1:SetBlendMode("ADD")
+    local texture1 = DropDownMenuButton:CreateTexture(name.."Highlight", "BACKGROUND")
     texture1:SetAllPoints()
     texture1:Hide()
-    frame.Highlight = texture1
+    texture1:SetTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight")
+    texture1:SetBlendMode("ADD")
 
-    local texture2 = frame:CreateTexture(name.."Check", "ARTWORK")
+    local texture2 = DropDownMenuButton:CreateTexture(name.."Check", "ARTWORK")
     texture2:SetTexture("Interface\\Common\\UI-DropDownRadioChecks")
-    texture2:SetSize(16, 16)
-    texture2:SetPoint("LEFT")
+    texture2:SetWidth(16)
+    texture2:SetHeight(16)
+    texture2:SetPoint("LEFT", DropDownMenuButton, 0, 0)
     texture2:SetTexCoord(0, 0.5, 0.5, 1)
 
-    local texture3 = frame:CreateTexture(name.."UnCheck", "ARTWORK")
+    local texture3 = DropDownMenuButton:CreateTexture(name.."UnCheck", "ARTWORK")
     texture3:SetTexture("Interface\\Common\\UI-DropDownRadioChecks")
-    texture3:SetSize(16, 16)
-    texture3:SetPoint("LEFT")
+    texture3:SetWidth(16)
+    texture3:SetHeight(16)
+    texture3:SetPoint("LEFT", DropDownMenuButton, 0, 0)
     texture3:SetTexCoord(0.5, 1, 0.5, 1)
 
-    local texture4 = frame:CreateTexture(name.."Icon", "ARTWORK")
+    local texture4 = DropDownMenuButton:CreateTexture(name.."Icon", "ARTWORK")
     texture4:Hide()
-    texture4:EnableMouseMotion(true)
-    texture4:SetSize(16, 16)
-    texture4:SetPoint("RIGHT")
-    texture4:SetScript("OnEnter", function(self)
-        MSA_DropDownMenuButtonIcon_OnEnter(self)
-    end)
-    texture4:SetScript("OnLeave", function(self)
-        MSA_DropDownMenuButtonIcon_OnLeave(self)
-    end)
-    frame.Icon = texture4
+    texture4:SetWidth(16)
+    texture4:SetHeight(16)
+    texture4:SetPoint("RIGHT", DropDownMenuButton, 0, 0)
 
-    local button1 = CreateFrame("Button", name.."ColorSwatch", frame, "ColorSwatchTemplate")
+    local button1 = CreateFrame("Button", name.."ColorSwatch", DropDownMenuButton)
     button1:Hide()
-    button1:SetPoint("RIGHT", -6, 0)
-    button1:SetScript("OnClick", function(self)
-        CloseMenus()
-        MSA_DropDownMenuButton_OpenColorPicker(self:GetParent())
+    button1:SetWidth(16)
+    button1:SetHeight(16)
+    button1:SetPoint("RIGHT", DropDownMenuButton, -6, 0)
+
+    local button1Texture1 = button1:CreateTexture(name.."ColorSwatchSwatchBg", "BACKGROUND")
+    button1Texture1:SetVertexColor(1, 1, 1)
+    button1Texture1:SetWidth(14)
+    button1Texture1:SetHeight(14)
+    button1Texture1:SetPoint("CENTER", button1, 0, 0)
+
+    button1:SetScript("OnClick", function(self, button, down)
+        CloseMenus();
+        MSA_DropDownMenuButton_OpenColorPicker(self:GetParent());
     end)
-    button1:SetScript("OnEnter", function(self)
-        MSA_CloseDropDownMenus(self:GetParent():GetParent():GetID() + 1)
-        _G[self:GetName().."SwatchBg"]:SetVertexColor(NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
+    button1:SetScript("OnEnter", function(self, motion)
+        MSA_CloseDropDownMenus(self:GetParent():GetParent():GetID() + 1);
+        _G[self:GetName().."SwatchBg"]:SetVertexColor(NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
+        MSA_DropDownMenu_StopCounting(self:GetParent():GetParent());
     end)
-    button1:SetScript("OnLeave", function(self)
-        _G[self:GetName().."SwatchBg"]:SetVertexColor(HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b)
+    button1:SetScript("OnLeave", function(self, motion)
+        _G[self:GetName().."SwatchBg"]:SetVertexColor(HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b);
+        MSA_DropDownMenu_StartCounting(self:GetParent():GetParent());
     end)
 
-    local button2 = CreateFrame("DropDownToggleButton", name.."ExpandArrow", frame)
-    Mixin(button2, MSA_DropDownExpandArrowMixin)
+    local button1NormalTexture = button1:CreateTexture(name.."ColorSwatchNormalTexture")
+    button1NormalTexture:SetTexture("Interface\\ChatFrame\\ChatFrameColorSwatch")
+    button1NormalTexture:SetAllPoints()
+    button1:SetNormalTexture(button1NormalTexture)
+
+    local button2 = CreateFrame("Button", name.."ExpandArrow", DropDownMenuButton)
     button2:Hide()
-    button2:SetMotionScriptsWhileDisabled(true)
-    button2:SetSize(16, 16)
-    button2:SetPoint("RIGHT")
-    button2:SetScript("OnMouseDown", button2.OnMouseDown)
-    button2:SetScript("OnEnter", button2.OnEnter)
-    button2:SetNormalTexture("Interface\\ChatFrame\\ChatFrameExpandArrow")
+    button2:SetWidth(16)
+    button2:SetHeight(16)
+    button2:SetPoint("RIGHT", DropDownMenuButton, 0, 0)
+    button2:SetScript("OnClick", function(self, button, down)
+        MSA_ToggleDropDownMenu(self:GetParent():GetParent():GetID() + 1, self:GetParent().value, nil, nil, nil, nil, self:GetParent().menuList, self);
+    end)
+    button2:SetScript("OnEnter", function(self, motion)
+        local level =  self:GetParent():GetParent():GetID() + 1;
+        local listFrame = _G["MSA_DropDownList"..level];
+        if ( not listFrame or not listFrame:IsShown() or select(2, listFrame:GetPoint()) ~= self ) then
+            MSA_ToggleDropDownMenu(level, self:GetParent().value, nil, nil, nil, nil, self:GetParent().menuList, self);
+        end
+        MSA_DropDownMenu_StopCounting(self:GetParent():GetParent());
+    end)
+    button2:SetScript("OnLeave", function(self, motion)
+        MSA_DropDownMenu_StartCounting(self:GetParent():GetParent());
+    end)
 
-    local button3 = CreateFrame("Button", name.."InvisibleButton", frame)
+    local button2NormalTexture = button2:CreateTexture()
+    button2NormalTexture:SetTexture("Interface\\ChatFrame\\ChatFrameExpandArrow")
+    button2NormalTexture:SetAllPoints()
+    button2:SetNormalTexture(button2NormalTexture)
+
+    local button3 = CreateFrame("Button", name.."InvisibleButton", DropDownMenuButton)
+    DropDownMenuButton["invisibleButton"] = button3
     button3:Hide()
-    button3:SetPoint("TOPLEFT")
-    button3:SetPoint("BOTTOMLEFT")
-    button3:SetPoint("RIGHT", button1, "LEFT")
-    button3:SetScript("OnEnter", function(self)
-        MSA_DropDownMenuButtonInvisibleButton_OnEnter(self)
+    button3:SetPoint("TOPLEFT", DropDownMenuButton, 0, 0)
+    button3:SetPoint("BOTTOMLEFT", DropDownMenuButton, 0, 0)
+    button3:SetPoint("RIGHT", button1, "LEFT", 0, 0)
+    button3:SetScript("OnEnter", function(self, motion)
+        MSA_DropDownMenu_StopCounting(self:GetParent():GetParent());
+        MSA_CloseDropDownMenus(self:GetParent():GetParent():GetID() + 1);
+        local parent = self:GetParent();
+        if ( parent.tooltipTitle and parent.tooltipWhileDisabled) then
+            if ( parent.tooltipOnButton ) then
+                GameTooltip:SetOwner(parent, "ANCHOR_RIGHT");
+                GameTooltip:AddLine(parent.tooltipTitle, 1.0, 1.0, 1.0);
+                GameTooltip:AddLine(parent.tooltipText, nil, nil, nil, true);
+                GameTooltip:Show();
+            end
+        end
     end)
-    button3:SetScript("OnLeave", function(self)
-        MSA_DropDownMenuButtonInvisibleButton_OnLeave(self)
-    end)
-    frame.invisibleButton = button3
-
-    frame:SetScript("OnClick", function(self, button, down)
-        MSA_DropDownMenuButton_OnClick(self, button, down)
-    end)
-    frame:SetScript("OnEnter", function(self)
-        MSA_DropDownMenuButton_OnEnter(self)
-    end)
-    frame:SetScript("OnLeave", function(self)
-        MSA_DropDownMenuButton_OnLeave(self)
-    end)
-    frame:SetScript("OnEnable", function(self)
-        self.invisibleButton:Hide()
-    end)
-    frame:SetScript("OnDisable", function(self)
-        self.invisibleButton:Show()
+    button3:SetScript("OnLeave", function(self, motion)
+        MSA_DropDownMenu_StartCounting(self:GetParent():GetParent());
+        GameTooltip:Hide();
     end)
 
-    local text1 = frame:CreateFontString(name.."NormalText")
-    frame:SetFontString(text1)
-    text1:SetPoint("LEFT", -5, 0)
-    frame:SetNormalFontObject(GameFontHighlightSmallLeft)
-    frame:SetHighlightFontObject(GameFontHighlightSmallLeft)
-    frame:SetDisabledFontObject(GameFontDisableSmallLeft)
+    DropDownMenuButton:SetScript("OnClick", function(self, button, down)
+        MSA_DropDownMenuButton_OnClick(self, button, down);
+    end)
+    DropDownMenuButton:SetScript("OnEnter", function(self, motion)
+        if ( self.hasArrow ) then
+            local level =  self:GetParent():GetID() + 1;
+            local listFrame = _G["MSA_DropDownList"..level];
+            if ( not listFrame or not listFrame:IsShown() or select(2, listFrame:GetPoint()) ~= self ) then
+                MSA_ToggleDropDownMenu(self:GetParent():GetID() + 1, self.value, nil, nil, nil, nil, self.menuList, self);
+            end
+        else
+            MSA_CloseDropDownMenus(self:GetParent():GetID() + 1);
+        end
+        _G[self:GetName().."Highlight"]:Show();
+        MSA_DropDownMenu_StopCounting(self:GetParent());
+        if ( self.tooltipTitle ) then
+            if ( self.tooltipOnButton ) then
+                GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+                GameTooltip:AddLine(self.tooltipTitle, 1.0, 1.0, 1.0);
+                GameTooltip:AddLine(self.tooltipText, nil, nil, nil, true);
+                GameTooltip:Show();
+            end
+        end
+    end)
+    DropDownMenuButton:SetScript("OnLeave", function(self, motion)
+        _G[self:GetName().."Highlight"]:Hide();
+        MSA_DropDownMenu_StartCounting(self:GetParent());
+        GameTooltip:Hide();
+    end)
+    DropDownMenuButton:SetScript("OnEnable", function(self)
+        self.invisibleButton:Hide();
+    end)
+    DropDownMenuButton:SetScript("OnDisable", function(self)
+        self.invisibleButton:Show();
+    end)
 
-    return frame
+    local text1 = DropDownMenuButton:CreateFontString(name.."NormalText")
+    DropDownMenuButton:SetFontString(text1)
+    text1:SetPoint("LEFT", DropDownMenuButton, -5, 0)
+    DropDownMenuButton:SetNormalFontObject("GameFontHighlightSmallLeft")
+    DropDownMenuButton:SetHighlightFontObject("GameFontHighlightSmallLeft")
+    DropDownMenuButton:SetDisabledFontObject("GameFontDisableSmallLeft")
+
+    return DropDownMenuButton
 end
 
 local function CreateDropDownList(name, parent)
-    local frame = CreateFrame("Button", name)
-    frame:SetParent(parent)
-    frame:Hide()
-    frame:SetFrameStrata("DIALOG")
-    frame:EnableMouse(true)
+    local DropDownList = _G[name] or CreateFrame("Button", name)
+    DropDownList:SetParent(parent or nil)
+    DropDownList:Hide()
+    DropDownList:SetFrameStrata("DIALOG")
+    DropDownList:EnableMouse(true)
 
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-        frame.Border = CreateFrame("Frame", name.."Backdrop", frame, "DialogBorderDarkTemplate")
+    local frame1 = _G[name.."Backdrop"] or CreateFrame("Frame", name.."Backdrop", DropDownList, "BackdropTemplate")
+    frame1:SetAllPoints()
+    frame1:SetBackdrop({
+        bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
+        edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+        tile = true,
+        tileSize = 32,
+        edgeSize = 32,
+        insets = {
+            left = 11,
+            right = 12,
+            top = 12,
+            bottom = 9,
+        },
+    })
 
-        local menuBackdrop = CreateFrame("Frame", name.."MenuBackdrop", frame, "TooltipBackdropTemplate")
-        menuBackdrop:SetAllPoints()
-        -- MSA
-        NineSliceUtil.ApplyLayoutByName(menuBackdrop.NineSlice, "TooltipDefaultDarkLayout")
-    else
-        frame.Border = CreateFrame("Frame", name.."Backdrop", frame)
-        -- MSA
-        frame.Border:SetAllPoints()
-        local background = frame.Border:CreateTexture(nil, "BACKGROUND")
-        background:SetAtlas("common-dropdown-classic-bg")
-        background:SetPoint("TOPLEFT", -3, 3)
-        background:SetPoint("BOTTOMRIGHT", 3, -3)
-        local background2 = frame.Border:CreateTexture(nil, "BACKGROUND")
-        background2:SetColorTexture(0, 0, 0, 0.8)
-        background2:SetPoint("TOPLEFT", background, "TOPLEFT", 6, -6)
-        background2:SetPoint("BOTTOMRIGHT", background, "BOTTOMRIGHT", -6, 6)
-        local layer, subLevel = background:GetDrawLayer()
-        background2:SetDrawLayer(layer, subLevel - 1)
+    local frame2 = _G[name.."MenuBackdrop"] or CreateFrame("Frame", name.."MenuBackdrop", DropDownList, "BackdropTemplate")
+    frame2:SetAllPoints()
+    frame2:SetBackdrop({
+        bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+        tile = true,
+        tileSize = 16,
+        edgeSize = 16,
+        insets = {
+            left = 5,
+            right = 5,
+            top = 5,
+            bottom = 4,
+        },
+    })
+    frame2:SetBackdropColor(TOOLTIP_DEFAULT_BACKGROUND_COLOR.r, TOOLTIP_DEFAULT_BACKGROUND_COLOR.g, TOOLTIP_DEFAULT_BACKGROUND_COLOR.b)
+    frame2:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b)
 
-        local menuBackdrop = CreateFrame("Frame", name.."MenuBackdrop", frame)
-        menuBackdrop:SetAllPoints()
-        -- MSA
-        background = menuBackdrop:CreateTexture(nil, "BACKGROUND")
-        background:SetAtlas("common-dropdown-classic-b-bg")
-        background:SetPoint("TOPLEFT", -3, 1)
-        background:SetPoint("BOTTOMRIGHT", 3, -5)
-        background2 = menuBackdrop:CreateTexture(nil, "BACKGROUND")
-        background2:SetColorTexture(0, 0, 0, 0.8)
-        background2:SetPoint("TOPLEFT", background, "TOPLEFT", 7, -4)
-        background2:SetPoint("BOTTOMRIGHT", background, "BOTTOMRIGHT", -7, 8)
-        layer, subLevel = background:GetDrawLayer()
-        background2:SetDrawLayer(layer, subLevel - 1)
-    end
-
-    for i = 1, MSA_DROPDOWNMENU_MAXBUTTONS do
-        local button = CreateDropDownMenuButton(name.."Button"..i, frame)
+    for i=1, MSA_DROPDOWNMENU_MAXBUTTONS do
+        local button = CreateDropDownMenuButton(name.."Button"..i, DropDownList)
         button:SetID(i)
     end
 
-    frame:SetScript("OnClick", function(self)
-        self:Hide()
+    DropDownList:SetScript("OnClick", function(self, button, down)
+        self:Hide();
     end)
-    frame:SetScript("OnUpdate", function(self, elapsed)
-        MSA_DropDownMenu_OnUpdate(self, elapsed)
+    DropDownList:SetScript("OnEnter", function(self, motion)
+        MSA_DropDownMenu_StopCounting(self, motion);
     end)
-    frame:SetScript("OnShow", function(self)
-        MSA_DropDownMenu_OnShow(self)
+    DropDownList:SetScript("OnLeave", function(self, motion)
+        MSA_DropDownMenu_StartCounting(self, motion);
     end)
-    frame:SetScript("OnHide", function(self)
-        MSA_DropDownMenu_OnHide(self)
+    DropDownList:SetScript("OnUpdate", function(self, elapsed)
+        MSA_DropDownMenu_OnUpdate(self, elapsed);
+    end)
+    DropDownList:SetScript("OnShow", function(self)
+        for i=1, MSA_DROPDOWNMENU_MAXBUTTONS do
+            if (not self.noResize) then
+                _G[self:GetName().."Button"..i]:SetWidth(self.maxWidth);
+            end
+        end
+        if (not self.noResize) then
+            self:SetWidth(self.maxWidth+25);
+        end
+        self.showTimer = nil;
+        if ( self:GetID() > 1 ) then
+            self.parent = _G["MSA_DropDownList"..(self:GetID() - 1)];
+        end
+    end)
+    DropDownList:SetScript("OnHide", function(self)
+        MSA_DropDownMenu_OnHide(self);
     end)
 
-    return frame
-end
-
-local function SetDropDownMenuButtonScriptTemplate(frame)
-    Mixin(frame, MSA_DropDownMenuButtonMixin)
-
-    frame:SetScript("OnEnter", frame.OnEnter)
-    frame:SetScript("OnLeave", frame.OnLeave)
-    frame:SetScript("OnMouseDown", frame.OnMouseDown)
+    return DropDownList
 end
 
 local function CreateDropDownMenu(name, parent)
-    local frame
+    local DropDownMenu
     if type(name) == "table" then
-        frame = name
-        name = frame:GetName()
+        DropDownMenu = name
+        name = DropDownMenu:GetName()
     else
-        frame = CreateFrame("Frame", name, parent)
+        DropDownMenu = CreateFrame("Frame", name, parent or nil)
     end
-    frame:SetSize(40, 32)
+    DropDownMenu:SetWidth(40)
+    DropDownMenu:SetHeight(32)
 
-    frame.Left = frame:CreateTexture(name.."Left", "ARTWORK")
-    frame.Left:SetTexture("Interface\\Glues\\CharacterCreate\\CharacterCreate-LabelFrame")
-    frame.Left:SetSize(25, 64)
-    frame.Left:SetPoint("TOPLEFT", 0, 17)
-    frame.Left:SetTexCoord(0, 0.1953125, 0, 1)
+    local texture1 = DropDownMenu:CreateTexture(name.."Left", "ARTWORK")
+    texture1:SetTexture("Interface\\Glues\\CharacterCreate\\CharacterCreate-LabelFrame")
+    texture1:SetWidth(25)
+    texture1:SetHeight(64)
+    texture1:SetPoint("TOPLEFT", DropDownMenu, 0, 17)
+    texture1:SetTexCoord(0, 0.1953125, 0, 1)
 
-    frame.Middle = frame:CreateTexture(name.."Middle", "ARTWORK")
-    frame.Middle:SetTexture("Interface\\Glues\\CharacterCreate\\CharacterCreate-LabelFrame")
-    frame.Middle:SetSize(115, 64)
-    frame.Middle:SetPoint("LEFT", frame.Left, "RIGHT")
-    frame.Middle:SetTexCoord(0.1953125, 0.8046875, 0, 1)
+    local texture2 = DropDownMenu:CreateTexture(name.."Middle", "ARTWORK")
+    texture2:SetTexture("Interface\\Glues\\CharacterCreate\\CharacterCreate-LabelFrame")
+    texture2:SetWidth(115)
+    texture2:SetHeight(64)
+    texture2:SetPoint("LEFT", texture1, "RIGHT", 0, 0)
+    texture2:SetTexCoord(0.1953125, 0.8046875, 0, 1)
 
-    frame.Right = frame:CreateTexture(name.."Right", "ARTWORK")
-    frame.Right:SetTexture("Interface\\Glues\\CharacterCreate\\CharacterCreate-LabelFrame")
-    frame.Right:SetSize(25, 64)
-    frame.Right:SetPoint("LEFT", frame.Middle, "RIGHT")
-    frame.Right:SetTexCoord(0.8046875, 1, 0, 1)
+    local texture3 = DropDownMenu:CreateTexture(name.."Right", "ARTWORK")
+    texture3:SetTexture("Interface\\Glues\\CharacterCreate\\CharacterCreate-LabelFrame")
+    texture3:SetWidth(25)
+    texture3:SetHeight(64)
+    texture3:SetPoint("LEFT", texture2, "RIGHT", 0, 0)
+    texture3:SetTexCoord(0.8046875, 1, 0, 1)
 
-    frame.Text = frame:CreateFontString(name.."Text", "ARTWORK", "GameFontHighlightSmall")
-    frame.Text:SetWordWrap(false)
-    frame.Text:SetJustifyH("RIGHT")
-    frame.Text:SetSize(0, 10)
-    frame.Text:SetPoint("RIGHT", frame.Right, -43, 2)
+    local text1 = DropDownMenu:CreateFontString(name.."Text", "ARTWORK", "GameFontHighlightSmall")
+    DropDownMenu["Text"] = text1
+    text1:SetWordWrap(false)
+    text1:SetJustifyH("RIGHT")
+    text1:SetWidth(0)
+    text1:SetHeight(10)
+    text1:SetPoint("RIGHT", texture3, -43, 2)
 
-    frame.Icon = frame:CreateTexture(name.."Icon", "OVERLAY")
-    frame.Icon:Hide()
-    frame.Icon:SetSize(16, 16)
-    frame.Icon:SetPoint("LEFT", 30, 2)
+    local texture4 = DropDownMenu:CreateTexture(name.."Icon", "OVERLAY")
+    DropDownMenu["Icon"] = texture4
+    texture4:Hide()
+    texture4:SetWidth(16)
+    texture4:SetHeight(16)
+    texture4:SetPoint("LEFT", DropDownMenu, 30, 2)
 
-    local button = CreateFrame("DropDownToggleButton", name.."Button", frame)
-    SetDropDownMenuButtonScriptTemplate(button)
-    button:SetMotionScriptsWhileDisabled(true)
-    button:SetSize(24, 24)
-    button:SetPoint("TOPRIGHT", frame.Right, -16, -18)
-    frame.Button = button
+    local button1 = CreateFrame("Button", name.."Button", DropDownMenu)
+    DropDownMenu["Button"] = button1
+    button1:SetMotionScriptsWhileDisabled(true)
+    button1:SetWidth(24)
+    button1:SetHeight(24)
+    button1:SetPoint("TOPRIGHT", texture3, -16, -18)
+    button1:SetScript("OnEnter", function(self, motion)
+        local parent = self:GetParent();
+        local myscript = parent:GetScript("OnEnter");
+        if(myscript ~= nil) then
+            myscript(parent);
+        end
+    end)
+    button1:SetScript("OnLeave", function(self, motion)
+        local parent = self:GetParent();
+        local myscript = parent:GetScript("OnLeave");
+        if(myscript ~= nil) then
+            myscript(parent);
+        end
+    end)
+    button1:SetScript("OnClick", function(self, button, down)
+        MSA_ToggleDropDownMenu(nil, nil, self:GetParent());
+        PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON);
+    end)
 
-    button.NormalTexture = button:CreateTexture(name.."ButtonNormalTexture")
-    button.NormalTexture:SetTexture("Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Up")
-    button.NormalTexture:SetSize(24, 24)
-    button.NormalTexture:SetPoint("RIGHT")
-    button:SetNormalTexture(button.NormalTexture)
+    local button1NormalTexture = button1:CreateTexture(name.."ButtonNormalTexture")
+    button1NormalTexture:SetTexture("Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Up")
+    button1NormalTexture:SetWidth(24)
+    button1NormalTexture:SetHeight(24)
+    button1NormalTexture:SetPoint("RIGHT", button1, 0, 0)
+    button1:SetNormalTexture(button1NormalTexture)
 
-    button.PushedTexture = button:CreateTexture(name.."ButtonPushedTexture")
-    button.PushedTexture:SetTexture("Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Down")
-    button.PushedTexture:SetSize(24, 24)
-    button.PushedTexture:SetPoint("RIGHT")
-    button:SetPushedTexture(button.PushedTexture)
+    local button1PushedTexture = button1:CreateTexture(name.."ButtonPushedTexture")
+    button1PushedTexture:SetTexture("Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Down")
+    button1PushedTexture:SetWidth(24)
+    button1PushedTexture:SetHeight(24)
+    button1PushedTexture:SetPoint("RIGHT", button1, 0, 0)
+    button1:SetPushedTexture(button1PushedTexture)
 
-    button.DisabledTexture = button:CreateTexture(name.."ButtonDisabledTexture")
-    button.DisabledTexture:SetTexture("Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Disabled")
-    button.DisabledTexture:SetSize(24, 24)
-    button.DisabledTexture:SetPoint("RIGHT")
-    button:SetDisabledTexture(button.DisabledTexture)
+    local button1DisabledTexture = button1:CreateTexture(name.."ButtonDisabledTexture")
+    button1DisabledTexture:SetTexture("Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Disabled")
+    button1DisabledTexture:SetWidth(24)
+    button1DisabledTexture:SetHeight(24)
+    button1DisabledTexture:SetPoint("RIGHT", button1, 0, 0)
+    button1:SetDisabledTexture(button1DisabledTexture)
 
-    button.HighlightTexture = button:CreateTexture(name.."ButtonHighlightTexture")
-    button.HighlightTexture:SetTexture("Interface\\Buttons\\UI-Common-MouseHilight")
-    button.HighlightTexture:SetBlendMode("ADD")
-    button.HighlightTexture:SetSize(24, 24)
-    button.HighlightTexture:SetPoint("RIGHT")
-    button:SetHighlightTexture(button.HighlightTexture)
+    local button1HighlightTexture = button1:CreateTexture(name.."ButtonHighlightTexture")
+    button1HighlightTexture:SetTexture("Interface\\Buttons\\UI-Common-MouseHilight")
+    button1HighlightTexture:SetBlendMode("ADD")
+    button1HighlightTexture:SetWidth(24)
+    button1HighlightTexture:SetHeight(24)
+    button1HighlightTexture:SetPoint("RIGHT", button1, 0, 0)
+    button1:SetHighlightTexture(button1HighlightTexture)
 
-    frame:SetScript("OnHide", function(self)
+    DropDownMenu:SetScript("OnHide", function(self)
         MSA_CloseDropDownMenus();
     end)
 
-    return frame
+    return DropDownMenu
 end
 
-local function CreateDropDownCustomMenuEntry(name, parent)
-    local frame = CreateFrame("Frame", name, parent)
-    Mixin(frame, MSA_DropDownCustomMenuEntryMixin)
-    frame:EnableMouse(true)
-    frame:Hide()
+local DropDownList1 = CreateDropDownList("MSA_DropDownList1")
+DropDownList1:Hide()
+DropDownList1:SetToplevel(true)
+DropDownList1:SetFrameStrata("FULLSCREEN_DIALOG")
+DropDownList1:SetID(1)
+DropDownList1:SetWidth(180)
+DropDownList1:SetHeight(10)
+local _, fontHeight, _ = _G["MSA_DropDownList1Button1NormalText"]:GetFont()
+MSA_DROPDOWNMENU_DEFAULT_TEXT_HEIGHT = fontHeight
 
-    return frame
-end
+local DropDownList2 = CreateDropDownList("MSA_DropDownList2")
+DropDownList2:Hide()
+DropDownList2:SetToplevel(true)
+DropDownList2:SetFrameStrata("FULLSCREEN_DIALOG")
+DropDownList2:SetID(2)
+DropDownList2:SetWidth(180)
+DropDownList2:SetHeight(10)
 
-for i = 1, MSA_DROPDOWNMENU_MAXLEVELS do
-    local list = CreateDropDownList(MSA.."DropDownList"..i)
-    list:SetToplevel(true)
-    list:SetFrameStrata("FULLSCREEN_DIALOG")
-    list:SetID(i)
-    list:SetSize(180, 10)
-    list:Hide()
-end
-do
-    local _, fontHeight = _G[MSA.."DropDownList1Button1NormalText"]:GetFont()
-    MSA_DROPDOWNMENU_DEFAULT_TEXT_HEIGHT = fontHeight
-end
-
--- Public --------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+-- Public
+------------------------------------------------------------------------------------------------------------------------
 
 function MSA_DropDownMenu_Create(name, parent)
     return CreateDropDownMenu(name, parent)
 end
 
-function MSA_DropDownCustomMenuEntry_Create(name, parent)
-    return CreateDropDownCustomMenuEntry(name, parent)
-end
+-- 7.3.0.24920
 
 function MSA_DropDownMenuDelegate_OnAttributeChanged(self, attribute, value)
     if ( attribute == "createframes" and value == true ) then
@@ -353,12 +439,12 @@ function MSA_DropDownMenu_InitializeHelper(frame)
     -- Hide all the buttons
     local button, dropDownList;
     for i = 1, MSA_DROPDOWNMENU_MAXLEVELS, 1 do
-        dropDownList = _G[MSA.."DropDownList"..i];
+        dropDownList = _G["MSA_DropDownList"..i];
         if ( i >= MSA_DROPDOWNMENU_MENU_LEVEL or frame ~= MSA_DROPDOWNMENU_OPEN_MENU ) then
             dropDownList.numButtons = 0;
             dropDownList.maxWidth = 0;
             for j=1, MSA_DROPDOWNMENU_MAXBUTTONS, 1 do
-                button = _G[MSA.."DropDownList"..i.."Button"..j];
+                button = _G["MSA_DropDownList"..i.."Button"..j];
                 button:Hide();
             end
             dropDownList:Hide();
@@ -367,20 +453,10 @@ function MSA_DropDownMenu_InitializeHelper(frame)
     frame:SetHeight(MSA_DROPDOWNMENU_BUTTON_HEIGHT * 2);
 end
 
-local function GetChild(frame, name, key)
-    if (frame[key]) then
-        return frame[key];
-    elseif name then
-        return _G[name..key];
-    end
-
-    return nil;
-end
-
 function MSA_DropDownMenu_Initialize(frame, initFunction, displayMode, level, menuList)
     frame.menuList = menuList;
 
-    securecall("MSA_DropDownMenu_InitializeHelper", frame);
+    MSA_DropDownMenu_InitializeHelper(frame);
 
     -- Set the initialize function and call it.  The initFunction populates the dropdown list.
     if ( initFunction ) then
@@ -393,43 +469,32 @@ function MSA_DropDownMenu_Initialize(frame, initFunction, displayMode, level, me
         level = 1;
     end
 
-    local dropDownList = _G[MSA.."DropDownList"..level];
+    local dropDownList = _G["MSA_DropDownList"..level]
     dropDownList.dropdown = frame;
     dropDownList.shouldRefresh = true;
-    dropDownList:SetWindow(frame:GetWindow());
 
-    MSA_DropDownMenu_SetDisplayMode(frame, displayMode);
+    -- Change appearance based on the displayMode
+    if ( displayMode == "MENU" ) then
+        local name = frame:GetName();
+        _G[name.."Left"]:Hide();
+        _G[name.."Middle"]:Hide();
+        _G[name.."Right"]:Hide();
+        _G[name.."ButtonNormalTexture"]:SetTexture("");
+        _G[name.."ButtonDisabledTexture"]:SetTexture("");
+        _G[name.."ButtonPushedTexture"]:SetTexture("");
+        _G[name.."ButtonHighlightTexture"]:SetTexture("");
+
+        local button = _G[name.."Button"]
+        button:ClearAllPoints();
+        button:SetPoint("LEFT", name.."Text", "LEFT", -9, 0);
+        button:SetPoint("RIGHT", name.."Text", "RIGHT", 6, 0);
+        frame.displayMode = "MENU";
+    end
+
 end
 
 function MSA_DropDownMenu_SetInitializeFunction(frame, initFunction)
     frame.initialize = initFunction;
-end
-
-function MSA_DropDownMenu_SetDisplayMode(frame, displayMode)
-    -- Change appearance based on the displayMode
-    -- Note: this is a one time change based on previous behavior.
-    if ( displayMode == "MENU" ) then
-        local name = frame:GetName();
-        GetChild(frame, name, "Left"):Hide();
-        GetChild(frame, name, "Middle"):Hide();
-        GetChild(frame, name, "Right"):Hide();
-        local button = GetChild(frame, name, "Button");
-        local buttonName = button:GetName();
-        GetChild(button, buttonName, "NormalTexture"):SetTexture(nil);
-        GetChild(button, buttonName, "DisabledTexture"):SetTexture(nil);
-        GetChild(button, buttonName, "PushedTexture"):SetTexture(nil);
-        GetChild(button, buttonName, "HighlightTexture"):SetTexture(nil);
-        local text = GetChild(frame, name, "Text");
-
-        button:ClearAllPoints();
-        button:SetPoint("LEFT", text, "LEFT", -9, 0);
-        button:SetPoint("RIGHT", text, "RIGHT", 6, 0);
-        frame.displayMode = "MENU";
-    end
-end
-
-function MSA_DropDownMenu_SetFrameStrata(frame, frameStrata)
-    frame.listFrameStrata = frameStrata;
 end
 
 function MSA_DropDownMenu_RefreshDropDownSize(self)
@@ -451,133 +516,35 @@ function MSA_DropDownMenu_OnUpdate(self, elapsed)
         MSA_DropDownMenu_RefreshDropDownSize(self);
         self.shouldRefresh = false;
     end
-end
 
-function MSA_DropDownMenuButtonInvisibleButton_OnEnter(self)
-    MSA_CloseDropDownMenus(self:GetParent():GetParent():GetID() + 1);
-    local parent = self:GetParent();
-    if ( parent.tooltipTitle and parent.tooltipWhileDisabled) then
-        if ( parent.tooltipOnButton ) then
-            local tooltip = GetAppropriateTooltip();
-            tooltip:SetOwner(parent, "ANCHOR_RIGHT");
-            GameTooltip_SetTitle(tooltip, parent.tooltipTitle);
-            if parent.tooltipInstruction then
-                GameTooltip_AddInstructionLine(tooltip, parent.tooltipInstruction);
-            end
-            if parent.tooltipText then
-                GameTooltip_AddNormalLine(tooltip, parent.tooltipText, true);
-            end
-            if parent.tooltipWarning then
-                GameTooltip_AddColoredLine(tooltip, parent.tooltipWarning, RED_FONT_COLOR, true);
-            end
-            if parent.tooltipBackdropStyle then
-                SharedTooltip_SetBackdropStyle(tooltip, parent.tooltipBackdropStyle);
-            end
-            tooltip:Show();
-        end
-    end
-end
-
-function MSA_DropDownMenuButtonInvisibleButton_OnLeave(self)
-    GetAppropriateTooltip():Hide();
-end
-
-function MSA_DropDownMenuButton_OnEnter(self)
-    if ( self.hasArrow ) then
-        local level =  self:GetParent():GetID() + 1;
-        local listFrame = _G[MSA.."DropDownList"..level];
-        if ( not listFrame or not listFrame:IsShown() or select(2, listFrame:GetPoint(1)) ~= self ) then
-            MSA_ToggleDropDownMenu(self:GetParent():GetID() + 1, self.value, nil, nil, nil, nil, self.menuList, self, nil, self.menuListDisplayMode);
-        end
+    if ( not self.showTimer or not self.isCounting ) then
+        return;
+    elseif ( self.showTimer < 0 ) then
+        self:Hide();
+        self.showTimer = nil;
+        self.isCounting = nil;
     else
-        MSA_CloseDropDownMenus(self:GetParent():GetID() + 1);
+        self.showTimer = self.showTimer - elapsed;
     end
-    self.Highlight:Show();
-    if ( self.tooltipTitle and not self.noTooltipWhileEnabled and not MSA_DropDownMenuButton_ShouldShowIconTooltip(self) ) then
-        if ( self.tooltipOnButton ) then
-            local tooltip = GetAppropriateTooltip();
-            tooltip:SetOwner(self, self.tooltipAnchor or "ANCHOR_RIGHT");
-            GameTooltip_SetTitle(tooltip, self.tooltipTitle);
-            if self.tooltipInstruction then
-                GameTooltip_AddInstructionLine(tooltip, self.tooltipInstruction);
-            end
-            if self.tooltipText then
-                GameTooltip_AddNormalLine(tooltip, self.tooltipText, true);
-            end
-            if self.tooltipWarning then
-                GameTooltip_AddColoredLine(tooltip, self.tooltipWarning, RED_FONT_COLOR, true);
-            end
-            if self.tooltipBackdropStyle then
-                SharedTooltip_SetBackdropStyle(tooltip, self.tooltipBackdropStyle);
-            end
-            tooltip:Show();
-        end
-    end
-
-    if ( self.mouseOverIcon ~= nil ) then
-        self.Icon:SetTexture(self.mouseOverIcon);
-        self.Icon:Show();
-    end
-
-    GetValueOrCallFunction(self, "funcOnEnter", self);
 end
 
-function MSA_DropDownMenuButton_OnLeave(self)
-    self.Highlight:Hide();
-    GetAppropriateTooltip():Hide();
-
-    if ( self.mouseOverIcon ~= nil ) then
-        if ( self.icon ~= nil ) then
-            self.Icon:SetTexture(self.icon);
-        else
-            self.Icon:Hide();
-        end
+-- Start the countdown on a frame
+function MSA_DropDownMenu_StartCounting(frame)
+    if ( frame.parent ) then
+        MSA_DropDownMenu_StartCounting(frame.parent);
+    else
+        frame.showTimer = MSA_DROPDOWNMENU_SHOW_TIME;
+        frame.isCounting = 1;
     end
-
-    GetValueOrCallFunction(self, "funcOnLeave", self);
 end
 
-function MSA_DropDownMenuButton_ShouldShowIconTooltip(self)
-    if self.Icon and (self.iconTooltipTitle or self.iconTooltipText) and (self.icon or self.mouseOverIcon) then
-        return self.Icon:IsMouseMotionFocus();
+-- Stop the countdown on a frame
+function MSA_DropDownMenu_StopCounting(frame)
+    if ( frame.parent ) then
+        MSA_DropDownMenu_StopCounting(frame.parent);
+    else
+        frame.isCounting = nil;
     end
-    return false;
-end
-
-function MSA_DropDownMenuButtonIcon_OnEnter(self)
-    local button = self:GetParent();
-    if not button then
-        return;
-    end
-
-    local shouldShowIconTooltip = MSA_DropDownMenuButton_ShouldShowIconTooltip(button);
-
-    if shouldShowIconTooltip then
-
-        local tooltip = GetAppropriateTooltip();
-        tooltip:SetOwner(button, "ANCHOR_RIGHT");
-        if button.iconTooltipTitle then
-            GameTooltip_SetTitle(tooltip, button.iconTooltipTitle);
-        end
-        if button.iconTooltipText then
-            GameTooltip_AddNormalLine(tooltip, button.iconTooltipText, true);
-        end
-        if button.iconTooltipBackdropStyle then
-            SharedTooltip_SetBackdropStyle(tooltip, button.iconTooltipBackdropStyle);
-        end
-        tooltip:Show();
-    end
-
-    MSA_DropDownMenuButton_OnEnter(button);
-end
-
-function MSA_DropDownMenuButtonIcon_OnLeave(self)
-    local button = self:GetParent();
-    if not button then
-        return;
-    end
-
-    MSA_DropDownMenuButton_OnLeave(button);
 end
 
 --[[
@@ -592,7 +559,6 @@ info.isTitle = [nil, true]  --  If it's a title the button is disabled and the f
 info.disabled = [nil, true]  --  Disable the button and show an invisible button that still traps the mouseover event so menu doesn't time out
 info.tooltipWhileDisabled = [nil, 1] -- Show the tooltip, even when the button is disabled.
 info.hasArrow = [nil, true]  --  Show the expand arrow for multilevel menus
-info.arrowXOffset = [nil, NUMBER] -- Number of pixels to shift the button's icon to the left or right (positive numbers shift right, negative numbers shift left).
 info.hasColorSwatch = [nil, true]  --  Show color swatch or not, for color selection
 info.r = [1 - 255]  --  Red color value of the color swatch
 info.g = [1 - 255]  --  Green color value of the color swatch
@@ -609,51 +575,39 @@ info.owner = [Frame]  --  Dropdown frame that "owns" the current dropdownlist
 info.keepShownOnClick = [nil, 1]  --  Don't hide the dropdownlist after a button is clicked
 info.tooltipTitle = [nil, STRING] -- Title of the tooltip shown on mouseover
 info.tooltipText = [nil, STRING] -- Text of the tooltip shown on mouseover
-info.tooltipWarning = [nil, STRING] -- Warning-style text of the tooltip shown on mouseover
-info.tooltipInstruction = [nil, STRING] -- Instruction-style text of the tooltip shown on mouseover
 info.tooltipOnButton = [nil, 1] -- Show the tooltip attached to the button instead of as a Newbie tooltip.
-info.tooltipBackdropStyle = [nil, TABLE] -- Optional Backdrop style of the tooltip shown on mouseover
-info.tooltipAnchor = [nil, STRING] -- Pass a custom tooltip anchor (Default is "ANCHOR_RIGHT")
 info.justifyH = [nil, "CENTER"] -- Justify button text
 info.arg1 = [ANYTHING] -- This is the first argument used by info.func
 info.arg2 = [ANYTHING] -- This is the second argument used by info.func
-info.arg3 = [ANYTHING] -- This is the third argument used by info.func  -- MSA
 info.fontObject = [FONT] -- font object replacement for Normal and Highlight
-info.menuList = [TABLE] -- This contains an array of info tables to be displayed as a child menu
-info.menuListDisplayMode = [nil, "MENU"] -- If menuList is set, show the sub drop down with an override display mode.
+info.menuTable = [TABLE] -- This contains an array of info tables to be displayed as a child menu
 info.noClickSound = [nil, 1]  --  Set to 1 to suppress the sound when clicking the button. The sound only plays if .func is set.
 info.padding = [nil, NUMBER] -- Number of pixels to pad the text on the right side
-info.topPadding = [nil, NUMBER] -- Extra spacing between buttons.
 info.leftPadding = [nil, NUMBER] -- Number of pixels to pad the button on the left side
 info.minWidth = [nil, NUMBER] -- Minimum width for this line
-info.customFrame = frame -- Allows this button to be a completely custom frame, use function MSA_DropDownCustomMenuEntry_Create() and override appropriate methods.
-info.icon = [TEXTURE] -- An icon for the button.
-info.iconXOffset = [nil, NUMBER] -- Number of pixels to shift the button's icon to the left or right (positive numbers shift right, negative numbers shift left).
-info.iconTooltipTitle = [nil, STRING] -- Title of the tooltip shown on icon mouseover
-info.iconTooltipText = [nil, STRING] -- Text of the tooltip shown on icon mouseover
-info.iconTooltipBackdropStyle = [nil, TABLE] -- Optional Backdrop style of the tooltip shown on icon mouseover
-info.mouseOverIcon = [TEXTURE] -- An override icon when a button is moused over.
-info.ignoreAsMenuSelection [nil, true] -- Never set the menu text/icon to this, even when this button is checked
-info.registerForRightClick [nil, true] -- Register dropdown buttons for right clicks
-info.registerForAnyClick [nil, true] -- Register dropdown buttons for any clicks
 ]]
 
+local MSA_DropDownMenu_ButtonInfo = {};
+
+local wipe = table.wipe;
+
 function MSA_DropDownMenu_CreateInfo()
-    return {};
+    -- Reuse the same table to prevent memory churn
+    return wipe(MSA_DropDownMenu_ButtonInfo);
 end
 
 function MSA_DropDownMenu_CreateFrames(level, index)
     while ( level > MSA_DROPDOWNMENU_MAXLEVELS ) do
         MSA_DROPDOWNMENU_MAXLEVELS = MSA_DROPDOWNMENU_MAXLEVELS + 1;
-        local newList = CreateDropDownList(MSA.."DropDownList"..MSA_DROPDOWNMENU_MAXLEVELS);
+        local newList = CreateDropDownList("MSA_DropDownList"..MSA_DROPDOWNMENU_MAXLEVELS);
         newList:SetFrameStrata("FULLSCREEN_DIALOG");
         newList:SetToplevel(true);
         newList:Hide();
         newList:SetID(MSA_DROPDOWNMENU_MAXLEVELS);
         newList:SetWidth(180)
         newList:SetHeight(10)
-        for i=1, MSA_DROPDOWNMENU_MAXBUTTONS do
-            local newButton = CreateDropDownMenuButton(MSA.."DropDownList"..MSA_DROPDOWNMENU_MAXLEVELS.."Button"..i, newList);
+        for i=MSA_DROPDOWNMENU_MINBUTTONS+1, MSA_DROPDOWNMENU_MAXBUTTONS do
+            local newButton = CreateDropDownMenuButton("MSA_DropDownList"..MSA_DROPDOWNMENU_MAXLEVELS.."Button"..i, newList);
             newButton:SetID(i);
         end
     end
@@ -661,65 +615,45 @@ function MSA_DropDownMenu_CreateFrames(level, index)
     while ( index > MSA_DROPDOWNMENU_MAXBUTTONS ) do
         MSA_DROPDOWNMENU_MAXBUTTONS = MSA_DROPDOWNMENU_MAXBUTTONS + 1;
         for i=1, MSA_DROPDOWNMENU_MAXLEVELS do
-            local newButton = CreateDropDownMenuButton(MSA.."DropDownList"..i.."Button"..MSA_DROPDOWNMENU_MAXBUTTONS, _G[MSA.."DropDownList"..i]);
+            local newButton = CreateDropDownMenuButton("MSA_DropDownList"..i.."Button"..MSA_DROPDOWNMENU_MAXBUTTONS, _G["MSA_DropDownList"..i]);
             newButton:SetID(MSA_DROPDOWNMENU_MAXBUTTONS);
         end
     end
 end
 
--- 1.0.19 - API changed
--- Old: MSA_DropDownMenu_AddSeparator(info, level)
--- New: MSA_DropDownMenu_AddSeparator(level)
--- arg2 is only for backward compatibility (<= 1.0.18)
-function MSA_DropDownMenu_AddSeparator(level, arg2)
-    if type(level) == "table" then
-        level = arg2
-    end
+function MSA_DropDownMenu_AddSeparator(info, level)
+    info.text = nil;
+    info.hasArrow = false;
+    info.dist = 0;
+    info.isTitle = true;
+    info.isUninteractable = true;
+    info.notCheckable = true;
+    info.leftPadding = nil;     -- MSA
+    info.iconOnly = true;
+    info.icon = "Interface\\Common\\UI-TooltipDivider-Transparent";
+    info.tCoordLeft = 0;
+    info.tCoordRight = 1;
+    info.tCoordTop = 0;
+    info.tCoordBottom = 1;
+    info.tSizeX = 0;
+    info.tSizeY = 8;
+    info.tFitDropDownSizeX = true;
+    info.iconInfo = { tCoordLeft = info.tCoordLeft,
+        tCoordRight = info.tCoordRight,
+        tCoordTop = info.tCoordTop,
+        tCoordBottom = info.tCoordBottom,
+        tSizeX = info.tSizeX,
+        tSizeY = info.tSizeY,
+        tFitDropDownSizeX = info.tFitDropDownSizeX };
 
-    local separatorInfo = {
-        hasArrow = false,
-        dist = 0,
-        isTitle = true,
-        isUninteractable = true,
-        notCheckable = true,
-        iconOnly = true,
-        icon = "Interface\\Common\\UI-TooltipDivider-Transparent",
-        tCoordLeft = 0,
-        tCoordRight = 1,
-        tCoordTop = 0,
-        tCoordBottom = 1,
-        tSizeX = 0,
-        tSizeY = 8,
-        tFitDropDownSizeX = true,
-        iconInfo = {
-            tCoordLeft = 0,
-            tCoordRight = 1,
-            tCoordTop = 0,
-            tCoordBottom = 1,
-            tSizeX = 0,
-            tSizeY = 8,
-            tFitDropDownSizeX = true
-        },
-    };
+    MSA_DropDownMenu_AddButton(info, level);
 
-    MSA_DropDownMenu_AddButton(separatorInfo, level);
-end
-
-function MSA_DropDownMenu_AddSpace(level)
-    local spaceInfo = {
-        hasArrow = false,
-        dist = 0,
-        isTitle = true,
-        isUninteractable = true,
-        notCheckable = true,
-    };
-
-    MSA_DropDownMenu_AddButton(spaceInfo, level);
-end
-
-local function MSA_DropDownMenu_IsDisplayModeMenu()
-    local frame = MSA_DROPDOWNMENU_OPEN_MENU;
-    return frame and frame.displayMode == "MENU";
+    -- MSA
+    info.isTitle = nil;
+    info.disabled = nil;
+    info.iconOnly = nil;
+    info.icon = nil;
+    info.iconInfo = nil;
 end
 
 function MSA_DropDownMenu_AddButton(info, level)
@@ -733,7 +667,7 @@ function MSA_DropDownMenu_AddButton(info, level)
         level = 1;
     end
 
-    local listFrame = _G[MSA.."DropDownList"..level];
+    local listFrame = _G["MSA_DropDownList"..level];
     local index = listFrame and (listFrame.numButtons + 1) or 1;
     local width;
 
@@ -741,7 +675,7 @@ function MSA_DropDownMenu_AddButton(info, level)
     MSA_DropDownMenuDelegate:SetAttribute("createframes-index", index);
     MSA_DropDownMenuDelegate:SetAttribute("createframes", true);
 
-    listFrame = listFrame or _G[MSA.."DropDownList"..level];
+    listFrame = listFrame or _G["MSA_DropDownList"..level];
     local listFrameName = listFrame:GetName();
 
     -- Set the number of buttons in the listframe
@@ -758,14 +692,6 @@ function MSA_DropDownMenu_AddButton(info, level)
     button:SetDisabledFontObject(GameFontDisableSmallLeft);
     invisibleButton:Hide();
     button:Enable();
-
-    if ( info.registerForAnyClick ) then
-        button:RegisterForClicks("AnyUp");
-    elseif ( info.registerForRightClick ) then
-        button:RegisterForClicks("LeftButtonUp", "RightButtonUp");
-    else
-        button:RegisterForClicks("LeftButtonUp");
-    end
 
     -- If not clickable then disable the button and set it white
     if ( info.notClickable ) then
@@ -801,20 +727,19 @@ function MSA_DropDownMenu_AddButton(info, level)
         end
 
         -- Set icon
-        if ( info.icon or info.mouseOverIcon ) then
+        if ( info.icon ) then
             icon:SetSize(16,16);
-            if ( info.icon and C_Texture.GetAtlasInfo(info.icon) ) then
-                icon:SetAtlas(info.icon);
-                -- MSA
-                info.tCoordLeft = 0
-                info.tCoordRight = 1
-                info.tCoordTop = 0
-                info.tCoordBottom = 1
+            if ( info.iconAtlas ) then
+                icon:SetAtlas(info.icon, true);
+                info.tCoordLeft = nil
+                info.tCoordRight = nil
+                info.tCoordTop = nil
+                info.tCoordBottom = nil
             else
                 icon:SetTexture(info.icon);
             end
             icon:ClearAllPoints();
-            icon:SetPoint("RIGHT", info.iconXOffset or 0, 0);
+            icon:SetPoint("RIGHT", -1, 0);
 
             if ( info.tCoordLeft ) then
                 icon:SetTexCoord(info.tCoordLeft, info.tCoordRight, info.tCoordTop, info.tCoordBottom);
@@ -860,8 +785,6 @@ function MSA_DropDownMenu_AddButton(info, level)
 
     -- Pass through attributes
     button.func = info.func;
-    button.funcOnEnter = info.funcOnEnter;
-    button.funcOnLeave = info.funcOnLeave;
     button.owner = info.owner;
     button.hasOpacity = info.hasOpacity;
     button.opacity = info.opacity;
@@ -871,33 +794,18 @@ function MSA_DropDownMenu_AddButton(info, level)
     button.keepShownOnClick = info.keepShownOnClick;
     button.tooltipTitle = info.tooltipTitle;
     button.tooltipText = info.tooltipText;
-    button.tooltipInstruction = info.tooltipInstruction;
-    button.tooltipWarning = info.tooltipWarning;
-    button.tooltipBackdropStyle = info.tooltipBackdropStyle;
-    button.tooltipAnchor = info.tooltipAnchor;
     button.arg1 = info.arg1;
     button.arg2 = info.arg2;
-    button.arg3 = info.arg3;  -- MSA
     button.hasArrow = info.hasArrow;
-    button.arrowXOffset = info.arrowXOffset;
     button.hasColorSwatch = info.hasColorSwatch;
     button.notCheckable = info.notCheckable;
     button.menuList = info.menuList;
-    button.menuListDisplayMode = info.menuListDisplayMode;
     button.tooltipWhileDisabled = info.tooltipWhileDisabled;
-    button.noTooltipWhileEnabled = info.noTooltipWhileEnabled;
     button.tooltipOnButton = info.tooltipOnButton;
     button.noClickSound = info.noClickSound;
     button.padding = info.padding;
-    button.icon = info.icon;
-    button.iconTooltipTitle = info.iconTooltipTitle;
-    button.iconTooltipText = info.iconTooltipText;
-    button.iconTooltipBackdropStyle = info.iconTooltipBackdropStyle;
-    button.iconXOffset = info.iconXOffset;
-    button.mouseOverIcon = info.mouseOverIcon;
-    button.ignoreAsMenuSelection = info.ignoreAsMenuSelection;
 
-    if ( info.value ~= nil ) then
+    if ( info.value ) then
         button.value = info.value;
     elseif ( info.text ) then
         button.value = info.text;
@@ -905,27 +813,17 @@ function MSA_DropDownMenu_AddButton(info, level)
         button.value = nil;
     end
 
-    local expandArrow = _G[listFrameName.."Button"..index.."ExpandArrow"];
-    expandArrow:SetPoint("RIGHT", info.arrowXOffset or 0, 0);
-    expandArrow:SetShown(info.hasArrow);
-    expandArrow:SetEnabled(not info.disabled);
+    -- Show the expand arrow if it has one
+    if ( info.hasArrow ) then
+        _G[listFrameName.."Button"..index.."ExpandArrow"]:Show();
+    else
+        _G[listFrameName.."Button"..index.."ExpandArrow"]:Hide();
+    end
+    button.hasArrow = info.hasArrow;
 
     -- If not checkable move everything over to the left to fill in the gap where the check would be
     local xPos = 5;
-    local buttonHeight = (info.topPadding or 0) + MSA_DROPDOWNMENU_BUTTON_HEIGHT;
-
-    -- MSA
-    --local yPos = -((button:GetID() - 1) * buttonHeight) - MSA_DROPDOWNMENU_BORDER_HEIGHT;
-    local yPos = -MSA_DROPDOWNMENU_BORDER_HEIGHT
-    for i = 1, button:GetID() - 1 do
-        local prevButton = _G[listFrameName.."Button"..i]
-        if prevButton.customFrame then
-            yPos = yPos - prevButton.customFrame:GetPreferredEntryHeight()
-        else
-            yPos = yPos - MSA_DROPDOWNMENU_BUTTON_HEIGHT
-        end
-    end
-
+    local yPos = -((button:GetID() - 1) * MSA_DROPDOWNMENU_BUTTON_HEIGHT) - MSA_DROPDOWNMENU_BORDER_HEIGHT;
     local displayInfo = normalText;
     if (info.iconOnly) then
         displayInfo = icon;
@@ -946,12 +844,15 @@ function MSA_DropDownMenu_AddButton(info, level)
     end
 
     -- Adjust offset if displayMode is menu
-    if (not info.notCheckable) and securecallfunction(MSA_DropDownMenu_IsDisplayModeMenu) then
-        xPos = xPos - 2;  -- MSA
+    local frame = MSA_DROPDOWNMENU_OPEN_MENU;
+    if ( frame and frame.displayMode == "MENU" ) then
+        if ( not info.notCheckable ) then
+            xPos = xPos - 2;    -- MSA
+        end
     end
 
     -- If no open frame then set the frame to the currently initialized frame
-    local frame = frame or MSA_DROPDOWNMENU_INIT_MENU;
+    frame = frame or MSA_DROPDOWNMENU_INIT_MENU;
 
     if ( info.leftPadding ) then
         xPos = xPos + info.leftPadding;
@@ -968,49 +869,33 @@ function MSA_DropDownMenu_AddButton(info, level)
             if ( button:GetID() == MSA_DropDownMenu_GetSelectedID(frame) ) then
                 info.checked = 1;
             end
-        elseif ( MSA_DropDownMenu_GetSelectedValue(frame) ~= nil ) then
+        elseif ( MSA_DropDownMenu_GetSelectedValue(frame) ) then
             if ( button.value == MSA_DropDownMenu_GetSelectedValue(frame) ) then
                 info.checked = 1;
             end
         end
     end
 
+
     if not info.notCheckable then
-        local check = _G[listFrameName.."Button"..index.."Check"];
-        local uncheck = _G[listFrameName.."Button"..index.."UnCheck"];
         if ( info.disabled ) then
-            check:SetDesaturated(true);
-            check:SetAlpha(0.5);
-            uncheck:SetDesaturated(true);
-            uncheck:SetAlpha(0.5);
+            _G[listFrameName.."Button"..index.."Check"]:SetDesaturated(true);
+            _G[listFrameName.."Button"..index.."Check"]:SetAlpha(0.5);
+            _G[listFrameName.."Button"..index.."UnCheck"]:SetDesaturated(true);
+            _G[listFrameName.."Button"..index.."UnCheck"]:SetAlpha(0.5);
         else
-            check:SetDesaturated(false);
-            check:SetAlpha(1);
-            uncheck:SetDesaturated(false);
-            uncheck:SetAlpha(1);
+            _G[listFrameName.."Button"..index.."Check"]:SetDesaturated(false);
+            _G[listFrameName.."Button"..index.."Check"]:SetAlpha(1);
+            _G[listFrameName.."Button"..index.."UnCheck"]:SetDesaturated(false);
+            _G[listFrameName.."Button"..index.."UnCheck"]:SetAlpha(1);
         end
 
-        if info.customCheckIconAtlas or info.customCheckIconTexture then
-            check:SetTexCoord(0, 1, 0, 1);
-            uncheck:SetTexCoord(0, 1, 0, 1);
-
-            if info.customCheckIconAtlas then
-                check:SetAtlas(info.customCheckIconAtlas);
-                uncheck:SetAtlas(info.customUncheckIconAtlas or info.customCheckIconAtlas);
-            else
-                check:SetTexture(info.customCheckIconTexture);
-                uncheck:SetTexture(info.customUncheckIconTexture or info.customCheckIconTexture);
-            end
-        elseif info.isNotRadio then
-            check:SetTexCoord(0.0, 0.5, 0.0, 0.5);
-            check:SetTexture("Interface\\Common\\UI-DropDownRadioChecks");
-            uncheck:SetTexCoord(0.5, 1.0, 0.0, 0.5);
-            uncheck:SetTexture("Interface\\Common\\UI-DropDownRadioChecks");
+        if info.isNotRadio then
+            _G[listFrameName.."Button"..index.."Check"]:SetTexCoord(0.0, 0.5, 0.0, 0.5);
+            _G[listFrameName.."Button"..index.."UnCheck"]:SetTexCoord(0.5, 1.0, 0.0, 0.5);
         else
-            check:SetTexCoord(0.0, 0.5, 0.5, 1.0);
-            check:SetTexture("Interface\\Common\\UI-DropDownRadioChecks");
-            uncheck:SetTexCoord(0.5, 1.0, 0.5, 1.0);
-            uncheck:SetTexture("Interface\\Common\\UI-DropDownRadioChecks");
+            _G[listFrameName.."Button"..index.."Check"]:SetTexCoord(0.0, 0.5, 0.5, 1.0);
+            _G[listFrameName.."Button"..index.."UnCheck"]:SetTexCoord(0.5, 1.0, 0.5, 1.0);
         end
 
         -- Checked can be a function now
@@ -1022,12 +907,12 @@ function MSA_DropDownMenu_AddButton(info, level)
         -- Show the check if checked
         if ( checked ) then
             button:LockHighlight();
-            check:Show();
-            uncheck:Hide();
+            _G[listFrameName.."Button"..index.."Check"]:Show();
+            _G[listFrameName.."Button"..index.."UnCheck"]:Hide();
         else
             button:UnlockHighlight();
-            check:Hide();
-            uncheck:Show();
+            _G[listFrameName.."Button"..index.."Check"]:Hide();
+            _G[listFrameName.."Button"..index.."UnCheck"]:Show();
         end
     else
         _G[listFrameName.."Button"..index.."Check"]:Hide();
@@ -1038,7 +923,7 @@ function MSA_DropDownMenu_AddButton(info, level)
     -- If has a colorswatch, show it and vertex color it
     local colorSwatch = _G[listFrameName.."Button"..index.."ColorSwatch"];
     if ( info.hasColorSwatch ) then
-        _G[MSA.."DropDownList"..level.."Button"..index.."ColorSwatch"].Color:SetVertexColor(info.r, info.g, info.b);
+        _G["MSA_DropDownList"..level.."Button"..index.."ColorSwatch".."NormalTexture"]:SetVertexColor(info.r, info.g, info.b);
         button.r = info.r;
         button.g = info.g;
         button.b = info.b;
@@ -1047,71 +932,33 @@ function MSA_DropDownMenu_AddButton(info, level)
         colorSwatch:Hide();
     end
 
-    MSA_DropDownMenu_CheckAddCustomFrame(listFrame, button, info);
-
-    button:SetShown(button.customFrame == nil);
-
-    button.minWidth = info.minWidth;
-
     width = max(MSA_DropDownMenu_GetButtonWidth(button), info.minWidth or 0);
     --Set maximum button width
     if ( width > listFrame.maxWidth ) then
         listFrame.maxWidth = width;
     end
 
-    local customFrameCount = listFrame.customFrames and #listFrame.customFrames or 0;
-    local height = ((index - customFrameCount) * buttonHeight) + (MSA_DROPDOWNMENU_BORDER_HEIGHT * 2);
-    for frameIndex = 1, customFrameCount do
-        frame = listFrame.customFrames[frameIndex];
-        height = height + frame:GetPreferredEntryHeight();
-    end
-
     -- Set the height of the listframe
-    listFrame:SetHeight(height);
+    listFrame:SetHeight((index * MSA_DROPDOWNMENU_BUTTON_HEIGHT) + (MSA_DROPDOWNMENU_BORDER_HEIGHT * 2));
 
-    return button;
-end
-
-function MSA_DropDownMenu_CheckAddCustomFrame(self, button, info)
-    local customFrame = info.customFrame;
-    button.customFrame = customFrame;
-    if customFrame then
-        customFrame:SetOwningButton(button);
-        customFrame:ClearAllPoints();
-        customFrame:SetPoint("TOPLEFT", button, "TOPLEFT", 0, 0);
-        customFrame:Show();
-
-        MSA_DropDownMenu_RegisterCustomFrame(self, customFrame);
-    end
-end
-
-function MSA_DropDownMenu_RegisterCustomFrame(self, customFrame)
-    self.customFrames = self.customFrames or {}
-    table.insert(self.customFrames, customFrame);
+    button:Show();
 end
 
 function MSA_DropDownMenu_GetMaxButtonWidth(self)
     local maxWidth = 0;
     for i=1, self.numButtons do
         local button = _G[self:GetName().."Button"..i];
-        local width = MSA_DropDownMenu_GetButtonWidth(button);
-        if ( width > maxWidth ) then
-            maxWidth = width;
+        if ( button:IsShown() ) then
+            local width = MSA_DropDownMenu_GetButtonWidth(button);
+            if ( width > maxWidth ) then
+                maxWidth = width;
+            end
         end
     end
     return maxWidth;
 end
 
 function MSA_DropDownMenu_GetButtonWidth(button)
-    local minWidth = button.minWidth or 0;
-    if button.customFrame and button.customFrame:IsShown() then
-        return math.max(minWidth, button.customFrame:GetPreferredEntryWidth());
-    end
-
-    if not button:IsShown() then
-        return 0;
-    end
-
     local width;
     local buttonName = button:GetName();
     local icon = _G[buttonName.."Icon"];
@@ -1127,7 +974,7 @@ function MSA_DropDownMenu_GetButtonWidth(button)
             width = width + 10;
         end
     else
-        return minWidth;
+        return 0;
     end
 
     -- Add padding if has and expand arrow or color swatch
@@ -1141,22 +988,23 @@ function MSA_DropDownMenu_GetButtonWidth(button)
         width = width + button.padding;
     end
 
-    return math.max(minWidth, width);
+    return width;
 end
 
 function MSA_DropDownMenu_Refresh(frame, useValue, dropdownLevel)
+    local button, checked, checkImage, uncheckImage, normalText, width;
     local maxWidth = 0;
     local somethingChecked = nil;
     if ( not dropdownLevel ) then
         dropdownLevel = MSA_DROPDOWNMENU_MENU_LEVEL;
     end
 
-    local listFrame = _G[MSA.."DropDownList"..dropdownLevel];
+    local listFrame = _G["MSA_DropDownList"..dropdownLevel];
     listFrame.numButtons = listFrame.numButtons or 0;
     -- Just redraws the existing menu
     for i=1, MSA_DROPDOWNMENU_MAXBUTTONS do
-        local button = _G[MSA.."DropDownList"..dropdownLevel.."Button"..i];
-        local checked = nil;
+        button = _G["MSA_DropDownList"..dropdownLevel.."Button"..i];
+        checked = nil;
 
         if(i <= listFrame.numButtons) then
             -- See if checked or not
@@ -1180,21 +1028,19 @@ function MSA_DropDownMenu_Refresh(frame, useValue, dropdownLevel)
 
         if not button.notCheckable and button:IsShown() then
             -- If checked show check image
-            local checkImage = _G[MSA.."DropDownList"..dropdownLevel.."Button"..i.."Check"];
-            local uncheckImage = _G[MSA.."DropDownList"..dropdownLevel.."Button"..i.."UnCheck"];
+            checkImage = _G["MSA_DropDownList"..dropdownLevel.."Button"..i.."Check"];
+            uncheckImage = _G["MSA_DropDownList"..dropdownLevel.."Button"..i.."UnCheck"];
             if ( checked ) then
-                if not button.ignoreAsMenuSelection then
-                    somethingChecked = true;
-                    local icon = GetChild(frame, frame:GetName(), "Icon");
-                    if (button.iconOnly and icon and button.icon) then
-                        MSA_DropDownMenu_SetIconImage(icon, button.icon, button.iconInfo);
-                    elseif ( useValue ) then
-                        MSA_DropDownMenu_SetText(frame, button.value);
-                        icon:Hide();
-                    else
-                        MSA_DropDownMenu_SetText(frame, button:GetText());
-                        icon:Hide();
-                    end
+                somethingChecked = true;
+                local icon = _G[frame:GetName().."Icon"];
+                if (button.iconOnly and icon and button.icon) then
+                    MSA_DropDownMenu_SetIconImage(icon, button.icon, button.iconInfo);
+                elseif ( useValue ) then
+                    MSA_DropDownMenu_SetText(frame, button.value);
+                    icon:Hide();
+                else
+                    MSA_DropDownMenu_SetText(frame, button:GetText());
+                    icon:Hide();
                 end
                 button:LockHighlight();
                 checkImage:Show();
@@ -1207,7 +1053,7 @@ function MSA_DropDownMenu_Refresh(frame, useValue, dropdownLevel)
         end
 
         if ( button:IsShown() ) then
-            local width = MSA_DropDownMenu_GetButtonWidth(button);
+            width = MSA_DropDownMenu_GetButtonWidth(button);
             if ( width > maxWidth ) then
                 maxWidth = width;
             end
@@ -1215,21 +1061,19 @@ function MSA_DropDownMenu_Refresh(frame, useValue, dropdownLevel)
     end
     if(somethingChecked == nil) then
         MSA_DropDownMenu_SetText(frame, VIDEO_QUALITY_LABEL6);
-        local icon = GetChild(frame, frame:GetName(), "Icon");
-        icon:Hide();
     end
     if (not frame.noResize) then
         for i=1, MSA_DROPDOWNMENU_MAXBUTTONS do
-            local button = _G[MSA.."DropDownList"..dropdownLevel.."Button"..i];
+            button = _G["MSA_DropDownList"..dropdownLevel.."Button"..i];
             button:SetWidth(maxWidth);
         end
-        MSA_DropDownMenu_RefreshDropDownSize(_G[MSA.."DropDownList"..dropdownLevel]);
+        MSA_DropDownMenu_RefreshDropDownSize(_G["MSA_DropDownList"..dropdownLevel]);
     end
 end
 
 function MSA_DropDownMenu_RefreshAll(frame, useValue)
     for dropdownLevel = MSA_DROPDOWNMENU_MENU_LEVEL, 2, -1 do
-        local listFrame = _G[MSA.."DropDownList"..dropdownLevel];
+        local listFrame = _G["MSA_DropDownList"..dropdownLevel];
         if ( listFrame:IsShown() ) then
             MSA_DropDownMenu_Refresh(frame, nil, dropdownLevel);
         end
@@ -1288,23 +1132,17 @@ function MSA_DropDownMenu_GetSelectedID(frame)
     if ( frame.selectedID ) then
         return frame.selectedID;
     else
-        local selectedName = MSA_DropDownMenu_GetSelectedName(frame);
-        local selectedValue = MSA_DropDownMenu_GetSelectedValue(frame);
-        if ( not selectedName and not selectedValue ) then
-            return nil;
-        end
-
         -- If no explicit selectedID then try to send the id of a selected value or name
-        local listFrame = _G[MSA.."DropDownList"..MSA_DROPDOWNMENU_MENU_LEVEL];
-        for i=1, listFrame.numButtons do
-            local button = _G[MSA.."DropDownList"..MSA_DROPDOWNMENU_MENU_LEVEL.."Button"..i];
+        local button;
+        for i=1, MSA_DROPDOWNMENU_MAXBUTTONS do
+            button = _G["MSA_DropDownList"..MSA_DROPDOWNMENU_MENU_LEVEL.."Button"..i];
             -- See if checked or not
-            if ( selectedName ) then
-                if ( button:GetText() == selectedName ) then
+            if ( MSA_DropDownMenu_GetSelectedName(frame) ) then
+                if ( button:GetText() == MSA_DropDownMenu_GetSelectedName(frame) ) then
                     return i;
                 end
-            elseif ( selectedValue ) then
-                if ( button.value == selectedValue ) then
+            elseif ( MSA_DropDownMenu_GetSelectedValue(frame) ) then
+                if ( button.value == MSA_DropDownMenu_GetSelectedValue(frame) ) then
                     return i;
                 end
             end
@@ -1316,7 +1154,7 @@ function MSA_DropDownMenu_GetSelectedValue(frame)
     return frame.selectedValue;
 end
 
-function MSA_DropDownMenuButton_OnClick(self, mouseButton)
+function MSA_DropDownMenuButton_OnClick(self)
     local checked = self.checked;
     if ( type (checked) == "function" ) then
         checked = checked(self);
@@ -1351,7 +1189,7 @@ function MSA_DropDownMenuButton_OnClick(self, mouseButton)
 
     local func = self.func;
     if ( func ) then
-        func(self, self.arg1, self.arg2, self.arg3, checked, mouseButton);  -- MSA
+        func(self, self.arg1, self.arg2, checked);
     else
         return;
     end
@@ -1362,11 +1200,11 @@ function MSA_DropDownMenuButton_OnClick(self, mouseButton)
 end
 
 function MSA_HideDropDownMenu(level)
-    local listFrame = _G[MSA.."DropDownList"..level];
+    local listFrame = _G["MSA_DropDownList"..level];
     listFrame:Hide();
 end
 
-function MSA_ToggleDropDownMenu(level, value, dropDownFrame, anchorName, xOffset, yOffset, menuList, button, autoHideDelay, overrideDisplayMode)
+function MSA_ToggleDropDownMenu(level, value, dropDownFrame, anchorName, xOffset, yOffset, menuList, button, autoHideDelay)
     if ( not level ) then
         level = 1;
     end
@@ -1375,10 +1213,9 @@ function MSA_ToggleDropDownMenu(level, value, dropDownFrame, anchorName, xOffset
     MSA_DropDownMenuDelegate:SetAttribute("createframes", true);
     MSA_DROPDOWNMENU_MENU_LEVEL = level;
     MSA_DROPDOWNMENU_MENU_VALUE = value;
-    local listFrameName = MSA.."DropDownList"..level;
-    local listFrame = _G[listFrameName];
-    MSA_DropDownMenu_ClearCustomFrames(listFrame);
-
+    local listFrame = _G["MSA_DropDownList"..level];
+    local listFrameName = "MSA_DropDownList"..level;
+    local listFrameBlizz = _G["DropDownList1"];
     local tempFrame;
     local point, relativePoint, relativeTo;
     if ( not dropDownFrame ) then
@@ -1388,7 +1225,6 @@ function MSA_ToggleDropDownMenu(level, value, dropDownFrame, anchorName, xOffset
     end
     if ( listFrame:IsShown() and (MSA_DROPDOWNMENU_OPEN_MENU == tempFrame) ) then
         listFrame:Hide();
-        return false;
     else
         -- Set the dropdownframe scale
         local uiScale;
@@ -1405,6 +1241,9 @@ function MSA_ToggleDropDownMenu(level, value, dropDownFrame, anchorName, xOffset
 
         -- Hide the listframe anyways since it is redrawn OnShow()
         listFrame:Hide();
+        if ( listFrameBlizz and listFrameBlizz:IsShown() ) then
+            listFrameBlizz:Hide();
+        end
 
         -- Frame to anchor the dropdown menu to
         local anchorFrame;
@@ -1429,7 +1268,7 @@ function MSA_ToggleDropDownMenu(level, value, dropDownFrame, anchorName, xOffset
                 if ( dropDownFrame.relativeTo ) then
                     relativeTo = dropDownFrame.relativeTo;
                 else
-                    relativeTo = GetChild(MSA_DROPDOWNMENU_OPEN_MENU, MSA_DROPDOWNMENU_OPEN_MENU:GetName(), "Left");
+                    relativeTo = MSA_DROPDOWNMENU_OPEN_MENU:GetName().."Left";
                 end
                 if ( dropDownFrame.relativePoint ) then
                     relativePoint = dropDownFrame.relativePoint;
@@ -1485,7 +1324,7 @@ function MSA_ToggleDropDownMenu(level, value, dropDownFrame, anchorName, xOffset
             end
             listFrame:ClearAllPoints();
             -- If this is a dropdown button, not the arrow anchor it to itself
-            if ( strsub(button:GetParent():GetName(), 0,18) == MSA.."DropDownList" and strlen(button:GetParent():GetName()) == 19 ) then  -- MSA
+            if ( strsub(button:GetParent():GetName(), 0,16) == "MSA_DropDownList" and strlen(button:GetParent():GetName()) == 17 ) then
                 anchorFrame = button;
             else
                 anchorFrame = button:GetParent();
@@ -1495,29 +1334,20 @@ function MSA_ToggleDropDownMenu(level, value, dropDownFrame, anchorName, xOffset
             listFrame:SetPoint(point, anchorFrame, relativePoint, 0, 0);
         end
 
-        local displayMode = overrideDisplayMode or (dropDownFrame and dropDownFrame.displayMode) or nil;  -- MSA
-        if dropDownFrame.hideBackdrops then
+        -- Change list box appearance depending on display mode
+        if ( dropDownFrame and dropDownFrame.displayMode == "MENU" ) then
             _G[listFrameName.."Backdrop"]:Hide();
-            _G[listFrameName.."MenuBackdrop"]:Hide();
+            _G[listFrameName.."MenuBackdrop"]:Show();
         else
-            -- Change list box appearance depending on display mode
-            --local displayMode = overrideDisplayMode or (dropDownFrame and dropDownFrame.displayMode) or nil;  -- MSA
-            if ( displayMode == "MENU" ) then
-                _G[listFrameName.."Backdrop"]:Hide();
-                _G[listFrameName.."MenuBackdrop"]:Show();
-            else
-                _G[listFrameName.."Backdrop"]:Show();
-                _G[listFrameName.."MenuBackdrop"]:Hide();
-            end
+            _G[listFrameName.."Backdrop"]:Show();
+            _G[listFrameName.."MenuBackdrop"]:Hide();
         end
-
+        dropDownFrame.menuList = menuList;
         MSA_DropDownMenu_Initialize(dropDownFrame, dropDownFrame.initialize, nil, level, menuList);
         -- If no items in the drop down don't show it
         if ( listFrame.numButtons == 0 ) then
-            return false;
+            return;
         end
-
-        listFrame.onShow = dropDownFrame.listFrameOnShow;
 
         -- Check to see if the dropdownlist is off the screen, if it is anchor it to the top of the dropdown button
         listFrame:Show();
@@ -1526,16 +1356,10 @@ function MSA_ToggleDropDownMenu(level, value, dropDownFrame, anchorName, xOffset
         -- Hack will fix this in next revision of dropdowns
         if ( not x or not y ) then
             listFrame:Hide();
-            return false;
+            return;
         end
 
         listFrame.onHide = dropDownFrame.onHide;
-
-        -- Set the listframe frameStrata
-        if dropDownFrame.listFrameStrata then
-            listFrame.baseFrameStrata = listFrame:GetFrameStrata();
-            listFrame:SetFrameStrata(dropDownFrame.listFrameStrata);
-        end
 
         --  We just move level 1 enough to keep it on the screen. We don't necessarily change the anchors.
         if ( level == 1 ) then
@@ -1572,60 +1396,68 @@ function MSA_ToggleDropDownMenu(level, value, dropDownFrame, anchorName, xOffset
             if ( listFrame:GetRight() > GetScreenWidth() ) then
                 offscreenX = 1;
             end
-            if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-                local menuOffset = displayMode == "MENU" and 8 or 0  -- MSA
-                if ( offscreenY and offscreenX ) then
-                    point = gsub(point, "TOP(.*)", "BOTTOM%1");
-                    point = gsub(point, "(.*)LEFT", "%1RIGHT");
-                    relativePoint = gsub(relativePoint, "TOP(.*)", "BOTTOM%1");
-                    relativePoint = gsub(relativePoint, "(.*)RIGHT", "%1LEFT");
-                    xOffset = -10 - menuOffset;  -- MSA
-                    yOffset = -15;  -- MSA
-                elseif ( offscreenY ) then
-                    point = gsub(point, "TOP(.*)", "BOTTOM%1");
-                    relativePoint = gsub(relativePoint, "TOP(.*)", "BOTTOM%1");
-                    xOffset = 5 + menuOffset;  -- MSA
-                    yOffset = -15;  -- MSA
-                elseif ( offscreenX ) then
-                    point = gsub(point, "(.*)LEFT", "%1RIGHT");
-                    relativePoint = gsub(relativePoint, "(.*)RIGHT", "%1LEFT");
-                    xOffset = -10 - menuOffset;  -- MSA
-                    yOffset = 15;  -- MSA
-                else
-                    xOffset = 5 + menuOffset;  -- MSA
-                    yOffset = 15;  -- MSA
-                end
+            if ( offscreenY and offscreenX ) then
+                point = gsub(point, "TOP(.*)", "BOTTOM%1");
+                point = gsub(point, "(.*)LEFT", "%1RIGHT");
+                relativePoint = gsub(relativePoint, "TOP(.*)", "BOTTOM%1");
+                relativePoint = gsub(relativePoint, "(.*)RIGHT", "%1LEFT");
+                xOffset = -11;
+                yOffset = -14;
+            elseif ( offscreenY ) then
+                point = gsub(point, "TOP(.*)", "BOTTOM%1");
+                relativePoint = gsub(relativePoint, "TOP(.*)", "BOTTOM%1");
+                xOffset = 0;
+                yOffset = -14;
+            elseif ( offscreenX ) then
+                point = gsub(point, "(.*)LEFT", "%1RIGHT");
+                relativePoint = gsub(relativePoint, "(.*)RIGHT", "%1LEFT");
+                xOffset = -11;
+                yOffset = 14;
             else
-                if ( offscreenY and offscreenX ) then
-                    point = gsub(point, "TOP(.*)", "BOTTOM%1");
-                    point = gsub(point, "(.*)LEFT", "%1RIGHT");
-                    relativePoint = gsub(relativePoint, "TOP(.*)", "BOTTOM%1");
-                    relativePoint = gsub(relativePoint, "(.*)RIGHT", "%1LEFT");
-                    xOffset = -16;  -- MSA
-                    yOffset = -15;  -- MSA
-                elseif ( offscreenY ) then
-                    point = gsub(point, "TOP(.*)", "BOTTOM%1");
-                    relativePoint = gsub(relativePoint, "TOP(.*)", "BOTTOM%1");
-                    xOffset = 11;   -- MSA
-                    yOffset = -15;  -- MSA
-                elseif ( offscreenX ) then
-                    point = gsub(point, "(.*)LEFT", "%1RIGHT");
-                    relativePoint = gsub(relativePoint, "(.*)RIGHT", "%1LEFT");
-                    xOffset = -16;  -- MSA
-                    yOffset = 15;   -- MSA
-                else
-                    xOffset = 11;  -- MSA
-                    yOffset = 15;  -- MSA
-                end
+                xOffset = 0;
+                yOffset = 14;
             end
 
             listFrame:ClearAllPoints();
-            listFrame.parentLevel = tonumber(strmatch(anchorFrame:GetName(), MSA.."DropDownList(%d+)"));
+            listFrame.parentLevel = tonumber(strmatch(anchorFrame:GetName(), "MSA_DropDownList(%d+)"));
             listFrame.parentID = anchorFrame:GetID();
             listFrame:SetPoint(point, anchorFrame, relativePoint, xOffset, yOffset);
         end
-        return true;
+
+        if ( autoHideDelay and tonumber(autoHideDelay)) then
+            listFrame.showTimer = autoHideDelay;
+            listFrame.isCounting = 1;
+        end
     end
+end
+
+if ToggleDropDownMenu then
+    hooksecurefunc("ToggleDropDownMenu", function(level, value, dropDownFrame, anchorName, xOffset, yOffset, menuList, button, autoHideDelay, overrideDisplayMode)
+        local listFrameMSA = _G["MSA_DropDownList1"];
+        if ( listFrameMSA:IsShown() ) then
+            listFrameMSA:Hide();
+        end
+    end)
+end
+
+if UIDropDownMenu_HandleGlobalMouseEvent then
+    local function MSA_DropDownMenu_ContainsMouse()
+        for i = 1, MSA_DROPDOWNMENU_MAXLEVELS do
+            local dropdown = _G["MSA_DropDownList"..i];
+            if dropdown:IsShown() and dropdown:IsMouseOver() then
+                return true;
+            end
+        end
+        return false;
+    end
+
+    hooksecurefunc("UIDropDownMenu_HandleGlobalMouseEvent", function(button, event)
+        if event == "GLOBAL_MOUSE_DOWN" and (button == "LeftButton" or button == "RightButton") then
+            if not MSA_DropDownMenu_ContainsMouse() then
+                MSA_CloseDropDownMenus()
+            end
+        end
+    end)
 end
 
 function MSA_CloseDropDownMenus(level)
@@ -1633,69 +1465,8 @@ function MSA_CloseDropDownMenus(level)
         level = 1;
     end
     for i=level, MSA_DROPDOWNMENU_MAXLEVELS do
-        _G[MSA.."DropDownList"..i]:Hide();
+        _G["MSA_DropDownList"..i]:Hide();
     end
-end
-
-local function MSA_DropDownMenu_ContainsMouse()
-    for i = 1, MSA_DROPDOWNMENU_MAXLEVELS do
-        local dropdown = _G[MSA.."DropDownList"..i];
-        if dropdown:IsShown() and dropdown:IsMouseOver() then
-            return true;
-        end
-    end
-
-    return false;
-end
-
-function MSA_DropDownMenu_HandleGlobalMouseEvent(button, event)
-    if event == "GLOBAL_MOUSE_DOWN" and (button == "LeftButton" or button == "RightButton") then
-        if not MSA_DropDownMenu_ContainsMouse() then
-            MSA_CloseDropDownMenus();
-        end
-    end
-end
-
-do
-    local event = "GLOBAL_MOUSE_DOWN"
-
-    if lib.globalMouseCallback then
-        EventRegistry:UnregisterFrameEventAndCallback(event, lib.globalMouseCallback)
-    end
-
-    local function HandlesGlobalMouseEvent(focus, buttonName)
-        return focus and focus.HandlesGlobalMouseEvent and focus:HandlesGlobalMouseEvent(buttonName, event)
-    end
-
-    lib.globalMouseCallback = function(buttonID, buttonName)
-        local foci = GetMouseFoci()
-        if not HandlesGlobalMouseEvent(foci[1], buttonName) then
-            MSA_DropDownMenu_HandleGlobalMouseEvent(buttonName, event)
-        end
-    end
-    EventRegistry:RegisterFrameEventAndCallback(event, lib.globalMouseCallback)
-end
-
-function MSA_DropDownMenu_OnShow(self)
-    if ( self.onShow ) then
-        self.onShow();
-        self.onShow = nil;
-    end
-
-    for i=1, MSA_DROPDOWNMENU_MAXBUTTONS do
-        if (not self.noResize) then
-            _G[self:GetName().."Button"..i]:SetWidth(self.maxWidth);
-        end
-    end
-
-    if (not self.noResize) then
-        self:SetWidth(self.maxWidth+25);
-    end
-
-    if ( self:GetID() > 1 ) then
-        self.parent = _G[MSA.."DropDownList"..(self:GetID() - 1)];
-    end
-    EventRegistry:TriggerEvent("UIDropDownMenu.Show", self);
 end
 
 function MSA_DropDownMenu_OnHide(self)
@@ -1704,74 +1475,46 @@ function MSA_DropDownMenu_OnHide(self)
         self.onHide(id+1);
         self.onHide = nil;
     end
-    if ( self.baseFrameStrata ) then
-        self:SetFrameStrata(self.baseFrameStrata);
-        self.baseFrameStrata = nil;
-    end
     MSA_CloseDropDownMenus(id+1);
     MSA_OPEN_DROPDOWNMENUS[id] = nil;
     if (id == 1) then
         MSA_DROPDOWNMENU_OPEN_MENU = nil;
     end
-    MSA_DropDownMenu_ClearCustomFrames(self);
-    EventRegistry:TriggerEvent("UIDropDownMenu.Hide");
-end
-
-function MSA_DropDownMenu_ClearCustomFrames(self)
-    if self.customFrames then
-        for index, frame in ipairs(self.customFrames) do
-            frame:Hide();
-        end
-
-        self.customFrames = nil;
-    end
-end
-
-function MSA_DropDownMenu_MatchTextWidth(frame, minWidth, maxWidth)
-    local frameName = frame:GetName();
-    local newWidth = GetChild(frame, frameName, "Text"):GetUnboundedStringWidth() + MSA_DROPDOWNMENU_DEFAULT_WIDTH_PADDING;
-
-    if minWidth or maxWidth then
-        newWidth = Clamp(newWidth, minWidth or newWidth, maxWidth or newWidth);
-    end
-
-    MSA_DropDownMenu_SetWidth(frame, newWidth);
 end
 
 function MSA_DropDownMenu_SetWidth(frame, width, padding)
-    local frameName = frame:GetName();
-    GetChild(frame, frameName, "Middle"):SetWidth(width);
+    _G[frame:GetName().."Middle"]:SetWidth(width);
+    local defaultPadding = 25;
     if ( padding ) then
         frame:SetWidth(width + padding);
     else
-        frame:SetWidth(width + MSA_DROPDOWNMENU_DEFAULT_WIDTH_PADDING + MSA_DROPDOWNMENU_DEFAULT_WIDTH_PADDING);
+        frame:SetWidth(width + defaultPadding + defaultPadding);
     end
     if ( padding ) then
-        GetChild(frame, frameName, "Text"):SetWidth(width);
+        _G[frame:GetName().."Text"]:SetWidth(width);
     else
-        GetChild(frame, frameName, "Text"):SetWidth(width - MSA_DROPDOWNMENU_DEFAULT_WIDTH_PADDING);
+        _G[frame:GetName().."Text"]:SetWidth(width - defaultPadding);
     end
     frame.noResize = 1;
 end
 
 function MSA_DropDownMenu_SetButtonWidth(frame, width)
-    local frameName = frame:GetName();
     if ( width == "TEXT" ) then
-        width = GetChild(frame, frameName, "Text"):GetWidth();
+        width = _G[frame:GetName().."Text"]:GetWidth();
     end
 
-    GetChild(frame, frameName, "Button"):SetWidth(width);
+    _G[frame:GetName().."Button"]:SetWidth(width);
     frame.noResize = 1;
 end
 
 function MSA_DropDownMenu_SetText(frame, text)
-    local frameName = frame:GetName();
-    GetChild(frame, frameName, "Text"):SetText(text);
+    local filterText = _G[frame:GetName().."Text"];
+    filterText:SetText(text);
 end
 
 function MSA_DropDownMenu_GetText(frame)
-    local frameName = frame:GetName();
-    return GetChild(frame, frameName, "Text"):GetText();
+    local filterText = _G[frame:GetName().."Text"];
+    return filterText:GetText();
 end
 
 function MSA_DropDownMenu_ClearAll(frame)
@@ -1783,28 +1526,27 @@ function MSA_DropDownMenu_ClearAll(frame)
 
     local button, checkImage, uncheckImage;
     for i=1, MSA_DROPDOWNMENU_MAXBUTTONS do
-        button = _G[MSA.."DropDownList"..MSA_DROPDOWNMENU_MENU_LEVEL.."Button"..i];
+        button = _G["MSA_DropDownList"..MSA_DROPDOWNMENU_MENU_LEVEL.."Button"..i];
         button:UnlockHighlight();
 
-        checkImage = _G[MSA.."DropDownList"..MSA_DROPDOWNMENU_MENU_LEVEL.."Button"..i.."Check"];
+        checkImage = _G["MSA_DropDownList"..MSA_DROPDOWNMENU_MENU_LEVEL.."Button"..i.."Check"];
         checkImage:Hide();
-        uncheckImage = _G[MSA.."DropDownList"..MSA_DROPDOWNMENU_MENU_LEVEL.."Button"..i.."UnCheck"];
+        uncheckImage = _G["MSA_DropDownList"..MSA_DROPDOWNMENU_MENU_LEVEL.."Button"..i.."UnCheck"];
         uncheckImage:Hide();
     end
 end
 
-function MSA_DropDownMenu_JustifyText(frame, justification, customXOffset, customYOffset)
-    local frameName = frame:GetName();
-    local text = GetChild(frame, frameName, "Text");
+function MSA_DropDownMenu_JustifyText(frame, justification)
+    local text = _G[frame:GetName().."Text"];
     text:ClearAllPoints();
     if ( justification == "LEFT" ) then
-        text:SetPoint("LEFT", GetChild(frame, frameName, "Left"), "LEFT", customXOffset or 27, customYOffset or 2);
+        text:SetPoint("LEFT", frame:GetName().."Left", "LEFT", 27, 2);
         text:SetJustifyH("LEFT");
     elseif ( justification == "RIGHT" ) then
-        text:SetPoint("RIGHT", GetChild(frame, frameName, "Right"), "RIGHT", customXOffset or -43, customYOffset or 2);
+        text:SetPoint("RIGHT", frame:GetName().."Right", "RIGHT", -43, 2);
         text:SetJustifyH("RIGHT");
     elseif ( justification == "CENTER" ) then
-        text:SetPoint("CENTER", GetChild(frame, frameName, "Middle"), "CENTER", customXOffset or -5, customYOffset or 2);
+        text:SetPoint("CENTER", frame:GetName().."Middle", "CENTER", -5, 2);
         text:SetJustifyH("CENTER");
     end
 end
@@ -1839,27 +1581,23 @@ function MSA_DropDownMenuButton_OpenColorPicker(self, button)
         button = self;
     end
     MSA_DROPDOWNMENU_MENU_VALUE = button.value;
-    ColorPickerFrame:SetupColorPickerAndShow(button);
-end
-
-function MSA_DropDownMenu_DisableButton(level, id)
-    MSA_DropDownMenu_SetDropdownButtonEnabled(_G[MSA.."DropDownList"..level.."Button"..id], false);
-end
-
-function MSA_DropDownMenu_EnableButton(level, id)
-    MSA_DropDownMenu_SetDropdownButtonEnabled(_G[MSA.."DropDownList"..level.."Button"..id], true);
-end
-
-function MSA_DropDownMenu_SetDropdownButtonEnabled(button, enabled)
-    if enabled then
-        button:Enable();
+    if WOW_PROJECT_ID ~= WOW_PROJECT_WRATH_CLASSIC then
+        ColorPickerFrame:SetupColorPickerAndShow(button);
     else
-        button:Disable();
+        MSA_OpenColorPicker(button);
     end
 end
 
+function MSA_DropDownMenu_DisableButton(level, id)
+    _G["MSA_DropDownList"..level.."Button"..id]:Disable();
+end
+
+function MSA_DropDownMenu_EnableButton(level, id)
+    _G["MSA_DropDownList"..level.."Button"..id]:Enable();
+end
+
 function MSA_DropDownMenu_SetButtonText(level, id, text, colorCode)
-    local button = _G[MSA.."DropDownList"..level.."Button"..id];
+    local button = _G["MSA_DropDownList"..level.."Button"..id];
     if ( colorCode) then
         button:SetText(colorCode..text.."|r");
     else
@@ -1868,76 +1606,31 @@ function MSA_DropDownMenu_SetButtonText(level, id, text, colorCode)
 end
 
 function MSA_DropDownMenu_SetButtonNotClickable(level, id)
-    _G[MSA.."DropDownList"..level.."Button"..id]:SetDisabledFontObject(GameFontHighlightSmallLeft);
+    _G["MSA_DropDownList"..level.."Button"..id]:SetDisabledFontObject(GameFontHighlightSmallLeft);
 end
 
 function MSA_DropDownMenu_SetButtonClickable(level, id)
-    _G[MSA.."DropDownList"..level.."Button"..id]:SetDisabledFontObject(GameFontDisableSmallLeft);
+    _G["MSA_DropDownList"..level.."Button"..id]:SetDisabledFontObject(GameFontDisableSmallLeft);
 end
 
-function MSA_DropDownMenu_SetDropDownEnabled(dropDown, enabled, disabledtooltip)
-    if enabled then
-        MSA_DropDownMenu_EnableDropDown(dropDown);
-    else
-        MSA_DropDownMenu_DisableDropDown(dropDown, disabledtooltip);
+function MSA_DropDownMenu_DisableDropDown(dropDown)
+    local label = _G[dropDown:GetName().."Label"];
+    if ( label ) then
+        label:SetVertexColor(GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b);
     end
-end
-
-function MSA_DropDownMenu_DisableDropDown(dropDown, disabledtooltip)
-    MSA_DropDownMenu_SetDropDownEnabled(dropDown, false, disabledtooltip);
+    _G[dropDown:GetName().."Text"]:SetVertexColor(GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b);
+    _G[dropDown:GetName().."Button"]:Disable();
+    dropDown.isDisabled = 1;
 end
 
 function MSA_DropDownMenu_EnableDropDown(dropDown)
-    MSA_DropDownMenu_SetDropDownEnabled(dropDown, true);
-end
-
-function MSA_DropDownMenu_SetDropDownEnabled(dropDown, enabled, disabledTooltip)
-    local dropDownName = dropDown:GetName();
-    local label = GetChild(dropDown, dropDownName, "Label");
-    if label then
-        label:SetVertexColor((enabled and NORMAL_FONT_COLOR or GRAY_FONT_COLOR):GetRGB());
+    local label = _G[dropDown:GetName().."Label"];
+    if ( label ) then
+        label:SetVertexColor(NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
     end
-
-    local icon = GetChild(dropDown, dropDownName, "Icon");
-    if icon then
-        icon:SetVertexColor((enabled and HIGHLIGHT_FONT_COLOR or GRAY_FONT_COLOR):GetRGB());
-    end
-
-    local text = GetChild(dropDown, dropDownName, "Text");
-    if text then
-        text:SetVertexColor((enabled and HIGHLIGHT_FONT_COLOR or GRAY_FONT_COLOR):GetRGB());
-    end
-
-    local button = GetChild(dropDown, dropDownName, "Button");
-    if button then
-        button:SetEnabled(enabled);
-
-        -- Clear any previously set disabledTooltip (it will be reset below if needed).
-        if button:GetMotionScriptsWhileDisabled() then
-            button:SetMotionScriptsWhileDisabled(false);
-            button:SetScript("OnEnter", nil);
-            button:SetScript("OnLeave", nil);
-        end
-    end
-
-    if enabled then
-        dropDown.isDisabled = nil;
-    else
-        dropDown.isDisabled = 1;
-
-        if button then
-            if disabledTooltip then
-                button:SetMotionScriptsWhileDisabled(true);
-                button:SetScript("OnEnter", function()
-                    GameTooltip:SetOwner(button, "ANCHOR_RIGHT");
-                    GameTooltip_AddErrorLine(GameTooltip, disabledTooltip);
-                    GameTooltip:Show();
-                end);
-
-                button:SetScript("OnLeave", GameTooltip_Hide);
-            end
-        end
-    end
+    _G[dropDown:GetName().."Text"]:SetVertexColor(HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b);
+    _G[dropDown:GetName().."Button"]:Enable();
+    dropDown.isDisabled = nil;
 end
 
 function MSA_DropDownMenu_IsEnabled(dropDown)
@@ -1946,60 +1639,78 @@ end
 
 function MSA_DropDownMenu_GetValue(id)
     --Only works if the dropdown has just been initialized, lame, I know =(
-    local button = _G[MSA.."DropDownList1Button"..id];
+    local button = _G["MSA_DropDownList1Button"..id];
     if ( button ) then
-        return _G[MSA.."DropDownList1Button"..id].value;
+        return _G["MSA_DropDownList1Button"..id].value;
     else
         return nil;
     end
 end
 
--- Skins ---------------------------------------------------------------------------------------------------------------
+if WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC then
+    function MSA_OpenColorPicker(info)
+        ColorPickerFrame.func = info.swatchFunc;
+        ColorPickerFrame.hasOpacity = info.hasOpacity;
+        ColorPickerFrame.opacityFunc = info.opacityFunc;
+        ColorPickerFrame.opacity = info.opacity;
+        ColorPickerFrame.previousValues = {r = info.r, g = info.g, b = info.b, opacity = info.opacity};
+        ColorPickerFrame.cancelFunc = info.cancelFunc;
+        ColorPickerFrame.extraInfo = info.extraInfo;
+        -- This must come last, since it triggers a call to ColorPickerFrame.func()
+        ColorPickerFrame:SetColorRGB(info.r, info.g, info.b);
+        ShowUIPanel(ColorPickerFrame);
+    end
+end
 
--- ElvUI
+------------------------------------------------------------------------------------------------------------------------
+-- Skins
+------------------------------------------------------------------------------------------------------------------------
+
+-- ElvUI skin
 local function LoadSkin_ElvUI()
-    if not C_AddOns.IsAddOnLoaded("ElvUI") then return end
+    if not IsAddOnLoaded("ElvUI") then return end
     local E = unpack(_G.ElvUI)
     if E.private.skins.blizzard.misc ~= true then return end
     for i = 1, MSA_DROPDOWNMENU_MAXLEVELS do
-        local frame = _G[MSA.."DropDownList"..i.."MenuBackdrop"]
-        frame:StripTextures()
-        frame:SetTemplate("Transparent")
-
-        frame = _G[MSA.."DropDownList"..i.."Backdrop"]
-        frame:StripTextures()
-        frame:SetTemplate("Transparent")
+        _G["MSA_DropDownList"..i.."MenuBackdrop"]:SetTemplate("Transparent")
+        _G["MSA_DropDownList"..i.."Backdrop"]:SetTemplate("Transparent")
     end
 end
 
--- Tukui
+-- Tukui skin
 local function LoadSkin_Tukui()
-    if not C_AddOns.IsAddOnLoaded("Tukui") then return end
+    if not IsAddOnLoaded("Tukui") then return end
+    local backdrop
     for i = 1, MSA_DROPDOWNMENU_MAXLEVELS do
-        local frame = _G[MSA.."DropDownList"..i.."MenuBackdrop"]
-        if frame.NineSlice then
-            frame.NineSlice:SetAlpha(0)
-        end
-        frame:StripTextures()
-        frame:CreateBackdrop("Default")
-        frame.IsSkinned = true
-
-        frame = _G[MSA.."DropDownList"..i.."Backdrop"]
-        if frame.NineSlice then
-            frame.NineSlice:SetAlpha(0)
-        end
-        frame:StripTextures()
-        frame:CreateBackdrop("Default")
-        frame.IsSkinned = true
+        backdrop = _G["MSA_DropDownList"..i.."MenuBackdrop"]
+        backdrop:StripTextures()
+        backdrop:CreateBackdrop("Default")
+        backdrop:CreateShadow()
+        backdrop.IsSkinned = true
+        backdrop = _G["MSA_DropDownList"..i.."Backdrop"]
+        backdrop:StripTextures()
+        backdrop:CreateBackdrop("Default")
+        backdrop:CreateShadow()
+        backdrop.IsSkinned = true
     end
 end
 
--- Events --------------------------------------------------------------------------------------------------------------
+-- Aurora skin
+local function LoadSkin_Aurora()
+    if not IsAddOnLoaded("Aurora") then return end
+    local Skin = _G.Aurora.Skin
+    for i = 1, MSA_DROPDOWNMENU_MAXLEVELS do
+        Skin.FrameTypeFrame(_G["MSA_DropDownList"..i.."MenuBackdrop"])
+        Skin.FrameTypeFrame(_G["MSA_DropDownList"..i.."Backdrop"])
+    end
+end
 
-lib.eventFrame = lib.eventFrame or CreateFrame("Frame")
-lib.eventFrame:SetScript("OnEvent", function(self, event)
+-- Init skins
+lib.initFrame = lib.initFrame or CreateFrame("Frame")
+lib.initFrame:SetScript("OnEvent", function(self, event)
     LoadSkin_ElvUI()
     LoadSkin_Tukui()
+    LoadSkin_Aurora()
     self:UnregisterEvent(event)
 end)
-lib.eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+lib.initFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
