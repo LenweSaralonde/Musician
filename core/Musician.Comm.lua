@@ -230,33 +230,52 @@ end
 --- Swap channels by index, without losing the color association on Retail.
 local swapChannelsByIndex = ChatConfigChannelSettings_SwapChannelsByIndex or C_ChatInfo.SwapChatChannelsByChannelIndex
 
---- Reorder channels the keep the communication channel at the end of the list
+local reorderChannelsTicker
+
+--- Reorder channels to keep the communication channel at the end of the list
 --
 local function reorderChannels()
-	local commChannelIndex = Musician.Comm.GetChannel()
-	if commChannelIndex == nil then return end
+	local function doReorderChannels()
+		local commChannelIndex = Musician.Comm.GetChannel()
+		if commChannelIndex == nil then return end
 
-	-- Get the index of the last channel
-	local lastChannelIndex = 0
-	for index = MAX_WOW_CHAT_CHANNELS, commChannelIndex, -1 do
-		if (C_ChatInfo.GetChannelShortcut(index) or "") ~= "" then
-			lastChannelIndex = index
-			break
+		-- Get the index of the last channel
+		local lastChannelIndex = 0
+		for index = MAX_WOW_CHAT_CHANNELS, commChannelIndex, -1 do
+			if (C_ChatInfo.GetChannelShortcut(index) or "") ~= "" then
+				lastChannelIndex = index
+				break
+			end
 		end
+
+		-- No need to reorder, the communication channel is already the last one
+		if commChannelIndex == lastChannelIndex then
+			Musician.Utils.Debug(MODULE_NAME, "reorderChannels", "Communication channel already in last position.")
+			return
+		end
+
+		-- Bubble the communication channel up to the last position
+		for index = commChannelIndex, lastChannelIndex - 1 do
+			swapChannelsByIndex(index, index + 1)
+		end
+		Musician.Utils.Debug(MODULE_NAME, "reorderChannels", "Changed communication channel position from",
+			commChannelIndex,
+			"to", lastChannelIndex)
 	end
 
-	-- No need to reorder, the communication channel is already the last one
-	if commChannelIndex == lastChannelIndex then
-		Musician.Utils.Debug(MODULE_NAME, "reorderChannels", "Communication channel already in last position.")
-		return
+	-- Attempt to reorder the channels
+	if not Musician.Comm.InChatMessagingLockdown() then
+		doReorderChannels()
+	elseif not reorderChannelsTicker then
+		-- Defer the channel reordering when in messaging lockdown
+		reorderChannelsTicker = C_Timer.NewTicker(1, function()
+			if not Musician.Comm.InChatMessagingLockdown() then
+				reorderChannelsTicker:Cancel()
+				reorderChannelsTicker = nil
+				doReorderChannels()
+			end
+		end)
 	end
-
-	-- Bubble the communication channel up to the last position
-	for index = commChannelIndex, lastChannelIndex - 1 do
-		swapChannelsByIndex(index, index + 1)
-	end
-	Musician.Utils.Debug(MODULE_NAME, "reorderChannels", "Changed communication channel position from", commChannelIndex,
-		"to", lastChannelIndex)
 end
 
 --- Join the communication channel and keep it joined
