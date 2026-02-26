@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.9.13.8
+---------
+* Updated 3rd party library MSA-DropDownMenu-1.0 to v21.
+* Fixed LUA error that may occur during boss encounters.
+
 v1.9.13.7
 ---------
 * Rolled back 3rd party library MSA-DropDownMenu-1.0 to v18 due to compatibility bugs in v20 with add-ons using v18.
