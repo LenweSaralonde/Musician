@@ -611,6 +611,7 @@ stds.wow = {
 		"MiniMapTracking_Update",
 		"CreateFromMixins",
 		"CompactUnitFrame_UpdateWidgetsOnlyMode",
+		"CompactUnitFrame_UpdateAuras",
 		"GetCameraZoom",
 		"SetInWorldUIVisibility",
 		"ExecuteFrameScript",

@@ -84,7 +84,9 @@ function Musician.NamePlates:OnEnable()
 	hooksecurefunc("CompactUnitFrame_UpdateMaxHealth", Musician.NamePlates.OnUnitFrameUpdate)
 
 	-- Auras (combat) updated
-	hooksecurefunc("CompactUnitFrame_UpdateAuras", Musician.NamePlates.OnUnitFrameUpdate)
+	if CompactUnitFrame_UpdateAuras ~= nil then
+		hooksecurefunc("CompactUnitFrame_UpdateAuras", Musician.NamePlates.OnUnitFrameUpdate)
+	end
 
 	-- Name updated
 	hooksecurefunc("CompactUnitFrame_UpdateName", Musician.NamePlates.OnUnitFrameUpdate)
