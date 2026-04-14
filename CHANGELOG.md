@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.14.0
+---------
+* Updated for Wow Retail 12.0.5.
+
 v1.9.13.8
 ---------
 * Updated 3rd party library MSA-DropDownMenu-1.0 to v21.
