@@ -77,8 +77,8 @@ function Musician.Registry.Init()
 		-- Standard player tooltip hook
 		local function onTooltipSetUnit(self)
 			if canaccessvalue(self) and self and canaccessvalue(self.GetUnit) and self.GetUnit then
-				local _, unitType = self:GetUnit()
-				if canaccessvalue(unitType) and UnitIsPlayer(unitType) then
+				local getUnitIsSuccess, unitType = pcall(function() return select(2, self:GetUnit()) end)
+				if getUnitIsSuccess and canaccessvalue(unitType) and UnitIsPlayer(unitType) then
 					local unitName = GetUnitName(unitType, true)
 					if canaccessvalue(unitName) then
 						local player = Musician.Utils.NormalizePlayerName(unitName)
@@ -503,8 +503,8 @@ end
 --- Update player tooltip to add missing Musician client version, if applicable.
 -- @param player (string)
 function Musician.Registry.UpdatePlayerTooltip(player)
-	local _, unitType = GameTooltip:GetUnit()
-	if not canaccessvalue(unitType) or not UnitIsPlayer(unitType) then return end
+	local getUnitIsSuccess, unitType = pcall(function() return select(2, GameTooltip:GetUnit()) end)
+	if not getUnitIsSuccess or not canaccessvalue(unitType) or not UnitIsPlayer(unitType) then return end
 
 	local unitName = GetUnitName(unitType, true)
 	if not canaccessvalue(unitName) then return end

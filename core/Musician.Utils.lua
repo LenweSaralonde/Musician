@@ -401,13 +401,15 @@ function Musician.Utils.DisplayEmote(player, playerGUID, message)
 		displayPlayerName = fullPlayerName
 	end
 
-	if playerGUID then
-		ChatFrame_OnEvent(DEFAULT_CHAT_FRAME, "CHAT_MSG_EMOTE", message, fullPlayerName, '', '', displayPlayerName, '', nil,
-			nil, nil, nil, 0, playerGUID)
-	else
-		ChatFrame_OnEvent(DEFAULT_CHAT_FRAME, "CHAT_MSG_EMOTE", message, fullPlayerName, '', '', displayPlayerName, '', nil,
-		nil, nil, nil, 0)
-	end
+	pcall(function()
+		if playerGUID then
+			ChatFrame_OnEvent(DEFAULT_CHAT_FRAME, "CHAT_MSG_EMOTE", message, fullPlayerName, '', '', displayPlayerName,
+				'', nil, nil, nil, nil, 0, playerGUID)
+		else
+			ChatFrame_OnEvent(DEFAULT_CHAT_FRAME, "CHAT_MSG_EMOTE", message, fullPlayerName, '', '', displayPlayerName,
+				'', nil, nil, nil, nil, 0)
+		end
+	end)
 end
 
 --- Remove a chat message by its line ID
