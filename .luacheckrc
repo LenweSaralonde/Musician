@@ -552,6 +552,7 @@ stds.wow = {
 		"GetChannelName",
 		"ListChannelByName",
 		"StaticPopup_Visible",
+		"StaticPopup_Hide",
 		"UnitIsDead",
 		"UnitIsGhost",
 		"UnitName",
