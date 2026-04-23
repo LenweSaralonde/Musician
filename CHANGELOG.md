@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.14.1
+---------
+* Fixed communication channel password popup showing up if joining was initiated by a third party add-on (Prat).
+
 v1.9.14.0
 ---------
 * Updated for Wow Retail 12.0.5.
