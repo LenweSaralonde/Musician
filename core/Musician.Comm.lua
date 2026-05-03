@@ -46,6 +46,8 @@ local currentSongCrc32
 local lastSentChannelStreamMessage = 0
 local useAlternateChannelStreamPrefix = false
 
+local lastSentChunkTime
+
 --- Print communication debug message
 -- @param out (boolean) Outgoing message
 -- @param event (string)
@@ -529,9 +531,13 @@ function Musician.Comm.StreamCompressedSongChunk(compressedChunk)
 	end
 
 	-- Calculate used bandwidth
-	local bwMin = Musician.BANDWIDTH_LIMIT_MIN
-	local bwMax = Musician.BANDWIDTH_LIMIT_MAX + 1
+	local now = GetTime()
+	local delta = lastSentChunkTime and now - lastSentChunkTime or 2
+	local capacity = delta >= 2 and 1 or delta / 2
+	local bwMin = Musician.BANDWIDTH_LIMIT_MIN * capacity
+	local bwMax = Musician.BANDWIDTH_LIMIT_MAX * capacity + 1
 	local bandwidth = (max(bwMin, min(bwMax, #serializedChunk)) - bwMin) / (bwMax - bwMin)
+	lastSentChunkTime = now
 	Musician.Comm:SendMessage(Musician.Events.Bandwidth, bandwidth)
 
 	-- Determine if we should use the alternate prefix for channel streaming
