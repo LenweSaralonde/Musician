@@ -339,17 +339,19 @@ end
 -- @param event (string)
 -- @param bandwidth (number)
 function Musician.Frame.RefreshBandwidthIndicator(event, bandwidth)
-	local r = max(0, min(1, bandwidth * 2))
-	local g = max(0, min(1, 2 - bandwidth * 2))
-	local b = 0
-	local a = 1
+	MusicianFramePlayButtonProgressBar:SetColorTexture(Musician.Comm.GetBandwidthColor(bandwidth, true))
 
+	-- Make the bar blink if the maximum bandwidth is reached
 	if bandwidth == 1 then
-		local t = GetTime()
-		r = sin((t - floor(t)) * 720) * .33 + .67
+		if MusicianFramePlayButtonProgressBar.blinkingTicker == nil then
+			MusicianFramePlayButtonProgressBar.blinkingTicker = C_Timer.NewTicker(1 / 60, function()
+				MusicianFramePlayButtonProgressBar:SetColorTexture(Musician.Comm.GetBandwidthColor(bandwidth, true))
+			end)
+		end
+	elseif MusicianFramePlayButtonProgressBar.blinkingTicker then
+		MusicianFramePlayButtonProgressBar.blinkingTicker:Cancel()
+		MusicianFramePlayButtonProgressBar.blinkingTicker = nil
 	end
-
-	MusicianFramePlayButtonProgressBar:SetColorTexture(r, g, b, a)
 end
 
 --- Update band play button

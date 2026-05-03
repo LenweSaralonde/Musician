@@ -558,6 +558,26 @@ function Musician.Comm.StreamCompressedSongChunk(compressedChunk)
 	return true
 end
 
+--- Get bandwidth color
+-- @param bandwidth (number)
+-- @param blink (boolean)
+-- @return r (number)
+-- @return g (number)
+-- @return b (number)
+function Musician.Comm.GetBandwidthColor(bandwidth, blink)
+	local r = max(0, min(1, bandwidth * 2))
+	local g = max(0, min(1, 2 - bandwidth * 2))
+	local b = 0
+
+	-- Make the red blink if the maximum bandwidth is reached
+	if bandwidth == 1 and blink then
+		local t = GetTime()
+		r = sin((t - floor(t)) * 720) * .33 + .67
+	end
+
+	return r, g, b
+end
+
 --- Process a packed chunk
 -- @param packedChunk (string)
 -- @param sender (string)
