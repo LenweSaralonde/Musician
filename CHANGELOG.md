@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.14.2
+---------
+* Added bandwidth indicator on the live play button.
+
 v1.9.14.1
 ---------
 * Fixed communication channel password popup showing up if joining was initiated by a third party add-on (Prat).
