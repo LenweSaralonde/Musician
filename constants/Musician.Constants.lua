@@ -44,6 +44,12 @@ Musician.OS_WINDOWS = "Windows"
 Musician.OS_MAC = "MacOS"
 Musician.OS_LINUX = "Linux"
 
+Musician.CHANNEL_POLYPHONY = {
+	Master = 40, -- Combination of Master (30) and Talking Head (10)
+	SFX = 15,
+	Dialog = 20,
+}
+
 Musician.Msg = {}
 Musician.Locale = {}
 

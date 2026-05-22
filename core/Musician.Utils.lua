@@ -594,7 +594,13 @@ end
 -- @return polyphony (number)
 function Musician.Utils.GetMaxPolyphony()
 	local audioChannels = Musician_Settings.audioChannels
-	return (audioChannels.Master and 30 or 0) + (audioChannels.SFX and 15 or 0) + (audioChannels.Dialog and 20 or 0)
+	local polyphony = 0
+	for channel, channelPolyphony in pairs(Musician.CHANNEL_POLYPHONY) do
+		if audioChannels[channel] then
+			polyphony = polyphony + channelPolyphony
+		end
+	end
+	return polyphony
 end
 
 --- Get the recommended total sound cache size.

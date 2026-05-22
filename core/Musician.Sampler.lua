@@ -284,21 +284,31 @@ function Musician.Sampler.PlaySoundFile(soundFile)
 	local soundHandle, willPlay, channel
 	local audioChannels = Musician_Settings.audioChannels
 
-	-- Try Master
+	-- Attempt to play using the enabled channels based on their capable polyphony
+	-- from the largest to the smallest to reduce the risk of dropped notes.
+
+	-- Try Master (30-note polyphony)
 	if audioChannels.Master then
 		channel = "Master"
 		willPlay, soundHandle = PlaySoundFile(soundFile, channel)
 	end
 
-	-- Try SFX
+	-- Try Dialog (20-note polyphony)
+	if not willPlay and audioChannels.Dialog then
+		channel = "Dialog"
+		willPlay, soundHandle = PlaySoundFile(soundFile, channel)
+	end
+
+	-- Try SFX (15-note polyphony)
 	if not willPlay and audioChannels.SFX then
 		channel = "SFX"
 		willPlay, soundHandle = PlaySoundFile(soundFile, channel)
 	end
 
-	-- Try Dialog
-	if not willPlay and audioChannels.Dialog then
-		channel = "Dialog"
+	-- Try Talking Head (10-note polyphony)
+	-- This channel is linked to the Master volume and can't be adjusted.
+	if not willPlay and audioChannels.Master then
+		channel = "Talking Head"
 		willPlay, soundHandle = PlaySoundFile(soundFile, channel)
 	end
 

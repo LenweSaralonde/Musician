@@ -70,11 +70,15 @@ function Musician.Options.Init()
 	Musician.Utils.SetInstrumentToysMuted(Musician_Settings.muteInstrumentToys)
 
 	-- Audio channels
+	local polyphony = Musician.CHANNEL_POLYPHONY
 	MusicianOptionsPanelAudioChannelsTitle:SetText(Musician.Msg.OPTIONS_AUDIO_CHANNELS_TITLE)
 	MusicianOptionsPanelAudioChannelsSubText:SetText(Musician.Msg.OPTIONS_AUDIO_CHANNELS_HINT)
-	Musician.Options.SetupSoundChannelCheckbox(MusicianOptionsPanelAudioChannelsMaster, MASTER_VOLUME, 'Master', 30)
-	Musician.Options.SetupSoundChannelCheckbox(MusicianOptionsPanelAudioChannelsSFX, FX_VOLUME or SOUND_VOLUME, 'SFX', 15)
-	Musician.Options.SetupSoundChannelCheckbox(MusicianOptionsPanelAudioChannelsDialog, DIALOG_VOLUME, 'Dialog', 20)
+	Musician.Options.SetupSoundChannelCheckbox(MusicianOptionsPanelAudioChannelsMaster, MASTER_VOLUME, 'Master',
+		polyphony.Master)
+	Musician.Options.SetupSoundChannelCheckbox(MusicianOptionsPanelAudioChannelsSFX, FX_VOLUME or SOUND_VOLUME, 'SFX',
+		polyphony.SFX)
+	Musician.Options.SetupSoundChannelCheckbox(MusicianOptionsPanelAudioChannelsDialog, DIALOG_VOLUME, 'Dialog',
+		polyphony.Dialog)
 	Musician.Options.SetupCheckbox(MusicianOptionsPanelAudioChannelsAutoAdjust,
 		Musician.Msg.OPTIONS_AUDIO_CHANNELS_AUTO_ADJUST_CONFIG)
 	MusicianOptionsPanelAudioChannelsAutoAdjust:HookScript("OnClick", function(self)
