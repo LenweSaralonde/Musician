@@ -229,7 +229,7 @@ Musician has several issues that are due to limitations of the World of Warcraft
 * Music playing relies on the refresh rate of the screen so stuttering may occur on slower computers. Adjust your settings to maintain a framerate above 30 FPS for good results. Songs having an overly high note rate may stutter.
 * There is no support for velocity and modulation in MIDI files.
 * The volume of MIDI tracks can't be adjusted. However, each track has an **Accent** checkbox you can enable to double the notes and make the track sound louder.
-* The polyphony is limited, some notes may drop if there are too many playing at the same time. By default, Musician uses the SFX and Dialog channels to reach a 64-note polyphony which is enough for 99,99% of the songs. Both channels' volume is set to 100% to make sure all notes play at the same level.
+* The polyphony is limited, some notes may drop if there are too many playing at the same time. By default, Musician uses the SFX and Dialog channels to reach a 75-note polyphony which is enough for 99,99% of the songs. Both channels' volume is set to 100% to make sure all notes play at the same level.
 * The *Play as a band* feature does not work with trial accounts in raid mode.
 
 Support
