@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.15.0
+---------
+* Increased the maximum polyphony from 65 to 75 notes by exploiting the Talking Head channel.
+
 v1.9.14.2
 ---------
 * Added bandwidth indicator on the live play button.
