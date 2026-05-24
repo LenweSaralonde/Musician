@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.15.1
+---------
+* Fixed LUA errors during decor duel.
+
 v1.9.15.0
 ---------
 * Increased the maximum polyphony from 65 to 75 notes by exploiting the Talking Head channel.
