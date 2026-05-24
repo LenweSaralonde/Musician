@@ -840,6 +840,17 @@ function Musician.Utils.PlayerIsOnSameRealm(playerName)
 	return false
 end
 
+--- Safely gets unit name. Returns nil in case of failure.
+-- @param unit (string)
+-- @param showServerName (string)
+-- @return unitName (string)
+function Musician.Utils.GetUnitName(unit, showServerName)
+	local isGetUnitNameSuccess, unitName = pcall(function()
+		return GetUnitName(unit, showServerName)
+	end)
+	return isGetUnitNameSuccess and canaccessvalue(unitName) and unitName or nil
+end
+
 --- Shortens the UTF-8 text with ellipsis if its size in bytes is longer than specified
 -- @param text (string)
 -- @param maxBytes (int)

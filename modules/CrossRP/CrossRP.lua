@@ -137,8 +137,8 @@ function Musician.CrossRP.Init()
 			return
 		end
 
-		local unitName = GetUnitName("mouseover", true)
-		if not canaccessvalue(unitName) then return end
+		local unitName = Musician.Utils.GetUnitName("mouseover", true)
+		if not unitName then return end
 
 		local player = Musician.Utils.NormalizePlayerName(unitName)
 		if Musician.Utils.PlayerIsMyself(player) then

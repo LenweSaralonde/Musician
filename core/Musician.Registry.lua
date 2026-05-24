@@ -79,8 +79,8 @@ function Musician.Registry.Init()
 			if canaccessvalue(self) and self and canaccessvalue(self.GetUnit) and self.GetUnit then
 				local getUnitIsSuccess, unitType = pcall(function() return select(2, self:GetUnit()) end)
 				if getUnitIsSuccess and canaccessvalue(unitType) and UnitIsPlayer(unitType) then
-					local unitName = GetUnitName(unitType, true)
-					if canaccessvalue(unitName) then
+					local unitName = Musician.Utils.GetUnitName(unitType, true)
+					if unitName then
 						local player = Musician.Utils.NormalizePlayerName(unitName)
 						Musician.Registry.UpdateTooltipInfo(self, player)
 					end
@@ -121,8 +121,8 @@ function Musician.Registry.Init()
 			return
 		end
 
-		local unitName = GetUnitName("mouseover", true)
-		if not canaccessvalue(unitName) then return end
+		local unitName = Musician.Utils.GetUnitName("mouseover", true)
+		if not unitName then return end
 
 		local player = Musician.Utils.NormalizePlayerName(unitName)
 		if Musician.Utils.PlayerIsMyself(player) then
@@ -506,8 +506,8 @@ function Musician.Registry.UpdatePlayerTooltip(player)
 	local getUnitIsSuccess, unitType = pcall(function() return select(2, GameTooltip:GetUnit()) end)
 	if not getUnitIsSuccess or not canaccessvalue(unitType) or not UnitIsPlayer(unitType) then return end
 
-	local unitName = GetUnitName(unitType, true)
-	if not canaccessvalue(unitName) then return end
+	local unitName = Musician.Utils.GetUnitName(unitType, true)
+	if not unitName then return end
 
 	local tooltipPlayer = Musician.Utils.NormalizePlayerName(unitName)
 	if tooltipPlayer == player then

@@ -480,8 +480,8 @@ function Musician.NamePlates.OnNamePlateAdded(event, unitToken)
 	Musician.NamePlates.DetachNamePlate(namePlate)
 
 	-- Make sure player name is accessible
-	local unitName = GetUnitName(unitToken, true)
-	if not canaccessvalue(unitName) then return end
+	local unitName = Musician.Utils.GetUnitName(unitToken, true)
+	if not unitName then return end
 
 	-- May return "Unknown" on first attempt: try again later.
 	if unitName == UNKNOWN then
@@ -594,8 +594,8 @@ function Musician.NamePlates.AddNoteIcon(namePlate, textElement, append)
 		return
 	end
 
-	local unitName = unitToken and GetUnitName(unitToken, true)
-	if not canaccessvalue(textElement:GetText()) or not canaccessvalue(unitName) then
+	local unitName = unitToken and Musician.Utils.GetUnitName(unitToken, true)
+	if not canaccessvalue(textElement:GetText()) or not unitName then
 		return
 	end
 
