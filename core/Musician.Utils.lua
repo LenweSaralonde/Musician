@@ -18,6 +18,7 @@ local fullPromoEmoteLastSeen
 local overrideNextFullPromoEmote = false
 local debugStartTime = debugprofilestop()
 
+local canaccessvalue = canaccessvalue or function() return true end
 local SendChatMessage = (C_ChatInfo and C_ChatInfo.SendChatMessage or SendChatMessage)
 local GetCVar = (C_CVar and C_CVar.GetCVar or GetCVar)
 local GetCVarNumber = function(cvar)
@@ -158,15 +159,7 @@ end
 -- @param player (string)
 -- @return playerLink (string)
 function Musician.Utils.GetPlayerLink(player)
-	local simplePlayerName, realm = strsplit('-', Musician.Utils.NormalizePlayerName(player), 2)
-	local _, myRealm = strsplit('-', Musician.Utils.NormalizePlayerName(UnitName("player")), 2)
-
-	local displayPlayerName = simplePlayerName
-	if myRealm ~= realm then
-		displayPlayerName = simplePlayerName .. "-" .. realm
-	end
-
-	return Musician.Utils.GetLink('player', displayPlayerName, displayPlayerName)
+	return GetPlayerLink(player, Musician.Utils.FormatPlayerName(player))
 end
 
 --- Get URL hyperlink
@@ -392,24 +385,30 @@ end
 -- @param playerGUID (string)
 -- @param message (string)
 function Musician.Utils.DisplayEmote(player, playerGUID, message)
-	local simplePlayerName, realm = strsplit('-', Musician.Utils.NormalizePlayerName(player), 2)
-	local _, myRealm = strsplit('-', Musician.Utils.NormalizePlayerName(UnitName("player")), 2)
-	local fullPlayerName = simplePlayerName .. "-" .. realm
-
-	local displayPlayerName = player
-	if myRealm ~= realm then
-		displayPlayerName = fullPlayerName
+	-- Old school way
+	if not ChatFrameUtil or not ChatFrameUtil.GetDecoratedSenderName then
+		return ChatFrame_OnEvent(DEFAULT_CHAT_FRAME, "CHAT_MSG_EMOTE", message, player, '', '', player, '', nil, nil, nil, nil, 0, playerGUID)
 	end
 
-	pcall(function()
-		if playerGUID then
-			ChatFrame_OnEvent(DEFAULT_CHAT_FRAME, "CHAT_MSG_EMOTE", message, fullPlayerName, '', '', displayPlayerName,
-				'', nil, nil, nil, nil, 0, playerGUID)
-		else
-			ChatFrame_OnEvent(DEFAULT_CHAT_FRAME, "CHAT_MSG_EMOTE", message, fullPlayerName, '', '', displayPlayerName,
-				'', nil, nil, nil, nil, 0)
+	local coloredName = ChatFrameUtil.GetDecoratedSenderName("CHAT_MSG_EMOTE", message, player, nil, nil, player, nil,
+	nil, nil, nil, nil, 0, playerGUID)
+	local playerLink = GetPlayerLink(player, coloredName)
+
+	local emoteMessage = playerLink .. " " .. message
+
+	--Add Timestamps
+	local chatTimestampFmt = ChatFrameUtil.GetTimestampFormat()
+	if (chatTimestampFmt) then
+		emoteMessage = BetterDate(chatTimestampFmt, time()) .. emoteMessage
+	end
+
+	local info = ChatTypeInfo.EMOTE
+	for i = 1, NUM_CHAT_WINDOWS do
+		local chatFrame = _G["ChatFrame" .. i]
+		if chatFrame and chatFrame:ContainsMessageGroup("EMOTE") then
+			chatFrame:AddMessage(emoteMessage, info.r, info.g, info.b, info.id)
 		end
-	end)
+	end
 end
 
 --- Remove a chat message by its line ID
@@ -786,14 +785,7 @@ end
 -- @param playerName (string)
 -- @return simpleName (string)
 function Musician.Utils.SimplePlayerName(playerName)
-	local _, myRealmName = getPlayerNameParts(UnitName("player"))
-	local simpleName, realmName, fullName = getPlayerNameParts(playerName)
-
-	if realmName == myRealmName then
-		return simpleName
-	end
-
-	return fullName
+	return Ambiguate(playerName, "none")
 end
 
 --- Return the player realm slug

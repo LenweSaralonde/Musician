@@ -515,6 +515,8 @@ stds.wow = {
 				"AddMessageEventFilter",
 				"AddSenderNameFilter",
 				"RemoveSenderNameFilter",
+				"GetDecoratedSenderName",
+				"GetTimestampFormat",
 			}
 		},
 
@@ -637,6 +639,8 @@ stds.wow = {
 		"CloseSpecialWindows",
 		"ShouldShowName",
 		"canaccessvalue",
+		"BetterDate",
+		"Ambiguate",
 
 		-- Global Mixins and UI Objects
 
@@ -669,6 +673,12 @@ stds.wow = {
 		DEFAULT_CHAT_FRAME = {
 			fields = {
 				"AddMessage",
+			}
+		},
+
+		ChatTypeInfo = {
+			fields = {
+				"EMOTE",
 			}
 		},
 
