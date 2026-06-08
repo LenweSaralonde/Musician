@@ -28,6 +28,9 @@ Musician.Comm.action.bandStop = "bandStop"
 Musician.Comm.action.bandReady = "bandReady"
 Musician.Comm.action.bandNotReady = "bandNotReady"
 
+-- Reordering channels causes tainting issues so we disable it until Blizzard fixes it (if they do it one day).
+local shouldReorderChannels = false
+
 local isSongPlaying = false
 
 local isPlayPending = false
@@ -254,6 +257,10 @@ local reorderChannelsTicker
 --- Reorder channels to keep the communication channel at the end of the list
 --
 local function reorderChannels()
+	if not shouldReorderChannels then
+		return
+	end
+
 	local function doReorderChannels()
 		local commChannelIndex = Musician.Comm.GetChannel()
 		if commChannelIndex == nil then return end
