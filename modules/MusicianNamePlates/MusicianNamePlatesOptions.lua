@@ -10,8 +10,8 @@ local C_CVar = _G["C_CVar"] or {
 	GetCVarBool = GetCVarBool
 }
 
-local CVAR_nameplateShowFriendlyPlayers = LE_EXPANSION_LEVEL_CURRENT >= 11 and "nameplateShowFriendlyPlayers" or "nameplateShowFriends"
-local CVAR_nameplateShowFriendlyNpcs = LE_EXPANSION_LEVEL_CURRENT >= 11 and "nameplateShowFriendlyNpcs" or "nameplateShowFriendlyNPCs"
+local CVAR_nameplateShowFriendlyPlayers = LE_EXPANSION_LEVEL_CURRENT >= 4 and "nameplateShowFriendlyPlayers" or "nameplateShowFriends"
+local CVAR_nameplateShowFriendlyNpcs = LE_EXPANSION_LEVEL_CURRENT >= 4 and "nameplateShowFriendlyNpcs" or "nameplateShowFriendlyNPCs"
 
 -- Previous settings to be restored restore when Cancel is pressed
 local oldSettings = {}

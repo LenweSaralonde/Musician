@@ -10,7 +10,7 @@ local GetCVar = (C_CVar and C_CVar.GetCVar or GetCVar)
 local GetCVarBool = (C_CVar and C_CVar.GetCVarBool or GetCVarBool)
 local canaccessvalue = canaccessvalue or function() return true end
 
-local CVAR_nameplateShowFriendlyPlayers = LE_EXPANSION_LEVEL_CURRENT >= 11 and "nameplateShowFriendlyPlayers" or
+local CVAR_nameplateShowFriendlyPlayers = LE_EXPANSION_LEVEL_CURRENT >= 4 and "nameplateShowFriendlyPlayers" or
 	"nameplateShowFriends"
 
 local canHideHealthBars = true
