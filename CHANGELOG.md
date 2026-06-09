@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.15.3
+---------
+* Reverted Retail TOC back to 12.0.5.
+
 v1.9.15.2
 ---------
 * Updated for Wow Retail 12.0.7 and MoP Classic 5.5.4.
