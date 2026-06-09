@@ -1,6 +1,14 @@
 Changelog
 =========
 
+v1.9.15.2
+---------
+* Updated for Wow Retail 12.0.7 and MoP Classic 5.5.4.
+* Disabled automatic channel reordering to prevent tainting issues.
+* Fixed tainting bug with emotes.
+* Fixed broken nameplate note icons after leaving a dungeon.
+* Fixed outdated nameplate CVars in MoP Classic.
+
 v1.9.15.1
 ---------
 * Fixed LUA errors during decor duel.
