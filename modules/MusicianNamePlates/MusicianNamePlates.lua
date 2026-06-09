@@ -584,7 +584,12 @@ function Musician.NamePlates.AddNoteIcon(namePlate, textElement, append)
 	-- Hook the SetText() function to ensure the icon is always added, even when modified by a third party
 	if textElement.musicianSetTextIsHooked == nil then
 		textElement.musicianSetTextIsHooked = true
-		hooksecurefunc(textElement, "SetText", function(self)
+		hooksecurefunc(textElement, "SetText", function(self, text)
+			-- Reset text to clear the secret value flag
+			if not canaccessvalue(self:GetText()) and canaccessvalue(text) then
+				self:ClearText()
+				setTextUnhooked(textElement, text)
+			end
 			Musician.NamePlates.AddNoteIcon(namePlate, self, append)
 		end)
 	end
@@ -644,11 +649,9 @@ function Musician.NamePlates.AddNoteIcon(namePlate, textElement, append)
 	end
 end
 
---- Attach Musician nameplate
+--- Init Musician nameplate unit frame
 -- @param namePlate (Frame)
--- @param player (string)
--- @param event (string)
-function Musician.NamePlates.AttachNamePlate(namePlate, player, event)
+function Musician.NamePlates.InitUnitFrame(namePlate)
 	-- Create a simplified unit frame with player name when not in combat
 	if not namePlate.musicianUnitFrame then
 		namePlate.musicianUnitFrame = CreateFrame('Button', nil, namePlate)
@@ -663,6 +666,14 @@ function Musician.NamePlates.AttachNamePlate(namePlate, player, event)
 		namePlate.musicianUnitFrame.name:SetJustifyV('MIDDLE')
 		namePlate.musicianUnitFrame.name:SetWordWrap(false)
 	end
+end
+
+--- Attach Musician nameplate
+-- @param namePlate (Frame)
+-- @param player (string)
+-- @param event (string)
+function Musician.NamePlates.AttachNamePlate(namePlate, player, event)
+	Musician.NamePlates.InitUnitFrame(namePlate)
 
 	Musician.NamePlates.UpdateNamePlate(namePlate)
 

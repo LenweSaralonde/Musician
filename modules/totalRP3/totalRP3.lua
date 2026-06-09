@@ -150,9 +150,14 @@ end
 --- Update the Musician nameplate with TRP info
 --
 function Musician.TRP3:OnNamePlateDataUpdated(_, namePlate, _, displayInfo)
-	if namePlate:IsForbidden() or not namePlate:IsShown() or not displayInfo or not namePlate.musicianUnitFrame then
+	if namePlate:IsForbidden() or not namePlate:IsShown() or not displayInfo then
 		return
 	end
+
+	if not namePlate.musicianUnitFrame then
+		Musician.NamePlates.InitUnitFrame(namePlate)
+	end
+
 	-- Attach icon
 	if not namePlate.musicianUnitFrame.trp3Icon then
 		namePlate.musicianUnitFrame.trp3Icon = namePlate.musicianUnitFrame:CreateTexture(nil, "ARTWORK")
