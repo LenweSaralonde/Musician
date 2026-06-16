@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.15.4
+---------
+* Retail TOC bump to 12.0.7.
+
 v1.9.15.3
 ---------
 * Reverted Retail TOC back to 12.0.5.
