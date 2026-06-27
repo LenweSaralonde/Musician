@@ -91,6 +91,7 @@ globals = {
 					"registerObject", -- Accessed only
 					tools = {
 						fields = {
+							"initItemEditorNormal",
 							"getBlankItemData" -- Accessed only
 						}
 					}
@@ -301,7 +302,8 @@ read_globals = {
 					normal = {
 						fields = {
 							"gameplay",
-							"display"
+							"display",
+							"loadItem",
 						}
 					}
 				}

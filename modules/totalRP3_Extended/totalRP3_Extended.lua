@@ -66,6 +66,7 @@ function Musician.TRP3E.CheckAPI()
 			TRP3_API.extended.unregisterObject and
 			TRP3_API.extended.registerObject and
 			TRP3_API.extended.tools.getBlankItemData and
+			TRP3_API.extended.tools.initItemEditorNormal and
 			TRP3_API.script.executeClassScript and
 			TRP3_API.script.clearRootCompilation and
 			TRP3_API.inventory.addItem and
@@ -688,47 +689,56 @@ function Musician.TRP3E.RegisterHooks()
 	-- Disable specific item editor elements for Musician sheet music items
 	--
 
-	local toolFrame = TRP3_ToolFrame
-	local gameplay = toolFrame.item.normal.gameplay
-	local display = toolFrame.item.normal.display
+	local function applyRefreshCheckHooks(toolFrame)
+		local gameplay = toolFrame.item.normal.gameplay
+		local display = toolFrame.item.normal.display
 
-	local function refreshCheck()
-		if toolFrame.fullClassID ~= nil and Musician.TRP3E.IsMusicianItem(TRP3_DB.global[toolFrame.fullClassID]) then
+		local function refreshCheck()
+			if toolFrame.fullClassID ~= nil and Musician.TRP3E.IsMusicianItem(TRP3_DB.global[toolFrame.fullClassID]) then
 
-			-- Hide all tabs except the first one
-			local tabIndex = 0
-			for _, frame in pairs({ TRP3_ToolFrameItemNormalTabPanel:GetChildren() }) do
-				if string.sub(frame:GetName(), 1, 16) == 'TRP3_TabBar_Tab_' then
-					tabIndex = tabIndex + 1
-					if tabIndex >= 2 then
-						frame:Hide()
+				-- Hide all tabs except the first one
+				local tabIndex = 0
+				for _, frame in pairs({ TRP3_ToolFrameItemNormalTabPanel:GetChildren() }) do
+					if string.sub(frame:GetName(), 1, 16) == 'TRP3_TabBar_Tab_' then
+						tabIndex = tabIndex + 1
+						if tabIndex >= 2 then
+							frame:Hide()
+						end
 					end
 				end
-			end
 
-			Musician.TRP3E.SetCheckboxEnabled(gameplay.unique, false)
-			Musician.TRP3E.SetCheckboxEnabled(gameplay.stack, false)
-			Musician.TRP3E.SetCheckboxEnabled(gameplay.use, false)
-			Musician.TRP3E.SetCheckboxEnabled(gameplay.container, false)
-			Musician.TRP3E.SetCheckboxEnabled(display.quest, false)
-			Musician.TRP3E.SetEditBoxEnabled(display.right, false)
-		else
-			Musician.TRP3E.SetCheckboxEnabled(gameplay.unique, true)
-			Musician.TRP3E.SetCheckboxEnabled(gameplay.stack, true)
-			Musician.TRP3E.SetCheckboxEnabled(gameplay.use, true)
-			Musician.TRP3E.SetCheckboxEnabled(gameplay.container, true)
-			Musician.TRP3E.SetCheckboxEnabled(display.quest, true)
-			Musician.TRP3E.SetEditBoxEnabled(display.right, true)
+				Musician.TRP3E.SetCheckboxEnabled(gameplay.unique, false)
+				Musician.TRP3E.SetCheckboxEnabled(gameplay.stack, false)
+				Musician.TRP3E.SetCheckboxEnabled(gameplay.use, false)
+				Musician.TRP3E.SetCheckboxEnabled(gameplay.container, false)
+				Musician.TRP3E.SetCheckboxEnabled(display.quest, false)
+				Musician.TRP3E.SetEditBoxEnabled(display.right, false)
+			else
+				Musician.TRP3E.SetCheckboxEnabled(gameplay.unique, true)
+				Musician.TRP3E.SetCheckboxEnabled(gameplay.stack, true)
+				Musician.TRP3E.SetCheckboxEnabled(gameplay.use, true)
+				Musician.TRP3E.SetCheckboxEnabled(gameplay.container, true)
+				Musician.TRP3E.SetCheckboxEnabled(display.quest, true)
+				Musician.TRP3E.SetEditBoxEnabled(display.right, true)
+			end
 		end
+
+		gameplay.unique:HookScript('OnClick', refreshCheck)
+		gameplay.stack:HookScript('OnClick', refreshCheck)
+		gameplay.use:HookScript('OnClick', refreshCheck)
+		gameplay.container:HookScript('OnClick', refreshCheck)
+		display.quest:HookScript('OnClick', refreshCheck)
+		toolFrame:HookScript('OnShow', refreshCheck)
+		hooksecurefunc(toolFrame.item.normal, 'loadItem', refreshCheck)
 	end
 
-	gameplay.unique:HookScript('OnClick', refreshCheck)
-	gameplay.stack:HookScript('OnClick', refreshCheck)
-	gameplay.use:HookScript('OnClick', refreshCheck)
-	gameplay.container:HookScript('OnClick', refreshCheck)
-	display.quest:HookScript('OnClick', refreshCheck)
-	toolFrame:HookScript('OnShow', refreshCheck)
-	hooksecurefunc(toolFrame.item.normal, 'loadItem', refreshCheck)
+	if TRP3_ToolFrame.item.normal.loadItem then
+		-- TRP3 Extended normal editor is already initialized
+		applyRefreshCheckHooks(TRP3_ToolFrame)
+	else
+		-- TRP3 Extended normal editor is not yet initialized
+		hooksecurefunc(TRP3_API.extended.tools, 'initItemEditorNormal', applyRefreshCheckHooks)
+	end
 end
 
 --- Add or update existing sheet music item into TRP3 items
