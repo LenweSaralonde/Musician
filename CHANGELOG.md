@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.15.5
+---------
+* Fixed Total RP 3 Extended integration breaking if other third party TRP3 Extended plugins are installed.
+
 v1.9.15.4
 ---------
 * Retail TOC bump to 12.0.7.
