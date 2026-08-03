@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.15.6
+---------
+* Fixed broken nameplates on WoW Vanilla and TBC Classic.
+
 v1.9.15.5
 ---------
 * Fixed Total RP 3 Extended integration breaking if other third party TRP3 Extended plugins are installed.
