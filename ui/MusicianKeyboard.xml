@@ -332,13 +332,13 @@
 						</Frames>
 					</Frame>
 
-					<Frame name="$parentLower" parentKey="lower" inherits="MusicianLayerTemplate" virtual="true">
+					<Frame name="$parentLower" parentKey="lower" inherits="MusicianLayerTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent" />
 						</Anchors>
 					</Frame>
 
-					<Frame name="$parentUpper" parentKey="upper" inherits="MusicianLayerTemplate" virtual="true">
+					<Frame name="$parentUpper" parentKey="upper" inherits="MusicianLayerTemplate">
 						<Anchors>
 							<Anchor point="TOPRIGHT" relativePoint="TOPRIGHT" relativeTo="$parent" />
 						</Anchors>
@@ -350,4 +350,3 @@
 		</Frames>
 	</Frame>
 </Ui>
-
