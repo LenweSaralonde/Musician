@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.16.0
+---------
+* Updated for Wow Retail 12.1.0.
+
 v1.9.15.6
 ---------
 * Fixed broken nameplates on WoW Vanilla and TBC Classic.
