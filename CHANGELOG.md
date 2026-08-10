@@ -3,7 +3,7 @@ Changelog
 
 v1.9.16.0
 ---------
-* Updated for Wow Retail 12.1.0.
+* Updated for WoW Retail 12.1.0.
 
 v1.9.15.6
 ---------
@@ -23,7 +23,7 @@ v1.9.15.3
 
 v1.9.15.2
 ---------
-* Updated for Wow Retail 12.0.7 and MoP Classic 5.5.4.
+* Updated for WoW Retail 12.0.7 and MoP Classic 5.5.4.
 * Disabled automatic channel reordering to prevent tainting issues.
 * Fixed tainting bug with emotes.
 * Fixed broken nameplate note icons after leaving a dungeon.
@@ -47,7 +47,7 @@ v1.9.14.1
 
 v1.9.14.0
 ---------
-* Updated for Wow Retail 12.0.5.
+* Updated for WoW Retail 12.0.5.
 
 v1.9.13.8
 ---------
@@ -61,7 +61,7 @@ v1.9.13.7
 v1.9.13.6
 ---------
 * Updated 3rd party libraries.
-* TOC bump for Wow Retail 12.0.1.
+* TOC bump for WoW Retail 12.0.1.
 
 v1.9.13.5
 ---------
