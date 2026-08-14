@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.16.1
+---------
+* Fixed music not playing if chat timestamps are enabled.
+
 v1.9.16.0
 ---------
 * Updated for WoW Retail 12.1.0.
