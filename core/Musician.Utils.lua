@@ -12,6 +12,7 @@ local FULL_PROMO_EMOTE_COOLDOWN = 10 * 60 -- Cooldown in seconds for the full pr
 
 local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetadata
 local ChatFrame_OnEvent = ChatFrameMixin and ChatFrameMixin.OnEvent or ChatFrame_OnEvent
+local BetterDate = TimeUtil and TimeUtil.BetterDate or BetterDate
 
 local isGameMusicMuted = false
 local fullPromoEmoteLastSeen

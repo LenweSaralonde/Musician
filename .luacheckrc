@@ -534,6 +534,12 @@ stds.wow = {
 			}
 		},
 
+		TimeUtil = {
+			fields = {
+				"BetterDate"
+			}
+		},
+
 		"SetBasicMessageDialogText",
 		"debugprofilestop",
 		"hooksecurefunc",
