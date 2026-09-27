@@ -79,7 +79,7 @@ function Musician.Registry.Init()
 			if canaccessvalue(self) and self and canaccessvalue(self.GetUnit) and self.GetUnit then
 				local getUnitIsSuccess, unitType = pcall(function() return select(2, self:GetUnit()) end)
 				if getUnitIsSuccess and canaccessvalue(unitType) and UnitIsPlayer(unitType) then
-					local unitName = Musician.Utils.GetUnitName(unitType, true)
+					local unitName = Musician.Utils.GetUnitName(unitType)
 					if unitName then
 						local player = Musician.Utils.NormalizePlayerName(unitName)
 						Musician.Registry.UpdateTooltipInfo(self, player)
@@ -121,7 +121,7 @@ function Musician.Registry.Init()
 			return
 		end
 
-		local unitName = Musician.Utils.GetUnitName("mouseover", true)
+		local unitName = Musician.Utils.GetUnitName("mouseover")
 		if not unitName then return end
 
 		local player = Musician.Utils.NormalizePlayerName(unitName)
@@ -506,7 +506,7 @@ function Musician.Registry.UpdatePlayerTooltip(player)
 	local getUnitIsSuccess, unitType = pcall(function() return select(2, GameTooltip:GetUnit()) end)
 	if not getUnitIsSuccess or not canaccessvalue(unitType) or not UnitIsPlayer(unitType) then return end
 
-	local unitName = Musician.Utils.GetUnitName(unitType, true)
+	local unitName = Musician.Utils.GetUnitName(unitType)
 	if not unitName then return end
 
 	local tooltipPlayer = Musician.Utils.NormalizePlayerName(unitName)
@@ -518,7 +518,7 @@ end
 --- Send a Hello to the channel
 --
 function Musician.Registry.SendHello()
-	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+	if Musician.Comm.UseCommChannel() then
 		if Musician.Comm.GetChannel() ~= nil then
 			debugComm(true, Musician.Registry.event.hello, Musician.Comm.GetChannel())
 			Musician.Registry:SendCommMessage(Musician.Registry.event.hello, Musician.Registry.GetVersionString(), 'CHANNEL',
@@ -696,7 +696,7 @@ function Musician.Registry.NotifyNewVersion(otherVersion)
 			msg = string.gsub(msg, '{version}', Musician.Utils.Highlight(theirVersion))
 
 			-- Display message with fanfare sound
-			if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+			if Musician.Utils.IsMainlineWoW() then
 				PlaySound(67788, 'Master')
 			else
 				PlaySoundFile("Interface\\AddOns\\Musician\\ui\\sound\\fx_flute_mylunesmelody_short.ogg")

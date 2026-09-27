@@ -21,7 +21,7 @@ local NOTES_TEXTURE_RACE = {
 	VoidElf = 1664883,       -- "spells\\t_vfx_note_void.blp",
 }
 
-if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then
+if not Musician.Utils.IsMainlineWoW() then
 	NOTES_TEXTURE = "Interface\\AddOns\\Musician\\ui\\textures\\t_vfx_note.blp"
 end
 
@@ -469,7 +469,7 @@ function Musician.NamePlates.OnNamePlateAdded(event, unitToken)
 	Musician.NamePlates.DetachNamePlate(namePlate)
 
 	-- Make sure player name is accessible
-	local unitName = Musician.Utils.GetUnitName(unitToken, true)
+	local unitName = Musician.Utils.GetUnitName(unitToken)
 	if not unitName then return end
 
 	-- May return "Unknown" on first attempt: try again later.
@@ -588,7 +588,7 @@ function Musician.NamePlates.AddNoteIcon(namePlate, textElement, append)
 		return
 	end
 
-	local unitName = unitToken and Musician.Utils.GetUnitName(unitToken, true)
+	local unitName = unitToken and Musician.Utils.GetUnitName(unitToken)
 	if not canaccessvalue(textElement:GetText()) or not unitName then
 		return
 	end
@@ -727,7 +727,7 @@ function Musician.NamePlates.CreatePlayerAnimatedNotesFrame()
 	playerAnimatedNotesFrame:SetScale(NOTES_ANIMATION_SCALE)
 
 	-- Set data
-	playerAnimatedNotesFrame.player = Musician.Utils.NormalizePlayerName(UnitName("player"))
+	playerAnimatedNotesFrame.player = Musician.Utils.NormalizePlayerName(Musician.Utils.GetUnitName("player"))
 	playerAnimatedNotesFrame.songId = nil
 	playerAnimatedNotesFrame.race = select(2, UnitRace("player"))
 	playerAnimatedNotesFrame.notesAddedDuringFrame = {}

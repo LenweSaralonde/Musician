@@ -278,7 +278,7 @@ end
 --
 function Musician.Options.SetupMuteInstrumentToysCheckbox()
 	local checkButton = MusicianOptionsPanelIntegrationMuteInstrumentToys
-	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+	if Musician.Utils.IsMainlineWoW() then
 		local label = string.gsub(Musician.Msg.OPTIONS_MUTE_INSTRUMENT_TOYS_LABEL, '{icons}', '')
 		Musician.Options.SetupCheckbox(checkButton, label)
 

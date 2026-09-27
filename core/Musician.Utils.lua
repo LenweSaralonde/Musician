@@ -54,7 +54,7 @@ end
 -- @param msg (string)
 function Musician.Utils.PrintError(msg)
 	DEFAULT_CHAT_FRAME:AddMessage(msg, RED_FONT_COLOR.r, RED_FONT_COLOR.g, RED_FONT_COLOR.b)
-	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+	if Musician.Utils.IsMainlineWoW() then
 		PlaySound(32051)
 	else
 		PlaySoundFile("sound\\interface\\error.ogg")
@@ -65,7 +65,7 @@ end
 -- @param msg (string)
 function Musician.Utils.Error(msg)
 	SetBasicMessageDialogText(msg, true)
-	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+	if Musician.Utils.IsMainlineWoW() then
 		PlaySound(32051)
 	else
 		PlaySoundFile("sound\\interface\\error.ogg")
@@ -580,7 +580,7 @@ end
 --- Mute or unmute music from instrument toys (Retail only)
 -- @param isMuted (boolean)
 function Musician.Utils.SetInstrumentToysMuted(isMuted)
-	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+	if Musician.Utils.IsMainlineWoW() then
 		local muteFunc = isMuted and MuteSoundFile or UnmuteSoundFile
 		for _, item in pairs(Musician.InstrumentToys) do
 			for _, file in pairs(item.soundFiles) do
@@ -756,6 +756,15 @@ function Musician.Utils.NormalizePlayerName(playerName)
 		return tonumber(playerName)
 	end
 
+	-- Space in the name (Forever)
+	if string.find(playerName, ' ') ~= nil then
+		if string.find(playerName, '-') ~= nil then
+			playerName = string.split('-', playerName)
+		end
+		local firstName, lastName = string.split(' ', playerName)
+		return firstName .. '-' .. lastName
+	end
+
 	-- Append missing realm name
 	if string.find(playerName, '-') == nil then
 		return playerName .. '-' .. Musician.Utils.GetNormalizedRealmName()
@@ -809,7 +818,7 @@ end
 -- @return isMyself (boolean)
 function Musician.Utils.PlayerIsMyself(playerName)
 	return playerName ~= nil and
-		Musician.Utils.NormalizePlayerName(playerName) == Musician.Utils.NormalizePlayerName(UnitName("player"))
+		Musician.Utils.NormalizePlayerName(playerName) == Musician.Utils.NormalizePlayerName(Musician.Utils.GetUnitName("player"))
 end
 
 --- Return true if the provided player name is on the same realm or connected realm as me
@@ -819,7 +828,7 @@ function Musician.Utils.PlayerIsOnSameRealm(playerName)
 	local playerRealm = Musician.Utils.PlayerRealm(playerName)
 
 	-- Is on the same realm
-	if playerRealm == Musician.Utils.PlayerRealm(UnitName("player")) then
+	if playerRealm == Musician.Utils.PlayerRealm(Musician.Utils.GetUnitName("player")) then
 		return true
 	end
 
@@ -835,11 +844,10 @@ end
 
 --- Safely gets unit name. Returns nil in case of failure.
 -- @param unit (string)
--- @param showServerName (string)
 -- @return unitName (string)
-function Musician.Utils.GetUnitName(unit, showServerName)
+function Musician.Utils.GetUnitName(unit)
 	local isGetUnitNameSuccess, unitName = pcall(function()
-		return GetUnitName(unit, showServerName)
+		return GetUnitName(unit, true)
 	end)
 	return isGetUnitNameSuccess and canaccessvalue(unitName) and unitName or nil
 end
@@ -1114,6 +1122,12 @@ function Musician.Utils.FlipTable(orig)
 		flipped[value] = key
 	end
 	return flipped
+end
+
+--- Indicates if running mainline WoW
+-- @return isMainlineWoW (boolean)
+function Musician.Utils.IsMainlineWoW()
+	return WOW_PROJECT_ID == WOW_PROJECT_MAINLINE and LE_EXPANSION_LEVEL_CURRENT > 0
 end
 
 --- Return operating system name
