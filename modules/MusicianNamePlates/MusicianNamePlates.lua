@@ -405,18 +405,8 @@ function Musician.NamePlates.UpdateNamePlate(namePlate)
 				local isInCombat = UnitAffectingCombat(unitToken)
 
 				-- Determine if the Blizzard unit frame should be displayed
-				local shouldDisplayBlizzardUnitFrame
-				if LE_EXPANSION_LEVEL_CURRENT >= 11 then
-					-- Midnight
-					shouldDisplayBlizzardUnitFrame = not GetCVarBool("nameplateShowOnlyNames") and
-						(not Musician_Settings.hideNamePlateBars or isInCombat)
-				else
-					-- Old school
-					local health = UnitHealth(unitToken)
-					local healthMax = UnitHealthMax(unitToken)
-					shouldDisplayBlizzardUnitFrame = not GetCVarBool("nameplateShowOnlyNames") and
-						(not Musician_Settings.hideNamePlateBars or isInCombat or health < healthMax)
-				end
+				local shouldDisplayBlizzardUnitFrame = not GetCVarBool("nameplateShowOnlyNames") and
+					(not Musician_Settings.hideNamePlateBars or isInCombat)
 
 				-- Set Blizzard unit frame visibility
 				if shouldDisplayBlizzardUnitFrame ~= unitFrame:IsVisible() then
