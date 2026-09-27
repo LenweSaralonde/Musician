@@ -756,12 +756,10 @@ function Musician.Utils.NormalizePlayerName(playerName)
 		return tonumber(playerName)
 	end
 
-	-- Space in the name (Forever)
-	if string.find(playerName, ' ') ~= nil then
-		if string.find(playerName, '-') ~= nil then
-			playerName = string.split('-', playerName)
-		end
-		local firstName, lastName = string.split(' ', playerName)
+	-- Space in the name (Forever): "Firstname Lastname[-Realm name]" => "Firstname-Lastname"
+	local name = string.match(playerName, '^[^%-]+')
+	local firstName, lastName = string.match(name or '', '^([^ ]+) ([^ ]+)$')
+	if firstName ~= nil then
 		return firstName .. '-' .. lastName
 	end
 
