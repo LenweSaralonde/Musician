@@ -277,7 +277,7 @@
 	<td class="summary">Get the recommended total sound cache size.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Musician.Utils.GetUnitName">Musician.Utils.GetUnitName (unit, showServerName)</a></td>
+	<td class="name" nowrap><a href="#Musician.Utils.GetUnitName">Musician.Utils.GetUnitName (unit)</a></td>
 	<td class="summary">Safely gets unit name.</td>
 	</tr>
 	<tr>
@@ -303,6 +303,10 @@
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.IsBattleNetID">Musician.Utils.IsBattleNetID (playerName)</a></td>
 	<td class="summary">Return true when the provided player name is a Battle.net account ID or Battle.net game account ID.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.IsMainlineWoW">Musician.Utils.IsMainlineWoW ()</a></td>
+	<td class="summary">Indicates if running mainline WoW</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.MuteGameMusic">Musician.Utils.MuteGameMusic (force)</a></td>
@@ -1401,7 +1405,7 @@
 </dd>
     <dt>
     <a name = "Musician.Utils.GetUnitName"></a>
-    <strong>Musician.Utils.GetUnitName (unit, showServerName)</strong>
+    <strong>Musician.Utils.GetUnitName (unit)</strong>
     </dt>
     <dd>
     Safely gets unit name.  Returns nil in case of failure.
@@ -1410,9 +1414,6 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">unit</span>
-         (string)
-        </li>
-        <li><span class="parameter">showServerName</span>
          (string)
         </li>
     </ul>
@@ -1570,6 +1571,25 @@
     <ol>
 
         isBattleNetID (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.IsMainlineWoW"></a>
+    <strong>Musician.Utils.IsMainlineWoW ()</strong>
+    </dt>
+    <dd>
+    Indicates if running mainline WoW
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        isMainlineWoW (boolean)
     </ol>
 
 
