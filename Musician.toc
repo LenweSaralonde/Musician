@@ -1,4 +1,4 @@
-## Interface: 120100
+## Interface: 120100, 50504, 20506, 11509
 ## Title: Musician
 ## Author: LenweSaralonde
 ## Version: 1.9.16.1
@@ -49,7 +49,8 @@ locale\locale.xml
 ui\fonts\MusicianFontIcons.xml
 ui\fonts\MusicianFontPercussionIcons.xml
 
-ui\widgets\MusicianWidgets.xml
+ui\widgets\MusicianWidgets.xml [AllowLoadGameType mainline]
+ui\widgets\MusicianWidgets.classic.xml [AllowLoadGameType classic]
 
 ui\MusicianLoadingScreen.xml
 ui\MusicianBasicMessageDialog.xml
@@ -64,4 +65,5 @@ ui\MusicianSongLinkExportFrame.xml
 ui\MusicianSongLinkImportFrame.xml
 ui\MusicianUrlHyperlinkSelector.xml
 
-modules\modules.xml
+modules\modules.xml [AllowLoadGameType mainline]
+modules\modules.classic.xml [AllowLoadGameType classic]
