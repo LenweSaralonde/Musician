@@ -181,6 +181,10 @@ read_globals = {
 	"MSA_DropDownMenu_DisableDropDown",
 	"MSA_CloseDropDownMenus",
 	"MSA_DropDownMenu_OnHide",
+	"MSA_DROPDOWNMENU_BUTTON_HEIGHT",
+	"MSA_DROPDOWNMENU_BORDER_HEIGHT",
+	"MSA_DROPDOWNMENU_OPEN_MENU",
+	"BaseScrollBoxEvents",
 	ChatThrottleLib = {
 		fields = {
 			"SendAddonMessage",
