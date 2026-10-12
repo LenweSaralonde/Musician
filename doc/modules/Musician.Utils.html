@@ -96,7 +96,7 @@
   <li><a href="../modules/MusicianButton.html">MusicianButton</a></li>
   <li><a href="../modules/MusicianCheckButtonTemplates.html">MusicianCheckButtonTemplates</a></li>
   <li><a href="../modules/MusicianDialogTemplate.html">MusicianDialogTemplate</a></li>
-  <li><a href="../modules/MusicianDropDownMenuTooltipTemplate.html">MusicianDropDownMenuTooltipTemplate</a></li>
+  <li><a href="../modules/MusicianDropdownTemplate.html">MusicianDropdownTemplate</a></li>
   <li><a href="../modules/MusicianEditBoxBackdropTemplate.html">MusicianEditBoxBackdropTemplate</a></li>
   <li><a href="../modules/MusicianEditBoxTemplate.html">MusicianEditBoxTemplate</a></li>
   <li><a href="../modules/MusicianIconTextButtonTemplate.html">MusicianIconTextButtonTemplate</a></li>
@@ -146,14 +146,6 @@
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.DisplayEmote">Musician.Utils.DisplayEmote (player, playerGUID, message)</a></td>
 	<td class="summary">Display a faked emote</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Musician.Utils.EasyMenu">Musician.Utils.EasyMenu (menuList, menuFrame, anchor, x, y, displayMode, autoHideDelay)</a></td>
-	<td class="summary">Blizzard's EasyMenu using MSA_DropDownMenu</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Musician.Utils.EasyMenu_Initialize">Musician.Utils.EasyMenu_Initialize (frame, level, menuList)</a></td>
-	<td class="summary">Blizzard's EasyMenu_Initialize using MSA_DropDownMenu</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.Ellipsis">Musician.Utils.Ellipsis (text, maxBytes)</a></td>
@@ -218,10 +210,6 @@
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.GetCurrentAudioSettings">Musician.Utils.GetCurrentAudioSettings ()</a></td>
 	<td class="summary">Get the current audio settings.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Musician.Utils.GetDropDownList">Musician.Utils.GetDropDownList (level)</a></td>
-	<td class="summary">Returns the MSA dropdown list frame based on the level</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.GetFullPlayerName">Musician.Utils.GetFullPlayerName (playerOrGameAccountID)</a></td>
@@ -319,6 +307,10 @@
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.NormalizeSongName">Musician.Utils.NormalizeSongName (songName)</a></td>
 	<td class="summary">Return the normalized song name</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.OpenContextMenu">Musician.Utils.OpenContextMenu (menuList[, owner])</a></td>
+	<td class="summary">Open a context menu at the cursor position</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.OverrideNextFullPromoEmote">Musician.Utils.OverrideNextFullPromoEmote ()</a></td>
@@ -597,70 +589,6 @@
         </li>
         <li><span class="parameter">message</span>
          (string)
-        </li>
-    </ul>
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Musician.Utils.EasyMenu"></a>
-    <strong>Musician.Utils.EasyMenu (menuList, menuFrame, anchor, x, y, displayMode, autoHideDelay)</strong>
-    </dt>
-    <dd>
-    Blizzard's EasyMenu using MSA_DropDownMenu
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">menuList</span>
-
-        </li>
-        <li><span class="parameter">menuFrame</span>
-
-        </li>
-        <li><span class="parameter">anchor</span>
-
-        </li>
-        <li><span class="parameter">x</span>
-
-        </li>
-        <li><span class="parameter">y</span>
-
-        </li>
-        <li><span class="parameter">displayMode</span>
-
-        </li>
-        <li><span class="parameter">autoHideDelay</span>
-
-        </li>
-    </ul>
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Musician.Utils.EasyMenu_Initialize"></a>
-    <strong>Musician.Utils.EasyMenu_Initialize (frame, level, menuList)</strong>
-    </dt>
-    <dd>
-    Blizzard's EasyMenu_Initialize using MSA_DropDownMenu
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">frame</span>
-
-        </li>
-        <li><span class="parameter">level</span>
-
-        </li>
-        <li><span class="parameter">menuList</span>
-
         </li>
     </ul>
 
@@ -1077,31 +1005,6 @@
     <ol>
 
         audioSettings (table)
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Musician.Utils.GetDropDownList"></a>
-    <strong>Musician.Utils.GetDropDownList (level)</strong>
-    </dt>
-    <dd>
-    Returns the MSA dropdown list frame based on the level
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">level</span>
-         (int)
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        dropDownList (Frame)
     </ol>
 
 
@@ -1661,6 +1564,30 @@
 
         normalizedSongName (string)
     </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.OpenContextMenu"></a>
+    <strong>Musician.Utils.OpenContextMenu (menuList[, owner])</strong>
+    </dt>
+    <dd>
+    Open a context menu at the cursor position
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">menuList</span>
+         (table) Elements, as in Blizzard's former EasyMenu: { text, isTitle, func, arg1, arg2, disabled, menuList }
+        </li>
+        <li><span class="parameter">owner</span>
+         (Region)
+         (<em>optional</em>)
+        </li>
+    </ul>
+
 
 
 
