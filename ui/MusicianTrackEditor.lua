@@ -53,6 +53,9 @@ function Musician.TrackEditor.Init()
 	MusicianTrackEditorHeaderAccent:SetText(Musician.Msg.HEADER_ACCENT)
 	MusicianTrackEditorHeaderTranspose:SetText(Musician.Msg.HEADER_OCTAVE)
 	MusicianTrackEditorHeaderInstrument:SetText(Musician.Msg.HEADER_INSTRUMENT)
+	if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE and WOW_PROJECT_ID ~= WOW_PROJECT_CAMELOT then
+		MusicianTrackEditorHeaderAccent:SetWidth(28)
+	end
 
 	-- Resize button
 	local resizeButton = MusicianTrackEditorResizeButton
