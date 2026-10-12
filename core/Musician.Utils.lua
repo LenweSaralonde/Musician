@@ -751,16 +751,19 @@ end
 -- @param playerName (string|number)
 -- @return normalizedPlayerName (string|number)
 function Musician.Utils.NormalizePlayerName(playerName)
+	playerName = strtrim(playerName)
+
 	-- Battle.net ID
 	if Musician.Utils.IsBattleNetID(playerName) then
 		return tonumber(playerName)
 	end
 
-	-- Space in the name (Forever): "Firstname Lastname[-Realm name]" => "Firstname-Lastname"
-	local name = string.match(playerName, '^[^%-]+')
-	local firstName, lastName = string.match(name or '', '^([^ ]+) ([^ ]+)$')
-	if firstName ~= nil then
-		return firstName .. '-' .. lastName
+	-- WoW Forever: "Firstname Lastname[-Realm name]" => "Firstname-Lastname"
+	if WOW_PROJECT_ID == WOW_PROJECT_CAMELOT then
+		local firstName, lastName = string.match(playerName, '^([^ %-]+)[ %-]([^ %-]+)$')
+		if firstName ~= nil then
+			return firstName .. '-' .. lastName
+		end
 	end
 
 	-- Append missing realm name

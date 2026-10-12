@@ -166,7 +166,7 @@ function Musician.Registry.Init()
 		end
 
 		-- Add the connected players to the registry
-		for player in string.gmatch(players, "([^, *]+)") do
+		for player in string.gmatch(players, "([^,*]+)") do
 			player = Musician.Utils.NormalizePlayerName(player)
 			Musician.Registry.RegisterPlayer(player)
 		end
