@@ -115,14 +115,12 @@
 		</Layers>
 
 		<Frames>
-			<Frame name="$parentInstrument" inherits="MusicianInstrumentDropdownTemplate">
+			<DropdownButton name="$parentInstrument" inherits="MusicianInstrumentDropdownTemplate">
+				<Size x="168" y="25" />
 				<Anchors>
-					<Anchor point="TOPLEFT" x="-18" relativePoint="BOTTOMLEFT" relativeTo="$parentLayerName" />
+					<Anchor point="TOPLEFT" x="0" y="-3" relativePoint="BOTTOMLEFT" relativeTo="$parentLayerName" />
 				</Anchors>
-				<Scripts>
-					<OnLoad inherit="prepend" function="MusicianLayerTemplateInstrument_OnLoad" />
-				</Scripts>
-			</Frame>
+			</DropdownButton>
 
 			<Button name="$parentShiftRight" parentKey="shiftRight" inherits="MusicianKeyboardSquareButtonTemplate">
 				<Anchors>
@@ -156,7 +154,7 @@
 
 			<CheckButton name="$parentPowerChords" parentKey="powerChordsCheckbox" inherits="MusicianSmallCheckButtonTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" x="16" y="0" relativeTo="$parentInstrument" relativePoint="BOTTOMLEFT" />
+					<Anchor point="TOPLEFT" x="0" y="-6" relativeTo="$parentInstrument" relativePoint="BOTTOMLEFT" />
 				</Anchors>
 				<Scripts>
 					<OnLoad function="MusicianLayerTemplateInstrumentPowerChords_OnLoad" />
@@ -318,17 +316,17 @@
 						</Layers>
 
 						<Frames>
-							<Frame name="$parentLayoutDropdown" parentKey="layoutDropdown" inherits="MusicianDropDownMenuTooltipTemplate">
+							<DropdownButton name="$parentLayoutDropdown" parentKey="layoutDropdown" inherits="MusicianDropdownTemplate">
 								<Anchors>
-									<Anchor point="TOPLEFT" x="-18" relativePoint="BOTTOMLEFT" relativeTo="$parentTitle" />
+									<Anchor point="TOPLEFT" x="0" y="-3" relativePoint="BOTTOMLEFT" relativeTo="$parentTitle" />
 								</Anchors>
-							</Frame>
+							</DropdownButton>
 
-							<Frame name="$parentBaseKeyDropdown" parentKey="baseKeyDropdown" inherits="MusicianDropDownMenuTooltipTemplate">
+							<DropdownButton name="$parentBaseKeyDropdown" parentKey="baseKeyDropdown" inherits="MusicianDropdownTemplate">
 								<Anchors>
-									<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentLayoutDropdown" x="-32" />
+									<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentLayoutDropdown" x="2" />
 								</Anchors>
-							</Frame>
+							</DropdownButton>
 						</Frames>
 					</Frame>
 

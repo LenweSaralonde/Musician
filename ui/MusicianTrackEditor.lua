@@ -394,7 +394,7 @@ function Musician.TrackEditor.CreateTrackWidget(trackIndex)
 end
 
 --- Init track transpose dropdown
--- @param dropdown (MSA_DropDownMenu)
+-- @param dropdown (DropdownButton)
 -- @param trackIndex (number)
 function Musician.TrackEditor.InitTransposeDropdown(dropdown, trackIndex)
 
@@ -417,31 +417,23 @@ function Musician.TrackEditor.InitTransposeDropdown(dropdown, trackIndex)
 	dropdown.UpdateValue = function(value)
 		dropdown.index = 3 - floor(value / 12)
 		dropdown.value = value
-		MSA_DropDownMenu_SetText(dropdown, transposeValues[dropdown.index])
+		dropdown:OverrideText(transposeValues[dropdown.index])
 	end
 
-	dropdown.OnClick = function(self, arg1)
-		dropdown.SetIndex(arg1)
+	local isSelected = function(index)
+		return dropdown.index == index
 	end
 
-	dropdown.GetItems = function(frame)
-		local info = MSA_DropDownMenu_CreateInfo()
-		info.func = dropdown.OnClick
-
+	dropdown:SetupMenu(function(_, rootDescription)
 		for index, label in pairs(transposeValues) do
-			info.text = label
-			info.arg1 = index
-			info.checked = dropdown.index == index
-			MSA_DropDownMenu_AddButton(info)
+			rootDescription:CreateRadio(label, isSelected, dropdown.SetIndex, index)
 		end
-	end
-
-	MSA_DropDownMenu_Initialize(dropdown, dropdown.GetItems)
+	end)
 	dropdown.SetValue(Musician.sourceSong.tracks[trackIndex].transpose)
 end
 
 --- Init track instrument dropdown
--- @param dropdown (MSA_DropDownMenu)
+-- @param dropdown (DropdownButton)
 -- @param trackIndex (number)
 function Musician.TrackEditor.InitInstrumentDropdown(dropdown, trackIndex)
 	dropdown.trackIndex = trackIndex
@@ -646,6 +638,6 @@ end
 --- Track template OnLoad
 --
 function MusicianTrackTemplate_OnLoad(self)
-	MSA_DropDownMenu_SetWidth(self.transposeDropdown, 40)
+	self.transposeDropdown:SetWidth(58)
 	Musician.EnableHyperlinks(self)
 end

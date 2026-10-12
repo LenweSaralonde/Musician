@@ -1139,34 +1139,38 @@ function Musician.Utils.GetOs()
 		IsLinuxClient() and Musician.OS_LINUX
 end
 
---- Blizzard's EasyMenu using MSA_DropDownMenu
---
-function Musician.Utils.EasyMenu(menuList, menuFrame, anchor, x, y, displayMode, autoHideDelay)
-	if displayMode == "MENU" then
-		menuFrame.displayMode = displayMode
-	end
-	MSA_DropDownMenu_Initialize(menuFrame, Musician.Utils.EasyMenu_Initialize, displayMode, nil, menuList)
-	MSA_ToggleDropDownMenu(1, nil, menuFrame, anchor, x, y, menuList, nil, autoHideDelay)
-end
-
---- Blizzard's EasyMenu_Initialize using MSA_DropDownMenu
---
-function Musician.Utils.EasyMenu_Initialize(frame, level, menuList)
-	for index = 1, #menuList do
-		local value = menuList[index]
-		if (value.text) then
-			value.index = index
-			MSA_DropDownMenu_AddButton(value, level)
+--- Add menu elements to a menu description
+-- @param description (table) Root menu or submenu description
+-- @param menuList (table) Elements, as in Blizzard's former EasyMenu: { text, isTitle, func, arg1, arg2, disabled, menuList }
+local function populateMenuDescription(description, menuList)
+	for _, info in ipairs(menuList) do
+		if info.text then
+			if info.isTitle then
+				description:CreateTitle(info.text)
+			else
+				local button = description:CreateButton(info.text, function()
+					if info.func then
+						info.func(nil, info.arg1, info.arg2)
+					end
+				end)
+				if info.disabled then
+					button:SetEnabled(false)
+				end
+				if info.menuList then
+					populateMenuDescription(button, info.menuList)
+				end
+			end
 		end
 	end
 end
 
---- Returns the MSA dropdown list frame based on the level
--- @param level (int)
--- @return dropDownList (Frame)
-function Musician.Utils.GetDropDownList(level)
-	local _, msaVersion = LibStub:GetLibrary("MSA-DropDownMenu-1.0")
-	return _G['MSA' .. msaVersion .. '_DropDownList' .. level] or _G['MSA_DropDownList' .. level]
+--- Open a context menu at the cursor position
+-- @param menuList (table) Elements, as in Blizzard's former EasyMenu: { text, isTitle, func, arg1, arg2, disabled, menuList }
+-- @param[opt] owner (Region)
+function Musician.Utils.OpenContextMenu(menuList, owner)
+	MenuUtil.CreateContextMenu(owner, function(_, rootDescription)
+		populateMenuDescription(rootDescription, menuList)
+	end)
 end
 
 --- Set text to a FontString element ensuring the visual text size is respected

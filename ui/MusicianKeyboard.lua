@@ -467,45 +467,35 @@ local function initLayoutDropdown()
 
 	local dropdown = MusicianKeyboardControlsMainLayoutDropdown
 
-	MSA_DropDownMenu_Initialize(dropdown, function(self, level, menuList)
-		local info = MSA_DropDownMenu_CreateInfo()
-		if (level or 1) == 1 then
-			for _, row in pairs(menu) do
-				info.text = row.text
-				info.isTitle = row.value and row.value.scale == nil
-				info.notCheckable = false
-				info.hasArrow = row.menuList ~= nil
-				info.arg1 = row.value and row.value.index
-				info.func = row.value and self.SetValue
-				info.menuList = row.menuList
-				info.checked = row.value and row.value.index == Musician.Keyboard.config.layout
-				MSA_DropDownMenu_AddButton(info)
-			end
-		else
-			info.func = self.SetValue
-			for _, row in pairs(menuList) do
-				info.text = row.text
-				info.isTitle = row.value.scale == nil
-				info.notCheckable = info.isTitle
-				info.disabled = info.isTitle
-				info.hasArrow = false
-				info.arg1 = row.value and row.value.index
-				info.checked = row.value and row.value.index == Musician.Keyboard.config.layout
-				MSA_DropDownMenu_AddButton(info, level)
-			end
-		end
-	end)
-
-	function dropdown:SetValue(layoutIndex)
-		Musician.Keyboard.SetLayout(layoutIndex)
-		MSA_CloseDropDownMenus()
+	local isSelected = function(layoutIndex)
+		return layoutIndex == Musician.Keyboard.config.layout
 	end
 
-	Musician.Utils.GetDropDownList(1):SetClampedToScreen(true)
-	Musician.Utils.GetDropDownList(2):SetClampedToScreen(true)
+	local setSelected = function(layoutIndex)
+		Musician.Keyboard.SetLayout(layoutIndex)
+	end
+
+	--- Add layout rows to a menu description
+	-- @param description (table)
+	-- @param rows (table)
+	local function addRows(description, rows)
+		for _, row in pairs(rows) do
+			if row.menuList then
+				addRows(description:CreateButton(row.text), row.menuList)
+			elseif row.value.scale == nil then
+				description:CreateTitle(row.text)
+			else
+				description:CreateRadio(row.text, isSelected, setSelected, row.value.index)
+			end
+		end
+	end
+
+	dropdown:SetupMenu(function(_, rootDescription)
+		addRows(rootDescription, menu)
+	end)
 
 	local layout = layouts[Musician.Keyboard.config.layout]
-	MSA_DropDownMenu_SetText(dropdown, Musician.Msg.KEYBOARD_LAYOUTS[layout.name] or layout.name)
+	dropdown:OverrideText(Musician.Msg.KEYBOARD_LAYOUTS[layout.name] or layout.name)
 end
 
 --- Initialize base key dropdown
@@ -513,26 +503,21 @@ end
 local function initBaseKeyDropdown()
 	local dropdown = MusicianKeyboardControlsMainBaseKeyDropdown
 
-	MSA_DropDownMenu_Initialize(dropdown, function(self)
-		local info = MSA_DropDownMenu_CreateInfo()
-		info.func = self.SetValue
+	local isSelected = function(key)
+		return key == Musician.Keyboard.config.baseKey
+	end
 
+	local setSelected = function(key)
+		Musician.Keyboard.SetBaseKey(key)
+	end
+
+	dropdown:SetupMenu(function(_, rootDescription)
 		for key = 0, 11, 1 do
-			local name = Musician.NOTE_NAMES[key]
-			info.text = name
-			info.arg1 = key
-			info.checked = key == Musician.Keyboard.config.baseKey
-			MSA_DropDownMenu_AddButton(info)
+			rootDescription:CreateRadio(Musician.NOTE_NAMES[key], isSelected, setSelected, key)
 		end
 	end)
 
-	function dropdown:SetValue(key)
-		Musician.Keyboard.SetBaseKey(key)
-		MSA_CloseDropDownMenus()
-	end
-
-	Musician.Utils.GetDropDownList(1):SetClampedToScreen(true)
-	MSA_DropDownMenu_SetText(dropdown, Musician.NOTE_NAMES[Musician.Keyboard.config.baseKey])
+	dropdown:OverrideText(Musician.NOTE_NAMES[Musician.Keyboard.config.baseKey])
 end
 
 --- Init controls for a layer
@@ -966,8 +951,7 @@ function Musician.Keyboard.SetLayout(layoutIndex, doKeyboardRefresh)
 	Musician.Keyboard.SetKeyShift(LAYER.LOWER, 0, false)
 	loadedProgram = nil
 
-	MSA_DropDownMenu_SetText(MusicianKeyboardControlsMainLayoutDropdown,
-		Musician.Msg.KEYBOARD_LAYOUTS[layout.name] or layout.name)
+	MusicianKeyboardControlsMainLayoutDropdown:OverrideText(Musician.Msg.KEYBOARD_LAYOUTS[layout.name] or layout.name)
 
 	modifiedLayers = {
 		[LAYER.UPPER] = true,
@@ -990,7 +974,7 @@ function Musician.Keyboard.SetBaseKey(key, doKeyboardRefresh)
 	Musician.Keyboard.config.baseKey = key
 	loadedProgram = nil
 
-	MSA_DropDownMenu_SetText(MusicianKeyboardControlsMainBaseKeyDropdown, Musician.NOTE_NAMES[key])
+	MusicianKeyboardControlsMainBaseKeyDropdown:OverrideText(Musician.NOTE_NAMES[key])
 
 	modifiedLayers = {
 		[LAYER.UPPER] = true,
@@ -1514,11 +1498,11 @@ function Musician.Keyboard.ConfigureDemo(doKeyboardRefresh)
 	for layer, layerName in pairs(LayerNames) do
 		local layerVarName = "MusicianKeyboardControls" .. layerName
 		if config.demoTrackMapping and config.demoTrackMapping[layer] then
-			MSA_DropDownMenu_DisableDropDown(_G[layerVarName .. "Instrument"])
+			_G[layerVarName .. "Instrument"]:Disable()
 			_G[layerVarName .. "PowerChords"]:Disable()
 			Musician.Keyboard.SetPowerChords(layer, false, doKeyboardRefresh)
 		else
-			MSA_DropDownMenu_EnableDropDown(_G[layerVarName .. "Instrument"])
+			_G[layerVarName .. "Instrument"]:Enable()
 			_G[layerVarName .. "PowerChords"]:Enable()
 		end
 	end
@@ -1632,12 +1616,6 @@ function MusicianLayerTemplate_OnLoad(self)
 	self.powerChordsCheckbox:SetHitRectInsets(0, -powerChordsLabelWidth, 0, 0)
 end
 
---- Layer template instrument OnLoad
---
-function MusicianLayerTemplateInstrument_OnLoad(self)
-	MSA_DropDownMenu_SetWidth(self, 150)
-end
-
 --- Layer template instrument power chords OnLoad
 --
 function MusicianLayerTemplateInstrumentPowerChords_OnLoad(self)
@@ -1736,8 +1714,8 @@ function MusicianKeyboardMixin:OnLoad()
 
 	-- Keyboard mode and key
 	self.controls.main.title:SetText(Musician.Msg.KEYBOARD_LAYOUT)
-	MSA_DropDownMenu_SetWidth(self.controls.main.layoutDropdown, 130)
-	MSA_DropDownMenu_SetWidth(self.controls.main.baseKeyDropdown, 40)
+	self.controls.main.layoutDropdown:SetWidth(148)
+	self.controls.main.baseKeyDropdown:SetWidth(58)
 
 	-- Layer names
 	self.controls.lower.layerName:SetText(Musician.Msg.LAYERS[Musician.KEYBOARD_LAYER.LOWER])

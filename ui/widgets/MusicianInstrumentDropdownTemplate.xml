@@ -3,9 +3,10 @@
 	xmlns="http://www.blizzard.com/wow/ui/">
 	<!-- Instrument dropdown -->
 	<Script file="MusicianInstrumentDropdownTemplate.lua" />
-	<Frame name="MusicianInstrumentDropdownTemplate" inherits="MusicianDropDownMenuTooltipTemplate" virtual="true">
+	<DropdownButton name="MusicianInstrumentDropdownTemplate" inherits="MusicianDropdownTemplate" virtual="true">
+		<Size x="133" y="25" />
 		<Scripts>
 			<OnLoad inherit="prepend" function="MusicianInstrumentDropdownTemplate_OnLoad" />
 		</Scripts>
-	</Frame>
+	</DropdownButton>
 </Ui>

@@ -6,8 +6,6 @@ Musician.SongLinkImportFrame = LibStub("AceAddon-3.0"):NewAddon("Musician.SongLi
 local MODULE_NAME = "Musician.SongLinkImportFrame"
 Musician.AddModule(MODULE_NAME)
 
-local gameAccountSelectorFrame
-
 local BOTTOM_FRAME_GAP = 22.5
 
 --- Init
@@ -25,10 +23,6 @@ function Musician.SongLinkImportFrame.Init()
 			msg = string.gsub(msg, '{title}', title)
 			Musician.Utils.Error(msg)
 		end)
-
-	-- Create WoW game account selector menu frame
-	gameAccountSelectorFrame = CreateFrame("Frame", "MusicianSongLinkImportFrame_GameAccountSelector", UIParent,
-		"MusicianDropDownMenuTooltipTemplate")
 end
 
 local function adjustHeight()
@@ -178,7 +172,7 @@ function Musician.SongLinkImportFrame.OnSongLinkClick(event, title, playerName)
 				})
 			end
 
-			Musician.Utils.EasyMenu(menu, gameAccountSelectorFrame, "cursor", 0, 0, "MENU")
+			Musician.Utils.OpenContextMenu(menu)
 		end
 	else
 		-- In-game character

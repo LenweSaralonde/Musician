@@ -55,11 +55,11 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<Frame name="$parentLocale" parentKey="locale" inherits="MusicianDropDownMenuTooltipTemplate">
+			<DropdownButton name="$parentLocale" parentKey="locale" inherits="MusicianDropdownTemplate">
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parentLocaleLabel" relativePoint="RIGHT" x="-10" y="-4" />
+					<Anchor point="LEFT" relativeTo="$parentLocaleLabel" relativePoint="RIGHT" x="7" y="-1" />
 				</Anchors>
-			</Frame>
+			</DropdownButton>
 		</Frames>
 
 		<!-- Item preview (icon) -->

@@ -8,7 +8,6 @@
 	<Include file="lib\AceAddon-3.0\AceAddon-3.0.xml" />
 	<Include file="lib\AceComm-3.0\AceComm-3.0.xml" />
 	<Include file="lib\AceEvent-3.0\AceEvent-3.0.xml" />
-	<Include file="lib\MSA-DropDownMenu-1.0\MSA-DropDownMenu-1.0.xml" />
 	<Include file="lib\LibDeflate\lib.xml" />
 	<Script file="lib\LibRealmInfo\LibRealmInfo.lua" />
 	<Script file="lib\LibCRC32\LibCRC32.lua" />

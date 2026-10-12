@@ -14,7 +14,7 @@
 	<Include file="MusicianBandPlayButtonTemplate.xml" />
 	<Include file="MusicianBandLivePlayButtonTemplate.xml" />
 	<Include file="MusicianEditBoxBackdropTemplate.xml" />
-	<Include file="MusicianDropDownMenuTooltipTemplate.xml" />
+	<Include file="MusicianDropdownTemplate.xml" />
 	<Include file="MusicianInstrumentDropdownTemplate.xml" />
 	<Include file="MusicianImageTemplate.xml" />
 	<Include file="MusicianAnimatedImageTemplate.xml" />

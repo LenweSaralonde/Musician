@@ -189,17 +189,17 @@
 				</Anchors>
 			</CheckButton>
 
-			<Frame name="$parentInstrumentDropdown" parentKey="instrumentDropdown" inherits="MusicianInstrumentDropdownTemplate">
+			<DropdownButton name="$parentInstrumentDropdown" parentKey="instrumentDropdown" inherits="MusicianInstrumentDropdownTemplate">
 				<Anchors>
-					<Anchor point="RIGHT" relativePoint="RIGHT" relativeTo="$parent" x="-12" />
+					<Anchor point="RIGHT" relativePoint="RIGHT" relativeTo="$parent" x="-28" y="2" />
 				</Anchors>
-			</Frame>
+			</DropdownButton>
 
-			<Frame name="$parentTransposeDropdown" parentKey="transposeDropdown" inherits="MusicianDropDownMenuTooltipTemplate">
+			<DropdownButton name="$parentTransposeDropdown" parentKey="transposeDropdown" inherits="MusicianDropdownTemplate">
 				<Anchors>
-					<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentInstrumentDropdown" x="32" />
+					<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentInstrumentDropdown" x="-2" />
 				</Anchors>
-			</Frame>
+			</DropdownButton>
 
 		</Frames>
 
@@ -384,7 +384,7 @@
 				<FontString name="$parentHeaderTrackId" inherits="GameFontNormal" text="#">
 					<Size x="32" />
 					<Anchors>
-						<Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT" x="0" y="8" relativeTo="$parentScrollFrame" />
+						<Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT" x="1" y="8" relativeTo="$parentScrollFrame" />
 					</Anchors>
 				</FontString>
 
@@ -403,14 +403,14 @@
 				</FontString>
 
 				<FontString name="$parentHeaderAccent" inherits="GameFontNormal" text="x2">
-					<Size x="26" />
+					<Size x="38" />
 					<Anchors>
 						<Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" x="0" y="8" relativeTo="$parentScrollFrame" />
 					</Anchors>
 				</FontString>
 
 				<FontString name="$parentHeaderInstrument" inherits="GameFontNormal" text="Instrument">
-					<Size x="135" />
+					<Size x="123" />
 					<Anchors>
 						<Anchor point="RIGHT" relativePoint="LEFT" x="0" relativeTo="$parentHeaderAccent" />
 					</Anchors>
@@ -419,7 +419,7 @@
 				<FontString name="$parentHeaderTranspose" inherits="GameFontNormal" text="Octave">
 					<Size x="74" />
 					<Anchors>
-						<Anchor point="RIGHT" relativePoint="LEFT" x="10" relativeTo="$parentHeaderInstrument" />
+						<Anchor point="RIGHT" relativePoint="LEFT" x="0" relativeTo="$parentHeaderInstrument" />
 					</Anchors>
 				</FontString>
 

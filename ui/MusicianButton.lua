@@ -29,9 +29,6 @@ function MusicianButton.Init()
 	-- Create button
 	icon:Register("Musician", musicianLDB, Musician_CharacterSettings.minimap)
 
-	-- Create menu frame
-	CreateFrame("Frame", "MusicianButton_Menu", UIParent, "MusicianDropDownMenuTooltipTemplate")
-
 	-- Create addon menu info
 	addOnMenuInfo = {
 		notCheckable = true,
@@ -302,7 +299,7 @@ function MusicianButton.OpenMenu()
 		end
 	end
 
-	Musician.Utils.EasyMenu(menu, MusicianButton_Menu, "cursor", 0, 0, "MENU")
+	Musician.Utils.OpenContextMenu(menu)
 end
 
 --- ShowTooltip

@@ -13,7 +13,6 @@ exclude_files = {
 	"lib/LibDeflate",
 	"lib/LibRealmInfo",
 	"lib/LibStub",
-	"lib/MSA-DropDownMenu-1.0",
 }
 
 ignore = {
@@ -170,21 +169,6 @@ read_globals = {
 	-- Libraries
 	"LibStub",
 
-	"MSA_DropDownMenu_Initialize",
-	"MSA_DropDownMenu_SetWidth",
-	"MSA_ToggleDropDownMenu",
-	"MSA_DropDownMenu_AddButton",
-	"MSA_DropDownMenu_SetText",
-	"MSA_DropDownMenu_Create",
-	"MSA_DropDownMenu_CreateInfo",
-	"MSA_DropDownMenu_EnableDropDown",
-	"MSA_DropDownMenu_DisableDropDown",
-	"MSA_CloseDropDownMenus",
-	"MSA_DropDownMenu_OnHide",
-	"MSA_DROPDOWNMENU_BUTTON_HEIGHT",
-	"MSA_DROPDOWNMENU_BORDER_HEIGHT",
-	"MSA_DROPDOWNMENU_OPEN_MENU",
-	"BaseScrollBoxEvents",
 	ChatThrottleLib = {
 		fields = {
 			"SendAddonMessage",
@@ -365,7 +349,6 @@ stds.wow = {
 		"StaticPopupDialogs",
 		"ChatEdit_OnEditFocusLost",
 		"SettingsLayoutMixin",
-		"UnitPopup_ShowMenu",
 	},
 
 	-- Globals that we access.
@@ -608,9 +591,6 @@ stds.wow = {
 		"GetCVar",
 		"GetCVarBool",
 		"SetCVar",
-		"UIDropDownMenu_AddSeparator",
-		"UIDropDownMenu_CreateInfo",
-		"UIDropDownMenu_AddButton",
 		"BNGetNumFriends",
 		"BNGetNumFriendGameAccounts",
 		"BNGetFriendGameAccountInfo",
@@ -797,6 +777,7 @@ stds.wow = {
 		"WorldFrame",
 		"WorldMapFrame",
 		"Minimap",
+		"MenuUtil",
 		"UISpecialFrames",
 		"GameFontNormal",
 		"GameFontDisable",
@@ -810,7 +791,6 @@ stds.wow = {
 		"LE_EXPANSION_LEVEL_CURRENT",
 		"MAX_WOW_CHAT_CHANNELS",
 		"ACTIVE_CHAT_EDIT_BOX",
-		"UIDROPDOWNMENU_MENU_LEVEL",
 		"RED_FONT_COLOR",
 		"ORANGE_FONT_COLOR",
 		"NORMAL_FONT_COLOR",

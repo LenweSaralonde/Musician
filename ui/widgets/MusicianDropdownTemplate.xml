@@ -1,0 +1,12 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.blizzard.com/wow/ui/">
+	<!-- Dropdown with tooltip -->
+	<Script file="MusicianDropdownTemplate.lua" />
+	<DropdownButton name="MusicianDropdownTemplate" inherits="WowStyle1DropdownTemplate" virtual="true">
+		<Size x="120" y="25" />
+		<Scripts>
+			<OnLoad inherit="prepend" function="MusicianDropdownTemplate_OnLoad" />
+		</Scripts>
+	</DropdownButton>
+</Ui>

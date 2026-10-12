@@ -104,25 +104,18 @@ local function initLocaleDropdown()
 			return
 		end
 		dropdown.value = value
-		MSA_DropDownMenu_SetText(dropdown, localeValues[index][2])
+		dropdown:OverrideText(localeValues[index][2])
 	end
 
-	dropdown.OnClick = function(self, arg1)
-		dropdown.SetValue(arg1)
+	local isSelected = function(value)
+		return dropdown.value == value
 	end
 
-	dropdown.GetItems = function(frame)
-		local info = MSA_DropDownMenu_CreateInfo()
-		info.func = dropdown.OnClick
+	dropdown:SetupMenu(function(_, rootDescription)
 		for _, value in pairs(localeValues) do
-			info.arg1 = value[1]
-			info.text = value[2]
-			info.checked = dropdown.value == value[1]
-			MSA_DropDownMenu_AddButton(info)
+			rootDescription:CreateRadio(value[2], isSelected, dropdown.SetValue, value[1])
 		end
-	end
-
-	MSA_DropDownMenu_Initialize(dropdown, dropdown.GetItems)
+	end)
 end
 
 local function setCooldown(infoId, progress)
@@ -199,8 +192,7 @@ function Musician.TRP3E.InitUI()
 				func = Musician.TRP3E.ShowExportFrame
 			},
 		}
-		local menuFrame = CreateFrame("Frame", "MusicianTRPE_ExportMenu", UIParent, "MusicianDropDownMenuTooltipTemplate")
-		Musician.Utils.EasyMenu(menu, menuFrame, "cursor", 0, 0, "MENU")
+		Musician.Utils.OpenContextMenu(menu, linkButton)
 	end)
 
 	-- Initialize item export frame
@@ -352,7 +344,7 @@ function Musician.TRP3E.InitExportFrame()
 
 	-- Locale
 	frame.localeLabel:SetText(Musician.Msg.TRPE_EXPORT_WINDOW_LOCALE)
-	MSA_DropDownMenu_SetWidth(frame.locale, 80)
+	frame.locale:SetWidth(98)
 
 	-- Add to bag checkbox
 	Musician.Options.SetupCheckbox(frame.addToBag, Musician.Msg.TRPE_EXPORT_WINDOW_ADD_TO_BAG)
@@ -445,7 +437,7 @@ function Musician.TRP3E.ShowExportFrame()
 
 		-- Locale
 
-		MSA_DropDownMenu_EnableDropDown(frame.locale)
+		frame.locale:Enable()
 		frame.locale.SetValue(object.MD.LO or Musician.Utils.GetRealmLocale())
 
 		-- Preview (icon select)
@@ -493,7 +485,7 @@ function Musician.TRP3E.ShowExportFrame()
 			exporting = true
 			frame.exportItemButton:Disable()
 			frame.songTitle:Disable()
-			MSA_DropDownMenu_DisableDropDown(frame.locale)
+			frame.locale:Disable()
 			frame.preview:Disable()
 			frame.addToBag:Disable()
 			frame.quantity:Disable()

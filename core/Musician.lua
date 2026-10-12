@@ -713,53 +713,27 @@ function Musician.SetupHooks()
 	-- Player dropdown menus
 	--
 
-	if UnitPopup_ShowMenu then
-		-- Old school way
-		hooksecurefunc("UnitPopup_ShowMenu", function(dropdownMenu, which)
-			if UIDROPDOWNMENU_MENU_LEVEL ~= 1 then return end
-			if
-				which == "PARTY" or which == "PLAYER" or which == "RAID_PLAYER" or which == "FRIEND" or which == "FRIEND_OFFLINE" or
-				which == "TARGET" then
-				local items = Musician.GetPlayerMenuItems(dropdownMenu.unit, dropdownMenu.chatTarget, dropdownMenu.name,
-					dropdownMenu.server)
+	local modifyPlayerMenu = function(_, rootDescription, contextData)
+		local items = Musician.GetPlayerMenuItems(contextData.unit, contextData.chatTarget, contextData.name,
+			contextData.server)
 
-				if #items > 0 then
-					UIDropDownMenu_AddSeparator(1)
-					for _, item in pairs(items) do
-						local info = UIDropDownMenu_CreateInfo()
-						info.text = item.text
-						info.isTitle = item.isTitle
-						info.func = item.func
-						info.notCheckable = true
-						info.value = item.value
-						UIDropDownMenu_AddButton(info)
-					end
-				end
-			end
-		end)
-	else
-		local modifyPlayerMenu = function(_, rootDescription, contextData)
-			local items = Musician.GetPlayerMenuItems(contextData.unit, contextData.chatTarget, contextData.name,
-				contextData.server)
-
-			if #items > 0 then
-				rootDescription:CreateDivider()
-				for _, item in pairs(items) do
-					if item.isTitle then
-						rootDescription:CreateTitle(item.text)
-					else
-						rootDescription:CreateButton(item.text, item.func)
-					end
+		if #items > 0 then
+			rootDescription:CreateDivider()
+			for _, item in pairs(items) do
+				if item.isTitle then
+					rootDescription:CreateTitle(item.text)
+				else
+					rootDescription:CreateButton(item.text, item.func)
 				end
 			end
 		end
-
-		Menu.ModifyMenu("MENU_UNIT_PLAYER", modifyPlayerMenu)
-		Menu.ModifyMenu("MENU_UNIT_FRIEND", modifyPlayerMenu)
-		Menu.ModifyMenu("MENU_UNIT_PARTY", modifyPlayerMenu)
-		Menu.ModifyMenu("MENU_UNIT_RAID_PLAYER", modifyPlayerMenu)
-		Menu.ModifyMenu("MENU_UNIT_ENEMY_PLAYER", modifyPlayerMenu)
 	end
+
+	Menu.ModifyMenu("MENU_UNIT_PLAYER", modifyPlayerMenu)
+	Menu.ModifyMenu("MENU_UNIT_FRIEND", modifyPlayerMenu)
+	Menu.ModifyMenu("MENU_UNIT_PARTY", modifyPlayerMenu)
+	Menu.ModifyMenu("MENU_UNIT_RAID_PLAYER", modifyPlayerMenu)
+	Menu.ModifyMenu("MENU_UNIT_ENEMY_PLAYER", modifyPlayerMenu)
 
 	-- Add muted/unmuted status to player messages when playing
 	--

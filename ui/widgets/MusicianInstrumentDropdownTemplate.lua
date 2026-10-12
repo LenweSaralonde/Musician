@@ -1,11 +1,21 @@
 --- Instrument dropdown template
 -- @module MusicianInstrumentDropdownTemplate
 
---- OnLoad handler
--- @param self (Frame)
-function MusicianInstrumentDropdownTemplate_OnLoad(self)
+--- Return the colored name of the instrument
+-- @param instrumentId (string)
+-- @return instrumentName (string)
+local function getColoredInstrumentName(instrumentId)
+	local instrumentName = Musician.Msg.INSTRUMENT_NAMES[instrumentId]
+	if Musician.INSTRUMENTS[instrumentId].color ~= nil then
+		instrumentName = Musician.Utils.GetColorCode(unpack(Musician.INSTRUMENTS[instrumentId].color)) ..
+			instrumentName .. "|r"
+	end
+	return instrumentName
+end
 
-	MSA_DropDownMenu_SetWidth(self, 115)
+--- OnLoad handler
+-- @param self (DropdownButton)
+function MusicianInstrumentDropdownTemplate_OnLoad(self)
 
 	self.value = nil
 
@@ -13,17 +23,11 @@ function MusicianInstrumentDropdownTemplate_OnLoad(self)
 		local originalMidiId = value
 		local instrumentId = Musician.Sampler.GetInstrumentName(originalMidiId)
 		local midiId = Musician.INSTRUMENTS[instrumentId].midi
-		local instrumentName = Musician.Msg.INSTRUMENT_NAMES[instrumentId]
 		self.value = midiId
 		self.midiId = midiId
 		self.instrumentId = instrumentId
 
-		if Musician.INSTRUMENTS[instrumentId].color ~= nil then
-			instrumentName = Musician.Utils.GetColorCode(unpack(Musician.INSTRUMENTS[instrumentId].color)) ..
-				instrumentName .. "|r"
-		end
-
-		MSA_DropDownMenu_SetText(self, instrumentName)
+		self:OverrideText(getColoredInstrumentName(instrumentId))
 	end
 
 	self.SetValue = function(value)
@@ -34,25 +38,14 @@ function MusicianInstrumentDropdownTemplate_OnLoad(self)
 		end
 	end
 
-	self.OnClick = function(_, value)
-		self.SetValue(value)
+	local isSelected = function(midiId)
+		return self.value == midiId
 	end
 
-	self.GetItems = function()
-		local info = MSA_DropDownMenu_CreateInfo()
-		info.func = self.OnClick
-
+	self.SetupScrollableMenu(function(_, rootDescription)
 		for _, instrumentId in pairs(Musician.INSTRUMENTS_AVAILABLE) do
 			local midiId = Musician.INSTRUMENTS[instrumentId].midi
-			info.text = Musician.Msg.INSTRUMENT_NAMES[instrumentId]
-			info.arg1 = midiId
-			info.checked = self.value == midiId
-			if Musician.INSTRUMENTS[instrumentId].color ~= nil then
-				info.colorCode = Musician.Utils.GetColorCode(unpack(Musician.INSTRUMENTS[instrumentId].color))
-			end
-			MSA_DropDownMenu_AddButton(info)
+			rootDescription:CreateRadio(getColoredInstrumentName(instrumentId), isSelected, self.SetValue, midiId)
 		end
-	end
-
-	MSA_DropDownMenu_Initialize(self, self.GetItems)
+	end)
 end
