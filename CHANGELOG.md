@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.9.17.0
+---------
+* Remade dropdowns using the standard API.
+
 v1.9.16.1
 ---------
 * Fixed music not playing if chat timestamps are enabled.
