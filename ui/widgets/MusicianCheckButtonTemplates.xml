@@ -6,12 +6,7 @@
 
 	<!-- Common check button template -->
 
-	<CheckButton name="MusicianCheckButtonArtTemplate" virtual="true">
-		<NormalTexture file="Interface\Buttons\UI-CheckBox-Up" />
-		<PushedTexture file="Interface\Buttons\UI-CheckBox-Down" />
-		<HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD" />
-		<CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
-		<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled" />
+	<CheckButton name="MusicianCheckButtonArtTemplate" inherits="UICheckButtonArtTemplate" virtual="true">
 		<HitRectInsets>
 			<AbsInset left="0" right="0" top="0" bottom="0" />
 		</HitRectInsets>
@@ -37,7 +32,7 @@
 						<Anchor point="LEFT" relativePoint="RIGHT" x="0" y="1" />
 					</Anchors>
 					<Scripts>
-						<OnLoad function="MusicianCheckButtonTemplate_SetParentKeyAlias" />
+						<OnLoad function="UICheckButtonFontString_SetParentKeyAlias" />
 					</Scripts>
 				</FontString>
 			</Layer>
@@ -57,7 +52,7 @@
 						<Anchor point="LEFT" relativePoint="RIGHT" x="-2" y="0" />
 					</Anchors>
 					<Scripts>
-						<OnLoad function="MusicianCheckButtonTemplate_SetParentKeyAlias" />
+						<OnLoad function="UICheckButtonFontString_SetParentKeyAlias" />
 					</Scripts>
 				</FontString>
 			</Layer>
@@ -77,7 +72,7 @@
 						<Anchor point="LEFT" relativePoint="RIGHT" x="0" y="1" />
 					</Anchors>
 					<Scripts>
-						<OnLoad function="MusicianCheckButtonTemplate_SetParentKeyAlias" />
+						<OnLoad function="UICheckButtonFontString_SetParentKeyAlias" />
 					</Scripts>
 				</FontString>
 			</Layer>

@@ -37,9 +37,3 @@ function MusicianCheckButtonTemplate_OnLeave(self)
 		GameTooltip:Hide()
 	end
 end
-
--- Hack to set an alias for addon backward compatibility.
-function MusicianCheckButtonTemplate_SetParentKeyAlias(fontString)
-	local parent = fontString:GetParent()
-	parent.text = fontString
-end

@@ -352,14 +352,11 @@
 
 			<!-- Resize button -->
 
-			<Button name="$parentResizeButton" parentKey="resizeButton">
+			<Button name="$parentResizeButton" parentKey="resizeButton" inherits="PanelResizeButtonTemplate">
 				<Size x="20" y="20" />
 				<Anchors>
 					<Anchor point="BOTTOMRIGHT" x="3" y="-3" />
 				</Anchors>
-				<NormalTexture file="Interface\ChatFrame\UI-ChatIM-SizeGrabber-Up" />
-				<HighlightTexture file="Interface\ChatFrame\UI-ChatIM-SizeGrabber-Highlight" />
-				<PushedTexture file="Interface\ChatFrame\UI-ChatIM-SizeGrabber-Down" />
 			</Button>
 
 		</Frames>
