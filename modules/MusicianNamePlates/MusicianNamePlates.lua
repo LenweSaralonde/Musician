@@ -427,7 +427,7 @@ function Musician.NamePlates.UpdateNamePlate(namePlate)
 		namePlate.musicianUnitFrame.name:SetFontObject(namePlate.UnitFrame.name:GetFontObject())
 		namePlate.musicianUnitFrame.name:SetFontHeight(namePlate.UnitFrame.name:GetFontHeight())
 		-- On Retail, use the health bar color instead of name text color when text only mode is disabled
-		if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE and not GetCVarBool("nameplateShowOnlyNameForFriendlyPlayerUnits") then
+		if Musician.Utils.IsModernWoW() and not GetCVarBool("nameplateShowOnlyNameForFriendlyPlayerUnits") then
 			namePlate.musicianUnitFrame.name:SetTextColor(namePlate.UnitFrame.healthBar:GetStatusBarColor())
 		else
 			namePlate.musicianUnitFrame.name:SetTextColor(namePlate.UnitFrame.name:GetTextColor())
@@ -768,7 +768,7 @@ end
 --- Indicates whenever the friendly player nameplates are enabled.
 -- @return areVisible (boolean)
 function Musician.NamePlates.AreNamePlatesEnabled()
-	local hasValidMaxDistance = WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE or
+	local hasValidMaxDistance = not Musician.Utils.IsModernWoW() or
 		(tonumber(GetCVar("nameplatePlayerMaxDistance")) or 0) > 0
 	return GetCVarBool("nameplateShowAll") and GetCVarBool(CVAR_nameplateShowFriendlyPlayers) and hasValidMaxDistance
 end

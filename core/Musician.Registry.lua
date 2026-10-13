@@ -697,11 +697,7 @@ function Musician.Registry.NotifyNewVersion(otherVersion)
 			msg = string.gsub(msg, '{version}', Musician.Utils.Highlight(theirVersion))
 
 			-- Display message with fanfare sound
-			if Musician.Utils.IsMainlineWoW() then
-				PlaySound(67788, 'Master')
-			else
-				PlaySoundFile("Interface\\AddOns\\Musician\\ui\\sound\\fx_flute_mylunesmelody_short.ogg")
-			end
+			PlaySoundFile("Interface\\AddOns\\Musician\\ui\\sound\\fx_flute_mylunesmelody_short.ogg")
 
 			Musician.Utils.Print(msg)
 		end

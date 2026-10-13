@@ -29,7 +29,7 @@ local function postLink()
 	ChatEdit_LinkItem(nil, Musician.SongLinks.GetHyperlink(name))
 
 	-- Focus the chat edit box on WoW Classic (it's not done by default)
-	if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then
+	if not Musician.Utils.IsModernWoW() then
 		local activeWindow = ChatEdit_GetActiveWindow()
 		if activeWindow then
 			activeWindow:SetFocus()

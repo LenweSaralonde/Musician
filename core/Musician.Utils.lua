@@ -50,26 +50,28 @@ function Musician.Utils.Debug(module, ...)
 	end
 end
 
+--- Play the error sound
+--
+function Musician.Utils.PlayErrorSound()
+	if Musician.Utils.IsModernWoW() then
+		PlaySound(SOUNDKIT.UI_GARRISON_ARCHITECT_TABLE_BUILDING_PLACEMENT_ERROR)
+	else
+		PlaySoundFile("sound\\interface\\error.ogg")
+	end
+end
+
 --- Display an error message in the console
 -- @param msg (string)
 function Musician.Utils.PrintError(msg)
 	DEFAULT_CHAT_FRAME:AddMessage(msg, RED_FONT_COLOR.r, RED_FONT_COLOR.g, RED_FONT_COLOR.b)
-	if Musician.Utils.IsMainlineWoW() then
-		PlaySound(32051)
-	else
-		PlaySoundFile("sound\\interface\\error.ogg")
-	end
+	Musician.Utils.PlayErrorSound()
 end
 
 --- Display an error message in a popup
 -- @param msg (string)
 function Musician.Utils.Error(msg)
 	SetBasicMessageDialogText(msg, true)
-	if Musician.Utils.IsMainlineWoW() then
-		PlaySound(32051)
-	else
-		PlaySoundFile("sound\\interface\\error.ogg")
-	end
+	Musician.Utils.PlayErrorSound()
 end
 
 --- Display a message in a popup
@@ -606,7 +608,7 @@ end
 --- Get the recommended total sound cache size.
 -- @return cacheSize (number) in MB
 function Musician.Utils.GetSoundCacheSize()
-	local baseSize = (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) and 128 or 64
+	local baseSize = Musician.Utils.IsModernWoW() and 128 or 64
 	return baseSize + Musician.SOUND_CACHE_SIZE
 end
 
