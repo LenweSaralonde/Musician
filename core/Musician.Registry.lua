@@ -579,6 +579,7 @@ end
 function Musician.Registry.RegisterPlayer(player)
 	if not canaccessvalue(player) then return end
 	player = Musician.Utils.NormalizePlayerName(player)
+	if player == "" then return end
 
 	if Musician.Registry.players[player] == nil then
 		Musician.Registry.players[player] = {}

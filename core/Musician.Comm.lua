@@ -85,7 +85,7 @@ end
 --- Indicates whenever the communication channel should be used.
 -- @return (boolean)
 function Musician.Comm.UseCommChannel()
-	return WOW_PROJECT_ID == WOW_PROJECT_MAINLINE or WOW_PROJECT_ID == WOW_PROJECT_CAMELOT
+	return Musician.Utils.IsModernWoW()
 end
 
 --- Set the delay before joining the communication channel.

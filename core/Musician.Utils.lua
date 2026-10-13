@@ -747,6 +747,18 @@ function Musician.Utils.GetRealmLocale()
 	return (string.gsub(locale, "[A-Z]+", ""))
 end
 
+--- Indicates if playing on a modern WoW flavor
+-- @return isModernWoW (boolean)
+function Musician.Utils.IsModernWoW()
+	return WOW_PROJECT_ID == WOW_PROJECT_MAINLINE or WOW_PROJECT_ID == WOW_PROJECT_CAMELOT
+end
+
+--- Indicates if playing on a realmless version
+-- @return isRealmless (boolean)
+function Musician.Utils.IsRealmlessWoW()
+	return WOW_PROJECT_ID == WOW_PROJECT_CAMELOT
+end
+
 --- Return the normalized player name, including realm slug. Normalized player name is a number if a Battle.net account ID or Battle.net game account ID is provided.
 -- @param playerName (string|number)
 -- @return normalizedPlayerName (string|number)
@@ -758,11 +770,14 @@ function Musician.Utils.NormalizePlayerName(playerName)
 		return tonumber(playerName)
 	end
 
-	-- WoW Forever: "Firstname Lastname[-Realm name]" => "Firstname-Lastname"
-	if WOW_PROJECT_ID == WOW_PROJECT_CAMELOT then
-		local firstName, lastName = string.match(playerName, '^([^ %-]+)[ %-]([^ %-]+)$')
+	-- Realmless WoW: "Firstname Lastname[-Realm]" => "Firstname Lastname"
+	if Musician.Utils.IsRealmlessWoW() then
+		local firstName, lastName = string.match(playerName, '^([^ ]+) ([^%-]+).*$')
 		if firstName ~= nil then
-			return firstName .. '-' .. lastName
+			return firstName .. ' ' .. lastName
+		else
+			local name = string.match(playerName, '^([^%-]+).*$')
+			return name or ""
 		end
 	end
 

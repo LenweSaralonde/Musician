@@ -625,7 +625,7 @@ function Musician.GetPlayerMenuItems(unit, chatTarget, name, server)
 			player = Musician.Utils.NormalizePlayerName(chatTarget)
 		else
 			if server then
-				player = name .. '-' .. server
+				player = Musician.Utils.NormalizePlayerName(name .. '-' .. server)
 			else
 				player = Musician.Utils.NormalizePlayerName(name)
 			end
@@ -714,7 +714,13 @@ function Musician.SetupHooks()
 	--
 
 	local modifyPlayerMenu = function(_, rootDescription, contextData)
-		local items = Musician.GetPlayerMenuItems(contextData.unit, contextData.chatTarget, contextData.name,
+
+		local name = contextData.name
+		if Musician.Utils.IsRealmlessWoW() and name and contextData.unit and not string.find(contextData.name, ' ') then
+			name = Musician.Utils.GetUnitName(contextData.unit) or name
+		end
+
+		local items = Musician.GetPlayerMenuItems(contextData.unit, contextData.chatTarget, name,
 			contextData.server)
 
 		if #items > 0 then
