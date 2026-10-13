@@ -95,7 +95,7 @@ function Musician.TrackEditor.Init()
 	end)
 
 	-- WoW Classic still uses the old school scrollbars, adjust anchors accordingly
-	if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then
+	if not Musician.Utils.IsModernWoW() then
 		MusicianTrackEditorTracksContainer:SetPoint("BOTTOMRIGHT", MusicianTrackEditorScrollFrame, "BOTTOMRIGHT", 0, -2)
 	end
 
