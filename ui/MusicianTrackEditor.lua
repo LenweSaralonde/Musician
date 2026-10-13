@@ -89,6 +89,13 @@ function Musician.TrackEditor.Init()
 	-- Put the tracks container on top of the background artwork
 	MusicianTrackEditorTracksContainer:SetFrameLevel(MusicianTrackEditorBackground:GetFrameLevel() + 1)
 
+	-- Put the dialog border on top of the background artwork and tracks
+	-- The border background texture is moved to the main frame so it remains below everything else
+	local border = MusicianTrackEditor.Border
+	border.Bg:SetParent(MusicianTrackEditor)
+	border:SetUsingParentLevel(false)
+	border:SetFrameLevel(MusicianTrackEditorTracksContainer:GetFrameLevel() + 1)
+
 	-- Synchronize scroll child
 	MusicianTrackEditorScrollFrame:HookScript("OnSizeChanged", function(self)
 		MusicianTrackEditorScrollFrameContentPlaceholder:SetWidth(self:GetWidth())
