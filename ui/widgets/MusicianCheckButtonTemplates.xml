@@ -6,11 +6,14 @@
 
 	<!-- Common check button template -->
 
-	<CheckButton name="MusicianCheckButtonArtTemplate" inherits="UICheckButtonArtTemplate" virtual="true">
+	<CheckButton name="MusicianCheckButtonArtTemplate" inherits="SettingsCheckboxTemplate" virtual="true">
+		<HighlightTexture atlas="checkbox-minimal" useAtlasSize="true" alphaMode="ADD" />
 		<HitRectInsets>
 			<AbsInset left="0" right="0" top="0" bottom="0" />
 		</HitRectInsets>
 		<Scripts>
+			<!-- Prevent SettingsCheckboxMixin from overriding the OnEnter and OnLeave scripts -->
+			<OnLoad function="nop" />
 			<OnClick function="MusicianCheckButtonTemplate_OnClick" />
 			<OnEnable function="MusicianCheckButtonTemplate_OnEnable" />
 			<OnDisable function="MusicianCheckButtonTemplate_OnDisable" />
@@ -29,7 +32,7 @@
 			<Layer level="ARTWORK">
 				<FontString name="$parentText" inherits="GameFontHighlightSmall" parentKey="Text">
 					<Anchors>
-						<Anchor point="LEFT" relativePoint="RIGHT" x="0" y="1" />
+						<Anchor point="LEFT" relativePoint="RIGHT" x="2" y="0" />
 					</Anchors>
 					<Scripts>
 						<OnLoad function="UICheckButtonFontString_SetParentKeyAlias" />
@@ -39,9 +42,9 @@
 		</Layers>
 	</CheckButton>
 
-	<!-- Option check button -->
+	<!-- Large check button -->
 
-	<CheckButton name="MusicianOptionCheckButtonTemplate" virtual="true" inherits="MusicianCheckButtonArtTemplate">
+	<CheckButton name="MusicianLargeCheckButtonTemplate" virtual="true" inherits="MusicianCheckButtonArtTemplate">
 		<Size>
 			<AbsDimension x="26" y="26" />
 		</Size>
@@ -59,17 +62,37 @@
 		</Layers>
 	</CheckButton>
 
+	<!-- Option check button -->
+
+	<CheckButton name="MusicianOptionCheckButtonTemplate" virtual="true" inherits="MusicianCheckButtonArtTemplate">
+		<Size>
+			<AbsDimension x="20" y="20" />
+		</Size>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentText" inherits="GameFontHighlightLeft" parentKey="Text">
+					<Anchors>
+						<Anchor point="LEFT" relativePoint="RIGHT" x="1" y="0" />
+					</Anchors>
+					<Scripts>
+						<OnLoad function="UICheckButtonFontString_SetParentKeyAlias" />
+					</Scripts>
+				</FontString>
+			</Layer>
+		</Layers>
+	</CheckButton>
+
 	<!-- Sub option check button -->
 
 	<CheckButton name="MusicianSubOptionCheckButtonTemplate" virtual="true" inherits="MusicianCheckButtonArtTemplate">
 		<Size>
-			<AbsDimension x="26" y="26" />
+			<AbsDimension x="20" y="20" />
 		</Size>
 		<Layers>
 			<Layer level="ARTWORK">
 				<FontString name="$parentText" inherits="GameFontHighlightSmall" parentKey="Text">
 					<Anchors>
-						<Anchor point="LEFT" relativePoint="RIGHT" x="0" y="1" />
+						<Anchor point="LEFT" relativePoint="RIGHT" x="3" y="1" />
 					</Anchors>
 					<Scripts>
 						<OnLoad function="UICheckButtonFontString_SetParentKeyAlias" />

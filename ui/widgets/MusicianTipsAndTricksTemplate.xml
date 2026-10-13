@@ -12,7 +12,7 @@
 			<Frame inherits="ShadowOverlaySmallTemplate" setAllPoints="true" />
 			<CheckButton name="$parentEnableTipsAndTricks" parentKey="enableCheckbox" inherits="MusicianSmallCheckButtonTemplate">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parent" x="10" y="10" />
+					<Anchor point="BOTTOMLEFT" relativeTo="$parent" x="11" y="11.5" />
 				</Anchors>
 				<Scripts>
 					<OnShow inherit="prepend" function="MusicianTipsAndTricksTemplateEnableTipsAndTricks_OnShow" />

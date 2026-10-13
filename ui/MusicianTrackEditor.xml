@@ -174,18 +174,18 @@
 		<Frames>
 			<CheckButton name="$parentMute" parentKey="muteCheckbox" inherits="MusicianSmallCheckButtonTemplate">
 				<Anchors>
-					<Anchor point="LEFT" x="32" y="8.5" />
+					<Anchor point="LEFT" x="31" y="8.5" />
 				</Anchors>
 			</CheckButton>
 			<CheckButton name="$parentSolo" parentKey="soloCheckbox" inherits="MusicianSmallCheckButtonTemplate">
 				<Anchors>
-					<Anchor point="LEFT" x="48" y="8.5" />
+					<Anchor point="LEFT" x="47" y="8.5" />
 				</Anchors>
 			</CheckButton>
 
-			<CheckButton name="$parentAccent" parentKey="accentCheckbox" inherits="MusicianOptionCheckButtonTemplate">
+			<CheckButton name="$parentAccent" parentKey="accentCheckbox" inherits="MusicianLargeCheckButtonTemplate">
 				<Anchors>
-					<Anchor point="RIGHT" relativePoint="RIGHT" relativeTo="$parent" x="-1" y="1" />
+					<Anchor point="RIGHT" relativePoint="RIGHT" relativeTo="$parent" x="-2" y="2" />
 				</Anchors>
 			</CheckButton>
 

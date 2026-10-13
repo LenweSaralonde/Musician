@@ -79,7 +79,7 @@
 		<Frames>
 			<CheckButton name="$parentAddToBag" parentKey="addToBag" inherits="MusicianOptionCheckButtonTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentPreviewContainer" relativePoint="BOTTOMLEFT" y="-25" />
+					<Anchor point="TOPLEFT" relativeTo="$parentPreviewContainer" relativePoint="BOTTOMLEFT" x="3" y="-28" />
 				</Anchors>
 			</CheckButton>
 		</Frames>
@@ -108,7 +108,7 @@
 			<Layer level="BACKGROUND">
 				<FontString name="$parentProgressText" inherits="GameFontNormal" parentKey="progressText">
 					<Anchors>
-						<Anchor point="TOP" relativeTo="$parentAddToBag" relativePoint="BOTTOM" y="-5" />
+						<Anchor point="TOP" relativeTo="$parentAddToBag" relativePoint="BOTTOM" y="-8" />
 						<Anchor point="LEFT" x="25" />
 						<Anchor point="RIGHT" x="-25" />
 					</Anchors>

@@ -154,7 +154,7 @@
 
 			<CheckButton name="$parentPowerChords" parentKey="powerChordsCheckbox" inherits="MusicianSmallCheckButtonTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" x="0" y="-6" relativeTo="$parentInstrument" relativePoint="BOTTOMLEFT" />
+					<Anchor point="TOPLEFT" x="1" y="-7.5" relativeTo="$parentInstrument" relativePoint="BOTTOMLEFT" />
 				</Anchors>
 				<Scripts>
 					<OnLoad function="MusicianLayerTemplateInstrumentPowerChords_OnLoad" />
@@ -166,7 +166,7 @@
 			<Layer level="OVERLAY">
 				<FontString name="$parentPowerChordsBolt" parentKey="powerChordsBolt" inherits="MusicianFontIconsNormal" justifyh="LEFT">
 					<Anchors>
-						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentPowerChords" x="4" />
+						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentPowerChords" x="6" />
 					</Anchors>
 				</FontString>
 				<FontString name="$parentPowerChordsLabel" parentKey="powerChordsLabel" inherits="GameFontNormal" justifyh="LEFT">
