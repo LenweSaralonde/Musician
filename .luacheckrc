@@ -552,7 +552,6 @@ stds.wow = {
 		"StaticPopup_Hide",
 		"UnitIsDead",
 		"UnitIsGhost",
-		"UnitName",
 		"UnitGUID",
 		"UnitInRange",
 		"UnitIsConnected",

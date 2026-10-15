@@ -324,7 +324,7 @@ function Musician.SongLinks.Init()
 	local messageEventFilter = function(self, event, msg, sender, ...)
 		local player = sender
 		if event == 'CHAT_MSG_WHISPER_INFORM' or event == 'CHAT_MSG_BN_WHISPER_INFORM' then
-			player = UnitName('player')
+			player = Musician.Utils.GetUnitName("player")
 		elseif event == 'CHAT_MSG_BN_WHISPER' then
 			local _, _, _, _, _, _, _, _, _, _, bnSenderID = ...
 			player = tonumber(bnSenderID)
@@ -341,7 +341,7 @@ function Musician.SongLinks.Init()
 		local args = { strsplit(':', link) }
 		if not IsModifiedClick("CHATLINK") then
 			-- Extract player name
-			local player = args[2] or UnitName('player')
+			local player = args[2] or Musician.Utils.GetUnitName("player")
 
 			-- Extract title
 			local title = string.match(text, '%[[^:]+: *([^%]]+)%]')
