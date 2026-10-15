@@ -3,52 +3,9 @@
 	xmlns="http://www.blizzard.com/wow/ui/">
 	<!-- Standard edit box -->
 	<Script file="MusicianEditBoxTemplate.lua" />
-	<EditBox name="MusicianEditBoxTemplate" mixin="MusicianEditBoxTemplateMixin" virtual="true">
-		<FontString inherits="ChatFontNormal" />
+	<EditBox name="MusicianEditBoxTemplate" inherits="InputBoxTemplate" mixin="MusicianEditBoxTemplateMixin" virtual="true">
 		<Size>
-			<AbsDimension y="32" />
+			<AbsDimension y="22" />
 		</Size>
-		<Layers>
-			<Layer level="BACKGROUND">
-				<Texture name="$parentLeft" file="Interface\ChatFrame\UI-ChatInputBorder-Left2">
-					<Size>
-						<AbsDimension x="32" y="32" />
-					</Size>
-					<Anchors>
-						<Anchor point="LEFT" x="-10" y="0" />
-					</Anchors>
-				</Texture>
-				<Texture name="$parentRight" file="Interface\ChatFrame\UI-ChatInputBorder-Right2">
-					<Size>
-						<AbsDimension x="32" y="32" />
-					</Size>
-					<Anchors>
-						<Anchor point="RIGHT" x="10" y="0" />
-					</Anchors>
-				</Texture>
-				<Texture name="$parentMid" file="Interface\ChatFrame\UI-ChatInputBorder-Mid2" horizTile="true">
-					<Size>
-						<AbsDimension x="0" y="32" />
-					</Size>
-					<Anchors>
-						<Anchor point="TOPLEFT" relativeTo="$parentLeft" relativePoint="TOPRIGHT">
-							<Offset>
-								<AbsDimension x="0" y="0" />
-							</Offset>
-						</Anchor>
-						<Anchor point="TOPRIGHT" relativeTo="$parentRight" relativePoint="TOPLEFT">
-							<Offset>
-								<AbsDimension x="0" y="0" />
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</Texture>
-			</Layer>
-			<Layer level="ARTWORK">
-				<FontString parentKey="Instructions" justifyH="LEFT" justifyV="MIDDLE" inherits="GameFontDisableSmall" setAllPoints="true">
-					<Color r="0.35" g="0.35" b="0.35" />
-				</FontString>
-			</Layer>
-		</Layers>
 	</EditBox>
 </Ui>

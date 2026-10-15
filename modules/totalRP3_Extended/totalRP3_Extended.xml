@@ -36,8 +36,8 @@
 			<EditBox name="$parentSongTitle" inherits="MusicianEditBoxTemplate" parentKey="songTitle">
 				<Anchors>
 					<Anchor point="TOP" relativeTo="$parentSongTitleLabel" relativePoint="BOTTOM" y="-2" />
-					<Anchor point="LEFT" x="32" />
-					<Anchor point="RIGHT" x="-32" />
+					<Anchor point="LEFT" x="28" />
+					<Anchor point="RIGHT" x="-28" />
 				</Anchors>
 			</EditBox>
 		</Frames>
@@ -96,7 +96,7 @@
 		<Frames>
 			<EditBox name="$parentQuantity" inherits="MusicianEditBoxTemplate" parentKey="quantity" numeric="true" letters="2">
 				<Anchors>
-					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentQuantityLabel" x="15" />
+					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentQuantityLabel" x="11" />
 					<Anchor point="RIGHT" relativePoint="RIGHT" relativeTo="$parentQuantityLabel" x="35" />
 				</Anchors>
 			</EditBox>
