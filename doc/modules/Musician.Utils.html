@@ -47,6 +47,7 @@
   <li><a href="../modules/Musician.CrossRP.html">Musician.CrossRP</a></li>
   <li><a href="../modules/Musician.CrossRP.Options.html">Musician.CrossRP.Options</a></li>
   <li><a href="../modules/Musician.ElvUI.html">Musician.ElvUI</a></li>
+  <li><a href="../modules/Musician.Emote.html">Musician.Emote</a></li>
   <li><a href="../modules/Musician.Events.html">Musician.Events</a></li>
   <li><a href="../modules/Musician.Extras.html">Musician.Extras</a></li>
   <li><a href="../modules/Musician.Frame.html">Musician.Frame</a></li>
@@ -97,7 +98,6 @@
   <li><a href="../modules/MusicianCheckButtonTemplates.html">MusicianCheckButtonTemplates</a></li>
   <li><a href="../modules/MusicianDialogTemplate.html">MusicianDialogTemplate</a></li>
   <li><a href="../modules/MusicianDropdownTemplate.html">MusicianDropdownTemplate</a></li>
-  <li><a href="../modules/MusicianEditBoxBackdropTemplate.html">MusicianEditBoxBackdropTemplate</a></li>
   <li><a href="../modules/MusicianEditBoxTemplate.html">MusicianEditBoxTemplate</a></li>
   <li><a href="../modules/MusicianIconTextButtonTemplate.html">MusicianIconTextButtonTemplate</a></li>
   <li><a href="../modules/MusicianIconTextProgressBarButtonTemplate.html">MusicianIconTextProgressBarButtonTemplate</a></li>
@@ -142,10 +142,6 @@
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.DeepMerge">Musician.Utils.DeepMerge (merged, orig)</a></td>
 	<td class="summary">Deep merge two tables</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Musician.Utils.DisplayEmote">Musician.Utils.DisplayEmote (player, playerGUID, message)</a></td>
-	<td class="summary">Display a faked emote</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.Ellipsis">Musician.Utils.Ellipsis (text, maxBytes)</a></td>
@@ -249,10 +245,6 @@
 	<td class="summary">Get the player position in the 3D world</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Musician.Utils.GetPromoEmote">Musician.Utils.GetPromoEmote ()</a></td>
-	<td class="summary">Return the "Player is playing music" emote with promo message</td>
-	</tr>
-	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.GetRandomArgument">Musician.Utils.GetRandomArgument (...)</a></td>
 	<td class="summary">Randomly returns one of the provided arguments</td>
 	</tr>
@@ -277,10 +269,6 @@
 	<td class="summary">Return the current version as text for the end user</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Musician.Utils.HasPromoEmote">Musician.Utils.HasPromoEmote (message)</a></td>
-	<td class="summary">Return true if the message contains the promo emote, in any language</td>
-	</tr>
-	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.Highlight">Musician.Utils.Highlight (text, color)</a></td>
 	<td class="summary">Highlight text</td>
 	</tr>
@@ -297,6 +285,14 @@
 	<td class="summary">Indicates if running mainline WoW</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.IsModernWoW">Musician.Utils.IsModernWoW ()</a></td>
+	<td class="summary">Indicates if playing on a modern WoW flavor</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.IsRealmlessWoW">Musician.Utils.IsRealmlessWoW ()</a></td>
+	<td class="summary">Indicates if playing on a realmless version</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.MuteGameMusic">Musician.Utils.MuteGameMusic (force)</a></td>
 	<td class="summary">Start or stop the actual game music if a song can actually be heard</td>
 	</tr>
@@ -311,10 +307,6 @@
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.OpenContextMenu">Musician.Utils.OpenContextMenu (menuList[, owner])</a></td>
 	<td class="summary">Open a context menu at the cursor position</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Musician.Utils.OverrideNextFullPromoEmote">Musician.Utils.OverrideNextFullPromoEmote ()</a></td>
-	<td class="summary">Override the next full promo emote</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.PackNumber">Musician.Utils.PackNumber (num, bytes)</a></td>
@@ -339,6 +331,10 @@
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.ParseTime">Musician.Utils.ParseTime (timestamp)</a></td>
 	<td class="summary">Parse time in seconds from mm:ss.ss format</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Musician.Utils.PlayErrorSound">Musician.Utils.PlayErrorSound ()</a></td>
+	<td class="summary">Play the error sound</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.PlayerIsInGroup">Musician.Utils.PlayerIsInGroup (playerName)</a></td>
@@ -379,14 +375,6 @@
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.RemoveLinks">Musician.Utils.RemoveLinks (textWithLinks)</a></td>
 	<td class="summary">Remove hyperlinks from text</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Musician.Utils.ResetFullPromoEmoteCooldown">Musician.Utils.ResetFullPromoEmoteCooldown ()</a></td>
-	<td class="summary">Mark the full promo emote as recently seen</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Musician.Utils.SendPromoEmote">Musician.Utils.SendPromoEmote ()</a></td>
-	<td class="summary">Send the "Player is playing music" emote with promo message</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.SetFontStringTextFixedSize">Musician.Utils.SetFontStringTextFixedSize (fontString, text)</a></td>
@@ -566,32 +554,6 @@
 
         merged (table)
     </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Musician.Utils.DisplayEmote"></a>
-    <strong>Musician.Utils.DisplayEmote (player, playerGUID, message)</strong>
-    </dt>
-    <dd>
-    Display a faked emote
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">player</span>
-         (string)
-        </li>
-        <li><span class="parameter">playerGUID</span>
-         (string)
-        </li>
-        <li><span class="parameter">message</span>
-         (string)
-        </li>
-    </ul>
-
 
 
 
@@ -1230,25 +1192,6 @@
 
 </dd>
     <dt>
-    <a name = "Musician.Utils.GetPromoEmote"></a>
-    <strong>Musician.Utils.GetPromoEmote ()</strong>
-    </dt>
-    <dd>
-    Return the "Player is playing music" emote with promo message
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-        promoEmote (string)
-    </ol>
-
-
-
-
-</dd>
-    <dt>
     <a name = "Musician.Utils.GetRandomArgument"></a>
     <strong>Musician.Utils.GetRandomArgument (...)</strong>
     </dt>
@@ -1376,33 +1319,6 @@
 
 </dd>
     <dt>
-    <a name = "Musician.Utils.HasPromoEmote"></a>
-    <strong>Musician.Utils.HasPromoEmote (message)</strong>
-    </dt>
-    <dd>
-    Return true if the message contains the promo emote, in any language
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">message</span>
-         (string)
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-        <li>
-        hasPromoEmote (boolean)</li>
-        <li>
-        isFullPromoEmote (boolean) true if the emote contains the part inviting other players to install Musician</li>
-    </ol>
-
-
-
-
-</dd>
-    <dt>
     <a name = "Musician.Utils.Highlight"></a>
     <strong>Musician.Utils.Highlight (text, color)</strong>
     </dt>
@@ -1500,6 +1416,44 @@
 
 </dd>
     <dt>
+    <a name = "Musician.Utils.IsModernWoW"></a>
+    <strong>Musician.Utils.IsModernWoW ()</strong>
+    </dt>
+    <dd>
+    Indicates if playing on a modern WoW flavor
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        isModernWoW (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.IsRealmlessWoW"></a>
+    <strong>Musician.Utils.IsRealmlessWoW ()</strong>
+    </dt>
+    <dd>
+    Indicates if playing on a realmless version
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        isRealmless (boolean)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
     <a name = "Musician.Utils.MuteGameMusic"></a>
     <strong>Musician.Utils.MuteGameMusic (force)</strong>
     </dt>
@@ -1587,20 +1541,6 @@
          (<em>optional</em>)
         </li>
     </ul>
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Musician.Utils.OverrideNextFullPromoEmote"></a>
-    <strong>Musician.Utils.OverrideNextFullPromoEmote ()</strong>
-    </dt>
-    <dd>
-    Override the next full promo emote
-
-
 
 
 
@@ -1752,6 +1692,20 @@
 
         seconds (number)
     </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Musician.Utils.PlayErrorSound"></a>
+    <strong>Musician.Utils.PlayErrorSound ()</strong>
+    </dt>
+    <dd>
+    Play the error sound
+
+
+
 
 
 
@@ -1988,34 +1942,6 @@
 
         text (string)
     </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Musician.Utils.ResetFullPromoEmoteCooldown"></a>
-    <strong>Musician.Utils.ResetFullPromoEmoteCooldown ()</strong>
-    </dt>
-    <dd>
-    Mark the full promo emote as recently seen
-
-
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Musician.Utils.SendPromoEmote"></a>
-    <strong>Musician.Utils.SendPromoEmote ()</strong>
-    </dt>
-    <dd>
-    Send the "Player is playing music" emote with promo message
-
-
-
 
 
 
