@@ -689,14 +689,21 @@ function Musician.TRP3E.RegisterHooks()
 			if toolFrame.fullClassID ~= nil and Musician.TRP3E.IsMusicianItem(TRP3_DB.global[toolFrame.fullClassID]) then
 
 				-- Hide all tabs except the first one
-				local tabIndex = 0
-				for _, frame in pairs({ TRP3_ToolFrameItemNormalTabPanel:GetChildren() }) do
-					if string.sub(frame:GetName(), 1, 16) == 'TRP3_TabBar_Tab_' then
-						tabIndex = tabIndex + 1
-						if tabIndex >= 2 then
+				-- (tab buttons are anonymous children of the tab panel, in creation order)
+				local tabs = {}
+				for _, frame in ipairs({ TRP3_ToolFrameItemNormalTabPanel:GetChildren() }) do
+					if frame:GetObjectType() == 'Button' then
+						table.insert(tabs, frame)
+						if #tabs >= 2 then
 							frame:Hide()
 						end
 					end
+				end
+
+				-- Switch back to the first tab if a hidden tab was selected
+				-- (selected tab buttons display their "active" textures)
+				if tabs[1] and not tabs[1].LeftActive:IsShown() then
+					tabs[1]:Click()
 				end
 
 				Musician.TRP3E.SetCheckboxEnabled(gameplay.unique, false)
@@ -706,6 +713,15 @@ function Musician.TRP3E.RegisterHooks()
 				Musician.TRP3E.SetCheckboxEnabled(display.quest, false)
 				Musician.TRP3E.SetEditBoxEnabled(display.right, false)
 			else
+				-- Restore the "Internal elements" tab (4th), which TRP3 never hides itself.
+				-- Other tabs visibility is already handled by TRP3.
+				local innerTab = select(4, TRP3_ToolFrameItemNormalTabPanel:GetChildren())
+				if innerTab and not innerTab:IsShown() then
+					innerTab:Show()
+					-- Run TRP3's own refreshCheck() (the checkboxes OnClick script) to redraw the tab bar
+					gameplay.unique:GetScript('OnClick')()
+				end
+
 				Musician.TRP3E.SetCheckboxEnabled(gameplay.unique, true)
 				Musician.TRP3E.SetCheckboxEnabled(gameplay.stack, true)
 				Musician.TRP3E.SetCheckboxEnabled(gameplay.use, true)
