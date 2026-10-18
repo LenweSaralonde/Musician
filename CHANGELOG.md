@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v1.9.18.0
+---------
+* Rewrote emote management.
+* Reworked widgets, edit boxes and checkboxes using standard components and the modern style.
+* Fixed TRP3 Extended item editor integration for Musician sheet music items.
+* WoW Forever compatibility.
+
 v1.9.17.0
 ---------
 * Remade dropdowns using the standard API.
