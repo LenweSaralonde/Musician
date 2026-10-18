@@ -474,12 +474,19 @@ function Musician.Comm.CanPlay()
 end
 
 --- Play song
+-- @param[opt=false] sendPromoEmote (boolean) Send the promo emote. Requires a hardware event.
 -- @return success (boolean)
-function Musician.Comm.PlaySong()
+function Musician.Comm.PlaySong(sendPromoEmote)
 	if isStopPending or isPlayPending then return false end
 	if not Musician.Comm.CanPlay() or not Musician.sourceSong then return false end
 
 	Musician.Utils.Debug(MODULE_NAME, "PlaySong")
+
+	-- Send the emote before anything else: on WoW Forever, the hardware event gets invalidated
+	-- once the clicked button is disabled by the UI update.
+	if sendPromoEmote then
+		Musician.Emote.SendPromoEmote()
+	end
 
 	isPlayPending = true
 	Musician.Comm:SendMessage(Musician.Events.CommSendAction, Musician.Comm.action.play)
@@ -510,9 +517,9 @@ function Musician.Comm.TogglePlaySong()
 	else
 		-- Play as band
 		if isBandPlayReady then
-			Musician.Comm.PlaySongBand()
+			Musician.Comm.PlaySongBand(true)
 		else
-			Musician.Comm.PlaySong()
+			Musician.Comm.PlaySong(true)
 		end
 	end
 end
@@ -946,14 +953,21 @@ function Musician.Comm.OnBandPlayReady(prefix, message, distribution, sender)
 end
 
 --- Play song as a band
+-- @param[opt=false] sendPromoEmote (boolean) Send the promo emote. Requires a hardware event.
 -- @return success (boolean)
-function Musician.Comm.PlaySongBand()
+function Musician.Comm.PlaySongBand(sendPromoEmote)
 	if isBandActionPending then return false end
 	if not Musician.Comm.CanPlay() then return false end
 	if not currentSongCrc32 then return false end
 
 	local groupChatType = Musician.Comm.GetGroupChatType()
 	if groupChatType == nil then return false end
+
+	-- Send the emote before anything else: on WoW Forever, the hardware event gets invalidated
+	-- once the clicked button is disabled by the UI update.
+	if sendPromoEmote then
+		Musician.Emote.SendPromoEmote()
+	end
 
 	isBandActionPending = true
 
@@ -983,11 +997,6 @@ function Musician.Comm.OnBandPlay(prefix, message, distribution, sender)
 
 	local songCrc32 = tonumber(message)
 	if currentSongCrc32 ~= songCrc32 then return end
-
-	-- Override next full promo emote if I'm not the initiator of band play to avoid spamming it
-	if not Musician.Utils.PlayerIsMyself(sender) then
-		Musician.Utils.OverrideNextFullPromoEmote()
-	end
 
 	Musician.Comm.PlaySong()
 

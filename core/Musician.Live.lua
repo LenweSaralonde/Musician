@@ -240,7 +240,7 @@ local function bandLiveSyncStatusChanged(event, player, isSynced)
 	if not Musician.Utils.PlayerIsMyself(player) then
 		local emote = isSynced and Musician.Msg.EMOTE_PLAYER_LIVE_SYNC_ENABLED or
 			Musician.Msg.EMOTE_PLAYER_LIVE_SYNC_DISABLED
-		Musician.Utils.DisplayEmote(player, UnitGUID(Musician.Utils.SimplePlayerName(player)), emote)
+		Musician.Emote.DisplayEmote(player, UnitGUID(Musician.Utils.SimplePlayerName(player)), emote)
 	end
 end
 
@@ -394,6 +394,11 @@ function Musician.Live.InsertNote(noteOn, key, layer, instrument)
 	-- Register note activity
 	Musician.Utils.Debug(MODULE_NAME, 'InsertNote', noteOn, key, layer, instrument)
 	resetStreamTimeout()
+
+	-- Send promo emote when the live song is started by a note on (triggered by a hardware event)
+	if noteOn and not liveStreamingSong then
+		Musician.Emote.SendPromoEmote()
+	end
 
 	Musician.Live.CreateLiveSong()
 

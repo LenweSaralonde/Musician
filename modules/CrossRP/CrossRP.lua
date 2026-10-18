@@ -310,7 +310,7 @@ function Musician.CrossRP.Init()
 	--
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_EMOTE",
 		function(self, event, msg, player, languageName, channelName, playerName2, pflag, ...)
-			local isPromoEmote, _ = Musician.Utils.HasPromoEmote(msg)
+			local isPromoEmote, _ = Musician.Emote.HasPromoEmote(msg)
 			-- Promo emote has been found
 			if isPromoEmote then
 				local fullPlayerName = Musician.Utils.NormalizePlayerName(player)

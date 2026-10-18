@@ -8,19 +8,12 @@ Musician.AddModule(MODULE_NAME)
 
 local LibRealmInfo = LibStub:GetLibrary("LibRealmInfo")
 
-local FULL_PROMO_EMOTE_COOLDOWN = 10 * 60 -- Cooldown in seconds for the full promo emote
-
 local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetadata
-local ChatFrame_OnEvent = ChatFrameMixin and ChatFrameMixin.OnEvent or ChatFrame_OnEvent
-local BetterDate = TimeUtil and TimeUtil.BetterDate or BetterDate
 
 local isGameMusicMuted = false
-local fullPromoEmoteLastSeen
-local overrideNextFullPromoEmote = false
 local debugStartTime = debugprofilestop()
 
 local canaccessvalue = canaccessvalue or function() return true end
-local SendChatMessage = (C_ChatInfo and C_ChatInfo.SendChatMessage or SendChatMessage)
 local GetCVar = (C_CVar and C_CVar.GetCVar or GetCVar)
 local GetCVarNumber = function(cvar)
 	return floor(tonumber(GetCVar(cvar)) * 1000) / 1000
@@ -380,37 +373,6 @@ function Musician.Utils.GetPlayerPosition()
 		return posY or 0, posX or 0, posZ or 0, instanceID or 0x7FFFFFFF
 	else
 		return 0, 0, 0, 0x7FFFFFFF
-	end
-end
-
---- Display a faked emote
--- @param player (string)
--- @param playerGUID (string)
--- @param message (string)
-function Musician.Utils.DisplayEmote(player, playerGUID, message)
-	-- Old school way
-	if not ChatFrameUtil or not ChatFrameUtil.GetDecoratedSenderName then
-		return ChatFrame_OnEvent(DEFAULT_CHAT_FRAME, "CHAT_MSG_EMOTE", message, player, '', '', player, '', nil, nil, nil, nil, 0, playerGUID)
-	end
-
-	local coloredName = ChatFrameUtil.GetDecoratedSenderName("CHAT_MSG_EMOTE", message, player, nil, nil, player, nil,
-	nil, nil, nil, nil, 0, playerGUID)
-	local playerLink = GetPlayerLink(player, coloredName)
-
-	local emoteMessage = playerLink .. " " .. message
-
-	--Add Timestamps
-	local chatTimestampFmt = ChatFrameUtil.GetTimestampFormat()
-	if (chatTimestampFmt) then
-		emoteMessage = BetterDate(chatTimestampFmt, time()) .. emoteMessage
-	end
-
-	local info = ChatTypeInfo.EMOTE
-	for i = 1, NUM_CHAT_WINDOWS do
-		local chatFrame = _G["ChatFrame" .. i]
-		if chatFrame and chatFrame:ContainsMessageGroup("EMOTE") then
-			chatFrame:AddMessage(emoteMessage, info.r, info.g, info.b, info.id)
-		end
 	end
 end
 
@@ -905,80 +867,6 @@ end
 function Musician.Utils.GetMsg(msg, locale)
 	if locale == nil then locale = Musician.Utils.GetRealmLocale() end
 	return Musician.Locale[locale] and Musician.Locale[locale][msg] or Musician.Msg[msg]
-end
-
---- Return the "Player is playing music" emote with promo message
--- @return promoEmote (string)
-function Musician.Utils.GetPromoEmote()
-	local EMOTE_PLAYING_MUSIC = Musician.Utils.GetMsg('EMOTE_PLAYING_MUSIC')
-	local EMOTE_PROMO = Musician.Utils.GetMsg('EMOTE_PROMO')
-
-	local sendPromoPart = Musician_Settings.enableEmotePromo
-
-	-- Do not send the promo part too often
-	if sendPromoPart and
-		(
-		overrideNextFullPromoEmote or
-			fullPromoEmoteLastSeen ~= nil and (fullPromoEmoteLastSeen + FULL_PROMO_EMOTE_COOLDOWN) > GetTime()) then
-		sendPromoPart = false
-	end
-
-	-- Append promo part
-	if sendPromoPart then
-		local promo = string.gsub(EMOTE_PROMO, "{url}", Musician.URL)
-		return EMOTE_PLAYING_MUSIC .. " " .. promo
-	else
-		return EMOTE_PLAYING_MUSIC
-	end
-end
-
---- Return true if the message contains the promo emote, in any language
--- @param message (string)
--- @return hasPromoEmote (boolean)
--- @return isFullPromoEmote (boolean) true if the emote contains the part inviting other players to install Musician
-function Musician.Utils.HasPromoEmote(message)
-	for _, locale in pairs(Musician.Locale) do
-		if locale.EMOTE_PLAYING_MUSIC ~= nil and string.find(message, locale.EMOTE_PLAYING_MUSIC, 1, true) == 1 then
-			local isFullPromoEmote = string.find(message, locale.EMOTE_PROMO, 1, true) ~= nil
-			return true, isFullPromoEmote
-		end
-	end
-
-	return false, false
-end
-
---- Mark the full promo emote as recently seen
---
-function Musician.Utils.ResetFullPromoEmoteCooldown()
-	fullPromoEmoteLastSeen = GetTime()
-end
-
---- Override the next full promo emote
---
-function Musician.Utils.OverrideNextFullPromoEmote()
-	overrideNextFullPromoEmote = true
-end
-
---- Send the "Player is playing music" emote with promo message
---
-function Musician.Utils.SendPromoEmote()
-	if Musician_Settings.enableEmote then
-		SendChatMessage(Musician.Utils.GetPromoEmote(), "EMOTE")
-		overrideNextFullPromoEmote = false
-
-		-- Show a hint to the user that an emote is also being sent by default
-		if not Musician_Settings.emoteHintShown then
-			Musician_Settings.emoteHintShown = true
-			local emoteHint = Musician.Msg.OPTIONS_EMOTE_HINT
-			local emoteHintLinkText = emoteHint:match("%[(.+)%]")
-			local emoteHintLink = Musician.Utils.Highlight(Musician.Utils.GetLink("musician", emoteHintLinkText, "options"),
-				'00BBBB')
-			emoteHintLink = Musician.Utils.Highlight('[', 'BBBBBB') .. emoteHintLink .. Musician.Utils.Highlight(']', 'BBBBBB')
-			emoteHint = string.gsub(emoteHint, '%[' .. emoteHintLinkText .. '%]', emoteHintLink)
-			DEFAULT_CHAT_FRAME:AddMessage(emoteHint,
-				ORANGE_FONT_COLOR.r * .75, ORANGE_FONT_COLOR.g * .75, ORANGE_FONT_COLOR.b * .75)
-		end
-	end
 end
 
 --- Return the current version as text for the end user

@@ -4,9 +4,9 @@
 Musician = LibStub("AceAddon-3.0"):NewAddon("Musician", "AceEvent-3.0")
 
 local MODULE_NAME = "Main"
+
 Musician.modules = { MODULE_NAME } -- All modules
 
-local ChatFrame_AddMessageEventFilter = ChatFrameUtil and ChatFrameUtil.AddMessageEventFilter or ChatFrame_AddMessageEventFilter
 local canaccessvalue = canaccessvalue or function() return true end
 
 local tipsAndTricks = {}
@@ -76,6 +76,7 @@ function Musician:OnInitialize()
 	Musician.Registry.Init()
 	Musician.SongLinks.Init()
 	Musician.SetupHooks()
+	Musician.Emote.Init()
 
 	Musician.Frame.Init()
 	MusicianButton.Init()
@@ -88,7 +89,6 @@ function Musician:OnInitialize()
 	Musician.Options.Init()
 	Musician.About.Init()
 
-	Musician:RegisterMessage(Musician.Events.SongPlay, Musician.OnSongPlayed)
 	Musician:RegisterMessage(Musician.Events.SongImportSuccessful, Musician.OnSourceImportSuccessful)
 	Musician:RegisterMessage(Musician.Events.SongImportFailed, Musician.OnSourceImportFailed)
 
@@ -442,22 +442,13 @@ end
 -- @param playerName (string)
 -- @param remove (boolean)
 function Musician.StopPlayerSong(playerName, remove)
+	Musician.Emote.CancelPendingPromoEmote(playerName)
 	if Musician.songs[playerName] then
 		Musician.songs[playerName]:Stop()
 		if remove then
 			Musician.songs[playerName]:Wipe()
 			Musician.songs[playerName] = nil
 		end
-	end
-end
-
---- Handle playing song
--- @param event (table)
--- @param song (Musician.Song)
-function Musician.OnSongPlayed(event, song)
-	-- Send promo emote if my song is playing
-	if song.player and Musician.songs[song.player] ~= nil and Musician.Utils.PlayerIsMyself(song.player) then
-		Musician.Utils.SendPromoEmote()
 	end
 end
 
@@ -754,100 +745,6 @@ function Musician.SetupHooks()
 			return Musician.FilterSenderName(nil, link, nil, playerName) or link
 		end
 	end
-
-	-- Add stop button to "Player plays music" emote
-	--
-
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_EMOTE",
-		function(self, event, msg, player, languageName, channelName, playerName2, pflag, ...)
-			local fullPlayerName = Musician.Utils.NormalizePlayerName(player)
-
-			-- "Player is playing music."
-			local isPromoEmote, isFullPromoEmote = Musician.Utils.HasPromoEmote(msg)
-			if isFullPromoEmote then
-				Musician.Utils.ResetFullPromoEmoteCooldown()
-			end
-
-			-- Process promo emote
-			if isPromoEmote then
-				local isPromoEmoteSuccessful
-
-				-- Music is loaded and actually playing
-				if Musician.songs[fullPlayerName] ~= nil and Musician.songs[fullPlayerName]:IsPlaying() then
-					-- Ignore emote if the player has already been notified
-					if Musician.songs[fullPlayerName].notified then
-						return true
-					end
-
-					-- Remove the "promo" part of the emote and mark as already notified
-					Musician.songs[fullPlayerName].notified = true
-					msg = Musician.Msg.EMOTE_PLAYING_MUSIC
-
-					-- Add action link if playing music (and not current player)
-					if not Musician.Utils.PlayerIsMyself(fullPlayerName) then
-						-- Stop music
-						if not Musician.PlayerIsMuted(fullPlayerName) then
-							local stopAction = Musician.Utils.Highlight(
-								Musician.Utils.GetLink("musician", Musician.Msg.STOP, "stop",
-									fullPlayerName), 'FF0000')
-							msg = msg ..
-								" " .. Musician.Utils.Highlight('[') .. stopAction .. Musician.Utils.Highlight(']')
-							-- Unmute player
-						else
-							local unmuteAction = Musician.Utils.Highlight(
-								Musician.Utils.GetLink("musician", Musician.Msg.UNMUTE, "unmute",
-									fullPlayerName), '00FF00')
-							msg = msg ..
-								" " .. Musician.Utils.Highlight('[') .. unmuteAction .. Musician.Utils.Highlight(']')
-						end
-					end
-
-					isPromoEmoteSuccessful = true
-
-					-- Music is not loaded
-				else
-					-- Player is not in the channel and not in my group: it's from another realm
-					if not Musician.Utils.PlayerIsOnSameRealm(player) and not Musician.Utils.PlayerIsInGroup(player) then
-						msg = Musician.Msg.EMOTE_PLAYING_MUSIC ..
-							" " .. Musician.Utils.Highlight(Musician.Msg.EMOTE_PLAYER_OTHER_REALM, 'FF0000')
-					else
-						-- languageName may not be provided
-						if languageName == nil or languageName == '' then
-							languageName = GetDefaultLanguage()
-						end
-
-						-- Determine if it's a language I'm supposed to understand
-						local isUnderstoodLanguage = false
-						for l = 1, GetNumLanguages() do
-							local myLanguageName, _ = GetLanguageByIndex(l)
-							if languageName == myLanguageName then
-								isUnderstoodLanguage = true
-								break
-							end
-						end
-
-						-- Player does not speak a language I should understand: player is from the other faction and I'm using an Elixir of Tongues
-						if not isUnderstoodLanguage then
-							msg = Musician.Msg.EMOTE_PLAYING_MUSIC ..
-								" " .. Musician.Utils.Highlight(Musician.Msg.EMOTE_PLAYER_OTHER_FACTION, 'FF0000')
-						else -- Song has not been loaded (incompatible version)
-							local errorMsg = string.gsub(Musician.Msg.EMOTE_SONG_NOT_LOADED, '{player}',
-								Musician.Utils.GetPlayerLink(fullPlayerName))
-							msg = Musician.Msg.EMOTE_PLAYING_MUSIC .. " " .. Musician.Utils.Highlight(errorMsg, 'FF0000')
-						end
-					end
-
-					isPromoEmoteSuccessful = false
-				end
-
-				-- Send promo emote event
-				Musician:SendMessage(Musician.Events.PromoEmote, isPromoEmoteSuccessful, msg, fullPlayerName,
-					languageName,
-					channelName, playerName2, pflag, ...)
-			end
-
-			return false, msg, player, languageName, channelName, playerName2, pflag, ...
-		end)
 
 	-- Add custom Sound_MaxCacheSizeInBytes option for Musician
 	--

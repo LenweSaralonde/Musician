@@ -402,7 +402,7 @@ function Musician.Frame.OnBandPlayReady(event, player, songCrc32, isReady)
 	-- Display "Is ready" emote in the chat
 	if Musician.Comm.GetCurrentSongCrc32() == songCrc32 then
 		local emote = isReady and Musician.Msg.EMOTE_PLAYER_IS_READY or Musician.Msg.EMOTE_PLAYER_IS_NOT_READY
-		Musician.Utils.DisplayEmote(player, UnitGUID(Musician.Utils.SimplePlayerName(player)), emote)
+		Musician.Emote.DisplayEmote(player, UnitGUID(Musician.Utils.SimplePlayerName(player)), emote)
 	end
 end
 
@@ -411,7 +411,7 @@ end
 function Musician.Frame.OnBandPlay(event, player, songCrc32)
 	-- Display "Started band play" emote in the chat
 	if Musician.Comm.GetCurrentSongCrc32() == songCrc32 then
-		Musician.Utils.DisplayEmote(player, UnitGUID(Musician.Utils.SimplePlayerName(player)),
+		Musician.Emote.DisplayEmote(player, UnitGUID(Musician.Utils.SimplePlayerName(player)),
 			Musician.Msg.EMOTE_PLAY_IN_BAND_START)
 	end
 end
@@ -421,7 +421,7 @@ end
 function Musician.Frame.OnBandStop(event, player, songCrc32)
 	-- Display "Stopped band play" emote in the chat
 	if Musician.Comm.GetCurrentSongCrc32() == songCrc32 then
-		Musician.Utils.DisplayEmote(player, UnitGUID(Musician.Utils.SimplePlayerName(player)),
+		Musician.Emote.DisplayEmote(player, UnitGUID(Musician.Utils.SimplePlayerName(player)),
 			Musician.Msg.EMOTE_PLAY_IN_BAND_STOP)
 	end
 end

@@ -233,7 +233,7 @@ function MusicianButton.GetMenu()
 			table.insert(menu, {
 				notCheckable = true,
 				text = Musician.Msg.MENU_PLAY,
-				func = Musician.Comm.PlaySong
+				func = function() Musician.Comm.PlaySong(true) end
 			})
 		end
 	end

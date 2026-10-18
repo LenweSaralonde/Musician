@@ -574,7 +574,8 @@ function Musician.Song:NoteOn(track, noteIndex)
 
 	-- Send notification emote
 	if self.player ~= nil and not self.notified and Musician.Registry.PlayerIsInRange(self.player) then
-		Musician.Utils.DisplayEmote(self.player, Musician.Registry.GetPlayerGUID(self.player), Musician.Msg.EMOTE_PLAYING_MUSIC)
+		Musician.Emote.DisplayEmote(self.player, Musician.Registry.GetPlayerGUID(self.player),
+			Musician.Emote.GetPlayingMusicEmote(self.player))
 		self.notified = true
 	end
 
