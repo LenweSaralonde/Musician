@@ -1,0 +1,39 @@
+name: Package and release
+
+on:
+  push:
+    tags:
+      - '**'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    env:
+      CF_API_KEY: ${{ secrets.CF_API_KEY }}
+      WAGO_API_TOKEN: ${{ secrets.WAGO_API_TOKEN }}
+      GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Clone project
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Package and release
+        uses: BigWigsMods/packager@v2
+        env:
+          # Undocumented: keeps the space in the label instead of replacing it with "_"
+          skip_invalid: true
+        with:
+          # Keep the default file name, prefix the upload label (CurseForge and Wago release title)
+          args: -n ":{package-name} {project-version}{classic}{nolib}"
+
+      # The packager always names the GitHub release after the tag
+      - name: Rename GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release edit "$GITHUB_REF_NAME" --title "${{ github.event.repository.name }} $GITHUB_REF_NAME"

@@ -19,6 +19,8 @@
 ## Category-zhCN: 角色扮演
 ## Category-zhTW: 角色扮演
 ## Group: Musician
+## X-Curse-Project-ID: 290830
+## X-Wago-ID: J96Ea6gn
 
 embeds.xml
 
