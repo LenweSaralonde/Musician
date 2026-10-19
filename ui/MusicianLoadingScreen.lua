@@ -28,8 +28,8 @@ function MusicianLoadingScreenMixin:OnShow()
 	local borderWidth = .6 * viewportWidth
 	local borderHeight = 64 * .8 * 1080 / 1024 * contentScale * imageScale
 
-	-- Set the loading bar to 4/3 width to match the WoW Classic loading screen skin
-	if not Musician.Utils.IsModernWoW() then
+	-- Set the loading bar to 4/3 width to match the WoW Classic and Forever loading screen skin
+	if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then
 		borderWidth = borderWidth * (4 / 3) / imageRatio
 	end
 
