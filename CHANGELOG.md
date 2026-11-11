@@ -1,6 +1,12 @@
 Changelog
 =========
 
+v1.9.18.1
+---------
+* Fixed Lua error when entering battleground.
+* Lib updates.
+* Fixed loading screen progress bar width for WoW Forever.
+
 v1.9.18.0
 ---------
 * Rewrote emote management.
