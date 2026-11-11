@@ -8,6 +8,7 @@ Musician.AddModule(MODULE_NAME)
 
 local LibDeflate = LibStub:GetLibrary("LibDeflate")
 local LibBase64 = LibStub:GetLibrary("LibBase64")
+local canaccessvalue = canaccessvalue or function() return true end
 
 Musician.Comm.event = {}
 Musician.Comm.event.stop = "MusicianStop"
@@ -315,6 +316,8 @@ function Musician.Comm.JoinChannel()
 	-- Channel status changed
 	Musician.Comm:RegisterEvent("CHAT_MSG_CHANNEL_NOTICE", function(event, ...)
 		local text, _, _, _, _, _, _, _, channelName = ...
+
+		if not canaccessvalue(text) then return end
 
 		-- Make sure the communication channel remains on top when a new channel has been joined.
 		if text == 'YOU_CHANGED' or text == 'YOU_JOINED' then
