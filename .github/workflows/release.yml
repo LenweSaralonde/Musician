@@ -32,8 +32,31 @@ jobs:
           # Keep the default file name, prefix the upload label (CurseForge and Wago release title)
           args: -n ":{package-name} {project-version}{classic}{nolib}"
 
-      # The packager always names the GitHub release after the tag
-      - name: Rename GitHub release
+      # The packager always names the GitHub release after the tag and uses the full changelog.
+      # Rename it and only keep the latest changelog entry, with a link to the full changelog.
+      - name: Update GitHub release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release edit "$GITHUB_REF_NAME" --title "${{ github.event.repository.name }} $GITHUB_REF_NAME"
+        run: |
+          {
+            # First level-2 section ("## Title" or "Title" underlined with "-"),
+            # without CRs and trailing blank lines
+            awk '
+              { sub(/\r$/, ""); line[NR] = $0 }
+              END {
+                for (i = 1; i <= NR; i++) {
+                  if (line[i] ~ /^##([ \t]|$)/ || (line[i] ~ /[^ \t]/ && line[i + 1] ~ /^-+[ \t]*$/)) {
+                    if (n++) break
+                  }
+                  if (!n) continue
+                  if (line[i] ~ /[^ \t]/) { printf "%s%s\n", blank, line[i]; blank = "" }
+                  else blank = blank "\n"
+                }
+              }
+            ' CHANGELOG.md
+            echo
+            echo "**Full Changelog**: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/blob/$GITHUB_REF_NAME/CHANGELOG.md"
+          } > release-notes.md
+          gh release edit "$GITHUB_REF_NAME" \
+            --title "${{ github.event.repository.name }} $GITHUB_REF_NAME" \
+            --notes-file release-notes.md
