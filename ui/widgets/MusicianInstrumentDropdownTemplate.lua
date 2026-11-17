@@ -5,7 +5,7 @@
 -- @param instrumentId (string)
 -- @return instrumentName (string)
 local function getColoredInstrumentName(instrumentId)
-	local instrumentName = Musician.Msg.INSTRUMENT_NAMES[instrumentId]
+	local instrumentName = Musician.Msg.INSTRUMENT_NAMES[instrumentId] or instrumentId
 	if Musician.INSTRUMENTS[instrumentId].color ~= nil then
 		instrumentName = Musician.Utils.GetColorCode(unpack(Musician.INSTRUMENTS[instrumentId].color)) ..
 			instrumentName .. "|r"
