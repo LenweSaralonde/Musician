@@ -245,12 +245,13 @@
 	<td class="summary">Get the player position in the 3D world</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Musician.Utils.GetRandomArgument">Musician.Utils.GetRandomArgument (...)</a></td>
-	<td class="summary">Randomly returns one of the provided arguments</td>
+	<td class="name" nowrap><a href="#Musician.Utils.GetPreferredPlayLocale">Musician.Utils.GetPreferredPlayLocale ()</a></td>
+	<td class="summary">Return the short locale code of the language the player prefers to play in
+ Uses the realm locale or, on realmless WoW, the preferred online language set in "Language and social interactions".</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Musician.Utils.GetRealmLocale">Musician.Utils.GetRealmLocale ()</a></td>
-	<td class="summary">Return the short locale code of the realm the player belongs to</td>
+	<td class="name" nowrap><a href="#Musician.Utils.GetRandomArgument">Musician.Utils.GetRandomArgument (...)</a></td>
+	<td class="summary">Randomly returns one of the provided arguments</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Musician.Utils.GetSoundCacheSize">Musician.Utils.GetSoundCacheSize ()</a></td>
@@ -1192,6 +1193,26 @@
 
 </dd>
     <dt>
+    <a name = "Musician.Utils.GetPreferredPlayLocale"></a>
+    <strong>Musician.Utils.GetPreferredPlayLocale ()</strong>
+    </dt>
+    <dd>
+    Return the short locale code of the language the player prefers to play in
+ Uses the realm locale or, on realmless WoW, the preferred online language set in "Language and social interactions".
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        locale (string) 'en', 'fr' etc.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
     <a name = "Musician.Utils.GetRandomArgument"></a>
     <strong>Musician.Utils.GetRandomArgument (...)</strong>
     </dt>
@@ -1206,25 +1227,6 @@
         </li>
     </ul>
 
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Musician.Utils.GetRealmLocale"></a>
-    <strong>Musician.Utils.GetRealmLocale ()</strong>
-    </dt>
-    <dd>
-    Return the short locale code of the realm the player belongs to
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-        locale (string) 'en', 'fr' etc.
-    </ol>
 
 
 
