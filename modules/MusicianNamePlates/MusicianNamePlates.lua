@@ -569,9 +569,10 @@ end
 -- @param namePlate (Frame)
 -- @param textElement (FontString)
 -- @param append (boolean) Add note icon at the end of the string
-function Musician.NamePlates.AddNoteIcon(namePlate, textElement, append)
+-- @param skipTextHook (boolean) The caller hooks the owner's redraw for a pooled label.
+function Musician.NamePlates.AddNoteIcon(namePlate, textElement, append, skipTextHook)
 	-- Hook the SetText() function to ensure the icon is always added, even when modified by a third party
-	if textElement.musicianSetTextIsHooked == nil then
+	if not skipTextHook and textElement.musicianSetTextIsHooked == nil then
 		textElement.musicianSetTextIsHooked = true
 		hooksecurefunc(textElement, "SetText", function(self, text)
 			-- Reset text to clear the secret value flag
