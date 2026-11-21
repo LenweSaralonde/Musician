@@ -495,8 +495,7 @@ end
 -- @param event (string)
 -- @param unitToken (string)
 function Musician.NamePlates.OnNamePlateRemoved(event, unitToken)
-	-- A departed player may already be unqueryable; use the recorded assignment.
-	if not canaccessvalue(unitToken) then return end
+	if not canaccessvalue(unitToken) or not UnitIsPlayer(unitToken) then return end
 
 	-- Detach nameplate and remove references
 	local player = namePlatePlayers[unitToken]
@@ -595,8 +594,7 @@ function Musician.NamePlates.AddNoteIcon(namePlate, textElement, append, skipTex
 		return
 	end
 
-	local isPlayer = UnitIsPlayer(unitToken)
-	local player = canaccessvalue(isPlayer) and isPlayer and Musician.Utils.NormalizePlayerName(unitName)
+	local player = unitToken and UnitIsPlayer(unitToken) and Musician.Utils.NormalizePlayerName(unitName)
 	local isNameVisible = Musician.NamePlates.ShouldRenderNoteIcon(textElement)
 	local hasNoteIcon = player and not Musician.Utils.PlayerIsMyself(player) and Musician_Settings.showNamePlateIcon and
 		Musician.Registry.PlayerIsRegistered(player)
