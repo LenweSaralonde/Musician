@@ -16,6 +16,8 @@ local canHideHealthBars = true
 local canShowNamesCinematicMode = true
 local playerNamePlates = {}
 local namePlatePlayers = {}
+local nameClaims = {}
+local initialized = false
 local NOTES_TEXTURE = 167069 -- "spells\\t_vfx_note.blp"
 local NOTES_TEXTURE_RACE = {
 	VoidElf = 1664883,       -- "spells\\t_vfx_note_void.blp",
@@ -63,11 +65,27 @@ local function adjustNamePlateScale(namePlate)
 	end
 end
 
+-- A plate already on screen won't get another UNIT_ADDED until it leaves and returns.
+local function attachVisiblePlayer(namePlate)
+	if namePlate:IsForbidden() then return end
+	local unit = namePlate.unitToken
+	if not canaccessvalue(unit) then return end
+	unit = unit or namePlate.namePlateUnitToken
+	if not canaccessvalue(unit) or not unit or namePlatePlayers[unit] then return end
+
+	local isPlayer = UnitIsPlayer(unit)
+	if not canaccessvalue(isPlayer) or not isPlayer then return end
+	if C_NamePlate.GetNamePlateForUnit(unit) == namePlate then
+		Musician.NamePlates.OnNamePlateAdded("NAME_PLATE_UNIT_ADDED", unit)
+	end
+end
+
 --- OnEnable
 --
 function Musician.NamePlates:OnEnable()
 	-- Init settings
 	Musician_Settings = Mixin(Musician.NamePlates.Options.GetDefaults(), Musician_Settings)
+	initialized = true
 
 	-- Create animated notes frame for player
 	Musician.NamePlates.CreatePlayerAnimatedNotesFrame()
@@ -110,6 +128,7 @@ function Musician.NamePlates:OnEnable()
 
 	-- Player registered
 	Musician.NamePlates:RegisterMessage(Musician.Registry.event.playerRegistered, Musician.NamePlates.OnPlayerRegistered)
+	Musician.NamePlates:RegisterMessage(Musician.Registry.event.playerUnregistered, Musician.NamePlates.RefreshClaimedPlayer)
 
 	-- Note On
 	Musician.NamePlates:RegisterMessage(Musician.Events.VisualNoteOn, Musician.NamePlates.OnNoteOn)
@@ -128,6 +147,12 @@ function Musician.NamePlates:OnEnable()
 
 	-- Tips and tricks
 	Musician.NamePlates.InitTipsAndTricks()
+
+	Musician.NamePlates:SendMessage("MusicianNamePlatesReady")
+
+	for _, namePlate in pairs(C_NamePlate.GetNamePlates()) do
+		attachVisiblePlayer(namePlate)
+	end
 
 	-- Update all nameplates at initialization for a clean start
 	Musician.NamePlates.UpdateAll()
@@ -383,6 +408,42 @@ function Musician.NamePlates.OnNamePlateNotesFrameUpdate(animatedNotesFrame, ela
 	animateNotes(animatedNotesFrame, elapsed)
 end
 
+--- Hide Musician's replacement name while another addon draws its own.
+-- Listen for MusicianNamePlatesReady if the addon can load before Musician.
+-- @param onIconChanged Called when the addon should redraw its name.
+-- @return A release function. Pass true if the unit is staying on screen, false if it left.
+function Musician.NamePlates.ClaimName(namePlate, unitToken, onIconChanged)
+	local claim = { refresh = onIconChanged }
+	nameClaims[namePlate] = claim
+	if namePlate.musicianUnitFrame then namePlate.musicianUnitFrame:Hide() end
+	return function(live)
+		-- The plate may already belong to a newer claim.
+		if nameClaims[namePlate] ~= claim then return end
+		nameClaims[namePlate] = nil
+		if not live or not initialized or namePlate:IsForbidden() then return end
+		if C_NamePlate.GetNamePlateForUnit(unitToken) ~= namePlate then return end
+		if not namePlate.UnitFrame or namePlate.UnitFrame:IsForbidden() then return end
+		Musician.NamePlates.UpdateNamePlate(namePlate)
+	end
+end
+
+local function getNoteIconForUnit(unit, knownName)
+	if not initialized or not Musician_Settings.showNamePlateIcon or not canaccessvalue(unit) or not unit then return end
+	local isPlayer = UnitIsPlayer(unit)
+	if not canaccessvalue(isPlayer) or not isPlayer then return end
+	local name = knownName or Musician.Utils.GetUnitName(unit)
+	if not name then return end
+	local player = Musician.Utils.NormalizePlayerName(name)
+	if Musician.Registry.PlayerIsRegistered(player) and not Musician.Utils.PlayerIsMyself(player) then
+		return Musician.Utils.GetChatIcon(Musician.IconImages.Note)
+	end
+end
+
+--- Return the note icon for a unit, or nil if its name should have no icon.
+function Musician.NamePlates.GetNoteIconForUnit(unit)
+	return getNoteIconForUnit(unit)
+end
+
 --- UpdateNamePlate
 -- @param namePlate (Frame)
 function Musician.NamePlates.UpdateNamePlate(namePlate)
@@ -393,7 +454,7 @@ function Musician.NamePlates.UpdateNamePlate(namePlate)
 	Musician.NamePlates.UpdateNamePlateCinematicMode(namePlate)
 
 	-- Hide friendly and player health bars when not in combat
-	if Musician.NamePlates.CanHideHealthBars() and not Musician.NamePlates.IsNameplateCustomized(namePlate) then
+	if not nameClaims[namePlate] and Musician.NamePlates.CanHideHealthBars() and not Musician.NamePlates.IsNameplateCustomized(namePlate) then
 		local unitToken = namePlate.unitToken or namePlate.namePlateUnitToken
 		local unitFrame = namePlate.UnitFrame
 
@@ -445,6 +506,8 @@ end
 function Musician.NamePlates.UpdateAll()
 	for _, namePlate in pairs(C_NamePlate.GetNamePlates()) do
 		Musician.NamePlates.UpdateNamePlate(namePlate)
+		local claim = nameClaims[namePlate]
+		if claim then claim.refresh() end
 	end
 end
 
@@ -495,9 +558,9 @@ end
 -- @param event (string)
 -- @param unitToken (string)
 function Musician.NamePlates.OnNamePlateRemoved(event, unitToken)
-	if not canaccessvalue(unitToken) or not UnitIsPlayer(unitToken) then return end
+	if not canaccessvalue(unitToken) then return end
 
-	-- Detach nameplate and remove references
+	-- The unit may no longer resolve; use the player recorded when it arrived.
 	local player = namePlatePlayers[unitToken]
 	if player and playerNamePlates[player] then
 		Musician.NamePlates.DetachNamePlate(playerNamePlates[player])
@@ -514,6 +577,11 @@ function Musician.NamePlates.OnPlayerRegistered(event, player)
 	local fullPlayerName = Musician.Utils.NormalizePlayerName(player)
 	if not playerNamePlates[fullPlayerName] then return end
 	Musician.NamePlates.AttachNamePlate(playerNamePlates[fullPlayerName], fullPlayerName, event)
+end
+
+function Musician.NamePlates.RefreshClaimedPlayer(_, player)
+	local claim = nameClaims[playerNamePlates[Musician.Utils.NormalizePlayerName(player)]]
+	if claim then claim.refresh() end
 end
 
 --- Hide nameplates in cinematic mode if nameplates are not enabled in this mode
@@ -593,11 +661,9 @@ function Musician.NamePlates.AddNoteIcon(namePlate, textElement, append)
 		return
 	end
 
-	local player = unitToken and UnitIsPlayer(unitToken) and Musician.Utils.NormalizePlayerName(unitName)
 	local isNameVisible = Musician.NamePlates.ShouldRenderNoteIcon(textElement)
-	local hasNoteIcon = player and not Musician.Utils.PlayerIsMyself(player) and Musician_Settings.showNamePlateIcon and
-		Musician.Registry.PlayerIsRegistered(player)
-	local textIcon = Musician.Utils.GetChatIcon(Musician.IconImages.Note)
+	local hasNoteIcon = getNoteIconForUnit(unitToken, unitName)
+	local textIcon = hasNoteIcon or Musician.Utils.GetChatIcon(Musician.IconImages.Note)
 	if not append then
 		textIcon = textIcon .. ' '
 	end
@@ -665,6 +731,8 @@ function Musician.NamePlates.AttachNamePlate(namePlate, player, event)
 	Musician.NamePlates.InitUnitFrame(namePlate)
 
 	Musician.NamePlates.UpdateNamePlate(namePlate)
+	local claim = nameClaims[namePlate]
+	if claim then claim.refresh() end
 
 	if not Musician.Registry.PlayerIsRegistered(player) then return end
 

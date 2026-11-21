@@ -180,6 +180,7 @@ function Musician.NamePlates.Options.Defaults()
 	ExecuteFrameScript(MusicianOptionsPanelUnitNamePlatesEnable, "OnClick", "LeftButton")
 	SetCVarSafe(CVAR_nameplateShowFriendlyNpcs, false)
 	Musician_Settings = Mixin(Musician_Settings, Musician.NamePlates.Options.GetDefaults())
+	Musician.NamePlates.UpdateAll()
 end
 
 hooksecurefunc(Musician.Options, "Defaults", Musician.NamePlates.Options.Defaults)
