@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.9.18.2
+---------
+* Fixed music not playing when the music playing emote is enabled in WoW Forever.
+* Added preferred language support in WoW Forever.
+
 v1.9.18.1
 ---------
 * Fixed Lua error when entering battleground.
