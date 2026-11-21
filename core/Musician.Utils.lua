@@ -707,8 +707,12 @@ end
 --- Return the short locale code of the realm the player belongs to
 -- @return locale (string) 'en', 'fr' etc.
 function Musician.Utils.GetRealmLocale()
-	local locale = select(5, LibRealmInfo:GetRealmInfoByUnit("player")) or GetLocale()
-	return (string.gsub(locale, "[A-Z]+", ""))
+	local realm = Musician.Utils.GetNormalizedRealmName()
+	local realmLocale
+	if realm ~= "" then
+		realmLocale = select(5, LibRealmInfo:GetRealmInfo(realm))
+	end
+	return (string.gsub(realmLocale or GetLocale(), "[A-Z]+", ""))
 end
 
 --- Indicates if playing on a modern WoW flavor
