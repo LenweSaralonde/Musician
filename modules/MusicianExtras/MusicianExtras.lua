@@ -78,43 +78,43 @@ local function initAF23()
 			"gives a fish to the cat. Oh nom nom nom!",
 			"Type **/mus feedthecat** to feed the cat with a fish."
 		}
-		if Musician.Utils.GetRealmLocale() == 'fr' then
+		if Musician.Utils.GetPreferredPlayLocale() == 'fr' then
 			msg = {
 				"a oublié de donner à manger au chat. Il réclame du poisson ! MIAOU MIAOU MIAOU !",
 				"donne du poisson au chat. Miam !",
 				"Tapez **/mus poisson** pour donner du poisson au chat."
 			}
-		elseif Musician.Utils.GetRealmLocale() == 'de' then
+		elseif Musician.Utils.GetPreferredPlayLocale() == 'de' then
 			msg = {
 				"hat vergessen, die Katze zu füttern. Die Katze miaut nach Fischen! MIAU MIAU MIAU !",
 				"gibt der Katze einen Fisch.",
 				"Gib **/mus feedthecat** ein, um die Katze mit einem Fisch zu füttern."
 			}
-		elseif Musician.Utils.GetRealmLocale() == 'es' then
+		elseif Musician.Utils.GetPreferredPlayLocale() == 'es' then
 			msg = {
 				"olvidó alimentar al gato. ¡El gato maúlla por un pez! ¡MIAU MIAU MIAU!",
 				"le da un pez al gato.",
 				"Escribe **/mus feedthecat** para alimentar al gato con un pez."
 			}
-		elseif Musician.Utils.GetRealmLocale() == 'it' then
+		elseif Musician.Utils.GetPreferredPlayLocale() == 'it' then
 			msg = {
 				"ha dimenticato di dare da mangiare al gatto. Il gatto miagola per i pesci! MEOW MEOW MEOW !",
 				"dà un pesce al gatto.",
 				"Digita **/mus feedthecat** per nutrire il gatto con un pesce."
 			}
-		elseif Musician.Utils.GetRealmLocale() == 'pt' then
+		elseif Musician.Utils.GetPreferredPlayLocale() == 'pt' then
 			msg = {
 				"esqueceu de alimentar o gato. O gato mia por peixes! MIAU MIAU MIAU !",
 				"dá um peixe para o gato.",
 				"Digite **/mus feedthecat** para alimentar o gato com um peixe."
 			}
-		elseif Musician.Utils.GetRealmLocale() == 'ru' then
+		elseif Musician.Utils.GetPreferredPlayLocale() == 'ru' then
 			msg = {
 				"забыл покормить кота. Кот мяукает за рыбой! МЯУ МЯУ МЯУ!",
 				"дает кошке рыбу.",
 				"Введите **/mus feedthecat**, чтобы покормить кошку рыбой."
 			}
-		elseif Musician.Utils.GetRealmLocale() == 'ko' then
+		elseif Musician.Utils.GetPreferredPlayLocale() == 'ko' then
 			msg = {
 				"가 고양이에게 먹이를 주는 것을 잊었습니다. 고양이가 물고기를 잡으려고 야옹합니다! 야옹 야옹 야옹!",
 				"가 고양이에게 물고기를 줍니다.",

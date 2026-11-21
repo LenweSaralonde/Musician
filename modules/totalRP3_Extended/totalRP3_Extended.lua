@@ -438,7 +438,7 @@ function Musician.TRP3E.ShowExportFrame()
 		-- Locale
 
 		frame.locale:Enable()
-		frame.locale.SetValue(object.MD.LO or Musician.Utils.GetRealmLocale())
+		frame.locale.SetValue(object.MD.LO or Musician.Utils.GetPreferredPlayLocale())
 
 		-- Preview (icon select)
 
@@ -760,7 +760,7 @@ function Musician.TRP3E.AddSheetMusicItem(title, encodedSongData, locale, icon, 
 	title = Musician.TRP3E.NormalizeTitle(title)
 
 	if icon == nil then icon = Musician.TRP3E.ITEM_ICON end
-	if locale == nil then locale = Musician.Utils.GetRealmLocale() end
+	if locale == nil then locale = Musician.Utils.GetPreferredPlayLocale() end
 	if quantity == nil then quantity = 1 end
 
 	local objectID, object = Musician.TRP3E.GetSheetMusicItem(title, locale, icon)
@@ -831,7 +831,7 @@ end
 function Musician.TRP3E.CreateSheetMusicItem(title, locale, icon)
 	title = Musician.TRP3E.NormalizeTitle(title)
 	if icon == nil then icon = Musician.TRP3E.ITEM_ICON end
-	if locale == nil then locale = Musician.Utils.GetRealmLocale() end
+	if locale == nil then locale = Musician.Utils.GetPreferredPlayLocale() end
 
 	-- Generate ID
 	local ID = Musician.TRP3E.ID_PREFIX .. TRP3_API.utils.str.id()

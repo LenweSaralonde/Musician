@@ -491,6 +491,12 @@ stds.wow = {
 			}
 		},
 
+		C_AccountServices = {
+			fields = {
+				"GetPreferredPlaySettings",
+			}
+		},
+
 		LinkUtil = {
 			fields = {
 				"RegisterLinkHandler",

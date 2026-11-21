@@ -704,15 +704,54 @@ function Musician.Utils.GetNormalizedRealmName()
 	return currentNormalizedRealmName
 end
 
---- Return the short locale code of the realm the player belongs to
--- @return locale (string) 'en', 'fr' etc.
-function Musician.Utils.GetRealmLocale()
-	local realm = Musician.Utils.GetNormalizedRealmName()
-	local realmLocale
-	if realm ~= "" then
-		realmLocale = select(5, LibRealmInfo:GetRealmInfo(realm))
+-- Preferred play locale IDs, matching the CASC locale flag bit positions
+local PREFERRED_PLAY_LOCALES = {
+	[1] = "enUS",
+	[2] = "koKR",
+	[4] = "frFR",
+	[5] = "deDE",
+	[6] = "zhCN",
+	[7] = "esES",
+	[8] = "zhTW",
+	[9] = "enGB",
+	[10] = "enCN",
+	[11] = "enTW",
+	[12] = "esMX",
+	[13] = "ruRU",
+	[14] = "ptBR",
+	[15] = "itIT",
+	[16] = "ptPT",
+}
+
+--- Return the full locale code of the preferred online language set in "Language and social interactions" (realmless WoW)
+-- @return locale (string|nil) 'enUS', 'frFR' etc. or nil if not available
+local function getAccountPreferredPlayLocale()
+	if not C_AccountServices or not C_AccountServices.GetPreferredPlaySettings then
+		return nil
 	end
-	return (string.gsub(realmLocale or GetLocale(), "[A-Z]+", ""))
+
+	local loaded, preferredLocaleID = C_AccountServices.GetPreferredPlaySettings()
+	if not loaded then
+		return nil
+	end
+
+	return PREFERRED_PLAY_LOCALES[preferredLocaleID]
+end
+
+--- Return the short locale code of the language the player prefers to play in
+-- Uses the realm locale or, on realmless WoW, the preferred online language set in "Language and social interactions".
+-- @return locale (string) 'en', 'fr' etc.
+function Musician.Utils.GetPreferredPlayLocale()
+	local preferredLocale
+	if Musician.Utils.IsRealmlessWoW() then
+		preferredLocale = getAccountPreferredPlayLocale()
+	else
+		local realm = Musician.Utils.GetNormalizedRealmName()
+		if realm ~= "" then
+			preferredLocale = select(5, LibRealmInfo:GetRealmInfo(realm))
+		end
+	end
+	return (string.gsub(preferredLocale or GetLocale(), "[A-Z]+", ""))
 end
 
 --- Indicates if playing on a modern WoW flavor
@@ -869,7 +908,7 @@ end
 -- @param[opt] locale (string) Defaults to the realm locale
 -- @return localizedMsg (string)
 function Musician.Utils.GetMsg(msg, locale)
-	if locale == nil then locale = Musician.Utils.GetRealmLocale() end
+	if locale == nil then locale = Musician.Utils.GetPreferredPlayLocale() end
 	return Musician.Locale[locale] and Musician.Locale[locale][msg] or Musician.Msg[msg]
 end
 
