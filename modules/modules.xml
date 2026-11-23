@@ -14,5 +14,6 @@
 	<Include file="NeatPlates\NeatPlates.xml" />
 	<Include file="ElvUI\ElvUI.xml" />
 	<Include file="Tukui\Tukui.xml" />
+	<Include file="FlareUI\FlareUI.xml" />
 	<Include file="MusicianExtras\MusicianExtras.xml" />
 </Ui>
