@@ -178,6 +178,16 @@ read_globals = {
 
 	-- 3rd party add-ons
 	"ElvUI",
+	FlareUI = {
+		fields = {
+			Nameplates = {
+				fields = {
+					"UpdateBarName",
+					"UpdateNameAbove",
+				}
+			}
+		}
+	},
 	"Tukui",
 	CrossRP = {
 		fields = {
